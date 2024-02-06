@@ -201,6 +201,8 @@ ACCOUNT_ADAPTER = 'accounts.adapter.NoNewUsersAccountAdapter'
 LOGIN_REDIRECT_URL = 'profile:home'
 ACCOUNT_LOGOUT_REDIRECT_URL = 'profile:home'
 
+ACCOUNT_DEFAULT_PASSWORD = "changethispassword"
+
 # Debug
 INTERNAL_IPS = [
     "127.0.0.1",

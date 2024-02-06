@@ -1,6 +1,6 @@
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth import get_user_model
-#from django.conf import settings
+from django.conf import settings
 from django import forms
 from django.contrib import admin
 from django.contrib.sites.models import Site
@@ -120,7 +120,7 @@ class TblCompanyProductionAdmin(LoggingAdminMixin,admin.ModelAdmin):
 
         User = get_user_model()
         
-        com_user = User.objects.create_user(obj.name_en,obj.email,"changethispassword")
+        com_user = User.objects.create_user(obj.name_en,obj.email,settings.ACCOUNT_DEFAULT_PASSWORD)
     
         u = TblCompanyProductionUserRole(company=obj,user=com_user)
         u.save()
