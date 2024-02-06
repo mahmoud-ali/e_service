@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-07 00:00+0200\n"
+"POT-Creation-Date: 2024-02-07 00:04+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -31,29 +31,29 @@ msgstr "العربية"
 msgid "English"
 msgstr ""
 
-#: company_profile/admin.py:26 company_profile/admin.py:27
-#: company_profile/admin.py:28 templates/admin/__base_site.html:6
+#: company_profile/admin.py:29 company_profile/admin.py:30
+#: company_profile/admin.py:31 templates/admin/__base_site.html:6
 msgid "Site header"
 msgstr "بوابة الخدمات الإلكترونية"
 
-#: company_profile/admin.py:87
+#: company_profile/admin.py:90
 msgid "Location information"
 msgstr "الموقع الجغرافي"
 
-#: company_profile/admin.py:88
+#: company_profile/admin.py:91
 msgid "Contact information"
 msgstr "بيانات التواصل"
 
-#: company_profile/admin.py:89 company_profile/models.py:122
+#: company_profile/admin.py:92 company_profile/models.py:122
 #: company_profile/models.py:123
 msgid "Company Status"
 msgstr "موقف الشركة"
 
-#: company_profile/admin.py:122
+#: company_profile/admin.py:125
 msgid "General information"
 msgstr "بيانات عامة"
 
-#: company_profile/admin.py:123
+#: company_profile/admin.py:126
 msgid "Contract information"
 msgstr "بيانات العقد"
 
@@ -210,6 +210,7 @@ msgstr "شركات الانتاج"
 #: company_profile/models.py:575 company_profile/models.py:607
 #: company_profile/models.py:638 company_profile/models.py:682
 #: company_profile/models.py:716 company_profile/models.py:749
+#: company_profile/models.py:782
 msgid "company"
 msgstr "شركة"
 
@@ -720,6 +721,7 @@ msgid "cause_for_tamdeed"
 msgstr "مسببات التمديد"
 
 #: company_profile/models.py:504 company_profile/models.py:541
+#: company_profile/models.py:784
 msgid "approved_work_plan_file"
 msgstr "خطة العمل المجازة"
 
@@ -979,9 +981,9 @@ msgstr "تكلفة التحليل"
 msgid "last_analysis_report_file"
 msgstr "نتيجة التحليل السابق ان وجدت"
 
-#: company_profile/models.py:645
+#: company_profile/models.py:645 company_profile/models.py:785
 msgid "initial_voucher_file"
-msgstr "فاتورة مبدئية لتكلفة التحليل"
+msgstr "فاتورة مبدئية"
 
 #: company_profile/models.py:646
 msgid "sample_description_form_file"
@@ -1117,6 +1119,7 @@ msgid "packing_certificate_file"
 msgstr "شهادة التغليف"
 
 #: company_profile/models.py:726 company_profile/models.py:754
+#: company_profile/models.py:786
 msgid "specifications_file"
 msgstr "شهادة المواصفات"
 
@@ -1198,6 +1201,63 @@ msgstr "تفاصيل اعادة صادر لاليات ومعدات"
 msgid "Reexport Equipments Details"
 msgstr "تفاصيل اعادة صادر لاليات ومعدات"
 
+#: company_profile/models.py:787
+msgid "mshobat_jamarik_file"
+msgstr "كشف المسحوبات من الجمارك للكشف السابق ان وجد"
+
+#: company_profile/models.py:790
+msgid "Requirements List"
+msgstr "كشف احتياجات"
+
+#: company_profile/models.py:797 company_profile/models.py:798
+#: company_profile/templates/company_profile/base.html:165
+msgid "Application: Requirements List"
+msgstr "طلب كشف احتياجات"
+
+#: company_profile/models.py:801
+msgid "requirements_master"
+msgstr ""
+
+#: company_profile/models.py:802
+msgid "item"
+msgstr "الصنف"
+
+#: company_profile/models.py:803
+msgid "description"
+msgstr "الوصف"
+
+#: company_profile/models.py:804
+msgid "qty"
+msgstr "الكمية"
+
+#: company_profile/models.py:811 company_profile/models.py:812
+msgid "Application: Requirements List - Mangam Equipments"
+msgstr "معدات المناجم"
+
+#: company_profile/models.py:816 company_profile/models.py:817
+msgid "Application: Requirements List - Factory Equipments"
+msgstr "معدات المصنع"
+
+#: company_profile/models.py:821 company_profile/models.py:822
+msgid "Application: Requirements List - Electricity Equipments"
+msgstr "محطة الكهرباء"
+
+#: company_profile/models.py:826 company_profile/models.py:827
+msgid "Application: Requirements List - Chemical Lab Equipments"
+msgstr "معدات المعمل الكيميائي"
+
+#: company_profile/models.py:831 company_profile/models.py:832
+msgid "Application: Requirements List - Chemical Equipments"
+msgstr "المواد الكيميائية"
+
+#: company_profile/models.py:836 company_profile/models.py:837
+msgid "Application: Requirements List - Motafjerat Equipments"
+msgstr "المتفجرات"
+
+#: company_profile/models.py:841 company_profile/models.py:842
+msgid "Application: Requirements List - Vehicles Equipments"
+msgstr "الاليات والمتحركات"
+
 #: company_profile/tables.py:23 company_profile/tables.py:36
 #: company_profile/tables.py:49 company_profile/tables.py:62
 #: company_profile/tables.py:75 company_profile/tables.py:88
@@ -1209,15 +1269,18 @@ msgstr "تفاصيل اعادة صادر لاليات ومعدات"
 #: company_profile/tables.py:240 company_profile/tables.py:253
 #: company_profile/tables.py:266 company_profile/tables.py:279
 #: company_profile/tables.py:292 company_profile/tables.py:305
+#: company_profile/tables.py:321
 msgid "No records."
 msgstr "لايوجد سجل."
 
 #: company_profile/templates/company_profile/application_add.html:15
-#: company_profile/templates/company_profile/application_add_master_details.html:45
+#: company_profile/templates/company_profile/application_add_master_details.html:50
+#: company_profile/templates/company_profile/views/requirements_list_add_master_details.html:53
 msgid "Submit"
 msgstr "ارسال"
 
-#: company_profile/templates/company_profile/application_add_master_details.html:62
+#: company_profile/templates/company_profile/application_add_master_details.html:44
+#: company_profile/templates/company_profile/views/requirements_list_add_master_details.html:45
 msgid "add_more"
 msgstr "اضافة المزيد"
 
@@ -1262,15 +1325,15 @@ msgstr "الرئيسية"
 msgid "Application: Foreigner Procedure"
 msgstr "طلب اجراءات اجانب"
 
-#: company_profile/views/__init__.py:106
+#: company_profile/views/__init__.py:107
 msgid "List of foreigner movements"
 msgstr "قائمة طلبات حركة الاجانب"
 
-#: company_profile/views/__init__.py:124
+#: company_profile/views/__init__.py:125
 msgid "Add new movement"
 msgstr "اضافة طلب حركة اجنبي"
 
-#: company_profile/views/__init__.py:144 company_profile/views/__init__.py:220
+#: company_profile/views/__init__.py:145 company_profile/views/__init__.py:221
 #: company_profile/views/add_area.py:64
 #: company_profile/views/aifaa_jomrki.py:71
 #: company_profile/views/change_company_name.py:68
@@ -1282,6 +1345,7 @@ msgstr "اضافة طلب حركة اجنبي"
 #: company_profile/views/mda.py:64
 #: company_profile/views/reexport_equipments.py:71
 #: company_profile/views/remove_area.py:67
+#: company_profile/views/requirements_list.py:92
 #: company_profile/views/send_samples_for_analysis.py:71
 #: company_profile/views/taaweed.py:63
 #: company_profile/views/tajeel_tnazol.py:64
@@ -1293,19 +1357,19 @@ msgstr "اضافة طلب حركة اجنبي"
 msgid "Application sent successfully."
 msgstr "تم ارسال الطلب بنجاح."
 
-#: company_profile/views/__init__.py:157
+#: company_profile/views/__init__.py:158
 msgid "Show movement"
 msgstr "عرض طلب حركة اجنبي"
 
-#: company_profile/views/__init__.py:172
+#: company_profile/views/__init__.py:173
 msgid "List of borrow materials"
 msgstr "قائمة طلبات الاستلاف"
 
-#: company_profile/views/__init__.py:191
+#: company_profile/views/__init__.py:192
 msgid "Add new borrow materials"
 msgstr "اضافة طلب اسلاف مواد"
 
-#: company_profile/views/__init__.py:238
+#: company_profile/views/__init__.py:239
 msgid "Show borrow materials"
 msgstr "عرض طلب استلاف مواد"
 
@@ -1440,6 +1504,18 @@ msgstr "اضافة طلب تنازل عن مساحة"
 #: company_profile/views/remove_area.py:80
 msgid "Show removed area"
 msgstr "عرض طلب تنازل عن مساحة"
+
+#: company_profile/views/requirements_list.py:34
+msgid "List of Requirements List"
+msgstr "قائمة طلبات كشف الاحتياجات"
+
+#: company_profile/views/requirements_list.py:54
+msgid "Add Requirements List"
+msgstr "اضافة طلب كشف احتياجات"
+
+#: company_profile/views/requirements_list.py:108
+msgid "Show Requirements List"
+msgstr "عرض طلب كشف احتياجات"
 
 #: company_profile/views/send_samples_for_analysis.py:31
 msgid "List of samples for analysis"

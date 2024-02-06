@@ -206,6 +206,38 @@
   fields:
     app_label: company_profile
     model: appreexportequipmentsdetail
+- model: contenttypes.contenttype
+  fields:
+    app_label: company_profile
+    model: apprequirementslist
+- model: contenttypes.contenttype
+  fields:
+    app_label: company_profile
+    model: apprequirementslistelectricityequipments
+- model: contenttypes.contenttype
+  fields:
+    app_label: company_profile
+    model: apprequirementslistchemicalequipments
+- model: contenttypes.contenttype
+  fields:
+    app_label: company_profile
+    model: apprequirementslistfactoryequipments
+- model: contenttypes.contenttype
+  fields:
+    app_label: company_profile
+    model: apprequirementslistmangamequipments
+- model: contenttypes.contenttype
+  fields:
+    app_label: company_profile
+    model: apprequirementslistchemicallabequipments
+- model: contenttypes.contenttype
+  fields:
+    app_label: company_profile
+    model: apprequirementslistvehiclesequipments
+- model: contenttypes.contenttype
+  fields:
+    app_label: company_profile
+    model: apprequirementslistmotafjeratequipments
 - model: sessions.session
   pk: 4vwj5xiolo57eoy577wxecx64b993d7f
   fields:
@@ -440,6 +472,24 @@
     borrow_master: 32
     material: ggggggg
     quantity: 545
+- model: company_profile.appborrowmaterialdetail
+  pk: 27
+  fields:
+    borrow_master: 33
+    material: aaaaaa
+    quantity: 111
+- model: company_profile.appborrowmaterialdetail
+  pk: 28
+  fields:
+    borrow_master: 33
+    material: bbbbbb
+    quantity: 222
+- model: company_profile.appborrowmaterialdetail
+  pk: 29
+  fields:
+    borrow_master: 33
+    material: ccccc
+    quantity: 333
 - model: company_profile.appsendsamplesforanalysisdetail
   pk: 1
   fields:
@@ -500,6 +550,18 @@
     procedure_master: 1
     employee_name: محمود علي
     employee_address: المنشية مربع7
+- model: company_profile.appforeignerproceduredetail
+  pk: 2
+  fields:
+    procedure_master: 2
+    employee_name: bbbbbbbbb
+    employee_address: bbbbbbb
+- model: company_profile.appforeignerproceduredetail
+  pk: 3
+  fields:
+    procedure_master: 2
+    employee_name: mmmmmmmm
+    employee_address: mmmmmmmmmm
 - model: company_profile.appaifaajomrkidetail
   pk: 1
   fields:
@@ -525,6 +587,69 @@
     voucher_no: '33333333'
     insurance_no: '44444444'
     check_certificate_no: '55555555'
+- model: company_profile.apprequirementslistmangamequipments
+  pk: 1
+  fields:
+    requirements_master: 1
+    item: aaaaaa
+    description: aaaaaaaaaa
+    qty: 1
+- model: company_profile.apprequirementslistfactoryequipments
+  pk: 1
+  fields:
+    requirements_master: 1
+    item: bbbbbb
+    description: bbbbbbbb
+    qty: 2
+- model: company_profile.apprequirementslistfactoryequipments
+  pk: 2
+  fields:
+    requirements_master: 1
+    item: cccccccc
+    description: cccccccccc
+    qty: 3
+- model: company_profile.apprequirementslistelectricityequipments
+  pk: 1
+  fields:
+    requirements_master: 1
+    item: dddddd
+    description: ddddddddd
+    qty: 4
+- model: company_profile.apprequirementslistelectricityequipments
+  pk: 2
+  fields:
+    requirements_master: 1
+    item: eeeeee
+    description: eeeeeee
+    qty: 5
+- model: company_profile.apprequirementslistchemicallabequipments
+  pk: 1
+  fields:
+    requirements_master: 1
+    item: ffffff
+    description: fffffffffff
+    qty: 6
+- model: company_profile.apprequirementslistchemicalequipments
+  pk: 1
+  fields:
+    requirements_master: 1
+    item: gggggg
+    description: gggggggg
+    qty: 7
+- model: company_profile.apprequirementslistmotafjeratequipments
+  pk: 1
+  fields:
+    requirements_master: 1
+    item: hhhhhh
+    description: hhhhhhh
+    qty: 8
+- model: company_profile.apprequirementslistvehiclesequipments
+  pk: 1
+  fields:
+    requirements_master: 1
+    item: iiiiiiiiii
+    description: iiiiiiiiii
+    qty: 9
 - model: auth.permission
   fields:
     name: Can add log entry
@@ -1981,6 +2106,230 @@
     - company_profile
     - appreexportequipmentsdetail
     codename: view_appreexportequipmentsdetail
+- model: auth.permission
+  fields:
+    name: 'Can add Application: Requirements List'
+    content_type:
+    - company_profile
+    - apprequirementslist
+    codename: add_apprequirementslist
+- model: auth.permission
+  fields:
+    name: 'Can change Application: Requirements List'
+    content_type:
+    - company_profile
+    - apprequirementslist
+    codename: change_apprequirementslist
+- model: auth.permission
+  fields:
+    name: 'Can delete Application: Requirements List'
+    content_type:
+    - company_profile
+    - apprequirementslist
+    codename: delete_apprequirementslist
+- model: auth.permission
+  fields:
+    name: 'Can view Application: Requirements List'
+    content_type:
+    - company_profile
+    - apprequirementslist
+    codename: view_apprequirementslist
+- model: auth.permission
+  fields:
+    name: 'Can add Application: Requirements List - Electricity Equipments'
+    content_type:
+    - company_profile
+    - apprequirementslistelectricityequipments
+    codename: add_apprequirementslistelectricityequipments
+- model: auth.permission
+  fields:
+    name: 'Can change Application: Requirements List - Electricity Equipments'
+    content_type:
+    - company_profile
+    - apprequirementslistelectricityequipments
+    codename: change_apprequirementslistelectricityequipments
+- model: auth.permission
+  fields:
+    name: 'Can delete Application: Requirements List - Electricity Equipments'
+    content_type:
+    - company_profile
+    - apprequirementslistelectricityequipments
+    codename: delete_apprequirementslistelectricityequipments
+- model: auth.permission
+  fields:
+    name: 'Can view Application: Requirements List - Electricity Equipments'
+    content_type:
+    - company_profile
+    - apprequirementslistelectricityequipments
+    codename: view_apprequirementslistelectricityequipments
+- model: auth.permission
+  fields:
+    name: 'Can add Application: Requirements List - Chemical Equipments'
+    content_type:
+    - company_profile
+    - apprequirementslistchemicalequipments
+    codename: add_apprequirementslistchemicalequipments
+- model: auth.permission
+  fields:
+    name: 'Can change Application: Requirements List - Chemical Equipments'
+    content_type:
+    - company_profile
+    - apprequirementslistchemicalequipments
+    codename: change_apprequirementslistchemicalequipments
+- model: auth.permission
+  fields:
+    name: 'Can delete Application: Requirements List - Chemical Equipments'
+    content_type:
+    - company_profile
+    - apprequirementslistchemicalequipments
+    codename: delete_apprequirementslistchemicalequipments
+- model: auth.permission
+  fields:
+    name: 'Can view Application: Requirements List - Chemical Equipments'
+    content_type:
+    - company_profile
+    - apprequirementslistchemicalequipments
+    codename: view_apprequirementslistchemicalequipments
+- model: auth.permission
+  fields:
+    name: 'Can add Application: Requirements List - Factory Equipments'
+    content_type:
+    - company_profile
+    - apprequirementslistfactoryequipments
+    codename: add_apprequirementslistfactoryequipments
+- model: auth.permission
+  fields:
+    name: 'Can change Application: Requirements List - Factory Equipments'
+    content_type:
+    - company_profile
+    - apprequirementslistfactoryequipments
+    codename: change_apprequirementslistfactoryequipments
+- model: auth.permission
+  fields:
+    name: 'Can delete Application: Requirements List - Factory Equipments'
+    content_type:
+    - company_profile
+    - apprequirementslistfactoryequipments
+    codename: delete_apprequirementslistfactoryequipments
+- model: auth.permission
+  fields:
+    name: 'Can view Application: Requirements List - Factory Equipments'
+    content_type:
+    - company_profile
+    - apprequirementslistfactoryequipments
+    codename: view_apprequirementslistfactoryequipments
+- model: auth.permission
+  fields:
+    name: 'Can add Application: Requirements List - Mangam Equipments'
+    content_type:
+    - company_profile
+    - apprequirementslistmangamequipments
+    codename: add_apprequirementslistmangamequipments
+- model: auth.permission
+  fields:
+    name: 'Can change Application: Requirements List - Mangam Equipments'
+    content_type:
+    - company_profile
+    - apprequirementslistmangamequipments
+    codename: change_apprequirementslistmangamequipments
+- model: auth.permission
+  fields:
+    name: 'Can delete Application: Requirements List - Mangam Equipments'
+    content_type:
+    - company_profile
+    - apprequirementslistmangamequipments
+    codename: delete_apprequirementslistmangamequipments
+- model: auth.permission
+  fields:
+    name: 'Can view Application: Requirements List - Mangam Equipments'
+    content_type:
+    - company_profile
+    - apprequirementslistmangamequipments
+    codename: view_apprequirementslistmangamequipments
+- model: auth.permission
+  fields:
+    name: 'Can add Application: Requirements List - Chemical Lab Equipments'
+    content_type:
+    - company_profile
+    - apprequirementslistchemicallabequipments
+    codename: add_apprequirementslistchemicallabequipments
+- model: auth.permission
+  fields:
+    name: 'Can change Application: Requirements List - Chemical Lab Equipments'
+    content_type:
+    - company_profile
+    - apprequirementslistchemicallabequipments
+    codename: change_apprequirementslistchemicallabequipments
+- model: auth.permission
+  fields:
+    name: 'Can delete Application: Requirements List - Chemical Lab Equipments'
+    content_type:
+    - company_profile
+    - apprequirementslistchemicallabequipments
+    codename: delete_apprequirementslistchemicallabequipments
+- model: auth.permission
+  fields:
+    name: 'Can view Application: Requirements List - Chemical Lab Equipments'
+    content_type:
+    - company_profile
+    - apprequirementslistchemicallabequipments
+    codename: view_apprequirementslistchemicallabequipments
+- model: auth.permission
+  fields:
+    name: 'Can add Application: Requirements List - Vehicles Equipments'
+    content_type:
+    - company_profile
+    - apprequirementslistvehiclesequipments
+    codename: add_apprequirementslistvehiclesequipments
+- model: auth.permission
+  fields:
+    name: 'Can change Application: Requirements List - Vehicles Equipments'
+    content_type:
+    - company_profile
+    - apprequirementslistvehiclesequipments
+    codename: change_apprequirementslistvehiclesequipments
+- model: auth.permission
+  fields:
+    name: 'Can delete Application: Requirements List - Vehicles Equipments'
+    content_type:
+    - company_profile
+    - apprequirementslistvehiclesequipments
+    codename: delete_apprequirementslistvehiclesequipments
+- model: auth.permission
+  fields:
+    name: 'Can view Application: Requirements List - Vehicles Equipments'
+    content_type:
+    - company_profile
+    - apprequirementslistvehiclesequipments
+    codename: view_apprequirementslistvehiclesequipments
+- model: auth.permission
+  fields:
+    name: 'Can add Application: Requirements List - Motafjerat Equipments'
+    content_type:
+    - company_profile
+    - apprequirementslistmotafjeratequipments
+    codename: add_apprequirementslistmotafjeratequipments
+- model: auth.permission
+  fields:
+    name: 'Can change Application: Requirements List - Motafjerat Equipments'
+    content_type:
+    - company_profile
+    - apprequirementslistmotafjeratequipments
+    codename: change_apprequirementslistmotafjeratequipments
+- model: auth.permission
+  fields:
+    name: 'Can delete Application: Requirements List - Motafjerat Equipments'
+    content_type:
+    - company_profile
+    - apprequirementslistmotafjeratequipments
+    codename: delete_apprequirementslistmotafjeratequipments
+- model: auth.permission
+  fields:
+    name: 'Can view Application: Requirements List - Motafjerat Equipments'
+    content_type:
+    - company_profile
+    - apprequirementslistmotafjeratequipments
+    codename: view_apprequirementslistmotafjeratequipments
 - model: auth.group
   fields:
     name: pro_company_application_accept
@@ -2771,6 +3120,22 @@
     borrow_date: 2024-02-07
     borrow_materials_list_file: company_1/applications/info
     borrow_from_approval_file: company_1/applications/info_KEvlhEr
+- model: company_profile.appborrowmaterial
+  pk: 33
+  fields:
+    created_at: 2024-02-07 12:23:36.217506+00:00
+    created_by:
+    - admin
+    updated_at: 2024-02-07 12:23:36.217788+00:00
+    updated_by:
+    - admin
+    state: submitted
+    notify: false
+    company: 1
+    company_from: 1
+    borrow_date: 2024-02-07
+    borrow_materials_list_file: company_1/applications/info_OfyHTZW
+    borrow_from_approval_file: company_1/applications/info_nV1Vabl
 - model: company_profile.appworkplan
   pk: 1
   fields:
@@ -3252,6 +3617,28 @@
     experience_certificates_file: company_1/applications/info_IeUpxpy
     eqama_file: company_1/applications/info_gmVVu6H
     dawa_file: company_1/applications/info_2kmsNi8
+- model: company_profile.appforeignerprocedure
+  pk: 2
+  fields:
+    created_at: 2024-02-07 12:14:32.044632+00:00
+    created_by:
+    - admin
+    updated_at: 2024-02-07 12:14:32.044843+00:00
+    updated_by:
+    - admin
+    state: submitted
+    notify: false
+    company: 1
+    procedure_type: 1
+    procedure_from: 2024-02-07
+    procedure_to: 2024-02-07
+    procedure_cause: ghgfhgf
+    official_letter_file: company_1/applications/info_8EMAQAQ
+    passport_file: company_1/applications/info_PCFP41P
+    cv_file: company_1/applications/info_aQC2iFj
+    experience_certificates_file: company_1/applications/info_hzM3wRg
+    eqama_file: company_1/applications/info_ehwZvty
+    dawa_file: company_1/applications/info_7OSOxEX
 - model: company_profile.appaifaajomrki
   pk: 1
   fields:
@@ -3291,6 +3678,22 @@
     voucher_file: company_1/applications/info_j9qFL23
     specifications_file: company_1/applications/info_JmTx8r5
     momentary_approval_file: company_1/applications/info_utsvgoB
+- model: company_profile.apprequirementslist
+  pk: 1
+  fields:
+    created_at: 2024-02-07 06:53:01.082383+00:00
+    created_by:
+    - admin
+    updated_at: 2024-02-07 06:53:01.082560+00:00
+    updated_by:
+    - admin
+    state: submitted
+    notify: false
+    company: 1
+    approved_work_plan_file: company_1/applications/for_upload
+    initial_voucher_file: company_1/applications/for_upload_m7FwYSh
+    specifications_file: company_1/applications/for_upload_SSuG8TZ
+    mshobat_jamarik_file: company_1/applications/for_upload_ay2fKzr
 - model: account.emailaddress
   pk: 1
   fields:
