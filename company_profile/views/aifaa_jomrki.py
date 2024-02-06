@@ -52,13 +52,12 @@ class AppAifaaJomrkiCreateView(ApplicationMasterDetailCreateView):
     template_name = "company_profile/application_add_master_details.html"
 
     def get(self,request):        
-        form = self.extra_context['form']()
-        form.fields['license_type'].queryset = form.fields['license_type'].queryset.filter(company=self.request.user.pro_company.company)
+        form = self.extra_context['form'](company_id=self.request.user.pro_company.company.id)
         self.extra_context['form'] = form
         return render(request, self.template_name, self.extra_context)
 
     def post(self, request, *args, **kwargs):
-        form = self.form_class(request.POST,request.FILES)
+        form = self.form_class(request.POST,request.FILES,company_id=self.request.user.pro_company.company.id)
         self.extra_context["form"] = form
         
         if form.is_valid():

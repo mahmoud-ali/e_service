@@ -56,11 +56,17 @@ class AppForignerMovementForm(AppForignerMovementAdminForm):
         
 class AppBorrowMaterialAdminForm(WorkflowFormMixin,ModelForm):
     company = forms.ModelChoiceField(queryset=TblCompanyProduction.objects.all(), disabled=True, label=_("company"))
-    company_from = forms.ModelChoiceField(queryset=TblCompanyProduction.objects.all(), label=_("company_borrow_from"))
-    def __init__(self, *args, **kwargs):        
+    company_from = forms.ModelChoiceField(queryset=None, label=_("company_borrow_from"))
+    def __init__(self, *args,company_id = None, **kwargs):        
         super().__init__(*args, **kwargs)
-        if kwargs.get('instance') and kwargs['instance'].pk:
-            self.fields["company_from"].queryset = self.fields["company_from"].queryset.exclude(id=kwargs['instance'].company.id)
+        #company_id = None
+        if kwargs.get('company_id'):
+            company_id = kwargs.get('company_id')
+        elif kwargs.get('instance') and kwargs['instance'].pk:
+            company_id = kwargs['instance'].company.id
+        
+        if company_id:
+            self.fields["company_from"].queryset = TblCompanyProduction.objects.exclude(id=company_id)
 
     class Meta:
         model = AppBorrowMaterial
@@ -338,11 +344,17 @@ class AppForeignerProcedureForm(AppForeignerProcedureAdminForm):
 
 class AppAifaaJomrkiAdminForm(WorkflowFormMixin,ModelForm):
     company = forms.ModelChoiceField(queryset=TblCompanyProduction.objects.all(), disabled=True, label=_("company"))
-    license_type = forms.ModelChoiceField(queryset=TblCompanyProductionLicense.objects.all(), label=_("license_type"))
-    def __init__(self, *args, **kwargs):        
+    license_type = forms.ModelChoiceField(queryset=None, label=_("license_type"))
+    def __init__(self, *args,company_id = None, **kwargs):        
         super().__init__(*args, **kwargs)
-        if kwargs.get('instance') and kwargs['instance'].pk:
-            self.fields["license_type"].queryset = self.fields["license_type"].queryset.filter(company=kwargs['instance'].company)
+
+        if kwargs.get('company_id'):
+            company_id = kwargs.get('company_id')
+        elif kwargs.get('instance') and kwargs['instance'].pk:
+            company_id = kwargs['instance'].company.id
+        
+        if company_id:
+            self.fields["license_type"].queryset = TblCompanyProductionLicense.objects.filter(company__id=company_id)
 
     class Meta:
         model = AppAifaaJomrki
