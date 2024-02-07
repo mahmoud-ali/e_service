@@ -178,6 +178,34 @@
   fields:
     app_label: company_profile
     model: appsendsamplesforanalysisdetail
+- model: contenttypes.contenttype
+  fields:
+    app_label: company_profile
+    model: lkpforeignerproceduretype
+- model: contenttypes.contenttype
+  fields:
+    app_label: company_profile
+    model: appforeignerprocedure
+- model: contenttypes.contenttype
+  fields:
+    app_label: company_profile
+    model: appforeignerproceduredetail
+- model: contenttypes.contenttype
+  fields:
+    app_label: company_profile
+    model: appaifaajomrki
+- model: contenttypes.contenttype
+  fields:
+    app_label: company_profile
+    model: appaifaajomrkidetail
+- model: contenttypes.contenttype
+  fields:
+    app_label: company_profile
+    model: appreexportequipments
+- model: contenttypes.contenttype
+  fields:
+    app_label: company_profile
+    model: appreexportequipmentsdetail
 - model: sessions.session
   pk: 4vwj5xiolo57eoy577wxecx64b993d7f
   fields:
@@ -430,6 +458,73 @@
     sample_packing_type: yyyyyy
     sample_analysis_type: bbbbb
     sample_analysis_cause: sdfsdfsdf
+- model: company_profile.lkpforeignerproceduretype
+  pk: 1
+  fields:
+    name: اذن تحرك
+- model: company_profile.lkpforeignerproceduretype
+  pk: 2
+  fields:
+    name: كرت عمل
+- model: company_profile.lkpforeignerproceduretype
+  pk: 3
+  fields:
+    name: تجديد كرت عمل
+- model: company_profile.lkpforeignerproceduretype
+  pk: 4
+  fields:
+    name: تأشيرة دخول
+- model: company_profile.lkpforeignerproceduretype
+  pk: 5
+  fields:
+    name: إقامة
+- model: company_profile.lkpforeignerproceduretype
+  pk: 6
+  fields:
+    name: تجديد إقامة
+- model: company_profile.lkpforeignerproceduretype
+  pk: 7
+  fields:
+    name: طلب تعيين اجنبي
+- model: company_profile.lkpforeignerproceduretype
+  pk: 8
+  fields:
+    name: تأشيرة متعددة
+- model: company_profile.lkpforeignerproceduretype
+  pk: 9
+  fields:
+    name: إذن عمل مبدئي
+- model: company_profile.appforeignerproceduredetail
+  pk: 1
+  fields:
+    procedure_master: 1
+    employee_name: محمود علي
+    employee_address: المنشية مربع7
+- model: company_profile.appaifaajomrkidetail
+  pk: 1
+  fields:
+    aifaa_master: 1
+    material_name: aaaaa
+- model: company_profile.appaifaajomrkidetail
+  pk: 2
+  fields:
+    aifaa_master: 1
+    material_name: bbbbbbbbb
+- model: company_profile.appaifaajomrkidetail
+  pk: 3
+  fields:
+    aifaa_master: 1
+    material_name: ccccccccccccc
+- model: company_profile.appreexportequipmentsdetail
+  pk: 1
+  fields:
+    reexport_master: 1
+    name: sssssss
+    serial_id: '111111'
+    policy_no: '2222222'
+    voucher_no: '33333333'
+    insurance_no: '44444444'
+    check_certificate_no: '55555555'
 - model: auth.permission
   fields:
     name: Can add log entry
@@ -1690,6 +1785,202 @@
     - company_profile
     - appsendsamplesforanalysisdetail
     codename: view_appsendsamplesforanalysisdetail
+- model: auth.permission
+  fields:
+    name: Can add Foreigner Procedure Type
+    content_type:
+    - company_profile
+    - lkpforeignerproceduretype
+    codename: add_lkpforeignerproceduretype
+- model: auth.permission
+  fields:
+    name: Can change Foreigner Procedure Type
+    content_type:
+    - company_profile
+    - lkpforeignerproceduretype
+    codename: change_lkpforeignerproceduretype
+- model: auth.permission
+  fields:
+    name: Can delete Foreigner Procedure Type
+    content_type:
+    - company_profile
+    - lkpforeignerproceduretype
+    codename: delete_lkpforeignerproceduretype
+- model: auth.permission
+  fields:
+    name: Can view Foreigner Procedure Type
+    content_type:
+    - company_profile
+    - lkpforeignerproceduretype
+    codename: view_lkpforeignerproceduretype
+- model: auth.permission
+  fields:
+    name: 'Can add Application: Foreigner procedure'
+    content_type:
+    - company_profile
+    - appforeignerprocedure
+    codename: add_appforeignerprocedure
+- model: auth.permission
+  fields:
+    name: 'Can change Application: Foreigner procedure'
+    content_type:
+    - company_profile
+    - appforeignerprocedure
+    codename: change_appforeignerprocedure
+- model: auth.permission
+  fields:
+    name: 'Can delete Application: Foreigner procedure'
+    content_type:
+    - company_profile
+    - appforeignerprocedure
+    codename: delete_appforeignerprocedure
+- model: auth.permission
+  fields:
+    name: 'Can view Application: Foreigner procedure'
+    content_type:
+    - company_profile
+    - appforeignerprocedure
+    codename: view_appforeignerprocedure
+- model: auth.permission
+  fields:
+    name: Can add Foreigner Procedure Detail
+    content_type:
+    - company_profile
+    - appforeignerproceduredetail
+    codename: add_appforeignerproceduredetail
+- model: auth.permission
+  fields:
+    name: Can change Foreigner Procedure Detail
+    content_type:
+    - company_profile
+    - appforeignerproceduredetail
+    codename: change_appforeignerproceduredetail
+- model: auth.permission
+  fields:
+    name: Can delete Foreigner Procedure Detail
+    content_type:
+    - company_profile
+    - appforeignerproceduredetail
+    codename: delete_appforeignerproceduredetail
+- model: auth.permission
+  fields:
+    name: Can view Foreigner Procedure Detail
+    content_type:
+    - company_profile
+    - appforeignerproceduredetail
+    codename: view_appforeignerproceduredetail
+- model: auth.permission
+  fields:
+    name: 'Can add Application: Aifaa Jomrki'
+    content_type:
+    - company_profile
+    - appaifaajomrki
+    codename: add_appaifaajomrki
+- model: auth.permission
+  fields:
+    name: 'Can change Application: Aifaa Jomrki'
+    content_type:
+    - company_profile
+    - appaifaajomrki
+    codename: change_appaifaajomrki
+- model: auth.permission
+  fields:
+    name: 'Can delete Application: Aifaa Jomrki'
+    content_type:
+    - company_profile
+    - appaifaajomrki
+    codename: delete_appaifaajomrki
+- model: auth.permission
+  fields:
+    name: 'Can view Application: Aifaa Jomrki'
+    content_type:
+    - company_profile
+    - appaifaajomrki
+    codename: view_appaifaajomrki
+- model: auth.permission
+  fields:
+    name: Can add Aifaa Jomrki Detail
+    content_type:
+    - company_profile
+    - appaifaajomrkidetail
+    codename: add_appaifaajomrkidetail
+- model: auth.permission
+  fields:
+    name: Can change Aifaa Jomrki Detail
+    content_type:
+    - company_profile
+    - appaifaajomrkidetail
+    codename: change_appaifaajomrkidetail
+- model: auth.permission
+  fields:
+    name: Can delete Aifaa Jomrki Detail
+    content_type:
+    - company_profile
+    - appaifaajomrkidetail
+    codename: delete_appaifaajomrkidetail
+- model: auth.permission
+  fields:
+    name: Can view Aifaa Jomrki Detail
+    content_type:
+    - company_profile
+    - appaifaajomrkidetail
+    codename: view_appaifaajomrkidetail
+- model: auth.permission
+  fields:
+    name: 'Can add Application: Reexport Equipments'
+    content_type:
+    - company_profile
+    - appreexportequipments
+    codename: add_appreexportequipments
+- model: auth.permission
+  fields:
+    name: 'Can change Application: Reexport Equipments'
+    content_type:
+    - company_profile
+    - appreexportequipments
+    codename: change_appreexportequipments
+- model: auth.permission
+  fields:
+    name: 'Can delete Application: Reexport Equipments'
+    content_type:
+    - company_profile
+    - appreexportequipments
+    codename: delete_appreexportequipments
+- model: auth.permission
+  fields:
+    name: 'Can view Application: Reexport Equipments'
+    content_type:
+    - company_profile
+    - appreexportequipments
+    codename: view_appreexportequipments
+- model: auth.permission
+  fields:
+    name: Can add Reexport Equipments Detail
+    content_type:
+    - company_profile
+    - appreexportequipmentsdetail
+    codename: add_appreexportequipmentsdetail
+- model: auth.permission
+  fields:
+    name: Can change Reexport Equipments Detail
+    content_type:
+    - company_profile
+    - appreexportequipmentsdetail
+    codename: change_appreexportequipmentsdetail
+- model: auth.permission
+  fields:
+    name: Can delete Reexport Equipments Detail
+    content_type:
+    - company_profile
+    - appreexportequipmentsdetail
+    codename: delete_appreexportequipmentsdetail
+- model: auth.permission
+  fields:
+    name: Can view Reexport Equipments Detail
+    content_type:
+    - company_profile
+    - appreexportequipmentsdetail
+    codename: view_appreexportequipmentsdetail
 - model: auth.group
   fields:
     name: pro_company_application_accept
@@ -2939,6 +3230,67 @@
     last_analysis_report_file: company_1/applications/info_tNYTGtQ
     initial_voucher_file: company_1/applications/info_QMEH0NG
     sample_description_form_file: company_1/applications/info_KYIaia9
+- model: company_profile.appforeignerprocedure
+  pk: 1
+  fields:
+    created_at: 2024-02-06 23:04:52.044660+00:00
+    created_by:
+    - admin
+    updated_at: 2024-02-06 23:04:52.044818+00:00
+    updated_by:
+    - admin
+    state: submitted
+    notify: false
+    company: 1
+    procedure_type: 1
+    procedure_from: 2024-02-07
+    procedure_to: 2024-02-21
+    procedure_cause: "بيسبسيب\r\nسيب\r\nسي\r\nب\r\nسيب\r\nسي"
+    official_letter_file: company_1/applications/info_UbG9DBR
+    passport_file: company_1/applications/info_iUwNshi
+    cv_file: company_1/applications/info_1CHhuCU
+    experience_certificates_file: company_1/applications/info_IeUpxpy
+    eqama_file: company_1/applications/info_gmVVu6H
+    dawa_file: company_1/applications/info_2kmsNi8
+- model: company_profile.appaifaajomrki
+  pk: 1
+  fields:
+    created_at: 2024-02-06 22:43:20.820465+00:00
+    created_by:
+    - admin
+    updated_at: 2024-02-06 22:44:13.234944+00:00
+    updated_by:
+    - admin
+    state: accepted
+    notify: false
+    company: 1
+    license_type: 1
+    approved_requirements_list_file: company_1/applications/info_5X3rCE4
+    approval_from_finance_ministry_file: company_1/applications/info_9ho8QZh
+    final_voucher_file: company_1/applications/info_VK12IfS
+    shipping_policy_file: company_1/applications/info_vHaeqyd
+    check_certificate_file: company_1/applications/info_P43OUqe
+    origin_certificate_file: company_1/applications/info_5x2rokX
+    packing_certificate_file: company_1/applications/info_ns3jc1f
+    specifications_file: company_1/applications/info_vr907Qe
+    taba_file: company_1/applications/info_wPyDTvM
+- model: company_profile.appreexportequipments
+  pk: 1
+  fields:
+    created_at: 2024-02-06 23:12:03.729810+00:00
+    created_by:
+    - admin
+    updated_at: 2024-02-06 23:12:35.047422+00:00
+    updated_by:
+    - admin
+    state: accepted
+    notify: false
+    company: 1
+    cause_for_equipments: bbbbbbbbb
+    shipping_policy_file: company_1/applications/info_v2Ttk9q
+    voucher_file: company_1/applications/info_j9qFL23
+    specifications_file: company_1/applications/info_JmTx8r5
+    momentary_approval_file: company_1/applications/info_utsvgoB
 - model: account.emailaddress
   pk: 1
   fields:
@@ -5013,5 +5365,161 @@
     - appsendsamplesforanalysis
     object_id: '2'
     object_repr: ارسال عينات للخارج للتحليل (2)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 160
+  fields:
+    action_time: 2024-02-06 22:59:12.943774+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - lkpforeignerproceduretype
+    object_id: '1'
+    object_repr: اذن تحرك
+    action_flag: 1
+    change_message: '[{"added": {}}]'
+- model: admin.logentry
+  pk: 161
+  fields:
+    action_time: 2024-02-06 22:59:24.949655+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - lkpforeignerproceduretype
+    object_id: '2'
+    object_repr: كرت عمل
+    action_flag: 1
+    change_message: '[{"added": {}}]'
+- model: admin.logentry
+  pk: 162
+  fields:
+    action_time: 2024-02-06 22:59:29.356564+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - lkpforeignerproceduretype
+    object_id: '2'
+    object_repr: كرت عمل
+    action_flag: 2
+    change_message: '[]'
+- model: admin.logentry
+  pk: 163
+  fields:
+    action_time: 2024-02-06 22:59:49.618898+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - lkpforeignerproceduretype
+    object_id: '3'
+    object_repr: تجديد كرت عمل
+    action_flag: 1
+    change_message: '[{"added": {}}]'
+- model: admin.logentry
+  pk: 164
+  fields:
+    action_time: 2024-02-06 23:00:02.342759+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - lkpforeignerproceduretype
+    object_id: '4'
+    object_repr: تأشيرة دخول
+    action_flag: 1
+    change_message: '[{"added": {}}]'
+- model: admin.logentry
+  pk: 165
+  fields:
+    action_time: 2024-02-06 23:00:09.756916+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - lkpforeignerproceduretype
+    object_id: '5'
+    object_repr: إقامة
+    action_flag: 1
+    change_message: '[{"added": {}}]'
+- model: admin.logentry
+  pk: 166
+  fields:
+    action_time: 2024-02-06 23:00:23.691157+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - lkpforeignerproceduretype
+    object_id: '6'
+    object_repr: تجديد إقامة
+    action_flag: 1
+    change_message: '[{"added": {}}]'
+- model: admin.logentry
+  pk: 167
+  fields:
+    action_time: 2024-02-06 23:00:37.625257+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - lkpforeignerproceduretype
+    object_id: '7'
+    object_repr: طلب تعيين اجنبي
+    action_flag: 1
+    change_message: '[{"added": {}}]'
+- model: admin.logentry
+  pk: 168
+  fields:
+    action_time: 2024-02-06 23:00:54.838419+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - lkpforeignerproceduretype
+    object_id: '8'
+    object_repr: تأشيرة متعددة
+    action_flag: 1
+    change_message: '[{"added": {}}]'
+- model: admin.logentry
+  pk: 169
+  fields:
+    action_time: 2024-02-06 23:01:09.251880+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - lkpforeignerproceduretype
+    object_id: '9'
+    object_repr: إذن عمل مبدئي
+    action_flag: 1
+    change_message: '[{"added": {}}]'
+- model: admin.logentry
+  pk: 170
+  fields:
+    action_time: 2024-02-06 22:44:13.239320+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appaifaajomrki
+    object_id: '1'
+    object_repr: Aifaa Jomrki (1)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 171
+  fields:
+    action_time: 2024-02-06 23:12:35.051201+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appreexportequipments
+    object_id: '1'
+    object_repr: Reexport Equipments (1)
     action_flag: 2
     change_message: '[{"changed": {"fields": ["Application_state"]}}]'

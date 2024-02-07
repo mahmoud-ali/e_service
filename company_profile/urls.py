@@ -22,7 +22,10 @@ from .views import SetLanguageView, HomePageView, \
                    AppChangeWorkProcedureListView, AppChangeWorkProcedureCreateView, AppChangeWorkProcedureReadonlyView, \
                    AppExportGoldListView, AppExportGoldCreateView, AppExportGoldReadonlyView, \
                    AppExportGoldRawListView, AppExportGoldRawCreateView, AppExportGoldRawReadonlyView, \
-                   AppSendSamplesForAnalysisListView, AppSendSamplesForAnalysisCreateView, AppSendSamplesForAnalysisReadonlyView
+                   AppSendSamplesForAnalysisListView, AppSendSamplesForAnalysisCreateView, AppSendSamplesForAnalysisReadonlyView, \
+                   AppForeignerProcedureListView, AppForeignerProcedureCreateView, AppForeignerProcedureReadonlyView, \
+                   AppAifaaJomrkiListView, AppAifaaJomrkiCreateView, AppAifaaJomrkiReadonlyView, \
+                   AppReexportEquipmentsListView, AppReexportEquipmentsCreateView, AppReexportEquipmentsReadonlyView
 
 app_name = "profile"
 urlpatterns = [                                                        
@@ -125,5 +128,20 @@ urlpatterns = [
     path('app_send_samples_for_analysis/<int:type>/', AppSendSamplesForAnalysisListView.as_view(), name='app_send_samples_for_analysis_list'),
     path('app_send_samples_for_analysis/<int:pk>/show/', AppSendSamplesForAnalysisReadonlyView.as_view(), name='app_send_samples_for_analysis_show'),    
     path('app_send_samples_for_analysis/add/', AppSendSamplesForAnalysisCreateView.as_view(), name='app_send_samples_for_analysis_add'),
+
+    path('app_foreigner_procedure/', AppForeignerProcedureListView.as_view(), name='app_foreigner_procedure_list'),
+    path('app_foreigner_procedure/<int:type>/', AppForeignerProcedureListView.as_view(), name='app_foreigner_procedure_list'),
+    path('app_foreigner_procedure/<int:pk>/show/', AppForeignerProcedureReadonlyView.as_view(), name='app_foreigner_procedure_show'),    
+    path('app_foreigner_procedure/add/', AppForeignerProcedureCreateView.as_view(), name='app_foreigner_procedure_add'),
+
+    path('app_aifaa_jomrki/', AppAifaaJomrkiListView.as_view(), name='app_aifaa_jomrki_list'),
+    path('app_aifaa_jomrki/<int:type>/', AppAifaaJomrkiListView.as_view(), name='app_aifaa_jomrki_list'),
+    path('app_aifaa_jomrki/<int:pk>/show/', AppAifaaJomrkiReadonlyView.as_view(), name='app_aifaa_jomrki_show'),    
+    path('app_aifaa_jomrki/add/', AppAifaaJomrkiCreateView.as_view(), name='app_aifaa_jomrki_add'),
+
+    path('app_reexport_equipments/', AppReexportEquipmentsListView.as_view(), name='app_reexport_equipments_list'),
+    path('app_reexport_equipments/<int:type>/', AppReexportEquipmentsListView.as_view(), name='app_reexport_equipments_list'),
+    path('app_reexport_equipments/<int:pk>/show/', AppReexportEquipmentsReadonlyView.as_view(), name='app_reexport_equipments_show'),    
+    path('app_reexport_equipments/add/', AppReexportEquipmentsCreateView.as_view(), name='app_reexport_equipments_add'),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

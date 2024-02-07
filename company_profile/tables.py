@@ -6,7 +6,7 @@ import django_tables2 as tables
 from .models import AppForignerMovement,AppBorrowMaterial,AppWorkPlan,AppTechnicalFinancialReport,AppChangeCompanyName, \
                     AppExplorationTime, AppAddArea,AppRemoveArea,AppTnazolShraka,AppTajeelTnazol,AppTajmeed,AppTakhali, \
                     AppTamdeed, AppTaaweed, AppMda,AppChangeWorkProcedure,AppExportGold,AppExportGoldRaw, \
-                    AppSendSamplesForAnalysis
+                    AppSendSamplesForAnalysis,AppForeignerProcedure,AppAifaaJomrki,AppReexportEquipments
 
 class AppTable(tables.Table):
     menu_name = None
@@ -267,5 +267,47 @@ class AppSendSamplesForAnalysisTable(AppTable):
 
     def render_id(self,value):
         return format_html("<a href={}>{}</a>",reverse_lazy(self.menu_name,args=(value,)),value)
+
+class AppForeignerProcedureTable(AppTable):
+    menu_name = "profile:app_foreigner_procedure_show"
+    relation_fields = ['procedure_type']
+
+    class Meta:
+        model = AppForeignerProcedure
+        template_name = "django_tables2/bootstrap.html"
+        fields = ("id","procedure_type","procedure_from","procedure_to")
+        empty_text = _("No records.")
+
+    def render_id(self,value):
+        return format_html("<a href={}>{}</a>",reverse_lazy(self.menu_name,args=(value,)),value)
+
+class AppAifaaJomrkiTable(AppTable):
+    menu_name = "profile:app_aifaa_jomrki_show"
+    relation_fields = []
+
+    class Meta:
+        model = AppAifaaJomrki
+        template_name = "django_tables2/bootstrap.html"
+        fields = ("id","license_type")
+        empty_text = _("No records.")
+
+    def render_id(self,value):
+        return format_html("<a href={}>{}</a>",reverse_lazy(self.menu_name,args=(value,)),value)
+
+class AppReexportEquipmentsTable(AppTable):
+    menu_name = "profile:app_reexport_equipments_show"
+    relation_fields = []
+
+    class Meta:
+        model = AppReexportEquipments
+        template_name = "django_tables2/bootstrap.html"
+        fields = ("id","cause_for_equipments")
+        empty_text = _("No records.")
+
+    def render_id(self,value):
+        return format_html("<a href={}>{}</a>",reverse_lazy(self.menu_name,args=(value,)),value)
+
+    def render_cause_for_equipments(self,value):
+        return value[:30]
 
 

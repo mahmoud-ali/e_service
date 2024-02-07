@@ -89,7 +89,7 @@ class ApplicationMasterDetailCreateView(LoginRequiredMixin,View):
     template_name = "company_profile/application_add_master_details.html"
     
     def dispatch(self, *args, **kwargs):         
-        self.detail_formset = inlineformset_factory(self.model, self.model_details, fields=self.model_details_fields,extra=10,can_delete=False,min_num=1, validate_min=True)
+        self.detail_formset = inlineformset_factory(self.model, self.model_details, fields=self.model_details_fields,extra=0,can_delete=False,min_num=1, validate_min=True)
             
         self.success_url = reverse_lazy(self.menu_name)    
         self.extra_context = {

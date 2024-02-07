@@ -245,6 +245,7 @@ class ProCompanyTests():
         self.assertGreaterEqual(count,1)
 
     def test_view_add_post_valid_data_not_raise_errors(self):
+        self.set_lang('en')
         attachments = {}
         data = self.add_data
         for k in self.add_file_data:
@@ -253,9 +254,8 @@ class ProCompanyTests():
 
         url = reverse(self.add_url_name)
         self.response = self.client.post(url, data, follow=True)
-        
         self.assertNotContains(self.response, 'has-error') #form show errors
-
+        
         for k in attachments.keys():
             attachments[k].close()
 

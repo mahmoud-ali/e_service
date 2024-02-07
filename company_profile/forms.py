@@ -9,7 +9,8 @@ from .workflow import SUBMITTED,ACCEPTED,APPROVED,REJECTED,WorkflowFormMixin
 
 from .models import TblCompanyProduction, AppForignerMovement,AppBorrowMaterial,AppWorkPlan,AppTechnicalFinancialReport,AppChangeCompanyName, \
                     AppExplorationTime, AppAddArea, AppRemoveArea, AppTnazolShraka, AppTajeelTnazol,AppTajmeed,AppTakhali,AppTamdeed, \
-                    AppTaaweed,AppMda,AppChangeWorkProcedure,AppExportGold,AppExportGoldRaw,AppSendSamplesForAnalysis
+                    AppTaaweed,AppMda,AppChangeWorkProcedure,AppExportGold,AppExportGoldRaw,AppSendSamplesForAnalysis,AppForeignerProcedure, \
+                    AppAifaaJomrki,AppReexportEquipments
 
 class LanguageForm(forms.Form):
     LANG_AR = "ar"
@@ -275,5 +276,39 @@ class AppSendSamplesForAnalysisForm(AppSendSamplesForAnalysisAdminForm):
         exclude = ["company","state"]
         widgets = {}
 
+class AppForeignerProcedureAdminForm(WorkflowFormMixin,ModelForm):
+    class Meta:
+        model = AppForeignerProcedure
+        fields = ["company","procedure_type","procedure_from","procedure_to","procedure_cause","state", "official_letter_file","passport_file","cv_file","experience_certificates_file","eqama_file","dawa_file"] 
+        
+class AppForeignerProcedureForm(AppForeignerProcedureAdminForm):
+    class Meta:
+        model = AppForeignerProcedure
+        exclude = ["company","state"]
+        widgets = {
+            "procedure_from":AdminDateWidget(),
+            "procedure_to":AdminDateWidget(),
+        }
 
+class AppAifaaJomrkiAdminForm(WorkflowFormMixin,ModelForm):
+    class Meta:
+        model = AppAifaaJomrki
+        fields = ["company","license_type","state", "approved_requirements_list_file", "approval_from_finance_ministry_file","final_voucher_file", "shipping_policy_file","check_certificate_file","origin_certificate_file", "packing_certificate_file","specifications_file","taba_file"] 
+        
+class AppAifaaJomrkiForm(AppAifaaJomrkiAdminForm):
+    class Meta:
+        model = AppAifaaJomrki
+        exclude = ["company","state"]
+        widgets = {}
+
+class AppReexportEquipmentsAdminForm(WorkflowFormMixin,ModelForm):
+    class Meta:
+        model = AppReexportEquipments
+        fields = ["company","cause_for_equipments","state", "shipping_policy_file", "voucher_file","specifications_file", "momentary_approval_file"] 
+        
+class AppReexportEquipmentsForm(AppReexportEquipmentsAdminForm):
+    class Meta:
+        model = AppReexportEquipments
+        exclude = ["company","state"]
+        widgets = {}
 

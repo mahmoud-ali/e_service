@@ -152,6 +152,15 @@ $(document).ready(function(){
 			 <li class="{% if menu_name == 'profile:app_send_samples_for_analysis_list' %}active{% endif %} ">  
 					<a href="{% url 'profile:app_send_samples_for_analysis_list' %}">{% translate "Application: Send samples for analysis" %}</a>
 			 </li>
+			 <li class="{% if menu_name == 'profile:app_foreigner_procedure_list' %}active{% endif %} ">  
+					<a href="{% url 'profile:app_foreigner_procedure_list' %}">{% translate "Application: Foreigner Procedure" %}</a>
+			 </li>
+			 <li class="{% if menu_name == 'profile:app_aifaa_jomrki_list' %}active{% endif %} ">  
+					<a href="{% url 'profile:app_aifaa_jomrki_list' %}">{% translate "Application: Aifaa Jomrki" %}</a>
+			 </li>
+			 <li class="{% if menu_name == 'profile:app_reexport_equipments_list' %}active{% endif %} ">  
+					<a href="{% url 'profile:app_reexport_equipments_list' %}">{% translate "Application: Reexport Equipments" %}</a>
+			 </li>
 
 		  </ul>
 		  </div>	  

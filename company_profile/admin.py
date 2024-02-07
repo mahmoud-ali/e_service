@@ -4,19 +4,22 @@ from django.contrib.auth import get_user_model
 from django.contrib import admin
 from django.contrib.sites.models import Site
 
-from .models import LkpNationality,LkpState,LkpLocality,LkpMineral,LkpCompanyProductionStatus,TblCompanyProduction, \
+from .models import LkpNationality,LkpState,LkpLocality,LkpMineral,LkpCompanyProductionStatus,LkpForeignerProcedureType,TblCompanyProduction, \
                                       LkpCompanyProductionFactoryType,TblCompanyProductionFactory,LkpCompanyProductionLicenseStatus, \
                                       TblCompanyProductionLicense,AppForignerMovement,TblCompanyProductionUserRole, \
                                       AppBorrowMaterial,AppBorrowMaterialDetail,AppWorkPlan,AppTechnicalFinancialReport, \
                                       AppChangeCompanyName, AppExplorationTime, AppAddArea,AppRemoveArea, AppTnazolShraka, \
                                       AppTajeelTnazol, AppTajmeed,AppTakhali,AppTamdeed,AppTaaweed,AppMda,AppChangeWorkProcedure, \
-                                      AppExportGold,AppExportGoldRaw,AppSendSamplesForAnalysis,AppSendSamplesForAnalysisDetail
+                                      AppExportGold,AppExportGoldRaw,AppSendSamplesForAnalysis,AppSendSamplesForAnalysisDetail, \
+                                      AppForeignerProcedure,AppForeignerProcedureDetail,AppAifaaJomrki,AppAifaaJomrkiDetail, \
+                                      AppReexportEquipments,AppReexportEquipmentsDetail
 
 from .forms import TblCompanyProductionForm,AppForignerMovementAdminForm,AppBorrowMaterialAdminForm,AppWorkPlanAdminForm, \
                    AppTechnicalFinancialReportAdminForm,AppChangeCompanyNameAdminForm, AppExplorationTimeAdminForm, \
                    AppAddAreaAdminForm,AppRemoveAreaAdminForm,AppTnazolShrakaAdminForm, AppTajeelTnazolAdminForm, \
                    AppTajmeedAdminForm,AppTakhaliAdminForm,AppTamdeedAdminForm,AppTaaweedAdminForm,AppMdaAdminForm, \
-                   AppChangeWorkProcedureAdminForm,AppExportGoldAdminForm,AppExportGoldRawAdminForm,AppSendSamplesForAnalysisAdminForm
+                   AppChangeWorkProcedureAdminForm,AppExportGoldAdminForm,AppExportGoldRawAdminForm,AppSendSamplesForAnalysisAdminForm, \
+                   AppForeignerProcedureAdminForm,AppAifaaJomrkiAdminForm,AppReexportEquipmentsAdminForm
 
 from .workflow import get_state_choices,send_transition_email,ACCEPTED,APPROVED,REJECTED
 
@@ -129,7 +132,8 @@ admin.site.register(LkpNationality)
 admin.site.register(LkpState)
 admin.site.register(LkpLocality)
 admin.site.register(LkpMineral)
-#admin.site.register(LkpCompanyProductionStatus)
+admin.site.register(LkpForeignerProcedureType)
+#admin.site.register(LkpCompanyProductionStatus) 
 admin.site.register(TblCompanyProduction,TblCompanyProductionAdmin)
 
 #admin.site.register(LkpCompanyProductionFactoryType)
@@ -330,4 +334,49 @@ class AppSendSamplesForAnalysisAdmin(WorkflowAdminMixin,admin.ModelAdmin):
     view_on_site = False
     
 admin.site.register(AppSendSamplesForAnalysis, AppSendSamplesForAnalysisAdmin)
+
+class AppForeignerProcedureDetailInline(admin.TabularInline):
+    model = AppForeignerProcedureDetail
+    exclude = ["created_at","created_by","updated_at","updated_by"]
+    extra = 1    
+
+class AppForeignerProcedureAdmin(WorkflowAdminMixin,admin.ModelAdmin):
+    form = AppForeignerProcedureAdminForm
+    inlines = [AppForeignerProcedureDetailInline]
+    
+    list_display = ["procedure_type","procedure_from","procedure_to", "created_at", "created_by","updated_at", "updated_by"]        
+    list_filter = ["company"]
+    view_on_site = False
+    
+admin.site.register(AppForeignerProcedure, AppForeignerProcedureAdmin)
+
+class AppAifaaJomrkiDetailInline(admin.TabularInline):
+    model = AppAifaaJomrkiDetail
+    exclude = ["created_at","created_by","updated_at","updated_by"]
+    extra = 1    
+
+class AppAifaaJomrkiAdmin(WorkflowAdminMixin,admin.ModelAdmin):
+    form = AppAifaaJomrkiAdminForm
+    inlines = [AppAifaaJomrkiDetailInline]
+    
+    list_display = ["license_type", "created_at", "created_by","updated_at", "updated_by"]        
+    list_filter = ["company"]
+    view_on_site = False
+    
+admin.site.register(AppAifaaJomrki, AppAifaaJomrkiAdmin)
+
+class AppReexportEquipmentsDetailInline(admin.TabularInline):
+    model = AppReexportEquipmentsDetail
+    exclude = ["created_at","created_by","updated_at","updated_by"]
+    extra = 1    
+
+class AppReexportEquipmentsAdmin(WorkflowAdminMixin,admin.ModelAdmin):
+    form = AppReexportEquipmentsAdminForm
+    inlines = [AppReexportEquipmentsDetailInline]
+    
+    list_display = ["cause_for_equipments", "created_at", "created_by","updated_at", "updated_by"]        
+    list_filter = ["company"]
+    view_on_site = False
+    
+admin.site.register(AppReexportEquipments, AppReexportEquipmentsAdmin)
 

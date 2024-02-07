@@ -39,7 +39,12 @@
         </tr>
     {% endfor %}        	
     </table>
-
+    <button id="add_row_btn" style="float:{% if request.LANGUAGE_CODE == 'ar' %} left {% else %} right {% endif %}" type="button" class="btn btn-default">
+        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+        {% translate "add_more" %}
+    </button>
+<br/>
+<br/>
 	
     {% buttons %}
         <button type="submit" class="btn btn-primary">{% translate "Submit" %}</button>
@@ -49,19 +54,44 @@
 <script type="text/javascript" src="{% static 'admin/js/core.js' %}"></script>
 {{ form.media }}
 
-<script src="{% static 'company_profile/js/jquery.formset.js' %}"></script>
 <script type="text/javascript">
+
 $(document).ready(function(){
+    function add_new_row(formset_name,table_id){
+      var row_id = parseInt($("input[name="+formset_name+"-TOTAL_FORMS]").val())
+      var temp = $("#"+table_id+" tr").last().clone()
+
+      temp.find(":input").each(function(i,e){
+        x = $(e).attr("id");
+        x = x.replace(/[0-9]+/,row_id);
+        $(e).attr("id",x);
+
+        x = $(e).attr("name");
+        x = x.replace(/[0-9]+/,row_id);
+        $(e).attr("name",x);
+
+      });
+
+      $("#"+table_id).append('<tr>'+temp.html()+'</tr>');
+      var v = row_id+1
+      $("input[name="+formset_name+"-TOTAL_FORMS]").val(v);
+
+    }
+
 	$('tr').attr('class','form-group');
 	$('td :input').attr('class','form-control');
-});
 
-    /*$(function() {
-        $('#detail_table tbody tr').formset({
-            prefix: '{{ formset.prefix }}',
-			addText: '{% translate "add_more" %}',
-			deleteText: ' X'
-        });
-    })*/
+    var formset_name = '{{ detail_formset.prefix }}';
+    var table_id = 'detail_table';
+
+    $("#add_row_btn").bind('click',function(e){
+        add_new_row(formset_name,table_id);
+        
+    });
+
+    
+
+
+});
 </script>
 {% endblock content %}

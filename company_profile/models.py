@@ -668,3 +668,113 @@ class AppSendSamplesForAnalysisDetail(models.Model):
         verbose_name = _("Send Samples For Analysis Detail")
         verbose_name_plural = _("Send Samples For Analysis Detail")
 
+class LkpForeignerProcedureType(models.Model):
+    name = models.CharField(_("name"),max_length=50)
+    
+    def __str__(self):
+        return self.name    
+        
+    class Meta:
+        verbose_name = _("Foreigner Procedure Type")
+        verbose_name_plural = _("Foreigner Procedure Types")
+
+class AppForeignerProcedure(WorkflowModel):
+    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
+    procedure_type = models.ForeignKey(LkpForeignerProcedureType, on_delete=models.PROTECT,verbose_name=_("procedure_type"))    
+    procedure_from = models.DateField(_("procedure_from"))
+    procedure_to = models.DateField(_("procedure_to"))
+    procedure_cause = models.TextField(_("procedure_cause"),max_length=1000)
+
+    official_letter_file = models.FileField(_("official_letter_file"),upload_to=company_applications_path)
+    passport_file = models.FileField(_("passport_file"),upload_to=company_applications_path)
+    cv_file = models.FileField(_("cv_file"),upload_to=company_applications_path)
+    experience_certificates_file = models.FileField(_("experience_certificates_file"),upload_to=company_applications_path)
+    eqama_file = models.FileField(_("eqama_file"),upload_to=company_applications_path,blank=True)
+    dawa_file = models.FileField(_("dawa_file"),upload_to=company_applications_path,blank=True)
+
+    def __str__(self):
+        return _("Foreigner Procedure") +" ("+str(self.id)+")"
+        
+    def get_absolute_url(self): 
+        return reverse('profile:app_foreigner_procedure_show',args=[str(self.id)])                
+    
+    class Meta:
+        ordering = ["-id"]
+        verbose_name = _("Application: Foreigner procedure")
+        verbose_name_plural = _("Application: Foreigner procedure")
+
+class AppForeignerProcedureDetail(models.Model):
+    procedure_master = models.ForeignKey(AppForeignerProcedure, on_delete=models.PROTECT,verbose_name=_("procedure_master"))    
+    employee_name = models.CharField(_("employee_name"),max_length=100)
+    employee_address = models.TextField(_("employee_address"),max_length=200)
+
+    class Meta:
+        verbose_name = _("Foreigner Procedure Detail")
+        verbose_name_plural = _("Foreigner Procedure Detail")
+
+class AppAifaaJomrki(WorkflowModel):
+    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
+    license_type = models.ForeignKey(TblCompanyProductionLicense, on_delete=models.PROTECT,verbose_name=_("license_type"))    
+
+    approved_requirements_list_file = models.FileField(_("approved_requirements_list_file"),upload_to=company_applications_path)
+    approval_from_finance_ministry_file = models.FileField(_("approval_from_finance_ministry_file"),upload_to=company_applications_path)
+    final_voucher_file = models.FileField(_("final_voucher_file"),upload_to=company_applications_path)
+    shipping_policy_file = models.FileField(_("shipping_policy_file"),upload_to=company_applications_path)
+    check_certificate_file = models.FileField(_("check_certificate_file"),upload_to=company_applications_path,blank=True)
+    origin_certificate_file = models.FileField(_("origin_certificate_file"),upload_to=company_applications_path,blank=True)
+    packing_certificate_file = models.FileField(_("packing_certificate_file"),upload_to=company_applications_path,blank=True)
+    specifications_file = models.FileField(_("specifications_file"),upload_to=company_applications_path,blank=True)
+    taba_file = models.FileField(_("taba_file"),upload_to=company_applications_path,blank=True)
+
+    def __str__(self):
+        return _("Aifaa Jomrki") +" ("+str(self.id)+")"
+        
+    def get_absolute_url(self): 
+        return reverse('profile:app_aifaa_jomrki_show',args=[str(self.id)])                
+    
+    class Meta:
+        ordering = ["-id"]
+        verbose_name = _("Application: Aifaa Jomrki")
+        verbose_name_plural = _("Application: Aifaa Jomrki")
+
+class AppAifaaJomrkiDetail(models.Model):
+    aifaa_master = models.ForeignKey(AppAifaaJomrki, on_delete=models.PROTECT,verbose_name=_("aifaa_master"))    
+    material_name = models.CharField(_("material_name"),max_length=200)
+
+    class Meta:
+        verbose_name = _("Aifaa Jomrki Detail")
+        verbose_name_plural = _("Aifaa Jomrki Details")
+
+class AppReexportEquipments(WorkflowModel):
+    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
+    cause_for_equipments = models.TextField(_("cause_for_equipments"),max_length=1000)
+
+    shipping_policy_file = models.FileField(_("shipping_policy_file"),upload_to=company_applications_path)
+    voucher_file = models.FileField(_("voucher_file"),upload_to=company_applications_path)
+    specifications_file = models.FileField(_("specifications_file"),upload_to=company_applications_path)
+    momentary_approval_file = models.FileField(_("momentary_approval_file"),upload_to=company_applications_path)
+
+    def __str__(self):
+        return _("Reexport Equipments") +" ("+str(self.id)+")"
+        
+    def get_absolute_url(self): 
+        return reverse('profile:app_reexport_equipments_show',args=[str(self.id)])                
+    
+    class Meta:
+        ordering = ["-id"]
+        verbose_name = _("Application: Reexport Equipments")
+        verbose_name_plural = _("Application: Reexport Equipments")
+
+class AppReexportEquipmentsDetail(models.Model):
+    reexport_master = models.ForeignKey(AppReexportEquipments, on_delete=models.PROTECT,verbose_name=_("aifaa_master"))    
+    name = models.CharField(_("name"),max_length=50)
+    serial_id = models.CharField(_("serial_id"),max_length=50)
+    policy_no = models.CharField(_("policy_no"),max_length=50)
+    voucher_no = models.CharField(_("voucher_no"),max_length=50)
+    insurance_no = models.CharField(_("insurance_no"),max_length=50)
+    check_certificate_no = models.CharField(_("check_certificate_no"),max_length=50)
+
+    class Meta:
+        verbose_name = _("Reexport Equipments Detail")
+        verbose_name_plural = _("Reexport Equipments Details")
+

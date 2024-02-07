@@ -25,23 +25,26 @@ from ..tables import AppForignerMovementTable,AppBorrowMaterialTable
 
 from .application import ApplicationListView, ApplicationCreateView, ApplicationReadonlyView, \
                          ApplicationMasterDetailCreateView, ApplicationMasterDetailReadonlyView
-from .work_plan import *
-from .technical_financial_report import *
-from .change_company_name import *
-from .exploration_time import *
-from .add_area import *
-from .remove_area import *
-from .tnazol_shraka import *
-from .tajeel_tnazol import *
-from .tajmeed import *
-from .takhali import *
-from .tamdeed import *
-from .taaweed import *
-from .mda import *
-from .change_work_procedure import *
-from .export_gold import *
-from .export_gold_raw import *
-from .send_samples_for_analysis import *
+from .work_plan import AppWorkPlanListView,AppWorkPlanCreateView,AppWorkPlanReadonlyView
+from .technical_financial_report import AppTechnicalFinancialReportListView, AppTechnicalFinancialReportCreateView, AppTechnicalFinancialReportReadonlyView
+from .change_company_name import AppChangeCompanyNameListView, AppChangeCompanyNameCreateView, AppChangeCompanyNameReadonlyView
+from .exploration_time import AppExplorationTimeListView, AppExplorationTimeCreateView, AppExplorationTimeReadonlyView
+from .add_area import AppAddAreaListView, AppAddAreaCreateView, AppAddAreaReadonlyView
+from .remove_area import AppRemoveAreaListView, AppRemoveAreaCreateView, AppRemoveAreaReadonlyView
+from .tnazol_shraka import AppTnazolShrakaListView, AppTnazolShrakaCreateView, AppTnazolShrakaReadonlyView
+from .tajeel_tnazol import AppTajeelTnazolListView, AppTajeelTnazolCreateView, AppTajeelTnazolReadonlyView
+from .tajmeed import AppTajmeedListView, AppTajmeedCreateView, AppTajmeedReadonlyView
+from .takhali import AppTakhaliListView, AppTakhaliCreateView, AppTakhaliReadonlyView
+from .tamdeed import AppTamdeedListView, AppTamdeedCreateView, AppTamdeedReadonlyView
+from .taaweed import AppTaaweedListView, AppTaaweedCreateView, AppTaaweedReadonlyView
+from .mda import AppMdaListView, AppMdaCreateView, AppMdaReadonlyView
+from .change_work_procedure import AppChangeWorkProcedureListView, AppChangeWorkProcedureCreateView, AppChangeWorkProcedureReadonlyView
+from .export_gold import AppExportGoldListView, AppExportGoldCreateView, AppExportGoldReadonlyView
+from .export_gold_raw import AppExportGoldRawListView, AppExportGoldRawCreateView, AppExportGoldRawReadonlyView
+from .send_samples_for_analysis import AppSendSamplesForAnalysisListView, AppSendSamplesForAnalysisCreateView, AppSendSamplesForAnalysisReadonlyView
+from .foreigner_procedure import AppForeignerProcedureListView, AppForeignerProcedureCreateView, AppForeignerProcedureReadonlyView
+from .aifaa_jomrki import AppAifaaJomrkiListView, AppAifaaJomrkiCreateView, AppAifaaJomrkiReadonlyView
+from .reexport_equipments import AppReexportEquipmentsListView, AppReexportEquipmentsCreateView, AppReexportEquipmentsReadonlyView
 
 class SetLanguageView(LoginRequiredMixin,View):
     def post(self,request):
