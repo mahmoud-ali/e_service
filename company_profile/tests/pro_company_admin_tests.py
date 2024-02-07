@@ -14,22 +14,20 @@ class ProCompanyAdminTests():
 
     username = ""
 
-    admin_accepted_email_to = '' #assign in setUp func
-    admin_accepted_email_subject_contain_ar = ['']
-    admin_accepted_email_subject_contain_en = ['']
-    admin_approved_email_to = '' #assign in setUp func
-    admin_approved_email_subject_contain_ar = ['']
-    admin_approved_email_subject_contain_en = ['']
-    admin_rejected_email_to = '' #assign in setUp func
-    admin_rejected_email_subject_contain_ar = ['']
-    admin_rejected_email_subject_contain_en = ['']
+    admin_accepted_email_subject_contain_ar = ['تم استلام الطلب']
+    admin_accepted_email_subject_contain_en = ['Application accepted']
+    admin_approved_email_subject_contain_ar = ['تم تصديق الطلب']
+    admin_approved_email_subject_contain_en = ['Application approved']
+    admin_rejected_email_subject_contain_ar = ['تم رفض الطلب']
+    admin_rejected_email_subject_contain_en = ['Application rejected']
 
-    admin_accepted_email_body_template_ar = ''
-    admin_accepted_email_body_template_en = ''
-    admin_approved_email_body_template_ar = ''
-    admin_approved_email_body_template_en = ''
-    admin_rejected_email_body_template_ar = ''
-    admin_rejected_email_body_template_en = ''
+    admin_accepted_email_body_template_ar = 'company_profile/email/accepted_email_ar.html'
+    admin_accepted_email_body_template_en = 'company_profile/email/accepted_email_en.html'
+    admin_approved_email_body_template_ar = 'company_profile/email/approved_email_ar.html'
+    admin_approved_email_body_template_en = 'company_profile/email/approved_email_en.html'
+    admin_rejected_email_body_template_ar = 'company_profile/email/rejected_email_ar.html'
+    admin_rejected_email_body_template_en = 'company_profile/email/rejected_email_en.html'
+
 
     change_model = None
     change_data = {}
