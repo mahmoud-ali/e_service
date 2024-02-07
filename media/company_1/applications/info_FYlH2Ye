@@ -1,3 +1,0 @@
-cd Videos && yt-dlp --yes-playlist --continue -f 18 -R 100 https://www.youtube.com/playlist?list=PL-osiE80TeTtoQCKZ03TU5fNfx2UY6U4p
-
-
