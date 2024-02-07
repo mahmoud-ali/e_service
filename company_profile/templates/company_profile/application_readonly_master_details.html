@@ -11,23 +11,10 @@
 <form  method="post">
 {% csrf_token %}
     {% bootstrap_form form %}
-	<h3>{% translate "AppBorrowMaterialDetail" %}:</h3>
+	<h3>{{detail_title}}:</h3>
 
     <table id="detail_table"  class="table table-bordered">
-			<thead>	
-			<tr>
-			<th>{% translate "borrow_material" %}</th>
-			<th>{% translate "borrow_quantity" %}</th> 
-			 </tr>
-			</thead>			 
-			<tbody>			 
-            {% for form in detail_formset.forms %}
-            <tr>
-               <td>{{ form.material }}</td>
-               <td>{{ form.quantity }}</td>
-            </tr>
-            {% endfor %}
-			</tbody>
+        {{ detail_formset.as_table }}	
     </table>
 	
 </form>
@@ -36,6 +23,7 @@ $(document).ready(function(){
 	$('form :input').attr('readonly','readonly');
 
 	$('form :input').attr('readonly','readonly');
+	$('td :input').attr('class','form-control');
 	var f = $('div.bootstrap3-multi-input a').attr("href");
 	$('div.bootstrap3-multi-input').html('<a target="_blank" href="'+f+'">'+f+'</a>');
 });

@@ -11,25 +11,12 @@
 <form  method="post"  enctype="multipart/form-data">
 {% csrf_token %}
     {% bootstrap_form form %}
-	<h3>{% translate "AppBorrowMaterialDetail" %}:</h3>
+	<h3>{{detail_title}}:</h3>
 
     <table id="detail_table"  class="table table-bordered">
-			<thead>	
-			<tr>
-			<th>{% translate "borrow_material" %}</th>
-			<th>{% translate "borrow_quantity" %}</th> 
-			 </tr>
-			</thead>			 
-			<tbody>			 
-            {% for form in detail_formset.forms %}
-            <tr>
-               <td>{{ form.material }}</td>
-               <td>{{ form.quantity }}</td>
-            </tr>
-            {% endfor %}
-			</tbody>
+        {{ detail_formset.as_table }}	
     </table>
-    {{ detail_formset.management_form }}	
+
 	
     {% buttons %}
         <button type="submit" class="btn btn-primary">{% translate "Submit" %}</button>
@@ -41,6 +28,11 @@
 
 <script src="{% static 'company_profile/js/jquery.formset.js' %}"></script>
 <script type="text/javascript">
+$(document).ready(function(){
+	$('tr').attr('class','form-group');
+	$('td :input').attr('class','form-control');
+});
+
     /*$(function() {
         $('#detail_table tbody tr').formset({
             prefix: '{{ formset.prefix }}',

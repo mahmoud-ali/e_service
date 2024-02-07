@@ -5,7 +5,8 @@ from django.utils.translation import gettext_lazy as _
 import django_tables2 as tables
 from .models import AppForignerMovement,AppBorrowMaterial,AppWorkPlan,AppTechnicalFinancialReport,AppChangeCompanyName, \
                     AppExplorationTime, AppAddArea,AppRemoveArea,AppTnazolShraka,AppTajeelTnazol,AppTajmeed,AppTakhali, \
-                    AppTamdeed, AppTaaweed, AppMda,AppChangeWorkProcedure,AppExportGold,AppExportGoldRaw
+                    AppTamdeed, AppTaaweed, AppMda,AppChangeWorkProcedure,AppExportGold,AppExportGoldRaw, \
+                    AppSendSamplesForAnalysis
 
 class AppTable(tables.Table):
     menu_name = None
@@ -253,4 +254,18 @@ class AppExportGoldRawTable(AppTable):
 
     def render_id(self,value):
         return format_html("<a href={}>{}</a>",reverse_lazy(self.menu_name,args=(value,)),value)
+
+class AppSendSamplesForAnalysisTable(AppTable):
+    menu_name = "profile:app_send_samples_for_analysis_show"
+    relation_fields = []
+
+    class Meta:
+        model = AppSendSamplesForAnalysis
+        template_name = "django_tables2/bootstrap.html"
+        fields = ("id","lab_country","lab_city","lab_analysis_cost")
+        empty_text = _("No records.")
+
+    def render_id(self,value):
+        return format_html("<a href={}>{}</a>",reverse_lazy(self.menu_name,args=(value,)),value)
+
 

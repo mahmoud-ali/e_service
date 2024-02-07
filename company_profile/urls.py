@@ -21,7 +21,8 @@ from .views import SetLanguageView, HomePageView, \
                    AppMdaListView, AppMdaCreateView, AppMdaReadonlyView, \
                    AppChangeWorkProcedureListView, AppChangeWorkProcedureCreateView, AppChangeWorkProcedureReadonlyView, \
                    AppExportGoldListView, AppExportGoldCreateView, AppExportGoldReadonlyView, \
-                   AppExportGoldRawListView, AppExportGoldRawCreateView, AppExportGoldRawReadonlyView
+                   AppExportGoldRawListView, AppExportGoldRawCreateView, AppExportGoldRawReadonlyView, \
+                   AppSendSamplesForAnalysisListView, AppSendSamplesForAnalysisCreateView, AppSendSamplesForAnalysisReadonlyView
 
 app_name = "profile"
 urlpatterns = [                                                        
@@ -119,5 +120,10 @@ urlpatterns = [
     path('app_export_gold_raw/<int:type>/', AppExportGoldRawListView.as_view(), name='app_export_gold_raw_list'),
     path('app_export_gold_raw/<int:pk>/show/', AppExportGoldRawReadonlyView.as_view(), name='app_export_gold_raw_show'),    
     path('app_export_gold_raw/add/', AppExportGoldRawCreateView.as_view(), name='app_export_gold_raw_add'),
+
+    path('app_send_samples_for_analysis/', AppSendSamplesForAnalysisListView.as_view(), name='app_send_samples_for_analysis_list'),
+    path('app_send_samples_for_analysis/<int:type>/', AppSendSamplesForAnalysisListView.as_view(), name='app_send_samples_for_analysis_list'),
+    path('app_send_samples_for_analysis/<int:pk>/show/', AppSendSamplesForAnalysisReadonlyView.as_view(), name='app_send_samples_for_analysis_show'),    
+    path('app_send_samples_for_analysis/add/', AppSendSamplesForAnalysisCreateView.as_view(), name='app_send_samples_for_analysis_add'),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

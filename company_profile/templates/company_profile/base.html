@@ -149,6 +149,9 @@ $(document).ready(function(){
 			 <li class="{% if menu_name == 'profile:app_export_gold_raw_list' %}active{% endif %} ">  
 					<a href="{% url 'profile:app_export_gold_raw_list' %}">{% translate "Application: Export Gold Raw" %}</a>
 			 </li>
+			 <li class="{% if menu_name == 'profile:app_send_samples_for_analysis_list' %}active{% endif %} ">  
+					<a href="{% url 'profile:app_send_samples_for_analysis_list' %}">{% translate "Application: Send samples for analysis" %}</a>
+			 </li>
 
 		  </ul>
 		  </div>	  

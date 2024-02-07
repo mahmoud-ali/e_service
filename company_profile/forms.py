@@ -9,7 +9,7 @@ from .workflow import SUBMITTED,ACCEPTED,APPROVED,REJECTED,WorkflowFormMixin
 
 from .models import TblCompanyProduction, AppForignerMovement,AppBorrowMaterial,AppWorkPlan,AppTechnicalFinancialReport,AppChangeCompanyName, \
                     AppExplorationTime, AppAddArea, AppRemoveArea, AppTnazolShraka, AppTajeelTnazol,AppTajmeed,AppTakhali,AppTamdeed, \
-                    AppTaaweed,AppMda,AppChangeWorkProcedure,AppExportGold,AppExportGoldRaw
+                    AppTaaweed,AppMda,AppChangeWorkProcedure,AppExportGold,AppExportGoldRaw,AppSendSamplesForAnalysis
 
 class LanguageForm(forms.Form):
     LANG_AR = "ar"
@@ -263,5 +263,17 @@ class AppExportGoldRawForm(AppExportGoldRawAdminForm):
         model = AppExportGoldRaw
         exclude = ["company","state"]
         widgets = {}
+
+class AppSendSamplesForAnalysisAdminForm(WorkflowFormMixin,ModelForm):
+    class Meta:
+        model = AppSendSamplesForAnalysis
+        fields = ["company","lab_country","lab_city","lab_address","lab_analysis_cost","state", "last_analysis_report_file","initial_voucher_file","sample_description_form_file"] 
+        
+class AppSendSamplesForAnalysisForm(AppSendSamplesForAnalysisAdminForm):
+    class Meta:
+        model = AppSendSamplesForAnalysis
+        exclude = ["company","state"]
+        widgets = {}
+
 
 

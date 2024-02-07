@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-07 15:31+0200\n"
+"POT-Creation-Date: 2024-02-07 10:31+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,7 +25,7 @@ msgstr "حسابات المستخدمين"
 
 #: accounts/models.py:11 company_profile/forms.py:19
 msgid "Arabic"
-msgstr ""
+msgstr "العربية"
 
 #: accounts/models.py:12 company_profile/forms.py:20
 msgid "English"
@@ -207,6 +207,7 @@ msgstr "شركات الانتاج"
 #: company_profile/models.py:499 company_profile/models.py:519
 #: company_profile/models.py:536 company_profile/models.py:555
 #: company_profile/models.py:575 company_profile/models.py:607
+#: company_profile/models.py:638
 msgid "company"
 msgstr "شركة"
 
@@ -854,7 +855,9 @@ msgstr "‫إستمارة‬‫الشحن"
 
 #: company_profile/models.py:588
 msgid "f4"
-msgstr "‫شهادة‬‫التحصيل‬ ‫للعوائد‬ ‫الجليلة‬ ‫وشهادة‬ ‫الزكاة‬ ‫وارباح‬ ‫االعمال‬ ‫وتنمية‬ ‫المجتمع ‫المحلي‬‫ صادرة‬ ‫عن‬ ‫مصفاة‬ ‫السودان‬ ‫للذهب‬"
+msgstr ""
+"‫شهادة‬‫التحصيل‬ ‫للعوائد‬ ‫الجليلة‬ ‫وشهادة‬ ‫الزكاة‬ ‫وارباح‬ ‫االعمال‬ ‫وتنمية‬ ‫المجتمع "
+"‫المحلي‬‫ صادرة‬ ‫عن‬ ‫مصفاة‬ ‫السودان‬ ‫للذهب‬"
 
 #: company_profile/models.py:589
 msgid "f5"
@@ -870,7 +873,8 @@ msgstr "‫شهادة‬‫تحليل‬ ‫من‬ ‫المواصفات‬ ‫
 
 #: company_profile/models.py:592
 msgid "f8"
-msgstr "‫خطاب ‬‫معنون‬ ‫الى‬ ‫وكيل‬ ‫اول‬ ‫وزارة‬ ‫التجارة‬ ‫الخارجية‬ ‫صادرة‬‫عن‬ ‫المواصفات ‫والمقاييس‬"
+msgstr ""
+"‫خطاب ‬‫معنون‬ ‫الى‬ ‫وكيل‬ ‫اول‬ ‫وزارة‬ ‫التجارة‬ ‫الخارجية‬ ‫صادرة‬‫عن‬ ‫المواصفات ‫والمقاييس‬"
 
 #: company_profile/models.py:593
 msgid "f9"
@@ -947,22 +951,91 @@ msgstr "‫العقد‬‫الولائي ‫الساري‬ ‫(‬‫في‬�
 
 #: company_profile/models.py:624
 msgid "f19"
-msgstr "‫في‬‫ حالة‬ ‫التصدير‬ ‫عن‬ ‫طريق‬ ‫شركة‬ ‫اخري‬ ‫غير‬ ‫الشركة‬ ‫محل‬ ‫الطلب‬ ‫يجب‬ ‫إحضار عقد‬ ‫البيع‬ المحلي بين الشركتين، اضافة الى عقد البيع ‫الخارجي‬ ‫للشركة‬ ‫محل‬ التصدير ‫(‬‫في‬‫ حالة‬ ‫الرخصة‬ ‫الولائية)"
+msgstr ""
+"‫في‬‫ حالة‬ ‫التصدير‬ ‫عن‬ ‫طريق‬ ‫شركة‬ ‫اخري‬ ‫غير‬ ‫الشركة‬ ‫محل‬ ‫الطلب‬ ‫يجب‬ ‫إحضار عقد‬ ‫البيع‬ "
+"المحلي بين الشركتين، اضافة الى عقد البيع ‫الخارجي‬ ‫للشركة‬ ‫محل‬ التصدير ‫(‬‫في‬‫ حالة‬ "
+"‫الرخصة‬ ‫الولائية)"
 
 #: company_profile/models.py:634 company_profile/models.py:635
 #: company_profile/templates/company_profile/base.html:150
 msgid "Application: Export Gold Raw"
 msgstr "طلب صادر خام"
 
-#: company_profile/tables.py:22 company_profile/tables.py:35
-#: company_profile/tables.py:48 company_profile/tables.py:61
-#: company_profile/tables.py:74 company_profile/tables.py:87
-#: company_profile/tables.py:100 company_profile/tables.py:113
-#: company_profile/tables.py:126 company_profile/tables.py:139
-#: company_profile/tables.py:152 company_profile/tables.py:165
-#: company_profile/tables.py:178 company_profile/tables.py:191
-#: company_profile/tables.py:204 company_profile/tables.py:217
-#: company_profile/tables.py:239 company_profile/tables.py:252
+#: company_profile/models.py:639
+msgid "lab_country"
+msgstr "الدولة"
+
+#: company_profile/models.py:640
+msgid "lab_city"
+msgstr "المدينة"
+
+#: company_profile/models.py:641
+msgid "lab_address"
+msgstr "العنوان"
+
+#: company_profile/models.py:642
+msgid "lab_analysis_cost"
+msgstr "تكلفة التحليل"
+
+#: company_profile/models.py:644
+msgid "last_analysis_report_file"
+msgstr "نتيجة التحليل السابق ان وجدت"
+
+#: company_profile/models.py:645
+msgid "initial_voucher_file"
+msgstr "فاتورة مبدئية لتكلفة التحليل"
+
+#: company_profile/models.py:646
+msgid "sample_description_form_file"
+msgstr "استمارة وصف العينات"
+
+#: company_profile/models.py:649
+msgid "Send samples for analysis"
+msgstr "ارسال عينات للخارج للتحليل"
+
+#: company_profile/models.py:656 company_profile/models.py:657
+#: company_profile/templates/company_profile/base.html:153
+msgid "Application: Send samples for analysis"
+msgstr "طلب ارسال عينات للخارج للتحليل"
+
+#: company_profile/models.py:660
+msgid "sample_master"
+msgstr ""
+
+#: company_profile/models.py:661
+msgid "sample_type"
+msgstr "نوع العينة"
+
+#: company_profile/models.py:662
+msgid "sample_weight"
+msgstr "وزن العينة"
+
+#: company_profile/models.py:663
+msgid "sample_packing_type"
+msgstr "طريقة  التعبئة"
+
+#: company_profile/models.py:664
+msgid "sample_analysis_type"
+msgstr "نوع التحليل"
+
+#: company_profile/models.py:665
+msgid "sample_analysis_cause"
+msgstr "الغرض من التحليل"
+
+#: company_profile/models.py:668 company_profile/models.py:669
+msgid "Send Samples For Analysis Detail"
+msgstr "تفاصيل ارسال عينات للخارج للتحليل"
+
+#: company_profile/tables.py:23 company_profile/tables.py:36
+#: company_profile/tables.py:49 company_profile/tables.py:62
+#: company_profile/tables.py:75 company_profile/tables.py:88
+#: company_profile/tables.py:101 company_profile/tables.py:114
+#: company_profile/tables.py:127 company_profile/tables.py:140
+#: company_profile/tables.py:153 company_profile/tables.py:166
+#: company_profile/tables.py:179 company_profile/tables.py:192
+#: company_profile/tables.py:205 company_profile/tables.py:218
+#: company_profile/tables.py:240 company_profile/tables.py:253
+#: company_profile/tables.py:266
 msgid "No records."
 msgstr "لايوجد سجل."
 
@@ -1012,22 +1085,24 @@ msgstr "القائمة"
 msgid "Home page"
 msgstr "الرئيسية"
 
-#: company_profile/views/__init__.py:101
+#: company_profile/views/__init__.py:102
 msgid "List of foreigner movements"
 msgstr "قائمة طلبات حركة الاجانب"
 
-#: company_profile/views/__init__.py:119
+#: company_profile/views/__init__.py:120
 msgid "Add new movement"
 msgstr "اضافة طلب حركة اجنبي"
 
-#: company_profile/views/__init__.py:139 company_profile/views/__init__.py:215
+#: company_profile/views/__init__.py:140 company_profile/views/__init__.py:216
 #: company_profile/views/add_area.py:64
 #: company_profile/views/change_company_name.py:68
 #: company_profile/views/change_work_procedure.py:65
 #: company_profile/views/exploration_time.py:64
 #: company_profile/views/export_gold.py:72
 #: company_profile/views/export_gold_raw.py:72 company_profile/views/mda.py:64
-#: company_profile/views/remove_area.py:67 company_profile/views/taaweed.py:63
+#: company_profile/views/remove_area.py:67
+#: company_profile/views/send_samples_for_analysis.py:66
+#: company_profile/views/taaweed.py:63
 #: company_profile/views/tajeel_tnazol.py:64
 #: company_profile/views/tajmeed.py:65 company_profile/views/takhali.py:64
 #: company_profile/views/tamdeed.py:65
@@ -1037,19 +1112,19 @@ msgstr "اضافة طلب حركة اجنبي"
 msgid "Application sent successfully."
 msgstr "تم ارسال الطلب بنجاح."
 
-#: company_profile/views/__init__.py:152
+#: company_profile/views/__init__.py:153
 msgid "Show movement"
 msgstr "عرض طلب حركة اجنبي"
 
-#: company_profile/views/__init__.py:158
+#: company_profile/views/__init__.py:159
 msgid "List of borrow materials"
 msgstr "قائمة طلبات الاستلاف"
 
-#: company_profile/views/__init__.py:177
+#: company_profile/views/__init__.py:178
 msgid "Add new borrow materials"
 msgstr "اضافة طلب اسلاف مواد"
 
-#: company_profile/views/__init__.py:233
+#: company_profile/views/__init__.py:234
 msgid "Show borrow materials"
 msgstr "عرض طلب استلاف مواد"
 
@@ -1148,6 +1223,18 @@ msgstr "اضافة طلب تنازل عن مساحة"
 #: company_profile/views/remove_area.py:80
 msgid "Show removed area"
 msgstr "عرض طلب تنازل عن مساحة"
+
+#: company_profile/views/send_samples_for_analysis.py:28
+msgid "List of samples for analysis"
+msgstr "قائمة طلبات ارسال عينات للخارج للتحليل"
+
+#: company_profile/views/send_samples_for_analysis.py:46
+msgid "Add samples for analysis"
+msgstr "اضافة طلب ارسال عينات للخارج للتحليل"
+
+#: company_profile/views/send_samples_for_analysis.py:79
+msgid "Show samples for analysis"
+msgstr "عرض طلب ارسال عينات للخارج للتحليل"
 
 #: company_profile/views/taaweed.py:28
 msgid "List of taaweed"

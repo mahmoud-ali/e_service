@@ -634,3 +634,37 @@ class AppExportGoldRaw(WorkflowModel):
         verbose_name = _("Application: Export Gold Raw")
         verbose_name_plural = _("Application: Export Gold Raw")
 
+class AppSendSamplesForAnalysis(WorkflowModel):
+    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
+    lab_country = models.CharField(_("lab_country"),max_length=100)
+    lab_city = models.CharField(_("lab_city"),max_length=100)
+    lab_address = models.TextField(_("lab_address"),max_length=256)
+    lab_analysis_cost = models.FloatField(_("lab_analysis_cost"))
+
+    last_analysis_report_file = models.FileField(_("last_analysis_report_file"),upload_to=company_applications_path,blank=True)
+    initial_voucher_file = models.FileField(_("initial_voucher_file"),upload_to=company_applications_path)
+    sample_description_form_file = models.FileField(_("sample_description_form_file"),upload_to=company_applications_path)
+
+    def __str__(self):
+        return _("Send samples for analysis") +" ("+str(self.id)+")"
+        
+    def get_absolute_url(self): 
+        return reverse('profile:app_send_samples_for_analysis_show',args=[str(self.id)])                
+    
+    class Meta:
+        ordering = ["-id"]
+        verbose_name = _("Application: Send samples for analysis")
+        verbose_name_plural = _("Application: Send samples for analysis")
+
+class AppSendSamplesForAnalysisDetail(models.Model):
+    sample_master = models.ForeignKey(AppSendSamplesForAnalysis, on_delete=models.PROTECT,verbose_name=_("sample_master"))    
+    sample_type = models.CharField(_("sample_type"),max_length=100)
+    sample_weight = models.FloatField(_("sample_weight"))
+    sample_packing_type = models.CharField(_("sample_packing_type"),max_length=100)
+    sample_analysis_type = models.CharField(_("sample_analysis_type"),max_length=100)
+    sample_analysis_cause = models.TextField(_("sample_analysis_cause"),max_length=256)
+
+    class Meta:
+        verbose_name = _("Send Samples For Analysis Detail")
+        verbose_name_plural = _("Send Samples For Analysis Detail")
+

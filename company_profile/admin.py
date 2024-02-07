@@ -10,13 +10,13 @@ from .models import LkpNationality,LkpState,LkpLocality,LkpMineral,LkpCompanyPro
                                       AppBorrowMaterial,AppBorrowMaterialDetail,AppWorkPlan,AppTechnicalFinancialReport, \
                                       AppChangeCompanyName, AppExplorationTime, AppAddArea,AppRemoveArea, AppTnazolShraka, \
                                       AppTajeelTnazol, AppTajmeed,AppTakhali,AppTamdeed,AppTaaweed,AppMda,AppChangeWorkProcedure, \
-                                      AppExportGold,AppExportGoldRaw
+                                      AppExportGold,AppExportGoldRaw,AppSendSamplesForAnalysis,AppSendSamplesForAnalysisDetail
 
 from .forms import TblCompanyProductionForm,AppForignerMovementAdminForm,AppBorrowMaterialAdminForm,AppWorkPlanAdminForm, \
                    AppTechnicalFinancialReportAdminForm,AppChangeCompanyNameAdminForm, AppExplorationTimeAdminForm, \
                    AppAddAreaAdminForm,AppRemoveAreaAdminForm,AppTnazolShrakaAdminForm, AppTajeelTnazolAdminForm, \
                    AppTajmeedAdminForm,AppTakhaliAdminForm,AppTamdeedAdminForm,AppTaaweedAdminForm,AppMdaAdminForm, \
-                   AppChangeWorkProcedureAdminForm,AppExportGoldAdminForm,AppExportGoldRawAdminForm
+                   AppChangeWorkProcedureAdminForm,AppExportGoldAdminForm,AppExportGoldRawAdminForm,AppSendSamplesForAnalysisAdminForm
 
 from .workflow import get_state_choices,send_transition_email,ACCEPTED,APPROVED,REJECTED
 
@@ -315,4 +315,19 @@ class AppExportGoldRawAdmin(WorkflowAdminMixin,admin.ModelAdmin):
     view_on_site = False
     
 admin.site.register(AppExportGoldRaw, AppExportGoldRawAdmin)
+
+class AppSendSamplesForAnalysisDetailInline(admin.TabularInline):
+    model = AppSendSamplesForAnalysisDetail
+    exclude = ["created_at","created_by","updated_at","updated_by"]
+    extra = 1    
+
+class AppSendSamplesForAnalysisAdmin(WorkflowAdminMixin,admin.ModelAdmin):
+    form = AppSendSamplesForAnalysisAdminForm
+    inlines = [AppSendSamplesForAnalysisDetailInline]
+    
+    list_display = ["lab_country","lab_city","lab_analysis_cost", "created_at", "created_by","updated_at", "updated_by"]        
+    list_filter = ["company"]
+    view_on_site = False
+    
+admin.site.register(AppSendSamplesForAnalysis, AppSendSamplesForAnalysisAdmin)
 

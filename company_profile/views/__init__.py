@@ -40,6 +40,7 @@ from .mda import *
 from .change_work_procedure import *
 from .export_gold import *
 from .export_gold_raw import *
+from .send_samples_for_analysis import *
 
 class SetLanguageView(LoginRequiredMixin,View):
     def post(self,request):
@@ -189,6 +190,7 @@ class AppBorrowMaterialCreateView(LoginRequiredMixin,View):
                             "title":self.title, 
                             "form": self.form_class,
                             "detail_formset": self.detail_formset,
+                            "detail_title":self.model_details._meta.verbose_name_plural,
          }
         return super().dispatch(*args, **kwargs)                    
 
@@ -244,6 +246,7 @@ class AppBorrowMaterialReadonlyView(ApplicationReadonlyView):
                             "title":self.title, 
                             "form": self.form_class,
                             "detail_formset": self.detail_formset,
+                            "detail_title":self.model_details._meta.verbose_name_plural,
          }
         return super().dispatch(*args, **kwargs)                    
 
