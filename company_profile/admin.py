@@ -1,14 +1,22 @@
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth import get_user_model
-from django.conf import settings
+#from django.conf import settings
 from django.contrib import admin
+from django.contrib.sites.models import Site
 
-from .models import LkpNationality,LkpState,LkpLocality,LkpCompanyProductionStatus,TblCompanyProduction, \
+from .models import LkpNationality,LkpState,LkpLocality,LkpMineral,LkpCompanyProductionStatus,TblCompanyProduction, \
                                       LkpCompanyProductionFactoryType,TblCompanyProductionFactory,LkpCompanyProductionLicenseStatus, \
                                       TblCompanyProductionLicense,AppForignerMovement,TblCompanyProductionUserRole, \
-                                      AppBorrowMaterial,AppBorrowMaterialDetail
+                                      AppBorrowMaterial,AppBorrowMaterialDetail,AppWorkPlan,AppTechnicalFinancialReport, \
+                                      AppChangeCompanyName, AppExplorationTime, AppAddArea,AppRemoveArea, AppTnazolShraka, \
+                                      AppTajeelTnazol, AppTajmeed,AppTakhali,AppTamdeed,AppTaaweed,AppMda,AppChangeWorkProcedure, \
+                                      AppExportGold,AppExportGoldRaw
 
-from .forms import TblCompanyProductionForm,AppForignerMovementAdminForm,AppBorrowMaterialAdminForm
+from .forms import TblCompanyProductionForm,AppForignerMovementAdminForm,AppBorrowMaterialAdminForm,AppWorkPlanAdminForm, \
+                   AppTechnicalFinancialReportAdminForm,AppChangeCompanyNameAdminForm, AppExplorationTimeAdminForm, \
+                   AppAddAreaAdminForm,AppRemoveAreaAdminForm,AppTnazolShrakaAdminForm, AppTajeelTnazolAdminForm, \
+                   AppTajmeedAdminForm,AppTakhaliAdminForm,AppTamdeedAdminForm,AppTaaweedAdminForm,AppMdaAdminForm, \
+                   AppChangeWorkProcedureAdminForm,AppExportGoldAdminForm,AppExportGoldRawAdminForm
 
 from .workflow import get_state_choices,send_transition_email,ACCEPTED,APPROVED,REJECTED
 
@@ -51,7 +59,7 @@ class WorkflowAdminMixin:
         user= None
         email = None
         lang = 'ar'
-        url = settings.BASE_URL
+        url = 'https://'+Site.objects.get_current().domain #settings.BASE_URL
         
         if obj.notify:
             # print("next transition*****",obj.state)
@@ -115,11 +123,12 @@ class TblCompanyProductionLicenseAdmin(LoggingAdminMixin,admin.ModelAdmin):
     
     list_display = ["company","sheet_no","date", "start_date", "end_date"]        
     list_filter = ["date","sheet_no"]
-    view_on_site = False    
+    view_on_site = False
      
 admin.site.register(LkpNationality)
 admin.site.register(LkpState)
 admin.site.register(LkpLocality)
+admin.site.register(LkpMineral)
 #admin.site.register(LkpCompanyProductionStatus)
 admin.site.register(TblCompanyProduction,TblCompanyProductionAdmin)
 
@@ -162,4 +171,148 @@ class AppBorrowMaterialAdmin(WorkflowAdminMixin,admin.ModelAdmin):
         super().save_model(request, obj, form, change)                
             
 admin.site.register(AppBorrowMaterial, AppBorrowMaterialAdmin)
+
+class AppWorkPlanAdmin(WorkflowAdminMixin,admin.ModelAdmin):
+    form = AppWorkPlanAdminForm
+    
+    list_display = ["company","plan_from","plan_to", "created_at", "created_by","updated_at", "updated_by"]        
+    list_filter = ["company"]
+    view_on_site = False
+    
+admin.site.register(AppWorkPlan, AppWorkPlanAdmin)
+
+class AppTechnicalFinancialReportAdmin(WorkflowAdminMixin,admin.ModelAdmin):
+    form = AppTechnicalFinancialReportAdminForm
+    
+    list_display = ["company","report_from","report_to","report_type", "created_at", "created_by","updated_at", "updated_by"]        
+    list_filter = ["company"]
+    view_on_site = False
+    
+admin.site.register(AppTechnicalFinancialReport, AppTechnicalFinancialReportAdmin)
+
+class AppChangeCompanyNameAdmin(WorkflowAdminMixin,admin.ModelAdmin):
+    form = AppChangeCompanyNameAdminForm
+    
+    list_display = ["company","new_name", "created_at", "created_by","updated_at", "updated_by"]        
+    list_filter = ["company"]
+    view_on_site = False
+    
+admin.site.register(AppChangeCompanyName, AppChangeCompanyNameAdmin)
+
+class AppExplorationTimeAdmin(WorkflowAdminMixin,admin.ModelAdmin):
+    form = AppExplorationTimeAdminForm
+    
+    list_display = ["company","expo_from","expo_to", "created_at", "created_by","updated_at", "updated_by"]        
+    list_filter = ["company"]
+    view_on_site = False
+    
+admin.site.register(AppExplorationTime, AppExplorationTimeAdmin)
+
+class AppAddAreaAdmin(WorkflowAdminMixin,admin.ModelAdmin):
+    form = AppAddAreaAdminForm
+    
+    list_display = ["company","area_in_km2", "created_at", "created_by","updated_at", "updated_by"]        
+    list_filter = ["company"]
+    view_on_site = False
+    
+admin.site.register(AppAddArea, AppAddAreaAdmin)
+
+class AppRemoveAreaAdmin(WorkflowAdminMixin,admin.ModelAdmin):
+    form = AppRemoveAreaAdminForm
+    
+    list_display = ["company","remove_type","area_in_km2","area_percent_from_total", "created_at", "created_by","updated_at", "updated_by"]        
+    list_filter = ["company"]
+    view_on_site = False
+    
+admin.site.register(AppRemoveArea, AppRemoveAreaAdmin)
+
+class AppTnazolShrakaAdmin(WorkflowAdminMixin,admin.ModelAdmin):
+    form = AppTnazolShrakaAdminForm
+    
+    list_display = ["company","tnazol_type","tnazol_for", "created_at", "created_by","updated_at", "updated_by"]        
+    list_filter = ["company"]
+    view_on_site = False
+    
+admin.site.register(AppTnazolShraka, AppTnazolShrakaAdmin)
+
+class AppTajeelTnazolAdmin(WorkflowAdminMixin,admin.ModelAdmin):
+    form = AppTajeelTnazolAdminForm
+    
+    list_display = ["company","tnazol_type", "created_at", "created_by","updated_at", "updated_by"]        
+    list_filter = ["company"]
+    view_on_site = False
+    
+admin.site.register(AppTajeelTnazol, AppTajeelTnazolAdmin)
+
+class AppTajmeedAdmin(WorkflowAdminMixin,admin.ModelAdmin):
+    form = AppTajmeedAdminForm
+    
+    list_display = ["company","tajmeed_from","tajmeed_to", "created_at", "created_by","updated_at", "updated_by"]        
+    list_filter = ["company"]
+    view_on_site = False
+    
+admin.site.register(AppTajmeed, AppTajmeedAdmin)
+
+class AppTakhaliAdmin(WorkflowAdminMixin,admin.ModelAdmin):
+    form = AppTakhaliAdminForm
+    
+    list_display = ["company","technical_presentation_date", "created_at", "created_by","updated_at", "updated_by"]        
+    list_filter = ["company"]
+    view_on_site = False
+    
+admin.site.register(AppTakhali, AppTakhaliAdmin)
+
+class AppTamdeedAdmin(WorkflowAdminMixin,admin.ModelAdmin):
+    form = AppTamdeedAdminForm
+    
+    list_display = ["company","tamdeed_from","tamdeed_to", "created_at", "created_by","updated_at", "updated_by"]        
+    list_filter = ["company"]
+    view_on_site = False
+    
+admin.site.register(AppTamdeed, AppTamdeedAdmin)
+
+class AppTaaweedAdmin(WorkflowAdminMixin,admin.ModelAdmin):
+    form = AppTaaweedAdminForm
+    
+    list_display = ["company","taaweed_from","taaweed_to", "created_at", "created_by","updated_at", "updated_by"]        
+    list_filter = ["company"]
+    view_on_site = False
+    
+admin.site.register(AppTaaweed, AppTaaweedAdmin)
+
+class AppMdaAdmin(WorkflowAdminMixin,admin.ModelAdmin):
+    form = AppMdaAdminForm
+    
+    list_display = ["company","mda_from","mda_to", "created_at", "created_by","updated_at", "updated_by"]        
+    list_filter = ["company"]
+    view_on_site = False
+    
+admin.site.register(AppMda, AppMdaAdmin)
+
+class AppChangeWorkProcedureAdmin(WorkflowAdminMixin,admin.ModelAdmin):
+    form = AppChangeWorkProcedureAdminForm
+    
+    list_display = ["company","reason_for_change","purpose_for_change","rational_reason", "created_at", "created_by","updated_at", "updated_by"]        
+    list_filter = ["company"]
+    view_on_site = False
+    
+admin.site.register(AppChangeWorkProcedure, AppChangeWorkProcedureAdmin)
+
+class AppExportGoldAdmin(WorkflowAdminMixin,admin.ModelAdmin):
+    form = AppExportGoldAdminForm
+    
+    list_display = ["company","total_in_gram","net_in_gram","zakat_in_gram", "awaad_jalila_in_gram","arbah_amal_in_gram","sold_for_bank_of_sudan_in_gram", "amount_to_export_in_gram","remain_in_gram", "created_at", "created_by","updated_at", "updated_by"]        
+    list_filter = ["company"]
+    view_on_site = False
+    
+admin.site.register(AppExportGold, AppExportGoldAdmin)
+
+class AppExportGoldRawAdmin(WorkflowAdminMixin,admin.ModelAdmin):
+    form = AppExportGoldRawAdminForm
+    
+    list_display = ["mineral","license_type","amount_in_gram","sale_price","export_country","export_city", "created_at", "created_by","updated_at", "updated_by"]        
+    list_filter = ["company"]
+    view_on_site = False
+    
+admin.site.register(AppExportGoldRaw, AppExportGoldRawAdmin)
 

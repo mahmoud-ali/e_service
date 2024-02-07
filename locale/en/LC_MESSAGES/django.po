@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-05 19:06+0200\n"
+"POT-Creation-Date: 2024-02-07 11:16+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,32 +18,41 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: accounts/models.py:11
+#: accounts/apps.py:7
+msgid "accounts"
+msgstr ""
+
+#: accounts/models.py:11 company_profile/forms.py:18
 msgid "Arabic"
 msgstr ""
 
-#: accounts/models.py:12
+#: accounts/models.py:12 company_profile/forms.py:19
 msgid "English"
 msgstr ""
 
-#: company_profile/admin.py:71
+#: company_profile/admin.py:21 company_profile/admin.py:22
+#: company_profile/admin.py:23 templates/admin/__base_site.html:6
+msgid "Site header"
+msgstr "SMRC e-services"
+
+#: company_profile/admin.py:82
 msgid "Location information"
 msgstr ""
 
-#: company_profile/admin.py:72
+#: company_profile/admin.py:83
 msgid "Contact information"
 msgstr ""
 
-#: company_profile/admin.py:73 company_profile/models.py:112
-#: company_profile/models.py:113
+#: company_profile/admin.py:84 company_profile/models.py:113
+#: company_profile/models.py:114
 msgid "Company Status"
 msgstr ""
 
-#: company_profile/admin.py:103
+#: company_profile/admin.py:117
 msgid "General information"
 msgstr ""
 
-#: company_profile/admin.py:104
+#: company_profile/admin.py:118
 msgid "Contract information"
 msgstr ""
 
@@ -51,336 +60,670 @@ msgstr ""
 msgid "Company profile"
 msgstr ""
 
-#: company_profile/forms.py:24
+#: company_profile/forms.py:36
 msgid "locality not belong to right state."
 msgstr ""
 
-#: company_profile/models.py:15
+#: company_profile/models.py:16
 msgid "created_at"
 msgstr ""
 
-#: company_profile/models.py:16
+#: company_profile/models.py:17
 msgid "created_by"
 msgstr ""
 
-#: company_profile/models.py:18
+#: company_profile/models.py:19
 msgid "updated_at"
 msgstr ""
 
-#: company_profile/models.py:19
+#: company_profile/models.py:20
 msgid "updated_by"
 msgstr ""
 
-#: company_profile/models.py:25
+#: company_profile/models.py:26
 msgid "application_state"
 msgstr ""
 
-#: company_profile/models.py:26
+#: company_profile/models.py:27
 msgid "notify_user"
 msgstr ""
 
-#: company_profile/models.py:52 company_profile/models.py:62
-#: company_profile/models.py:73 company_profile/models.py:106
-#: company_profile/models.py:138 company_profile/models.py:160
+#: company_profile/models.py:53 company_profile/models.py:63
+#: company_profile/models.py:74 company_profile/models.py:107
+#: company_profile/models.py:139 company_profile/models.py:161
 msgid "name"
 msgstr ""
 
-#: company_profile/models.py:58
+#: company_profile/models.py:59
 msgid "Nationality"
 msgstr ""
 
-#: company_profile/models.py:59
+#: company_profile/models.py:60
 msgid "Nationalities"
 msgstr ""
 
-#: company_profile/models.py:68
+#: company_profile/models.py:69
 msgid "State"
 msgstr ""
 
-#: company_profile/models.py:69
+#: company_profile/models.py:70
 msgid "States"
 msgstr ""
 
-#: company_profile/models.py:72 company_profile/models.py:87
+#: company_profile/models.py:73 company_profile/models.py:88
 msgid "state"
 msgstr ""
 
-#: company_profile/models.py:79
+#: company_profile/models.py:80
 msgid "Locality"
 msgstr ""
 
-#: company_profile/models.py:80
+#: company_profile/models.py:81
 msgid "Localities"
 msgstr ""
 
-#: company_profile/models.py:84
+#: company_profile/models.py:85
 msgid "name_ar"
 msgstr ""
 
-#: company_profile/models.py:85
+#: company_profile/models.py:86
 msgid "name_en"
 msgstr ""
 
-#: company_profile/models.py:86 company_profile/models.py:209
+#: company_profile/models.py:87 company_profile/models.py:210
 msgid "nationality"
 msgstr ""
 
-#: company_profile/models.py:88
+#: company_profile/models.py:89
 msgid "locality"
 msgstr ""
 
-#: company_profile/models.py:89
+#: company_profile/models.py:90
 msgid "location"
 msgstr ""
 
-#: company_profile/models.py:90 company_profile/models.py:179
+#: company_profile/models.py:91 company_profile/models.py:180
 msgid "cordinates"
 msgstr ""
 
-#: company_profile/models.py:91
+#: company_profile/models.py:92
 msgid "address"
 msgstr ""
 
-#: company_profile/models.py:92
+#: company_profile/models.py:93
 msgid "website"
 msgstr ""
 
-#: company_profile/models.py:93
+#: company_profile/models.py:94
 msgid "manager_name"
 msgstr ""
 
-#: company_profile/models.py:94
+#: company_profile/models.py:95
 msgid "manager_phone"
 msgstr ""
 
-#: company_profile/models.py:95
+#: company_profile/models.py:96
 msgid "Representative name"
 msgstr ""
 
-#: company_profile/models.py:96
+#: company_profile/models.py:97
 msgid "Representative phone"
 msgstr ""
 
-#: company_profile/models.py:97
+#: company_profile/models.py:98
 msgid "Official email"
 msgstr ""
 
-#: company_profile/models.py:117
+#: company_profile/models.py:118
 msgid "status"
 msgstr ""
 
-#: company_profile/models.py:120
+#: company_profile/models.py:121
 msgid "Production Company"
 msgstr ""
 
-#: company_profile/models.py:121
+#: company_profile/models.py:122
 msgid "Production Companies"
 msgstr ""
 
-#: company_profile/models.py:128 company_profile/models.py:148
-#: company_profile/models.py:174 company_profile/models.py:187
-#: company_profile/models.py:203 company_profile/models.py:228
+#: company_profile/models.py:129 company_profile/models.py:149
+#: company_profile/models.py:175 company_profile/models.py:188
+#: company_profile/models.py:204 company_profile/models.py:230
+#: company_profile/models.py:258 company_profile/models.py:284
+#: company_profile/models.py:305 company_profile/models.py:327
+#: company_profile/models.py:346 company_profile/models.py:374
+#: company_profile/models.py:406 company_profile/models.py:434
+#: company_profile/models.py:452 company_profile/models.py:472
 msgid "company"
 msgstr ""
 
-#: company_profile/models.py:134
+#: company_profile/models.py:135
 msgid "Production Company User"
 msgstr ""
 
-#: company_profile/models.py:135
+#: company_profile/models.py:136
 msgid "Production Company Users"
 msgstr ""
 
-#: company_profile/models.py:144
+#: company_profile/models.py:145
 msgid "Factory Type"
 msgstr ""
 
-#: company_profile/models.py:145
+#: company_profile/models.py:146
 msgid "Factory Types"
 msgstr ""
 
-#: company_profile/models.py:149
+#: company_profile/models.py:150
 msgid "factory_type"
 msgstr ""
 
-#: company_profile/models.py:150
+#: company_profile/models.py:151
 msgid "Capacity (Tones per day)"
 msgstr ""
 
-#: company_profile/models.py:156
+#: company_profile/models.py:157
 msgid "Production Company Factory"
 msgstr ""
 
-#: company_profile/models.py:157
+#: company_profile/models.py:158
 msgid "Production Company Factories"
 msgstr ""
 
-#: company_profile/models.py:166 company_profile/models.py:167
+#: company_profile/models.py:167 company_profile/models.py:168
 msgid "License Status"
 msgstr ""
 
-#: company_profile/models.py:175
+#: company_profile/models.py:176
 msgid "Sign date"
 msgstr ""
 
-#: company_profile/models.py:176
+#: company_profile/models.py:177
 msgid "start_date"
 msgstr "start date"
 
-#: company_profile/models.py:177
+#: company_profile/models.py:178
 msgid "end_date"
 msgstr "end date"
 
-#: company_profile/models.py:178
+#: company_profile/models.py:179
 msgid "sheet_no"
 msgstr "sheet no"
 
-#: company_profile/models.py:180
+#: company_profile/models.py:181
 msgid "Area in Kilometers"
 msgstr ""
 
-#: company_profile/models.py:181
+#: company_profile/models.py:182
 msgid "Reserve in Tones"
 msgstr ""
 
-#: company_profile/models.py:182
+#: company_profile/models.py:183
 msgid "Goverment representative"
 msgstr ""
 
-#: company_profile/models.py:183
+#: company_profile/models.py:184
 msgid "Representative percentage(%)"
 msgstr ""
 
-#: company_profile/models.py:184
+#: company_profile/models.py:185
 msgid "Company percentage(%)"
 msgstr ""
 
-#: company_profile/models.py:185
+#: company_profile/models.py:186
 msgid "royalty"
 msgstr ""
 
-#: company_profile/models.py:186
+#: company_profile/models.py:187
 msgid "zakat"
 msgstr ""
 
-#: company_profile/models.py:188
+#: company_profile/models.py:189
 msgid "contract_status"
 msgstr "contract status"
 
-#: company_profile/models.py:189
+#: company_profile/models.py:190
 msgid "contract_file"
 msgstr "contract file"
 
-#: company_profile/models.py:195
+#: company_profile/models.py:196
 msgid "Production Company License"
 msgstr ""
 
-#: company_profile/models.py:196
+#: company_profile/models.py:197
 msgid "Production Company Licenses"
 msgstr ""
 
-#: company_profile/models.py:204
+#: company_profile/models.py:205
 msgid "route_from"
 msgstr "route from"
 
-#: company_profile/models.py:205
+#: company_profile/models.py:206
 msgid "route_to"
 msgstr "route to"
 
-#: company_profile/models.py:206
+#: company_profile/models.py:207
 msgid "period_from"
 msgstr "period from"
 
-#: company_profile/models.py:207
+#: company_profile/models.py:208
 msgid "period_to"
 msgstr "period to"
 
-#: company_profile/models.py:208
+#: company_profile/models.py:209
 msgid "address_in_sudan"
 msgstr "address in sudan"
 
-#: company_profile/models.py:210
+#: company_profile/models.py:211
 msgid "passport_no"
 msgstr "passport no"
 
-#: company_profile/models.py:211
+#: company_profile/models.py:212
 msgid "passport_expiry_date"
 msgstr "passport expiry date"
 
-#: company_profile/models.py:212
+#: company_profile/models.py:213 company_profile/models.py:261
 msgid "official_letter_file"
 msgstr ""
 
-#: company_profile/models.py:213
+#: company_profile/models.py:214
 #, fuzzy
 #| msgid "passport_no"
 msgid "passport_copy_file"
 msgstr "passport no"
 
-#: company_profile/models.py:214
+#: company_profile/models.py:215 company_profile/models.py:412
 #, fuzzy
 #| msgid "contract_file"
 msgid "cv_file"
 msgstr "contract file"
 
-#: company_profile/models.py:215
+#: company_profile/models.py:216
 msgid "experiance_certificates_file"
 msgstr ""
 
-#: company_profile/models.py:218
+#: company_profile/models.py:219
 msgid "Forigner movement"
 msgstr ""
 
-#: company_profile/models.py:224
+#: company_profile/models.py:226
 msgid "Application: Forigner movement "
 msgstr ""
 
-#: company_profile/models.py:225
-#: company_profile/templates/company_profile/base.html:97
+#: company_profile/models.py:227
+#: company_profile/templates/company_profile/base.html:99
 msgid "Application: Forigner movement"
 msgstr ""
 
-#: company_profile/models.py:229
+#: company_profile/models.py:231
 msgid "company_borrow_from"
 msgstr "borrow from"
 
-#: company_profile/models.py:230
+#: company_profile/models.py:232
 msgid "borrow_date"
 msgstr "borrow date"
 
-#: company_profile/models.py:231
+#: company_profile/models.py:233
 msgid "borrow_materials_list_file"
 msgstr "material list file"
 
-#: company_profile/models.py:232
+#: company_profile/models.py:234
 msgid "borrow_from_approval_file"
 msgstr "company borrow from approval file"
 
-#: company_profile/models.py:235
+#: company_profile/models.py:237
 msgid "Borrow materials"
 msgstr ""
 
-#: company_profile/models.py:241 company_profile/models.py:242
-#: company_profile/templates/company_profile/base.html:100
+#: company_profile/models.py:244 company_profile/models.py:245
+#: company_profile/templates/company_profile/base.html:102
 msgid "Application: BorrowMaterials"
 msgstr ""
 
-#: company_profile/models.py:247
+#: company_profile/models.py:250
 #: company_profile/templates/company_profile/application_add_master_details.html:19
 #: company_profile/templates/company_profile/application_readonly_master_details.html:19
 msgid "borrow_material"
 msgstr "borrow material"
 
-#: company_profile/models.py:248
+#: company_profile/models.py:251
 #: company_profile/templates/company_profile/application_add_master_details.html:20
 #: company_profile/templates/company_profile/application_readonly_master_details.html:20
 msgid "borrow_quantity"
 msgstr "borrow quantity"
 
-#: company_profile/models.py:251 company_profile/models.py:252
+#: company_profile/models.py:254 company_profile/models.py:255
 #: company_profile/templates/company_profile/application_add_master_details.html:14
 #: company_profile/templates/company_profile/application_readonly_master_details.html:14
 msgid "AppBorrowMaterialDetail"
+msgstr ""
+
+#: company_profile/models.py:259
+#, fuzzy
+#| msgid "period_from"
+msgid "plan_from"
+msgstr "period from"
+
+#: company_profile/models.py:260
+msgid "plan_to"
+msgstr ""
+
+#: company_profile/models.py:262
+msgid "work_plan_file"
+msgstr ""
+
+#: company_profile/models.py:265
+msgid "Work Plan"
+msgstr ""
+
+#: company_profile/models.py:272 company_profile/models.py:273
+#: company_profile/templates/company_profile/base.html:105
+msgid "Application: Work Plan"
+msgstr ""
+
+#: company_profile/models.py:280
+msgid "Technical"
+msgstr ""
+
+#: company_profile/models.py:281
+msgid "Financial"
+msgstr ""
+
+#: company_profile/models.py:285
+#, fuzzy
+#| msgid "route_from"
+msgid "report_from"
+msgstr "route from"
+
+#: company_profile/models.py:286
+#, fuzzy
+#| msgid "passport_no"
+msgid "report_to"
+msgstr "passport no"
+
+#: company_profile/models.py:287
+msgid "report_type"
+msgstr ""
+
+#: company_profile/models.py:288
+msgid "report_comments"
+msgstr ""
+
+#: company_profile/models.py:290
+#, fuzzy
+#| msgid "contract_file"
+msgid "report_file"
+msgstr "contract file"
+
+#: company_profile/models.py:291
+#, fuzzy
+#| msgid "contract_file"
+msgid "other_attachments_file"
+msgstr "contract file"
+
+#: company_profile/models.py:294
+msgid "Technical & Financial Report"
+msgstr ""
+
+#: company_profile/models.py:301
+msgid "Application: Technical & Financial Report"
+msgstr ""
+
+#: company_profile/models.py:302
+#: company_profile/templates/company_profile/base.html:108
+msgid "Application: Technical & Financial Reports"
+msgstr ""
+
+#: company_profile/models.py:306
+msgid "new_name"
+msgstr ""
+
+#: company_profile/models.py:307
+msgid "cause_for_change"
+msgstr ""
+
+#: company_profile/models.py:309
+msgid "tasis_certificate_file"
+msgstr ""
+
+#: company_profile/models.py:310
+#, fuzzy
+#| msgid "contract_file"
+msgid "tasis_contract_file"
+msgstr "contract file"
+
+#: company_profile/models.py:311
+#, fuzzy
+#| msgid "contract_file"
+msgid "sh7_file"
+msgstr "contract file"
+
+#: company_profile/models.py:312
+msgid "lahat_tasis_file"
+msgstr ""
+
+#: company_profile/models.py:313
+msgid "name_change_alert_file"
+msgstr ""
+
+#: company_profile/models.py:316
+msgid "Change Company Name"
+msgstr ""
+
+#: company_profile/models.py:323
+msgid "Application: Company Name Change"
+msgstr ""
+
+#: company_profile/models.py:324
+#: company_profile/templates/company_profile/base.html:111
+msgid "Application: Company Name Changes"
+msgstr ""
+
+#: company_profile/models.py:328
+#, fuzzy
+#| msgid "period_from"
+msgid "expo_from"
+msgstr "period from"
+
+#: company_profile/models.py:329
+msgid "expo_to"
+msgstr ""
+
+#: company_profile/models.py:330
+msgid "expo_cause_for_timing"
+msgstr ""
+
+#: company_profile/models.py:332
+msgid "expo_cause_for_change_file"
+msgstr ""
+
+#: company_profile/models.py:335
+msgid "Exploration Time"
+msgstr ""
+
+#: company_profile/models.py:342
+msgid "Application: Exploration Time"
+msgstr ""
+
+#: company_profile/models.py:343
+#: company_profile/templates/company_profile/base.html:114
+msgid "Application: Exploration Times"
+msgstr ""
+
+#: company_profile/models.py:347 company_profile/models.py:376
+msgid "area_in_km2"
+msgstr ""
+
+#: company_profile/models.py:348
+msgid "cause_for_addition"
+msgstr ""
+
+#: company_profile/models.py:350
+msgid "geo_coordination_file"
+msgstr ""
+
+#: company_profile/models.py:353
+msgid "Add Area"
+msgstr ""
+
+#: company_profile/models.py:360 company_profile/models.py:361
+#: company_profile/templates/company_profile/base.html:117
+msgid "Application: Add Area"
+msgstr ""
+
+#: company_profile/models.py:369 company_profile/models.py:430
+msgid "first"
+msgstr ""
+
+#: company_profile/models.py:370 company_profile/models.py:431
+msgid "second"
+msgstr ""
+
+#: company_profile/models.py:371
+msgid "exceptional"
+msgstr ""
+
+#: company_profile/models.py:375
+msgid "remove_type"
+msgstr ""
+
+#: company_profile/models.py:377
+msgid "area_percent_from_total"
+msgstr ""
+
+#: company_profile/models.py:379
+msgid "geo_coordinator_for_removed_area_file"
+msgstr ""
+
+#: company_profile/models.py:380
+msgid "geo_coordinator_for_remain_area_file"
+msgstr ""
+
+#: company_profile/models.py:381
+msgid "map_for_clarification_file"
+msgstr ""
+
+#: company_profile/models.py:382
+msgid "technical_report_for_removed_area_file"
+msgstr ""
+
+#: company_profile/models.py:385
+msgid "Remove Area"
+msgstr ""
+
+#: company_profile/models.py:392 company_profile/models.py:393
+#: company_profile/templates/company_profile/base.html:120
+msgid "Application: Remove Area"
+msgstr ""
+
+#: company_profile/models.py:401
+msgid "partial"
+msgstr ""
+
+#: company_profile/models.py:402
+msgid "complete"
+msgstr ""
+
+#: company_profile/models.py:407 company_profile/models.py:435
+msgid "tnazol_type"
+msgstr ""
+
+#: company_profile/models.py:408
+msgid "tnazol_for"
+msgstr ""
+
+#: company_profile/models.py:409
+msgid "cause_for_tnazol"
+msgstr ""
+
+#: company_profile/models.py:411
+msgid "financial_ability_file"
+msgstr ""
+
+#: company_profile/models.py:415
+msgid "Tnazol Shraka"
+msgstr ""
+
+#: company_profile/models.py:422 company_profile/models.py:423
+#: company_profile/templates/company_profile/base.html:123
+msgid "Application: Tnazol Shraka"
+msgstr ""
+
+#: company_profile/models.py:436
+msgid "cause_for_tajeel"
+msgstr ""
+
+#: company_profile/models.py:438
+msgid "cause_for_tajeel_file"
+msgstr ""
+
+#: company_profile/models.py:441
+msgid "Tajeel Tnazol"
+msgstr ""
+
+#: company_profile/models.py:448 company_profile/models.py:449
+#: company_profile/templates/company_profile/base.html:126
+msgid "Application: Tajeel Tnazol"
+msgstr ""
+
+#: company_profile/models.py:453
+#, fuzzy
+#| msgid "route_from"
+msgid "tajmeed_from"
+msgstr "route from"
+
+#: company_profile/models.py:454
+msgid "tajmeed_to"
+msgstr ""
+
+#: company_profile/models.py:455
+msgid "cause_for_tajmeed"
+msgstr ""
+
+#: company_profile/models.py:457
+msgid "cause_for_uncontrolled_force_file"
+msgstr ""
+
+#: company_profile/models.py:458
+msgid "letter_from_jeha_amnia_file"
+msgstr ""
+
+#: company_profile/models.py:461
+msgid "Tajmeed"
+msgstr ""
+
+#: company_profile/models.py:468 company_profile/models.py:469
+#: company_profile/templates/company_profile/base.html:129
+msgid "Application: Tajmeed"
+msgstr ""
+
+#: company_profile/models.py:473
+msgid "technical_presentation_date"
+msgstr ""
+
+#: company_profile/models.py:474
+msgid "cause_for_takhali"
+msgstr ""
+
+#: company_profile/models.py:476
+msgid "technical_report_file"
+msgstr ""
+
+#: company_profile/models.py:479
+msgid "Takhali"
+msgstr ""
+
+#: company_profile/models.py:486 company_profile/models.py:487
+#: company_profile/templates/company_profile/base.html:132
+msgid "Application: Takhali"
+msgstr ""
+
+#: company_profile/tables.py:21 company_profile/tables.py:34
+#: company_profile/tables.py:47 company_profile/tables.py:60
+#: company_profile/tables.py:73 company_profile/tables.py:86
+#: company_profile/tables.py:99 company_profile/tables.py:112
+#: company_profile/tables.py:125 company_profile/tables.py:138
+#: company_profile/tables.py:151 company_profile/tables.py:164
+msgid "No records."
 msgstr ""
 
 #: company_profile/templates/company_profile/application_add.html:15
@@ -408,10 +751,6 @@ msgstr ""
 msgid "Rejected"
 msgstr ""
 
-#: company_profile/templates/company_profile/application_list.html:30
-msgid "No records."
-msgstr ""
-
 #: company_profile/templates/company_profile/base.html:9
 #: company_profile/templates/company_profile/base.html:61
 msgid "E-Services App"
@@ -425,53 +764,232 @@ msgstr ""
 msgid "Log Out"
 msgstr ""
 
-#: company_profile/templates/company_profile/base.html:94
+#: company_profile/templates/company_profile/base.html:93
 msgid "Menu"
 msgstr ""
 
-#: company_profile/views.py:135 company_profile/views.py:230
+#: company_profile/templates/company_profile/base.html:96
+msgid "Home page"
+msgstr ""
+
+#: company_profile/views/__init__.py:95
+msgid "List of foreigner movements"
+msgstr ""
+
+#: company_profile/views/__init__.py:113
+msgid "Add new movement"
+msgstr ""
+
+#: company_profile/views/__init__.py:133 company_profile/views/__init__.py:209
+#: company_profile/views/add_area.py:64
+#: company_profile/views/change_company_name.py:68
+#: company_profile/views/exploration_time.py:64
+#: company_profile/views/remove_area.py:67
+#: company_profile/views/tajeel_tnazol.py:64
+#: company_profile/views/tajmeed.py:65 company_profile/views/takhali.py:64
+#: company_profile/views/technical_financial_report.py:64
+#: company_profile/views/tnazol_shraka.py:65
+#: company_profile/views/work_plan.py:64
 msgid "Application sent successfully."
 msgstr ""
 
-#: company_profile/workflow.py:11
-msgid "Submitted state"
+#: company_profile/views/__init__.py:146
+msgid "Show movement"
 msgstr ""
 
-#: company_profile/workflow.py:12
-msgid "Accepted state"
+#: company_profile/views/__init__.py:152
+#, fuzzy
+#| msgid "borrow_material"
+msgid "List of borrow materials"
+msgstr "borrow material"
+
+#: company_profile/views/__init__.py:171
+#, fuzzy
+#| msgid "borrow_material"
+msgid "Add new borrow materials"
+msgstr "borrow material"
+
+#: company_profile/views/__init__.py:227
+#, fuzzy
+#| msgid "borrow_material"
+msgid "Show borrow materials"
+msgstr "borrow material"
+
+#: company_profile/views/add_area.py:28
+msgid "List of Added area"
 msgstr ""
 
-#: company_profile/workflow.py:13
-msgid "Approved state"
+#: company_profile/views/add_area.py:46
+msgid "Add new area"
+msgstr ""
+
+#: company_profile/views/add_area.py:77
+msgid "Show added area"
+msgstr ""
+
+#: company_profile/views/change_company_name.py:28
+msgid "List of company name changes"
+msgstr ""
+
+#: company_profile/views/change_company_name.py:46
+msgid "Add new company name"
+msgstr ""
+
+#: company_profile/views/change_company_name.py:81
+msgid "Show company name"
+msgstr ""
+
+#: company_profile/views/exploration_time.py:28
+msgid "List of exploration times"
+msgstr ""
+
+#: company_profile/views/exploration_time.py:46
+msgid "Add new exploration time"
+msgstr ""
+
+#: company_profile/views/exploration_time.py:77
+msgid "Show exploration time"
+msgstr ""
+
+#: company_profile/views/remove_area.py:28
+msgid "List of removed area"
+msgstr ""
+
+#: company_profile/views/remove_area.py:46
+msgid "Add remove area application"
+msgstr ""
+
+#: company_profile/views/remove_area.py:80
+msgid "Show removed area"
+msgstr ""
+
+#: company_profile/views/tajeel_tnazol.py:28
+msgid "List of tajeel tnazol"
+msgstr ""
+
+#: company_profile/views/tajeel_tnazol.py:46
+msgid "Add tajeel tnazol"
+msgstr ""
+
+#: company_profile/views/tajeel_tnazol.py:77
+msgid "Show tajeel tnazol"
+msgstr ""
+
+#: company_profile/views/tajmeed.py:28
+msgid "List of tajmeed"
+msgstr ""
+
+#: company_profile/views/tajmeed.py:46
+msgid "Add tajmeed"
+msgstr ""
+
+#: company_profile/views/tajmeed.py:78
+msgid "Show tajmeed"
+msgstr ""
+
+#: company_profile/views/takhali.py:28
+msgid "List of takhali"
+msgstr ""
+
+#: company_profile/views/takhali.py:46
+msgid "Add takhali"
+msgstr ""
+
+#: company_profile/views/takhali.py:77
+msgid "Show takhali"
+msgstr ""
+
+#: company_profile/views/technical_financial_report.py:28
+msgid "List of technical & Financial Reports"
+msgstr ""
+
+#: company_profile/views/technical_financial_report.py:46
+msgid "Add new technical & financial report"
+msgstr ""
+
+#: company_profile/views/technical_financial_report.py:77
+msgid "Show technical & financial report"
+msgstr ""
+
+#: company_profile/views/tnazol_shraka.py:28
+msgid "List of tnazol shraka"
+msgstr ""
+
+#: company_profile/views/tnazol_shraka.py:46
+msgid "Add tnazol shraka"
+msgstr ""
+
+#: company_profile/views/tnazol_shraka.py:78
+msgid "Show tnazol shraka"
+msgstr ""
+
+#: company_profile/views/work_plan.py:28
+msgid "List of work plans"
+msgstr ""
+
+#: company_profile/views/work_plan.py:46
+msgid "Add new work plan"
+msgstr ""
+
+#: company_profile/views/work_plan.py:77
+msgid "Show work plan"
 msgstr ""
 
 #: company_profile/workflow.py:14
+msgid "Submitted state"
+msgstr ""
+
+#: company_profile/workflow.py:15
+msgid "Accepted state"
+msgstr ""
+
+#: company_profile/workflow.py:16
+msgid "Approved state"
+msgstr ""
+
+#: company_profile/workflow.py:17
 msgid "Rejected state"
 msgstr ""
 
-#: company_profile/workflow.py:85
+#: company_profile/workflow.py:41
+msgid "New application submitted"
+msgstr ""
+
+#: company_profile/workflow.py:45
+msgid "Application accepted"
+msgstr ""
+
+#: company_profile/workflow.py:49
+msgid "Application approved"
+msgstr ""
+
+#: company_profile/workflow.py:53
+msgid "Application rejected"
+msgstr ""
+
+#: company_profile/workflow.py:90
 msgid ""
 "Wrong transition path. You can reach submitted state only when creating a "
 "new application."
 msgstr ""
 
-#: company_profile/workflow.py:88
+#: company_profile/workflow.py:93
 msgid ""
 "Wrong transition path. You can reach accepted state only from submitted "
 "state."
 msgstr ""
 
-#: company_profile/workflow.py:93
+#: company_profile/workflow.py:98
 msgid ""
 "Wrong transition path. You can reach approved state only from accepted state."
 msgstr ""
 
-#: company_profile/workflow.py:98
+#: company_profile/workflow.py:103
 msgid ""
 "Wrong transition path. You can reach rejected state only from accepted state."
 msgstr ""
 
-#: company_profile/workflow.py:102
+#: company_profile/workflow.py:107
 msgid "Wrong transition path."
 msgstr ""
 
@@ -497,21 +1015,17 @@ msgstr ""
 
 #: templates/account/password_change.html:7
 #: templates/account/password_change.html:12
-#: templates/account/password_change.html:22
+#: templates/account/password_change.html:23
 msgid "Change Password"
 msgstr ""
 
-#: templates/account/password_change.html:24
+#: templates/account/password_change.html:25
 msgid "Forgot Password?"
 msgstr ""
 
-#: templates/admin/base_site.html:3
+#: templates/admin/__base_site.html:3
 msgid "SMRC e-services"
 msgstr ""
-
-#: templates/admin/base_site.html:6
-msgid "Site header"
-msgstr "SMRC e-services"
 
 #: templates/allauth/layouts/base.html:18
 msgid "Messages:"

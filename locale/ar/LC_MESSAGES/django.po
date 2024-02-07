@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-03 14:28+0200\n"
+"POT-Creation-Date: 2024-02-07 15:31+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,28 +19,49 @@ msgstr ""
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
-#: company_profile/admin.py:22
+#: accounts/apps.py:7
+msgid "accounts"
+msgstr "حسابات المستخدمين"
+
+#: accounts/models.py:11 company_profile/forms.py:19
+msgid "Arabic"
+msgstr ""
+
+#: accounts/models.py:12 company_profile/forms.py:20
+msgid "English"
+msgstr ""
+
+#: company_profile/admin.py:23 company_profile/admin.py:24
+#: company_profile/admin.py:25 templates/admin/__base_site.html:6
+msgid "Site header"
+msgstr "بوابة الخدمات الإلكترونية"
+
+#: company_profile/admin.py:84
 msgid "Location information"
 msgstr "الموقع الجغرافي"
 
-#: company_profile/admin.py:23
+#: company_profile/admin.py:85
 msgid "Contact information"
 msgstr "بيانات التواصل"
 
-#: company_profile/admin.py:24 company_profile/models.py:112
-#: company_profile/models.py:113
+#: company_profile/admin.py:86 company_profile/models.py:122
+#: company_profile/models.py:123
 msgid "Company Status"
 msgstr "موقف الشركة"
 
-#: company_profile/admin.py:53
+#: company_profile/admin.py:119
 msgid "General information"
 msgstr "بيانات عامة"
 
-#: company_profile/admin.py:54
+#: company_profile/admin.py:120
 msgid "Contract information"
 msgstr "بيانات العقد"
 
-#: company_profile/forms.py:24
+#: company_profile/apps.py:7
+msgid "Company profile"
+msgstr "ملف الشركة"
+
+#: company_profile/forms.py:37
 msgid "locality not belong to right state."
 msgstr "المحلية لا تتبع للولاية الصحيحة"
 
@@ -64,337 +85,1223 @@ msgstr "المستخدم المسئول عن التعديل"
 msgid "application_state"
 msgstr "موقف الطلب"
 
-#: company_profile/models.py:52 company_profile/models.py:62
-#: company_profile/models.py:73 company_profile/models.py:106
-#: company_profile/models.py:137 company_profile/models.py:159
+#: company_profile/models.py:27
+msgid "notify_user"
+msgstr ""
+
+#: company_profile/models.py:53 company_profile/models.py:63
+#: company_profile/models.py:74 company_profile/models.py:84
+#: company_profile/models.py:116 company_profile/models.py:148
+#: company_profile/models.py:170
 msgid "name"
 msgstr "الاسم"
 
-#: company_profile/models.py:58
+#: company_profile/models.py:59
 msgid "Nationality"
 msgstr "الجنسية"
 
-#: company_profile/models.py:59
+#: company_profile/models.py:60
 msgid "Nationalities"
 msgstr "الجنسية"
 
-#: company_profile/models.py:68
+#: company_profile/models.py:69
 msgid "State"
 msgstr "الولاية"
 
-#: company_profile/models.py:69
+#: company_profile/models.py:70
 msgid "States"
 msgstr "الولايات"
 
-#: company_profile/models.py:72 company_profile/models.py:87
+#: company_profile/models.py:73 company_profile/models.py:97
 msgid "state"
 msgstr "الولاية"
 
-#: company_profile/models.py:79
+#: company_profile/models.py:80
 msgid "Locality"
 msgstr "المحلية"
 
-#: company_profile/models.py:80
+#: company_profile/models.py:81
 msgid "Localities"
 msgstr "المحليات"
 
-#: company_profile/models.py:84
+#: company_profile/models.py:90
+msgid "Mineral"
+msgstr "المعدن"
+
+#: company_profile/models.py:91
+msgid "Minerals"
+msgstr "المعادن"
+
+#: company_profile/models.py:94
 msgid "name_ar"
 msgstr "الاسم العربي"
 
-#: company_profile/models.py:85
+#: company_profile/models.py:95
 msgid "name_en"
 msgstr "الاسم الانجليزي"
 
-#: company_profile/models.py:86 company_profile/models.py:204
+#: company_profile/models.py:96 company_profile/models.py:219
 msgid "nationality"
 msgstr "الجنسية"
 
-#: company_profile/models.py:88
+#: company_profile/models.py:98
 msgid "locality"
 msgstr "المحلية"
 
-#: company_profile/models.py:89
+#: company_profile/models.py:99
 msgid "location"
 msgstr "الموقع"
 
-#: company_profile/models.py:90 company_profile/models.py:178
+#: company_profile/models.py:100 company_profile/models.py:189
 msgid "cordinates"
 msgstr "الاحداثيات"
 
-#: company_profile/models.py:91
+#: company_profile/models.py:101
 msgid "address"
 msgstr "العنوان"
 
-#: company_profile/models.py:92
+#: company_profile/models.py:102
 msgid "website"
 msgstr "الموقع الالكتروني"
 
-#: company_profile/models.py:93
+#: company_profile/models.py:103
 msgid "manager_name"
 msgstr "اسم المدير"
 
-#: company_profile/models.py:94
+#: company_profile/models.py:104
 msgid "manager_phone"
 msgstr "تلفون المدير"
 
-#: company_profile/models.py:95
+#: company_profile/models.py:105
 msgid "Representative name"
 msgstr "اسم ممثل الشركة"
 
-#: company_profile/models.py:96
+#: company_profile/models.py:106
 msgid "Representative phone"
 msgstr "تلفون ممثل الشركة"
 
-#: company_profile/models.py:97
+#: company_profile/models.py:107
 msgid "Official email"
 msgstr "البريد الالكتروني الرسمي"
 
-#: company_profile/models.py:117
+#: company_profile/models.py:127
 msgid "status"
 msgstr "الحالة"
 
-#: company_profile/models.py:120
+#: company_profile/models.py:130
 msgid "Production Company"
 msgstr "شركة انتاج"
 
-#: company_profile/models.py:121
+#: company_profile/models.py:131
 msgid "Production Companies"
 msgstr "شركات الانتاج"
 
-#: company_profile/models.py:127 company_profile/models.py:147
-#: company_profile/models.py:173 company_profile/models.py:186
-#: company_profile/models.py:198 company_profile/models.py:216
+#: company_profile/models.py:138 company_profile/models.py:158
+#: company_profile/models.py:184 company_profile/models.py:197
+#: company_profile/models.py:213 company_profile/models.py:239
+#: company_profile/models.py:267 company_profile/models.py:293
+#: company_profile/models.py:314 company_profile/models.py:336
+#: company_profile/models.py:355 company_profile/models.py:383
+#: company_profile/models.py:415 company_profile/models.py:443
+#: company_profile/models.py:461 company_profile/models.py:481
+#: company_profile/models.py:499 company_profile/models.py:519
+#: company_profile/models.py:536 company_profile/models.py:555
+#: company_profile/models.py:575 company_profile/models.py:607
 msgid "company"
 msgstr "شركة"
 
-#: company_profile/models.py:133
+#: company_profile/models.py:144
 msgid "Production Company User"
 msgstr "مستخدم شركة انتاج"
 
-#: company_profile/models.py:134
+#: company_profile/models.py:145
 msgid "Production Company Users"
 msgstr "مستخدمي شركات الانتاج"
 
-#: company_profile/models.py:143
+#: company_profile/models.py:154
 msgid "Factory Type"
 msgstr "نوع المصنع"
 
-#: company_profile/models.py:144
+#: company_profile/models.py:155
 msgid "Factory Types"
 msgstr "نوع المصنع"
 
-#: company_profile/models.py:148
+#: company_profile/models.py:159
 msgid "factory_type"
 msgstr "نوع المصنع"
 
-#: company_profile/models.py:149
+#: company_profile/models.py:160
 msgid "Capacity (Tones per day)"
 msgstr "قدرة المصنع (طن في اليوم)"
 
-#: company_profile/models.py:155
+#: company_profile/models.py:166
 msgid "Production Company Factory"
 msgstr "مصنع شركة منتجة"
 
-#: company_profile/models.py:156
+#: company_profile/models.py:167
 msgid "Production Company Factories"
 msgstr "مصانع الشركات المنتجة"
 
-#: company_profile/models.py:165 company_profile/models.py:166
+#: company_profile/models.py:176 company_profile/models.py:177
 msgid "License Status"
 msgstr "حالة الترخيص"
 
-#: company_profile/models.py:174
+#: company_profile/models.py:185
 msgid "Sign date"
 msgstr "تاريخ التوقيع"
 
-#: company_profile/models.py:175
+#: company_profile/models.py:186
 msgid "start_date"
 msgstr "تاريح البداية"
 
-#: company_profile/models.py:176
+#: company_profile/models.py:187
 msgid "end_date"
 msgstr "تاريخ النهاية"
 
-#: company_profile/models.py:177
+#: company_profile/models.py:188
 msgid "sheet_no"
 msgstr "رقم المربع"
 
-#: company_profile/models.py:179
+#: company_profile/models.py:190
 msgid "Area in Kilometers"
 msgstr "المساحة بالكيلوميتر"
 
-#: company_profile/models.py:180
+#: company_profile/models.py:191
 msgid "Reserve in Tones"
 msgstr "الاحتياطي بالطن"
 
-#: company_profile/models.py:181
+#: company_profile/models.py:192
 msgid "Goverment representative"
 msgstr "ممثل الحكومة"
 
-#: company_profile/models.py:182
+#: company_profile/models.py:193
 msgid "Representative percentage(%)"
 msgstr "نسبة الممثل (%)"
 
-#: company_profile/models.py:183
+#: company_profile/models.py:194
 msgid "Company percentage(%)"
 msgstr "نسبة الشركة (%)"
 
-#: company_profile/models.py:184
+#: company_profile/models.py:195
 msgid "royalty"
 msgstr "الامتياز"
 
-#: company_profile/models.py:185
+#: company_profile/models.py:196
 msgid "zakat"
 msgstr "الزكاة"
 
-#: company_profile/models.py:187
+#: company_profile/models.py:198
 msgid "contract_status"
 msgstr "حالة العقد"
 
-#: company_profile/models.py:188
+#: company_profile/models.py:199
 msgid "contract_file"
 msgstr "ملف العقد"
 
-#: company_profile/models.py:194
+#: company_profile/models.py:205
 msgid "Production Company License"
 msgstr "رخصة شركة منتجة"
 
-#: company_profile/models.py:195
+#: company_profile/models.py:206
 msgid "Production Company Licenses"
 msgstr "رخص الشركات المنتجة"
 
-#: company_profile/models.py:199
+#: company_profile/models.py:214
 msgid "route_from"
 msgstr "المسار من"
 
-#: company_profile/models.py:200
+#: company_profile/models.py:215
 msgid "route_to"
 msgstr "المسار إلى"
 
-#: company_profile/models.py:201
+#: company_profile/models.py:216
 msgid "period_from"
 msgstr "المدة من"
 
-#: company_profile/models.py:202
+#: company_profile/models.py:217
 msgid "period_to"
 msgstr "المدة إلى"
 
-#: company_profile/models.py:203
+#: company_profile/models.py:218
 msgid "address_in_sudan"
 msgstr "العنوان في الشودان"
 
-#: company_profile/models.py:205
+#: company_profile/models.py:220
 msgid "passport_no"
 msgstr "رقم الجواز"
 
-#: company_profile/models.py:206
+#: company_profile/models.py:221
 msgid "passport_expiry_date"
 msgstr "تاريخ انتهاء الجواز"
 
-#: company_profile/models.py:209
+#: company_profile/models.py:222 company_profile/models.py:270
+msgid "official_letter_file"
+msgstr "خطاب رسمي ‫من‬ ‫الشركة‬"
+
+#: company_profile/models.py:223
+msgid "passport_copy_file"
+msgstr "صورة من جواز ساري"
+
+#: company_profile/models.py:224 company_profile/models.py:421
+msgid "cv_file"
+msgstr "السيرة الذاتية"
+
+#: company_profile/models.py:225
+msgid "experiance_certificates_file"
+msgstr "شهادات الخبرة المعتمدة"
+
+#: company_profile/models.py:228
 msgid "Forigner movement"
 msgstr "تحرك اجنبي"
 
-#: company_profile/models.py:212
+#: company_profile/models.py:235
 msgid "Application: Forigner movement "
 msgstr "طلب تحرك اجنبي"
 
-#: company_profile/models.py:213
+#: company_profile/models.py:236
+#: company_profile/templates/company_profile/base.html:99
 msgid "Application: Forigner movement"
 msgstr "طلب تحرك اجنبي"
 
-#: company_profile/models.py:217
+#: company_profile/models.py:240
 msgid "company_borrow_from"
 msgstr "الشركة المستلف منها"
 
-#: company_profile/models.py:218
+#: company_profile/models.py:241
 msgid "borrow_date"
 msgstr "تاريخ الاستلاف"
 
-#: company_profile/models.py:221
-#: company_profile/templates/company_profile/base.html:197
+#: company_profile/models.py:242
+msgid "borrow_materials_list_file"
+msgstr "‫كشف‬‫ المواد‬ ‫المراد‬ ‫إستالفها‬"
+
+#: company_profile/models.py:243
+msgid "borrow_from_approval_file"
+msgstr "‫موافقة‬‫الشركة‬ ‫المستلف‬ ‫منها‬"
+
+#: company_profile/models.py:246
 msgid "Borrow materials"
 msgstr "استلاف مواد"
 
-#: company_profile/models.py:224 company_profile/models.py:225
+#: company_profile/models.py:253 company_profile/models.py:254
+#: company_profile/templates/company_profile/base.html:102
 msgid "Application: BorrowMaterials"
 msgstr "طلب استلاف مواد"
 
-#: company_profile/models.py:230
+#: company_profile/models.py:259
+#: company_profile/templates/company_profile/application_add_master_details.html:19
+#: company_profile/templates/company_profile/application_readonly_master_details.html:19
 msgid "borrow_material"
 msgstr "المواد المستلفة"
 
-#: company_profile/models.py:231
+#: company_profile/models.py:260
+#: company_profile/templates/company_profile/application_add_master_details.html:20
+#: company_profile/templates/company_profile/application_readonly_master_details.html:20
 msgid "borrow_quantity"
 msgstr "الكمية المستلفة"
 
-#: company_profile/models.py:234 company_profile/models.py:235
+#: company_profile/models.py:263 company_profile/models.py:264
+#: company_profile/templates/company_profile/application_add_master_details.html:14
+#: company_profile/templates/company_profile/application_readonly_master_details.html:14
 msgid "AppBorrowMaterialDetail"
 msgstr "تفاصيل المواد المستلفة"
 
-#: company_profile/templates/company_profile/application_add.html:10
-msgid "Submit"
-msgstr "ارسال"
+#: company_profile/models.py:268
+msgid "plan_from"
+msgstr "بداية الخطة"
 
-#: company_profile/templates/company_profile/application_list.html:11
-msgid "New application"
-msgstr "طلب جديد"
+#: company_profile/models.py:269
+msgid "plan_to"
+msgstr "نهاية الخطة"
 
-#: company_profile/templates/company_profile/application_list.html:17
-msgid "In progress"
-msgstr "قيد الاجراء"
+#: company_profile/models.py:271
+msgid "work_plan_file"
+msgstr "ملف خطة العمل"
 
-#: company_profile/templates/company_profile/application_list.html:18
-msgid "Approved"
-msgstr "تم التصديق"
+#: company_profile/models.py:274
+msgid "Work Plan"
+msgstr "خطة عمل"
 
-#: company_profile/templates/company_profile/application_list.html:19
-msgid "Rejected"
-msgstr "تم الرفض"
+#: company_profile/models.py:281 company_profile/models.py:282
+#: company_profile/templates/company_profile/base.html:105
+msgid "Application: Work Plan"
+msgstr "طلب خطة عمل"
 
-#: company_profile/templates/company_profile/application_list.html:27
+#: company_profile/models.py:289
+msgid "Technical"
+msgstr "فني"
+
+#: company_profile/models.py:290
+msgid "Financial"
+msgstr "مالي"
+
+#: company_profile/models.py:294
+msgid "report_from"
+msgstr "بداية التقرير"
+
+#: company_profile/models.py:295
+msgid "report_to"
+msgstr "نهاية التقرير"
+
+#: company_profile/models.py:296
+msgid "report_type"
+msgstr "نوع التقرير"
+
+#: company_profile/models.py:297
+msgid "report_comments"
+msgstr "تعليق على التقرير"
+
+#: company_profile/models.py:299
+msgid "report_file"
+msgstr "ملف التقرير"
+
+#: company_profile/models.py:300
+msgid "other_attachments_file"
+msgstr "ملف المرفقات الاخرى"
+
+#: company_profile/models.py:303
+msgid "Technical & Financial Report"
+msgstr "تقرير فني ومالي"
+
+#: company_profile/models.py:310
+msgid "Application: Technical & Financial Report"
+msgstr "طلب تقرير فني ومالي"
+
+#: company_profile/models.py:311
+#: company_profile/templates/company_profile/base.html:108
+msgid "Application: Technical & Financial Reports"
+msgstr "طلبات التقارير الفنية والمالية"
+
+#: company_profile/models.py:315
+msgid "new_name"
+msgstr "الاسم الجديد"
+
+#: company_profile/models.py:316
+msgid "cause_for_change"
+msgstr "سبب التغيير"
+
+#: company_profile/models.py:318
+msgid "tasis_certificate_file"
+msgstr "شهادة تأسيس"
+
+#: company_profile/models.py:319
+msgid "tasis_contract_file"
+msgstr "عقد تأسيس"
+
+#: company_profile/models.py:320
+msgid "sh7_file"
+msgstr "شهادة ش7"
+
+#: company_profile/models.py:321
+msgid "lahat_tasis_file"
+msgstr "لائحة النظام الاساسي"
+
+#: company_profile/models.py:322
+msgid "name_change_alert_file"
+msgstr "اخطار تغيير الاسم"
+
+#: company_profile/models.py:325
+msgid "Change Company Name"
+msgstr "تغيير اسم شركة"
+
+#: company_profile/models.py:332
+msgid "Application: Company Name Change"
+msgstr "طلب تغيير اسم شركة"
+
+#: company_profile/models.py:333
+#: company_profile/templates/company_profile/base.html:111
+msgid "Application: Company Name Changes"
+msgstr "طلب تغيير اسم شركة"
+
+#: company_profile/models.py:337
+msgid "expo_from"
+msgstr "بداية مدة الاستكشاف"
+
+#: company_profile/models.py:338
+msgid "expo_to"
+msgstr "نهاية مدة الاستكشاف"
+
+#: company_profile/models.py:339
+msgid "expo_cause_for_timing"
+msgstr "اسباب اعتماد المواقيت"
+
+#: company_profile/models.py:341
+msgid "expo_cause_for_change_file"
+msgstr "ملف مسببات تغير المواقيت"
+
+#: company_profile/models.py:344
+msgid "Exploration Time"
+msgstr "مواقيت الاستكشاف"
+
+#: company_profile/models.py:351
+msgid "Application: Exploration Time"
+msgstr "طلب اعتماد مواقيت الاستكشاف"
+
+#: company_profile/models.py:352
+#: company_profile/templates/company_profile/base.html:114
+msgid "Application: Exploration Times"
+msgstr "طلب اعتماد مواقيت الاستكشاف"
+
+#: company_profile/models.py:356 company_profile/models.py:385
+msgid "area_in_km2"
+msgstr "المساحة بالكم2"
+
+#: company_profile/models.py:357
+msgid "cause_for_addition"
+msgstr "اسباب الاضافة"
+
+#: company_profile/models.py:359
+msgid "geo_coordination_file"
+msgstr "احداثيات المساحة المضافة"
+
+#: company_profile/models.py:362
+msgid "Add Area"
+msgstr "اضافة مساحة"
+
+#: company_profile/models.py:369 company_profile/models.py:370
+#: company_profile/templates/company_profile/base.html:117
+msgid "Application: Add Area"
+msgstr "طلب اضافة مساحة"
+
+#: company_profile/models.py:378 company_profile/models.py:439
+msgid "first"
+msgstr "أول"
+
+#: company_profile/models.py:379 company_profile/models.py:440
+msgid "second"
+msgstr "ثاني"
+
+#: company_profile/models.py:380
+msgid "exceptional"
+msgstr "استثنائي"
+
+#: company_profile/models.py:384
+msgid "remove_type"
+msgstr "نوع التنازل"
+
+#: company_profile/models.py:386
+msgid "area_percent_from_total"
+msgstr "نسبة التنازل"
+
+#: company_profile/models.py:388
+msgid "geo_coordinator_for_removed_area_file"
+msgstr "احداثيات المساحة المراد التنازل عنها"
+
+#: company_profile/models.py:389
+msgid "geo_coordinator_for_remain_area_file"
+msgstr "احداثيات المساحة المراد الاحتفاظ بها"
+
+#: company_profile/models.py:390
+msgid "map_for_clarification_file"
+msgstr "خريطة توضيحية لمناطق التنازل والاحتفاظ بمربع الشركة"
+
+#: company_profile/models.py:391
+msgid "technical_report_for_removed_area_file"
+msgstr "تقرير فني لمناطق التنازل"
+
+#: company_profile/models.py:394
+msgid "Remove Area"
+msgstr "تنازل عن مساحات"
+
+#: company_profile/models.py:401 company_profile/models.py:402
+#: company_profile/templates/company_profile/base.html:120
+msgid "Application: Remove Area"
+msgstr "طلب تنازل عن مساحة"
+
+#: company_profile/models.py:410
+msgid "partial"
+msgstr "جزئي"
+
+#: company_profile/models.py:411
+msgid "complete"
+msgstr "كامل"
+
+#: company_profile/models.py:416 company_profile/models.py:444
+msgid "tnazol_type"
+msgstr "نوع التنازل"
+
+#: company_profile/models.py:417
+msgid "tnazol_for"
+msgstr "التنازل عن الاسهم لشركة"
+
+#: company_profile/models.py:418
+msgid "cause_for_tnazol"
+msgstr "اسباب التنازل"
+
+#: company_profile/models.py:420
+msgid "financial_ability_file"
+msgstr "المقدرة المالية"
+
+#: company_profile/models.py:424
+msgid "Tnazol Shraka"
+msgstr "تنازل عن شركة او اسهم  "
+
+#: company_profile/models.py:431 company_profile/models.py:432
+#: company_profile/templates/company_profile/base.html:123
+msgid "Application: Tnazol Shraka"
+msgstr "طلب تنازل عن اسهم او شركة"
+
+#: company_profile/models.py:445
+msgid "cause_for_tajeel"
+msgstr "اسباب التأجيل"
+
+#: company_profile/models.py:447
+msgid "cause_for_tajeel_file"
+msgstr "مسببات التأجيل"
+
+#: company_profile/models.py:450
+msgid "Tajeel Tnazol"
+msgstr "تأجيل التنازل"
+
+#: company_profile/models.py:457 company_profile/models.py:458
+#: company_profile/templates/company_profile/base.html:126
+msgid "Application: Tajeel Tnazol"
+msgstr "طلب تأجيل تنازل"
+
+#: company_profile/models.py:462
+msgid "tajmeed_from"
+msgstr "بداية التجمييد"
+
+#: company_profile/models.py:463
+msgid "tajmeed_to"
+msgstr "نهاية التجميد"
+
+#: company_profile/models.py:464
+msgid "cause_for_tajmeed"
+msgstr "سبب التجمييد"
+
+#: company_profile/models.py:466
+msgid "cause_for_uncontrolled_force_file"
+msgstr "مسببات القوة القاهرة"
+
+#: company_profile/models.py:467
+msgid "letter_from_jeha_amnia_file"
+msgstr "خطاب من الجهة الامنية بالمنطقة"
+
+#: company_profile/models.py:470
+msgid "Tajmeed"
+msgstr "تجمييد"
+
+#: company_profile/models.py:477 company_profile/models.py:478
+#: company_profile/templates/company_profile/base.html:129
+msgid "Application: Tajmeed"
+msgstr "طلب تجمييد"
+
+#: company_profile/models.py:482
+msgid "technical_presentation_date"
+msgstr "تاريخ العرض الفني"
+
+#: company_profile/models.py:483
+msgid "cause_for_takhali"
+msgstr "مسببات التخلي"
+
+#: company_profile/models.py:485
+msgid "technical_report_file"
+msgstr "ملف التقرير الفني"
+
+#: company_profile/models.py:488
+msgid "Takhali"
+msgstr "تخلي"
+
+#: company_profile/models.py:495 company_profile/models.py:496
+#: company_profile/templates/company_profile/base.html:132
+msgid "Application: Takhali"
+msgstr "طلب تخلي"
+
+#: company_profile/models.py:500
+msgid "tamdeed_from"
+msgstr "بداية التمديد"
+
+#: company_profile/models.py:501
+msgid "tamdeed_to"
+msgstr "نهاية التمديد"
+
+#: company_profile/models.py:502
+msgid "cause_for_tamdeed"
+msgstr "مسببات التمديد"
+
+#: company_profile/models.py:504 company_profile/models.py:541
+msgid "approved_work_plan_file"
+msgstr "خطة العمل المجازة"
+
+#: company_profile/models.py:505
+msgid "tnazol_file"
+msgstr "‫التنازل‬‫ عن‬ ‫جزء‬ ‫من‬ ‫مساحة‬ ‫المربع‬"
+
+#: company_profile/models.py:508
+msgid "Tamdeed"
+msgstr "تمديد"
+
+#: company_profile/models.py:515 company_profile/models.py:516
+#: company_profile/templates/company_profile/base.html:135
+msgid "Application: Tamdeed"
+msgstr "طلب تمديد"
+
+#: company_profile/models.py:520
+msgid "taaweed_from"
+msgstr "بداية التعويض"
+
+#: company_profile/models.py:521
+msgid "taaweed_to"
+msgstr "نهاية التعويض"
+
+#: company_profile/models.py:522
+msgid "cause_for_taaweed"
+msgstr "مسببات التعويض"
+
+#: company_profile/models.py:525
+msgid "Taaweed"
+msgstr "تعويض"
+
+#: company_profile/models.py:532 company_profile/models.py:533
+#: company_profile/templates/company_profile/base.html:138
+msgid "Application: Taaweed"
+msgstr "طلب تعويض"
+
+#: company_profile/models.py:537
+msgid "mda_from"
+msgstr "بداية الMDA"
+
+#: company_profile/models.py:538
+msgid "mda_to"
+msgstr "نهاية الMDA"
+
+#: company_profile/models.py:539
+msgid "cause_for_mda"
+msgstr "مسببات الMDA"
+
+#: company_profile/models.py:544
+msgid "MDA"
+msgstr "MDA"
+
+#: company_profile/models.py:551 company_profile/models.py:552
+#: company_profile/templates/company_profile/base.html:141
+msgid "Application: MDA"
+msgstr "طلب MDA'"
+
+#: company_profile/models.py:556
+msgid "reason_for_change"
+msgstr "اسباب الحاجة لتغيير طريقة العمل او المعالجة"
+
+#: company_profile/models.py:557
+msgid "purpose_for_change"
+msgstr "الغرض من تغيير طريقة العمل او المعالجة"
+
+#: company_profile/models.py:558
+msgid "rational_reason"
+msgstr "الاساس المنطقي لتغيير طريقة العمل او المعالجة"
+
+#: company_profile/models.py:560
+msgid "study_about_change_reason_file"
+msgstr "دراسة عن اسباب التغيير"
+
+#: company_profile/models.py:561
+msgid "study_about_new_suggestion_file"
+msgstr "دراسة للمقترح الجديد"
+
+#: company_profile/models.py:564
+msgid "Change Work Procedure"
+msgstr "تغيير طريقة العمل"
+
+#: company_profile/models.py:571 company_profile/models.py:572
+#: company_profile/templates/company_profile/base.html:144
+msgid "Application: Change Work Procedure"
+msgstr "طلب تغيير طريقة العمل"
+
+#: company_profile/models.py:576
+msgid "total_in_gram"
+msgstr "اجمالي انتاج الشركة بالجرام"
+
+#: company_profile/models.py:577
+msgid "net_in_gram"
+msgstr "اجمالي الوزن الصافي بالجرام"
+
+#: company_profile/models.py:578
+msgid "zakat_in_gram"
+msgstr "استلام الزكاة صافي بالجرام"
+
+#: company_profile/models.py:579
+msgid "awaad_jalila_in_gram"
+msgstr "استلام العوائد الجليلة صافي بالجرام"
+
+#: company_profile/models.py:580
+msgid "arbah_amal_in_gram"
+msgstr "استلام ارباح اعمال صافي بالجرام"
+
+#: company_profile/models.py:581
+msgid "sold_for_bank_of_sudan_in_gram"
+msgstr "الكمية المباعة لبنك السودان المركزي صافي بالجرام"
+
+#: company_profile/models.py:582
+msgid "amount_to_export_in_gram"
+msgstr "الكمية المراد تصديرها صافي بالجرام"
+
+#: company_profile/models.py:583
+msgid "remain_in_gram"
+msgstr "متبقي الذهب عند المصفاة"
+
+#: company_profile/models.py:585
+msgid "f1"
+msgstr "‫إستمارة‬‫ الانتاج ‫الموقعة‬ ‫من‬ ‫الحقل‬ ‫(‫الشحن‬‫ والترحيل‬)‬"
+
+#: company_profile/models.py:586
+msgid "f2"
+msgstr "‫شهادة‬‫موافقة‬ ‫بنك‬ ‫السودان‬ ‫المركزي‬ ‫علي‬ ‫التصدير"
+
+#: company_profile/models.py:587
+msgid "f3"
+msgstr "‫إستمارة‬‫الشحن"
+
+#: company_profile/models.py:588
+msgid "f4"
+msgstr "‫شهادة‬‫التحصيل‬ ‫للعوائد‬ ‫الجليلة‬ ‫وشهادة‬ ‫الزكاة‬ ‫وارباح‬ ‫االعمال‬ ‫وتنمية‬ ‫المجتمع ‫المحلي‬‫ صادرة‬ ‫عن‬ ‫مصفاة‬ ‫السودان‬ ‫للذهب‬"
+
+#: company_profile/models.py:589
+msgid "f5"
+msgstr "‫شهادة‬‫التحليل‬ ‫من‬ ‫المصفاة‬"
+
+#: company_profile/models.py:590
+msgid "f6"
+msgstr "‫إستمارة‬‫إستلام‬ ‫معادن‬ ‫من‬ ‫المصفاة"
+
+#: company_profile/models.py:591
+msgid "f7"
+msgstr "‫شهادة‬‫تحليل‬ ‫من‬ ‫المواصفات‬ ‫والمقاييس‬ ‫(‬‫فحص ‬‫سبائك‬ ‫الصادر‬)"
+
+#: company_profile/models.py:592
+msgid "f8"
+msgstr "‫خطاب ‬‫معنون‬ ‫الى‬ ‫وكيل‬ ‫اول‬ ‫وزارة‬ ‫التجارة‬ ‫الخارجية‬ ‫صادرة‬‫عن‬ ‫المواصفات ‫والمقاييس‬"
+
+#: company_profile/models.py:593
+msgid "f9"
+msgstr "‫عقد‬‫البيع‬ ‫لسبائك‬ ‫الصادر‬"
+
+#: company_profile/models.py:596 company_profile/models.py:627
+msgid "Export Gold"
+msgstr "صادر ذهب"
+
+#: company_profile/models.py:603 company_profile/models.py:604
+#: company_profile/templates/company_profile/base.html:147
+msgid "Application: Export Gold"
+msgstr "طلب صادر ذهب"
+
+#: company_profile/models.py:608
+msgid "mineral"
+msgstr "المعدن"
+
+#: company_profile/models.py:609
+msgid "license_type"
+msgstr "نوع الرخصة"
+
+#: company_profile/models.py:610
+msgid "amount_in_gram"
+msgstr "الكمية بالجرام"
+
+#: company_profile/models.py:611
+msgid "sale_price"
+msgstr "سعر البيع"
+
+#: company_profile/models.py:612
+msgid "export_country"
+msgstr "الدولة المرسل إليها"
+
+#: company_profile/models.py:613
+msgid "export_city"
+msgstr "المدينة المرسل إليها"
+
+#: company_profile/models.py:614
+msgid "export_address"
+msgstr "العنوان المرسل إليه"
+
+#: company_profile/models.py:616
+msgid "f11"
+msgstr "‫خطاب‬‫ رسمي‬ ‫من‬ ‫الشركة‬"
+
+#: company_profile/models.py:617
+msgid "f12"
+msgstr "‫صورة‬‫من‬ ‫حصيلة‬ ‫الصادر‬ ‫بعد‬ ‫التصدير"
+
+#: company_profile/models.py:618
+msgid "f13"
+msgstr "‫تحليل‬ ‫الخام‬ ‫من‬ ‫معمل‬ ‫معتمد‬"
+
+#: company_profile/models.py:619
+msgid "f14"
+msgstr "‫عقد‬‫بيع‬ ‫الخام"
+
+#: company_profile/models.py:620
+msgid "f15"
+msgstr "‫حصيلة ‬‫صادر‬ ‫بعد‬ ‫التصدير"
+
+#: company_profile/models.py:621
+msgid "f16"
+msgstr "‫صورة‬‫من‬ ‫ملف‬ ‫الشركة‬ ‫كاملا ‫ً‬ ‫لدى ‫الولاية ‫(‬‫في‬‫ حالة‬ ‫الرخصة‬ ‫الولائية)"
+
+#: company_profile/models.py:622
+msgid "f17"
+msgstr "‫الرخصة‬‫ والسجل‬ ‫التجاري ‫(‬‫في‬‫ حالة‬ ‫الرخصة‬ ‫الولائية)"
+
+#: company_profile/models.py:623
+msgid "f18"
+msgstr "‫العقد‬‫الولائي ‫الساري‬ ‫(‬‫في‬‫ حالة‬ ‫الرخصة‬ ‫الولائية)"
+
+#: company_profile/models.py:624
+msgid "f19"
+msgstr "‫في‬‫ حالة‬ ‫التصدير‬ ‫عن‬ ‫طريق‬ ‫شركة‬ ‫اخري‬ ‫غير‬ ‫الشركة‬ ‫محل‬ ‫الطلب‬ ‫يجب‬ ‫إحضار عقد‬ ‫البيع‬ المحلي بين الشركتين، اضافة الى عقد البيع ‫الخارجي‬ ‫للشركة‬ ‫محل‬ التصدير ‫(‬‫في‬‫ حالة‬ ‫الرخصة‬ ‫الولائية)"
+
+#: company_profile/models.py:634 company_profile/models.py:635
+#: company_profile/templates/company_profile/base.html:150
+msgid "Application: Export Gold Raw"
+msgstr "طلب صادر خام"
+
+#: company_profile/tables.py:22 company_profile/tables.py:35
+#: company_profile/tables.py:48 company_profile/tables.py:61
+#: company_profile/tables.py:74 company_profile/tables.py:87
+#: company_profile/tables.py:100 company_profile/tables.py:113
+#: company_profile/tables.py:126 company_profile/tables.py:139
+#: company_profile/tables.py:152 company_profile/tables.py:165
+#: company_profile/tables.py:178 company_profile/tables.py:191
+#: company_profile/tables.py:204 company_profile/tables.py:217
+#: company_profile/tables.py:239 company_profile/tables.py:252
 msgid "No records."
 msgstr "لايوجد سجل."
 
+#: company_profile/templates/company_profile/application_add.html:15
+#: company_profile/templates/company_profile/application_add_master_details.html:35
+msgid "Submit"
+msgstr "ارسال"
+
+#: company_profile/templates/company_profile/application_add_master_details.html:47
+msgid "add_more"
+msgstr "اضافة المزيد"
+
+#: company_profile/templates/company_profile/application_list.html:14
+msgid "New application"
+msgstr "طلب جديد"
+
+#: company_profile/templates/company_profile/application_list.html:20
+msgid "In progress"
+msgstr "قيد الاجراء"
+
+#: company_profile/templates/company_profile/application_list.html:21
+msgid "Approved"
+msgstr "تم التصديق"
+
+#: company_profile/templates/company_profile/application_list.html:22
+msgid "Rejected"
+msgstr "تم الرفض"
+
 #: company_profile/templates/company_profile/base.html:9
-#: company_profile/templates/company_profile/base.html:158
+#: company_profile/templates/company_profile/base.html:61
 msgid "E-Services App"
 msgstr "نظام المعاملات الالكترونية"
 
-#: company_profile/templates/company_profile/base.html:163
-#, fuzzy
-#| msgid "Change Password"
+#: company_profile/templates/company_profile/base.html:66
 msgid "Change password"
 msgstr "تغيير كلمة المرور"
 
-#: company_profile/templates/company_profile/base.html:164
+#: company_profile/templates/company_profile/base.html:67
 msgid "Log Out"
 msgstr "خروج"
 
-#: company_profile/templates/company_profile/base.html:191
+#: company_profile/templates/company_profile/base.html:93
 msgid "Menu"
 msgstr "القائمة"
 
-#: company_profile/templates/company_profile/base.html:194
-msgid "Foreigner movement"
-msgstr "طلب تحرك اجنبي"
+#: company_profile/templates/company_profile/base.html:96
+msgid "Home page"
+msgstr "الرئيسية"
 
-#: company_profile/workflow.py:10
+#: company_profile/views/__init__.py:101
+msgid "List of foreigner movements"
+msgstr "قائمة طلبات حركة الاجانب"
+
+#: company_profile/views/__init__.py:119
+msgid "Add new movement"
+msgstr "اضافة طلب حركة اجنبي"
+
+#: company_profile/views/__init__.py:139 company_profile/views/__init__.py:215
+#: company_profile/views/add_area.py:64
+#: company_profile/views/change_company_name.py:68
+#: company_profile/views/change_work_procedure.py:65
+#: company_profile/views/exploration_time.py:64
+#: company_profile/views/export_gold.py:72
+#: company_profile/views/export_gold_raw.py:72 company_profile/views/mda.py:64
+#: company_profile/views/remove_area.py:67 company_profile/views/taaweed.py:63
+#: company_profile/views/tajeel_tnazol.py:64
+#: company_profile/views/tajmeed.py:65 company_profile/views/takhali.py:64
+#: company_profile/views/tamdeed.py:65
+#: company_profile/views/technical_financial_report.py:64
+#: company_profile/views/tnazol_shraka.py:65
+#: company_profile/views/work_plan.py:64
+msgid "Application sent successfully."
+msgstr "تم ارسال الطلب بنجاح."
+
+#: company_profile/views/__init__.py:152
+msgid "Show movement"
+msgstr "عرض طلب حركة اجنبي"
+
+#: company_profile/views/__init__.py:158
+msgid "List of borrow materials"
+msgstr "قائمة طلبات الاستلاف"
+
+#: company_profile/views/__init__.py:177
+msgid "Add new borrow materials"
+msgstr "اضافة طلب اسلاف مواد"
+
+#: company_profile/views/__init__.py:233
+msgid "Show borrow materials"
+msgstr "عرض طلب استلاف مواد"
+
+#: company_profile/views/add_area.py:28
+msgid "List of Added area"
+msgstr "قائمة طلبات اضافة مساحة"
+
+#: company_profile/views/add_area.py:46
+msgid "Add new area"
+msgstr "اضافة مساحة جديدة"
+
+#: company_profile/views/add_area.py:77
+msgid "Show added area"
+msgstr "عرض طلب المساحة المضافة"
+
+#: company_profile/views/change_company_name.py:28
+msgid "List of company name changes"
+msgstr "قائمة تغيير اسماء الشركات"
+
+#: company_profile/views/change_company_name.py:46
+msgid "Add new company name"
+msgstr "اضافة اسم شركة جديد"
+
+#: company_profile/views/change_company_name.py:81
+msgid "Show company name"
+msgstr "عرض طلب تغيير اسم شركة"
+
+#: company_profile/views/change_work_procedure.py:28
+msgid "List of change work procedure"
+msgstr "قائمة تغيير طريقة العمل"
+
+#: company_profile/views/change_work_procedure.py:46
+msgid "Add change work procedure"
+msgstr "اضافة طلب تغيير طريقة عمل"
+
+#: company_profile/views/change_work_procedure.py:78
+msgid "Show change work procedure"
+msgstr "عرض طلب تغيير طريقة عمل"
+
+#: company_profile/views/exploration_time.py:28
+msgid "List of exploration times"
+msgstr "قائمة طلبات مواقيت الاستكشاف"
+
+#: company_profile/views/exploration_time.py:46
+msgid "Add new exploration time"
+msgstr "اضافة طلب ميقات استكشاف"
+
+#: company_profile/views/exploration_time.py:77
+msgid "Show exploration time"
+msgstr "عرض طلب مدة استكشاف"
+
+#: company_profile/views/export_gold.py:28
+msgid "List of export gold"
+msgstr "قائمة طابات صادر ذهب"
+
+#: company_profile/views/export_gold.py:46
+msgid "Add export gold"
+msgstr "اضافة طلب صادر ذهب"
+
+#: company_profile/views/export_gold.py:85
+msgid "Show export gold"
+msgstr "عرض طلب صادر ذهب"
+
+#: company_profile/views/export_gold_raw.py:28
+msgid "List of export gold raw"
+msgstr "قائمة طلبات صادر خام"
+
+#: company_profile/views/export_gold_raw.py:46
+msgid "Add export gold raw"
+msgstr "اضافة طلب صادر خام"
+
+#: company_profile/views/export_gold_raw.py:85
+msgid "Show export gold raw"
+msgstr "عرض طلب صادر خام"
+
+#: company_profile/views/mda.py:28
+msgid "List of mda"
+msgstr "قائمة طلبات MDA"
+
+#: company_profile/views/mda.py:46
+msgid "Add mda"
+msgstr "اضافة طلب MDA"
+
+#: company_profile/views/mda.py:77
+msgid "Show mda"
+msgstr "عرض طلب MDA"
+
+#: company_profile/views/remove_area.py:28
+msgid "List of removed area"
+msgstr "قائمة طلبات تنازل عن مساحة"
+
+#: company_profile/views/remove_area.py:46
+msgid "Add remove area application"
+msgstr "اضافة طلب تنازل عن مساحة"
+
+#: company_profile/views/remove_area.py:80
+msgid "Show removed area"
+msgstr "عرض طلب تنازل عن مساحة"
+
+#: company_profile/views/taaweed.py:28
+msgid "List of taaweed"
+msgstr "قائمة طلبات تعويض"
+
+#: company_profile/views/taaweed.py:46
+msgid "Add taaweed"
+msgstr "اضافة طلب تعويض"
+
+#: company_profile/views/taaweed.py:76
+msgid "Show taaweed"
+msgstr "عرض طلب تعويض"
+
+#: company_profile/views/tajeel_tnazol.py:28
+msgid "List of tajeel tnazol"
+msgstr "قائمة طلبات تأجيل تنازل"
+
+#: company_profile/views/tajeel_tnazol.py:46
+msgid "Add tajeel tnazol"
+msgstr "اضافة طلب تأجيل تنازل"
+
+#: company_profile/views/tajeel_tnazol.py:77
+msgid "Show tajeel tnazol"
+msgstr "عرض طلب تأجيل تنازل"
+
+#: company_profile/views/tajmeed.py:28
+msgid "List of tajmeed"
+msgstr "قائمة طلبات التجمييد"
+
+#: company_profile/views/tajmeed.py:46
+msgid "Add tajmeed"
+msgstr "اضافة طلب تجمييد"
+
+#: company_profile/views/tajmeed.py:78
+msgid "Show tajmeed"
+msgstr "عرض طلب تجمييد"
+
+#: company_profile/views/takhali.py:28
+msgid "List of takhali"
+msgstr "قائمة طلبات التخلي"
+
+#: company_profile/views/takhali.py:46
+msgid "Add takhali"
+msgstr "اضافة طلب تخلي"
+
+#: company_profile/views/takhali.py:77
+msgid "Show takhali"
+msgstr "عرض طلب تخلي"
+
+#: company_profile/views/tamdeed.py:28
+msgid "List of tamdeed"
+msgstr "قائمة طلبات التمديد"
+
+#: company_profile/views/tamdeed.py:46
+msgid "Add tamdeed"
+msgstr "اضافة طلب تمديد"
+
+#: company_profile/views/tamdeed.py:78
+msgid "Show tamdeed"
+msgstr "عرض طلب تمديد"
+
+#: company_profile/views/technical_financial_report.py:28
+msgid "List of technical & financial reports"
+msgstr "قائمة طلبات التقارير الفنية والمالية"
+
+#: company_profile/views/technical_financial_report.py:46
+msgid "Add new technical & financial report"
+msgstr "اضافة طلب تقرير فني ومالي"
+
+#: company_profile/views/technical_financial_report.py:77
+msgid "Show technical & financial report"
+msgstr "عرض طلب تقرير فني ومالي"
+
+#: company_profile/views/tnazol_shraka.py:28
+msgid "List of tnazol shraka"
+msgstr "قائمة طلبات التنازل عن شركة او اسهم"
+
+#: company_profile/views/tnazol_shraka.py:46
+msgid "Add tnazol shraka"
+msgstr "اضافة طلب تنازل عن شركة او سهم"
+
+#: company_profile/views/tnazol_shraka.py:78
+msgid "Show tnazol shraka"
+msgstr "عرض طلب تنازل عن شركة او سهم"
+
+#: company_profile/views/work_plan.py:28
+msgid "List of work plans"
+msgstr "قائمة طلبات خطة عمل"
+
+#: company_profile/views/work_plan.py:46
+msgid "Add new work plan"
+msgstr "اضافة طلب خطة عمل"
+
+#: company_profile/views/work_plan.py:77
+msgid "Show work plan"
+msgstr "عرض طلب خطة عمل"
+
+#: company_profile/workflow.py:14
 msgid "Submitted state"
 msgstr "تم ارسال الطلب"
 
-#: company_profile/workflow.py:11
+#: company_profile/workflow.py:15
 msgid "Accepted state"
 msgstr "تم قبول الطلب"
 
-#: company_profile/workflow.py:12
+#: company_profile/workflow.py:16
 msgid "Approved state"
 msgstr "تم تصديق الطلب"
 
-#: company_profile/workflow.py:13
+#: company_profile/workflow.py:17
 msgid "Rejected state"
 msgstr "تم رفض الطلب"
+
+#: company_profile/workflow.py:41
+msgid "New application submitted"
+msgstr "تم ارسال طلب جديد"
+
+#: company_profile/workflow.py:45
+msgid "Application accepted"
+msgstr "تم استلام الطلب"
+
+#: company_profile/workflow.py:49
+msgid "Application approved"
+msgstr "تم تصديق الطلب"
+
+#: company_profile/workflow.py:53
+msgid "Application rejected"
+msgstr "تم رفض الطلب"
+
+#: company_profile/workflow.py:90
+msgid ""
+"Wrong transition path. You can reach submitted state only when creating a "
+"new application."
+msgstr ""
+
+#: company_profile/workflow.py:93
+msgid ""
+"Wrong transition path. You can reach accepted state only from submitted "
+"state."
+msgstr ""
+
+#: company_profile/workflow.py:98
+msgid ""
+"Wrong transition path. You can reach approved state only from accepted state."
+msgstr ""
+
+#: company_profile/workflow.py:103
+msgid ""
+"Wrong transition path. You can reach rejected state only from accepted state."
+msgstr ""
+
+#: company_profile/workflow.py:107
+msgid "Wrong transition path."
+msgstr ""
 
 #: templates/account/login.html:6
 msgid "Log In page"
@@ -405,10 +1312,8 @@ msgid "Log In"
 msgstr "دخول"
 
 #: templates/account/logout.html:7
-#, fuzzy
-#| msgid "Log In"
 msgid "Log out"
-msgstr "دخول"
+msgstr "خروج"
 
 #: templates/account/logout.html:8
 msgid "Are you sure you want to logout?"
@@ -420,13 +1325,17 @@ msgstr "خروج"
 
 #: templates/account/password_change.html:7
 #: templates/account/password_change.html:12
-#: templates/account/password_change.html:22
+#: templates/account/password_change.html:23
 msgid "Change Password"
 msgstr "تغيير كلمة المرور"
 
-#: templates/account/password_change.html:24
+#: templates/account/password_change.html:25
 msgid "Forgot Password?"
 msgstr "هل نسيت كلمة المرور؟"
+
+#: templates/admin/__base_site.html:3
+msgid "SMRC e-services"
+msgstr "بوابة الخدمات الالكترونية"
 
 #: templates/allauth/layouts/base.html:18
 msgid "Messages:"
@@ -444,69 +1353,8 @@ msgstr "خروج"
 msgid "Sign In"
 msgstr "دخول"
 
+#~ msgid "Foreigner movement"
+#~ msgstr "طلب تحرك اجنبي"
 
-msgid "Borrow materials "
-msgstr "المواد المستلفة"
-
-msgid "List of foreigner movements"
-msgstr "قائمة طلبات حركة الاجانب"
-
-msgid "List of borrow materials"
-msgstr "قائمة طلبات الاستلاف"
-
-msgid "Company profile"
-msgstr "ملف الشركة"
-
-msgid "Add new borrow materials"
-msgstr "اضافة طلب اسلاف مواد"
-
-msgid "add_more"
-msgstr "اضافة المزيد"
-
-msgid "Show movement"
-msgstr "عرض طلب حركة اجنبي"
-
-msgid "Show borrow materials"
-msgstr "عرض طلب استلاف مواد"
-
-msgid "Application sent successfully."
-msgstr "تم ارسال الطلب بنجاح."
-
-msgid "official_letter_file"
-msgstr "خطاب رسمي ‫من‬ ‫الشركة‬"
-
-msgid "passport_copy_file"
-msgstr "صورة من جواز ساري"
-
-msgid "cv_file"
-msgstr "السيرة الذاتية"
-
-msgid "experiance_certificates_file"
-msgstr "شهادات الخبرة المعتمدة"
-
-msgid "borrow_materials_list_file"
-msgstr "‫كشف‬‫ المواد‬ ‫المراد‬ ‫إستالفها‬"
-
-msgid "borrow_from_approval_file"
-msgstr "‫موافقة‬‫الشركة‬ ‫المستلف‬ ‫منها‬"
-
-msgid "Site header"
-msgstr "بوابة الخدمات الإلكترونية"
-
-msgid "Home page"
-msgstr "الرئيسية"
-
-msgid "accounts"
-msgstr "حسابات المستخدمين"
-
-msgid "New application submitted"
-msgstr "تم ارسال طلب جديد"
-
-msgid "Application accepted"
-msgstr "تم استلام الطلب"
-
-msgid "Application approved"
-msgstr "تم تصديق الطلب"
-
-msgid "Application rejected"
-msgstr "تم رفض الطلب"
+#~ msgid "Borrow materials "
+#~ msgstr "المواد المستلفة"

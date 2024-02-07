@@ -6,8 +6,22 @@ from django.conf import settings
 from .views import SetLanguageView, HomePageView, \
                    AppForignerMovementListView,AppForignerMovementCreateView,AppForignerMovementReadonlyView, \
                    AppBorrowMaterialListView,AppBorrowMaterialCreateView,AppBorrowMaterialReadonlyView, \
-                   LkpLocalitySelectView
-                                    
+                   LkpLocalitySelectView,AppWorkPlanListView,AppWorkPlanCreateView,AppWorkPlanReadonlyView, \
+                   AppTechnicalFinancialReportListView, AppTechnicalFinancialReportCreateView, AppTechnicalFinancialReportReadonlyView, \
+                   AppChangeCompanyNameListView, AppChangeCompanyNameCreateView, AppChangeCompanyNameReadonlyView, \
+                   AppExplorationTimeListView, AppExplorationTimeCreateView, AppExplorationTimeReadonlyView, \
+                   AppAddAreaListView, AppAddAreaCreateView, AppAddAreaReadonlyView, \
+                   AppRemoveAreaListView, AppRemoveAreaCreateView, AppRemoveAreaReadonlyView, \
+                   AppTnazolShrakaListView, AppTnazolShrakaCreateView, AppTnazolShrakaReadonlyView, \
+                   AppTajeelTnazolListView, AppTajeelTnazolCreateView, AppTajeelTnazolReadonlyView, \
+                   AppTajmeedListView, AppTajmeedCreateView, AppTajmeedReadonlyView, \
+                   AppTakhaliListView, AppTakhaliCreateView, AppTakhaliReadonlyView, \
+                   AppTamdeedListView, AppTamdeedCreateView, AppTamdeedReadonlyView, \
+                   AppTaaweedListView, AppTaaweedCreateView, AppTaaweedReadonlyView, \
+                   AppMdaListView, AppMdaCreateView, AppMdaReadonlyView, \
+                   AppChangeWorkProcedureListView, AppChangeWorkProcedureCreateView, AppChangeWorkProcedureReadonlyView, \
+                   AppExportGoldListView, AppExportGoldCreateView, AppExportGoldReadonlyView, \
+                   AppExportGoldRawListView, AppExportGoldRawCreateView, AppExportGoldRawReadonlyView
 
 app_name = "profile"
 urlpatterns = [                                                        
@@ -25,5 +39,85 @@ urlpatterns = [
     path('app_borrow_materials/<int:type>/', AppBorrowMaterialListView.as_view(), name='app_borrow_list'),
     path('app_borrow_materials/<int:pk>/show/', AppBorrowMaterialReadonlyView.as_view(), name='app_borrow_show'),    
     path('app_borrow_materials/add/', AppBorrowMaterialCreateView.as_view(), name='app_borrow_add'),
+
+    path('app_work_plan/', AppWorkPlanListView.as_view(), name='app_work_plan_list'),
+    path('app_work_plan/<int:type>/', AppWorkPlanListView.as_view(), name='app_work_plan_list'),
+    path('app_work_plan/<int:pk>/show/', AppWorkPlanReadonlyView.as_view(), name='app_work_plan_show'),    
+    path('app_work_plan/add/', AppWorkPlanCreateView.as_view(), name='app_work_plan_add'),
+
+    path('app_technical_financial_report/', AppTechnicalFinancialReportListView.as_view(), name='app_technical_financial_report_list'),
+    path('app_technical_financial_report/<int:type>/', AppTechnicalFinancialReportListView.as_view(), name='app_technical_financial_report_list'),
+    path('app_technical_financial_report/<int:pk>/show/', AppTechnicalFinancialReportReadonlyView.as_view(), name='app_technical_financial_report_show'),    
+    path('app_technical_financial_report/add/', AppTechnicalFinancialReportCreateView.as_view(), name='app_technical_financial_report_add'),
+
+    path('app_change_company_name/', AppChangeCompanyNameListView.as_view(), name='app_change_company_name_list'),
+    path('app_change_company_name/<int:type>/', AppChangeCompanyNameListView.as_view(), name='app_change_company_name_list'),
+    path('app_change_company_name/<int:pk>/show/', AppChangeCompanyNameReadonlyView.as_view(), name='app_change_company_name_show'),    
+    path('app_change_company_name/add/', AppChangeCompanyNameCreateView.as_view(), name='app_change_company_name_add'),
+
+    path('app_exploration_time/', AppExplorationTimeListView.as_view(), name='app_exploration_time_list'),
+    path('app_exploration_time/<int:type>/', AppExplorationTimeListView.as_view(), name='app_exploration_time_list'),
+    path('app_exploration_time/<int:pk>/show/', AppExplorationTimeReadonlyView.as_view(), name='app_exploration_time_show'),    
+    path('app_exploration_time/add/', AppExplorationTimeCreateView.as_view(), name='app_exploration_time_add'),
+
+    path('app_add_area/', AppAddAreaListView.as_view(), name='app_add_area_list'),
+    path('app_add_area/<int:type>/', AppAddAreaListView.as_view(), name='app_add_area_list'),
+    path('app_add_area/<int:pk>/show/', AppAddAreaReadonlyView.as_view(), name='app_add_area_show'),    
+    path('app_add_area/add/', AppAddAreaCreateView.as_view(), name='app_add_area_add'),
+
+    path('app_remove_area/', AppRemoveAreaListView.as_view(), name='app_remove_area_list'),
+    path('app_remove_area/<int:type>/', AppRemoveAreaListView.as_view(), name='app_remove_area_list'),
+    path('app_remove_area/<int:pk>/show/', AppRemoveAreaReadonlyView.as_view(), name='app_remove_area_show'),    
+    path('app_remove_area/add/', AppRemoveAreaCreateView.as_view(), name='app_remove_area_add'),
+
+    path('app_tnazol_shraka/', AppTnazolShrakaListView.as_view(), name='app_tnazol_shraka_list'),
+    path('app_tnazol_shraka/<int:type>/', AppTnazolShrakaListView.as_view(), name='app_tnazol_shraka_list'),
+    path('app_tnazol_shraka/<int:pk>/show/', AppTnazolShrakaReadonlyView.as_view(), name='app_tnazol_shraka_show'),    
+    path('app_tnazol_shraka/add/', AppTnazolShrakaCreateView.as_view(), name='app_tnazol_shraka_add'),
+
+    path('app_tajeel_tnazol/', AppTajeelTnazolListView.as_view(), name='app_tajeel_tnazol_list'),
+    path('app_tajeel_tnazol/<int:type>/', AppTajeelTnazolListView.as_view(), name='app_tajeel_tnazol_list'),
+    path('app_tajeel_tnazol/<int:pk>/show/', AppTajeelTnazolReadonlyView.as_view(), name='app_tajeel_tnazol_show'),    
+    path('app_tajeel_tnazol/add/', AppTajeelTnazolCreateView.as_view(), name='app_tajeel_tnazol_add'),
+
+    path('app_tajmeed/', AppTajmeedListView.as_view(), name='app_tajmeed_list'),
+    path('app_tajmeed/<int:type>/', AppTajmeedListView.as_view(), name='app_tajmeed_list'),
+    path('app_tajmeed/<int:pk>/show/', AppTajmeedReadonlyView.as_view(), name='app_tajmeed_show'),    
+    path('app_tajmeed/add/', AppTajmeedCreateView.as_view(), name='app_tajmeed_add'),
+
+    path('app_takhali/', AppTakhaliListView.as_view(), name='app_takhali_list'),
+    path('app_takhali/<int:type>/', AppTakhaliListView.as_view(), name='app_takhali_list'),
+    path('app_takhali/<int:pk>/show/', AppTakhaliReadonlyView.as_view(), name='app_takhali_show'),    
+    path('app_takhali/add/', AppTakhaliCreateView.as_view(), name='app_takhali_add'),
+
+    path('app_tamdeed/', AppTamdeedListView.as_view(), name='app_tamdeed_list'),
+    path('app_tamdeed/<int:type>/', AppTamdeedListView.as_view(), name='app_tamdeed_list'),
+    path('app_tamdeed/<int:pk>/show/', AppTamdeedReadonlyView.as_view(), name='app_tamdeed_show'),    
+    path('app_tamdeed/add/', AppTamdeedCreateView.as_view(), name='app_tamdeed_add'),
     
+    path('app_taaweed/', AppTaaweedListView.as_view(), name='app_taaweed_list'),
+    path('app_taaweed/<int:type>/', AppTaaweedListView.as_view(), name='app_taaweed_list'),
+    path('app_taaweed/<int:pk>/show/', AppTaaweedReadonlyView.as_view(), name='app_taaweed_show'),    
+    path('app_taaweed/add/', AppTaaweedCreateView.as_view(), name='app_taaweed_add'),
+
+    path('app_mda/', AppMdaListView.as_view(), name='app_mda_list'),
+    path('app_mda/<int:type>/', AppMdaListView.as_view(), name='app_mda_list'),
+    path('app_mda/<int:pk>/show/', AppMdaReadonlyView.as_view(), name='app_mda_show'),    
+    path('app_mda/add/', AppMdaCreateView.as_view(), name='app_mda_add'),
+
+    path('app_change_work_procedure/', AppChangeWorkProcedureListView.as_view(), name='app_change_work_procedure_list'),
+    path('app_change_work_procedure/<int:type>/', AppChangeWorkProcedureListView.as_view(), name='app_change_work_procedure_list'),
+    path('app_change_work_procedure/<int:pk>/show/', AppChangeWorkProcedureReadonlyView.as_view(), name='app_change_work_procedure_show'),    
+    path('app_change_work_procedure/add/', AppChangeWorkProcedureCreateView.as_view(), name='app_change_work_procedure_add'),
+
+    path('app_export_gold/', AppExportGoldListView.as_view(), name='app_export_gold_list'),
+    path('app_export_gold/<int:type>/', AppExportGoldListView.as_view(), name='app_export_gold_list'),
+    path('app_export_gold/<int:pk>/show/', AppExportGoldReadonlyView.as_view(), name='app_export_gold_show'),    
+    path('app_export_gold/add/', AppExportGoldCreateView.as_view(), name='app_export_gold_add'),
+
+    path('app_export_gold_raw/', AppExportGoldRawListView.as_view(), name='app_export_gold_raw_list'),
+    path('app_export_gold_raw/<int:type>/', AppExportGoldRawListView.as_view(), name='app_export_gold_raw_list'),
+    path('app_export_gold_raw/<int:pk>/show/', AppExportGoldRawReadonlyView.as_view(), name='app_export_gold_raw_show'),    
+    path('app_export_gold_raw/add/', AppExportGoldRawCreateView.as_view(), name='app_export_gold_raw_add'),
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

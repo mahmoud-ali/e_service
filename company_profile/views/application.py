@@ -1,0 +1,86 @@
+from django.urls import reverse_lazy
+from django.views.generic import View,ListView,CreateView
+from django.views.generic.detail import SingleObjectMixin
+from django.http import HttpResponseRedirect, HttpResponse
+from django.shortcuts import render
+from django.utils.translation import gettext_lazy as _
+
+from django.contrib.auth.mixins import LoginRequiredMixin
+
+from django_tables2 import SingleTableView
+from django_tables2.paginators import LazyPaginator
+
+from ..workflow import STATE_CHOICES,SUBMITTED,ACCEPTED,APPROVED,REJECTED,send_transition_email,get_sumitted_responsible
+
+class ApplicationListView(LoginRequiredMixin,SingleTableView):
+    model = None
+    table_class = None
+    title = None
+    menu_name = ""
+    context_object_name = "apps"    
+    template_name = "company_profile/application_list.html"     
+    paginator_class = LazyPaginator
+    
+    def dispatch(self, *args, **kwargs):         
+        self.extra_context = {
+                            "type":kwargs.get("type",1),
+                            "menu_name":self.menu_name,
+                            "title":self.title,
+         }
+        return super().dispatch(*args, **kwargs)       
+        
+    def get_queryset(self):
+        query_filter = []
+        if self.extra_context["type"] == 1:
+            query_filter = [SUBMITTED,ACCEPTED]
+        elif self.extra_context["type"] == 2:
+            query_filter = [APPROVED]
+        elif self.extra_context["type"] == 3:
+            query_filter = [REJECTED]
+                
+        query = super().get_queryset()
+        return query.filter(state__in=query_filter).prefetch_related(*self.table_class.relation_fields)
+        
+class ApplicationCreateView(LoginRequiredMixin,CreateView):
+    model = None
+    form_class = None
+    success_url = None
+    title = None    
+    menu_name = ""  
+    template_name = "company_profile/application_add.html"    
+    
+    def dispatch(self, *args, **kwargs):
+        self.success_url = reverse_lazy(self.menu_name)    
+        self.extra_context = {
+                            "menu_name":self.menu_name,
+                            "title":self.title, 
+         }
+        return super().dispatch(*args, **kwargs)        
+        
+class ApplicationReadonlyView(LoginRequiredMixin,SingleObjectMixin,View):
+    model = None
+    form_class = None
+    title = None    
+    menu_name = ""  
+    template_name = "company_profile/application_readonly.html"    
+    
+    def dispatch(self, *args, **kwargs):
+        if not hasattr(self.request.user,"pro_company"):
+            return HttpResponseRedirect(reverse_lazy("profile:home"))    
+
+        self.extra_context = {
+                            "menu_name":self.menu_name,
+                            "title":self.title, 
+                            "state":STATE_CHOICES[self.get_object().state], 
+         }
+        return super().dispatch(*args, **kwargs)        
+        
+    def get_queryset(self):
+
+        query = super().get_queryset()        
+        return query.filter(company=self.request.user.pro_company.company)
+                
+    def get(self,request,pk=0):        
+        self.extra_context["form"] = self.form_class(instance=self.get_object())
+        return render(request, self.template_name, self.extra_context)
+

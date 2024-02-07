@@ -94,6 +94,82 @@
   fields:
     app_label: company_profile
     model: appborrowmaterialdetail
+- model: contenttypes.contenttype
+  fields:
+    app_label: sites
+    model: site
+- model: contenttypes.contenttype
+  fields:
+    app_label: flatpages
+    model: flatpage
+- model: contenttypes.contenttype
+  fields:
+    app_label: company_profile
+    model: appworkplan
+- model: contenttypes.contenttype
+  fields:
+    app_label: company_profile
+    model: apptechnicalfinancialreport
+- model: contenttypes.contenttype
+  fields:
+    app_label: company_profile
+    model: appchangecompanyname
+- model: contenttypes.contenttype
+  fields:
+    app_label: company_profile
+    model: appexplorationtime
+- model: contenttypes.contenttype
+  fields:
+    app_label: company_profile
+    model: appaddarea
+- model: contenttypes.contenttype
+  fields:
+    app_label: company_profile
+    model: appremovearea
+- model: contenttypes.contenttype
+  fields:
+    app_label: company_profile
+    model: apptnazolshraka
+- model: contenttypes.contenttype
+  fields:
+    app_label: company_profile
+    model: apptajeeltnazol
+- model: contenttypes.contenttype
+  fields:
+    app_label: company_profile
+    model: apptajmeed
+- model: contenttypes.contenttype
+  fields:
+    app_label: company_profile
+    model: apptakhali
+- model: contenttypes.contenttype
+  fields:
+    app_label: company_profile
+    model: apptamdeed
+- model: contenttypes.contenttype
+  fields:
+    app_label: company_profile
+    model: apptaaweed
+- model: contenttypes.contenttype
+  fields:
+    app_label: company_profile
+    model: appmda
+- model: contenttypes.contenttype
+  fields:
+    app_label: company_profile
+    model: appchangeworkprocedure
+- model: contenttypes.contenttype
+  fields:
+    app_label: company_profile
+    model: appexportgold
+- model: contenttypes.contenttype
+  fields:
+    app_label: company_profile
+    model: lkpmineral
+- model: contenttypes.contenttype
+  fields:
+    app_label: company_profile
+    model: appexportgoldraw
 - model: sessions.session
   pk: 4vwj5xiolo57eoy577wxecx64b993d7f
   fields:
@@ -104,6 +180,21 @@
   fields:
     session_data: .eJxlUMtqxDAM_Bedg_FLsZ1T298oJSi2IaZ5LLFDW5b998bbXEJvYmY0mtEdyPt1X0pPexnjUpKnktaln2MZ15Che7_D3wwd3Cjnr3UL0AAV6IThrRNCcMmsccYJbCDOlKZDSmFOy0ueN89ygMdHA88L_Z7j1qdqJuCCDeQ_41IJmqYKszMZe2pOOrPXS863c-tiNVIeDx-uUaMhrgcy0iqDioR2USIp9BwxDCYoa8yAiisdHLpWS2tjRCGsVK62_P-cGPpLd8WUkgKFOSLkmHN9Xvy-pe3nEEnuWs4fvz9Lc6s:1rW1YF:77X1nM35Fqi1fFDBmXLtM-fScCEQTCLqPDjJg0VGVQU
     expire_date: 2024-02-16 21:58:23.337069+00:00
+- model: sites.site
+  fields:
+    domain: 127.0.0.1:8000
+    name: smrc.sd
+- model: flatpages.flatpage
+  pk: 1
+  fields:
+    url: /about/
+    title: About us
+    content: SMRC is a greate company.
+    enable_comments: false
+    template_name: ''
+    registration_required: false
+    sites:
+    - - 127.0.0.1:8000
 - model: company_profile.lkpnationality
   pk: 1
   fields:
@@ -121,6 +212,10 @@
   fields:
     state: 1
     name: ابو حمد
+- model: company_profile.lkpmineral
+  pk: 1
+  fields:
+    name: Gold
 - model: company_profile.lkpcompanyproductionstatus
   pk: 1
   fields:
@@ -297,6 +392,12 @@
     borrow_master: 29
     material: vvvvvvvvv
     quantity: 7777777777
+- model: company_profile.appborrowmaterialdetail
+  pk: 25
+  fields:
+    borrow_master: 31
+    material: ggg
+    quantity: 1
 - model: auth.permission
   fields:
     name: Can add log entry
@@ -969,6 +1070,538 @@
     - company_profile
     - appborrowmaterialdetail
     codename: view_appborrowmaterialdetail
+- model: auth.permission
+  fields:
+    name: Can add site
+    content_type:
+    - sites
+    - site
+    codename: add_site
+- model: auth.permission
+  fields:
+    name: Can change site
+    content_type:
+    - sites
+    - site
+    codename: change_site
+- model: auth.permission
+  fields:
+    name: Can delete site
+    content_type:
+    - sites
+    - site
+    codename: delete_site
+- model: auth.permission
+  fields:
+    name: Can view site
+    content_type:
+    - sites
+    - site
+    codename: view_site
+- model: auth.permission
+  fields:
+    name: Can add flat page
+    content_type:
+    - flatpages
+    - flatpage
+    codename: add_flatpage
+- model: auth.permission
+  fields:
+    name: Can change flat page
+    content_type:
+    - flatpages
+    - flatpage
+    codename: change_flatpage
+- model: auth.permission
+  fields:
+    name: Can delete flat page
+    content_type:
+    - flatpages
+    - flatpage
+    codename: delete_flatpage
+- model: auth.permission
+  fields:
+    name: Can view flat page
+    content_type:
+    - flatpages
+    - flatpage
+    codename: view_flatpage
+- model: auth.permission
+  fields:
+    name: 'Can add Application: Work Plan'
+    content_type:
+    - company_profile
+    - appworkplan
+    codename: add_appworkplan
+- model: auth.permission
+  fields:
+    name: 'Can change Application: Work Plan'
+    content_type:
+    - company_profile
+    - appworkplan
+    codename: change_appworkplan
+- model: auth.permission
+  fields:
+    name: 'Can delete Application: Work Plan'
+    content_type:
+    - company_profile
+    - appworkplan
+    codename: delete_appworkplan
+- model: auth.permission
+  fields:
+    name: 'Can view Application: Work Plan'
+    content_type:
+    - company_profile
+    - appworkplan
+    codename: view_appworkplan
+- model: auth.permission
+  fields:
+    name: 'Can add Application: Technical & Financial Report'
+    content_type:
+    - company_profile
+    - apptechnicalfinancialreport
+    codename: add_apptechnicalfinancialreport
+- model: auth.permission
+  fields:
+    name: 'Can change Application: Technical & Financial Report'
+    content_type:
+    - company_profile
+    - apptechnicalfinancialreport
+    codename: change_apptechnicalfinancialreport
+- model: auth.permission
+  fields:
+    name: 'Can delete Application: Technical & Financial Report'
+    content_type:
+    - company_profile
+    - apptechnicalfinancialreport
+    codename: delete_apptechnicalfinancialreport
+- model: auth.permission
+  fields:
+    name: 'Can view Application: Technical & Financial Report'
+    content_type:
+    - company_profile
+    - apptechnicalfinancialreport
+    codename: view_apptechnicalfinancialreport
+- model: auth.permission
+  fields:
+    name: 'Can add Application: Company Name Change'
+    content_type:
+    - company_profile
+    - appchangecompanyname
+    codename: add_appchangecompanyname
+- model: auth.permission
+  fields:
+    name: 'Can change Application: Company Name Change'
+    content_type:
+    - company_profile
+    - appchangecompanyname
+    codename: change_appchangecompanyname
+- model: auth.permission
+  fields:
+    name: 'Can delete Application: Company Name Change'
+    content_type:
+    - company_profile
+    - appchangecompanyname
+    codename: delete_appchangecompanyname
+- model: auth.permission
+  fields:
+    name: 'Can view Application: Company Name Change'
+    content_type:
+    - company_profile
+    - appchangecompanyname
+    codename: view_appchangecompanyname
+- model: auth.permission
+  fields:
+    name: 'Can add Application: Exploration Time'
+    content_type:
+    - company_profile
+    - appexplorationtime
+    codename: add_appexplorationtime
+- model: auth.permission
+  fields:
+    name: 'Can change Application: Exploration Time'
+    content_type:
+    - company_profile
+    - appexplorationtime
+    codename: change_appexplorationtime
+- model: auth.permission
+  fields:
+    name: 'Can delete Application: Exploration Time'
+    content_type:
+    - company_profile
+    - appexplorationtime
+    codename: delete_appexplorationtime
+- model: auth.permission
+  fields:
+    name: 'Can view Application: Exploration Time'
+    content_type:
+    - company_profile
+    - appexplorationtime
+    codename: view_appexplorationtime
+- model: auth.permission
+  fields:
+    name: 'Can add Application: Add Area'
+    content_type:
+    - company_profile
+    - appaddarea
+    codename: add_appaddarea
+- model: auth.permission
+  fields:
+    name: 'Can change Application: Add Area'
+    content_type:
+    - company_profile
+    - appaddarea
+    codename: change_appaddarea
+- model: auth.permission
+  fields:
+    name: 'Can delete Application: Add Area'
+    content_type:
+    - company_profile
+    - appaddarea
+    codename: delete_appaddarea
+- model: auth.permission
+  fields:
+    name: 'Can view Application: Add Area'
+    content_type:
+    - company_profile
+    - appaddarea
+    codename: view_appaddarea
+- model: auth.permission
+  fields:
+    name: 'Can add Application: Remove Area'
+    content_type:
+    - company_profile
+    - appremovearea
+    codename: add_appremovearea
+- model: auth.permission
+  fields:
+    name: 'Can change Application: Remove Area'
+    content_type:
+    - company_profile
+    - appremovearea
+    codename: change_appremovearea
+- model: auth.permission
+  fields:
+    name: 'Can delete Application: Remove Area'
+    content_type:
+    - company_profile
+    - appremovearea
+    codename: delete_appremovearea
+- model: auth.permission
+  fields:
+    name: 'Can view Application: Remove Area'
+    content_type:
+    - company_profile
+    - appremovearea
+    codename: view_appremovearea
+- model: auth.permission
+  fields:
+    name: 'Can add Application: Tnazol Shraka'
+    content_type:
+    - company_profile
+    - apptnazolshraka
+    codename: add_apptnazolshraka
+- model: auth.permission
+  fields:
+    name: 'Can change Application: Tnazol Shraka'
+    content_type:
+    - company_profile
+    - apptnazolshraka
+    codename: change_apptnazolshraka
+- model: auth.permission
+  fields:
+    name: 'Can delete Application: Tnazol Shraka'
+    content_type:
+    - company_profile
+    - apptnazolshraka
+    codename: delete_apptnazolshraka
+- model: auth.permission
+  fields:
+    name: 'Can view Application: Tnazol Shraka'
+    content_type:
+    - company_profile
+    - apptnazolshraka
+    codename: view_apptnazolshraka
+- model: auth.permission
+  fields:
+    name: 'Can add Application: Tajeel Tnazol'
+    content_type:
+    - company_profile
+    - apptajeeltnazol
+    codename: add_apptajeeltnazol
+- model: auth.permission
+  fields:
+    name: 'Can change Application: Tajeel Tnazol'
+    content_type:
+    - company_profile
+    - apptajeeltnazol
+    codename: change_apptajeeltnazol
+- model: auth.permission
+  fields:
+    name: 'Can delete Application: Tajeel Tnazol'
+    content_type:
+    - company_profile
+    - apptajeeltnazol
+    codename: delete_apptajeeltnazol
+- model: auth.permission
+  fields:
+    name: 'Can view Application: Tajeel Tnazol'
+    content_type:
+    - company_profile
+    - apptajeeltnazol
+    codename: view_apptajeeltnazol
+- model: auth.permission
+  fields:
+    name: 'Can add Application: Tajmeed'
+    content_type:
+    - company_profile
+    - apptajmeed
+    codename: add_apptajmeed
+- model: auth.permission
+  fields:
+    name: 'Can change Application: Tajmeed'
+    content_type:
+    - company_profile
+    - apptajmeed
+    codename: change_apptajmeed
+- model: auth.permission
+  fields:
+    name: 'Can delete Application: Tajmeed'
+    content_type:
+    - company_profile
+    - apptajmeed
+    codename: delete_apptajmeed
+- model: auth.permission
+  fields:
+    name: 'Can view Application: Tajmeed'
+    content_type:
+    - company_profile
+    - apptajmeed
+    codename: view_apptajmeed
+- model: auth.permission
+  fields:
+    name: 'Can add Application: Takhali'
+    content_type:
+    - company_profile
+    - apptakhali
+    codename: add_apptakhali
+- model: auth.permission
+  fields:
+    name: 'Can change Application: Takhali'
+    content_type:
+    - company_profile
+    - apptakhali
+    codename: change_apptakhali
+- model: auth.permission
+  fields:
+    name: 'Can delete Application: Takhali'
+    content_type:
+    - company_profile
+    - apptakhali
+    codename: delete_apptakhali
+- model: auth.permission
+  fields:
+    name: 'Can view Application: Takhali'
+    content_type:
+    - company_profile
+    - apptakhali
+    codename: view_apptakhali
+- model: auth.permission
+  fields:
+    name: 'Can add Application: Tamdeed'
+    content_type:
+    - company_profile
+    - apptamdeed
+    codename: add_apptamdeed
+- model: auth.permission
+  fields:
+    name: 'Can change Application: Tamdeed'
+    content_type:
+    - company_profile
+    - apptamdeed
+    codename: change_apptamdeed
+- model: auth.permission
+  fields:
+    name: 'Can delete Application: Tamdeed'
+    content_type:
+    - company_profile
+    - apptamdeed
+    codename: delete_apptamdeed
+- model: auth.permission
+  fields:
+    name: 'Can view Application: Tamdeed'
+    content_type:
+    - company_profile
+    - apptamdeed
+    codename: view_apptamdeed
+- model: auth.permission
+  fields:
+    name: 'Can add Application: Taaweed'
+    content_type:
+    - company_profile
+    - apptaaweed
+    codename: add_apptaaweed
+- model: auth.permission
+  fields:
+    name: 'Can change Application: Taaweed'
+    content_type:
+    - company_profile
+    - apptaaweed
+    codename: change_apptaaweed
+- model: auth.permission
+  fields:
+    name: 'Can delete Application: Taaweed'
+    content_type:
+    - company_profile
+    - apptaaweed
+    codename: delete_apptaaweed
+- model: auth.permission
+  fields:
+    name: 'Can view Application: Taaweed'
+    content_type:
+    - company_profile
+    - apptaaweed
+    codename: view_apptaaweed
+- model: auth.permission
+  fields:
+    name: 'Can add Application: MDA'
+    content_type:
+    - company_profile
+    - appmda
+    codename: add_appmda
+- model: auth.permission
+  fields:
+    name: 'Can change Application: MDA'
+    content_type:
+    - company_profile
+    - appmda
+    codename: change_appmda
+- model: auth.permission
+  fields:
+    name: 'Can delete Application: MDA'
+    content_type:
+    - company_profile
+    - appmda
+    codename: delete_appmda
+- model: auth.permission
+  fields:
+    name: 'Can view Application: MDA'
+    content_type:
+    - company_profile
+    - appmda
+    codename: view_appmda
+- model: auth.permission
+  fields:
+    name: 'Can add Application: Change Work Procedure'
+    content_type:
+    - company_profile
+    - appchangeworkprocedure
+    codename: add_appchangeworkprocedure
+- model: auth.permission
+  fields:
+    name: 'Can change Application: Change Work Procedure'
+    content_type:
+    - company_profile
+    - appchangeworkprocedure
+    codename: change_appchangeworkprocedure
+- model: auth.permission
+  fields:
+    name: 'Can delete Application: Change Work Procedure'
+    content_type:
+    - company_profile
+    - appchangeworkprocedure
+    codename: delete_appchangeworkprocedure
+- model: auth.permission
+  fields:
+    name: 'Can view Application: Change Work Procedure'
+    content_type:
+    - company_profile
+    - appchangeworkprocedure
+    codename: view_appchangeworkprocedure
+- model: auth.permission
+  fields:
+    name: 'Can add Application: Export Gold'
+    content_type:
+    - company_profile
+    - appexportgold
+    codename: add_appexportgold
+- model: auth.permission
+  fields:
+    name: 'Can change Application: Export Gold'
+    content_type:
+    - company_profile
+    - appexportgold
+    codename: change_appexportgold
+- model: auth.permission
+  fields:
+    name: 'Can delete Application: Export Gold'
+    content_type:
+    - company_profile
+    - appexportgold
+    codename: delete_appexportgold
+- model: auth.permission
+  fields:
+    name: 'Can view Application: Export Gold'
+    content_type:
+    - company_profile
+    - appexportgold
+    codename: view_appexportgold
+- model: auth.permission
+  fields:
+    name: Can add Mineral
+    content_type:
+    - company_profile
+    - lkpmineral
+    codename: add_lkpmineral
+- model: auth.permission
+  fields:
+    name: Can change Mineral
+    content_type:
+    - company_profile
+    - lkpmineral
+    codename: change_lkpmineral
+- model: auth.permission
+  fields:
+    name: Can delete Mineral
+    content_type:
+    - company_profile
+    - lkpmineral
+    codename: delete_lkpmineral
+- model: auth.permission
+  fields:
+    name: Can view Mineral
+    content_type:
+    - company_profile
+    - lkpmineral
+    codename: view_lkpmineral
+- model: auth.permission
+  fields:
+    name: 'Can add Application: Export Gold Raw'
+    content_type:
+    - company_profile
+    - appexportgoldraw
+    codename: add_appexportgoldraw
+- model: auth.permission
+  fields:
+    name: 'Can change Application: Export Gold Raw'
+    content_type:
+    - company_profile
+    - appexportgoldraw
+    codename: change_appexportgoldraw
+- model: auth.permission
+  fields:
+    name: 'Can delete Application: Export Gold Raw'
+    content_type:
+    - company_profile
+    - appexportgoldraw
+    codename: delete_appexportgoldraw
+- model: auth.permission
+  fields:
+    name: 'Can view Application: Export Gold Raw'
+    content_type:
+    - company_profile
+    - appexportgoldraw
+    codename: view_appexportgoldraw
 - model: auth.group
   fields:
     name: pro_company_application_accept
@@ -989,7 +1622,7 @@
     is_staff: true
     is_active: true
     date_joined: 2024-01-28 16:57:39+00:00
-    lang: AR
+    lang: ar
     groups:
     - - pro_company_application_accept
     - - pro_company_application_approve
@@ -1009,13 +1642,28 @@
     lang: ar
     groups: []
     user_permissions: []
+- model: accounts.customuser
+  fields:
+    password: pbkdf2_sha256$720000$95U9Afwu96XvzMI6itoE6z$QEINlev0qzf7U7/q+dUVYLy2UbIQxqPlfJmwq3VTWKo=
+    last_login: null
+    is_superuser: false
+    username: doishat
+    first_name: ''
+    last_name: ''
+    email: admin2@smrc.sd
+    is_staff: false
+    is_active: true
+    date_joined: 2024-02-06 22:52:42+00:00
+    lang: ar
+    groups: []
+    user_permissions: []
 - model: company_profile.tblcompanyproduction
   pk: 1
   fields:
     created_at: 2024-01-29 14:53:31.593007+00:00
     created_by:
     - admin
-    updated_at: 2024-01-31 20:12:13.434624+00:00
+    updated_at: 2024-02-06 22:52:42.012303+00:00
     updated_by:
     - admin
     name_ar: دويشات للتعدين المحدودة
@@ -1093,6 +1741,12 @@
     user:
     - bbb
     company: 4
+- model: company_profile.tblcompanyproductionuserrole
+  pk: 4
+  fields:
+    user:
+    - doishat
+    company: 1
 - model: company_profile.tblcompanyproductionfactory
   pk: 1
   fields:
@@ -1163,7 +1817,7 @@
     updated_at: 2024-02-05 12:18:24.786391+00:00
     updated_by:
     - admin
-    state: submitted
+    state: approved
     notify: false
     company: 1
     route_from: aaaaaa
@@ -1187,7 +1841,7 @@
     updated_at: 2024-02-05 13:31:21.030244+00:00
     updated_by:
     - admin
-    state: submitted
+    state: accepted
     notify: false
     company: 1
     route_from: aaaaaa
@@ -1690,6 +2344,440 @@
     borrow_date: 2024-02-04
     borrow_materials_list_file: company_1/applications/test_MDoipZh.txt
     borrow_from_approval_file: company_1/applications/test_vETx7Xj.txt
+- model: company_profile.appborrowmaterial
+  pk: 30
+  fields:
+    created_at: 2024-02-07 01:31:55.760554+00:00
+    created_by:
+    - admin
+    updated_at: 2024-02-07 01:31:55.760724+00:00
+    updated_by:
+    - admin
+    state: submitted
+    notify: false
+    company: 1
+    company_from: 2
+    borrow_date: 2024-02-07
+    borrow_materials_list_file: company_1/applications/info
+    borrow_from_approval_file: company_1/applications/info_Da4XOEf
+- model: company_profile.appborrowmaterial
+  pk: 31
+  fields:
+    created_at: 2024-02-07 01:37:28.589025+00:00
+    created_by:
+    - admin
+    updated_at: 2024-02-07 01:37:28.589320+00:00
+    updated_by:
+    - admin
+    state: submitted
+    notify: false
+    company: 1
+    company_from: 2
+    borrow_date: 2024-02-07
+    borrow_materials_list_file: company_1/applications/info_FYlH2Ye
+    borrow_from_approval_file: company_1/applications/info_qBO3XU6
+- model: company_profile.appworkplan
+  pk: 1
+  fields:
+    created_at: 2024-02-06 22:38:46.647681+00:00
+    created_by:
+    - admin
+    updated_at: 2024-02-06 22:38:46.647935+00:00
+    updated_by:
+    - admin
+    state: submitted
+    notify: false
+    company: 1
+    plan_from: 2024-02-07
+    plan_to: 2024-02-07
+    official_letter_file: company_1/applications/info_BITuAJp
+    work_plan_file: company_1/applications/info_Miug39P
+- model: company_profile.appworkplan
+  pk: 2
+  fields:
+    created_at: 2024-02-06 22:39:23.571232+00:00
+    created_by:
+    - admin
+    updated_at: 2024-02-06 22:39:23.571438+00:00
+    updated_by:
+    - admin
+    state: submitted
+    notify: false
+    company: 1
+    plan_from: 2024-02-07
+    plan_to: 2024-02-07
+    official_letter_file: company_1/applications/info_h9Hj5g0
+    work_plan_file: company_1/applications/info_UvnH4SH
+- model: company_profile.appworkplan
+  pk: 3
+  fields:
+    created_at: 2024-02-06 22:41:19.877979+00:00
+    created_by:
+    - admin
+    updated_at: 2024-02-06 22:41:19.878175+00:00
+    updated_by:
+    - admin
+    state: submitted
+    notify: false
+    company: 1
+    plan_from: 2024-02-07
+    plan_to: 2024-02-07
+    official_letter_file: company_1/applications/info_Vbxf6lx
+    work_plan_file: company_1/applications/info_LGcRBTe
+- model: company_profile.appworkplan
+  pk: 4
+  fields:
+    created_at: 2024-02-06 22:42:32.580499+00:00
+    created_by:
+    - admin
+    updated_at: 2024-02-06 22:42:32.580687+00:00
+    updated_by:
+    - admin
+    state: submitted
+    notify: false
+    company: 1
+    plan_from: 2024-02-07
+    plan_to: 2024-02-07
+    official_letter_file: company_1/applications/info_mdgwgkv
+    work_plan_file: company_1/applications/info_7hFgOkl
+- model: company_profile.appworkplan
+  pk: 5
+  fields:
+    created_at: 2024-02-06 22:48:06.340647+00:00
+    created_by:
+    - admin
+    updated_at: 2024-02-06 22:48:06.340874+00:00
+    updated_by:
+    - admin
+    state: submitted
+    notify: false
+    company: 1
+    plan_from: 2024-02-07
+    plan_to: 2024-02-07
+    official_letter_file: company_1/applications/info_vUoTOxL
+    work_plan_file: company_1/applications/info_2cKIeB6
+- model: company_profile.appworkplan
+  pk: 6
+  fields:
+    created_at: 2024-02-06 22:48:44.191859+00:00
+    created_by:
+    - admin
+    updated_at: 2024-02-06 22:57:51.104486+00:00
+    updated_by:
+    - admin
+    state: accepted
+    notify: false
+    company: 1
+    plan_from: 2024-02-01
+    plan_to: 2024-02-29
+    official_letter_file: company_1/applications/bootstrap.min.css
+    work_plan_file: company_1/applications/bootstrap.bundle.min.js.js
+- model: company_profile.appworkplan
+  pk: 7
+  fields:
+    created_at: 2024-02-06 23:38:03.719608+00:00
+    created_by:
+    - admin
+    updated_at: 2024-02-06 23:38:03.719793+00:00
+    updated_by:
+    - admin
+    state: submitted
+    notify: false
+    company: 1
+    plan_from: 2024-02-07
+    plan_to: 2024-02-07
+    official_letter_file: company_1/applications/info_OLblRCZ
+    work_plan_file: company_1/applications/info_Mik9yZe
+- model: company_profile.apptechnicalfinancialreport
+  pk: 1
+  fields:
+    created_at: 2024-02-07 00:11:49.311276+00:00
+    created_by:
+    - admin
+    updated_at: 2024-02-07 00:12:22.109209+00:00
+    updated_by:
+    - admin
+    state: accepted
+    notify: false
+    company: 1
+    report_from: 2024-02-07
+    report_to: 2024-02-07
+    report_type: technical
+    report_comments: werwerwer
+    report_file: company_1/applications/info_p0cqmrk
+    other_attachments_file: company_1/applications/info_P6bXIXB
+- model: company_profile.appchangecompanyname
+  pk: 1
+  fields:
+    created_at: 2024-02-07 00:51:27.704598+00:00
+    created_by:
+    - admin
+    updated_at: 2024-02-07 00:51:27.704799+00:00
+    updated_by:
+    - admin
+    state: submitted
+    notify: false
+    company: 1
+    new_name: bbb
+    cause_for_change: "rwerwerwer\r\nwerw\r\ner\r\nwer\r\nw\r\ner\r\nwe\r\nr\r\nwer"
+    tasis_certificate_file: company_1/applications/info_YkjhYKg
+    tasis_contract_file: company_1/applications/info_1NwMK2f
+    sh7_file: company_1/applications/info_YIPYMJf
+    lahat_tasis_file: company_1/applications/info_RzrhPJO
+    name_change_alert_file: company_1/applications/info_DBJrxGX
+- model: company_profile.appexplorationtime
+  pk: 1
+  fields:
+    created_at: 2024-02-07 01:13:52.346813+00:00
+    created_by:
+    - admin
+    updated_at: 2024-02-07 01:15:01.765332+00:00
+    updated_by:
+    - admin
+    state: approved
+    notify: false
+    company: 1
+    expo_from: 2024-02-07
+    expo_to: 2024-02-07
+    expo_cause_for_timing: "dsfsdf\r\n\r\nsdfs\r\ndf\r\nsdf\r\nsd\r\nf\r\nsd\r\nsdf"
+    expo_cause_for_change_file: company_1/applications/info_PgI7y1D
+- model: company_profile.appaddarea
+  pk: 1
+  fields:
+    created_at: 2024-02-07 01:34:46.413745+00:00
+    created_by:
+    - admin
+    updated_at: 2024-02-07 01:36:33.091285+00:00
+    updated_by:
+    - admin
+    state: rejected
+    notify: false
+    company: 1
+    area_in_km2: 344
+    cause_for_addition: "werwer\r\nwerw\r\ner\r\nwe\r\nr\r\nwer\r\nwer"
+    geo_coordination_file: company_1/applications/info_bFjajZt
+- model: company_profile.appremovearea
+  pk: 1
+  fields:
+    created_at: 2024-02-07 07:01:51.064821+00:00
+    created_by:
+    - admin
+    updated_at: 2024-02-07 07:01:51.065025+00:00
+    updated_by:
+    - admin
+    state: submitted
+    notify: false
+    company: 1
+    remove_type: first
+    area_in_km2: 55
+    area_percent_from_total: 90
+    geo_coordinator_for_removed_area_file: company_1/applications/info_2eiLI16
+    geo_coordinator_for_remain_area_file: company_1/applications/info_H3n5E00
+    map_for_clarification_file: company_1/applications/info_C03RLMz
+    technical_report_for_removed_area_file: company_1/applications/info_dfjUt1w
+- model: company_profile.apptnazolshraka
+  pk: 1
+  fields:
+    created_at: 2024-02-07 07:26:49.180940+00:00
+    created_by:
+    - admin
+    updated_at: 2024-02-07 07:27:24.920819+00:00
+    updated_by:
+    - admin
+    state: approved
+    notify: false
+    company: 1
+    tnazol_type: partial
+    tnazol_for: ashfsdf sdfskdgfjshdgf
+    cause_for_tnazol: rtertertert
+    financial_ability_file: company_1/applications/info_Vqps2bz
+    cv_file: company_1/applications/info_m5jzVRV
+- model: company_profile.apptajeeltnazol
+  pk: 1
+  fields:
+    created_at: 2024-02-07 08:20:23.807229+00:00
+    created_by:
+    - admin
+    updated_at: 2024-02-07 08:21:07.214549+00:00
+    updated_by:
+    - admin
+    state: rejected
+    notify: false
+    company: 1
+    tnazol_type: first
+    cause_for_tajeel: "etrter\r\nert\r\ner\r\nterter"
+    cause_for_tajeel_file: company_1/applications/info_tDKS9u6
+- model: company_profile.apptajmeed
+  pk: 1
+  fields:
+    created_at: 2024-02-07 08:42:40.030332+00:00
+    created_by:
+    - admin
+    updated_at: 2024-02-07 08:43:20.108447+00:00
+    updated_by:
+    - admin
+    state: accepted
+    notify: false
+    company: 1
+    tajmeed_from: 2024-02-07
+    tajmeed_to: 2024-02-07
+    cause_for_tajmeed: retertert
+    cause_for_uncontrolled_force_file: company_1/applications/info_8uP7dNl
+    letter_from_jeha_amnia_file: company_1/applications/info_12GqZT6
+- model: company_profile.apptakhali
+  pk: 1
+  fields:
+    created_at: 2024-02-07 08:59:06.226147+00:00
+    created_by:
+    - admin
+    updated_at: 2024-02-07 08:59:31.321744+00:00
+    updated_by:
+    - admin
+    state: approved
+    notify: false
+    company: 1
+    technical_presentation_date: 2024-02-07
+    cause_for_takhali: "fgdfg\r\n\r\nfdgdfg\r\n\r\ndfg"
+    technical_report_file: company_1/applications/info_clXTcOY
+- model: company_profile.apptamdeed
+  pk: 1
+  fields:
+    created_at: 2024-02-06 22:21:15.134277+00:00
+    created_by:
+    - admin
+    updated_at: 2024-02-06 22:21:49.354266+00:00
+    updated_by:
+    - admin
+    state: accepted
+    notify: false
+    company: 1
+    tamdeed_from: 2024-02-07
+    tamdeed_to: 2024-02-07
+    cause_for_tamdeed: "111111113\r\n555"
+    approved_work_plan_file: company_1/applications/info_cZCSoMs
+    tnazol_file: company_1/applications/info_RSLIaUh
+- model: company_profile.apptaaweed
+  pk: 1
+  fields:
+    created_at: 2024-02-06 22:33:28.430804+00:00
+    created_by:
+    - admin
+    updated_at: 2024-02-06 22:34:04.297063+00:00
+    updated_by:
+    - admin
+    state: rejected
+    notify: false
+    company: 1
+    taaweed_from: 2024-02-07
+    taaweed_to: 2024-02-07
+    cause_for_taaweed: "444\r\n999"
+- model: company_profile.appmda
+  pk: 1
+  fields:
+    created_at: 2024-02-06 22:51:27.868604+00:00
+    created_by:
+    - admin
+    updated_at: 2024-02-06 22:51:27.868864+00:00
+    updated_by:
+    - admin
+    state: submitted
+    notify: false
+    company: 1
+    mda_from: 2024-02-07
+    mda_to: 2024-02-07
+    cause_for_mda: "4444\r\n99\r\n555"
+    approved_work_plan_file: company_1/applications/info_5VvXCB9
+- model: company_profile.appmda
+  pk: 2
+  fields:
+    created_at: 2024-02-06 22:52:14.772750+00:00
+    created_by:
+    - admin
+    updated_at: 2024-02-06 22:52:49.945960+00:00
+    updated_by:
+    - admin
+    state: rejected
+    notify: false
+    company: 1
+    mda_from: 2024-02-07
+    mda_to: 2024-02-07
+    cause_for_mda: "4444\r\n99\r\n555"
+    approved_work_plan_file: company_1/applications/info_Y72rhXx
+- model: company_profile.appchangeworkprocedure
+  pk: 1
+  fields:
+    created_at: 2024-02-07 03:48:12.830285+00:00
+    created_by:
+    - admin
+    updated_at: 2024-02-07 03:51:05.419805+00:00
+    updated_by:
+    - admin
+    state: submitted
+    notify: false
+    company: 1
+    reason_for_change: "asgdakjsgdjkas ajsgdjhkasgdjkhasg asgdjkasgdjkasgdkujas asgdjhasgd
+      jkhasgd a sjkhdg asjkhgdajksh\r\nsdf\r\nsd\r\nfs\r\ndf\r\nd\r\nf"
+    purpose_for_change: "sdf\r\nsdf\r\nsd\r\nfs\r\ndf\r\nsd\r\nf"
+    rational_reason: "sdfsdf\r\nsd\r\nf\r\nsdf\r\nsd\r\nfsf\r\nd"
+    study_about_change_reason_file: company_1/applications/info_72bE5PG
+    study_about_new_suggestion_file: company_1/applications/info_EBrQuUI
+- model: company_profile.appexportgold
+  pk: 1
+  fields:
+    created_at: 2024-02-07 04:43:23.564214+00:00
+    created_by:
+    - admin
+    updated_at: 2024-02-07 04:44:27.611378+00:00
+    updated_by:
+    - admin
+    state: approved
+    notify: false
+    company: 1
+    total_in_gram: 6.0
+    net_in_gram: 4.0
+    zakat_in_gram: 7.0
+    awaad_jalila_in_gram: 4.0
+    arbah_amal_in_gram: 6.0
+    sold_for_bank_of_sudan_in_gram: 4.0
+    amount_to_export_in_gram: 3.0
+    remain_in_gram: 4.0
+    f1: company_1/applications/info_g1IcdfU
+    f2: company_1/applications/info_itpv7JE
+    f3: company_1/applications/info_nGQ0lXI
+    f4: company_1/applications/info_7Duu5R7
+    f5: company_1/applications/info_4ALctEU
+    f6: company_1/applications/info_97KjnRK
+    f7: company_1/applications/info_jIBQ59E
+    f8: company_1/applications/info_OI2x7eo
+    f9: company_1/applications/info_lwQ4JZC
+- model: company_profile.appexportgoldraw
+  pk: 1
+  fields:
+    created_at: 2024-02-07 05:17:40.279541+00:00
+    created_by:
+    - admin
+    updated_at: 2024-02-07 05:18:05.761940+00:00
+    updated_by:
+    - admin
+    state: accepted
+    notify: false
+    company: 1
+    mineral: 1
+    license_type: aaaaa
+    amount_in_gram: 525.5
+    sale_price: 4555.0
+    export_country: Egypt
+    export_city: Cairo
+    export_address: "erterertert\r\ner\r\nter\r\nter\r\nt\r\ne"
+    f11: company_1/applications/info_OwyXBfZ
+    f12: company_1/applications/info_4dQ40md
+    f13: company_1/applications/info_Bg93rdY
+    f14: company_1/applications/info_Js6cAOZ
+    f15: company_1/applications/info_zQHscBN
+    f16: company_1/applications/info_YG87wUc
+    f17: company_1/applications/info_GkGWo6T
+    f18: company_1/applications/info_ICRoWNt
+    f19: company_1/applications/info_Tr8VlOs
 - model: account.emailaddress
   pk: 1
   fields:
@@ -3376,3 +4464,367 @@
     object_repr: admin@smrc.sd
     action_flag: 2
     change_message: '[{"changed": {"fields": ["Groups"]}}]'
+- model: admin.logentry
+  pk: 130
+  fields:
+    action_time: 2024-02-06 22:53:26.165027+00:00
+    user:
+    - admin
+    content_type:
+    - sites
+    - site
+    object_id: '1'
+    object_repr: http://127.0.0.1:8000
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Domain name", "Display name"]}}]'
+- model: admin.logentry
+  pk: 131
+  fields:
+    action_time: 2024-02-06 22:57:29.871998+00:00
+    user:
+    - admin
+    content_type:
+    - sites
+    - site
+    object_id: '1'
+    object_repr: 127.0.0.1:8000
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Domain name"]}}]'
+- model: admin.logentry
+  pk: 132
+  fields:
+    action_time: 2024-02-06 23:26:44.114789+00:00
+    user:
+    - admin
+    content_type:
+    - flatpages
+    - flatpage
+    object_id: '1'
+    object_repr: /about/ -- About us
+    action_flag: 1
+    change_message: '[{"added": {}}]'
+- model: admin.logentry
+  pk: 133
+  fields:
+    action_time: 2024-02-06 22:52:43.251910+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - tblcompanyproduction
+    object_id: '1'
+    object_repr: دويشات للتعدين المحدودة
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Official email"]}}]'
+- model: admin.logentry
+  pk: 134
+  fields:
+    action_time: 2024-02-06 22:57:31.868275+00:00
+    user:
+    - admin
+    content_type:
+    - accounts
+    - customuser
+    object_id: '5'
+    object_repr: admin2@smrc.sd
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Username", "Email address"]}}]'
+- model: admin.logentry
+  pk: 135
+  fields:
+    action_time: 2024-02-06 22:57:51.109265+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appworkplan
+    object_id: '6'
+    object_repr: Work Plan (6)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 136
+  fields:
+    action_time: 2024-02-07 00:12:22.114664+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - apptechnicalfinancialreport
+    object_id: '1'
+    object_repr: Technical & Financial Report (1)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 137
+  fields:
+    action_time: 2024-02-07 01:14:47.265096+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appexplorationtime
+    object_id: '1'
+    object_repr: Exploration Time (1)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 138
+  fields:
+    action_time: 2024-02-07 01:15:01.769076+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appexplorationtime
+    object_id: '1'
+    object_repr: Exploration Time (1)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 139
+  fields:
+    action_time: 2024-02-07 01:36:25.390134+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appaddarea
+    object_id: '1'
+    object_repr: Add Area (1)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 140
+  fields:
+    action_time: 2024-02-07 01:36:33.095219+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appaddarea
+    object_id: '1'
+    object_repr: Add Area (1)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 141
+  fields:
+    action_time: 2024-02-07 07:27:16.210826+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - apptnazolshraka
+    object_id: '1'
+    object_repr: Tnazol Shraka (1)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 142
+  fields:
+    action_time: 2024-02-07 07:27:24.924434+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - apptnazolshraka
+    object_id: '1'
+    object_repr: Tnazol Shraka (1)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 143
+  fields:
+    action_time: 2024-02-07 08:20:55.649661+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - apptajeeltnazol
+    object_id: '1'
+    object_repr: Tajeel Tnazol (1)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 144
+  fields:
+    action_time: 2024-02-07 08:21:07.217586+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - apptajeeltnazol
+    object_id: '1'
+    object_repr: Tajeel Tnazol (1)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 145
+  fields:
+    action_time: 2024-02-07 08:43:20.114345+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - apptajmeed
+    object_id: '1'
+    object_repr: Tajmeed (1)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 146
+  fields:
+    action_time: 2024-02-07 08:59:23.962823+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - apptakhali
+    object_id: '1'
+    object_repr: Takhali (1)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 147
+  fields:
+    action_time: 2024-02-07 08:59:31.326160+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - apptakhali
+    object_id: '1'
+    object_repr: Takhali (1)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 148
+  fields:
+    action_time: 2024-02-06 22:21:49.359679+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - apptamdeed
+    object_id: '1'
+    object_repr: Tamdeed (1)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 149
+  fields:
+    action_time: 2024-02-06 22:33:54.127750+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - apptaaweed
+    object_id: '1'
+    object_repr: Taaweed (1)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 150
+  fields:
+    action_time: 2024-02-06 22:34:04.301601+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - apptaaweed
+    object_id: '1'
+    object_repr: Taaweed (1)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 151
+  fields:
+    action_time: 2024-02-06 22:52:39.661314+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appmda
+    object_id: '2'
+    object_repr: MDA (2)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 152
+  fields:
+    action_time: 2024-02-06 22:52:49.949742+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appmda
+    object_id: '2'
+    object_repr: MDA (2)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 153
+  fields:
+    action_time: 2024-02-07 03:51:05.430507+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appchangeworkprocedure
+    object_id: '1'
+    object_repr: Change Work Procedure (1)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Reason_for_change"]}}]'
+- model: admin.logentry
+  pk: 154
+  fields:
+    action_time: 2024-02-07 04:44:16.887230+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appexportgold
+    object_id: '1'
+    object_repr: Export Gold (1)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 155
+  fields:
+    action_time: 2024-02-07 04:44:27.616722+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appexportgold
+    object_id: '1'
+    object_repr: Export Gold (1)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 156
+  fields:
+    action_time: 2024-02-07 05:16:28.162579+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - lkpmineral
+    object_id: '1'
+    object_repr: Gold
+    action_flag: 1
+    change_message: '[{"added": {}}]'
+- model: admin.logentry
+  pk: 157
+  fields:
+    action_time: 2024-02-07 05:18:05.767067+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appexportgoldraw
+    object_id: '1'
+    object_repr: Export Gold (1)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
