@@ -1,0 +1,3378 @@
+- model: contenttypes.contenttype
+  fields:
+    app_label: admin
+    model: logentry
+- model: contenttypes.contenttype
+  fields:
+    app_label: auth
+    model: permission
+- model: contenttypes.contenttype
+  fields:
+    app_label: auth
+    model: group
+- model: contenttypes.contenttype
+  fields:
+    app_label: contenttypes
+    model: contenttype
+- model: contenttypes.contenttype
+  fields:
+    app_label: sessions
+    model: session
+- model: contenttypes.contenttype
+  fields:
+    app_label: accounts
+    model: customuser
+- model: contenttypes.contenttype
+  fields:
+    app_label: account
+    model: emailaddress
+- model: contenttypes.contenttype
+  fields:
+    app_label: account
+    model: emailconfirmation
+- model: contenttypes.contenttype
+  fields:
+    app_label: socialaccount
+    model: socialaccount
+- model: contenttypes.contenttype
+  fields:
+    app_label: socialaccount
+    model: socialapp
+- model: contenttypes.contenttype
+  fields:
+    app_label: socialaccount
+    model: socialtoken
+- model: contenttypes.contenttype
+  fields:
+    app_label: company_profile
+    model: lkpcompanyproductionstatus
+- model: contenttypes.contenttype
+  fields:
+    app_label: company_profile
+    model: lkpcompanyproductionfactorytype
+- model: contenttypes.contenttype
+  fields:
+    app_label: company_profile
+    model: lkpcompanyproductionlicensestatus
+- model: contenttypes.contenttype
+  fields:
+    app_label: company_profile
+    model: tblcompanyproductionlicense
+- model: contenttypes.contenttype
+  fields:
+    app_label: company_profile
+    model: tblcompanyproduction
+- model: contenttypes.contenttype
+  fields:
+    app_label: company_profile
+    model: lkplocality
+- model: contenttypes.contenttype
+  fields:
+    app_label: company_profile
+    model: tblcompanyproductionfactory
+- model: contenttypes.contenttype
+  fields:
+    app_label: company_profile
+    model: lkpnationality
+- model: contenttypes.contenttype
+  fields:
+    app_label: company_profile
+    model: lkpstate
+- model: contenttypes.contenttype
+  fields:
+    app_label: company_profile
+    model: appforignermovement
+- model: contenttypes.contenttype
+  fields:
+    app_label: company_profile
+    model: tblcompanyproductionuserrole
+- model: contenttypes.contenttype
+  fields:
+    app_label: company_profile
+    model: appborrowmaterial
+- model: contenttypes.contenttype
+  fields:
+    app_label: company_profile
+    model: appborrowmaterialdetail
+- model: sessions.session
+  pk: 4vwj5xiolo57eoy577wxecx64b993d7f
+  fields:
+    session_data: .eJxtUMtuhDAM_BefEUoCcYBT29-oVsgkrojKY4WDutVq_72w5ULVmzUzHo_nDuT9vE6ppTX1PKXoKcV5akdO_RwEmvc7_M7QwJVEvuYlQAaUoNFOOVOh0Ta32pZlWWXAI8Vhk1IY4_Qi4-JzCfC4ZPC80K7CSxt3Mw0nrCP_ydNO0DDscH4ky5-ag5b89ZTz7dg6WfUk_ebjVWW0I19ahdRVXFnUhgssa4_GFcaqwGy565BU9-GxQFOQM07RNliz5_unHA7tn99rLJS1uEUQFtnL49s1Lt-byKgalXr8AKp1dLs:1rXb8S:HiQExq3BE2Y_3grB2ebTUA97uWJjIWYuyOvNRO7vbvM
+    expire_date: 2024-02-21 06:10:16.096086+00:00
+- model: sessions.session
+  pk: gd7tmtfdfrjv73h3a3vf1n252txs0enl
+  fields:
+    session_data: .eJxlUMtqxDAM_Bedg_FLsZ1T298oJSi2IaZ5LLFDW5b998bbXEJvYmY0mtEdyPt1X0pPexnjUpKnktaln2MZ15Che7_D3wwd3Cjnr3UL0AAV6IThrRNCcMmsccYJbCDOlKZDSmFOy0ueN89ygMdHA88L_Z7j1qdqJuCCDeQ_41IJmqYKszMZe2pOOrPXS863c-tiNVIeDx-uUaMhrgcy0iqDioR2USIp9BwxDCYoa8yAiisdHLpWS2tjRCGsVK62_P-cGPpLd8WUkgKFOSLkmHN9Xvy-pe3nEEnuWs4fvz9Lc6s:1rW1YF:77X1nM35Fqi1fFDBmXLtM-fScCEQTCLqPDjJg0VGVQU
+    expire_date: 2024-02-16 21:58:23.337069+00:00
+- model: company_profile.lkpnationality
+  pk: 1
+  fields:
+    name: سوداني
+- model: company_profile.lkpstate
+  pk: 1
+  fields:
+    name: نهر النيل
+- model: company_profile.lkpstate
+  pk: 2
+  fields:
+    name: الخرطوم
+- model: company_profile.lkplocality
+  pk: 1
+  fields:
+    state: 1
+    name: ابو حمد
+- model: company_profile.lkpcompanyproductionstatus
+  pk: 1
+  fields:
+    name: منتجة
+- model: company_profile.lkpcompanyproductionstatus
+  pk: 2
+  fields:
+    name: مقبلة
+- model: company_profile.lkpcompanyproductionstatus
+  pk: 3
+  fields:
+    name: متوقفة
+- model: company_profile.lkpcompanyproductionfactorytype
+  pk: 1
+  fields:
+    name: CIL
+- model: company_profile.lkpcompanyproductionfactorytype
+  pk: 2
+  fields:
+    name: CIC
+- model: company_profile.lkpcompanyproductionfactorytype
+  pk: 3
+  fields:
+    name: VAT
+- model: company_profile.lkpcompanyproductionlicensestatus
+  pk: 1
+  fields:
+    name: ساري
+- model: company_profile.lkpcompanyproductionlicensestatus
+  pk: 2
+  fields:
+    name: غير ساري
+- model: company_profile.appborrowmaterialdetail
+  pk: 1
+  fields:
+    borrow_master: 1
+    material: sdfsdf
+    quantity: 50
+- model: company_profile.appborrowmaterialdetail
+  pk: 2
+  fields:
+    borrow_master: 12
+    material: '66666666'
+    quantity: 66
+- model: company_profile.appborrowmaterialdetail
+  pk: 3
+  fields:
+    borrow_master: 13
+    material: '555'
+    quantity: 5
+- model: company_profile.appborrowmaterialdetail
+  pk: 4
+  fields:
+    borrow_master: 14
+    material: '555'
+    quantity: 5
+- model: company_profile.appborrowmaterialdetail
+  pk: 5
+  fields:
+    borrow_master: 15
+    material: fdewf
+    quantity: 4
+- model: company_profile.appborrowmaterialdetail
+  pk: 6
+  fields:
+    borrow_master: 16
+    material: '00000000'
+    quantity: 88
+- model: company_profile.appborrowmaterialdetail
+  pk: 7
+  fields:
+    borrow_master: 17
+    material: '777'
+    quantity: 666
+- model: company_profile.appborrowmaterialdetail
+  pk: 8
+  fields:
+    borrow_master: 18
+    material: '777'
+    quantity: 666
+- model: company_profile.appborrowmaterialdetail
+  pk: 9
+  fields:
+    borrow_master: 19
+    material: '111111111'
+    quantity: 1
+- model: company_profile.appborrowmaterialdetail
+  pk: 10
+  fields:
+    borrow_master: 20
+    material: '3333333'
+    quantity: 3
+- model: company_profile.appborrowmaterialdetail
+  pk: 11
+  fields:
+    borrow_master: 21
+    material: '999999'
+    quantity: 9
+- model: company_profile.appborrowmaterialdetail
+  pk: 12
+  fields:
+    borrow_master: 22
+    material: '11'
+    quantity: 1
+- model: company_profile.appborrowmaterialdetail
+  pk: 13
+  fields:
+    borrow_master: 22
+    material: '22'
+    quantity: 2
+- model: company_profile.appborrowmaterialdetail
+  pk: 14
+  fields:
+    borrow_master: 22
+    material: '33'
+    quantity: 3
+- model: company_profile.appborrowmaterialdetail
+  pk: 15
+  fields:
+    borrow_master: 22
+    material: '44'
+    quantity: 4
+- model: company_profile.appborrowmaterialdetail
+  pk: 16
+  fields:
+    borrow_master: 23
+    material: aaaaaa
+    quantity: 1
+- model: company_profile.appborrowmaterialdetail
+  pk: 17
+  fields:
+    borrow_master: 24
+    material: zzzzzzz
+    quantity: 7
+- model: company_profile.appborrowmaterialdetail
+  pk: 18
+  fields:
+    borrow_master: 25
+    material: ggggggg
+    quantity: 999999999
+- model: company_profile.appborrowmaterialdetail
+  pk: 19
+  fields:
+    borrow_master: 25
+    material: oooooooooo
+    quantity: 8888888
+- model: company_profile.appborrowmaterialdetail
+  pk: 20
+  fields:
+    borrow_master: 26
+    material: '11111111'
+    quantity: 11
+- model: company_profile.appborrowmaterialdetail
+  pk: 21
+  fields:
+    borrow_master: 27
+    material: '11111111'
+    quantity: 11
+- model: company_profile.appborrowmaterialdetail
+  pk: 22
+  fields:
+    borrow_master: 28
+    material: '11111111'
+    quantity: 11
+- model: company_profile.appborrowmaterialdetail
+  pk: 23
+  fields:
+    borrow_master: 29
+    material: zzzzzzzzz
+    quantity: 7777777
+- model: company_profile.appborrowmaterialdetail
+  pk: 24
+  fields:
+    borrow_master: 29
+    material: vvvvvvvvv
+    quantity: 7777777777
+- model: auth.permission
+  fields:
+    name: Can add log entry
+    content_type:
+    - admin
+    - logentry
+    codename: add_logentry
+- model: auth.permission
+  fields:
+    name: Can change log entry
+    content_type:
+    - admin
+    - logentry
+    codename: change_logentry
+- model: auth.permission
+  fields:
+    name: Can delete log entry
+    content_type:
+    - admin
+    - logentry
+    codename: delete_logentry
+- model: auth.permission
+  fields:
+    name: Can view log entry
+    content_type:
+    - admin
+    - logentry
+    codename: view_logentry
+- model: auth.permission
+  fields:
+    name: Can add permission
+    content_type:
+    - auth
+    - permission
+    codename: add_permission
+- model: auth.permission
+  fields:
+    name: Can change permission
+    content_type:
+    - auth
+    - permission
+    codename: change_permission
+- model: auth.permission
+  fields:
+    name: Can delete permission
+    content_type:
+    - auth
+    - permission
+    codename: delete_permission
+- model: auth.permission
+  fields:
+    name: Can view permission
+    content_type:
+    - auth
+    - permission
+    codename: view_permission
+- model: auth.permission
+  fields:
+    name: Can add group
+    content_type:
+    - auth
+    - group
+    codename: add_group
+- model: auth.permission
+  fields:
+    name: Can change group
+    content_type:
+    - auth
+    - group
+    codename: change_group
+- model: auth.permission
+  fields:
+    name: Can delete group
+    content_type:
+    - auth
+    - group
+    codename: delete_group
+- model: auth.permission
+  fields:
+    name: Can view group
+    content_type:
+    - auth
+    - group
+    codename: view_group
+- model: auth.permission
+  fields:
+    name: Can add content type
+    content_type:
+    - contenttypes
+    - contenttype
+    codename: add_contenttype
+- model: auth.permission
+  fields:
+    name: Can change content type
+    content_type:
+    - contenttypes
+    - contenttype
+    codename: change_contenttype
+- model: auth.permission
+  fields:
+    name: Can delete content type
+    content_type:
+    - contenttypes
+    - contenttype
+    codename: delete_contenttype
+- model: auth.permission
+  fields:
+    name: Can view content type
+    content_type:
+    - contenttypes
+    - contenttype
+    codename: view_contenttype
+- model: auth.permission
+  fields:
+    name: Can add session
+    content_type:
+    - sessions
+    - session
+    codename: add_session
+- model: auth.permission
+  fields:
+    name: Can change session
+    content_type:
+    - sessions
+    - session
+    codename: change_session
+- model: auth.permission
+  fields:
+    name: Can delete session
+    content_type:
+    - sessions
+    - session
+    codename: delete_session
+- model: auth.permission
+  fields:
+    name: Can view session
+    content_type:
+    - sessions
+    - session
+    codename: view_session
+- model: auth.permission
+  fields:
+    name: Can add user
+    content_type:
+    - accounts
+    - customuser
+    codename: add_customuser
+- model: auth.permission
+  fields:
+    name: Can change user
+    content_type:
+    - accounts
+    - customuser
+    codename: change_customuser
+- model: auth.permission
+  fields:
+    name: Can delete user
+    content_type:
+    - accounts
+    - customuser
+    codename: delete_customuser
+- model: auth.permission
+  fields:
+    name: Can view user
+    content_type:
+    - accounts
+    - customuser
+    codename: view_customuser
+- model: auth.permission
+  fields:
+    name: Can add email address
+    content_type:
+    - account
+    - emailaddress
+    codename: add_emailaddress
+- model: auth.permission
+  fields:
+    name: Can change email address
+    content_type:
+    - account
+    - emailaddress
+    codename: change_emailaddress
+- model: auth.permission
+  fields:
+    name: Can delete email address
+    content_type:
+    - account
+    - emailaddress
+    codename: delete_emailaddress
+- model: auth.permission
+  fields:
+    name: Can view email address
+    content_type:
+    - account
+    - emailaddress
+    codename: view_emailaddress
+- model: auth.permission
+  fields:
+    name: Can add email confirmation
+    content_type:
+    - account
+    - emailconfirmation
+    codename: add_emailconfirmation
+- model: auth.permission
+  fields:
+    name: Can change email confirmation
+    content_type:
+    - account
+    - emailconfirmation
+    codename: change_emailconfirmation
+- model: auth.permission
+  fields:
+    name: Can delete email confirmation
+    content_type:
+    - account
+    - emailconfirmation
+    codename: delete_emailconfirmation
+- model: auth.permission
+  fields:
+    name: Can view email confirmation
+    content_type:
+    - account
+    - emailconfirmation
+    codename: view_emailconfirmation
+- model: auth.permission
+  fields:
+    name: Can add social account
+    content_type:
+    - socialaccount
+    - socialaccount
+    codename: add_socialaccount
+- model: auth.permission
+  fields:
+    name: Can change social account
+    content_type:
+    - socialaccount
+    - socialaccount
+    codename: change_socialaccount
+- model: auth.permission
+  fields:
+    name: Can delete social account
+    content_type:
+    - socialaccount
+    - socialaccount
+    codename: delete_socialaccount
+- model: auth.permission
+  fields:
+    name: Can view social account
+    content_type:
+    - socialaccount
+    - socialaccount
+    codename: view_socialaccount
+- model: auth.permission
+  fields:
+    name: Can add social application
+    content_type:
+    - socialaccount
+    - socialapp
+    codename: add_socialapp
+- model: auth.permission
+  fields:
+    name: Can change social application
+    content_type:
+    - socialaccount
+    - socialapp
+    codename: change_socialapp
+- model: auth.permission
+  fields:
+    name: Can delete social application
+    content_type:
+    - socialaccount
+    - socialapp
+    codename: delete_socialapp
+- model: auth.permission
+  fields:
+    name: Can view social application
+    content_type:
+    - socialaccount
+    - socialapp
+    codename: view_socialapp
+- model: auth.permission
+  fields:
+    name: Can add social application token
+    content_type:
+    - socialaccount
+    - socialtoken
+    codename: add_socialtoken
+- model: auth.permission
+  fields:
+    name: Can change social application token
+    content_type:
+    - socialaccount
+    - socialtoken
+    codename: change_socialtoken
+- model: auth.permission
+  fields:
+    name: Can delete social application token
+    content_type:
+    - socialaccount
+    - socialtoken
+    codename: delete_socialtoken
+- model: auth.permission
+  fields:
+    name: Can view social application token
+    content_type:
+    - socialaccount
+    - socialtoken
+    codename: view_socialtoken
+- model: auth.permission
+  fields:
+    name: Can add lkp company production status
+    content_type:
+    - company_profile
+    - lkpcompanyproductionstatus
+    codename: add_lkpcompanyproductionstatus
+- model: auth.permission
+  fields:
+    name: Can change lkp company production status
+    content_type:
+    - company_profile
+    - lkpcompanyproductionstatus
+    codename: change_lkpcompanyproductionstatus
+- model: auth.permission
+  fields:
+    name: Can delete lkp company production status
+    content_type:
+    - company_profile
+    - lkpcompanyproductionstatus
+    codename: delete_lkpcompanyproductionstatus
+- model: auth.permission
+  fields:
+    name: Can view lkp company production status
+    content_type:
+    - company_profile
+    - lkpcompanyproductionstatus
+    codename: view_lkpcompanyproductionstatus
+- model: auth.permission
+  fields:
+    name: Can add lkp company production factory type
+    content_type:
+    - company_profile
+    - lkpcompanyproductionfactorytype
+    codename: add_lkpcompanyproductionfactorytype
+- model: auth.permission
+  fields:
+    name: Can change lkp company production factory type
+    content_type:
+    - company_profile
+    - lkpcompanyproductionfactorytype
+    codename: change_lkpcompanyproductionfactorytype
+- model: auth.permission
+  fields:
+    name: Can delete lkp company production factory type
+    content_type:
+    - company_profile
+    - lkpcompanyproductionfactorytype
+    codename: delete_lkpcompanyproductionfactorytype
+- model: auth.permission
+  fields:
+    name: Can view lkp company production factory type
+    content_type:
+    - company_profile
+    - lkpcompanyproductionfactorytype
+    codename: view_lkpcompanyproductionfactorytype
+- model: auth.permission
+  fields:
+    name: Can add lkp company production license status
+    content_type:
+    - company_profile
+    - lkpcompanyproductionlicensestatus
+    codename: add_lkpcompanyproductionlicensestatus
+- model: auth.permission
+  fields:
+    name: Can change lkp company production license status
+    content_type:
+    - company_profile
+    - lkpcompanyproductionlicensestatus
+    codename: change_lkpcompanyproductionlicensestatus
+- model: auth.permission
+  fields:
+    name: Can delete lkp company production license status
+    content_type:
+    - company_profile
+    - lkpcompanyproductionlicensestatus
+    codename: delete_lkpcompanyproductionlicensestatus
+- model: auth.permission
+  fields:
+    name: Can view lkp company production license status
+    content_type:
+    - company_profile
+    - lkpcompanyproductionlicensestatus
+    codename: view_lkpcompanyproductionlicensestatus
+- model: auth.permission
+  fields:
+    name: Can add tbl company production license
+    content_type:
+    - company_profile
+    - tblcompanyproductionlicense
+    codename: add_tblcompanyproductionlicense
+- model: auth.permission
+  fields:
+    name: Can change tbl company production license
+    content_type:
+    - company_profile
+    - tblcompanyproductionlicense
+    codename: change_tblcompanyproductionlicense
+- model: auth.permission
+  fields:
+    name: Can delete tbl company production license
+    content_type:
+    - company_profile
+    - tblcompanyproductionlicense
+    codename: delete_tblcompanyproductionlicense
+- model: auth.permission
+  fields:
+    name: Can view tbl company production license
+    content_type:
+    - company_profile
+    - tblcompanyproductionlicense
+    codename: view_tblcompanyproductionlicense
+- model: auth.permission
+  fields:
+    name: Can add tbl company production
+    content_type:
+    - company_profile
+    - tblcompanyproduction
+    codename: add_tblcompanyproduction
+- model: auth.permission
+  fields:
+    name: Can change tbl company production
+    content_type:
+    - company_profile
+    - tblcompanyproduction
+    codename: change_tblcompanyproduction
+- model: auth.permission
+  fields:
+    name: Can delete tbl company production
+    content_type:
+    - company_profile
+    - tblcompanyproduction
+    codename: delete_tblcompanyproduction
+- model: auth.permission
+  fields:
+    name: Can view tbl company production
+    content_type:
+    - company_profile
+    - tblcompanyproduction
+    codename: view_tblcompanyproduction
+- model: auth.permission
+  fields:
+    name: Can add lkp locality
+    content_type:
+    - company_profile
+    - lkplocality
+    codename: add_lkplocality
+- model: auth.permission
+  fields:
+    name: Can change lkp locality
+    content_type:
+    - company_profile
+    - lkplocality
+    codename: change_lkplocality
+- model: auth.permission
+  fields:
+    name: Can delete lkp locality
+    content_type:
+    - company_profile
+    - lkplocality
+    codename: delete_lkplocality
+- model: auth.permission
+  fields:
+    name: Can view lkp locality
+    content_type:
+    - company_profile
+    - lkplocality
+    codename: view_lkplocality
+- model: auth.permission
+  fields:
+    name: Can add tbl company production factory
+    content_type:
+    - company_profile
+    - tblcompanyproductionfactory
+    codename: add_tblcompanyproductionfactory
+- model: auth.permission
+  fields:
+    name: Can change tbl company production factory
+    content_type:
+    - company_profile
+    - tblcompanyproductionfactory
+    codename: change_tblcompanyproductionfactory
+- model: auth.permission
+  fields:
+    name: Can delete tbl company production factory
+    content_type:
+    - company_profile
+    - tblcompanyproductionfactory
+    codename: delete_tblcompanyproductionfactory
+- model: auth.permission
+  fields:
+    name: Can view tbl company production factory
+    content_type:
+    - company_profile
+    - tblcompanyproductionfactory
+    codename: view_tblcompanyproductionfactory
+- model: auth.permission
+  fields:
+    name: Can add lkp nationality
+    content_type:
+    - company_profile
+    - lkpnationality
+    codename: add_lkpnationality
+- model: auth.permission
+  fields:
+    name: Can change lkp nationality
+    content_type:
+    - company_profile
+    - lkpnationality
+    codename: change_lkpnationality
+- model: auth.permission
+  fields:
+    name: Can delete lkp nationality
+    content_type:
+    - company_profile
+    - lkpnationality
+    codename: delete_lkpnationality
+- model: auth.permission
+  fields:
+    name: Can view lkp nationality
+    content_type:
+    - company_profile
+    - lkpnationality
+    codename: view_lkpnationality
+- model: auth.permission
+  fields:
+    name: Can add lkp state
+    content_type:
+    - company_profile
+    - lkpstate
+    codename: add_lkpstate
+- model: auth.permission
+  fields:
+    name: Can change lkp state
+    content_type:
+    - company_profile
+    - lkpstate
+    codename: change_lkpstate
+- model: auth.permission
+  fields:
+    name: Can delete lkp state
+    content_type:
+    - company_profile
+    - lkpstate
+    codename: delete_lkpstate
+- model: auth.permission
+  fields:
+    name: Can view lkp state
+    content_type:
+    - company_profile
+    - lkpstate
+    codename: view_lkpstate
+- model: auth.permission
+  fields:
+    name: Can add app forigner movement
+    content_type:
+    - company_profile
+    - appforignermovement
+    codename: add_appforignermovement
+- model: auth.permission
+  fields:
+    name: Can change app forigner movement
+    content_type:
+    - company_profile
+    - appforignermovement
+    codename: change_appforignermovement
+- model: auth.permission
+  fields:
+    name: Can delete app forigner movement
+    content_type:
+    - company_profile
+    - appforignermovement
+    codename: delete_appforignermovement
+- model: auth.permission
+  fields:
+    name: Can view app forigner movement
+    content_type:
+    - company_profile
+    - appforignermovement
+    codename: view_appforignermovement
+- model: auth.permission
+  fields:
+    name: Can add tbl company production user role
+    content_type:
+    - company_profile
+    - tblcompanyproductionuserrole
+    codename: add_tblcompanyproductionuserrole
+- model: auth.permission
+  fields:
+    name: Can change tbl company production user role
+    content_type:
+    - company_profile
+    - tblcompanyproductionuserrole
+    codename: change_tblcompanyproductionuserrole
+- model: auth.permission
+  fields:
+    name: Can delete tbl company production user role
+    content_type:
+    - company_profile
+    - tblcompanyproductionuserrole
+    codename: delete_tblcompanyproductionuserrole
+- model: auth.permission
+  fields:
+    name: Can view tbl company production user role
+    content_type:
+    - company_profile
+    - tblcompanyproductionuserrole
+    codename: view_tblcompanyproductionuserrole
+- model: auth.permission
+  fields:
+    name: Can add app borrow material
+    content_type:
+    - company_profile
+    - appborrowmaterial
+    codename: add_appborrowmaterial
+- model: auth.permission
+  fields:
+    name: Can change app borrow material
+    content_type:
+    - company_profile
+    - appborrowmaterial
+    codename: change_appborrowmaterial
+- model: auth.permission
+  fields:
+    name: Can delete app borrow material
+    content_type:
+    - company_profile
+    - appborrowmaterial
+    codename: delete_appborrowmaterial
+- model: auth.permission
+  fields:
+    name: Can view app borrow material
+    content_type:
+    - company_profile
+    - appborrowmaterial
+    codename: view_appborrowmaterial
+- model: auth.permission
+  fields:
+    name: Can add app borrow material detail
+    content_type:
+    - company_profile
+    - appborrowmaterialdetail
+    codename: add_appborrowmaterialdetail
+- model: auth.permission
+  fields:
+    name: Can change app borrow material detail
+    content_type:
+    - company_profile
+    - appborrowmaterialdetail
+    codename: change_appborrowmaterialdetail
+- model: auth.permission
+  fields:
+    name: Can delete app borrow material detail
+    content_type:
+    - company_profile
+    - appborrowmaterialdetail
+    codename: delete_appborrowmaterialdetail
+- model: auth.permission
+  fields:
+    name: Can view app borrow material detail
+    content_type:
+    - company_profile
+    - appborrowmaterialdetail
+    codename: view_appborrowmaterialdetail
+- model: auth.group
+  fields:
+    name: pro_company_application_accept
+    permissions: []
+- model: auth.group
+  fields:
+    name: pro_company_application_approve
+    permissions: []
+- model: accounts.customuser
+  fields:
+    password: pbkdf2_sha256$720000$tH5f7gkeFN9Es8mHafSUxJ$P28/0MeQeLvSmoLdJodz05oaT8noDhnJa2DUp0FwHP8=
+    last_login: 2024-02-07 06:10:15.704565+00:00
+    is_superuser: true
+    username: admin
+    first_name: ''
+    last_name: ''
+    email: admin@smrc.sd
+    is_staff: true
+    is_active: true
+    date_joined: 2024-01-28 16:57:39+00:00
+    lang: AR
+    groups:
+    - - pro_company_application_accept
+    - - pro_company_application_approve
+    user_permissions: []
+- model: accounts.customuser
+  fields:
+    password: pbkdf2_sha256$720000$lEDPxNchkMzbWsLXvhzF7Z$79mrLMWU+1GQDMdcpWtSGnStSnwallslYXbjKxhBL3I=
+    last_login: 2024-02-04 11:04:23.590240+00:00
+    is_superuser: false
+    username: bbb
+    first_name: ''
+    last_name: ''
+    email: info@bbb.com
+    is_staff: false
+    is_active: true
+    date_joined: 2024-02-04 10:25:23.909905+00:00
+    lang: ar
+    groups: []
+    user_permissions: []
+- model: company_profile.tblcompanyproduction
+  pk: 1
+  fields:
+    created_at: 2024-01-29 14:53:31.593007+00:00
+    created_by:
+    - admin
+    updated_at: 2024-01-31 20:12:13.434624+00:00
+    updated_by:
+    - admin
+    name_ar: دويشات للتعدين المحدودة
+    name_en: doishat co ltd
+    nationality: 1
+    state: 1
+    locality: 1
+    location: bbbbbbbbbbbbb
+    cordinates: '345'
+    address: '345'
+    website: http://www.doishat.com
+    manager_name: Mahmoud
+    manager_phone: 0922555
+    rep_name: Omer
+    rep_phone: '54656'
+    email: info@doishat.com
+    status: 1
+- model: company_profile.tblcompanyproduction
+  pk: 2
+  fields:
+    created_at: 2024-02-04 10:02:13.385561+00:00
+    created_by:
+    - admin
+    updated_at: 2024-02-04 10:02:13.385784+00:00
+    updated_by:
+    - admin
+    name_ar: جبل الذهب
+    name_en: gold mountin
+    nationality: 1
+    state: 1
+    locality: 1
+    location: '1111'
+    cordinates: erwwre
+    address: werwe
+    website: http://www.gold-mountin.com
+    manager_name: حسن محمد
+    manager_phone: '416546'
+    rep_name: طارق الشريف
+    rep_phone: '4646'
+    email: info@gold-mountin.com
+    status: 1
+- model: company_profile.tblcompanyproduction
+  pk: 4
+  fields:
+    created_at: 2024-02-04 10:25:23.902107+00:00
+    created_by:
+    - admin
+    updated_at: 2024-02-04 10:25:23.902341+00:00
+    updated_by:
+    - admin
+    name_ar: bbbb
+    name_en: bbb
+    nationality: 1
+    state: 1
+    locality: 1
+    location: bbb
+    cordinates: bb
+    address: bb
+    website: http://www.bbb.com
+    manager_name: bbb
+    manager_phone: 0922555
+    rep_name: bbbbbbbbb
+    rep_phone: '54656'
+    email: info@bbb.com
+    status: 1
+- model: company_profile.tblcompanyproductionuserrole
+  pk: 2
+  fields:
+    user:
+    - admin
+    company: 1
+- model: company_profile.tblcompanyproductionuserrole
+  pk: 3
+  fields:
+    user:
+    - bbb
+    company: 4
+- model: company_profile.tblcompanyproductionfactory
+  pk: 1
+  fields:
+    created_at: 2024-01-29 15:18:08.679198+00:00
+    created_by:
+    - admin
+    updated_at: 2024-01-29 15:18:08.679415+00:00
+    updated_by:
+    - admin
+    company: 1
+    factory_type: 1
+    capacity: 555.0
+- model: company_profile.tblcompanyproductionfactory
+  pk: 2
+  fields:
+    created_at: 2024-01-29 15:26:49.170674+00:00
+    created_by:
+    - admin
+    updated_at: 2024-01-29 15:26:49.171131+00:00
+    updated_by:
+    - admin
+    company: 1
+    factory_type: 2
+    capacity: 11.0
+- model: company_profile.tblcompanyproductionfactory
+  pk: 3
+  fields:
+    created_at: 2024-01-29 15:27:35.303570+00:00
+    created_by:
+    - admin
+    updated_at: 2024-01-29 15:27:35.303800+00:00
+    updated_by:
+    - admin
+    company: 1
+    factory_type: 3
+    capacity: 2.0
+- model: company_profile.tblcompanyproductionlicense
+  pk: 1
+  fields:
+    created_at: 2024-01-29 16:36:43.975524+00:00
+    created_by:
+    - admin
+    updated_at: 2024-01-29 16:40:52.178136+00:00
+    updated_by:
+    - admin
+    company: 1
+    date: 2024-01-29
+    start_date: 2024-01-29
+    end_date: 2024-01-31
+    sheet_no: '1'
+    cordinates: h
+    area: 435.0
+    reserve: 435.0
+    gov_rep: rtert
+    rep_percent: 234.0
+    com_percent: 234.0
+    royalty: 345.0
+    zakat: 435.0
+    annual_rent: 345.0
+    contract_status: 1
+    contract_file: company_1/license_2024-01-29/info
+- model: company_profile.appforignermovement
+  pk: 1
+  fields:
+    created_at: 2024-02-04 20:14:06.254080+00:00
+    created_by:
+    - admin
+    updated_at: 2024-02-05 12:18:24.786391+00:00
+    updated_by:
+    - admin
+    state: approved
+    notify: false
+    company: 1
+    route_from: aaaaaa
+    route_to: bbbbbbbb
+    period_from: 2024-02-04
+    period_to: 2024-02-04
+    address_in_sudan: bbbbbbbbbb
+    nationality: 1
+    passport_no: '111'
+    passport_expiry_date: 2024-02-04
+    official_letter_file: company_1/applications/test.txt
+    passport_copy_file: company_1/applications/test_zSns5CD.txt
+    cv_file: company_1/applications/test_vnnPVgU.txt
+    experiance_certificates_file: company_1/applications/test_2xSMf7R.txt
+- model: company_profile.appforignermovement
+  pk: 2
+  fields:
+    created_at: 2024-02-04 21:30:58.598981+00:00
+    created_by:
+    - admin
+    updated_at: 2024-02-05 13:31:21.030244+00:00
+    updated_by:
+    - admin
+    state: accepted
+    notify: false
+    company: 1
+    route_from: aaaaaa
+    route_to: bbbbbb
+    period_from: 2024-02-04
+    period_to: 2024-02-04
+    address_in_sudan: bbbb
+    nationality: 1
+    passport_no: '1111111'
+    passport_expiry_date: 2024-02-04
+    official_letter_file: company_1/applications/test_S5ra1DF.txt
+    passport_copy_file: company_1/applications/test_yXErBWD.txt
+    cv_file: company_1/applications/test_Z9Ofc8C.txt
+    experiance_certificates_file: company_1/applications/test_lfyLxpF.txt
+- model: company_profile.appforignermovement
+  pk: 4
+  fields:
+    created_at: 2024-02-04 21:32:19.708191+00:00
+    created_by:
+    - admin
+    updated_at: 2024-02-05 13:29:59.034467+00:00
+    updated_by:
+    - admin
+    state: accepted
+    notify: false
+    company: 1
+    route_from: aaaaaa
+    route_to: bbbbbb
+    period_from: 2024-02-04
+    period_to: 2024-02-04
+    address_in_sudan: bbbb
+    nationality: 1
+    passport_no: '1111111'
+    passport_expiry_date: 2024-02-04
+    official_letter_file: company_1/applications/test_HrSyjKh.txt
+    passport_copy_file: company_1/applications/test_YGvPmAG.txt
+    cv_file: company_1/applications/test_dv2zTY5.txt
+    experiance_certificates_file: company_1/applications/test_SxOrliG.txt
+- model: company_profile.appborrowmaterial
+  pk: 1
+  fields:
+    created_at: 2024-02-02 23:44:45.194969+00:00
+    created_by:
+    - admin
+    updated_at: 2024-02-02 23:44:45.195120+00:00
+    updated_by:
+    - admin
+    state: submitted
+    notify: false
+    company: 1
+    company_from: 1
+    borrow_date: 2024-02-03
+    borrow_materials_list_file: ('1\n',)
+    borrow_from_approval_file: ('1\n',)
+- model: company_profile.appborrowmaterial
+  pk: 2
+  fields:
+    created_at: 2024-02-03 00:31:20.434181+00:00
+    created_by:
+    - admin
+    updated_at: 2024-02-03 00:31:20.434362+00:00
+    updated_by:
+    - admin
+    state: submitted
+    notify: false
+    company: 1
+    company_from: 1
+    borrow_date: 2024-02-29
+    borrow_materials_list_file: ('1\n',)
+    borrow_from_approval_file: ('1\n',)
+- model: company_profile.appborrowmaterial
+  pk: 3
+  fields:
+    created_at: 2024-02-03 00:34:09.417709+00:00
+    created_by:
+    - admin
+    updated_at: 2024-02-03 00:34:09.417883+00:00
+    updated_by:
+    - admin
+    state: submitted
+    notify: false
+    company: 1
+    company_from: 1
+    borrow_date: 2024-02-29
+    borrow_materials_list_file: ('1\n',)
+    borrow_from_approval_file: ('1\n',)
+- model: company_profile.appborrowmaterial
+  pk: 4
+  fields:
+    created_at: 2024-02-03 00:36:58.288749+00:00
+    created_by:
+    - admin
+    updated_at: 2024-02-03 00:36:58.288993+00:00
+    updated_by:
+    - admin
+    state: submitted
+    notify: false
+    company: 1
+    company_from: 1
+    borrow_date: 2024-02-29
+    borrow_materials_list_file: ('1\n',)
+    borrow_from_approval_file: ('1\n',)
+- model: company_profile.appborrowmaterial
+  pk: 5
+  fields:
+    created_at: 2024-02-03 00:37:21.464370+00:00
+    created_by:
+    - admin
+    updated_at: 2024-02-03 00:37:21.464529+00:00
+    updated_by:
+    - admin
+    state: submitted
+    notify: false
+    company: 1
+    company_from: 1
+    borrow_date: 2024-02-13
+    borrow_materials_list_file: ('1\n',)
+    borrow_from_approval_file: ('1\n',)
+- model: company_profile.appborrowmaterial
+  pk: 6
+  fields:
+    created_at: 2024-02-03 15:42:20.113164+00:00
+    created_by:
+    - admin
+    updated_at: 2024-02-03 15:42:20.113369+00:00
+    updated_by:
+    - admin
+    state: submitted
+    notify: false
+    company: 1
+    company_from: 1
+    borrow_date: 2024-02-11
+    borrow_materials_list_file: ('1\n',)
+    borrow_from_approval_file: ('1\n',)
+- model: company_profile.appborrowmaterial
+  pk: 7
+  fields:
+    created_at: 2024-02-03 17:59:09.689334+00:00
+    created_by:
+    - admin
+    updated_at: 2024-02-03 17:59:10.090368+00:00
+    updated_by:
+    - admin
+    state: submitted
+    notify: false
+    company: 1
+    company_from: 1
+    borrow_date: 2024-02-08
+    borrow_materials_list_file: ('1\n',)
+    borrow_from_approval_file: ('1\n',)
+- model: company_profile.appborrowmaterial
+  pk: 8
+  fields:
+    created_at: 2024-02-03 18:15:32.385812+00:00
+    created_by:
+    - admin
+    updated_at: 2024-02-03 18:15:32.386056+00:00
+    updated_by:
+    - admin
+    state: submitted
+    notify: false
+    company: 1
+    company_from: 1
+    borrow_date: 2024-02-01
+    borrow_materials_list_file: ('1\n',)
+    borrow_from_approval_file: ('1\n',)
+- model: company_profile.appborrowmaterial
+  pk: 9
+  fields:
+    created_at: 2024-02-03 18:31:42.047146+00:00
+    created_by:
+    - admin
+    updated_at: 2024-02-03 18:31:42.047724+00:00
+    updated_by:
+    - admin
+    state: submitted
+    notify: false
+    company: 1
+    company_from: 1
+    borrow_date: 2024-02-02
+    borrow_materials_list_file: ('1\n',)
+    borrow_from_approval_file: ('1\n',)
+- model: company_profile.appborrowmaterial
+  pk: 10
+  fields:
+    created_at: 2024-02-03 18:39:24.505874+00:00
+    created_by:
+    - admin
+    updated_at: 2024-02-03 18:39:24.506305+00:00
+    updated_by:
+    - admin
+    state: submitted
+    notify: false
+    company: 1
+    company_from: 1
+    borrow_date: 2024-02-03
+    borrow_materials_list_file: ('1\n',)
+    borrow_from_approval_file: ('1\n',)
+- model: company_profile.appborrowmaterial
+  pk: 11
+  fields:
+    created_at: 2024-02-03 18:41:33.666445+00:00
+    created_by:
+    - admin
+    updated_at: 2024-02-03 18:41:33.666651+00:00
+    updated_by:
+    - admin
+    state: submitted
+    notify: false
+    company: 1
+    company_from: 1
+    borrow_date: 2024-02-03
+    borrow_materials_list_file: ('1\n',)
+    borrow_from_approval_file: ('1\n',)
+- model: company_profile.appborrowmaterial
+  pk: 12
+  fields:
+    created_at: 2024-02-03 18:44:00.757433+00:00
+    created_by:
+    - admin
+    updated_at: 2024-02-04 16:39:17.561828+00:00
+    updated_by:
+    - admin
+    state: accepted
+    notify: true
+    company: 1
+    company_from: 1
+    borrow_date: 2024-02-03
+    borrow_materials_list_file: ('1\n',)
+    borrow_from_approval_file: ('1\n',)
+- model: company_profile.appborrowmaterial
+  pk: 13
+  fields:
+    created_at: 2024-02-03 18:44:40.917681+00:00
+    created_by:
+    - admin
+    updated_at: 2024-02-03 18:44:40.917900+00:00
+    updated_by:
+    - admin
+    state: submitted
+    notify: false
+    company: 1
+    company_from: 1
+    borrow_date: 2024-02-04
+    borrow_materials_list_file: ('1\n',)
+    borrow_from_approval_file: ('1\n',)
+- model: company_profile.appborrowmaterial
+  pk: 14
+  fields:
+    created_at: 2024-02-03 18:45:12.731358+00:00
+    created_by:
+    - admin
+    updated_at: 2024-02-04 13:36:34.610111+00:00
+    updated_by:
+    - admin
+    state: approved
+    notify: true
+    company: 1
+    company_from: 1
+    borrow_date: 2024-02-04
+    borrow_materials_list_file: ('1\n',)
+    borrow_from_approval_file: ('1\n',)
+- model: company_profile.appborrowmaterial
+  pk: 15
+  fields:
+    created_at: 2024-02-03 18:46:45.914013+00:00
+    created_by:
+    - admin
+    updated_at: 2024-02-04 13:31:53.681469+00:00
+    updated_by:
+    - admin
+    state: accepted
+    notify: true
+    company: 1
+    company_from: 1
+    borrow_date: 2024-02-05
+    borrow_materials_list_file: ('1\n',)
+    borrow_from_approval_file: ('1\n',)
+- model: company_profile.appborrowmaterial
+  pk: 16
+  fields:
+    created_at: 2024-02-03 18:51:57.771890+00:00
+    created_by:
+    - admin
+    updated_at: 2024-02-04 13:26:40.576587+00:00
+    updated_by:
+    - admin
+    state: approved
+    notify: true
+    company: 1
+    company_from: 1
+    borrow_date: 2024-02-07
+    borrow_materials_list_file: ('1\n',)
+    borrow_from_approval_file: ('1\n',)
+- model: company_profile.appborrowmaterial
+  pk: 17
+  fields:
+    created_at: 2024-02-03 18:52:17.544367+00:00
+    created_by:
+    - admin
+    updated_at: 2024-02-04 16:30:58.464168+00:00
+    updated_by:
+    - admin
+    state: approved
+    notify: true
+    company: 1
+    company_from: 1
+    borrow_date: 2024-02-07
+    borrow_materials_list_file: ('1\n',)
+    borrow_from_approval_file: ('1\n',)
+- model: company_profile.appborrowmaterial
+  pk: 18
+  fields:
+    created_at: 2024-02-03 18:53:12.185395+00:00
+    created_by:
+    - admin
+    updated_at: 2024-02-03 18:53:12.186372+00:00
+    updated_by:
+    - admin
+    state: submitted
+    notify: false
+    company: 1
+    company_from: 1
+    borrow_date: 2024-02-07
+    borrow_materials_list_file: ('1\n',)
+    borrow_from_approval_file: ('1\n',)
+- model: company_profile.appborrowmaterial
+  pk: 19
+  fields:
+    created_at: 2024-02-03 19:57:45.772873+00:00
+    created_by:
+    - admin
+    updated_at: 2024-02-03 19:57:45.773115+00:00
+    updated_by:
+    - admin
+    state: submitted
+    notify: false
+    company: 1
+    company_from: 1
+    borrow_date: 2024-02-09
+    borrow_materials_list_file: ('1\n',)
+    borrow_from_approval_file: ('1\n',)
+- model: company_profile.appborrowmaterial
+  pk: 20
+  fields:
+    created_at: 2024-02-03 20:02:01.700749+00:00
+    created_by:
+    - admin
+    updated_at: 2024-02-04 16:30:21.944257+00:00
+    updated_by:
+    - admin
+    state: accepted
+    notify: true
+    company: 1
+    company_from: 1
+    borrow_date: 2024-02-16
+    borrow_materials_list_file: ('1\n',)
+    borrow_from_approval_file: ('1\n',)
+- model: company_profile.appborrowmaterial
+  pk: 21
+  fields:
+    created_at: 2024-02-03 20:28:50.480924+00:00
+    created_by:
+    - admin
+    updated_at: 2024-02-04 12:54:56.317985+00:00
+    updated_by:
+    - admin
+    state: accepted
+    notify: true
+    company: 1
+    company_from: 1
+    borrow_date: 2024-02-14
+    borrow_materials_list_file: ('1\n',)
+    borrow_from_approval_file: ('1\n',)
+- model: company_profile.appborrowmaterial
+  pk: 22
+  fields:
+    created_at: 2024-02-03 20:51:07.540580+00:00
+    created_by:
+    - admin
+    updated_at: 2024-02-04 09:41:45.814357+00:00
+    updated_by:
+    - admin
+    state: rejected
+    notify: false
+    company: 1
+    company_from: 1
+    borrow_date: 2024-02-14
+    borrow_materials_list_file: ('1\n',)
+    borrow_from_approval_file: ('1\n',)
+- model: company_profile.appborrowmaterial
+  pk: 23
+  fields:
+    created_at: 2024-02-04 09:45:00.655980+00:00
+    created_by:
+    - admin
+    updated_at: 2024-02-04 13:22:38.037311+00:00
+    updated_by:
+    - admin
+    state: approved
+    notify: true
+    company: 1
+    company_from: 1
+    borrow_date: 2024-02-22
+    borrow_materials_list_file: ('1\n',)
+    borrow_from_approval_file: ('1\n',)
+- model: company_profile.appborrowmaterial
+  pk: 24
+  fields:
+    created_at: 2024-02-04 11:05:52.416932+00:00
+    created_by:
+    - bbb
+    updated_at: 2024-02-04 16:29:51.817877+00:00
+    updated_by:
+    - admin
+    state: approved
+    notify: false
+    company: 4
+    company_from: 2
+    borrow_date: 2024-02-04
+    borrow_materials_list_file: ('1\n',)
+    borrow_from_approval_file: ('1\n',)
+- model: company_profile.appborrowmaterial
+  pk: 25
+  fields:
+    created_at: 2024-02-04 20:32:11.905947+00:00
+    created_by:
+    - admin
+    updated_at: 2024-02-04 20:32:11.906111+00:00
+    updated_by:
+    - admin
+    state: submitted
+    notify: false
+    company: 1
+    company_from: 2
+    borrow_date: 2024-02-04
+    borrow_materials_list_file: company_1/applications/test_U1Iro0B.txt
+    borrow_from_approval_file: company_1/applications/test_l7OG9Mk.txt
+- model: company_profile.appborrowmaterial
+  pk: 26
+  fields:
+    created_at: 2024-02-04 20:43:01.962521+00:00
+    created_by:
+    - admin
+    updated_at: 2024-02-04 20:43:01.962794+00:00
+    updated_by:
+    - admin
+    state: submitted
+    notify: false
+    company: 1
+    company_from: 1
+    borrow_date: 2024-02-04
+    borrow_materials_list_file: company_1/applications/test_Y9pFoxv.txt
+    borrow_from_approval_file: company_1/applications/test_6xswvD1.txt
+- model: company_profile.appborrowmaterial
+  pk: 27
+  fields:
+    created_at: 2024-02-04 20:46:19.344061+00:00
+    created_by:
+    - admin
+    updated_at: 2024-02-04 20:46:19.344214+00:00
+    updated_by:
+    - admin
+    state: submitted
+    notify: false
+    company: 1
+    company_from: 1
+    borrow_date: 2024-02-04
+    borrow_materials_list_file: company_1/applications/test_dAq13SO.txt
+    borrow_from_approval_file: company_1/applications/test_MofNky7.txt
+- model: company_profile.appborrowmaterial
+  pk: 28
+  fields:
+    created_at: 2024-02-04 20:47:09.354157+00:00
+    created_by:
+    - admin
+    updated_at: 2024-02-05 17:05:16.321023+00:00
+    updated_by:
+    - admin
+    state: accepted
+    notify: false
+    company: 1
+    company_from: 1
+    borrow_date: 2024-02-04
+    borrow_materials_list_file: company_1/applications/test_sWvNkAf.txt
+    borrow_from_approval_file: company_1/applications/test_L8Nw9CE.txt
+- model: company_profile.appborrowmaterial
+  pk: 29
+  fields:
+    created_at: 2024-02-04 21:34:37.585121+00:00
+    created_by:
+    - admin
+    updated_at: 2024-02-04 21:37:15.171210+00:00
+    updated_by:
+    - admin
+    state: approved
+    notify: false
+    company: 1
+    company_from: 1
+    borrow_date: 2024-02-04
+    borrow_materials_list_file: company_1/applications/test_MDoipZh.txt
+    borrow_from_approval_file: company_1/applications/test_vETx7Xj.txt
+- model: account.emailaddress
+  pk: 1
+  fields:
+    user:
+    - admin
+    email: admin@smrc.sd
+    verified: true
+    primary: true
+- model: admin.logentry
+  pk: 1
+  fields:
+    action_time: 2024-01-29 12:20:58.439120+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - lkpnationality
+    object_id: '1'
+    object_repr: LkpNationality object (1)
+    action_flag: 1
+    change_message: '[{"added": {}}]'
+- model: admin.logentry
+  pk: 2
+  fields:
+    action_time: 2024-01-29 12:21:52.289873+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - lkpstate
+    object_id: '1'
+    object_repr: LkpState object (1)
+    action_flag: 1
+    change_message: '[{"added": {}}]'
+- model: admin.logentry
+  pk: 3
+  fields:
+    action_time: 2024-01-29 12:22:08.543997+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - lkplocality
+    object_id: '1'
+    object_repr: LkpLocality object (1)
+    action_flag: 1
+    change_message: '[{"added": {}}]'
+- model: admin.logentry
+  pk: 4
+  fields:
+    action_time: 2024-01-29 12:26:50.615080+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - lkpcompanyproductionstatus
+    object_id: '1'
+    object_repr: LkpCompanyProductionStatus object (1)
+    action_flag: 1
+    change_message: '[{"added": {}}]'
+- model: admin.logentry
+  pk: 5
+  fields:
+    action_time: 2024-01-29 12:26:58.306433+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - lkpcompanyproductionfactorytype
+    object_id: '1'
+    object_repr: LkpCompanyProductionFactoryType object (1)
+    action_flag: 1
+    change_message: '[{"added": {}}]'
+- model: admin.logentry
+  pk: 6
+  fields:
+    action_time: 2024-01-29 12:27:34.645628+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - lkpcompanyproductionstatus
+    object_id: '2'
+    object_repr: LkpCompanyProductionStatus object (2)
+    action_flag: 1
+    change_message: '[{"added": {}}]'
+- model: admin.logentry
+  pk: 7
+  fields:
+    action_time: 2024-01-29 12:27:40.706007+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - lkpcompanyproductionstatus
+    object_id: '3'
+    object_repr: LkpCompanyProductionStatus object (3)
+    action_flag: 1
+    change_message: '[{"added": {}}]'
+- model: admin.logentry
+  pk: 8
+  fields:
+    action_time: 2024-01-29 12:28:09.655700+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - lkpcompanyproductionfactorytype
+    object_id: '1'
+    object_repr: LkpCompanyProductionFactoryType object (1)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Name"]}}]'
+- model: admin.logentry
+  pk: 9
+  fields:
+    action_time: 2024-01-29 12:28:18.959893+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - lkpcompanyproductionfactorytype
+    object_id: '2'
+    object_repr: LkpCompanyProductionFactoryType object (2)
+    action_flag: 1
+    change_message: '[{"added": {}}]'
+- model: admin.logentry
+  pk: 10
+  fields:
+    action_time: 2024-01-29 12:28:32.553770+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - lkpcompanyproductionfactorytype
+    object_id: '3'
+    object_repr: LkpCompanyProductionFactoryType object (3)
+    action_flag: 1
+    change_message: '[{"added": {}}]'
+- model: admin.logentry
+  pk: 11
+  fields:
+    action_time: 2024-01-29 14:53:31.647442+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - tblcompanyproduction
+    object_id: '1'
+    object_repr: دويشات للتعدين المحدودة
+    action_flag: 1
+    change_message: '[{"added": {}}]'
+- model: admin.logentry
+  pk: 12
+  fields:
+    action_time: 2024-01-29 14:54:40.623503+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - tblcompanyproduction
+    object_id: '1'
+    object_repr: دويشات للتعدين المحدودة
+    action_flag: 2
+    change_message: '[]'
+- model: admin.logentry
+  pk: 13
+  fields:
+    action_time: 2024-01-29 14:54:53.603299+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - tblcompanyproduction
+    object_id: '1'
+    object_repr: دويشات للتعدين المحدودة
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Location"]}}]'
+- model: admin.logentry
+  pk: 14
+  fields:
+    action_time: 2024-01-29 14:55:45.018815+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - tblcompanyproduction
+    object_id: '1'
+    object_repr: دويشات للتعدين المحدودة
+    action_flag: 2
+    change_message: '[]'
+- model: admin.logentry
+  pk: 15
+  fields:
+    action_time: 2024-01-29 14:56:29.810257+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - tblcompanyproduction
+    object_id: '1'
+    object_repr: دويشات للتعدين المحدودة
+    action_flag: 2
+    change_message: '[]'
+- model: admin.logentry
+  pk: 16
+  fields:
+    action_time: 2024-01-29 15:18:08.694064+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - tblcompanyproductionfactory
+    object_id: '1'
+    object_repr: دويشات للتعدين المحدودة - CIL
+    action_flag: 1
+    change_message: '[{"added": {}}]'
+- model: admin.logentry
+  pk: 17
+  fields:
+    action_time: 2024-01-29 15:26:49.195967+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - tblcompanyproductionfactory
+    object_id: '2'
+    object_repr: دويشات للتعدين المحدودة - CIC
+    action_flag: 1
+    change_message: '[{"added": {}}]'
+- model: admin.logentry
+  pk: 18
+  fields:
+    action_time: 2024-01-29 15:27:35.329979+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - tblcompanyproductionfactory
+    object_id: '3'
+    object_repr: دويشات للتعدين المحدودة - VAT
+    action_flag: 1
+    change_message: '[{"added": {}}]'
+- model: admin.logentry
+  pk: 19
+  fields:
+    action_time: 2024-01-29 15:28:36.845478+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - lkpstate
+    object_id: '2'
+    object_repr: الخرطومد
+    action_flag: 1
+    change_message: '[{"added": {}}]'
+- model: admin.logentry
+  pk: 20
+  fields:
+    action_time: 2024-01-29 15:28:45.481911+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - lkpstate
+    object_id: '2'
+    object_repr: الخرطوم
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Name"]}}]'
+- model: admin.logentry
+  pk: 21
+  fields:
+    action_time: 2024-01-29 16:34:14.327213+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - lkpcompanyproductionlicensestatus
+    object_id: '1'
+    object_repr: ساري
+    action_flag: 1
+    change_message: '[{"added": {}}]'
+- model: admin.logentry
+  pk: 22
+  fields:
+    action_time: 2024-01-29 16:34:24.984753+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - lkpcompanyproductionlicensestatus
+    object_id: '2'
+    object_repr: غير ساري
+    action_flag: 1
+    change_message: '[{"added": {}}]'
+- model: admin.logentry
+  pk: 23
+  fields:
+    action_time: 2024-01-29 16:36:43.998102+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - tblcompanyproductionlicense
+    object_id: '1'
+    object_repr: دويشات للتعدين المحدودة( 2024-01-29 )
+    action_flag: 1
+    change_message: '[{"added": {}}]'
+- model: admin.logentry
+  pk: 24
+  fields:
+    action_time: 2024-01-29 16:40:52.266080+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - tblcompanyproductionlicense
+    object_id: '1'
+    object_repr: دويشات للتعدين المحدودة( 2024-01-29 )
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Contract file"]}}]'
+- model: admin.logentry
+  pk: 25
+  fields:
+    action_time: 2024-01-29 18:43:49.179100+00:00
+    user:
+    - admin
+    content_type:
+    - accounts
+    - customuser
+    object_id: '1'
+    object_repr: admin2@smrc.sd
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Email address"]}}]'
+- model: admin.logentry
+  pk: 26
+  fields:
+    action_time: 2024-01-29 18:45:00.518888+00:00
+    user:
+    - admin
+    content_type:
+    - accounts
+    - customuser
+    object_id: '1'
+    object_repr: admin@smrc.sd
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Email address"]}}]'
+- model: admin.logentry
+  pk: 27
+  fields:
+    action_time: 2024-01-30 11:46:10.801894+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appforignermovement
+    object_id: '1'
+    object_repr: AppForignerMovement object (1)
+    action_flag: 1
+    change_message: '[{"added": {}}]'
+- model: admin.logentry
+  pk: 28
+  fields:
+    action_time: 2024-01-30 11:46:29.172886+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appforignermovement
+    object_id: '1'
+    object_repr: AppForignerMovement object (1)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["State"]}}]'
+- model: admin.logentry
+  pk: 29
+  fields:
+    action_time: 2024-01-30 11:46:56.300189+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appforignermovement
+    object_id: '1'
+    object_repr: AppForignerMovement object (1)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["State"]}}]'
+- model: admin.logentry
+  pk: 30
+  fields:
+    action_time: 2024-01-30 11:50:20.842150+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appforignermovement
+    object_id: '1'
+    object_repr: AppForignerMovement object (1)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["State"]}}]'
+- model: admin.logentry
+  pk: 31
+  fields:
+    action_time: 2024-01-30 11:50:26.730792+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appforignermovement
+    object_id: '1'
+    object_repr: AppForignerMovement object (1)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["State"]}}]'
+- model: admin.logentry
+  pk: 32
+  fields:
+    action_time: 2024-01-30 14:29:19.067940+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appforignermovement
+    object_id: '1'
+    object_repr: AppForignerMovement object (1)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["State"]}}]'
+- model: admin.logentry
+  pk: 33
+  fields:
+    action_time: 2024-01-30 14:29:28.906220+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appforignermovement
+    object_id: '1'
+    object_repr: AppForignerMovement object (1)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["State"]}}]'
+- model: admin.logentry
+  pk: 34
+  fields:
+    action_time: 2024-01-30 14:38:26.262888+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appforignermovement
+    object_id: '1'
+    object_repr: AppForignerMovement object (1)
+    action_flag: 2
+    change_message: '[]'
+- model: admin.logentry
+  pk: 35
+  fields:
+    action_time: 2024-01-30 14:44:51.504555+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appforignermovement
+    object_id: '1'
+    object_repr: AppForignerMovement object (1)
+    action_flag: 2
+    change_message: '[]'
+- model: admin.logentry
+  pk: 36
+  fields:
+    action_time: 2024-01-30 14:45:05.982704+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appforignermovement
+    object_id: '1'
+    object_repr: AppForignerMovement object (1)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["State"]}}]'
+- model: admin.logentry
+  pk: 37
+  fields:
+    action_time: 2024-01-30 14:45:48.054217+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appforignermovement
+    object_id: '1'
+    object_repr: AppForignerMovement object (1)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["State"]}}]'
+- model: admin.logentry
+  pk: 38
+  fields:
+    action_time: 2024-01-30 14:47:08.850840+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appforignermovement
+    object_id: '1'
+    object_repr: AppForignerMovement object (1)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["State"]}}]'
+- model: admin.logentry
+  pk: 39
+  fields:
+    action_time: 2024-01-30 15:01:48.719429+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appforignermovement
+    object_id: '1'
+    object_repr: AppForignerMovement object (1)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["State"]}}]'
+- model: admin.logentry
+  pk: 40
+  fields:
+    action_time: 2024-01-30 15:18:19.210449+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appforignermovement
+    object_id: '1'
+    object_repr: AppForignerMovement object (1)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["State"]}}]'
+- model: admin.logentry
+  pk: 41
+  fields:
+    action_time: 2024-01-30 15:20:53.761544+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appforignermovement
+    object_id: '2'
+    object_repr: AppForignerMovement object (2)
+    action_flag: 1
+    change_message: '[{"added": {}}]'
+- model: admin.logentry
+  pk: 42
+  fields:
+    action_time: 2024-01-30 15:25:12.944080+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appforignermovement
+    object_id: '2'
+    object_repr: AppForignerMovement object (2)
+    action_flag: 2
+    change_message: '[]'
+- model: admin.logentry
+  pk: 43
+  fields:
+    action_time: 2024-01-30 15:25:30.920732+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appforignermovement
+    object_id: '2'
+    object_repr: AppForignerMovement object (2)
+    action_flag: 2
+    change_message: '[]'
+- model: admin.logentry
+  pk: 44
+  fields:
+    action_time: 2024-01-30 16:24:23.813564+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appforignermovement
+    object_id: '2'
+    object_repr: AppForignerMovement object (2)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["State"]}}]'
+- model: admin.logentry
+  pk: 45
+  fields:
+    action_time: 2024-01-30 16:34:12.860259+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - tblcompanyproduction
+    object_id: '1'
+    object_repr: دويشات للتعدين المحدودة
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["State"]}}]'
+- model: admin.logentry
+  pk: 46
+  fields:
+    action_time: 2024-01-30 16:36:28.544573+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - tblcompanyproduction
+    object_id: '1'
+    object_repr: دويشات للتعدين المحدودة
+    action_flag: 2
+    change_message: '[]'
+- model: admin.logentry
+  pk: 47
+  fields:
+    action_time: 2024-01-30 17:52:04.511125+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appforignermovement
+    object_id: '1'
+    object_repr: AppForignerMovement object (1)
+    action_flag: 2
+    change_message: '[]'
+- model: admin.logentry
+  pk: 48
+  fields:
+    action_time: 2024-01-30 17:53:01.526468+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appforignermovement
+    object_id: '2'
+    object_repr: AppForignerMovement object (2)
+    action_flag: 2
+    change_message: '[]'
+- model: admin.logentry
+  pk: 49
+  fields:
+    action_time: 2024-01-30 17:54:00.943053+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appforignermovement
+    object_id: '2'
+    object_repr: AppForignerMovement object (2)
+    action_flag: 2
+    change_message: '[]'
+- model: admin.logentry
+  pk: 50
+  fields:
+    action_time: 2024-01-30 18:44:03.940792+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appforignermovement
+    object_id: '2'
+    object_repr: AppForignerMovement object (2)
+    action_flag: 2
+    change_message: '[]'
+- model: admin.logentry
+  pk: 51
+  fields:
+    action_time: 2024-01-30 21:32:32.657785+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - tblcompanyproduction
+    object_id: '1'
+    object_repr: دويشات للتعدين المحدودة
+    action_flag: 2
+    change_message: '[]'
+- model: admin.logentry
+  pk: 52
+  fields:
+    action_time: 2024-01-30 21:32:54.561784+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - tblcompanyproduction
+    object_id: '1'
+    object_repr: دويشات للتعدين المحدودة
+    action_flag: 2
+    change_message: '[]'
+- model: admin.logentry
+  pk: 53
+  fields:
+    action_time: 2024-01-30 21:36:21.833064+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - tblcompanyproduction
+    object_id: '1'
+    object_repr: دويشات للتعدين المحدودة
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["State"]}}]'
+- model: admin.logentry
+  pk: 54
+  fields:
+    action_time: 2024-01-30 21:38:32.950663+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - lkpnationality
+    object_id: '1'
+    object_repr: سوداني
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Name"]}}]'
+- model: admin.logentry
+  pk: 55
+  fields:
+    action_time: 2024-01-30 21:59:36.359016+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appforignermovement
+    object_id: '2'
+    object_repr: Movement - دويشات للتعدين المحدودة (2)
+    action_flag: 2
+    change_message: '[]'
+- model: admin.logentry
+  pk: 56
+  fields:
+    action_time: 2024-01-30 22:07:39.681504+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appforignermovement
+    object_id: '2'
+    object_repr: Movement - دويشات للتعدين المحدودة (2)
+    action_flag: 2
+    change_message: '[]'
+- model: admin.logentry
+  pk: 57
+  fields:
+    action_time: 2024-02-02 15:18:59.897193+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - tblcompanyproductionuserrole
+    object_id: '1'
+    object_repr: TblCompanyProductionUserRole object (1)
+    action_flag: 1
+    change_message: '[{"added": {}}]'
+- model: admin.logentry
+  pk: 58
+  fields:
+    action_time: 2024-02-02 23:44:45.283741+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appborrowmaterial
+    object_id: '1'
+    object_repr: Movement  (1)
+    action_flag: 1
+    change_message: '[{"added": {}}, {"added": {"name": "app borrow material detail",
+      "object": "AppBorrowMaterialDetail object (1)"}}]'
+- model: admin.logentry
+  pk: 59
+  fields:
+    action_time: 2024-02-03 15:44:46.733945+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - tblcompanyproductionuserrole
+    object_id: '1'
+    object_repr: 'admin@smrc.sd (دويشات للتعدين المحدودة) '
+    action_flag: 3
+    change_message: ''
+- model: admin.logentry
+  pk: 60
+  fields:
+    action_time: 2024-02-03 15:53:54.344526+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - tblcompanyproductionuserrole
+    object_id: '2'
+    object_repr: 'admin@smrc.sd (دويشات للتعدين المحدودة) '
+    action_flag: 1
+    change_message: '[{"added": {}}]'
+- model: admin.logentry
+  pk: 61
+  fields:
+    action_time: 2024-02-03 16:22:46.806245+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - tblcompanyproductionuserrole
+    object_id: '2'
+    object_repr: 'admin@smrc.sd (دويشات للتعدين المحدودة) '
+    action_flag: 2
+    change_message: '[]'
+- model: admin.logentry
+  pk: 62
+  fields:
+    action_time: 2024-02-03 16:28:33.279950+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appforignermovement
+    object_id: '4'
+    object_repr: تحرك اجنبي (4)
+    action_flag: 1
+    change_message: '[{"added": {}}]'
+- model: admin.logentry
+  pk: 63
+  fields:
+    action_time: 2024-02-03 16:28:51.412758+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appforignermovement
+    object_id: '4'
+    object_repr: تحرك اجنبي (4)
+    action_flag: 2
+    change_message: '[]'
+- model: admin.logentry
+  pk: 64
+  fields:
+    action_time: 2024-02-03 16:30:00.561004+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appforignermovement
+    object_id: '4'
+    object_repr: تحرك اجنبي (4)
+    action_flag: 2
+    change_message: '[]'
+- model: admin.logentry
+  pk: 65
+  fields:
+    action_time: 2024-02-03 16:33:22.583645+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appforignermovement
+    object_id: '5'
+    object_repr: تحرك اجنبي (5)
+    action_flag: 1
+    change_message: '[{"added": {}}]'
+- model: admin.logentry
+  pk: 66
+  fields:
+    action_time: 2024-02-03 16:34:02.842928+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appforignermovement
+    object_id: '5'
+    object_repr: تحرك اجنبي (5)
+    action_flag: 2
+    change_message: '[]'
+- model: admin.logentry
+  pk: 67
+  fields:
+    action_time: 2024-02-04 09:33:02.456165+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appborrowmaterial
+    object_id: '22'
+    object_repr: استلاف مواد (22)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 68
+  fields:
+    action_time: 2024-02-04 09:33:17.215017+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appborrowmaterial
+    object_id: '22'
+    object_repr: استلاف مواد (22)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 69
+  fields:
+    action_time: 2024-02-04 09:37:21.983587+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appborrowmaterial
+    object_id: '22'
+    object_repr: استلاف مواد (22)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 70
+  fields:
+    action_time: 2024-02-04 09:38:06.981175+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appborrowmaterial
+    object_id: '22'
+    object_repr: استلاف مواد (22)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 71
+  fields:
+    action_time: 2024-02-04 09:38:31.236345+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appborrowmaterial
+    object_id: '22'
+    object_repr: استلاف مواد (22)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 72
+  fields:
+    action_time: 2024-02-04 09:38:59.687950+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appborrowmaterial
+    object_id: '22'
+    object_repr: استلاف مواد (22)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 73
+  fields:
+    action_time: 2024-02-04 09:39:51.186815+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appborrowmaterial
+    object_id: '22'
+    object_repr: استلاف مواد (22)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 74
+  fields:
+    action_time: 2024-02-04 09:40:19.530455+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appborrowmaterial
+    object_id: '22'
+    object_repr: استلاف مواد (22)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 75
+  fields:
+    action_time: 2024-02-04 09:41:45.831229+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appborrowmaterial
+    object_id: '22'
+    object_repr: استلاف مواد (22)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 76
+  fields:
+    action_time: 2024-02-04 10:02:13.440494+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - tblcompanyproduction
+    object_id: '2'
+    object_repr: جبل الذهب
+    action_flag: 1
+    change_message: '[{"added": {}}]'
+- model: admin.logentry
+  pk: 77
+  fields:
+    action_time: 2024-02-04 10:20:36.559279+00:00
+    user:
+    - admin
+    content_type:
+    - accounts
+    - customuser
+    object_id: '2'
+    object_repr: lennon@thebeatles.com
+    action_flag: 3
+    change_message: ''
+- model: admin.logentry
+  pk: 78
+  fields:
+    action_time: 2024-02-04 10:23:09.157864+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - tblcompanyproduction
+    object_id: '3'
+    object_repr: bbb
+    action_flag: 1
+    change_message: '[{"added": {}}]'
+- model: admin.logentry
+  pk: 79
+  fields:
+    action_time: 2024-02-04 10:24:23.858969+00:00
+    user:
+    - admin
+    content_type:
+    - accounts
+    - customuser
+    object_id: '3'
+    object_repr: info@bbb.com
+    action_flag: 3
+    change_message: ''
+- model: admin.logentry
+  pk: 80
+  fields:
+    action_time: 2024-02-04 10:24:38.131234+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - tblcompanyproduction
+    object_id: '3'
+    object_repr: bbb
+    action_flag: 3
+    change_message: ''
+- model: admin.logentry
+  pk: 81
+  fields:
+    action_time: 2024-02-04 10:25:25.230784+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - tblcompanyproduction
+    object_id: '4'
+    object_repr: bbbb
+    action_flag: 1
+    change_message: '[{"added": {}}]'
+- model: admin.logentry
+  pk: 82
+  fields:
+    action_time: 2024-02-04 11:28:04.994383+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appborrowmaterial
+    object_id: '24'
+    object_repr: استلاف مواد (24)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 83
+  fields:
+    action_time: 2024-02-04 11:32:43.743398+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appborrowmaterial
+    object_id: '24'
+    object_repr: استلاف مواد (24)
+    action_flag: 2
+    change_message: '[]'
+- model: admin.logentry
+  pk: 84
+  fields:
+    action_time: 2024-02-04 11:32:57.625404+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appborrowmaterial
+    object_id: '24'
+    object_repr: استلاف مواد (24)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 85
+  fields:
+    action_time: 2024-02-04 12:29:25.824633+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appborrowmaterial
+    object_id: '24'
+    object_repr: استلاف مواد (24)
+    action_flag: 2
+    change_message: '[]'
+- model: admin.logentry
+  pk: 86
+  fields:
+    action_time: 2024-02-04 12:29:57.039828+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appborrowmaterial
+    object_id: '23'
+    object_repr: استلاف مواد (23)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 87
+  fields:
+    action_time: 2024-02-04 12:54:56.331764+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appborrowmaterial
+    object_id: '21'
+    object_repr: استلاف مواد (21)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 88
+  fields:
+    action_time: 2024-02-04 12:57:13.447207+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appborrowmaterial
+    object_id: '17'
+    object_repr: استلاف مواد (17)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 89
+  fields:
+    action_time: 2024-02-04 13:22:38.057888+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appborrowmaterial
+    object_id: '23'
+    object_repr: استلاف مواد (23)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 90
+  fields:
+    action_time: 2024-02-04 13:25:37.509920+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appborrowmaterial
+    object_id: '16'
+    object_repr: استلاف مواد (16)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 91
+  fields:
+    action_time: 2024-02-04 13:26:40.596358+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appborrowmaterial
+    object_id: '16'
+    object_repr: استلاف مواد (16)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 92
+  fields:
+    action_time: 2024-02-04 13:31:53.722551+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appborrowmaterial
+    object_id: '15'
+    object_repr: استلاف مواد (15)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 93
+  fields:
+    action_time: 2024-02-04 13:36:11.853785+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appborrowmaterial
+    object_id: '14'
+    object_repr: استلاف مواد (14)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 94
+  fields:
+    action_time: 2024-02-04 13:36:34.624851+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appborrowmaterial
+    object_id: '14'
+    object_repr: استلاف مواد (14)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 95
+  fields:
+    action_time: 2024-02-04 16:29:51.866515+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appborrowmaterial
+    object_id: '24'
+    object_repr: استلاف مواد (24)
+    action_flag: 2
+    change_message: '[]'
+- model: admin.logentry
+  pk: 96
+  fields:
+    action_time: 2024-02-04 16:30:22.047615+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appborrowmaterial
+    object_id: '20'
+    object_repr: استلاف مواد (20)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 97
+  fields:
+    action_time: 2024-02-04 16:30:58.487393+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appborrowmaterial
+    object_id: '17'
+    object_repr: استلاف مواد (17)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 98
+  fields:
+    action_time: 2024-02-04 16:39:17.588024+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appborrowmaterial
+    object_id: '12'
+    object_repr: استلاف مواد (12)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 99
+  fields:
+    action_time: 2024-02-04 16:58:05.383330+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appforignermovement
+    object_id: '5'
+    object_repr: تحرك اجنبي (5)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 100
+  fields:
+    action_time: 2024-02-04 17:19:34.788938+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appforignermovement
+    object_id: '3'
+    object_repr: تحرك اجنبي (3)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 101
+  fields:
+    action_time: 2024-02-04 18:18:03.420841+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appforignermovement
+    object_id: '3'
+    object_repr: تحرك اجنبي (3)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 102
+  fields:
+    action_time: 2024-02-04 19:41:00.917661+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appforignermovement
+    object_id: '5'
+    object_repr: تحرك اجنبي (5)
+    action_flag: 3
+    change_message: ''
+- model: admin.logentry
+  pk: 103
+  fields:
+    action_time: 2024-02-04 19:41:01.248686+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appforignermovement
+    object_id: '4'
+    object_repr: تحرك اجنبي (4)
+    action_flag: 3
+    change_message: ''
+- model: admin.logentry
+  pk: 104
+  fields:
+    action_time: 2024-02-04 19:41:01.414827+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appforignermovement
+    object_id: '3'
+    object_repr: تحرك اجنبي (3)
+    action_flag: 3
+    change_message: ''
+- model: admin.logentry
+  pk: 105
+  fields:
+    action_time: 2024-02-04 19:41:01.604147+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appforignermovement
+    object_id: '2'
+    object_repr: تحرك اجنبي (2)
+    action_flag: 3
+    change_message: ''
+- model: admin.logentry
+  pk: 106
+  fields:
+    action_time: 2024-02-04 19:41:01.781150+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appforignermovement
+    object_id: '1'
+    object_repr: تحرك اجنبي (1)
+    action_flag: 3
+    change_message: ''
+- model: admin.logentry
+  pk: 107
+  fields:
+    action_time: 2024-02-04 21:35:37.408583+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appborrowmaterial
+    object_id: '29'
+    object_repr: استلاف مواد (29)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 108
+  fields:
+    action_time: 2024-02-04 21:37:15.175558+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appborrowmaterial
+    object_id: '29'
+    object_repr: استلاف مواد (29)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 109
+  fields:
+    action_time: 2024-02-05 12:17:56.735448+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appforignermovement
+    object_id: '1'
+    object_repr: تحرك اجنبي (1)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 110
+  fields:
+    action_time: 2024-02-05 12:18:24.792697+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appforignermovement
+    object_id: '1'
+    object_repr: تحرك اجنبي (1)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 111
+  fields:
+    action_time: 2024-02-05 12:36:07.293054+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appforignermovement
+    object_id: '3'
+    object_repr: تحرك اجنبي (3)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 112
+  fields:
+    action_time: 2024-02-05 12:36:18.046443+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appforignermovement
+    object_id: '3'
+    object_repr: تحرك اجنبي (3)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 113
+  fields:
+    action_time: 2024-02-05 12:49:34.430209+00:00
+    user:
+    - admin
+    content_type:
+    - auth
+    - group
+    object_id: '1'
+    object_repr: pro_company_application_accept
+    action_flag: 1
+    change_message: '[{"added": {}}]'
+- model: admin.logentry
+  pk: 114
+  fields:
+    action_time: 2024-02-05 12:49:58.356433+00:00
+    user:
+    - admin
+    content_type:
+    - auth
+    - group
+    object_id: '2'
+    object_repr: pro_company_application_approve
+    action_flag: 1
+    change_message: '[{"added": {}}]'
+- model: admin.logentry
+  pk: 115
+  fields:
+    action_time: 2024-02-05 13:14:05.515386+00:00
+    user:
+    - admin
+    content_type:
+    - accounts
+    - customuser
+    object_id: '1'
+    object_repr: admin@smrc.sd
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Groups"]}}]'
+- model: admin.logentry
+  pk: 116
+  fields:
+    action_time: 2024-02-05 13:29:59.038752+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appforignermovement
+    object_id: '4'
+    object_repr: تحرك اجنبي (4)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 117
+  fields:
+    action_time: 2024-02-05 13:31:21.034256+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appforignermovement
+    object_id: '2'
+    object_repr: تحرك اجنبي (2)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 118
+  fields:
+    action_time: 2024-02-05 13:31:59.686127+00:00
+    user:
+    - admin
+    content_type:
+    - accounts
+    - customuser
+    object_id: '1'
+    object_repr: admin@smrc.sd
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Groups"]}}]'
+- model: admin.logentry
+  pk: 119
+  fields:
+    action_time: 2024-02-05 13:33:18.687579+00:00
+    user:
+    - admin
+    content_type:
+    - accounts
+    - customuser
+    object_id: '1'
+    object_repr: admin@smrc.sd
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Groups"]}}]'
+- model: admin.logentry
+  pk: 120
+  fields:
+    action_time: 2024-02-05 17:05:16.323685+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appborrowmaterial
+    object_id: '28'
+    object_repr: استلاف مواد (28)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 121
+  fields:
+    action_time: 2024-02-05 17:10:09.921331+00:00
+    user:
+    - admin
+    content_type:
+    - accounts
+    - customuser
+    object_id: '1'
+    object_repr: admin@smrc.sd
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Groups"]}}]'
+- model: admin.logentry
+  pk: 122
+  fields:
+    action_time: 2024-02-05 18:59:58.047113+00:00
+    user:
+    - admin
+    content_type:
+    - account
+    - emailaddress
+    object_id: '1'
+    object_repr: admin@smrc.sd
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Verified", "Primary"]}}]'
+- model: admin.logentry
+  pk: 123
+  fields:
+    action_time: 2024-02-06 16:44:02.554382+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appforignermovement
+    object_id: '3'
+    object_repr: Forigner movement (3)
+    action_flag: 3
+    change_message: ''
+- model: admin.logentry
+  pk: 124
+  fields:
+    action_time: 2024-02-06 19:19:30.154516+00:00
+    user:
+    - admin
+    content_type:
+    - auth
+    - group
+    object_id: '1'
+    object_repr: pro_company_application_accept
+    action_flag: 3
+    change_message: ''
+- model: admin.logentry
+  pk: 125
+  fields:
+    action_time: 2024-02-06 19:19:30.503839+00:00
+    user:
+    - admin
+    content_type:
+    - auth
+    - group
+    object_id: '2'
+    object_repr: pro_company_application_approve
+    action_flag: 3
+    change_message: ''
+- model: admin.logentry
+  pk: 126
+  fields:
+    action_time: 2024-02-06 19:25:48.250915+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - lkpcompanyproductionstatus
+    object_id: '2'
+    object_repr: مقبلة
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Name"]}}]'
+- model: admin.logentry
+  pk: 127
+  fields:
+    action_time: 2024-02-07 05:19:12.845139+00:00
+    user:
+    - admin
+    content_type:
+    - auth
+    - group
+    object_id: '3'
+    object_repr: '1'
+    action_flag: 3
+    change_message: ''
+- model: admin.logentry
+  pk: 128
+  fields:
+    action_time: 2024-02-07 05:19:13.095581+00:00
+    user:
+    - admin
+    content_type:
+    - auth
+    - group
+    object_id: '4'
+    object_repr: '2'
+    action_flag: 3
+    change_message: ''
+- model: admin.logentry
+  pk: 129
+  fields:
+    action_time: 2024-02-07 06:05:39.751771+00:00
+    user:
+    - admin
+    content_type:
+    - accounts
+    - customuser
+    object_id: '1'
+    object_repr: admin@smrc.sd
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Groups"]}}]'
