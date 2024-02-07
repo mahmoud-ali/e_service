@@ -6,7 +6,7 @@ import django_tables2 as tables
 from .models import AppForignerMovement,AppBorrowMaterial,AppWorkPlan,AppTechnicalFinancialReport,AppChangeCompanyName, \
                     AppExplorationTime, AppAddArea,AppRemoveArea,AppTnazolShraka,AppTajeelTnazol,AppTajmeed,AppTakhali, \
                     AppTamdeed, AppTaaweed, AppMda,AppChangeWorkProcedure,AppExportGold,AppExportGoldRaw, \
-                    AppSendSamplesForAnalysis,AppForeignerProcedure,AppAifaaJomrki,AppReexportEquipments
+                    AppSendSamplesForAnalysis,AppForeignerProcedure,AppAifaaJomrki,AppReexportEquipments,AppRequirementsList
 
 class AppTable(tables.Table):
     menu_name = None
@@ -309,5 +309,18 @@ class AppReexportEquipmentsTable(AppTable):
 
     def render_cause_for_equipments(self,value):
         return value[:30]
+
+class AppRequirementsListTable(AppTable):
+    menu_name = "profile:app_requirements_list_show"
+    relation_fields = []
+
+    class Meta:
+        model = AppRequirementsList
+        template_name = "django_tables2/bootstrap.html"
+        fields = ("id","created_at")
+        empty_text = _("No records.")
+
+    def render_id(self,value):
+        return format_html("<a href={}>{}</a>",reverse_lazy(self.menu_name,args=(value,)),value)
 
 

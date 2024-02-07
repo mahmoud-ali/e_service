@@ -25,7 +25,8 @@ from .views import SetLanguageView, HomePageView, \
                    AppSendSamplesForAnalysisListView, AppSendSamplesForAnalysisCreateView, AppSendSamplesForAnalysisReadonlyView, \
                    AppForeignerProcedureListView, AppForeignerProcedureCreateView, AppForeignerProcedureReadonlyView, \
                    AppAifaaJomrkiListView, AppAifaaJomrkiCreateView, AppAifaaJomrkiReadonlyView, \
-                   AppReexportEquipmentsListView, AppReexportEquipmentsCreateView, AppReexportEquipmentsReadonlyView
+                   AppReexportEquipmentsListView, AppReexportEquipmentsCreateView, AppReexportEquipmentsReadonlyView, \
+                   AppRequirementsListListView, AppRequirementsListCreateView, AppRequirementsListReadonlyView
 
 app_name = "profile"
 urlpatterns = [                                                        
@@ -143,5 +144,10 @@ urlpatterns = [
     path('app_reexport_equipments/<int:type>/', AppReexportEquipmentsListView.as_view(), name='app_reexport_equipments_list'),
     path('app_reexport_equipments/<int:pk>/show/', AppReexportEquipmentsReadonlyView.as_view(), name='app_reexport_equipments_show'),    
     path('app_reexport_equipments/add/', AppReexportEquipmentsCreateView.as_view(), name='app_reexport_equipments_add'),
+
+    path('app_requirements_list/', AppRequirementsListListView.as_view(), name='app_requirements_list_list'),
+    path('app_requirements_list/<int:type>/', AppRequirementsListListView.as_view(), name='app_requirements_list_list'),
+    path('app_requirements_list/<int:pk>/show/', AppRequirementsListReadonlyView.as_view(), name='app_requirements_list_show'),    
+    path('app_requirements_list/add/', AppRequirementsListCreateView.as_view(), name='app_requirements_list_add'),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

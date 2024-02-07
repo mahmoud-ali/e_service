@@ -12,14 +12,17 @@ from .models import LkpNationality,LkpState,LkpLocality,LkpMineral,LkpCompanyPro
                                       AppTajeelTnazol, AppTajmeed,AppTakhali,AppTamdeed,AppTaaweed,AppMda,AppChangeWorkProcedure, \
                                       AppExportGold,AppExportGoldRaw,AppSendSamplesForAnalysis,AppSendSamplesForAnalysisDetail, \
                                       AppForeignerProcedure,AppForeignerProcedureDetail,AppAifaaJomrki,AppAifaaJomrkiDetail, \
-                                      AppReexportEquipments,AppReexportEquipmentsDetail
+                                      AppReexportEquipments,AppReexportEquipmentsDetail,AppRequirementsList, \
+                                      AppRequirementsListMangamEquipments,AppRequirementsListFactoryEquipments,AppRequirementsListElectricityEquipments, \
+                                      AppRequirementsListChemicalLabEquipments,AppRequirementsListChemicalEquipments, \
+                                      AppRequirementsListMotafjeratEquipments,AppRequirementsListVehiclesEquipments
 
 from .forms import TblCompanyProductionForm,AppForignerMovementAdminForm,AppBorrowMaterialAdminForm,AppWorkPlanAdminForm, \
                    AppTechnicalFinancialReportAdminForm,AppChangeCompanyNameAdminForm, AppExplorationTimeAdminForm, \
                    AppAddAreaAdminForm,AppRemoveAreaAdminForm,AppTnazolShrakaAdminForm, AppTajeelTnazolAdminForm, \
                    AppTajmeedAdminForm,AppTakhaliAdminForm,AppTamdeedAdminForm,AppTaaweedAdminForm,AppMdaAdminForm, \
                    AppChangeWorkProcedureAdminForm,AppExportGoldAdminForm,AppExportGoldRawAdminForm,AppSendSamplesForAnalysisAdminForm, \
-                   AppForeignerProcedureAdminForm,AppAifaaJomrkiAdminForm,AppReexportEquipmentsAdminForm
+                   AppForeignerProcedureAdminForm,AppAifaaJomrkiAdminForm,AppReexportEquipmentsAdminForm, AppRequirementsListAdminForm
 
 from .workflow import get_state_choices,send_transition_email,ACCEPTED,APPROVED,REJECTED
 
@@ -379,4 +382,49 @@ class AppReexportEquipmentsAdmin(WorkflowAdminMixin,admin.ModelAdmin):
     view_on_site = False
     
 admin.site.register(AppReexportEquipments, AppReexportEquipmentsAdmin)
+
+class AppRequirementsListMangamEquipmentsInline(admin.TabularInline):
+    model = AppRequirementsListMangamEquipments
+    exclude = ["created_at","created_by","updated_at","updated_by"]
+    extra = 1    
+
+class AppRequirementsListFactoryEquipmentsInline(admin.TabularInline):
+    model = AppRequirementsListFactoryEquipments
+    exclude = ["created_at","created_by","updated_at","updated_by"]
+    extra = 1    
+
+class AppRequirementsListElectricityEquipmentsInline(admin.TabularInline):
+    model = AppRequirementsListElectricityEquipments
+    exclude = ["created_at","created_by","updated_at","updated_by"]
+    extra = 1    
+
+class AppRequirementsListChemicalLabEquipmentsInline(admin.TabularInline):
+    model = AppRequirementsListChemicalLabEquipments
+    exclude = ["created_at","created_by","updated_at","updated_by"]
+    extra = 1    
+
+class AppRequirementsListChemicalEquipmentsInline(admin.TabularInline):
+    model = AppRequirementsListChemicalEquipments
+    exclude = ["created_at","created_by","updated_at","updated_by"]
+    extra = 1    
+
+class AppRequirementsListMotafjeratEquipmentsInline(admin.TabularInline):
+    model = AppRequirementsListMotafjeratEquipments
+    exclude = ["created_at","created_by","updated_at","updated_by"]
+    extra = 1    
+
+class AppRequirementsListVehiclesEquipmentsInline(admin.TabularInline):
+    model = AppRequirementsListVehiclesEquipments
+    exclude = ["created_at","created_by","updated_at","updated_by"]
+    extra = 1    
+
+class AppRequirementsListAdmin(WorkflowAdminMixin,admin.ModelAdmin):
+    form = AppRequirementsListAdminForm
+    inlines = [AppRequirementsListMangamEquipmentsInline,AppRequirementsListFactoryEquipmentsInline, AppRequirementsListElectricityEquipmentsInline,  AppRequirementsListChemicalLabEquipmentsInline,AppRequirementsListChemicalEquipmentsInline, AppRequirementsListMotafjeratEquipmentsInline,AppRequirementsListVehiclesEquipmentsInline]
+    
+    list_display = ["created_at", "created_by","updated_at", "updated_by"]        
+    list_filter = ["company"]
+    view_on_site = False
+    
+admin.site.register(AppRequirementsList, AppRequirementsListAdmin)
 

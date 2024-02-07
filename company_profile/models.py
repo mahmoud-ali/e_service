@@ -778,3 +778,66 @@ class AppReexportEquipmentsDetail(models.Model):
         verbose_name = _("Reexport Equipments Detail")
         verbose_name_plural = _("Reexport Equipments Details")
 
+class AppRequirementsList(WorkflowModel):
+    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
+
+    approved_work_plan_file = models.FileField(_("approved_work_plan_file"),upload_to=company_applications_path)
+    initial_voucher_file = models.FileField(_("initial_voucher_file"),upload_to=company_applications_path)
+    specifications_file = models.FileField(_("specifications_file"),upload_to=company_applications_path)
+    mshobat_jamarik_file = models.FileField(_("mshobat_jamarik_file"),upload_to=company_applications_path,blank=True)
+
+    def __str__(self):
+        return _("Requirements List") +" ("+str(self.id)+")"
+        
+    def get_absolute_url(self): 
+        return reverse('profile:app_requirements_list_show',args=[str(self.id)])                
+    
+    class Meta:
+        ordering = ["-id"]
+        verbose_name = _("Application: Requirements List")
+        verbose_name_plural = _("Application: Requirements List")
+
+class AppRequirementsListDetail(models.Model):
+    requirements_master = models.ForeignKey(AppRequirementsList, on_delete=models.PROTECT,verbose_name=_("requirements_master"))
+    item = models.CharField(_("item"),max_length=100)
+    description = models.TextField(_("description"),max_length=256)
+    qty = models.IntegerField(_("qty"))
+
+    class Meta:
+        abstract = True
+
+class AppRequirementsListMangamEquipments(AppRequirementsListDetail):
+    class Meta:
+        verbose_name = _("Application: Requirements List - Mangam Equipments")
+        verbose_name_plural = _("Application: Requirements List - Mangam Equipments")
+
+class AppRequirementsListFactoryEquipments(AppRequirementsListDetail):
+    class Meta:
+        verbose_name = _("Application: Requirements List - Factory Equipments")
+        verbose_name_plural = _("Application: Requirements List - Factory Equipments")
+
+class AppRequirementsListElectricityEquipments(AppRequirementsListDetail):
+    class Meta:
+        verbose_name = _("Application: Requirements List - Electricity Equipments")
+        verbose_name_plural = _("Application: Requirements List - Electricity Equipments")
+
+class AppRequirementsListChemicalLabEquipments(AppRequirementsListDetail):
+    class Meta:
+        verbose_name = _("Application: Requirements List - Chemical Lab Equipments")
+        verbose_name_plural = _("Application: Requirements List - Chemical Lab Equipments")
+
+class AppRequirementsListChemicalEquipments(AppRequirementsListDetail):
+    class Meta:
+        verbose_name = _("Application: Requirements List - Chemical Equipments")
+        verbose_name_plural = _("Application: Requirements List - Chemical Equipments")
+
+class AppRequirementsListMotafjeratEquipments(AppRequirementsListDetail):
+    class Meta:
+        verbose_name = _("Application: Requirements List - Motafjerat Equipments")
+        verbose_name_plural = _("Application: Requirements List - Motafjerat Equipments")
+
+class AppRequirementsListVehiclesEquipments(AppRequirementsListDetail):
+    class Meta:
+        verbose_name = _("Application: Requirements List - Vehicles Equipments")
+        verbose_name_plural = _("Application: Requirements List - Vehicles Equipments")
+

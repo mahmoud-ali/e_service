@@ -1,0 +1,63 @@
+    {% extends 'company_profile/base.html' %}
+{% load i18n %}
+{% load static  %}
+{% load bootstrap3 %}
+{% load get_item_from_list %}
+
+{% block content %}
+<h1 class="page-header">{{title}}</h1>
+{% bootstrap_messages %}
+
+<form  method="post"  enctype="multipart/form-data">
+{% csrf_token %}
+    {% bootstrap_form form %}
+{% for formset in detail_formset  %}
+	<h3>{% get_item_from_list detail_title forloop.counter0 %}:</h3>
+    <table id="detail_table{{forloop.counter0}}"  class="table table-bordered">
+        <tr>
+        {% for field in formset|first %}
+            {% if field.is_hidden is not True %}
+            <th>
+            {{ field.label }}
+            </th>
+            {% endif %}
+        {% endfor %}
+        </tr>
+    {% for form in formset %}
+        <tr>
+        {% for field in form.visible_fields %}
+            <td>
+            {{ field.errors }}
+            {{ field }}
+            {% if field.help_text %}
+            <p class="help" id="{{ field.auto_id }}_helptext">
+            {{ field.help_text|safe }}
+            </p>
+            {% endif %}
+            </td>
+        {% endfor %}
+        </tr>
+    {% endfor %}        	
+    </table>
+    <br/>
+    <br/>
+	
+{% endfor %}        	
+
+</form>
+<script type="text/javascript" src="{% static 'company_profile/js/admin_jsi18n.js' %}"></script>
+<script type="text/javascript" src="{% static 'admin/js/core.js' %}"></script>
+{{ form.media }}
+
+<script>
+$(document).ready(function(){
+	$('form :input').attr('readonly','readonly');
+
+	$('form :input').attr('readonly','readonly');
+	$('td :input').attr('class','form-control');
+	var f = $('div.bootstrap3-multi-input a').attr("href");
+	$('div.bootstrap3-multi-input').html('<a target="_blank" href="'+f+'">'+f+'</a>');
+});
+
+</script>
+{% endblock content %}

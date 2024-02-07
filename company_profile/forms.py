@@ -10,7 +10,7 @@ from .workflow import SUBMITTED,ACCEPTED,APPROVED,REJECTED,WorkflowFormMixin
 from .models import TblCompanyProduction, AppForignerMovement,AppBorrowMaterial,AppWorkPlan,AppTechnicalFinancialReport,AppChangeCompanyName, \
                     AppExplorationTime, AppAddArea, AppRemoveArea, AppTnazolShraka, AppTajeelTnazol,AppTajmeed,AppTakhali,AppTamdeed, \
                     AppTaaweed,AppMda,AppChangeWorkProcedure,AppExportGold,AppExportGoldRaw,AppSendSamplesForAnalysis,AppForeignerProcedure, \
-                    AppAifaaJomrki,AppReexportEquipments
+                    AppAifaaJomrki,AppReexportEquipments,AppRequirementsList
 
 class LanguageForm(forms.Form):
     LANG_AR = "ar"
@@ -311,4 +311,16 @@ class AppReexportEquipmentsForm(AppReexportEquipmentsAdminForm):
         model = AppReexportEquipments
         exclude = ["company","state"]
         widgets = {}
+
+class AppRequirementsListAdminForm(WorkflowFormMixin,ModelForm):
+    class Meta:
+        model = AppRequirementsList
+        fields = ["company","state", "approved_work_plan_file", "initial_voucher_file","specifications_file", "mshobat_jamarik_file"] 
+        
+class AppRequirementsListForm(AppRequirementsListAdminForm):
+    class Meta:
+        model = AppRequirementsList
+        exclude = ["company","state"]
+        widgets = {}
+
 
