@@ -1,5 +1,8 @@
 from django.utils.translation import gettext_lazy as _
 from django.core.mail import send_mail
+from django.template.loader import render_to_string
+
+from django.contrib.auth import get_user_model
 
 from django_fsm import can_proceed,get_available_FIELD_transitions
 
@@ -30,25 +33,25 @@ def get_state_choices(state):
         return { REJECTED: "Rejected"}
                                         
                                         
-def send_transition_email(state,email,url):
+def send_transition_email(state,email,url,lang):
     subject = ""
     message = ""
 
     if state == SUBMITTED:
-        subject = "New application submitted"
-        message = "Go here "+url
+        subject = _("New application submitted")
+        message = render_to_string('company_profile/email/submitted_email_{0}.html'.format(lang),{'url':url}) 
   
     if state == ACCEPTED:
-        subject = "Application accepted"
-        message = "Go here "+url
+        subject = _("Application accepted")
+        message = render_to_string('company_profile/email/accepted_email_{0}.html'.format(lang),{'url':url}) 
             
     if state == APPROVED:
-        subject = "Application approved"
-        message = "Go here "+url
+        subject = _("Application approved")
+        message = render_to_string('company_profile/email/approved_email_{0}.html'.format(lang),{'url':url}) 
         
     if state == REJECTED:
-        subject = "Application rejected"
-        message = "Go here "+url
+        subject = _("Application rejected")
+        message = render_to_string('company_profile/email/rejected_email_{0}.html'.format(lang),{'url':url}) 
         
     send_mail(
         subject,
@@ -58,9 +61,11 @@ def send_transition_email(state,email,url):
         fail_silently=False,
     )        
         
-def get_sumitted_responsible_email(app):
+def get_sumitted_responsible(app):
+    User = get_user_model()
     if app == 'pro_company':
-        return 'admin@smrc.sd'
+        user = User.objects.filter(groups__name="pro_company_application_accept").first()
+        return user
 
 def can_do_transition(instance, user):
     ###logic here!

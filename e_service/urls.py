@@ -22,7 +22,7 @@ from django.views.generic import TemplateView
 urlpatterns = [
     path("__debug__/", include("debug_toolbar.urls")),
 
-	path("i18n/", include("django.conf.urls.i18n"),name="set_language"),
+#	path("i18n/", include("django.conf.urls.i18n"),name="set_language"),
     path('managers/', admin.site.urls),
     path('accounts/', include('accounts.urls')), 
     path('', include('company_profile.urls')),

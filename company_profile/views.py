@@ -1,9 +1,10 @@
 from django.urls import reverse_lazy
 from django.views.generic import View,TemplateView,ListView,DetailView,CreateView,UpdateView,DeleteView
 from django.views.generic.detail import SingleObjectMixin
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
 from django.utils.translation import gettext_lazy as _
+from django.utils import translation
 
 from django.conf import settings
 
@@ -16,11 +17,26 @@ from django_tables2 import SingleTableView
 from django_tables2.paginators import LazyPaginator
 
 from .models import LkpState,LkpLocality,TblCompanyProduction,AppForignerMovement,AppBorrowMaterial,AppBorrowMaterialDetail
-from .forms import AppForignerMovementForm,AppBorrowMaterialForm
+from .forms import LanguageForm,AppForignerMovementForm,AppBorrowMaterialForm
 
-from .workflow import STATE_CHOICES,SUBMITTED,ACCEPTED,APPROVED,REJECTED,send_transition_email,get_sumitted_responsible_email
+from .workflow import STATE_CHOICES,SUBMITTED,ACCEPTED,APPROVED,REJECTED,send_transition_email,get_sumitted_responsible
 from .tables import AppForignerMovementTable,AppBorrowMaterialTable
 
+class SetLanguageView(View):
+    def post(self,request):
+        form = LanguageForm(request.POST)
+        
+        if form.is_valid():
+            print("post----",request.POST)
+            user_language = request.POST['language']
+
+            request.user.lang= user_language
+            request.user.save()
+
+            translation.activate(user_language)
+            response = HttpResponseRedirect(reverse_lazy("profile:home"))
+            response.set_cookie(settings.LANGUAGE_COOKIE_NAME, user_language)        
+            return response
         
 class ApplicationListView(LoginRequiredMixin,SingleTableView):
     model = None
@@ -157,8 +173,9 @@ class AppForignerMovementCreateView(ApplicationCreateView):
         messages.add_message(self.request,messages.SUCCESS,_("Application sent successfully."))
         
         info = (self.object._meta.app_label, self.object._meta.model_name)
+        resp_user = get_sumitted_responsible('pro_company')
         url = settings.BASE_URL+reverse_lazy('admin:%s_%s_change' % info, args=(self.object.id,))
-        send_transition_email(self.object.state,get_sumitted_responsible_email('pro_company'),url)
+        send_transition_email(self.object.state,resp_user.email,url,resp_user.lang.lower())
         
         return HttpResponseRedirect(self.get_success_url())
         
@@ -232,8 +249,9 @@ class AppBorrowMaterialCreateView(LoginRequiredMixin,View):
                 messages.add_message(request,messages.SUCCESS,_("Application sent successfully."))
                 
                 info = (self.object._meta.app_label, self.object._meta.model_name)
+                resp_user = get_sumitted_responsible('pro_company')
                 url = settings.BASE_URL+reverse_lazy('admin:%s_%s_change' % info, args=(self.object.id,))
-                send_transition_email(self.object.state,get_sumitted_responsible_email('pro_company'),url)
+                send_transition_email(self.object.state,resp_user.email,url,resp_user.lang.lower())
                 
                 return HttpResponseRedirect(self.success_url)
             

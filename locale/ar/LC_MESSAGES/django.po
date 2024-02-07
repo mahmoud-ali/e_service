@@ -498,3 +498,15 @@ msgstr "الرئيسية"
 
 msgid "accounts"
 msgstr "حسابات المستخدمين"
+
+msgid "New application submitted"
+msgstr "تم ارسال طلب جديد"
+
+msgid "Application accepted"
+msgstr "تم استلام الطلب"
+
+msgid "Application approved"
+msgstr "تم تصديق الطلب"
+
+msgid "Application rejected"
+msgstr "تم رفض الطلب"

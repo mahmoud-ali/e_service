@@ -1031,7 +1031,7 @@
     manager_phone: 0922555
     rep_name: Omer
     rep_phone: '54656'
-    email: info@doishat.com
+    email: admin@smrc.sd
     status: 1
 - model: company_profile.tblcompanyproduction
   pk: 2

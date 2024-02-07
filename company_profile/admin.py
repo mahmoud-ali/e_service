@@ -50,19 +50,21 @@ class WorkflowAdminMixin:
 
         user= None
         email = None
+        lang = 'ar'
         url = settings.BASE_URL
         
         if obj.notify:
             # print("next transition*****",obj.state)
             if obj.state in (ACCEPTED,APPROVED,REJECTED):
-                user = TblCompanyProductionUserRole.objects.get(company=obj.company).user
-                email = user.email
+                email = obj.company.email
+                lang = get_user_model().objects.get(email=email).lang
                 url += obj.get_absolute_url()
             else:
                 email = request.user.email
+                lang = request.user.lang
                 url += request.path
                                 
-            send_transition_email(obj.state,email,url)
+            send_transition_email(obj.state,email,url,lang.lower())
             obj.notify = False
             obj.save()
         

@@ -1,3 +1,4 @@
+from django import forms
 from django.forms import ModelForm
 from django.contrib.admin.widgets import AdminDateWidget
 from django.utils.translation import gettext_lazy as _
@@ -8,6 +9,16 @@ from .workflow import SUBMITTED,ACCEPTED,APPROVED,REJECTED,WorkflowFormMixin
 
 from .models import TblCompanyProduction, AppForignerMovement,AppBorrowMaterial
 
+class LanguageForm(forms.Form):
+    LANG_AR = "ar"
+    LANG_EN = "en"
+
+    LANG_CHOICES = {
+        LANG_AR: _("Arabic"),
+        LANG_AR: _("English"),
+    }
+
+    language = forms.CharField(max_length=2)
 
 class TblCompanyProductionForm(ModelForm):
 
