@@ -1,0 +1,530 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-02-05 19:06+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: accounts/models.py:11
+msgid "Arabic"
+msgstr ""
+
+#: accounts/models.py:12
+msgid "English"
+msgstr ""
+
+#: company_profile/admin.py:71
+msgid "Location information"
+msgstr ""
+
+#: company_profile/admin.py:72
+msgid "Contact information"
+msgstr ""
+
+#: company_profile/admin.py:73 company_profile/models.py:112
+#: company_profile/models.py:113
+msgid "Company Status"
+msgstr ""
+
+#: company_profile/admin.py:103
+msgid "General information"
+msgstr ""
+
+#: company_profile/admin.py:104
+msgid "Contract information"
+msgstr ""
+
+#: company_profile/apps.py:7
+msgid "Company profile"
+msgstr ""
+
+#: company_profile/forms.py:24
+msgid "locality not belong to right state."
+msgstr ""
+
+#: company_profile/models.py:15
+msgid "created_at"
+msgstr ""
+
+#: company_profile/models.py:16
+msgid "created_by"
+msgstr ""
+
+#: company_profile/models.py:18
+msgid "updated_at"
+msgstr ""
+
+#: company_profile/models.py:19
+msgid "updated_by"
+msgstr ""
+
+#: company_profile/models.py:25
+msgid "application_state"
+msgstr ""
+
+#: company_profile/models.py:26
+msgid "notify_user"
+msgstr ""
+
+#: company_profile/models.py:52 company_profile/models.py:62
+#: company_profile/models.py:73 company_profile/models.py:106
+#: company_profile/models.py:138 company_profile/models.py:160
+msgid "name"
+msgstr ""
+
+#: company_profile/models.py:58
+msgid "Nationality"
+msgstr ""
+
+#: company_profile/models.py:59
+msgid "Nationalities"
+msgstr ""
+
+#: company_profile/models.py:68
+msgid "State"
+msgstr ""
+
+#: company_profile/models.py:69
+msgid "States"
+msgstr ""
+
+#: company_profile/models.py:72 company_profile/models.py:87
+msgid "state"
+msgstr ""
+
+#: company_profile/models.py:79
+msgid "Locality"
+msgstr ""
+
+#: company_profile/models.py:80
+msgid "Localities"
+msgstr ""
+
+#: company_profile/models.py:84
+msgid "name_ar"
+msgstr ""
+
+#: company_profile/models.py:85
+msgid "name_en"
+msgstr ""
+
+#: company_profile/models.py:86 company_profile/models.py:209
+msgid "nationality"
+msgstr ""
+
+#: company_profile/models.py:88
+msgid "locality"
+msgstr ""
+
+#: company_profile/models.py:89
+msgid "location"
+msgstr ""
+
+#: company_profile/models.py:90 company_profile/models.py:179
+msgid "cordinates"
+msgstr ""
+
+#: company_profile/models.py:91
+msgid "address"
+msgstr ""
+
+#: company_profile/models.py:92
+msgid "website"
+msgstr ""
+
+#: company_profile/models.py:93
+msgid "manager_name"
+msgstr ""
+
+#: company_profile/models.py:94
+msgid "manager_phone"
+msgstr ""
+
+#: company_profile/models.py:95
+msgid "Representative name"
+msgstr ""
+
+#: company_profile/models.py:96
+msgid "Representative phone"
+msgstr ""
+
+#: company_profile/models.py:97
+msgid "Official email"
+msgstr ""
+
+#: company_profile/models.py:117
+msgid "status"
+msgstr ""
+
+#: company_profile/models.py:120
+msgid "Production Company"
+msgstr ""
+
+#: company_profile/models.py:121
+msgid "Production Companies"
+msgstr ""
+
+#: company_profile/models.py:128 company_profile/models.py:148
+#: company_profile/models.py:174 company_profile/models.py:187
+#: company_profile/models.py:203 company_profile/models.py:228
+msgid "company"
+msgstr ""
+
+#: company_profile/models.py:134
+msgid "Production Company User"
+msgstr ""
+
+#: company_profile/models.py:135
+msgid "Production Company Users"
+msgstr ""
+
+#: company_profile/models.py:144
+msgid "Factory Type"
+msgstr ""
+
+#: company_profile/models.py:145
+msgid "Factory Types"
+msgstr ""
+
+#: company_profile/models.py:149
+msgid "factory_type"
+msgstr ""
+
+#: company_profile/models.py:150
+msgid "Capacity (Tones per day)"
+msgstr ""
+
+#: company_profile/models.py:156
+msgid "Production Company Factory"
+msgstr ""
+
+#: company_profile/models.py:157
+msgid "Production Company Factories"
+msgstr ""
+
+#: company_profile/models.py:166 company_profile/models.py:167
+msgid "License Status"
+msgstr ""
+
+#: company_profile/models.py:175
+msgid "Sign date"
+msgstr ""
+
+#: company_profile/models.py:176
+msgid "start_date"
+msgstr "start date"
+
+#: company_profile/models.py:177
+msgid "end_date"
+msgstr "end date"
+
+#: company_profile/models.py:178
+msgid "sheet_no"
+msgstr "sheet no"
+
+#: company_profile/models.py:180
+msgid "Area in Kilometers"
+msgstr ""
+
+#: company_profile/models.py:181
+msgid "Reserve in Tones"
+msgstr ""
+
+#: company_profile/models.py:182
+msgid "Goverment representative"
+msgstr ""
+
+#: company_profile/models.py:183
+msgid "Representative percentage(%)"
+msgstr ""
+
+#: company_profile/models.py:184
+msgid "Company percentage(%)"
+msgstr ""
+
+#: company_profile/models.py:185
+msgid "royalty"
+msgstr ""
+
+#: company_profile/models.py:186
+msgid "zakat"
+msgstr ""
+
+#: company_profile/models.py:188
+msgid "contract_status"
+msgstr "contract status"
+
+#: company_profile/models.py:189
+msgid "contract_file"
+msgstr "contract file"
+
+#: company_profile/models.py:195
+msgid "Production Company License"
+msgstr ""
+
+#: company_profile/models.py:196
+msgid "Production Company Licenses"
+msgstr ""
+
+#: company_profile/models.py:204
+msgid "route_from"
+msgstr "route from"
+
+#: company_profile/models.py:205
+msgid "route_to"
+msgstr "route to"
+
+#: company_profile/models.py:206
+msgid "period_from"
+msgstr "period from"
+
+#: company_profile/models.py:207
+msgid "period_to"
+msgstr "period to"
+
+#: company_profile/models.py:208
+msgid "address_in_sudan"
+msgstr "address in sudan"
+
+#: company_profile/models.py:210
+msgid "passport_no"
+msgstr "passport no"
+
+#: company_profile/models.py:211
+msgid "passport_expiry_date"
+msgstr "passport expiry date"
+
+#: company_profile/models.py:212
+msgid "official_letter_file"
+msgstr ""
+
+#: company_profile/models.py:213
+#, fuzzy
+#| msgid "passport_no"
+msgid "passport_copy_file"
+msgstr "passport no"
+
+#: company_profile/models.py:214
+#, fuzzy
+#| msgid "contract_file"
+msgid "cv_file"
+msgstr "contract file"
+
+#: company_profile/models.py:215
+msgid "experiance_certificates_file"
+msgstr ""
+
+#: company_profile/models.py:218
+msgid "Forigner movement"
+msgstr ""
+
+#: company_profile/models.py:224
+msgid "Application: Forigner movement "
+msgstr ""
+
+#: company_profile/models.py:225
+#: company_profile/templates/company_profile/base.html:97
+msgid "Application: Forigner movement"
+msgstr ""
+
+#: company_profile/models.py:229
+msgid "company_borrow_from"
+msgstr "borrow from"
+
+#: company_profile/models.py:230
+msgid "borrow_date"
+msgstr "borrow date"
+
+#: company_profile/models.py:231
+msgid "borrow_materials_list_file"
+msgstr "material list file"
+
+#: company_profile/models.py:232
+msgid "borrow_from_approval_file"
+msgstr "company borrow from approval file"
+
+#: company_profile/models.py:235
+msgid "Borrow materials"
+msgstr ""
+
+#: company_profile/models.py:241 company_profile/models.py:242
+#: company_profile/templates/company_profile/base.html:100
+msgid "Application: BorrowMaterials"
+msgstr ""
+
+#: company_profile/models.py:247
+#: company_profile/templates/company_profile/application_add_master_details.html:19
+#: company_profile/templates/company_profile/application_readonly_master_details.html:19
+msgid "borrow_material"
+msgstr "borrow material"
+
+#: company_profile/models.py:248
+#: company_profile/templates/company_profile/application_add_master_details.html:20
+#: company_profile/templates/company_profile/application_readonly_master_details.html:20
+msgid "borrow_quantity"
+msgstr "borrow quantity"
+
+#: company_profile/models.py:251 company_profile/models.py:252
+#: company_profile/templates/company_profile/application_add_master_details.html:14
+#: company_profile/templates/company_profile/application_readonly_master_details.html:14
+msgid "AppBorrowMaterialDetail"
+msgstr ""
+
+#: company_profile/templates/company_profile/application_add.html:15
+#: company_profile/templates/company_profile/application_add_master_details.html:35
+msgid "Submit"
+msgstr ""
+
+#: company_profile/templates/company_profile/application_add_master_details.html:47
+msgid "add_more"
+msgstr ""
+
+#: company_profile/templates/company_profile/application_list.html:14
+msgid "New application"
+msgstr ""
+
+#: company_profile/templates/company_profile/application_list.html:20
+msgid "In progress"
+msgstr ""
+
+#: company_profile/templates/company_profile/application_list.html:21
+msgid "Approved"
+msgstr ""
+
+#: company_profile/templates/company_profile/application_list.html:22
+msgid "Rejected"
+msgstr ""
+
+#: company_profile/templates/company_profile/application_list.html:30
+msgid "No records."
+msgstr ""
+
+#: company_profile/templates/company_profile/base.html:9
+#: company_profile/templates/company_profile/base.html:61
+msgid "E-Services App"
+msgstr ""
+
+#: company_profile/templates/company_profile/base.html:66
+msgid "Change password"
+msgstr ""
+
+#: company_profile/templates/company_profile/base.html:67
+msgid "Log Out"
+msgstr ""
+
+#: company_profile/templates/company_profile/base.html:94
+msgid "Menu"
+msgstr ""
+
+#: company_profile/views.py:135 company_profile/views.py:230
+msgid "Application sent successfully."
+msgstr ""
+
+#: company_profile/workflow.py:11
+msgid "Submitted state"
+msgstr ""
+
+#: company_profile/workflow.py:12
+msgid "Accepted state"
+msgstr ""
+
+#: company_profile/workflow.py:13
+msgid "Approved state"
+msgstr ""
+
+#: company_profile/workflow.py:14
+msgid "Rejected state"
+msgstr ""
+
+#: company_profile/workflow.py:85
+msgid ""
+"Wrong transition path. You can reach submitted state only when creating a "
+"new application."
+msgstr ""
+
+#: company_profile/workflow.py:88
+msgid ""
+"Wrong transition path. You can reach accepted state only from submitted "
+"state."
+msgstr ""
+
+#: company_profile/workflow.py:93
+msgid ""
+"Wrong transition path. You can reach approved state only from accepted state."
+msgstr ""
+
+#: company_profile/workflow.py:98
+msgid ""
+"Wrong transition path. You can reach rejected state only from accepted state."
+msgstr ""
+
+#: company_profile/workflow.py:102
+msgid "Wrong transition path."
+msgstr ""
+
+#: templates/account/login.html:6
+msgid "Log In page"
+msgstr ""
+
+#: templates/account/login.html:10
+msgid "Log In"
+msgstr ""
+
+#: templates/account/logout.html:7
+msgid "Log out"
+msgstr ""
+
+#: templates/account/logout.html:8
+msgid "Are you sure you want to logout?"
+msgstr ""
+
+#: templates/account/logout.html:11
+msgid "Logout"
+msgstr ""
+
+#: templates/account/password_change.html:7
+#: templates/account/password_change.html:12
+#: templates/account/password_change.html:22
+msgid "Change Password"
+msgstr ""
+
+#: templates/account/password_change.html:24
+msgid "Forgot Password?"
+msgstr ""
+
+#: templates/admin/base_site.html:3
+msgid "SMRC e-services"
+msgstr ""
+
+#: templates/admin/base_site.html:6
+msgid "Site header"
+msgstr "SMRC e-services"
+
+#: templates/allauth/layouts/base.html:18
+msgid "Messages:"
+msgstr ""
+
+#: templates/allauth/layouts/base.html:25
+msgid "Menu:"
+msgstr ""
+
+#: templates/allauth/layouts/base.html:29
+msgid "Sign Out"
+msgstr ""
+
+#: templates/allauth/layouts/base.html:33
+msgid "Sign In"
+msgstr ""

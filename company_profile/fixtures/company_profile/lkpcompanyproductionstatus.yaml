@@ -1,0 +1,13 @@
+- model: company_profile.lkpcompanyproductionstatus
+  pk: 1
+  fields:
+    name: منتجة
+- model: company_profile.lkpcompanyproductionstatus
+  pk: 2
+  fields:
+    name: مقبلة
+- model: company_profile.lkpcompanyproductionstatus
+  pk: 3
+  fields:
+    name: متوقفة
+

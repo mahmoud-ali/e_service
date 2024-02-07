@@ -1,0 +1,500 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-02-03 14:28+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
+"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+
+#: company_profile/admin.py:22
+msgid "Location information"
+msgstr "الموقع الجغرافي"
+
+#: company_profile/admin.py:23
+msgid "Contact information"
+msgstr "بيانات التواصل"
+
+#: company_profile/admin.py:24 company_profile/models.py:112
+#: company_profile/models.py:113
+msgid "Company Status"
+msgstr "موقف الشركة"
+
+#: company_profile/admin.py:53
+msgid "General information"
+msgstr "بيانات عامة"
+
+#: company_profile/admin.py:54
+msgid "Contract information"
+msgstr "بيانات العقد"
+
+#: company_profile/forms.py:24
+msgid "locality not belong to right state."
+msgstr "المحلية لا تتبع للولاية الصحيحة"
+
+#: company_profile/models.py:16
+msgid "created_at"
+msgstr "تاريخ الانشاء"
+
+#: company_profile/models.py:17
+msgid "created_by"
+msgstr "المستخدم المسئول عن الانشاء"
+
+#: company_profile/models.py:19
+msgid "updated_at"
+msgstr "تاريخ اخر تعديل"
+
+#: company_profile/models.py:20
+msgid "updated_by"
+msgstr "المستخدم المسئول عن التعديل"
+
+#: company_profile/models.py:26
+msgid "application_state"
+msgstr "موقف الطلب"
+
+#: company_profile/models.py:52 company_profile/models.py:62
+#: company_profile/models.py:73 company_profile/models.py:106
+#: company_profile/models.py:137 company_profile/models.py:159
+msgid "name"
+msgstr "الاسم"
+
+#: company_profile/models.py:58
+msgid "Nationality"
+msgstr "الجنسية"
+
+#: company_profile/models.py:59
+msgid "Nationalities"
+msgstr "الجنسية"
+
+#: company_profile/models.py:68
+msgid "State"
+msgstr "الولاية"
+
+#: company_profile/models.py:69
+msgid "States"
+msgstr "الولايات"
+
+#: company_profile/models.py:72 company_profile/models.py:87
+msgid "state"
+msgstr "الولاية"
+
+#: company_profile/models.py:79
+msgid "Locality"
+msgstr "المحلية"
+
+#: company_profile/models.py:80
+msgid "Localities"
+msgstr "المحليات"
+
+#: company_profile/models.py:84
+msgid "name_ar"
+msgstr "الاسم العربي"
+
+#: company_profile/models.py:85
+msgid "name_en"
+msgstr "الاسم الانجليزي"
+
+#: company_profile/models.py:86 company_profile/models.py:204
+msgid "nationality"
+msgstr "الجنسية"
+
+#: company_profile/models.py:88
+msgid "locality"
+msgstr "المحلية"
+
+#: company_profile/models.py:89
+msgid "location"
+msgstr "الموقع"
+
+#: company_profile/models.py:90 company_profile/models.py:178
+msgid "cordinates"
+msgstr "الاحداثيات"
+
+#: company_profile/models.py:91
+msgid "address"
+msgstr "العنوان"
+
+#: company_profile/models.py:92
+msgid "website"
+msgstr "الموقع الالكتروني"
+
+#: company_profile/models.py:93
+msgid "manager_name"
+msgstr "اسم المدير"
+
+#: company_profile/models.py:94
+msgid "manager_phone"
+msgstr "تلفون المدير"
+
+#: company_profile/models.py:95
+msgid "Representative name"
+msgstr "اسم ممثل الشركة"
+
+#: company_profile/models.py:96
+msgid "Representative phone"
+msgstr "تلفون ممثل الشركة"
+
+#: company_profile/models.py:97
+msgid "Official email"
+msgstr "البريد الالكتروني الرسمي"
+
+#: company_profile/models.py:117
+msgid "status"
+msgstr "الحالة"
+
+#: company_profile/models.py:120
+msgid "Production Company"
+msgstr "شركة انتاج"
+
+#: company_profile/models.py:121
+msgid "Production Companies"
+msgstr "شركات الانتاج"
+
+#: company_profile/models.py:127 company_profile/models.py:147
+#: company_profile/models.py:173 company_profile/models.py:186
+#: company_profile/models.py:198 company_profile/models.py:216
+msgid "company"
+msgstr "شركة"
+
+#: company_profile/models.py:133
+msgid "Production Company User"
+msgstr "مستخدم شركة انتاج"
+
+#: company_profile/models.py:134
+msgid "Production Company Users"
+msgstr "مستخدمي شركات الانتاج"
+
+#: company_profile/models.py:143
+msgid "Factory Type"
+msgstr "نوع المصنع"
+
+#: company_profile/models.py:144
+msgid "Factory Types"
+msgstr "نوع المصنع"
+
+#: company_profile/models.py:148
+msgid "factory_type"
+msgstr "نوع المصنع"
+
+#: company_profile/models.py:149
+msgid "Capacity (Tones per day)"
+msgstr "قدرة المصنع (طن في اليوم)"
+
+#: company_profile/models.py:155
+msgid "Production Company Factory"
+msgstr "مصنع شركة منتجة"
+
+#: company_profile/models.py:156
+msgid "Production Company Factories"
+msgstr "مصانع الشركات المنتجة"
+
+#: company_profile/models.py:165 company_profile/models.py:166
+msgid "License Status"
+msgstr "حالة الترخيص"
+
+#: company_profile/models.py:174
+msgid "Sign date"
+msgstr "تاريخ التوقيع"
+
+#: company_profile/models.py:175
+msgid "start_date"
+msgstr "تاريح البداية"
+
+#: company_profile/models.py:176
+msgid "end_date"
+msgstr "تاريخ النهاية"
+
+#: company_profile/models.py:177
+msgid "sheet_no"
+msgstr "رقم المربع"
+
+#: company_profile/models.py:179
+msgid "Area in Kilometers"
+msgstr "المساحة بالكيلوميتر"
+
+#: company_profile/models.py:180
+msgid "Reserve in Tones"
+msgstr "الاحتياطي بالطن"
+
+#: company_profile/models.py:181
+msgid "Goverment representative"
+msgstr "ممثل الحكومة"
+
+#: company_profile/models.py:182
+msgid "Representative percentage(%)"
+msgstr "نسبة الممثل (%)"
+
+#: company_profile/models.py:183
+msgid "Company percentage(%)"
+msgstr "نسبة الشركة (%)"
+
+#: company_profile/models.py:184
+msgid "royalty"
+msgstr "الامتياز"
+
+#: company_profile/models.py:185
+msgid "zakat"
+msgstr "الزكاة"
+
+#: company_profile/models.py:187
+msgid "contract_status"
+msgstr "حالة العقد"
+
+#: company_profile/models.py:188
+msgid "contract_file"
+msgstr "ملف العقد"
+
+#: company_profile/models.py:194
+msgid "Production Company License"
+msgstr "رخصة شركة منتجة"
+
+#: company_profile/models.py:195
+msgid "Production Company Licenses"
+msgstr "رخص الشركات المنتجة"
+
+#: company_profile/models.py:199
+msgid "route_from"
+msgstr "المسار من"
+
+#: company_profile/models.py:200
+msgid "route_to"
+msgstr "المسار إلى"
+
+#: company_profile/models.py:201
+msgid "period_from"
+msgstr "المدة من"
+
+#: company_profile/models.py:202
+msgid "period_to"
+msgstr "المدة إلى"
+
+#: company_profile/models.py:203
+msgid "address_in_sudan"
+msgstr "العنوان في الشودان"
+
+#: company_profile/models.py:205
+msgid "passport_no"
+msgstr "رقم الجواز"
+
+#: company_profile/models.py:206
+msgid "passport_expiry_date"
+msgstr "تاريخ انتهاء الجواز"
+
+#: company_profile/models.py:209
+msgid "Forigner movement"
+msgstr "تحرك اجنبي"
+
+#: company_profile/models.py:212
+msgid "Application: Forigner movement "
+msgstr "طلب تحرك اجنبي"
+
+#: company_profile/models.py:213
+msgid "Application: Forigner movement"
+msgstr "طلب تحرك اجنبي"
+
+#: company_profile/models.py:217
+msgid "company_borrow_from"
+msgstr "الشركة المستلف منها"
+
+#: company_profile/models.py:218
+msgid "borrow_date"
+msgstr "تاريخ الاستلاف"
+
+#: company_profile/models.py:221
+#: company_profile/templates/company_profile/base.html:197
+msgid "Borrow materials"
+msgstr "استلاف مواد"
+
+#: company_profile/models.py:224 company_profile/models.py:225
+msgid "Application: BorrowMaterials"
+msgstr "طلب استلاف مواد"
+
+#: company_profile/models.py:230
+msgid "borrow_material"
+msgstr "المواد المستلفة"
+
+#: company_profile/models.py:231
+msgid "borrow_quantity"
+msgstr "الكمية المستلفة"
+
+#: company_profile/models.py:234 company_profile/models.py:235
+msgid "AppBorrowMaterialDetail"
+msgstr "تفاصيل المواد المستلفة"
+
+#: company_profile/templates/company_profile/application_add.html:10
+msgid "Submit"
+msgstr "ارسال"
+
+#: company_profile/templates/company_profile/application_list.html:11
+msgid "New application"
+msgstr "طلب جديد"
+
+#: company_profile/templates/company_profile/application_list.html:17
+msgid "In progress"
+msgstr "قيد الاجراء"
+
+#: company_profile/templates/company_profile/application_list.html:18
+msgid "Approved"
+msgstr "تم التصديق"
+
+#: company_profile/templates/company_profile/application_list.html:19
+msgid "Rejected"
+msgstr "تم الرفض"
+
+#: company_profile/templates/company_profile/application_list.html:27
+msgid "No records."
+msgstr "لايوجد سجل."
+
+#: company_profile/templates/company_profile/base.html:9
+#: company_profile/templates/company_profile/base.html:158
+msgid "E-Services App"
+msgstr "نظام المعاملات الالكترونية"
+
+#: company_profile/templates/company_profile/base.html:163
+#, fuzzy
+#| msgid "Change Password"
+msgid "Change password"
+msgstr "تغيير كلمة المرور"
+
+#: company_profile/templates/company_profile/base.html:164
+msgid "Log Out"
+msgstr "خروج"
+
+#: company_profile/templates/company_profile/base.html:191
+msgid "Menu"
+msgstr "القائمة"
+
+#: company_profile/templates/company_profile/base.html:194
+msgid "Foreigner movement"
+msgstr "طلب تحرك اجنبي"
+
+#: company_profile/workflow.py:10
+msgid "Submitted state"
+msgstr "تم ارسال الطلب"
+
+#: company_profile/workflow.py:11
+msgid "Accepted state"
+msgstr "تم قبول الطلب"
+
+#: company_profile/workflow.py:12
+msgid "Approved state"
+msgstr "تم تصديق الطلب"
+
+#: company_profile/workflow.py:13
+msgid "Rejected state"
+msgstr "تم رفض الطلب"
+
+#: templates/account/login.html:6
+msgid "Log In page"
+msgstr "صفحة الدخول"
+
+#: templates/account/login.html:10
+msgid "Log In"
+msgstr "دخول"
+
+#: templates/account/logout.html:7
+#, fuzzy
+#| msgid "Log In"
+msgid "Log out"
+msgstr "دخول"
+
+#: templates/account/logout.html:8
+msgid "Are you sure you want to logout?"
+msgstr "هل ترغب حقاً في الخروج؟"
+
+#: templates/account/logout.html:11
+msgid "Logout"
+msgstr "خروج"
+
+#: templates/account/password_change.html:7
+#: templates/account/password_change.html:12
+#: templates/account/password_change.html:22
+msgid "Change Password"
+msgstr "تغيير كلمة المرور"
+
+#: templates/account/password_change.html:24
+msgid "Forgot Password?"
+msgstr "هل نسيت كلمة المرور؟"
+
+#: templates/allauth/layouts/base.html:18
+msgid "Messages:"
+msgstr "الرسائل"
+
+#: templates/allauth/layouts/base.html:25
+msgid "Menu:"
+msgstr "القائمة"
+
+#: templates/allauth/layouts/base.html:29
+msgid "Sign Out"
+msgstr "خروج"
+
+#: templates/allauth/layouts/base.html:33
+msgid "Sign In"
+msgstr "دخول"
+
+
+msgid "Borrow materials "
+msgstr "المواد المستلفة"
+
+msgid "List of foreigner movements"
+msgstr "قائمة طلبات حركة الاجانب"
+
+msgid "List of borrow materials"
+msgstr "قائمة طلبات الاستلاف"
+
+msgid "Company profile"
+msgstr "ملف الشركة"
+
+msgid "Add new borrow materials"
+msgstr "اضافة طلب اسلاف مواد"
+
+msgid "add_more"
+msgstr "اضافة المزيد"
+
+msgid "Show movement"
+msgstr "عرض طلب حركة اجنبي"
+
+msgid "Show borrow materials"
+msgstr "عرض طلب استلاف مواد"
+
+msgid "Application sent successfully."
+msgstr "تم ارسال الطلب بنجاح."
+
+msgid "official_letter_file"
+msgstr "خطاب رسمي ‫من‬ ‫الشركة‬"
+
+msgid "passport_copy_file"
+msgstr "صورة من جواز ساري"
+
+msgid "cv_file"
+msgstr "السيرة الذاتية"
+
+msgid "experiance_certificates_file"
+msgstr "شهادات الخبرة المعتمدة"
+
+msgid "borrow_materials_list_file"
+msgstr "‫كشف‬‫ المواد‬ ‫المراد‬ ‫إستالفها‬"
+
+msgid "borrow_from_approval_file"
+msgstr "‫موافقة‬‫الشركة‬ ‫المستلف‬ ‫منها‬"
+
+msgid "Site header"
+msgstr "بوابة الخدمات الإلكترونية"
+
+msgid "Home page"
+msgstr "الرئيسية"
+
+msgid "accounts"
+msgstr "حسابات المستخدمين"

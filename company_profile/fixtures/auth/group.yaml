@@ -1,0 +1,10 @@
+- model: auth.group
+  pk: 1
+  fields:
+    name: pro_company_application_accept
+    permissions: []
+- model: auth.group
+  pk: 2
+  fields:
+    name: pro_company_application_approve
+    permissions: []

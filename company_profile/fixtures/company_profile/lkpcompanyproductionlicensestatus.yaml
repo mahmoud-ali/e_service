@@ -1,0 +1,9 @@
+- model: company_profile.lkpcompanyproductionlicensestatus
+  pk: 1
+  fields:
+    name: ساري
+- model: company_profile.lkpcompanyproductionlicensestatus
+  pk: 2
+  fields:
+    name: غير ساري
+

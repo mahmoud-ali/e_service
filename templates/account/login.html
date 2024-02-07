@@ -1,0 +1,12 @@
+{% extends 'company_profile/base.html' %}
+{% load i18n %}
+{% load bootstrap3 %}
+
+{% block content %}
+<h2>{% translate "Log In page" %}</h2>
+<form method="post">
+  {% csrf_token %}
+  {% bootstrap_form form %}
+  <button class="btn btn-primary"="submit">{% translate "Log In" %}</button>
+</form>
+{% endblock content %}

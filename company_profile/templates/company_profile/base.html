@@ -1,0 +1,117 @@
+{% load i18n %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+<title>{% block title %}{% translate "E-Services App" %}{% endblock title %}</title>
+
+{% load bootstrap3 %}
+
+{% bootstrap_css %}
+
+{% if request.LANGUAGE_CODE == "ar" %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-rtl/3.4.0/css/bootstrap-rtl.min.css" integrity="sha512-3Lr2MkT5iW+jVhwKFUBa+zQk8Uklef98/3mebU6wNxTzj65enYrFXaeuqPAYWxcQd1GAt9aUBvYHOIcl2SUsKA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+{% endif %}
+
+{% load static  %}
+
+<!-- <link rel="stylesheet" type="text/css" href="{% static 'admin/css/base.css' %}" /> -->
+<link rel="stylesheet" type="text/css" href="{% static 'admin/css/widgets.css' %}" />
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+    <![endif]-->
+<link rel="stylesheet" type="text/css" href="{% static 'company_profile/css/base.css' %}" />
+
+	
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha384-nvAa0+6Qg9clwYCGGPpDQLVpLNn0fRaROjHqs13t4Ggj3Ez50XnGQqc/r8MhnRDZ" crossorigin="anonymous"></script>
+    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>	
+{% bootstrap_javascript %}
+
+
+
+<script>
+$(document).ready(function(){
+	$("th.asc").append('<span class="glyphicon glyphicon-sort-by-alphabet" aria-hidden="true"></span>');
+	$("th.desc").append('<span class="glyphicon glyphicon-sort-by-alphabet-alt" aria-hidden="true"></span>');
+
+});
+
+</script>
+	
+</head>
+<body>
+
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="{% url 'profile:home'%}">{% translate "E-Services App" %}</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+		{% if user.is_authenticated %}	
+          <ul class="nav navbar-nav {% if request.LANGUAGE_CODE == 'ar' %} navbar-left {% else %} navbar-right {% endif %}">
+            <li><a href="{% url 'account_change_password'%}">{% translate "Change password" %}</a></li>
+            <li><a href="{% url 'account_logout' %}">{% translate "Log Out" %}</a></li>
+          </ul>
+		{% endif %}
+		  
+		<form  class="navbar-form {% if request.LANGUAGE_CODE == 'ar' %} navbar-left {% else %} navbar-right {% endif %}" action="{% url 'set_language' %}" method="post">
+			{% csrf_token %}
+			<input name="next" type="hidden" value="{{ redirect_to }}">
+			<select  class="form-control" name="language"  onchange="this.form.submit()">
+			{% get_current_language as LANGUAGE_CODE %}
+			{% get_available_languages as LANGUAGES %}
+			{% get_language_info_list for LANGUAGES as languages %}
+			{% for language in languages %}
+			<option value="{{ language.code }}"{% if language.code == LANGUAGE_CODE %} selected{%	endif %}>
+			{{ language.name_local }} ({{ language.code }})
+			</option>
+			{% endfor %}
+			</select>
+		</form>
+
+        </div>
+      </div>
+    </nav>	
+	
+	<div class="container-fluid">
+	  <div class="row">
+		  <div class="col-sm-3 col-md-2 sidebar">
+
+		  <h4 class="text-center">{% translate "Menu" %}</h4>
+		  <ul class="nav nav-sidebar">
+			 <li class="{% if menu_name == 'profile:home' %}active{% endif %} ">  
+					<a href="{% url 'profile:home' %}">{% translate "Home page" %}</a>
+			 </li>
+			 <li class="{% if menu_name == 'profile:app_foreigner_list' %}active{% endif %} ">  
+					<a href="{% url 'profile:app_foreigner_list' %}">{% translate "Application: Forigner movement" %}</a>
+			 </li>
+			 <li class="{% if menu_name == 'profile:app_borrow_list' %}active{% endif %} ">  
+					<a href="{% url 'profile:app_borrow_list' %}">{% translate "Application: BorrowMaterials" %}</a>
+			 </li>
+		  </ul>
+		  </div>	  
+
+		  <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+		  
+				{% block content %}
+				{% endblock content %}
+		  </div>	  
+		</div>
+	</div>
+
+</body>
+</html>

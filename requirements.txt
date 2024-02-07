@@ -1,0 +1,9 @@
+Django>=5.0.1
+django-allauth>=0.60.1
+django-appconf>=1.0.6
+django-bootstrap3>=23.6
+django-debug-toolbar>=4.3.0
+django-fsm>=2.8.1
+django-tables2>=2.7.0
+python-decouple>=3.8
+

@@ -1,0 +1,13 @@
+{% extends 'company_profile/base.html' %}
+{% load i18n %}
+
+{% block title %}Logout page{% endblock title%}
+
+{% block content %}
+<h2>{% translate "Log out" %}</h2>
+<p>{% translate "Are you sure you want to logout?" %}</p>
+<form method="post">
+  {% csrf_token %}
+  <button class="btn btn-danger" type="submit">{% translate "Logout" %}</button>
+</form>
+{% endblock content %}

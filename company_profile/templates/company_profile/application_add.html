@@ -1,0 +1,22 @@
+{% extends 'company_profile/base.html' %}
+{% load static  %}
+
+{% load i18n %}
+{% load bootstrap3 %}
+
+{% block content %}
+<h1 class="page-header">{% translate title %}</h1>
+{% bootstrap_messages %}
+
+<form  method="post" enctype="multipart/form-data">
+{% csrf_token %}
+    {% bootstrap_form form %}
+    {% buttons %}
+        <button type="submit" class="btn btn-primary">{% translate "Submit" %}</button>
+    {% endbuttons %}
+</form>
+<script type="text/javascript" src="{% static 'company_profile/js/admin_jsi18n.js' %}"></script>
+<script type="text/javascript" src="{% static 'admin/js/core.js' %}"></script>
+{{ form.media }}
+
+{% endblock content %}

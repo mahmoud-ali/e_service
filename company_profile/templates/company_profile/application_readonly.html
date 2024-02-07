@@ -1,0 +1,20 @@
+{% extends 'company_profile/base.html' %}
+{% load i18n %}
+{% load bootstrap3 %}
+
+{% block content %}
+<h1 class="page-header">{% translate title %} ({% translate state %})</h1>
+{% bootstrap_messages %}
+
+<form  method="">
+{% csrf_token %}
+    {% bootstrap_form form %}
+</form>
+<script>
+$(document).ready(function(){
+	$('form :input').attr('readonly','readonly');
+	var f = $('div.bootstrap3-multi-input a').attr("href");
+	$('div.bootstrap3-multi-input').html('<a target="_blank" href="'+f+'">'+f+'</a>');
+});
+</script>
+{% endblock content %}

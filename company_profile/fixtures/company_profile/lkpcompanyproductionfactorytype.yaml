@@ -1,0 +1,13 @@
+- model: company_profile.lkpcompanyproductionfactorytype
+  pk: 1
+  fields:
+    name: CIL
+- model: company_profile.lkpcompanyproductionfactorytype
+  pk: 2
+  fields:
+    name: CIC
+- model: company_profile.lkpcompanyproductionfactorytype
+  pk: 3
+  fields:
+    name: VAT
+
