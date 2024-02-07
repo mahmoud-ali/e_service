@@ -75,6 +75,9 @@ class ApplicationReadonlyView(LoginRequiredMixin,SingleObjectMixin,View):
     template_name = "company_profile/application_readonly.html"    
     
     def dispatch(self, *args, **kwargs):
+        if not hasattr(self.request.user,"pro_company"):
+            return HttpResponseRedirect(reverse_lazy("profile:home"))    
+
         self.extra_context = {
                             "menu_name":self.menu_name,
                             "title":self.title, 
@@ -83,6 +86,7 @@ class ApplicationReadonlyView(LoginRequiredMixin,SingleObjectMixin,View):
         return super().dispatch(*args, **kwargs)        
         
     def get_queryset(self):
+
         query = super().get_queryset()        
         return query.filter(company=self.request.user.pro_company.company)
                 
@@ -121,6 +125,7 @@ class AppForignerMovementListView(ApplicationListView):
         return super().dispatch(*args, **kwargs)        
             
     def get_queryset(self):
+
         query = super().get_queryset()        
         return query.filter(company__id=self.request.user.pro_company.company.id)
 
@@ -193,7 +198,7 @@ class AppBorrowMaterialCreateView(LoginRequiredMixin,View):
         if not hasattr(self.request.user,"pro_company"):
             return HttpResponseRedirect(reverse_lazy("profile:home"))        
             
-        self.detail_formset = inlineformset_factory(self.model, self.model_details, fields=self.model_details_fields,extra=10,can_delete=False)
+        self.detail_formset = inlineformset_factory(self.model, self.model_details, fields=self.model_details_fields,extra=10,can_delete=False,min_num=1, validate_min=True)
             
         self.success_url = reverse_lazy(self.menu_name)    
         self.extra_context = {
@@ -216,11 +221,12 @@ class AppBorrowMaterialCreateView(LoginRequiredMixin,View):
             
             self.object.company = request.user.pro_company.company
             self.object.created_by = self.object.updated_by = request.user
-            self.object.save()
+            
         
             formset = self.detail_formset(request.POST,instance=self.object)
             self.extra_context["detail_formset"] = formset
             if formset.is_valid():
+                self.object.save()
                 formset.save()
                 
                 messages.add_message(request,messages.SUCCESS,_("Application sent successfully."))

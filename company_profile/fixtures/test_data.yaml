@@ -1163,7 +1163,7 @@
     updated_at: 2024-02-05 12:18:24.786391+00:00
     updated_by:
     - admin
-    state: approved
+    state: submitted
     notify: false
     company: 1
     route_from: aaaaaa
@@ -1187,7 +1187,7 @@
     updated_at: 2024-02-05 13:31:21.030244+00:00
     updated_by:
     - admin
-    state: accepted
+    state: submitted
     notify: false
     company: 1
     route_from: aaaaaa
