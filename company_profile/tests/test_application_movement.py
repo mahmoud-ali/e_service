@@ -6,7 +6,6 @@ from ..models import AppForignerMovement
 from ..views import AppForignerMovementListView,AppForignerMovementReadonlyView
 
 class AppMovementTests(ProCompanyTests,TestCase):
-    language = "en"
     username = "admin"
 
     list_view_class = AppForignerMovementListView 
@@ -14,20 +13,22 @@ class AppMovementTests(ProCompanyTests,TestCase):
     list_context_object_name = "apps"
     list_url_name = 'profile:app_foreigner_list'
     list_url_path = '/app_foreigner/'
-    list_html_contain = 'List of foreigner movements'
+    list_html_contain_ar = ['قائمة طلبات حركة الاجانب']
+    list_html_contain_en = ['List of foreigner movements']
 
     show_view_class = AppForignerMovementListView
     show_template_name = 'company_profile/application_readonly.html'
     show_url_name = 'profile:app_foreigner_show'
     show_url_path = '/app_foreigner/%d/show/'
-    show_html_contain = 'Show movement'
+    show_html_contain_ar = ['عرض طلب حركة اجنبي']
+    show_html_contain_en = ['Show movement']
 
     add_template_name = 'company_profile/application_add.html'
     add_url_name = 'profile:app_foreigner_add'
     add_url_path = '/app_foreigner/add/'
-    add_html_contain = 'Add new movement'
-    add_email_subject_contain = 'New application submitted'
-    add_email_body_contain = 'Go here'
+    add_html_contain_ar = ['طلب تحرك اجنبي']
+    add_html_contain_en = ['Add new movement']
+
     add_model = AppForignerMovement
     add_data = {
             'route_from':'AAAAAAAAAA',
@@ -41,4 +42,8 @@ class AppMovementTests(ProCompanyTests,TestCase):
     }
     add_file_data = ['official_letter_file','passport_copy_file','cv_file','experiance_certificates_file']
 
+    add_email_subject_contain_ar = ['تم ارسال طلب جديد']
+    add_email_subject_contain_en = ['New application submitted']
+    add_email_body_template_ar = 'company_profile/email/submitted_email_ar.html'
+    add_email_body_template_en = 'company_profile/email/submitted_email_en.html'
 
