@@ -12,9 +12,32 @@
 {% csrf_token %}
     {% bootstrap_form form %}
 	<h3>{{detail_title}}:</h3>
-
+    {{ detail_formset.management_form }}
     <table id="detail_table"  class="table table-bordered">
-        {{ detail_formset.as_table }}	
+        <tr>
+        {% for field in detail_formset|first %}
+            {% if field.is_hidden is not True %}
+            <th>
+            {{ field.label }}
+            </th>
+            {% endif %}
+        {% endfor %}
+        </tr>
+    {% for form in detail_formset %}
+        <tr>
+        {% for field in form.visible_fields %}
+            <td>
+            {{ field.errors }}
+            {{ field }}
+            {% if field.help_text %}
+            <p class="help" id="{{ field.auto_id }}_helptext">
+            {{ field.help_text|safe }}
+            </p>
+            {% endif %}
+            </td>
+        {% endfor %}
+        </tr>
+    {% endfor %}        	
     </table>
 
 	

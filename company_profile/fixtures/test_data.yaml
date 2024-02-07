@@ -170,6 +170,14 @@
   fields:
     app_label: company_profile
     model: appexportgoldraw
+- model: contenttypes.contenttype
+  fields:
+    app_label: company_profile
+    model: appsendsamplesforanalysis
+- model: contenttypes.contenttype
+  fields:
+    app_label: company_profile
+    model: appsendsamplesforanalysisdetail
 - model: sessions.session
   pk: 4vwj5xiolo57eoy577wxecx64b993d7f
   fields:
@@ -398,6 +406,30 @@
     borrow_master: 31
     material: ggg
     quantity: 1
+- model: company_profile.appborrowmaterialdetail
+  pk: 26
+  fields:
+    borrow_master: 32
+    material: ggggggg
+    quantity: 545
+- model: company_profile.appsendsamplesforanalysisdetail
+  pk: 1
+  fields:
+    sample_master: 2
+    sample_type: aaa
+    sample_weight: 232.0
+    sample_packing_type: ggg
+    sample_analysis_type: '324234'
+    sample_analysis_cause: sfsdf sdfdfsd sdffsdfsd
+- model: company_profile.appsendsamplesforanalysisdetail
+  pk: 2
+  fields:
+    sample_master: 3
+    sample_type: ttt
+    sample_weight: 44.0
+    sample_packing_type: yyyyyy
+    sample_analysis_type: bbbbb
+    sample_analysis_cause: sdfsdfsdf
 - model: auth.permission
   fields:
     name: Can add log entry
@@ -1602,6 +1634,62 @@
     - company_profile
     - appexportgoldraw
     codename: view_appexportgoldraw
+- model: auth.permission
+  fields:
+    name: 'Can add Application: Send samples for analysis'
+    content_type:
+    - company_profile
+    - appsendsamplesforanalysis
+    codename: add_appsendsamplesforanalysis
+- model: auth.permission
+  fields:
+    name: 'Can change Application: Send samples for analysis'
+    content_type:
+    - company_profile
+    - appsendsamplesforanalysis
+    codename: change_appsendsamplesforanalysis
+- model: auth.permission
+  fields:
+    name: 'Can delete Application: Send samples for analysis'
+    content_type:
+    - company_profile
+    - appsendsamplesforanalysis
+    codename: delete_appsendsamplesforanalysis
+- model: auth.permission
+  fields:
+    name: 'Can view Application: Send samples for analysis'
+    content_type:
+    - company_profile
+    - appsendsamplesforanalysis
+    codename: view_appsendsamplesforanalysis
+- model: auth.permission
+  fields:
+    name: Can add app send samples for analysis detail
+    content_type:
+    - company_profile
+    - appsendsamplesforanalysisdetail
+    codename: add_appsendsamplesforanalysisdetail
+- model: auth.permission
+  fields:
+    name: Can change app send samples for analysis detail
+    content_type:
+    - company_profile
+    - appsendsamplesforanalysisdetail
+    codename: change_appsendsamplesforanalysisdetail
+- model: auth.permission
+  fields:
+    name: Can delete app send samples for analysis detail
+    content_type:
+    - company_profile
+    - appsendsamplesforanalysisdetail
+    codename: delete_appsendsamplesforanalysisdetail
+- model: auth.permission
+  fields:
+    name: Can view app send samples for analysis detail
+    content_type:
+    - company_profile
+    - appsendsamplesforanalysisdetail
+    codename: view_appsendsamplesforanalysisdetail
 - model: auth.group
   fields:
     name: pro_company_application_accept
@@ -2376,6 +2464,22 @@
     borrow_date: 2024-02-07
     borrow_materials_list_file: company_1/applications/info_FYlH2Ye
     borrow_from_approval_file: company_1/applications/info_qBO3XU6
+- model: company_profile.appborrowmaterial
+  pk: 32
+  fields:
+    created_at: 2024-02-07 10:30:27.479253+00:00
+    created_by:
+    - admin
+    updated_at: 2024-02-07 10:30:27.479497+00:00
+    updated_by:
+    - admin
+    state: submitted
+    notify: false
+    company: 1
+    company_from: 2
+    borrow_date: 2024-02-07
+    borrow_materials_list_file: company_1/applications/info
+    borrow_from_approval_file: company_1/applications/info_KEvlhEr
 - model: company_profile.appworkplan
   pk: 1
   fields:
@@ -2778,6 +2882,63 @@
     f17: company_1/applications/info_GkGWo6T
     f18: company_1/applications/info_ICRoWNt
     f19: company_1/applications/info_Tr8VlOs
+- model: company_profile.appsendsamplesforanalysis
+  pk: 1
+  fields:
+    created_at: 2024-02-07 07:47:48.094044+00:00
+    created_by:
+    - admin
+    updated_at: 2024-02-07 07:48:23.504608+00:00
+    updated_by:
+    - admin
+    state: accepted
+    notify: false
+    company: 1
+    lab_country: egy
+    lab_city: ca
+    lab_address: "asdsa\r\nasd\r\nasd\r\na\r\nsd"
+    lab_analysis_cost: 54.0
+    last_analysis_report_file: company_1/applications/info
+    initial_voucher_file: company_1/applications/info_l8rH9rn
+    sample_description_form_file: company_1/applications/info_kY9iN9S
+- model: company_profile.appsendsamplesforanalysis
+  pk: 2
+  fields:
+    created_at: 2024-02-07 09:10:57.429633+00:00
+    created_by:
+    - admin
+    updated_at: 2024-02-07 09:12:06.501588+00:00
+    updated_by:
+    - admin
+    state: accepted
+    notify: false
+    company: 1
+    lab_country: erw
+    lab_city: '53'
+    lab_address: '345'
+    lab_analysis_cost: 45.0
+    last_analysis_report_file: company_1/applications/info_LqhAh3O
+    initial_voucher_file: company_1/applications/info_fi5yJUS
+    sample_description_form_file: company_1/applications/info_1EhKAj1
+- model: company_profile.appsendsamplesforanalysis
+  pk: 3
+  fields:
+    created_at: 2024-02-07 10:50:46.674084+00:00
+    created_by:
+    - admin
+    updated_at: 2024-02-07 10:50:46.674294+00:00
+    updated_by:
+    - admin
+    state: submitted
+    notify: false
+    company: 1
+    lab_country: ccccc
+    lab_city: ccccccccc
+    lab_address: ccccccccc
+    lab_analysis_cost: 444.0
+    last_analysis_report_file: company_1/applications/info_tNYTGtQ
+    initial_voucher_file: company_1/applications/info_QMEH0NG
+    sample_description_form_file: company_1/applications/info_KYIaia9
 - model: account.emailaddress
   pk: 1
   fields:
@@ -4826,5 +4987,31 @@
     - appexportgoldraw
     object_id: '1'
     object_repr: Export Gold (1)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 158
+  fields:
+    action_time: 2024-02-07 07:48:23.509313+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appsendsamplesforanalysis
+    object_id: '1'
+    object_repr: Send samples for analysis (1)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 159
+  fields:
+    action_time: 2024-02-07 09:12:06.508165+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appsendsamplesforanalysis
+    object_id: '2'
+    object_repr: ارسال عينات للخارج للتحليل (2)
     action_flag: 2
     change_message: '[{"changed": {"fields": ["Application_state"]}}]'

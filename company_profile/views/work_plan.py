@@ -76,3 +76,12 @@ class AppWorkPlanReadonlyView(ApplicationReadonlyView):
     menu_name = "profile:app_work_plan_list"
     title = _("Show work plan")
 
+    def dispatch(self, *args, **kwargs):         
+        if not hasattr(self.request.user,"pro_company"):
+            return HttpResponseRedirect(reverse_lazy("profile:home"))               
+        return super().dispatch(*args, **kwargs)        
+
+    def get_queryset(self):
+        query = super().get_queryset()        
+        return query.filter(company=self.request.user.pro_company.company)
+

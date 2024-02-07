@@ -23,7 +23,8 @@ from ..forms import LanguageForm,AppForignerMovementForm,AppBorrowMaterialForm
 from ..workflow import STATE_CHOICES,SUBMITTED,ACCEPTED,APPROVED,REJECTED,send_transition_email,get_sumitted_responsible
 from ..tables import AppForignerMovementTable,AppBorrowMaterialTable
 
-from .application import ApplicationListView, ApplicationCreateView, ApplicationReadonlyView
+from .application import ApplicationListView, ApplicationCreateView, ApplicationReadonlyView, \
+                         ApplicationMasterDetailCreateView, ApplicationMasterDetailReadonlyView
 from .work_plan import *
 from .technical_financial_report import *
 from .change_company_name import *
@@ -151,6 +152,15 @@ class AppForignerMovementReadonlyView(ApplicationReadonlyView):
     form_class = AppForignerMovementForm
     menu_name = "profile:app_foreigner_list"
     title = _("Show movement")
+
+    def dispatch(self, *args, **kwargs):         
+        if not hasattr(self.request.user,"pro_company"):
+            return HttpResponseRedirect(reverse_lazy("profile:home"))               
+        return super().dispatch(*args, **kwargs)        
+
+    def get_queryset(self):
+        query = super().get_queryset()        
+        return query.filter(company=self.request.user.pro_company.company)
         
 class AppBorrowMaterialListView(ApplicationListView):
     model = AppBorrowMaterial
@@ -168,7 +178,7 @@ class AppBorrowMaterialListView(ApplicationListView):
         query = super().get_queryset()        
         return query.filter(company__id=self.request.user.pro_company.company.id) #.only(*self.table_class.Meta.fields)
         
-class AppBorrowMaterialCreateView(LoginRequiredMixin,View):
+class AppBorrowMaterialCreateView(ApplicationMasterDetailCreateView):
     model = AppBorrowMaterial
     model_details = AppBorrowMaterialDetail
     model_details_fields = ["material","quantity"]
@@ -177,23 +187,13 @@ class AppBorrowMaterialCreateView(LoginRequiredMixin,View):
     menu_name = "profile:app_borrow_list"
     title = _("Add new borrow materials")
     template_name = "company_profile/application_add_master_details.html"
-    
+
     def dispatch(self, *args, **kwargs):         
         if not hasattr(self.request.user,"pro_company"):
-            return HttpResponseRedirect(reverse_lazy("profile:home"))        
+            return HttpResponseRedirect(reverse_lazy("profile:home"))    
             
-        self.detail_formset = inlineformset_factory(self.model, self.model_details, fields=self.model_details_fields,extra=10,can_delete=False,min_num=1, validate_min=True)
-            
-        self.success_url = reverse_lazy(self.menu_name)    
-        self.extra_context = {
-                            "menu_name":self.menu_name,
-                            "title":self.title, 
-                            "form": self.form_class,
-                            "detail_formset": self.detail_formset,
-                            "detail_title":self.model_details._meta.verbose_name_plural,
-         }
         return super().dispatch(*args, **kwargs)                    
-
+    
     def get(self,request):        
         return render(request, self.template_name, self.extra_context)
 
@@ -225,7 +225,7 @@ class AppBorrowMaterialCreateView(LoginRequiredMixin,View):
             
             return render(request, self.template_name, self.extra_context)
             
-class AppBorrowMaterialReadonlyView(ApplicationReadonlyView):
+class AppBorrowMaterialReadonlyView(ApplicationMasterDetailReadonlyView):
     model = AppBorrowMaterial
     model_details = AppBorrowMaterialDetail
     model_details_fields = ["material","quantity"]
@@ -233,27 +233,13 @@ class AppBorrowMaterialReadonlyView(ApplicationReadonlyView):
     detail_formset = None
     menu_name = "profile:app_borrow_list"
     title = _("Show borrow materials")
-    template_name = "company_profile/application_readonly_master_details.html"
-        
+
     def dispatch(self, *args, **kwargs):         
         if not hasattr(self.request.user,"pro_company"):
-            return HttpResponseRedirect(reverse_lazy("profile:home"))        
-            
-        self.detail_formset = inlineformset_factory(self.model, self.model_details, fields=self.model_details_fields,extra=0,can_delete=False)
-            
-        self.extra_context = {
-                            "menu_name":self.menu_name,
-                            "title":self.title, 
-                            "form": self.form_class,
-                            "detail_formset": self.detail_formset,
-                            "detail_title":self.model_details._meta.verbose_name_plural,
-         }
-        return super().dispatch(*args, **kwargs)                    
+            return HttpResponseRedirect(reverse_lazy("profile:home"))               
+        return super().dispatch(*args, **kwargs)        
 
-    def get(self,request,pk=0):        
-        obj = self.get_object()
-        self.extra_context["form"] = self.form_class(instance=obj)
-        self.extra_context["detail_formset"] = self.detail_formset(instance=obj)
-        
-        return render(request, self.template_name, self.extra_context)
+    def get_queryset(self):
+        query = super().get_queryset()        
+        return query.filter(company=self.request.user.pro_company.company)
 
