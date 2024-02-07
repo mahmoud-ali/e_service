@@ -1,21 +1,30 @@
 from django.test import TestCase
 from django.urls import reverse, resolve
+from django.conf import settings
 
 from django.contrib.auth import get_user_model
 
 from ..views import HomePageView
 
 class HomePageTests(TestCase):
+    language = "en"
+    username = "admin"
+
     view_class = HomePageView
     template_name = 'company_profile/home.html'
     url_name = 'profile:home'
     url_path = '/'
     html_contain = 'Home page here.'
-    def setUp(self):
-        user = get_user_model()
-        user.objects.create_user(username="abc",email="abc@smrc.sd",password="123")
 
-        self.client.login(email="abc@smrc.sd",password="123")
+    fixtures = ['test_data.yaml']
+
+    def setUp(self):
+        User = get_user_model()
+        self.user = User.objects.get(username=self.username)
+
+        self.client.cookies.load({settings.LANGUAGE_COOKIE_NAME: self.language})
+
+        self.client.force_login(self.user,settings.AUTHENTICATION_BACKENDS[0])
 
         url = reverse(self.url_name)
         self.response = self.client.get(url)
