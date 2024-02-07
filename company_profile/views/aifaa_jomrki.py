@@ -51,6 +51,12 @@ class AppAifaaJomrkiCreateView(ApplicationMasterDetailCreateView):
     title = _("Add Aifaa Jomrki")
     template_name = "company_profile/application_add_master_details.html"
 
+    def get(self,request):        
+        form = self.extra_context['form']()
+        form.fields['license_type'].queryset = form.fields['license_type'].queryset.filter(company=self.request.user.pro_company.company)
+        self.extra_context['form'] = form
+        return render(request, self.template_name, self.extra_context)
+
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST,request.FILES)
         self.extra_context["form"] = form

@@ -36,7 +36,7 @@ def get_state_choices(state):
 def send_transition_email(state,email,url,lang):
     subject = ""
     message = ""
-
+    
     if state == SUBMITTED:
         subject = _("New application submitted")
         message = render_to_string('company_profile/email/submitted_email_{0}.html'.format(lang),{'url':url}) 

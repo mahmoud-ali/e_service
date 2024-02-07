@@ -1,8 +1,10 @@
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth import get_user_model
 #from django.conf import settings
+from django import forms
 from django.contrib import admin
 from django.contrib.sites.models import Site
+
 
 from .models import LkpNationality,LkpState,LkpLocality,LkpMineral,LkpCompanyProductionStatus,LkpForeignerProcedureType,TblCompanyProduction, \
                                       LkpCompanyProductionFactoryType,TblCompanyProductionFactory,LkpCompanyProductionLicenseStatus, \
@@ -40,8 +42,18 @@ class LoggingAdminMixin:
         super().save_model(request, obj, form, change)                
 
 class WorkflowAdminMixin:
+    #list_select_related = True
     class Media:
         js = ('admin/js/jquery.init.js',"company_profile/js/state_control.js",)
+
+    def has_change_permission(self, request, obj=None):
+#        if obj and obj.state in[APPROVED,REJECTED]:
+#            return False
+#        
+        return super().has_change_permission(request, obj)
+
+    def has_delete_permission(self, request, obj=None):
+        return False
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
@@ -55,6 +67,7 @@ class WorkflowAdminMixin:
             filter += ["accepted","approved","rejected"]
 
         return qs.filter(state__in=filter)
+
     def save_model(self, request, obj, form, change):
         if obj.pk:
             obj.updated_by = request.user
@@ -64,7 +77,8 @@ class WorkflowAdminMixin:
 
         user= None
         email = None
-        lang = 'ar'
+        lang = None
+        
         url = 'https://'+Site.objects.get_current().domain #settings.BASE_URL
         
         if obj.notify:
@@ -75,7 +89,7 @@ class WorkflowAdminMixin:
                 url += obj.get_absolute_url()
             else:
                 email = request.user.email
-                lang = request.user.lang
+                lang = get_user_model().objects.get(email=email).lang
                 url += request.path
                                 
             send_transition_email(obj.state,email,url,lang.lower())
@@ -145,12 +159,12 @@ admin.site.register(TblCompanyProductionFactory,TblCompanyProductionFactoryAdmin
 #admin.site.register(LkpCompanyProductionLicenseStatus)
 admin.site.register(TblCompanyProductionLicense,TblCompanyProductionLicenseAdmin)
 
-#class TblCompanyProductionUserRoleAdmin( admin.ModelAdmin):
-#    
-#    list_display = ["company","user"]        
-#    list_filter = ["company","user"]
-#    
-#admin.site.register(TblCompanyProductionUserRole, TblCompanyProductionUserRoleAdmin)
+class TblCompanyProductionUserRoleAdmin( admin.ModelAdmin):
+    
+    list_display = ["company","user"]        
+    list_filter = ["company","user"]
+    
+admin.site.register(TblCompanyProductionUserRole, TblCompanyProductionUserRoleAdmin)
 
 class AppForignerMovementAdmin(WorkflowAdminMixin,admin.ModelAdmin):
     form = AppForignerMovementAdminForm
@@ -173,7 +187,7 @@ class AppBorrowMaterialAdmin(WorkflowAdminMixin,admin.ModelAdmin):
     list_display = ["company","company_from","borrow_date", "created_at", "created_by","updated_at", "updated_by"]        
     list_filter = ["borrow_date"]
     view_on_site = False
-    
+
     def save_model(self, request, obj, form, change):
         super().save_model(request, obj, form, change)                
             

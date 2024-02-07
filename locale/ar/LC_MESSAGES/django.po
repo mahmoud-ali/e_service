@@ -1088,7 +1088,7 @@ msgstr "العنوان"
 
 #: company_profile/models.py:712 company_profile/models.py:713
 msgid "Foreigner Procedure Detail"
-msgstr "تفاصيل اجراء اجنبي"
+msgstr "تفاصيل اجراءات اجانب"
 
 #: company_profile/models.py:719
 msgid "approved_requirements_list_file"

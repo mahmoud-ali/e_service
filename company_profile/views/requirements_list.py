@@ -125,6 +125,6 @@ class AppRequirementsListReadonlyView(LoginRequiredMixin,DetailView):
         obj = self.get_object()
         self.extra_context["form"] = self.form_class(instance=obj)
         self.extra_context["detail_formset"] = [formset(instance=obj) for formset in self.detail_formset]
-        #print("88888888",self.extra_context["detail_title"])
+
         return render(request, self.template_name, self.extra_context)
 

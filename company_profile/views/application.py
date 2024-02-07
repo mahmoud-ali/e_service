@@ -1,5 +1,5 @@
 from django.urls import reverse_lazy
-from django.views.generic import View,ListView,CreateView
+from django.views.generic import View,ListView,CreateView,DetailView
 from django.views.generic.detail import SingleObjectMixin
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
@@ -104,7 +104,7 @@ class ApplicationMasterDetailCreateView(LoginRequiredMixin,View):
     def get(self,request):        
         return render(request, self.template_name, self.extra_context)
 
-class ApplicationMasterDetailReadonlyView(ApplicationReadonlyView):
+class ApplicationMasterDetailReadonlyView(LoginRequiredMixin,DetailView):
     model = None
     model_details = None
     model_details_fields = []
@@ -123,6 +123,7 @@ class ApplicationMasterDetailReadonlyView(ApplicationReadonlyView):
                             "form": self.form_class,
                             "detail_formset": self.detail_formset,
                             "detail_title":self.model_details._meta.verbose_name_plural,
+                            "state":STATE_CHOICES[self.get_object().state], 
          }
         return super().dispatch(*args, **kwargs)                    
 
@@ -130,6 +131,6 @@ class ApplicationMasterDetailReadonlyView(ApplicationReadonlyView):
         obj = self.get_object()
         self.extra_context["form"] = self.form_class(instance=obj)
         self.extra_context["detail_formset"] = self.detail_formset(instance=obj)
-        
+
         return render(request, self.template_name, self.extra_context)
 

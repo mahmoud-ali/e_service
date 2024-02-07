@@ -111,3 +111,11 @@ body {
   display: inline-block;
   border-radius: 50%;
 }
+
+/*#calendarbox1{
+    width:200px;
+}*/
+
+.calendarbox, .clockbox{
+    width:25em
+}

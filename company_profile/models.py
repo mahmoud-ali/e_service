@@ -383,7 +383,7 @@ class AppRemoveArea(WorkflowModel):
     company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
     remove_type = models.CharField(_("remove_type"),max_length=15, choices=TNAZOL_TYPE_CHOICES)
     area_in_km2 = models.IntegerField(_("area_in_km2"))
-    area_percent_from_total = models.IntegerField(_("area_percent_from_total"),validators=[MinValueValidator(limit_value=0),MaxValueValidator(limit_value=100)])
+    area_percent_from_total = models.FloatField(_("area_percent_from_total"),validators=[MinValueValidator(limit_value=0),MaxValueValidator(limit_value=100)])
 
     geo_coordinator_for_removed_area_file = models.FileField(_("geo_coordinator_for_removed_area_file"),upload_to=company_applications_path)
     geo_coordinator_for_remain_area_file = models.FileField(_("geo_coordinator_for_remain_area_file"),upload_to=company_applications_path)

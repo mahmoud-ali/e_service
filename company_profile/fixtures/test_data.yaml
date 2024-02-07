@@ -239,10 +239,10 @@
     app_label: company_profile
     model: apprequirementslistmotafjeratequipments
 - model: sessions.session
-  pk: 4vwj5xiolo57eoy577wxecx64b993d7f
+  pk: 9xg7m5skscd3x6ffhn136z8cng9j5mjz
   fields:
-    session_data: .eJxtUMtuhDAM_BefEUoCcYBT29-oVsgkrojKY4WDutVq_72w5ULVmzUzHo_nDuT9vE6ppTX1PKXoKcV5akdO_RwEmvc7_M7QwJVEvuYlQAaUoNFOOVOh0Ta32pZlWWXAI8Vhk1IY4_Qi4-JzCfC4ZPC80K7CSxt3Mw0nrCP_ydNO0DDscH4ky5-ag5b89ZTz7dg6WfUk_ebjVWW0I19ahdRVXFnUhgssa4_GFcaqwGy565BU9-GxQFOQM07RNliz5_unHA7tn99rLJS1uEUQFtnL49s1Lt-byKgalXr8AKp1dLs:1rXb8S:HiQExq3BE2Y_3grB2ebTUA97uWJjIWYuyOvNRO7vbvM
-    expire_date: 2024-02-21 06:10:16.096086+00:00
+    session_data: .eJxVjMEOwiAQRP-Fs2lgKUv1pj9Clu0aiA1NLJyM_y41PehtZt7MvFSgVlNomzxDntVFGXX6zSLxQ8oOaFn2eCDmtZU6fDsH3oZrd1JqZqp5Lbdj9XeVaEv9h_UExhOPTiPFSSaHBsTieGYEb8HpWcRJjEg63hktgiUPXlMXDox6fwChSTtt:1rXack:v164bpH4_KwzIyyA9jzXa-P4iFCDvQu73z9QCgbRc-4
+    expire_date: 2024-02-21 05:37:30.273300+00:00
 - model: sessions.session
   pk: gd7tmtfdfrjv73h3a3vf1n252txs0enl
   fields:
@@ -490,6 +490,42 @@
     borrow_master: 33
     material: ccccc
     quantity: 333
+- model: company_profile.appborrowmaterialdetail
+  pk: 30
+  fields:
+    borrow_master: 34
+    material: مادة 1
+    quantity: 100
+- model: company_profile.appborrowmaterialdetail
+  pk: 31
+  fields:
+    borrow_master: 34
+    material: مادة 2
+    quantity: 200
+- model: company_profile.appborrowmaterialdetail
+  pk: 32
+  fields:
+    borrow_master: 35
+    material: مادة 1
+    quantity: 200
+- model: company_profile.appborrowmaterialdetail
+  pk: 33
+  fields:
+    borrow_master: 35
+    material: مادة 2
+    quantity: 400
+- model: company_profile.appborrowmaterialdetail
+  pk: 34
+  fields:
+    borrow_master: 36
+    material: مادة 1
+    quantity: 670
+- model: company_profile.appborrowmaterialdetail
+  pk: 35
+  fields:
+    borrow_master: 36
+    material: مادة 2
+    quantity: 350
 - model: company_profile.appsendsamplesforanalysisdetail
   pk: 1
   fields:
@@ -508,6 +544,42 @@
     sample_packing_type: yyyyyy
     sample_analysis_type: bbbbb
     sample_analysis_cause: sdfsdfsdf
+- model: company_profile.appsendsamplesforanalysisdetail
+  pk: 3
+  fields:
+    sample_master: 4
+    sample_type: aaa
+    sample_weight: 300.0
+    sample_packing_type: ggg
+    sample_analysis_type: fff
+    sample_analysis_cause: rewer
+- model: company_profile.appsendsamplesforanalysisdetail
+  pk: 4
+  fields:
+    sample_master: 4
+    sample_type: bbb
+    sample_weight: 200.0
+    sample_packing_type: ccc
+    sample_analysis_type: eee
+    sample_analysis_cause: qwe
+- model: company_profile.appsendsamplesforanalysisdetail
+  pk: 5
+  fields:
+    sample_master: 5
+    sample_type: dd
+    sample_weight: 500.0
+    sample_packing_type: yyy
+    sample_analysis_type: iiii
+    sample_analysis_cause: hgfhfg
+- model: company_profile.appsendsamplesforanalysisdetail
+  pk: 6
+  fields:
+    sample_master: 6
+    sample_type: oooo
+    sample_weight: 800.0
+    sample_packing_type: rrr
+    sample_analysis_type: mmm
+    sample_analysis_cause: sdfsdf
 - model: company_profile.lkpforeignerproceduretype
   pk: 1
   fields:
@@ -562,6 +634,30 @@
     procedure_master: 2
     employee_name: mmmmmmmm
     employee_address: mmmmmmmmmm
+- model: company_profile.appforeignerproceduredetail
+  pk: 4
+  fields:
+    procedure_master: 3
+    employee_name: ali
+    employee_address: asdasd
+- model: company_profile.appforeignerproceduredetail
+  pk: 5
+  fields:
+    procedure_master: 3
+    employee_name: omer
+    employee_address: sdfsdf
+- model: company_profile.appforeignerproceduredetail
+  pk: 6
+  fields:
+    procedure_master: 4
+    employee_name: saeed
+    employee_address: sdf
+- model: company_profile.appforeignerproceduredetail
+  pk: 7
+  fields:
+    procedure_master: 5
+    employee_name: nnnn
+    employee_address: jlkjlk
 - model: company_profile.appaifaajomrkidetail
   pk: 1
   fields:
@@ -577,6 +673,21 @@
   fields:
     aifaa_master: 1
     material_name: ccccccccccccc
+- model: company_profile.appaifaajomrkidetail
+  pk: 4
+  fields:
+    aifaa_master: 2
+    material_name: zzzzzzzzzz
+- model: company_profile.appaifaajomrkidetail
+  pk: 5
+  fields:
+    aifaa_master: 3
+    material_name: vvvvvvvv
+- model: company_profile.appaifaajomrkidetail
+  pk: 6
+  fields:
+    aifaa_master: 4
+    material_name: bbbbbbb
 - model: company_profile.appreexportequipmentsdetail
   pk: 1
   fields:
@@ -587,6 +698,36 @@
     voucher_no: '33333333'
     insurance_no: '44444444'
     check_certificate_no: '55555555'
+- model: company_profile.appreexportequipmentsdetail
+  pk: 2
+  fields:
+    reexport_master: 2
+    name: aaaa
+    serial_id: '222222'
+    policy_no: '333333'
+    voucher_no: '44444'
+    insurance_no: '55555555'
+    check_certificate_no: '6666666'
+- model: company_profile.appreexportequipmentsdetail
+  pk: 3
+  fields:
+    reexport_master: 3
+    name: '22222'
+    serial_id: '2222'
+    policy_no: '22222'
+    voucher_no: '222222'
+    insurance_no: '222'
+    check_certificate_no: '2222'
+- model: company_profile.appreexportequipmentsdetail
+  pk: 4
+  fields:
+    reexport_master: 4
+    name: '3333'
+    serial_id: '3333'
+    policy_no: '33333'
+    voucher_no: '33333'
+    insurance_no: '33333'
+    check_certificate_no: '3333'
 - model: company_profile.apprequirementslistmangamequipments
   pk: 1
   fields:
@@ -594,6 +735,27 @@
     item: aaaaaa
     description: aaaaaaaaaa
     qty: 1
+- model: company_profile.apprequirementslistmangamequipments
+  pk: 2
+  fields:
+    requirements_master: 2
+    item: aaa
+    description: asdas
+    qty: 12
+- model: company_profile.apprequirementslistmangamequipments
+  pk: 3
+  fields:
+    requirements_master: 3
+    item: xx
+    description: dsfsd
+    qty: 45
+- model: company_profile.apprequirementslistmangamequipments
+  pk: 4
+  fields:
+    requirements_master: 4
+    item: zzzz
+    description: zzzz
+    qty: 435
 - model: company_profile.apprequirementslistfactoryequipments
   pk: 1
   fields:
@@ -608,6 +770,27 @@
     item: cccccccc
     description: cccccccccc
     qty: 3
+- model: company_profile.apprequirementslistfactoryequipments
+  pk: 3
+  fields:
+    requirements_master: 2
+    item: bbbb
+    description: fsdf
+    qty: 23
+- model: company_profile.apprequirementslistfactoryequipments
+  pk: 4
+  fields:
+    requirements_master: 3
+    item: jhgj
+    description: ghj
+    qty: 45
+- model: company_profile.apprequirementslistfactoryequipments
+  pk: 5
+  fields:
+    requirements_master: 4
+    item: ccccc
+    description: sdfsd
+    qty: 232
 - model: company_profile.apprequirementslistelectricityequipments
   pk: 1
   fields:
@@ -622,6 +805,27 @@
     item: eeeeee
     description: eeeeeee
     qty: 5
+- model: company_profile.apprequirementslistelectricityequipments
+  pk: 3
+  fields:
+    requirements_master: 2
+    item: ccccc
+    description: xcvxv
+    qty: 3
+- model: company_profile.apprequirementslistelectricityequipments
+  pk: 4
+  fields:
+    requirements_master: 3
+    item: jhkhj
+    description: fghf
+    qty: 34
+- model: company_profile.apprequirementslistelectricityequipments
+  pk: 5
+  fields:
+    requirements_master: 4
+    item: bcvb
+    description: fgdf
+    qty: 455
 - model: company_profile.apprequirementslistchemicallabequipments
   pk: 1
   fields:
@@ -629,6 +833,27 @@
     item: ffffff
     description: fffffffffff
     qty: 6
+- model: company_profile.apprequirementslistchemicallabequipments
+  pk: 2
+  fields:
+    requirements_master: 2
+    item: ttt
+    description: erwe
+    qty: 34
+- model: company_profile.apprequirementslistchemicallabequipments
+  pk: 3
+  fields:
+    requirements_master: 3
+    item: vbccv
+    description: dfgdf
+    qty: 34
+- model: company_profile.apprequirementslistchemicallabequipments
+  pk: 4
+  fields:
+    requirements_master: 4
+    item: vcbcv
+    description: gfd
+    qty: 45
 - model: company_profile.apprequirementslistchemicalequipments
   pk: 1
   fields:
@@ -636,6 +861,27 @@
     item: gggggg
     description: gggggggg
     qty: 7
+- model: company_profile.apprequirementslistchemicalequipments
+  pk: 2
+  fields:
+    requirements_master: 2
+    item: gfgf
+    description: dfgdfg
+    qty: 45
+- model: company_profile.apprequirementslistchemicalequipments
+  pk: 3
+  fields:
+    requirements_master: 3
+    item: nbvn
+    description: hfg
+    qty: 45
+- model: company_profile.apprequirementslistchemicalequipments
+  pk: 4
+  fields:
+    requirements_master: 4
+    item: dfgdf
+    description: dfgd
+    qty: 455
 - model: company_profile.apprequirementslistmotafjeratequipments
   pk: 1
   fields:
@@ -643,6 +889,27 @@
     item: hhhhhh
     description: hhhhhhh
     qty: 8
+- model: company_profile.apprequirementslistmotafjeratequipments
+  pk: 2
+  fields:
+    requirements_master: 2
+    item: fjhgj
+    description: hfghf
+    qty: 13
+- model: company_profile.apprequirementslistmotafjeratequipments
+  pk: 3
+  fields:
+    requirements_master: 3
+    item: bnv
+    description: cvb
+    qty: 67
+- model: company_profile.apprequirementslistmotafjeratequipments
+  pk: 4
+  fields:
+    requirements_master: 4
+    item: fhgfg
+    description: fghfg
+    qty: 56
 - model: company_profile.apprequirementslistvehiclesequipments
   pk: 1
   fields:
@@ -650,6 +917,27 @@
     item: iiiiiiiiii
     description: iiiiiiiiii
     qty: 9
+- model: company_profile.apprequirementslistvehiclesequipments
+  pk: 2
+  fields:
+    requirements_master: 2
+    item: ghfg
+    description: sfdsd
+    qty: 15
+- model: company_profile.apprequirementslistvehiclesequipments
+  pk: 3
+  fields:
+    requirements_master: 3
+    item: ',nm,'
+    description: ghjg
+    qty: 56
+- model: company_profile.apprequirementslistvehiclesequipments
+  pk: 4
+  fields:
+    requirements_master: 4
+    item: fghf
+    description: fghf
+    qty: 45
 - model: auth.permission
   fields:
     name: Can add log entry
@@ -2341,7 +2629,7 @@
 - model: accounts.customuser
   fields:
     password: pbkdf2_sha256$720000$tH5f7gkeFN9Es8mHafSUxJ$P28/0MeQeLvSmoLdJodz05oaT8noDhnJa2DUp0FwHP8=
-    last_login: 2024-02-07 06:10:15.704565+00:00
+    last_login: 2024-02-07 05:37:29.975522+00:00
     is_superuser: true
     username: admin
     first_name: ''
@@ -2358,7 +2646,7 @@
 - model: accounts.customuser
   fields:
     password: pbkdf2_sha256$720000$lEDPxNchkMzbWsLXvhzF7Z$79mrLMWU+1GQDMdcpWtSGnStSnwallslYXbjKxhBL3I=
-    last_login: 2024-02-04 11:04:23.590240+00:00
+    last_login: 2024-02-06 22:14:14.890258+00:00
     is_superuser: false
     username: bbb
     first_name: ''
@@ -2536,6 +2824,31 @@
     annual_rent: 345.0
     contract_status: 1
     contract_file: company_1/license_2024-01-29/info
+- model: company_profile.tblcompanyproductionlicense
+  pk: 2
+  fields:
+    created_at: 2024-02-06 22:12:37.315731+00:00
+    created_by:
+    - admin
+    updated_at: 2024-02-06 22:12:37.315886+00:00
+    updated_by:
+    - admin
+    company: 4
+    date: 2024-02-04
+    start_date: 2024-02-21
+    end_date: 2024-10-24
+    sheet_no: '11'
+    cordinates: vcbc
+    area: 4324.0
+    reserve: 234.0
+    gov_rep: rwerwer
+    rep_percent: 3.0
+    com_percent: 43.0
+    royalty: 3432.0
+    zakat: 324.0
+    annual_rent: 324.0
+    contract_status: 1
+    contract_file: company_4/contract_2024-02-04/for_upload
 - model: company_profile.appforignermovement
   pk: 1
   fields:
@@ -2608,6 +2921,78 @@
     passport_copy_file: company_1/applications/test_YGvPmAG.txt
     cv_file: company_1/applications/test_dv2zTY5.txt
     experiance_certificates_file: company_1/applications/test_SxOrliG.txt
+- model: company_profile.appforignermovement
+  pk: 5
+  fields:
+    created_at: 2024-02-06 22:16:08.471068+00:00
+    created_by:
+    - bbb
+    updated_at: 2024-02-06 22:16:08.471294+00:00
+    updated_by:
+    - bbb
+    state: submitted
+    notify: false
+    company: 4
+    route_from: الخرطوم
+    route_to: مدني
+    period_from: 2024-02-07
+    period_to: 2024-02-22
+    address_in_sudan: فندق السودان
+    nationality: 1
+    passport_no: '123456'
+    passport_expiry_date: 2024-02-29
+    official_letter_file: company_4/applications/for_upload
+    passport_copy_file: company_4/applications/for_upload_JYxUbPJ
+    cv_file: company_4/applications/for_upload_zxo9nuD
+    experiance_certificates_file: company_4/applications/for_upload_20FJj8v
+- model: company_profile.appforignermovement
+  pk: 6
+  fields:
+    created_at: 2024-02-06 22:17:45.105894+00:00
+    created_by:
+    - bbb
+    updated_at: 2024-02-07 07:08:30.130769+00:00
+    updated_by:
+    - admin
+    state: rejected
+    notify: false
+    company: 4
+    route_from: كسلا
+    route_to: دارفور
+    period_from: 2024-02-07
+    period_to: 2024-02-20
+    address_in_sudan: فندق
+    nationality: 1
+    passport_no: '789'
+    passport_expiry_date: 2024-02-29
+    official_letter_file: company_4/applications/for_upload_KTscMTG
+    passport_copy_file: company_4/applications/for_upload_XvLtuXX
+    cv_file: company_4/applications/for_upload_aJV2fBP
+    experiance_certificates_file: company_4/applications/for_upload_sMeHXd6
+- model: company_profile.appforignermovement
+  pk: 7
+  fields:
+    created_at: 2024-02-06 22:19:00.917385+00:00
+    created_by:
+    - bbb
+    updated_at: 2024-02-07 07:08:06.938834+00:00
+    updated_by:
+    - admin
+    state: approved
+    notify: false
+    company: 4
+    route_from: كوستي
+    route_to: دنقلا
+    period_from: 2024-02-04
+    period_to: 2024-02-16
+    address_in_sudan: حي العرب
+    nationality: 1
+    passport_no: '456'
+    passport_expiry_date: 2024-05-30
+    official_letter_file: company_4/applications/for_upload_v4SocC5
+    passport_copy_file: company_4/applications/for_upload_ccfJ8Ur
+    cv_file: company_4/applications/for_upload_dwzd2ox
+    experiance_certificates_file: company_4/applications/for_upload_m1XSVTI
 - model: company_profile.appborrowmaterial
   pk: 1
   fields:
@@ -3136,6 +3521,54 @@
     borrow_date: 2024-02-07
     borrow_materials_list_file: company_1/applications/info_OfyHTZW
     borrow_from_approval_file: company_1/applications/info_nV1Vabl
+- model: company_profile.appborrowmaterial
+  pk: 34
+  fields:
+    created_at: 2024-02-06 22:22:39.292680+00:00
+    created_by:
+    - bbb
+    updated_at: 2024-02-06 22:22:39.292994+00:00
+    updated_by:
+    - bbb
+    state: submitted
+    notify: false
+    company: 4
+    company_from: 1
+    borrow_date: 2024-02-07
+    borrow_materials_list_file: company_4/applications/for_upload_jaUvFdD
+    borrow_from_approval_file: company_4/applications/for_upload_jWsbbGo
+- model: company_profile.appborrowmaterial
+  pk: 35
+  fields:
+    created_at: 2024-02-06 22:23:23.979637+00:00
+    created_by:
+    - bbb
+    updated_at: 2024-02-07 05:40:55.998694+00:00
+    updated_by:
+    - admin
+    state: rejected
+    notify: false
+    company: 4
+    company_from: 2
+    borrow_date: 2024-02-07
+    borrow_materials_list_file: company_4/applications/for_upload_0Lqqkdo
+    borrow_from_approval_file: company_4/applications/for_upload_Yu8qaga
+- model: company_profile.appborrowmaterial
+  pk: 36
+  fields:
+    created_at: 2024-02-06 22:24:39.637106+00:00
+    created_by:
+    - bbb
+    updated_at: 2024-02-07 05:40:37.910307+00:00
+    updated_by:
+    - admin
+    state: approved
+    notify: false
+    company: 4
+    company_from: 1
+    borrow_date: 2024-02-07
+    borrow_materials_list_file: company_4/applications/for_upload_4Org9XG
+    borrow_from_approval_file: company_4/applications/for_upload_NGadPYD
 - model: company_profile.appworkplan
   pk: 1
   fields:
@@ -3248,6 +3681,54 @@
     plan_to: 2024-02-07
     official_letter_file: company_1/applications/info_OLblRCZ
     work_plan_file: company_1/applications/info_Mik9yZe
+- model: company_profile.appworkplan
+  pk: 8
+  fields:
+    created_at: 2024-02-06 22:25:08.306973+00:00
+    created_by:
+    - bbb
+    updated_at: 2024-02-06 22:25:08.307208+00:00
+    updated_by:
+    - bbb
+    state: submitted
+    notify: false
+    company: 4
+    plan_from: 2024-02-07
+    plan_to: 2024-02-23
+    official_letter_file: company_4/applications/for_upload_lJbtcx1
+    work_plan_file: company_4/applications/for_upload_rzoWtRI
+- model: company_profile.appworkplan
+  pk: 9
+  fields:
+    created_at: 2024-02-06 22:25:27.572084+00:00
+    created_by:
+    - bbb
+    updated_at: 2024-02-07 07:14:29.611855+00:00
+    updated_by:
+    - admin
+    state: rejected
+    notify: false
+    company: 4
+    plan_from: 2024-02-07
+    plan_to: 2024-02-15
+    official_letter_file: company_4/applications/for_upload_Jf9hLqD
+    work_plan_file: company_4/applications/for_upload_kkqHtsd
+- model: company_profile.appworkplan
+  pk: 10
+  fields:
+    created_at: 2024-02-06 22:25:43.118159+00:00
+    created_by:
+    - bbb
+    updated_at: 2024-02-07 07:14:15.524773+00:00
+    updated_by:
+    - admin
+    state: approved
+    notify: false
+    company: 4
+    plan_from: 2024-02-04
+    plan_to: 2024-02-29
+    official_letter_file: company_4/applications/for_upload_eqcy54o
+    work_plan_file: company_4/applications/for_upload_hTYykV5
 - model: company_profile.apptechnicalfinancialreport
   pk: 1
   fields:
@@ -3266,6 +3747,60 @@
     report_comments: werwerwer
     report_file: company_1/applications/info_p0cqmrk
     other_attachments_file: company_1/applications/info_P6bXIXB
+- model: company_profile.apptechnicalfinancialreport
+  pk: 2
+  fields:
+    created_at: 2024-02-06 22:26:28.065437+00:00
+    created_by:
+    - bbb
+    updated_at: 2024-02-06 22:26:28.065607+00:00
+    updated_by:
+    - bbb
+    state: submitted
+    notify: false
+    company: 4
+    report_from: 2024-02-07
+    report_to: 2024-02-29
+    report_type: technical
+    report_comments: تقرير هام
+    report_file: company_4/applications/for_upload_0YPwCTO
+    other_attachments_file: company_4/applications/for_upload_GkWxEIm
+- model: company_profile.apptechnicalfinancialreport
+  pk: 3
+  fields:
+    created_at: 2024-02-06 22:26:53.430966+00:00
+    created_by:
+    - bbb
+    updated_at: 2024-02-07 07:18:04.191348+00:00
+    updated_by:
+    - admin
+    state: rejected
+    notify: false
+    company: 4
+    report_from: 2024-02-04
+    report_to: 2024-02-22
+    report_type: financial
+    report_comments: تقرير عاجل
+    report_file: company_4/applications/for_upload_3u4odv3
+    other_attachments_file: company_4/applications/for_upload_XRkSQcQ
+- model: company_profile.apptechnicalfinancialreport
+  pk: 4
+  fields:
+    created_at: 2024-02-06 22:27:27.649032+00:00
+    created_by:
+    - bbb
+    updated_at: 2024-02-07 07:17:45.047127+00:00
+    updated_by:
+    - admin
+    state: approved
+    notify: false
+    company: 4
+    report_from: 2024-02-16
+    report_to: 2024-02-29
+    report_type: technical
+    report_comments: تقرير تفصيلي
+    report_file: company_4/applications/for_upload_fQEdoC0
+    other_attachments_file: company_4/applications/for_upload_oGNWHNg
 - model: company_profile.appchangecompanyname
   pk: 1
   fields:
@@ -3285,6 +3820,63 @@
     sh7_file: company_1/applications/info_YIPYMJf
     lahat_tasis_file: company_1/applications/info_RzrhPJO
     name_change_alert_file: company_1/applications/info_DBJrxGX
+- model: company_profile.appchangecompanyname
+  pk: 2
+  fields:
+    created_at: 2024-02-06 22:28:42.005250+00:00
+    created_by:
+    - bbb
+    updated_at: 2024-02-06 22:28:42.005512+00:00
+    updated_by:
+    - bbb
+    state: submitted
+    notify: false
+    company: 4
+    new_name: الذهبية
+    cause_for_change: اسم اجمل
+    tasis_certificate_file: company_4/applications/for_upload_NH1Ttjb
+    tasis_contract_file: company_4/applications/for_upload_05AQFRB
+    sh7_file: company_4/applications/for_upload_3oLE38h
+    lahat_tasis_file: company_4/applications/for_upload_VFWTDQN
+    name_change_alert_file: company_4/applications/for_upload_nMAxA2N
+- model: company_profile.appchangecompanyname
+  pk: 3
+  fields:
+    created_at: 2024-02-06 22:29:41.867905+00:00
+    created_by:
+    - bbb
+    updated_at: 2024-02-07 07:10:22.341415+00:00
+    updated_by:
+    - admin
+    state: rejected
+    notify: false
+    company: 4
+    new_name: الفضية
+    cause_for_change: ضرورة سوقية
+    tasis_certificate_file: company_4/applications/for_upload_VrZ8Xih
+    tasis_contract_file: company_4/applications/for_upload_PvJYQOu
+    sh7_file: company_4/applications/for_upload_LBfKP7n
+    lahat_tasis_file: company_4/applications/for_upload_6wGAe1C
+    name_change_alert_file: company_4/applications/for_upload_q2ZIfv3
+- model: company_profile.appchangecompanyname
+  pk: 4
+  fields:
+    created_at: 2024-02-06 22:30:36.318451+00:00
+    created_by:
+    - bbb
+    updated_at: 2024-02-07 07:10:08.325370+00:00
+    updated_by:
+    - admin
+    state: approved
+    notify: false
+    company: 4
+    new_name: البرونزية
+    cause_for_change: تغيير الشراكة
+    tasis_certificate_file: company_4/applications/for_upload_R5HFkRe
+    tasis_contract_file: company_4/applications/for_upload_VWxaSEc
+    sh7_file: company_4/applications/for_upload_vkHJMvL
+    lahat_tasis_file: company_4/applications/for_upload_CtP7UOk
+    name_change_alert_file: company_4/applications/for_upload_HjREODA
 - model: company_profile.appexplorationtime
   pk: 1
   fields:
@@ -3301,6 +3893,54 @@
     expo_to: 2024-02-07
     expo_cause_for_timing: "dsfsdf\r\n\r\nsdfs\r\ndf\r\nsdf\r\nsd\r\nf\r\nsd\r\nsdf"
     expo_cause_for_change_file: company_1/applications/info_PgI7y1D
+- model: company_profile.appexplorationtime
+  pk: 2
+  fields:
+    created_at: 2024-02-06 22:31:16.202872+00:00
+    created_by:
+    - bbb
+    updated_at: 2024-02-06 22:31:16.203054+00:00
+    updated_by:
+    - bbb
+    state: submitted
+    notify: false
+    company: 4
+    expo_from: 2024-02-07
+    expo_to: 2024-02-21
+    expo_cause_for_timing: تقدير فني
+    expo_cause_for_change_file: company_4/applications/for_upload_cCieJ1p
+- model: company_profile.appexplorationtime
+  pk: 3
+  fields:
+    created_at: 2024-02-06 22:31:32.746841+00:00
+    created_by:
+    - bbb
+    updated_at: 2024-02-07 07:05:25.789995+00:00
+    updated_by:
+    - admin
+    state: rejected
+    notify: false
+    company: 4
+    expo_from: 2024-02-01
+    expo_to: 2024-02-29
+    expo_cause_for_timing: فني
+    expo_cause_for_change_file: company_4/applications/for_upload_qr0SFe9
+- model: company_profile.appexplorationtime
+  pk: 4
+  fields:
+    created_at: 2024-02-06 22:31:53.517722+00:00
+    created_by:
+    - bbb
+    updated_at: 2024-02-07 07:05:11.666937+00:00
+    updated_by:
+    - admin
+    state: approved
+    notify: false
+    company: 4
+    expo_from: 2024-02-12
+    expo_to: 2024-02-23
+    expo_cause_for_timing: كده بس
+    expo_cause_for_change_file: company_4/applications/for_upload_jVqGZIg
 - model: company_profile.appaddarea
   pk: 1
   fields:
@@ -3316,6 +3956,51 @@
     area_in_km2: 344
     cause_for_addition: "werwer\r\nwerw\r\ner\r\nwe\r\nr\r\nwer\r\nwer"
     geo_coordination_file: company_1/applications/info_bFjajZt
+- model: company_profile.appaddarea
+  pk: 2
+  fields:
+    created_at: 2024-02-06 22:32:19.043981+00:00
+    created_by:
+    - bbb
+    updated_at: 2024-02-06 22:32:19.044229+00:00
+    updated_by:
+    - bbb
+    state: submitted
+    notify: false
+    company: 4
+    area_in_km2: 12
+    cause_for_addition: ز
+    geo_coordination_file: company_4/applications/for_upload_q0tdV9L
+- model: company_profile.appaddarea
+  pk: 3
+  fields:
+    created_at: 2024-02-06 22:32:30.839242+00:00
+    created_by:
+    - bbb
+    updated_at: 2024-02-07 05:41:34.537551+00:00
+    updated_by:
+    - admin
+    state: rejected
+    notify: false
+    company: 4
+    area_in_km2: 19
+    cause_for_addition: ا
+    geo_coordination_file: company_4/applications/for_upload_jl3o0NF
+- model: company_profile.appaddarea
+  pk: 4
+  fields:
+    created_at: 2024-02-06 22:32:42.679535+00:00
+    created_by:
+    - bbb
+    updated_at: 2024-02-07 05:41:20.555735+00:00
+    updated_by:
+    - admin
+    state: approved
+    notify: false
+    company: 4
+    area_in_km2: 20
+    cause_for_addition: ﻻ
+    geo_coordination_file: company_4/applications/for_upload_nHVsdgA
 - model: company_profile.appremovearea
   pk: 1
   fields:
@@ -3330,11 +4015,87 @@
     company: 1
     remove_type: first
     area_in_km2: 55
-    area_percent_from_total: 90
+    area_percent_from_total: 90.0
     geo_coordinator_for_removed_area_file: company_1/applications/info_2eiLI16
     geo_coordinator_for_remain_area_file: company_1/applications/info_H3n5E00
     map_for_clarification_file: company_1/applications/info_C03RLMz
     technical_report_for_removed_area_file: company_1/applications/info_dfjUt1w
+- model: company_profile.appremovearea
+  pk: 2
+  fields:
+    created_at: 2024-02-06 22:34:04.472618+00:00
+    created_by:
+    - admin
+    updated_at: 2024-02-06 22:34:04.472843+00:00
+    updated_by:
+    - admin
+    state: submitted
+    notify: false
+    company: 1
+    remove_type: second
+    area_in_km2: 22
+    area_percent_from_total: 100.0
+    geo_coordinator_for_removed_area_file: company_1/applications/for_upload
+    geo_coordinator_for_remain_area_file: company_1/applications/for_upload_vkGDqI5
+    map_for_clarification_file: company_1/applications/for_upload_aYgjpSy
+    technical_report_for_removed_area_file: company_1/applications/for_upload_fdCQdhh
+- model: company_profile.appremovearea
+  pk: 3
+  fields:
+    created_at: 2024-02-06 22:33:09.623313+00:00
+    created_by:
+    - bbb
+    updated_at: 2024-02-06 22:33:09.623510+00:00
+    updated_by:
+    - bbb
+    state: submitted
+    notify: false
+    company: 4
+    remove_type: first
+    area_in_km2: 10
+    area_percent_from_total: 1.0
+    geo_coordinator_for_removed_area_file: company_4/applications/for_upload_xJy3vPP
+    geo_coordinator_for_remain_area_file: company_4/applications/for_upload_1tJFtIV
+    map_for_clarification_file: company_4/applications/for_upload_Pev6O9q
+    technical_report_for_removed_area_file: company_4/applications/for_upload_LsIP0Tf
+- model: company_profile.appremovearea
+  pk: 4
+  fields:
+    created_at: 2024-02-06 22:35:55.308059+00:00
+    created_by:
+    - bbb
+    updated_at: 2024-02-07 07:13:54.394999+00:00
+    updated_by:
+    - admin
+    state: rejected
+    notify: false
+    company: 4
+    remove_type: second
+    area_in_km2: 5
+    area_percent_from_total: 0.5
+    geo_coordinator_for_removed_area_file: company_4/applications/for_upload_Yx4MPBM
+    geo_coordinator_for_remain_area_file: company_4/applications/for_upload_8izB5MH
+    map_for_clarification_file: company_4/applications/for_upload_NFedpxo
+    technical_report_for_removed_area_file: company_4/applications/for_upload_PfOV2cy
+- model: company_profile.appremovearea
+  pk: 5
+  fields:
+    created_at: 2024-02-06 22:36:20.676450+00:00
+    created_by:
+    - bbb
+    updated_at: 2024-02-07 07:13:40.400343+00:00
+    updated_by:
+    - admin
+    state: approved
+    notify: false
+    company: 4
+    remove_type: exceptional
+    area_in_km2: 20
+    area_percent_from_total: 2.0
+    geo_coordinator_for_removed_area_file: company_4/applications/for_upload_TYco82w
+    geo_coordinator_for_remain_area_file: company_4/applications/for_upload_Ntz3Mht
+    map_for_clarification_file: company_4/applications/for_upload_ufmiNFy
+    technical_report_for_removed_area_file: company_4/applications/for_upload_gsAwzuS
 - model: company_profile.apptnazolshraka
   pk: 1
   fields:
@@ -3352,6 +4113,57 @@
     cause_for_tnazol: rtertertert
     financial_ability_file: company_1/applications/info_Vqps2bz
     cv_file: company_1/applications/info_m5jzVRV
+- model: company_profile.apptnazolshraka
+  pk: 2
+  fields:
+    created_at: 2024-02-06 22:36:48.068677+00:00
+    created_by:
+    - bbb
+    updated_at: 2024-02-06 22:36:48.068836+00:00
+    updated_by:
+    - bbb
+    state: submitted
+    notify: false
+    company: 4
+    tnazol_type: partial
+    tnazol_for: المسرة
+    cause_for_tnazol: ش
+    financial_ability_file: company_4/applications/for_upload_Xqd1Pty
+    cv_file: company_4/applications/for_upload_a9tIFyE
+- model: company_profile.apptnazolshraka
+  pk: 3
+  fields:
+    created_at: 2024-02-06 22:37:10.575567+00:00
+    created_by:
+    - bbb
+    updated_at: 2024-02-07 07:13:19.366729+00:00
+    updated_by:
+    - admin
+    state: rejected
+    notify: false
+    company: 4
+    tnazol_type: partial
+    tnazol_for: الهدهد
+    cause_for_tnazol: ﻻ
+    financial_ability_file: company_4/applications/for_upload_N4EAFWy
+    cv_file: company_4/applications/for_upload_WtazNzt
+- model: company_profile.apptnazolshraka
+  pk: 4
+  fields:
+    created_at: 2024-02-06 22:37:40.897863+00:00
+    created_by:
+    - bbb
+    updated_at: 2024-02-07 07:13:03.698238+00:00
+    updated_by:
+    - admin
+    state: approved
+    notify: false
+    company: 4
+    tnazol_type: partial
+    tnazol_for: الذهبي
+    cause_for_tnazol: ص
+    financial_ability_file: company_4/applications/for_upload_obC8KM1
+    cv_file: company_4/applications/for_upload_DdtezG1
 - model: company_profile.apptajeeltnazol
   pk: 1
   fields:
@@ -3367,6 +4179,51 @@
     tnazol_type: first
     cause_for_tajeel: "etrter\r\nert\r\ner\r\nterter"
     cause_for_tajeel_file: company_1/applications/info_tDKS9u6
+- model: company_profile.apptajeeltnazol
+  pk: 2
+  fields:
+    created_at: 2024-02-06 22:37:52.388905+00:00
+    created_by:
+    - bbb
+    updated_at: 2024-02-06 22:37:52.389064+00:00
+    updated_by:
+    - bbb
+    state: submitted
+    notify: false
+    company: 4
+    tnazol_type: first
+    cause_for_tajeel: ص
+    cause_for_tajeel_file: company_4/applications/for_upload_10vmQu9
+- model: company_profile.apptajeeltnazol
+  pk: 3
+  fields:
+    created_at: 2024-02-06 22:38:01.969889+00:00
+    created_by:
+    - bbb
+    updated_at: 2024-02-07 07:06:53.983760+00:00
+    updated_by:
+    - admin
+    state: rejected
+    notify: false
+    company: 4
+    tnazol_type: second
+    cause_for_tajeel: ص
+    cause_for_tajeel_file: company_4/applications/for_upload_tajTCBy
+- model: company_profile.apptajeeltnazol
+  pk: 4
+  fields:
+    created_at: 2024-02-06 22:38:13.021315+00:00
+    created_by:
+    - bbb
+    updated_at: 2024-02-07 07:06:39.503271+00:00
+    updated_by:
+    - admin
+    state: approved
+    notify: false
+    company: 4
+    tnazol_type: second
+    cause_for_tajeel: صص
+    cause_for_tajeel_file: company_4/applications/for_upload_fkcVsOk
 - model: company_profile.apptajmeed
   pk: 1
   fields:
@@ -3384,6 +4241,57 @@
     cause_for_tajmeed: retertert
     cause_for_uncontrolled_force_file: company_1/applications/info_8uP7dNl
     letter_from_jeha_amnia_file: company_1/applications/info_12GqZT6
+- model: company_profile.apptajmeed
+  pk: 2
+  fields:
+    created_at: 2024-02-06 22:38:36.499196+00:00
+    created_by:
+    - bbb
+    updated_at: 2024-02-06 22:38:36.499376+00:00
+    updated_by:
+    - bbb
+    state: submitted
+    notify: false
+    company: 4
+    tajmeed_from: 2024-02-07
+    tajmeed_to: 2024-02-14
+    cause_for_tajmeed: ثضص
+    cause_for_uncontrolled_force_file: company_4/applications/for_upload_ktzb9nI
+    letter_from_jeha_amnia_file: company_4/applications/for_upload_I3Zjzng
+- model: company_profile.apptajmeed
+  pk: 3
+  fields:
+    created_at: 2024-02-06 22:38:57.378528+00:00
+    created_by:
+    - bbb
+    updated_at: 2024-02-07 07:07:27.674140+00:00
+    updated_by:
+    - admin
+    state: rejected
+    notify: false
+    company: 4
+    tajmeed_from: 2024-02-06
+    tajmeed_to: 2024-02-16
+    cause_for_tajmeed: ق
+    cause_for_uncontrolled_force_file: company_4/applications/for_upload_g9CzTte
+    letter_from_jeha_amnia_file: company_4/applications/for_upload_7FXkYh6
+- model: company_profile.apptajmeed
+  pk: 4
+  fields:
+    created_at: 2024-02-06 22:39:15.491643+00:00
+    created_by:
+    - bbb
+    updated_at: 2024-02-07 07:07:13.463630+00:00
+    updated_by:
+    - admin
+    state: approved
+    notify: false
+    company: 4
+    tajmeed_from: 2024-02-06
+    tajmeed_to: 2024-02-19
+    cause_for_tajmeed: ا
+    cause_for_uncontrolled_force_file: company_4/applications/for_upload_soOh7v1
+    letter_from_jeha_amnia_file: company_4/applications/for_upload_tNmMaEw
 - model: company_profile.apptakhali
   pk: 1
   fields:
@@ -3399,6 +4307,51 @@
     technical_presentation_date: 2024-02-07
     cause_for_takhali: "fgdfg\r\n\r\nfdgdfg\r\n\r\ndfg"
     technical_report_file: company_1/applications/info_clXTcOY
+- model: company_profile.apptakhali
+  pk: 2
+  fields:
+    created_at: 2024-02-06 22:39:35.266564+00:00
+    created_by:
+    - bbb
+    updated_at: 2024-02-06 22:39:35.266718+00:00
+    updated_by:
+    - bbb
+    state: submitted
+    notify: false
+    company: 4
+    technical_presentation_date: 2024-02-07
+    cause_for_takhali: '6'
+    technical_report_file: company_4/applications/for_upload_xaLGH5s
+- model: company_profile.apptakhali
+  pk: 3
+  fields:
+    created_at: 2024-02-06 22:39:57.591377+00:00
+    created_by:
+    - bbb
+    updated_at: 2024-02-07 07:09:11.709635+00:00
+    updated_by:
+    - admin
+    state: rejected
+    notify: false
+    company: 4
+    technical_presentation_date: 2024-02-13
+    cause_for_takhali: ؤ
+    technical_report_file: company_4/applications/for_upload_xX0fJaz
+- model: company_profile.apptakhali
+  pk: 4
+  fields:
+    created_at: 2024-02-06 22:40:09.282220+00:00
+    created_by:
+    - bbb
+    updated_at: 2024-02-07 07:08:55.728592+00:00
+    updated_by:
+    - admin
+    state: approved
+    notify: false
+    company: 4
+    technical_presentation_date: 2024-02-21
+    cause_for_takhali: ع
+    technical_report_file: company_4/applications/for_upload_InFmPE1
 - model: company_profile.apptamdeed
   pk: 1
   fields:
@@ -3416,6 +4369,57 @@
     cause_for_tamdeed: "111111113\r\n555"
     approved_work_plan_file: company_1/applications/info_cZCSoMs
     tnazol_file: company_1/applications/info_RSLIaUh
+- model: company_profile.apptamdeed
+  pk: 2
+  fields:
+    created_at: 2024-02-06 22:40:39.339653+00:00
+    created_by:
+    - bbb
+    updated_at: 2024-02-06 22:40:39.339965+00:00
+    updated_by:
+    - bbb
+    state: submitted
+    notify: false
+    company: 4
+    tamdeed_from: 2024-02-05
+    tamdeed_to: 2024-02-15
+    cause_for_tamdeed: ا
+    approved_work_plan_file: company_4/applications/for_upload_Zi8smRq
+    tnazol_file: company_4/applications/for_upload_bs9nyQc
+- model: company_profile.apptamdeed
+  pk: 3
+  fields:
+    created_at: 2024-02-06 22:41:09.439064+00:00
+    created_by:
+    - bbb
+    updated_at: 2024-02-07 07:12:44.394653+00:00
+    updated_by:
+    - admin
+    state: rejected
+    notify: false
+    company: 4
+    tamdeed_from: 2024-02-05
+    tamdeed_to: 2024-02-22
+    cause_for_tamdeed: ف
+    approved_work_plan_file: company_4/applications/for_upload_QOdOwPM
+    tnazol_file: company_4/applications/for_upload_FokXdO6
+- model: company_profile.apptamdeed
+  pk: 4
+  fields:
+    created_at: 2024-02-06 22:41:27.924243+00:00
+    created_by:
+    - bbb
+    updated_at: 2024-02-07 07:12:32.132462+00:00
+    updated_by:
+    - admin
+    state: approved
+    notify: false
+    company: 4
+    tamdeed_from: 2024-02-05
+    tamdeed_to: 2024-02-22
+    cause_for_tamdeed: ى
+    approved_work_plan_file: company_4/applications/for_upload_obF7WMi
+    tnazol_file: company_4/applications/for_upload_5vVE9rX
 - model: company_profile.apptaaweed
   pk: 1
   fields:
@@ -3431,6 +4435,51 @@
     taaweed_from: 2024-02-07
     taaweed_to: 2024-02-07
     cause_for_taaweed: "444\r\n999"
+- model: company_profile.apptaaweed
+  pk: 2
+  fields:
+    created_at: 2024-02-06 22:48:55.294573+00:00
+    created_by:
+    - bbb
+    updated_at: 2024-02-06 22:48:55.294804+00:00
+    updated_by:
+    - bbb
+    state: submitted
+    notify: false
+    company: 4
+    taaweed_from: 2024-02-07
+    taaweed_to: 2024-02-07
+    cause_for_taaweed: ff
+- model: company_profile.apptaaweed
+  pk: 3
+  fields:
+    created_at: 2024-02-06 22:49:08.339799+00:00
+    created_by:
+    - bbb
+    updated_at: 2024-02-07 07:09:49.269126+00:00
+    updated_by:
+    - admin
+    state: rejected
+    notify: false
+    company: 4
+    taaweed_from: 2024-02-04
+    taaweed_to: 2024-02-22
+    cause_for_taaweed: rr
+- model: company_profile.apptaaweed
+  pk: 4
+  fields:
+    created_at: 2024-02-06 22:49:16.304080+00:00
+    created_by:
+    - bbb
+    updated_at: 2024-02-07 07:09:36.088010+00:00
+    updated_by:
+    - admin
+    state: approved
+    notify: false
+    company: 4
+    taaweed_from: 2024-02-05
+    taaweed_to: 2024-02-22
+    cause_for_taaweed: r
 - model: company_profile.appmda
   pk: 1
   fields:
@@ -3463,6 +4512,54 @@
     mda_to: 2024-02-07
     cause_for_mda: "4444\r\n99\r\n555"
     approved_work_plan_file: company_1/applications/info_Y72rhXx
+- model: company_profile.appmda
+  pk: 3
+  fields:
+    created_at: 2024-02-07 05:09:33.921217+00:00
+    created_by:
+    - bbb
+    updated_at: 2024-02-07 05:09:33.921470+00:00
+    updated_by:
+    - bbb
+    state: submitted
+    notify: false
+    company: 4
+    mda_from: 2024-02-07
+    mda_to: 2024-02-14
+    cause_for_mda: '444'
+    approved_work_plan_file: company_4/applications/for_upload_0zqDSVX
+- model: company_profile.appmda
+  pk: 4
+  fields:
+    created_at: 2024-02-07 05:09:48.180423+00:00
+    created_by:
+    - bbb
+    updated_at: 2024-02-07 05:38:31.856273+00:00
+    updated_by:
+    - admin
+    state: rejected
+    notify: false
+    company: 4
+    mda_from: 2024-02-05
+    mda_to: 2024-02-15
+    cause_for_mda: rrr
+    approved_work_plan_file: company_4/applications/for_upload_zMMbUXj
+- model: company_profile.appmda
+  pk: 5
+  fields:
+    created_at: 2024-02-07 05:10:05.282561+00:00
+    created_by:
+    - bbb
+    updated_at: 2024-02-07 05:38:16.063020+00:00
+    updated_by:
+    - admin
+    state: approved
+    notify: false
+    company: 4
+    mda_from: 2024-02-06
+    mda_to: 2024-02-16
+    cause_for_mda: mm
+    approved_work_plan_file: company_4/applications/for_upload_V4vJKEa
 - model: company_profile.appchangeworkprocedure
   pk: 1
   fields:
@@ -3481,6 +4578,57 @@
     rational_reason: "sdfsdf\r\nsd\r\nf\r\nsdf\r\nsd\r\nfsf\r\nd"
     study_about_change_reason_file: company_1/applications/info_72bE5PG
     study_about_new_suggestion_file: company_1/applications/info_EBrQuUI
+- model: company_profile.appchangeworkprocedure
+  pk: 2
+  fields:
+    created_at: 2024-02-07 05:10:30.450984+00:00
+    created_by:
+    - bbb
+    updated_at: 2024-02-07 05:10:30.451140+00:00
+    updated_by:
+    - bbb
+    state: submitted
+    notify: false
+    company: 4
+    reason_for_change: aa
+    purpose_for_change: bbb
+    rational_reason: cc
+    study_about_change_reason_file: company_4/applications/for_upload_B6n6r7u
+    study_about_new_suggestion_file: company_4/applications/for_upload_b7tIT3O
+- model: company_profile.appchangeworkprocedure
+  pk: 3
+  fields:
+    created_at: 2024-02-07 05:10:48.809014+00:00
+    created_by:
+    - bbb
+    updated_at: 2024-02-07 07:11:18.388893+00:00
+    updated_by:
+    - admin
+    state: rejected
+    notify: false
+    company: 4
+    reason_for_change: dd
+    purpose_for_change: ee
+    rational_reason: ff
+    study_about_change_reason_file: company_4/applications/for_upload_LJTcWzS
+    study_about_new_suggestion_file: company_4/applications/for_upload_4q1FAzz
+- model: company_profile.appchangeworkprocedure
+  pk: 4
+  fields:
+    created_at: 2024-02-07 05:11:05.842245+00:00
+    created_by:
+    - bbb
+    updated_at: 2024-02-07 07:10:42.000085+00:00
+    updated_by:
+    - admin
+    state: approved
+    notify: false
+    company: 4
+    reason_for_change: gg
+    purpose_for_change: hh
+    rational_reason: ii
+    study_about_change_reason_file: company_4/applications/for_upload_y8FIpAB
+    study_about_new_suggestion_file: company_4/applications/for_upload_PCRt4R1
 - model: company_profile.appexportgold
   pk: 1
   fields:
@@ -3510,6 +4658,93 @@
     f7: company_1/applications/info_jIBQ59E
     f8: company_1/applications/info_OI2x7eo
     f9: company_1/applications/info_lwQ4JZC
+- model: company_profile.appexportgold
+  pk: 2
+  fields:
+    created_at: 2024-02-07 05:14:39.047380+00:00
+    created_by:
+    - bbb
+    updated_at: 2024-02-07 05:14:39.047543+00:00
+    updated_by:
+    - bbb
+    state: submitted
+    notify: false
+    company: 4
+    total_in_gram: 10.5
+    net_in_gram: 8.0
+    zakat_in_gram: 1.0
+    awaad_jalila_in_gram: 1.0
+    arbah_amal_in_gram: 1.0
+    sold_for_bank_of_sudan_in_gram: 2.0
+    amount_to_export_in_gram: 4.0
+    remain_in_gram: 1.0
+    f1: company_4/applications/for_upload_r9mzEyk
+    f2: company_4/applications/for_upload_mZKyIsg
+    f3: company_4/applications/for_upload_lWFiFxb
+    f4: company_4/applications/for_upload_W4RTII9
+    f5: company_4/applications/for_upload_YKZ8BjN
+    f6: company_4/applications/for_upload_kQgeeUt
+    f7: company_4/applications/for_upload_YLpUODB
+    f8: company_4/applications/for_upload_62BMFz8
+    f9: company_4/applications/for_upload_xx4ekJQ
+- model: company_profile.appexportgold
+  pk: 3
+  fields:
+    created_at: 2024-02-07 05:16:15.722520+00:00
+    created_by:
+    - bbb
+    updated_at: 2024-02-07 07:16:23.509532+00:00
+    updated_by:
+    - admin
+    state: rejected
+    notify: false
+    company: 4
+    total_in_gram: 50.0
+    net_in_gram: 30.0
+    zakat_in_gram: 10.0
+    awaad_jalila_in_gram: 10.0
+    arbah_amal_in_gram: 10.0
+    sold_for_bank_of_sudan_in_gram: 10.0
+    amount_to_export_in_gram: 10.0
+    remain_in_gram: 10.0
+    f1: company_4/applications/for_upload_mCLtMjo
+    f2: company_4/applications/for_upload_hIyYXdn
+    f3: company_4/applications/for_upload_1YaqPxe
+    f4: company_4/applications/for_upload_uTWRdh4
+    f5: company_4/applications/for_upload_Plb11U8
+    f6: company_4/applications/for_upload_NvQOLz2
+    f7: company_4/applications/for_upload_uUdxld3
+    f8: company_4/applications/for_upload_GXVWiox
+    f9: company_4/applications/for_upload_25wEaMY
+- model: company_profile.appexportgold
+  pk: 4
+  fields:
+    created_at: 2024-02-07 05:17:29.251527+00:00
+    created_by:
+    - bbb
+    updated_at: 2024-02-07 07:16:02.677403+00:00
+    updated_by:
+    - admin
+    state: approved
+    notify: false
+    company: 4
+    total_in_gram: 100.0
+    net_in_gram: 90.0
+    zakat_in_gram: 15.0
+    awaad_jalila_in_gram: 15.0
+    arbah_amal_in_gram: 15.0
+    sold_for_bank_of_sudan_in_gram: 15.0
+    amount_to_export_in_gram: 15.0
+    remain_in_gram: 15.0
+    f1: company_4/applications/for_upload_44UDiH0
+    f2: company_4/applications/for_upload_a1B2SbM
+    f3: company_4/applications/for_upload_hxL4Bye
+    f4: company_4/applications/for_upload_7yRVt6t
+    f5: company_4/applications/for_upload_1NBs6e9
+    f6: company_4/applications/for_upload_j5419n2
+    f7: company_4/applications/for_upload_tfamlXM
+    f8: company_4/applications/for_upload_DNdeoW7
+    f9: company_4/applications/for_upload_CLTKl1q
 - model: company_profile.appexportgoldraw
   pk: 1
   fields:
@@ -3538,6 +4773,90 @@
     f17: company_1/applications/info_GkGWo6T
     f18: company_1/applications/info_ICRoWNt
     f19: company_1/applications/info_Tr8VlOs
+- model: company_profile.appexportgoldraw
+  pk: 2
+  fields:
+    created_at: 2024-02-07 05:18:41.725744+00:00
+    created_by:
+    - bbb
+    updated_at: 2024-02-07 05:18:41.725978+00:00
+    updated_by:
+    - bbb
+    state: submitted
+    notify: false
+    company: 4
+    mineral: 1
+    license_type: aaa
+    amount_in_gram: 500.0
+    sale_price: 300.0
+    export_country: gggg
+    export_city: cccc
+    export_address: ffff
+    f11: company_4/applications/for_upload_DsXA4VB
+    f12: company_4/applications/for_upload_ZOwlPje
+    f13: company_4/applications/for_upload_w3CjEKo
+    f14: company_4/applications/for_upload_qgJvrV6
+    f15: company_4/applications/for_upload_o6N5ytE
+    f16: company_4/applications/for_upload_PjN863l
+    f17: company_4/applications/for_upload_lOfb3nX
+    f18: company_4/applications/for_upload_j32drKu
+    f19: company_4/applications/for_upload_7B3lK5q
+- model: company_profile.appexportgoldraw
+  pk: 3
+  fields:
+    created_at: 2024-02-07 05:20:11.642675+00:00
+    created_by:
+    - bbb
+    updated_at: 2024-02-07 07:15:27.690736+00:00
+    updated_by:
+    - admin
+    state: rejected
+    notify: false
+    company: 4
+    mineral: 1
+    license_type: qqq
+    amount_in_gram: 300.0
+    sale_price: 200.0
+    export_country: ggg
+    export_city: hhh
+    export_address: nnn
+    f11: company_4/applications/for_upload_ECpiP4f
+    f12: company_4/applications/for_upload_lFjtC0Z
+    f13: company_4/applications/for_upload_lpFoK83
+    f14: company_4/applications/for_upload_vKDq3UZ
+    f15: company_4/applications/for_upload_0lh0VOL
+    f16: company_4/applications/for_upload_9M9gEPa
+    f17: company_4/applications/for_upload_s3eXtkQ
+    f18: company_4/applications/for_upload_GBLMgcE
+    f19: company_4/applications/for_upload_7TnBwzO
+- model: company_profile.appexportgoldraw
+  pk: 4
+  fields:
+    created_at: 2024-02-07 05:21:09.264303+00:00
+    created_by:
+    - bbb
+    updated_at: 2024-02-07 07:15:06.032979+00:00
+    updated_by:
+    - admin
+    state: approved
+    notify: false
+    company: 4
+    mineral: 1
+    license_type: sss
+    amount_in_gram: 600.0
+    sale_price: 400.0
+    export_country: ttt
+    export_city: fff
+    export_address: ytry
+    f11: company_4/applications/for_upload_L8wnui9
+    f12: company_4/applications/for_upload_T6uB33u
+    f13: company_4/applications/for_upload_wGX2saf
+    f14: company_4/applications/for_upload_dcEbcdO
+    f15: company_4/applications/for_upload_AoI2dmY
+    f16: company_4/applications/for_upload_EQUM3xt
+    f17: company_4/applications/for_upload_EPaPfGZ
+    f18: company_4/applications/for_upload_jpRZwiL
+    f19: company_4/applications/for_upload_QX1HWGN
 - model: company_profile.appsendsamplesforanalysis
   pk: 1
   fields:
@@ -3595,6 +4914,63 @@
     last_analysis_report_file: company_1/applications/info_tNYTGtQ
     initial_voucher_file: company_1/applications/info_QMEH0NG
     sample_description_form_file: company_1/applications/info_KYIaia9
+- model: company_profile.appsendsamplesforanalysis
+  pk: 4
+  fields:
+    created_at: 2024-02-07 05:22:16.088321+00:00
+    created_by:
+    - bbb
+    updated_at: 2024-02-07 05:22:16.088574+00:00
+    updated_by:
+    - bbb
+    state: submitted
+    notify: false
+    company: 4
+    lab_country: fff
+    lab_city: fff
+    lab_address: ffff
+    lab_analysis_cost: 5000.0
+    last_analysis_report_file: company_4/applications/for_upload_GhqtF2g
+    initial_voucher_file: company_4/applications/for_upload_sLyDbyX
+    sample_description_form_file: company_4/applications/for_upload_HQew5Eh
+- model: company_profile.appsendsamplesforanalysis
+  pk: 5
+  fields:
+    created_at: 2024-02-07 05:23:17.319691+00:00
+    created_by:
+    - bbb
+    updated_at: 2024-02-07 05:40:11.408383+00:00
+    updated_by:
+    - admin
+    state: rejected
+    notify: false
+    company: 4
+    lab_country: ccc
+    lab_city: vvv
+    lab_address: bbbb
+    lab_analysis_cost: 3500.0
+    last_analysis_report_file: company_4/applications/for_upload_JvsX7kO
+    initial_voucher_file: company_4/applications/for_upload_vFTxalJ
+    sample_description_form_file: company_4/applications/for_upload_ojtC6ag
+- model: company_profile.appsendsamplesforanalysis
+  pk: 6
+  fields:
+    created_at: 2024-02-07 05:24:36.245027+00:00
+    created_by:
+    - bbb
+    updated_at: 2024-02-07 05:39:49.691411+00:00
+    updated_by:
+    - admin
+    state: approved
+    notify: false
+    company: 4
+    lab_country: rrrr
+    lab_city: www
+    lab_address: dddd
+    lab_analysis_cost: 6000.0
+    last_analysis_report_file: company_4/applications/for_upload_bejTJog
+    initial_voucher_file: company_4/applications/for_upload_WKMApZM
+    sample_description_form_file: company_4/applications/for_upload_rRvtFgn
 - model: company_profile.appforeignerprocedure
   pk: 1
   fields:
@@ -3639,6 +5015,72 @@
     experience_certificates_file: company_1/applications/info_hzM3wRg
     eqama_file: company_1/applications/info_ehwZvty
     dawa_file: company_1/applications/info_7OSOxEX
+- model: company_profile.appforeignerprocedure
+  pk: 3
+  fields:
+    created_at: 2024-02-07 05:25:48.668579+00:00
+    created_by:
+    - bbb
+    updated_at: 2024-02-07 05:25:48.668822+00:00
+    updated_by:
+    - bbb
+    state: submitted
+    notify: false
+    company: 4
+    procedure_type: 1
+    procedure_from: 2024-02-05
+    procedure_to: 2024-02-22
+    procedure_cause: mmmmm
+    official_letter_file: company_4/applications/for_upload_GwY0xuB
+    passport_file: company_4/applications/for_upload_Bm5V46f
+    cv_file: company_4/applications/for_upload_DL6N6OL
+    experience_certificates_file: company_4/applications/for_upload_vAxPzLu
+    eqama_file: company_4/applications/for_upload_57uwkqE
+    dawa_file: company_4/applications/for_upload_ptSQLf6
+- model: company_profile.appforeignerprocedure
+  pk: 4
+  fields:
+    created_at: 2024-02-07 05:26:36.602053+00:00
+    created_by:
+    - bbb
+    updated_at: 2024-02-07 05:39:25.287545+00:00
+    updated_by:
+    - admin
+    state: rejected
+    notify: false
+    company: 4
+    procedure_type: 3
+    procedure_from: 2024-02-06
+    procedure_to: 2024-02-22
+    procedure_cause: bbbbb
+    official_letter_file: company_4/applications/for_upload_fXr5elz
+    passport_file: company_4/applications/for_upload_J8HExVS
+    cv_file: company_4/applications/for_upload_imem3It
+    experience_certificates_file: company_4/applications/for_upload_M32bOuf
+    eqama_file: company_4/applications/for_upload_MkQW5td
+    dawa_file: company_4/applications/for_upload_MH2HONR
+- model: company_profile.appforeignerprocedure
+  pk: 5
+  fields:
+    created_at: 2024-02-07 05:27:48.381426+00:00
+    created_by:
+    - bbb
+    updated_at: 2024-02-07 05:39:05.533162+00:00
+    updated_by:
+    - admin
+    state: approved
+    notify: false
+    company: 4
+    procedure_type: 8
+    procedure_from: 2024-02-01
+    procedure_to: 2024-02-22
+    procedure_cause: mmm
+    official_letter_file: company_4/applications/for_upload_MLWd8FD
+    passport_file: company_4/applications/for_upload_KjZCbdK
+    cv_file: company_4/applications/for_upload_pVsjSqr
+    experience_certificates_file: company_4/applications/for_upload_Gy4LN7a
+    eqama_file: company_4/applications/for_upload_o40PHGn
+    dawa_file: company_4/applications/for_upload_yAEj9CT
 - model: company_profile.appaifaajomrki
   pk: 1
   fields:
@@ -3650,8 +5092,8 @@
     - admin
     state: accepted
     notify: false
-    company: 1
-    license_type: 1
+    company: 4
+    license_type: 2
     approved_requirements_list_file: company_1/applications/info_5X3rCE4
     approval_from_finance_ministry_file: company_1/applications/info_9ho8QZh
     final_voucher_file: company_1/applications/info_VK12IfS
@@ -3661,6 +5103,72 @@
     packing_certificate_file: company_1/applications/info_ns3jc1f
     specifications_file: company_1/applications/info_vr907Qe
     taba_file: company_1/applications/info_wPyDTvM
+- model: company_profile.appaifaajomrki
+  pk: 2
+  fields:
+    created_at: 2024-02-07 05:28:42.136289+00:00
+    created_by:
+    - bbb
+    updated_at: 2024-02-07 05:28:42.136515+00:00
+    updated_by:
+    - bbb
+    state: submitted
+    notify: false
+    company: 4
+    license_type: 2
+    approved_requirements_list_file: company_4/applications/for_upload_cyg92t2
+    approval_from_finance_ministry_file: company_4/applications/for_upload_6EbnNCY
+    final_voucher_file: company_4/applications/for_upload_GCiOp8z
+    shipping_policy_file: company_4/applications/for_upload_6mnRR60
+    check_certificate_file: company_4/applications/for_upload_GtgZYhb
+    origin_certificate_file: company_4/applications/for_upload_rWhMa7A
+    packing_certificate_file: company_4/applications/for_upload_zTHkmVd
+    specifications_file: company_4/applications/for_upload_fYzVgA9
+    taba_file: company_4/applications/for_upload_FoaSB6B
+- model: company_profile.appaifaajomrki
+  pk: 3
+  fields:
+    created_at: 2024-02-07 05:29:18.559354+00:00
+    created_by:
+    - bbb
+    updated_at: 2024-02-07 07:06:13.658907+00:00
+    updated_by:
+    - admin
+    state: rejected
+    notify: false
+    company: 4
+    license_type: 2
+    approved_requirements_list_file: company_4/applications/for_upload_h4TrdIH
+    approval_from_finance_ministry_file: company_4/applications/for_upload_jbgNnPl
+    final_voucher_file: company_4/applications/for_upload_ECG26zQ
+    shipping_policy_file: company_4/applications/for_upload_8DlZ92E
+    check_certificate_file: company_4/applications/for_upload_E9O7lb5
+    origin_certificate_file: company_4/applications/for_upload_MmEanA4
+    packing_certificate_file: company_4/applications/for_upload_Vxxq3ON
+    specifications_file: company_4/applications/for_upload_cimb81C
+    taba_file: company_4/applications/for_upload_66vc42t
+- model: company_profile.appaifaajomrki
+  pk: 4
+  fields:
+    created_at: 2024-02-07 05:30:29.198120+00:00
+    created_by:
+    - bbb
+    updated_at: 2024-02-07 07:05:51.090971+00:00
+    updated_by:
+    - admin
+    state: approved
+    notify: false
+    company: 4
+    license_type: 1
+    approved_requirements_list_file: company_4/applications/for_upload_PLy6eYG
+    approval_from_finance_ministry_file: company_4/applications/for_upload_c4yPgY1
+    final_voucher_file: company_4/applications/for_upload_1lx89YG
+    shipping_policy_file: company_4/applications/for_upload_tay1tOH
+    check_certificate_file: company_4/applications/for_upload_1BnKBFI
+    origin_certificate_file: company_4/applications/for_upload_c9LyDpy
+    packing_certificate_file: company_4/applications/for_upload_U7BFD1k
+    specifications_file: company_4/applications/for_upload_bDv2Yra
+    taba_file: company_4/applications/for_upload_ExWZjFq
 - model: company_profile.appreexportequipments
   pk: 1
   fields:
@@ -3678,6 +5186,57 @@
     voucher_file: company_1/applications/info_j9qFL23
     specifications_file: company_1/applications/info_JmTx8r5
     momentary_approval_file: company_1/applications/info_utsvgoB
+- model: company_profile.appreexportequipments
+  pk: 2
+  fields:
+    created_at: 2024-02-07 05:31:57.227166+00:00
+    created_by:
+    - bbb
+    updated_at: 2024-02-07 05:31:57.227486+00:00
+    updated_by:
+    - bbb
+    state: submitted
+    notify: false
+    company: 4
+    cause_for_equipments: ddd
+    shipping_policy_file: company_4/applications/for_upload_Kfdc3oS
+    voucher_file: company_4/applications/for_upload_UymDwgS
+    specifications_file: company_4/applications/for_upload_99cK9Vb
+    momentary_approval_file: company_4/applications/for_upload_DkvQ4xI
+- model: company_profile.appreexportequipments
+  pk: 3
+  fields:
+    created_at: 2024-02-07 05:32:27.435939+00:00
+    created_by:
+    - bbb
+    updated_at: 2024-02-07 05:42:21.801046+00:00
+    updated_by:
+    - admin
+    state: rejected
+    notify: false
+    company: 4
+    cause_for_equipments: ggggggg
+    shipping_policy_file: company_4/applications/for_upload_FqkQnop
+    voucher_file: company_4/applications/for_upload_a0HdbeI
+    specifications_file: company_4/applications/for_upload_ujyNb08
+    momentary_approval_file: company_4/applications/for_upload_lLseyVG
+- model: company_profile.appreexportequipments
+  pk: 4
+  fields:
+    created_at: 2024-02-07 05:32:59.366308+00:00
+    created_by:
+    - bbb
+    updated_at: 2024-02-07 05:42:03.674947+00:00
+    updated_by:
+    - admin
+    state: approved
+    notify: false
+    company: 4
+    cause_for_equipments: ccccccc
+    shipping_policy_file: company_4/applications/for_upload_ppBqbR4
+    voucher_file: company_4/applications/for_upload_ZOBl0my
+    specifications_file: company_4/applications/for_upload_7zJpUlB
+    momentary_approval_file: company_4/applications/for_upload_Agb3c6I
 - model: company_profile.apprequirementslist
   pk: 1
   fields:
@@ -3694,6 +5253,54 @@
     initial_voucher_file: company_1/applications/for_upload_m7FwYSh
     specifications_file: company_1/applications/for_upload_SSuG8TZ
     mshobat_jamarik_file: company_1/applications/for_upload_ay2fKzr
+- model: company_profile.apprequirementslist
+  pk: 2
+  fields:
+    created_at: 2024-02-07 05:34:51.836650+00:00
+    created_by:
+    - bbb
+    updated_at: 2024-02-07 05:34:51.836933+00:00
+    updated_by:
+    - bbb
+    state: submitted
+    notify: false
+    company: 4
+    approved_work_plan_file: company_4/applications/for_upload_JQ4btHl
+    initial_voucher_file: company_4/applications/for_upload_FKzcJhH
+    specifications_file: company_4/applications/for_upload_YJUZqot
+    mshobat_jamarik_file: company_4/applications/for_upload_yGjePEg
+- model: company_profile.apprequirementslist
+  pk: 3
+  fields:
+    created_at: 2024-02-07 05:35:53.873835+00:00
+    created_by:
+    - bbb
+    updated_at: 2024-02-07 07:17:16.473285+00:00
+    updated_by:
+    - admin
+    state: rejected
+    notify: false
+    company: 4
+    approved_work_plan_file: company_4/applications/for_upload_qNKlJs4
+    initial_voucher_file: company_4/applications/for_upload_SiE139p
+    specifications_file: company_4/applications/for_upload_udQcHTV
+    mshobat_jamarik_file: company_4/applications/for_upload_ayjrWY5
+- model: company_profile.apprequirementslist
+  pk: 4
+  fields:
+    created_at: 2024-02-07 05:36:50.965009+00:00
+    created_by:
+    - bbb
+    updated_at: 2024-02-07 07:16:56.809566+00:00
+    updated_by:
+    - admin
+    state: approved
+    notify: false
+    company: 4
+    approved_work_plan_file: company_4/applications/for_upload_bJJZSqM
+    initial_voucher_file: company_4/applications/for_upload_qhhLJZc
+    specifications_file: company_4/applications/for_upload_XVYpovM
+    mshobat_jamarik_file: company_4/applications/for_upload_Q5IDgdV
 - model: account.emailaddress
   pk: 1
   fields:
@@ -5924,5 +7531,1214 @@
     - appreexportequipments
     object_id: '1'
     object_repr: Reexport Equipments (1)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 172
+  fields:
+    action_time: 2024-02-06 22:12:37.369951+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - tblcompanyproductionlicense
+    object_id: '2'
+    object_repr: bbbb( 2024-02-04 )
+    action_flag: 1
+    change_message: '[{"added": {}}]'
+- model: admin.logentry
+  pk: 173
+  fields:
+    action_time: 2024-02-07 05:38:06.797088+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appmda
+    object_id: '5'
+    object_repr: MDA (5)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 174
+  fields:
+    action_time: 2024-02-07 05:38:16.067485+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appmda
+    object_id: '5'
+    object_repr: MDA (5)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 175
+  fields:
+    action_time: 2024-02-07 05:38:23.199060+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appmda
+    object_id: '4'
+    object_repr: MDA (4)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 176
+  fields:
+    action_time: 2024-02-07 05:38:31.859616+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appmda
+    object_id: '4'
+    object_repr: MDA (4)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 177
+  fields:
+    action_time: 2024-02-07 05:38:55.491789+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appforeignerprocedure
+    object_id: '5'
+    object_repr: اجراء اجنبي (5)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 178
+  fields:
+    action_time: 2024-02-07 05:39:05.537161+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appforeignerprocedure
+    object_id: '5'
+    object_repr: اجراء اجنبي (5)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 179
+  fields:
+    action_time: 2024-02-07 05:39:14.711014+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appforeignerprocedure
+    object_id: '4'
+    object_repr: اجراء اجنبي (4)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 180
+  fields:
+    action_time: 2024-02-07 05:39:25.292238+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appforeignerprocedure
+    object_id: '4'
+    object_repr: اجراء اجنبي (4)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 181
+  fields:
+    action_time: 2024-02-07 05:39:40.976811+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appsendsamplesforanalysis
+    object_id: '6'
+    object_repr: ارسال عينات للخارج للتحليل (6)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 182
+  fields:
+    action_time: 2024-02-07 05:39:49.695889+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appsendsamplesforanalysis
+    object_id: '6'
+    object_repr: ارسال عينات للخارج للتحليل (6)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 183
+  fields:
+    action_time: 2024-02-07 05:39:57.480398+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appsendsamplesforanalysis
+    object_id: '5'
+    object_repr: ارسال عينات للخارج للتحليل (5)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 184
+  fields:
+    action_time: 2024-02-07 05:40:11.414270+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appsendsamplesforanalysis
+    object_id: '5'
+    object_repr: ارسال عينات للخارج للتحليل (5)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 185
+  fields:
+    action_time: 2024-02-07 05:40:31.859368+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appborrowmaterial
+    object_id: '36'
+    object_repr: استلاف مواد (36)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 186
+  fields:
+    action_time: 2024-02-07 05:40:37.913814+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appborrowmaterial
+    object_id: '36'
+    object_repr: استلاف مواد (36)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 187
+  fields:
+    action_time: 2024-02-07 05:40:48.803743+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appborrowmaterial
+    object_id: '35'
+    object_repr: استلاف مواد (35)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 188
+  fields:
+    action_time: 2024-02-07 05:40:56.002304+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appborrowmaterial
+    object_id: '35'
+    object_repr: استلاف مواد (35)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 189
+  fields:
+    action_time: 2024-02-07 05:41:15.243526+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appaddarea
+    object_id: '4'
+    object_repr: اضافة مساحة (4)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 190
+  fields:
+    action_time: 2024-02-07 05:41:20.559162+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appaddarea
+    object_id: '4'
+    object_repr: اضافة مساحة (4)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 191
+  fields:
+    action_time: 2024-02-07 05:41:28.379524+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appaddarea
+    object_id: '3'
+    object_repr: اضافة مساحة (3)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 192
+  fields:
+    action_time: 2024-02-07 05:41:34.541445+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appaddarea
+    object_id: '3'
+    object_repr: اضافة مساحة (3)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 193
+  fields:
+    action_time: 2024-02-07 05:41:54.381690+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appreexportequipments
+    object_id: '4'
+    object_repr: اعادة صادر لاليات ومعدات (4)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 194
+  fields:
+    action_time: 2024-02-07 05:42:03.679259+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appreexportequipments
+    object_id: '4'
+    object_repr: اعادة صادر لاليات ومعدات (4)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 195
+  fields:
+    action_time: 2024-02-07 05:42:12.048869+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appreexportequipments
+    object_id: '3'
+    object_repr: اعادة صادر لاليات ومعدات (3)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 196
+  fields:
+    action_time: 2024-02-07 05:42:21.805419+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appreexportequipments
+    object_id: '3'
+    object_repr: اعادة صادر لاليات ومعدات (3)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 197
+  fields:
+    action_time: 2024-02-07 07:05:04.539128+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appexplorationtime
+    object_id: '4'
+    object_repr: مواقيت الاستكشاف (4)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 198
+  fields:
+    action_time: 2024-02-07 07:05:11.672336+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appexplorationtime
+    object_id: '4'
+    object_repr: مواقيت الاستكشاف (4)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 199
+  fields:
+    action_time: 2024-02-07 07:05:19.772799+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appexplorationtime
+    object_id: '3'
+    object_repr: مواقيت الاستكشاف (3)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 200
+  fields:
+    action_time: 2024-02-07 07:05:25.793566+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appexplorationtime
+    object_id: '3'
+    object_repr: مواقيت الاستكشاف (3)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 201
+  fields:
+    action_time: 2024-02-07 07:05:44.376805+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appaifaajomrki
+    object_id: '4'
+    object_repr: اعفاء جمركي (4)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 202
+  fields:
+    action_time: 2024-02-07 07:05:51.096851+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appaifaajomrki
+    object_id: '4'
+    object_repr: اعفاء جمركي (4)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 203
+  fields:
+    action_time: 2024-02-07 07:05:59.637549+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appaifaajomrki
+    object_id: '3'
+    object_repr: اعفاء جمركي (3)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 204
+  fields:
+    action_time: 2024-02-07 07:06:13.664489+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appaifaajomrki
+    object_id: '3'
+    object_repr: اعفاء جمركي (3)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 205
+  fields:
+    action_time: 2024-02-07 07:06:34.223541+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - apptajeeltnazol
+    object_id: '4'
+    object_repr: تأجيل التنازل (4)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 206
+  fields:
+    action_time: 2024-02-07 07:06:39.506589+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - apptajeeltnazol
+    object_id: '4'
+    object_repr: تأجيل التنازل (4)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 207
+  fields:
+    action_time: 2024-02-07 07:06:47.118104+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - apptajeeltnazol
+    object_id: '3'
+    object_repr: تأجيل التنازل (3)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 208
+  fields:
+    action_time: 2024-02-07 07:06:53.987913+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - apptajeeltnazol
+    object_id: '3'
+    object_repr: تأجيل التنازل (3)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 209
+  fields:
+    action_time: 2024-02-07 07:07:07.095428+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - apptajmeed
+    object_id: '4'
+    object_repr: تجمييد (4)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 210
+  fields:
+    action_time: 2024-02-07 07:07:13.467128+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - apptajmeed
+    object_id: '4'
+    object_repr: تجمييد (4)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 211
+  fields:
+    action_time: 2024-02-07 07:07:21.079769+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - apptajmeed
+    object_id: '3'
+    object_repr: تجمييد (3)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 212
+  fields:
+    action_time: 2024-02-07 07:07:27.678589+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - apptajmeed
+    object_id: '3'
+    object_repr: تجمييد (3)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 213
+  fields:
+    action_time: 2024-02-07 07:07:56.511254+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appforignermovement
+    object_id: '7'
+    object_repr: تحرك اجنبي (7)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 214
+  fields:
+    action_time: 2024-02-07 07:08:06.943963+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appforignermovement
+    object_id: '7'
+    object_repr: تحرك اجنبي (7)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 215
+  fields:
+    action_time: 2024-02-07 07:08:16.086380+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appforignermovement
+    object_id: '6'
+    object_repr: تحرك اجنبي (6)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 216
+  fields:
+    action_time: 2024-02-07 07:08:30.135412+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appforignermovement
+    object_id: '6'
+    object_repr: تحرك اجنبي (6)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 217
+  fields:
+    action_time: 2024-02-07 07:08:49.661750+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - apptakhali
+    object_id: '4'
+    object_repr: تخلي (4)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 218
+  fields:
+    action_time: 2024-02-07 07:08:55.732440+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - apptakhali
+    object_id: '4'
+    object_repr: تخلي (4)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 219
+  fields:
+    action_time: 2024-02-07 07:09:05.914470+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - apptakhali
+    object_id: '3'
+    object_repr: تخلي (3)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 220
+  fields:
+    action_time: 2024-02-07 07:09:11.714338+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - apptakhali
+    object_id: '3'
+    object_repr: تخلي (3)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 221
+  fields:
+    action_time: 2024-02-07 07:09:29.726876+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - apptaaweed
+    object_id: '4'
+    object_repr: تعويض (4)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 222
+  fields:
+    action_time: 2024-02-07 07:09:36.092529+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - apptaaweed
+    object_id: '4'
+    object_repr: تعويض (4)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 223
+  fields:
+    action_time: 2024-02-07 07:09:43.615624+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - apptaaweed
+    object_id: '3'
+    object_repr: تعويض (3)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 224
+  fields:
+    action_time: 2024-02-07 07:09:49.272732+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - apptaaweed
+    object_id: '3'
+    object_repr: تعويض (3)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 225
+  fields:
+    action_time: 2024-02-07 07:10:02.500682+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appchangecompanyname
+    object_id: '4'
+    object_repr: تغيير اسم شركة (4)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 226
+  fields:
+    action_time: 2024-02-07 07:10:08.330539+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appchangecompanyname
+    object_id: '4'
+    object_repr: تغيير اسم شركة (4)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 227
+  fields:
+    action_time: 2024-02-07 07:10:15.842592+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appchangecompanyname
+    object_id: '3'
+    object_repr: تغيير اسم شركة (3)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 228
+  fields:
+    action_time: 2024-02-07 07:10:22.347758+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appchangecompanyname
+    object_id: '3'
+    object_repr: تغيير اسم شركة (3)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 229
+  fields:
+    action_time: 2024-02-07 07:10:36.329802+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appchangeworkprocedure
+    object_id: '4'
+    object_repr: تغيير طريقة العمل (4)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 230
+  fields:
+    action_time: 2024-02-07 07:10:42.003252+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appchangeworkprocedure
+    object_id: '4'
+    object_repr: تغيير طريقة العمل (4)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 231
+  fields:
+    action_time: 2024-02-07 07:10:57.378715+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appchangeworkprocedure
+    object_id: '3'
+    object_repr: تغيير طريقة العمل (3)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 232
+  fields:
+    action_time: 2024-02-07 07:11:18.392518+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appchangeworkprocedure
+    object_id: '3'
+    object_repr: تغيير طريقة العمل (3)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 233
+  fields:
+    action_time: 2024-02-07 07:12:26.163530+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - apptamdeed
+    object_id: '4'
+    object_repr: تمديد (4)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 234
+  fields:
+    action_time: 2024-02-07 07:12:32.136697+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - apptamdeed
+    object_id: '4'
+    object_repr: تمديد (4)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 235
+  fields:
+    action_time: 2024-02-07 07:12:39.284658+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - apptamdeed
+    object_id: '3'
+    object_repr: تمديد (3)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 236
+  fields:
+    action_time: 2024-02-07 07:12:44.398511+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - apptamdeed
+    object_id: '3'
+    object_repr: تمديد (3)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 237
+  fields:
+    action_time: 2024-02-07 07:12:58.465109+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - apptnazolshraka
+    object_id: '4'
+    object_repr: تنازل عن شركة او اسهم   (4)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 238
+  fields:
+    action_time: 2024-02-07 07:13:03.702140+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - apptnazolshraka
+    object_id: '4'
+    object_repr: تنازل عن شركة او اسهم   (4)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 239
+  fields:
+    action_time: 2024-02-07 07:13:11.537271+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - apptnazolshraka
+    object_id: '3'
+    object_repr: تنازل عن شركة او اسهم   (3)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 240
+  fields:
+    action_time: 2024-02-07 07:13:19.369961+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - apptnazolshraka
+    object_id: '3'
+    object_repr: تنازل عن شركة او اسهم   (3)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 241
+  fields:
+    action_time: 2024-02-07 07:13:34.666003+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appremovearea
+    object_id: '5'
+    object_repr: تنازل عن مساحات (5)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 242
+  fields:
+    action_time: 2024-02-07 07:13:40.404806+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appremovearea
+    object_id: '5'
+    object_repr: تنازل عن مساحات (5)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 243
+  fields:
+    action_time: 2024-02-07 07:13:47.975704+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appremovearea
+    object_id: '4'
+    object_repr: تنازل عن مساحات (4)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 244
+  fields:
+    action_time: 2024-02-07 07:13:54.398542+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appremovearea
+    object_id: '4'
+    object_repr: تنازل عن مساحات (4)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 245
+  fields:
+    action_time: 2024-02-07 07:14:08.303717+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appworkplan
+    object_id: '10'
+    object_repr: خطة عمل (10)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 246
+  fields:
+    action_time: 2024-02-07 07:14:15.530657+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appworkplan
+    object_id: '10'
+    object_repr: خطة عمل (10)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 247
+  fields:
+    action_time: 2024-02-07 07:14:22.743920+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appworkplan
+    object_id: '9'
+    object_repr: خطة عمل (9)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 248
+  fields:
+    action_time: 2024-02-07 07:14:29.615632+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appworkplan
+    object_id: '9'
+    object_repr: خطة عمل (9)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 249
+  fields:
+    action_time: 2024-02-07 07:14:53.077916+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appexportgoldraw
+    object_id: '4'
+    object_repr: صادر ذهب (4)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 250
+  fields:
+    action_time: 2024-02-07 07:15:06.038262+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appexportgoldraw
+    object_id: '4'
+    object_repr: صادر ذهب (4)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 251
+  fields:
+    action_time: 2024-02-07 07:15:17.782554+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appexportgoldraw
+    object_id: '3'
+    object_repr: صادر ذهب (3)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 252
+  fields:
+    action_time: 2024-02-07 07:15:27.695700+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appexportgoldraw
+    object_id: '3'
+    object_repr: صادر ذهب (3)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 253
+  fields:
+    action_time: 2024-02-07 07:15:49.544515+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appexportgold
+    object_id: '4'
+    object_repr: صادر ذهب (4)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 254
+  fields:
+    action_time: 2024-02-07 07:16:02.686181+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appexportgold
+    object_id: '4'
+    object_repr: صادر ذهب (4)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 255
+  fields:
+    action_time: 2024-02-07 07:16:13.382374+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appexportgold
+    object_id: '3'
+    object_repr: صادر ذهب (3)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 256
+  fields:
+    action_time: 2024-02-07 07:16:23.516647+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appexportgold
+    object_id: '3'
+    object_repr: صادر ذهب (3)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 257
+  fields:
+    action_time: 2024-02-07 07:16:48.862854+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - apprequirementslist
+    object_id: '4'
+    object_repr: كشف احتياجات (4)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 258
+  fields:
+    action_time: 2024-02-07 07:16:56.815362+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - apprequirementslist
+    object_id: '4'
+    object_repr: كشف احتياجات (4)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 259
+  fields:
+    action_time: 2024-02-07 07:17:06.847433+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - apprequirementslist
+    object_id: '3'
+    object_repr: كشف احتياجات (3)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 260
+  fields:
+    action_time: 2024-02-07 07:17:16.477498+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - apprequirementslist
+    object_id: '3'
+    object_repr: كشف احتياجات (3)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 261
+  fields:
+    action_time: 2024-02-07 07:17:32.618855+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - apptechnicalfinancialreport
+    object_id: '4'
+    object_repr: تقرير فني ومالي (4)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 262
+  fields:
+    action_time: 2024-02-07 07:17:45.053591+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - apptechnicalfinancialreport
+    object_id: '4'
+    object_repr: تقرير فني ومالي (4)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 263
+  fields:
+    action_time: 2024-02-07 07:17:53.347349+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - apptechnicalfinancialreport
+    object_id: '3'
+    object_repr: تقرير فني ومالي (3)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 264
+  fields:
+    action_time: 2024-02-07 07:18:04.196478+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - apptechnicalfinancialreport
+    object_id: '3'
+    object_repr: تقرير فني ومالي (3)
     action_flag: 2
     change_message: '[{"changed": {"fields": ["Application_state"]}}]'
