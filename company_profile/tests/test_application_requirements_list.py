@@ -6,7 +6,7 @@ from ..models import AppRequirementsList
 from ..views import AppRequirementsListListView,AppRequirementsListReadonlyView
 
 class AppRequirementsListTests(ProCompanyTests,TestCase):
-    username = "admin"
+    #username = "admin"
 
     list_view_class = AppRequirementsListListView 
     list_template_name = 'company_profile/application_list.html'

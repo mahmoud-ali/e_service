@@ -6,7 +6,7 @@ from ..models import AppRemoveArea
 from ..views import AppRemoveAreaListView,AppRemoveAreaReadonlyView
 
 class AppRemoveAreaTests(ProCompanyTests,TestCase):
-    username = "admin"
+    #username = "admin"
 
     list_view_class = AppRemoveAreaListView 
     list_template_name = 'company_profile/application_list.html'

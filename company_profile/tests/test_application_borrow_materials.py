@@ -6,7 +6,7 @@ from ..models import AppBorrowMaterial
 from ..views import AppBorrowMaterialListView,AppBorrowMaterialReadonlyView
 
 class AppBorrowMaterialTests(ProCompanyTests,TestCase):
-    username = "admin"
+    #username = "admin"
 
     list_view_class = AppBorrowMaterialListView 
     list_template_name = 'company_profile/application_list.html'

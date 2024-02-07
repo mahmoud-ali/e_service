@@ -6,7 +6,7 @@ from ..models import AppWorkPlan
 from ..views import AppWorkPlanListView,AppWorkPlanReadonlyView
 
 class AppWorkPlanTests(ProCompanyTests,TestCase):
-    username = "admin"
+    #username = "admin"
 
     list_view_class = AppWorkPlanListView 
     list_template_name = 'company_profile/application_list.html'

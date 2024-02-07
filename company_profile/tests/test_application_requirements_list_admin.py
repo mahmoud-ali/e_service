@@ -5,7 +5,7 @@ from .pro_company_admin_tests import ProCompanyAdminTests
 from ..models import AppRequirementsList
 
 class AppRequirementsListAdminTests(ProCompanyAdminTests,TestCase):
-    username = "admin"
+    #username = "admin"
 
     change_model = AppRequirementsList
     change_data = {

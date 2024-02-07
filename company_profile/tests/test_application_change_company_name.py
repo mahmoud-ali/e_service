@@ -6,7 +6,7 @@ from ..models import AppChangeCompanyName
 from ..views import AppChangeCompanyNameListView,AppChangeCompanyNameReadonlyView
 
 class AppChangeCompanyNameTests(ProCompanyTests,TestCase):
-    username = "admin"
+    #username = "admin"
 
     list_view_class = AppChangeCompanyNameListView 
     list_template_name = 'company_profile/application_list.html'

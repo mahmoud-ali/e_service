@@ -5,7 +5,7 @@ from .pro_company_admin_tests import ProCompanyAdminTests
 from ..models import AppTakhali
 
 class AppTakhaliAdminTests(ProCompanyAdminTests,TestCase):
-    username = "admin"
+    #username = "admin"
 
     change_model = AppTakhali
     change_data = {

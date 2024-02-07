@@ -5,7 +5,7 @@ from .pro_company_admin_tests import ProCompanyAdminTests
 from ..models import AppTajmeed
 
 class AppTajmeedAdminTests(ProCompanyAdminTests,TestCase):
-    username = "admin"
+    #username = "admin"
 
     change_model = AppTajmeed
     change_data = {

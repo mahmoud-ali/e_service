@@ -12,7 +12,7 @@ from ..workflow import SUBMITTED,ACCEPTED,APPROVED,REJECTED
 class ProCompanyAdminTests():
     fixtures = ['test_data.yaml']
 
-    username = ""
+    username = "admin"
 
     admin_accepted_email_subject_contain_ar = ['تم استلام الطلب']
     admin_accepted_email_subject_contain_en = ['Application accepted']
@@ -39,10 +39,20 @@ class ProCompanyAdminTests():
 
         self.client.force_login(self.user,settings.AUTHENTICATION_BACKENDS[0])
 
-    def set_lang(self,lang):
-        self.user.lang = lang
-        self.user.save()
+    def set_lang(self,lang,user=None):
+        if user:
+            user.lang = lang
+            user.save()
+        else:
+            self.user.lang = lang
+            self.user.save()
+
         self.client.cookies.load({settings.LANGUAGE_COOKIE_NAME: lang})
+
+    def get_user(self,model):
+        User = get_user_model()        
+        user = User.objects.get(email=model.company.email)
+        return user
 
     def test_user_assigned_to_group_pro_company_application_approve(self):
         User = get_user_model()
@@ -55,6 +65,7 @@ class ProCompanyAdminTests():
         data['state'] = ACCEPTED
 
         for model in qs:
+            self.set_lang('en',user=self.get_user(model))
             data['company'] = model.company.id
             #url = admin:app_name_model_name_change
             url = reverse("admin:"+self.change_model.__module__.split('.')[0].lower()+"_"+self.change_model.__name__.lower()+"_change",args=(model.id,))
@@ -84,16 +95,16 @@ class ProCompanyAdminTests():
             #url = admin:app_name_model_name_change
             url = reverse("admin:"+self.change_model.__module__.split('.')[0].lower()+"_"+self.change_model.__name__.lower()+"_change",args=(model.id,))
             self.response = self.client.post(url, data, follow=True) 
-            self.assertIn(self.admin_accepted_email_to, mail.outbox[0].to) #email sent
+            self.assertIn(model.company.email, mail.outbox[0].to) #email sent
             mail.outbox = []
 
     def test_admin_workflow_transition_from_submitted_to_accepted_send_email_with_correct_subject_ar(self):
-        self.set_lang('ar')
         qs = self.change_model.objects.filter(state=SUBMITTED)
         data = self.change_data
         data['state'] = ACCEPTED
 
         for model in qs:
+            self.set_lang('ar',user=self.get_user(model))
             data['company'] = model.company.id
             #url = admin:app_name_model_name_change
             url = reverse("admin:"+self.change_model.__module__.split('.')[0].lower()+"_"+self.change_model.__name__.lower()+"_change",args=(model.id,))
@@ -103,12 +114,12 @@ class ProCompanyAdminTests():
             mail.outbox = []
 
     def test_admin_workflow_transition_from_submitted_to_accepted_send_email_with_correct_subject_en(self):
-        self.set_lang('en')
         qs = self.change_model.objects.filter(state=SUBMITTED)
         data = self.change_data
         data['state'] = ACCEPTED
 
         for model in qs:
+            self.set_lang('en',user=self.get_user(model))
             data['company'] = model.company.id
             #url = admin:app_name_model_name_change
             url = reverse("admin:"+self.change_model.__module__.split('.')[0].lower()+"_"+self.change_model.__name__.lower()+"_change",args=(model.id,))
@@ -118,12 +129,12 @@ class ProCompanyAdminTests():
             mail.outbox = []
 
     def test_admin_workflow_transition_from_submitted_to_accepted_send_email_with_correct_body_ar(self):
-        self.set_lang('ar')
         qs = self.change_model.objects.filter(state=SUBMITTED)
         data = self.change_data
         data['state'] = ACCEPTED
 
         for model in qs:
+            self.set_lang('ar',user=self.get_user(model))
             data['company'] = model.company.id
             #url = admin:app_name_model_name_change
             url = reverse("admin:"+self.change_model.__module__.split('.')[0].lower()+"_"+self.change_model.__name__.lower()+"_change",args=(model.id,))
@@ -136,12 +147,12 @@ class ProCompanyAdminTests():
             mail.outbox = []
 
     def test_admin_workflow_transition_from_submitted_to_accepted_send_email_with_correct_body_en(self):
-        self.set_lang('en')
         qs = self.change_model.objects.filter(state=SUBMITTED)
         data = self.change_data
         data['state'] = ACCEPTED
 
         for model in qs:
+            self.set_lang('en',user=self.get_user(model))
             data['company'] = model.company.id
             #url = admin:app_name_model_name_change
             url = reverse("admin:"+self.change_model.__module__.split('.')[0].lower()+"_"+self.change_model.__name__.lower()+"_change",args=(model.id,))
@@ -188,16 +199,16 @@ class ProCompanyAdminTests():
             #url = admin:app_name_model_name_change
             url = reverse("admin:"+self.change_model.__module__.split('.')[0].lower()+"_"+self.change_model.__name__.lower()+"_change",args=(model.id,))
             self.response = self.client.post(url, data, follow=True) 
-            self.assertIn(self.admin_approved_email_to, mail.outbox[0].to) #email sent
+            self.assertIn(self.get_user(model).email, mail.outbox[0].to) #email sent
             mail.outbox = []
 
     def test_admin_workflow_transition_from_accepted_to_approved_send_email_with_correct_subject_ar(self):
-        self.set_lang('ar')
         qs = self.change_model.objects.filter(state=ACCEPTED)
         data = self.change_data
         data['state'] = APPROVED
 
         for model in qs:
+            self.set_lang('ar',user=self.get_user(model))
             data['company'] = model.company.id
             #url = admin:app_name_model_name_change
             url = reverse("admin:"+self.change_model.__module__.split('.')[0].lower()+"_"+self.change_model.__name__.lower()+"_change",args=(model.id,))
@@ -207,12 +218,12 @@ class ProCompanyAdminTests():
             mail.outbox = []
 
     def test_admin_workflow_transition_from_accepted_to_approved_send_email_with_correct_subject_en(self):
-        self.set_lang('en')
         qs = self.change_model.objects.filter(state=ACCEPTED)
         data = self.change_data
         data['state'] = APPROVED
 
         for model in qs:
+            self.set_lang('en',user=self.get_user(model))
             data['company'] = model.company.id
             #url = admin:app_name_model_name_change
             url = reverse("admin:"+self.change_model.__module__.split('.')[0].lower()+"_"+self.change_model.__name__.lower()+"_change",args=(model.id,))
@@ -222,12 +233,12 @@ class ProCompanyAdminTests():
             mail.outbox = []
 
     def test_admin_workflow_transition_from_accepted_to_approved_send_email_with_correct_body_ar(self):
-        self.set_lang('ar')
         qs = self.change_model.objects.filter(state=ACCEPTED)
         data = self.change_data
         data['state'] = APPROVED
 
         for model in qs:
+            self.set_lang('ar',user=self.get_user(model))
             data['company'] = model.company.id
             #url = admin:app_name_model_name_change
             url = reverse("admin:"+self.change_model.__module__.split('.')[0].lower()+"_"+self.change_model.__name__.lower()+"_change",args=(model.id,))
@@ -240,12 +251,12 @@ class ProCompanyAdminTests():
             mail.outbox = []
 
     def test_admin_workflow_transition_from_accepted_to_approved_send_email_with_correct_body_en(self):
-        self.set_lang('en')
         qs = self.change_model.objects.filter(state=ACCEPTED)
         data = self.change_data
         data['state'] = APPROVED
 
         for model in qs:
+            self.set_lang('en',user=self.get_user(model))
             data['company'] = model.company.id
             #url = admin:app_name_model_name_change
             url = reverse("admin:"+self.change_model.__module__.split('.')[0].lower()+"_"+self.change_model.__name__.lower()+"_change",args=(model.id,))
@@ -263,10 +274,12 @@ class ProCompanyAdminTests():
         data['state'] = REJECTED
 
         for model in qs:
+            self.set_lang('en',user=self.get_user(model))
             data['company'] = model.company.id
             #url = admin:app_name_model_name_change
             url = reverse("admin:"+self.change_model.__module__.split('.')[0].lower()+"_"+self.change_model.__name__.lower()+"_change",args=(model.id,))
             self.response = self.client.post(url, data, follow=True) 
+#            print(self.response.content)
             self.assertNotContains(self.response, 'errorlist') #form show errors
 
     def test_admin_workflow_transition_from_accepted_to_rejected_send_email(self):
@@ -292,16 +305,16 @@ class ProCompanyAdminTests():
             #url = admin:app_name_model_name_change
             url = reverse("admin:"+self.change_model.__module__.split('.')[0].lower()+"_"+self.change_model.__name__.lower()+"_change",args=(model.id,))
             self.response = self.client.post(url, data, follow=True) 
-            self.assertIn(self.admin_rejected_email_to, mail.outbox[0].to) #email sent
+            self.assertIn(self.get_user(model).email, mail.outbox[0].to) #email sent
             mail.outbox = []
 
     def test_admin_workflow_transition_from_accepted_to_rejected_send_email_with_correct_subject_ar(self):
-        self.set_lang('ar')
         qs = self.change_model.objects.filter(state=ACCEPTED)
         data = self.change_data
         data['state'] = REJECTED
 
         for model in qs:
+            self.set_lang('ar',user=self.get_user(model))
             data['company'] = model.company.id
             #url = admin:app_name_model_name_change
             url = reverse("admin:"+self.change_model.__module__.split('.')[0].lower()+"_"+self.change_model.__name__.lower()+"_change",args=(model.id,))
@@ -311,12 +324,12 @@ class ProCompanyAdminTests():
             mail.outbox = []
 
     def test_admin_workflow_transition_from_accepted_to_rejected_send_email_with_correct_subject_en(self):
-        self.set_lang('en')
         qs = self.change_model.objects.filter(state=ACCEPTED)
         data = self.change_data
         data['state'] = REJECTED
 
         for model in qs:
+            self.set_lang('en',user=self.get_user(model))
             data['company'] = model.company.id
             #url = admin:app_name_model_name_change
             url = reverse("admin:"+self.change_model.__module__.split('.')[0].lower()+"_"+self.change_model.__name__.lower()+"_change",args=(model.id,))
@@ -326,12 +339,12 @@ class ProCompanyAdminTests():
             mail.outbox = []
 
     def test_admin_workflow_transition_from_accepted_to_rejected_send_email_with_correct_body_ar(self):
-        self.set_lang('ar')
         qs = self.change_model.objects.filter(state=ACCEPTED)
         data = self.change_data
         data['state'] = REJECTED
 
         for model in qs:
+            self.set_lang('ar',user=self.get_user(model))
             data['company'] = model.company.id
             #url = admin:app_name_model_name_change
             url = reverse("admin:"+self.change_model.__module__.split('.')[0].lower()+"_"+self.change_model.__name__.lower()+"_change",args=(model.id,))
@@ -344,12 +357,12 @@ class ProCompanyAdminTests():
             mail.outbox = []
 
     def test_admin_workflow_transition_from_accepted_to_rejected_send_email_with_correct_body_en(self):
-        self.set_lang('en')
         qs = self.change_model.objects.filter(state=ACCEPTED)
         data = self.change_data
         data['state'] = REJECTED
 
         for model in qs:
+            self.set_lang('en',user=self.get_user(model))
             data['company'] = model.company.id
             #url = admin:app_name_model_name_change
             url = reverse("admin:"+self.change_model.__module__.split('.')[0].lower()+"_"+self.change_model.__name__.lower()+"_change",args=(model.id,))

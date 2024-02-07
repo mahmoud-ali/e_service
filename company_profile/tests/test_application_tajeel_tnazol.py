@@ -6,7 +6,7 @@ from ..models import AppTajeelTnazol
 from ..views import AppTajeelTnazolListView,AppTajeelTnazolReadonlyView
 
 class AppTajeelTnazolTests(ProCompanyTests,TestCase):
-    username = "admin"
+    #username = "admin"
 
     list_view_class = AppTajeelTnazolListView 
     list_template_name = 'company_profile/application_list.html'

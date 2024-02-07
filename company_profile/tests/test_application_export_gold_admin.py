@@ -5,7 +5,7 @@ from .pro_company_admin_tests import ProCompanyAdminTests
 from ..models import AppExportGold
 
 class AppExportGoldAdminTests(ProCompanyAdminTests,TestCase):
-    username = "admin"
+    #username = "admin"
 
     change_model = AppExportGold
     change_data = {

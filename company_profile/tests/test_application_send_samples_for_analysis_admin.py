@@ -5,7 +5,7 @@ from .pro_company_admin_tests import ProCompanyAdminTests
 from ..models import AppSendSamplesForAnalysis
 
 class AppSendSamplesForAnalysisAdminTests(ProCompanyAdminTests,TestCase):
-    username = "admin"
+    #username = "admin"
 
     change_model = AppSendSamplesForAnalysis
     change_data = {

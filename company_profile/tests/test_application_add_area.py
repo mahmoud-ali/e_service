@@ -6,7 +6,7 @@ from ..models import AppAddArea
 from ..views import AppAddAreaListView,AppAddAreaReadonlyView
 
 class AppAddAreaTests(ProCompanyTests,TestCase):
-    username = "admin"
+    #username = "bbb"
 
     list_view_class = AppAddAreaListView 
     list_template_name = 'company_profile/application_list.html'

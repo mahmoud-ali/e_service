@@ -6,7 +6,7 @@ from ..models import AppForignerMovement
 from ..views import AppForignerMovementListView,AppForignerMovementReadonlyView
 
 class AppMovementTests(ProCompanyTests,TestCase):
-    username = "admin"
+    #username = "admin"
 
     list_view_class = AppForignerMovementListView 
     list_template_name = 'company_profile/application_list.html'
@@ -16,7 +16,7 @@ class AppMovementTests(ProCompanyTests,TestCase):
     list_html_contain_ar = ['قائمة طلبات حركة الاجانب']
     list_html_contain_en = ['List of foreigner movements']
 
-    show_view_class = AppForignerMovementListView
+    show_view_class = AppForignerMovementReadonlyView
     show_template_name = 'company_profile/application_readonly.html'
     show_url_name = 'profile:app_foreigner_show'
     show_url_path = '/app_foreigner/%d/show/'

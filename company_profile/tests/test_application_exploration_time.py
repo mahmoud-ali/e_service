@@ -6,7 +6,7 @@ from ..models import AppExplorationTime
 from ..views import AppExplorationTimeListView,AppExplorationTimeReadonlyView
 
 class AppExplorationTimeTests(ProCompanyTests,TestCase):
-    username = "admin"
+    #username = "admin"
 
     list_view_class = AppExplorationTimeListView 
     list_template_name = 'company_profile/application_list.html'

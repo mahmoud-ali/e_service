@@ -8,7 +8,7 @@ from ..views import HomePageView
 
 class HomePageTests(TestCase):
     language = "en"
-    username = "admin"
+    username = "bbb"
 
     view_class = HomePageView
     template_name = 'company_profile/home.html'

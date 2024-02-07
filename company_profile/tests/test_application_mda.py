@@ -6,7 +6,7 @@ from ..models import AppMda
 from ..views import AppMdaListView,AppMdaReadonlyView
 
 class AppMdaTests(ProCompanyTests,TestCase):
-    username = "admin"
+    #username = "admin"
 
     list_view_class = AppMdaListView 
     list_template_name = 'company_profile/application_list.html'

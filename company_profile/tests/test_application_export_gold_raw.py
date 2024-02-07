@@ -6,7 +6,7 @@ from ..models import AppExportGoldRaw
 from ..views import AppExportGoldRawListView,AppExportGoldRawReadonlyView
 
 class AppExportGoldRawTests(ProCompanyTests,TestCase):
-    username = "admin"
+    #username = "admin"
 
     list_view_class = AppExportGoldRawListView 
     list_template_name = 'company_profile/application_list.html'

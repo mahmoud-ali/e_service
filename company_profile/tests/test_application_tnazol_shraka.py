@@ -6,7 +6,7 @@ from ..models import AppTnazolShraka
 from ..views import AppTnazolShrakaListView,AppTnazolShrakaReadonlyView
 
 class AppTnazolShrakaTests(ProCompanyTests,TestCase):
-    username = "admin"
+    #username = "admin"
 
     list_view_class = AppTnazolShrakaListView 
     list_template_name = 'company_profile/application_list.html'

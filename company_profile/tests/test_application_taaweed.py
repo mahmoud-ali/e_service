@@ -6,7 +6,7 @@ from ..models import AppTaaweed
 from ..views import AppTaaweedListView,AppTaaweedReadonlyView
 
 class AppTaaweedTests(ProCompanyTests,TestCase):
-    username = "admin"
+    #username = "admin"
 
     list_view_class = AppTaaweedListView 
     list_template_name = 'company_profile/application_list.html'

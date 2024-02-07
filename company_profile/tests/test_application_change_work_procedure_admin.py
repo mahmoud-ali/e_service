@@ -5,7 +5,7 @@ from .pro_company_admin_tests import ProCompanyAdminTests
 from ..models import AppChangeWorkProcedure
 
 class AppChangeWorkProcedureAdminTests(ProCompanyAdminTests,TestCase):
-    username = "admin"
+    #username = "admin"
 
     change_model = AppChangeWorkProcedure
     change_data = {

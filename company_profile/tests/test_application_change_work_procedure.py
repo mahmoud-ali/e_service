@@ -6,7 +6,7 @@ from ..models import AppChangeWorkProcedure
 from ..views import AppChangeWorkProcedureListView,AppChangeWorkProcedureReadonlyView
 
 class AppChangeWorkProcedureTests(ProCompanyTests,TestCase):
-    username = "admin"
+    #username = "admin"
 
     list_view_class = AppChangeWorkProcedureListView 
     list_template_name = 'company_profile/application_list.html'

@@ -15,7 +15,7 @@ from ..workflow import get_sumitted_responsible,SUBMITTED,ACCEPTED,APPROVED,REJE
 class ProCompanyTests():
     fixtures = ['test_data.yaml']
 
-    username = ""
+    username = "bbb"
 
     list_view_class = None 
     list_template_name = ''
@@ -25,7 +25,7 @@ class ProCompanyTests():
     list_html_contain_ar = []
     list_html_contain_en = []
 
-#    show_view_class = None
+    show_view_class = None
     show_template_name = ''
     show_url_name = ''
 #    show_url_path = ''
@@ -55,9 +55,14 @@ class ProCompanyTests():
 
         self.add_email_to = get_sumitted_responsible('pro_company').email
 
-    def set_lang(self,lang):
-        self.user.lang = lang
-        self.user.save()
+    def set_lang(self,lang,user=None):
+        if user:
+            user.lang = lang
+            user.save()
+        else:
+            self.user.lang = lang
+            self.user.save()
+
         self.client.cookies.load({settings.LANGUAGE_COOKIE_NAME: lang})
 
     def test_view_list_status_code(self):
@@ -75,11 +80,21 @@ class ProCompanyTests():
         url = reverse(self.list_url_name)
         self.response = self.client.get(url)
         lst = self.response.context[self.list_context_object_name]
-
+        self.assertGreaterEqual(len(lst),1) #no data for test #no data for test
         for model in lst:
             url = reverse(self.show_url_name, args=(model.id,))
             self.response = self.client.get(url)
             self.assertEqual(self.response.status_code, 200)
+
+    def test_view_list_view_used(self):
+        url = reverse(self.list_url_name)
+        self.response = self.client.get(url)
+        self.assertIs(self.response.resolver_match.func.view_class, self.list_view_class)
+
+    def test_view_show_view_used(self):
+        url = reverse(self.show_url_name, args=(999,))
+        self.response = self.client.get(url)
+        self.assertIs(self.response.resolver_match.func.view_class, self.show_view_class)
 
     def test_view_list_template_used(self):
         url = reverse(self.list_url_name)
@@ -96,6 +111,7 @@ class ProCompanyTests():
         url = reverse(self.list_url_name)
         self.response = self.client.get(url)
         lst = self.response.context[self.list_context_object_name]
+        self.assertGreaterEqual(len(lst),1) #no data for test
 
         for model in lst:
             url = reverse(self.show_url_name, args=(model.id,))
@@ -103,7 +119,9 @@ class ProCompanyTests():
             self.assertTemplateUsed(self.response, self.show_template_name)
 
     def test_view_list_contain_array_of_text_en(self):
-        self.set_lang('en')
+        resp_user = get_sumitted_responsible('pro_company')
+        self.set_lang('en',user=resp_user)
+
         url = reverse(self.list_url_name)
         self.response = self.client.get(url)
         lst = self.response.context[self.list_context_object_name]
@@ -111,7 +129,9 @@ class ProCompanyTests():
             self.assertContains(self.response, c)
 
     def test_view_list_contain_array_of_text_ar(self):
-        self.set_lang('ar')
+        resp_user = get_sumitted_responsible('pro_company')
+        self.set_lang('ar',user=resp_user)
+
         url = reverse(self.list_url_name)
         self.response = self.client.get(url)
         lst = self.response.context[self.list_context_object_name]
@@ -120,24 +140,31 @@ class ProCompanyTests():
 
 
     def test_view_add_contain_array_of_text_ar(self):
-        self.set_lang('ar')
+        resp_user = get_sumitted_responsible('pro_company')
+        self.set_lang('ar',user=resp_user)
+
         url = reverse(self.add_url_name)
         self.response = self.client.get(url)
         for c in self.add_html_contain_ar:
             self.assertContains(self.response, c)
 
     def test_view_add_contain_array_of_text_en(self):
-        self.set_lang('en')
+        resp_user = get_sumitted_responsible('pro_company')
+        self.set_lang('en',user=resp_user)
+
         url = reverse(self.add_url_name)
         self.response = self.client.get(url)
         for c in self.add_html_contain_en:
             self.assertContains(self.response, c)
 
     def test_view_show_contain_array_of_text_ar(self):
-        self.set_lang('ar')
+        resp_user = get_sumitted_responsible('pro_company')
+        self.set_lang('ar',user=resp_user)
+
         url = reverse(self.list_url_name)
         self.response = self.client.get(url)
         lst = self.response.context[self.list_context_object_name]
+        self.assertGreaterEqual(len(lst),1) #no data for test
 
         for model in lst:
             url = reverse(self.show_url_name, args=(model.id,))
@@ -146,10 +173,13 @@ class ProCompanyTests():
                 self.assertContains(self.response, c)
 
     def test_view_show_contain_array_of_text_en(self):
-        self.set_lang('en')
+        resp_user = get_sumitted_responsible('pro_company')
+        self.set_lang('en',user=resp_user)
+
         url = reverse(self.list_url_name)
         self.response = self.client.get(url)
         lst = self.response.context[self.list_context_object_name]
+        self.assertGreaterEqual(len(lst),1) #no data for test
 
         for model in lst:
             url = reverse(self.show_url_name, args=(model.id,))
@@ -171,8 +201,10 @@ class ProCompanyTests():
         self.assertTrue(hasattr(model._meta,'ordering')) #model should implement Meta.ordering
 
         old_model_id = None
-        models = self.add_model.objects.all()[:20]
-        for model in models:
+        lst = self.add_model.objects.all()[:20]
+        self.assertGreaterEqual(len(lst),1) #no data for test
+
+        for model in lst:
             if old_model_id:
                 self.assertTrue(old_model_id>model.id)
             old_model_id = model.id
@@ -180,50 +212,54 @@ class ProCompanyTests():
     def test_view_list_only_submitted_and_acceped_states_listed_in_progress_tab(self):
         url = reverse(self.list_url_name)
         self.response = self.client.get(url)
-
         lst = self.response.context[self.list_context_object_name]
+        self.assertGreaterEqual(len(lst),1) #no data for test
+
         for model in lst:
             self.assertIn(model.state, [SUBMITTED,ACCEPTED])
 
     def test_view_list_company_field_match_company_in_user_session_in_progress_tab(self):
         url = reverse(self.list_url_name)
         self.response = self.client.get(url)
-
         lst = self.response.context[self.list_context_object_name]
+        self.assertGreaterEqual(len(lst),1) #no data for test
+
         for model in lst:
             self.assertEqual(model.company,self.user.pro_company.company)
 
     def test_view_list_only_approved_states_listed_in_approved_tab(self):
         url = reverse(self.list_url_name,args=(2,))
         self.response = self.client.get(url)
-
         lst = self.response.context[self.list_context_object_name]
+        self.assertGreaterEqual(len(lst),1) #no data for test
+
         for model in lst:
             self.assertEqual(model.state, APPROVED)
 
     def test_view_list_company_field_match_company_in_user_session_in_approved_tab(self):
         url = reverse(self.list_url_name,args=(2,))
         self.response = self.client.get(url)
-
         lst = self.response.context[self.list_context_object_name]
+        self.assertGreaterEqual(len(lst),1) #no data for test
+
         for model in lst:
             self.assertEqual(model.company,self.user.pro_company.company)
 
     def test_view_list_only_rejected_states_listed_in_rejected_tab(self):
         url = reverse(self.list_url_name,args=(3,))
         self.response = self.client.get(url)
-        # print(help(self.client.request))
-
         lst = self.response.context[self.list_context_object_name]
+        self.assertGreaterEqual(len(lst),1) #no data for test
+
         for model in lst:
             self.assertEqual(model.state, REJECTED)
 
     def test_view_list_company_field_match_company_in_user_session_in_rejected_tab(self):
         url = reverse(self.list_url_name,args=(3,))
         self.response = self.client.get(url)
-        # print(help(self.client.request))
-
         lst = self.response.context[self.list_context_object_name]
+        self.assertGreaterEqual(len(lst),1) #no data for test
+
         for model in lst:
             self.assertEqual(model.company,self.user.pro_company.company)
 
@@ -234,8 +270,9 @@ class ProCompanyTests():
         view = self.list_view_class()
         view.setup(request)
         view.dispatch(request)
-
         lst = view.get_queryset().all()
+        self.assertGreaterEqual(len(lst),1) #no data for test
+
         for model in lst:
             self.assertIn(model.state, [SUBMITTED,ACCEPTED])
 
@@ -245,7 +282,9 @@ class ProCompanyTests():
         self.assertGreaterEqual(count,1)
 
     def test_view_add_post_valid_data_not_raise_errors(self):
-        self.set_lang('en')
+        resp_user = get_sumitted_responsible('pro_company')
+        self.set_lang('en',user=resp_user)
+
         attachments = {}
         data = self.add_data
         for k in self.add_file_data:
@@ -308,7 +347,9 @@ class ProCompanyTests():
             attachments[k].close()
 
     def test_view_add_post_valid_data_send_email_with_correct_subject_ar(self):
-        self.set_lang('ar')
+        resp_user = get_sumitted_responsible('pro_company')
+        self.set_lang('ar',user=resp_user)
+
         attachments = {}
         data = self.add_data
         for k in self.add_file_data:
@@ -325,7 +366,9 @@ class ProCompanyTests():
             attachments[k].close()
 
     def test_view_add_post_valid_data_send_email_with_correct_subject_en(self):
-        self.set_lang('en')
+        resp_user = get_sumitted_responsible('pro_company')
+        self.set_lang('en',user=resp_user)
+
         attachments = {}
         data = self.add_data
         for k in self.add_file_data:
@@ -342,7 +385,9 @@ class ProCompanyTests():
             attachments[k].close()
 
     def test_view_add_post_valid_data_send_email_with_correct_body_ar(self):
-        self.set_lang('ar')
+        resp_user = get_sumitted_responsible('pro_company')
+        self.set_lang('ar',user=resp_user)
+
         attachments = {}
         data = self.add_data
         for k in self.add_file_data:
@@ -363,7 +408,8 @@ class ProCompanyTests():
             attachments[k].close()
 
     def test_view_add_post_valid_data_send_email_with_correct_body_en(self):
-        self.set_lang('en')
+        resp_user = get_sumitted_responsible('pro_company')
+        self.set_lang('en',user=resp_user)
         attachments = {}
         data = self.add_data
         for k in self.add_file_data:

@@ -6,7 +6,7 @@ from ..models import AppAifaaJomrki
 from ..views import AppAifaaJomrkiListView,AppAifaaJomrkiReadonlyView
 
 class AppAifaaJomrkiTests(ProCompanyTests,TestCase):
-    username = "admin"
+    #username = "admin"
 
     list_view_class = AppAifaaJomrkiListView 
     list_template_name = 'company_profile/application_list.html'
@@ -31,7 +31,7 @@ class AppAifaaJomrkiTests(ProCompanyTests,TestCase):
 
     add_model = AppAifaaJomrki
     add_data = {
-            'license_type':1,
+            'license_type':2,
             'appaifaajomrkidetail_set-TOTAL_FORMS':1,
             'appaifaajomrkidetail_set-INITIAL_FORMS':0,
             'appaifaajomrkidetail_set-MIN_NUM_FORMS':1,

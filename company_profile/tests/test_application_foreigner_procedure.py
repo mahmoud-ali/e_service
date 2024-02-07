@@ -6,7 +6,7 @@ from ..models import AppForeignerProcedure
 from ..views import AppForeignerProcedureListView,AppForeignerProcedureReadonlyView
 
 class AppForeignerProcedureTests(ProCompanyTests,TestCase):
-    username = "admin"
+    #username = "admin"
 
     list_view_class = AppForeignerProcedureListView 
     list_template_name = 'company_profile/application_list.html'

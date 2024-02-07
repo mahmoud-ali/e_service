@@ -6,7 +6,7 @@ from ..models import AppTakhali
 from ..views import AppTakhaliListView,AppTakhaliReadonlyView
 
 class AppTakhaliTests(ProCompanyTests,TestCase):
-    username = "admin"
+    #username = "admin"
 
     list_view_class = AppTakhaliListView 
     list_template_name = 'company_profile/application_list.html'

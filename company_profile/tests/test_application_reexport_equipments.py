@@ -6,7 +6,7 @@ from ..models import AppReexportEquipments
 from ..views import AppReexportEquipmentsListView,AppReexportEquipmentsReadonlyView
 
 class AppReexportEquipmentsTests(ProCompanyTests,TestCase):
-    username = "admin"
+    #username = "admin"
 
     list_view_class = AppReexportEquipmentsListView 
     list_template_name = 'company_profile/application_list.html'

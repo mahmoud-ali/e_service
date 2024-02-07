@@ -6,7 +6,7 @@ from ..models import AppSendSamplesForAnalysis
 from ..views import AppSendSamplesForAnalysisListView,AppSendSamplesForAnalysisReadonlyView
 
 class AppSendSamplesForAnalysisTests(ProCompanyTests,TestCase):
-    username = "admin"
+    #username = "admin"
 
     list_view_class = AppSendSamplesForAnalysisListView 
     list_template_name = 'company_profile/application_list.html'

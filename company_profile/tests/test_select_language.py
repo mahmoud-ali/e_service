@@ -8,7 +8,7 @@ from django.contrib.auth import get_user_model
 
 class HomePageTests(TestCase):
     language = "en"
-    username = "admin"
+    username = "bbb"
 
     #view_class = SetLanguageView
     url_name = 'profile:set_lang'

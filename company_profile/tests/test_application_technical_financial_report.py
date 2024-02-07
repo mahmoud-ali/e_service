@@ -6,7 +6,7 @@ from ..models import AppTechnicalFinancialReport
 from ..views import AppTechnicalFinancialReportListView,AppTechnicalFinancialReportReadonlyView
 
 class AppTechnicalFinancialReportTests(ProCompanyTests,TestCase):
-    username = "admin"
+    #username = "admin"
 
     list_view_class = AppTechnicalFinancialReportListView 
     list_template_name = 'company_profile/application_list.html'

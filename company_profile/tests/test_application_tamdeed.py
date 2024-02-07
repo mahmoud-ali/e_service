@@ -6,7 +6,7 @@ from ..models import AppTamdeed
 from ..views import AppTamdeedListView,AppTamdeedReadonlyView
 
 class AppTamdeedTests(ProCompanyTests,TestCase):
-    username = "admin"
+    #username = "admin"
 
     list_view_class = AppTamdeedListView 
     list_template_name = 'company_profile/application_list.html'

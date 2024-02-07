@@ -6,7 +6,7 @@ from ..models import AppTajmeed
 from ..views import AppTajmeedListView,AppTajmeedReadonlyView
 
 class AppTajmeedTests(ProCompanyTests,TestCase):
-    username = "admin"
+    #username = "admin"
 
     list_view_class = AppTajmeedListView 
     list_template_name = 'company_profile/application_list.html'

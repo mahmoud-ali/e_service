@@ -5,7 +5,7 @@ from .pro_company_admin_tests import ProCompanyAdminTests
 from ..models import AppForignerMovement
 
 class AppMovementAdminTests(ProCompanyAdminTests,TestCase):
-    username = "admin"
+    #username = "admin"
 
     admin_accepted_email_subject_contain_ar = ['تم استلام الطلب']
     admin_accepted_email_subject_contain_en = ['Application accepted']

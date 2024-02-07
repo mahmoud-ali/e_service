@@ -5,7 +5,7 @@ from .pro_company_admin_tests import ProCompanyAdminTests
 from ..models import AppTechnicalFinancialReport
 
 class AppTechnicalFinancialReportAdminTests(ProCompanyAdminTests,TestCase):
-    username = "admin"
+    #username = "admin"
 
     change_model = AppTechnicalFinancialReport
     change_data = {
