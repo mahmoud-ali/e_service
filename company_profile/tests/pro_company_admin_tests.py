@@ -5,6 +5,7 @@ from django.core import mail
 from django.template.loader import render_to_string
 
 from django.contrib.auth import get_user_model
+from django.contrib.sites.models import Site
 
 from ..workflow import SUBMITTED,ACCEPTED,APPROVED,REJECTED
 
@@ -130,7 +131,7 @@ class ProCompanyAdminTests():
             url = reverse("admin:"+self.change_model.__module__.split('.')[0].lower()+"_"+self.change_model.__name__.lower()+"_change",args=(model.id,))
             self.response = self.client.post(url, data, follow=True) 
 
-            email_url = settings.BASE_URL+model.get_absolute_url()
+            email_url = 'https://'+Site.objects.get_current().domain+model.get_absolute_url()
             messsage = render_to_string(self.admin_accepted_email_body_template_ar,{'url':email_url})
 
             self.assertEqual(messsage, mail.outbox[0].body) #correct email body
@@ -148,7 +149,7 @@ class ProCompanyAdminTests():
             url = reverse("admin:"+self.change_model.__module__.split('.')[0].lower()+"_"+self.change_model.__name__.lower()+"_change",args=(model.id,))
             self.response = self.client.post(url, data, follow=True) 
 
-            email_url = settings.BASE_URL+model.get_absolute_url()
+            email_url = 'https://'+Site.objects.get_current().domain+model.get_absolute_url()
             messsage = render_to_string(self.admin_accepted_email_body_template_en,{'url':email_url})
 
             self.assertEqual(messsage, mail.outbox[0].body) #correct email body
@@ -234,7 +235,7 @@ class ProCompanyAdminTests():
             url = reverse("admin:"+self.change_model.__module__.split('.')[0].lower()+"_"+self.change_model.__name__.lower()+"_change",args=(model.id,))
             self.response = self.client.post(url, data, follow=True) 
 
-            email_url = settings.BASE_URL+model.get_absolute_url()
+            email_url = 'https://'+Site.objects.get_current().domain+model.get_absolute_url()
             messsage = render_to_string(self.admin_approved_email_body_template_ar,{'url':email_url})
 
             self.assertEqual(messsage, mail.outbox[0].body) #correct email body
@@ -252,7 +253,7 @@ class ProCompanyAdminTests():
             url = reverse("admin:"+self.change_model.__module__.split('.')[0].lower()+"_"+self.change_model.__name__.lower()+"_change",args=(model.id,))
             self.response = self.client.post(url, data, follow=True) 
 
-            email_url = settings.BASE_URL+model.get_absolute_url()
+            email_url = 'https://'+Site.objects.get_current().domain+model.get_absolute_url()
             messsage = render_to_string(self.admin_approved_email_body_template_en,{'url':email_url})
 
             self.assertEqual(messsage, mail.outbox[0].body) #correct email body
@@ -338,7 +339,7 @@ class ProCompanyAdminTests():
             url = reverse("admin:"+self.change_model.__module__.split('.')[0].lower()+"_"+self.change_model.__name__.lower()+"_change",args=(model.id,))
             self.response = self.client.post(url, data, follow=True) 
 
-            email_url = settings.BASE_URL+model.get_absolute_url()
+            email_url = 'https://'+Site.objects.get_current().domain+model.get_absolute_url()
             messsage = render_to_string(self.admin_rejected_email_body_template_ar,{'url':email_url})
 
             self.assertEqual(messsage, mail.outbox[0].body) #correct email body
@@ -356,7 +357,7 @@ class ProCompanyAdminTests():
             url = reverse("admin:"+self.change_model.__module__.split('.')[0].lower()+"_"+self.change_model.__name__.lower()+"_change",args=(model.id,))
             self.response = self.client.post(url, data, follow=True) 
 
-            email_url = settings.BASE_URL+model.get_absolute_url()
+            email_url = 'https://'+Site.objects.get_current().domain+model.get_absolute_url()
             messsage = render_to_string(self.admin_rejected_email_body_template_en,{'url':email_url})
 
             self.assertEqual(messsage, mail.outbox[0].body) #correct email body

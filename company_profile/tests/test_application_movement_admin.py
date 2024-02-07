@@ -1,4 +1,5 @@
 from django.test import TestCase
+
 from .pro_company_admin_tests import ProCompanyAdminTests
 
 from ..models import AppForignerMovement

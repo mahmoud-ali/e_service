@@ -8,6 +8,7 @@ from django.core import mail
 from django.template.loader import render_to_string
 
 from django.contrib.auth import get_user_model
+from django.contrib.sites.models import Site
 
 from ..workflow import get_sumitted_responsible,SUBMITTED,ACCEPTED,APPROVED,REJECTED
 
@@ -24,16 +25,16 @@ class ProCompanyTests():
     list_html_contain_ar = []
     list_html_contain_en = []
 
-    show_view_class = None
+#    show_view_class = None
     show_template_name = ''
     show_url_name = ''
-    show_url_path = ''
+#    show_url_path = ''
     show_html_contain_ar = []
     show_html_contain_en = []
 
     add_template_name = ''
     add_url_name = ''
-    add_url_path = ''
+#    add_url_path = ''
     add_html_contain_ar = []
     add_html_contain_en = []
 
@@ -164,6 +165,17 @@ class ProCompanyTests():
         model = self.add_model.objects.first()
         url = reverse(self.show_url_name, args=(model.id,))
         self.assertEqual(url, model.get_absolute_url()) #get_absolute_url referance show page
+
+    def test_model_ordered_descending(self):
+        model = self.add_model.objects.first()
+        self.assertTrue(hasattr(model._meta,'ordering')) #model should implement Meta.ordering
+
+        old_model_id = None
+        models = self.add_model.objects.all()[:20]
+        for model in models:
+            if old_model_id:
+                self.assertTrue(old_model_id>model.id)
+            old_model_id = model.id
 
     def test_view_list_only_submitted_and_acceped_states_listed_in_progress_tab(self):
         url = reverse(self.list_url_name)
@@ -340,9 +352,9 @@ class ProCompanyTests():
         url = reverse(self.add_url_name)
         self.response = self.client.post(url, data, follow=True)
 
-        change_model = self.add_model.objects.last()
+        change_model = self.add_model.objects.order_by("-id").first()
         info = (change_model._meta.app_label, change_model._meta.model_name)
-        admin_url = settings.BASE_URL+reverse('admin:%s_%s_change' % info, args=(change_model.id,))
+        admin_url = 'https://'+Site.objects.get_current().domain+reverse('admin:%s_%s_change' % info, args=(change_model.id,))
         messsage = render_to_string(self.add_email_body_template_ar,{'url':admin_url})
 
         self.assertEqual(messsage, mail.outbox[0].body) #correct email body
@@ -361,9 +373,9 @@ class ProCompanyTests():
         url = reverse(self.add_url_name)
         self.response = self.client.post(url, data, follow=True)
 
-        change_model = self.add_model.objects.last()
+        change_model = self.add_model.objects.order_by("-id").first()
         info = (change_model._meta.app_label, change_model._meta.model_name)
-        admin_url = settings.BASE_URL+reverse('admin:%s_%s_change' % info, args=(change_model.id,))
+        admin_url = 'https://'+Site.objects.get_current().domain+reverse('admin:%s_%s_change' % info, args=(change_model.id,))
         messsage = render_to_string(self.add_email_body_template_en,{'url':admin_url})
 
         self.assertEqual(messsage, mail.outbox[0].body) #correct email body
