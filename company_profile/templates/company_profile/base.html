@@ -66,7 +66,6 @@ $(document).ready(function(){
             <li><a href="{% url 'account_change_password'%}">{% translate "Change password" %}</a></li>
             <li><a href="{% url 'account_logout' %}">{% translate "Log Out" %}</a></li>
           </ul>
-		{% endif %}
 		  
 		<form  class="navbar-form {% if request.LANGUAGE_CODE == 'ar' %} navbar-left {% else %} navbar-right {% endif %}" action="{% url 'profile:set_lang' %}" method="post">
 			{% csrf_token %}
@@ -81,6 +80,8 @@ $(document).ready(function(){
 			{% endfor %}
 			</select>
 		</form>
+
+		{% endif %}
 
         </div>
       </div>
