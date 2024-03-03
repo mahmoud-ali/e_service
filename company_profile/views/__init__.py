@@ -92,7 +92,7 @@ class HomePageView(LoginRequiredMixin,TemplateView):
         return super().dispatch(*args, **kwargs)    
 
     def get(self, request, *args, **kwargs):
-        if not request.LANGUAGE_CODE:
+        if not request.COOKIES.get(settings.LANGUAGE_COOKIE_NAME):
             translation.activate(request.user.lang)
             response = HttpResponseRedirect(reverse_lazy("profile:home"))
             response.set_cookie(settings.LANGUAGE_COOKIE_NAME,request.user.lang)
