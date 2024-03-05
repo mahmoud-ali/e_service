@@ -13,8 +13,11 @@
 <script>
 $(document).ready(function(){
 	$('form :input').attr('readonly','readonly');
-	var f = $('div.bootstrap3-multi-input a').attr("href");
-	$('div.bootstrap3-multi-input').html('<a target="_blank" href="'+f+'">'+f+'</a>');
+    $('div.bootstrap3-multi-input').find("a").each(function(i,e){
+        var a = '<a target="_blank" href="/media/'+$(e).text()+'">'+$(e).text()+'</a>'
+        $(e).parent().html(a)
+
+    });
 });
 </script>
 {% endblock content %}

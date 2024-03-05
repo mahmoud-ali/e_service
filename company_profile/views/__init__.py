@@ -217,6 +217,8 @@ class AppBorrowMaterialCreateView(ApplicationMasterDetailCreateView):
             
             self.object.company = request.user.pro_company.company
             self.object.created_by = self.object.updated_by = request.user
+            self.object.borrow_materials_list_file = self.request.FILES["borrow_materials_list_file"]
+            self.object.borrow_from_approval_file = self.request.FILES["borrow_from_approval_file"]
             
         
             formset = self.detail_formset(request.POST,instance=self.object)
