@@ -453,13 +453,13 @@
   fields:
     borrow_master: 29
     material: zzzzzzzzz
-    quantity: 7777777
+    quantity: 77
 - model: company_profile.appborrowmaterialdetail
   pk: 24
   fields:
     borrow_master: 29
     material: vvvvvvvvv
-    quantity: 7777777777
+    quantity: 777
 - model: company_profile.appborrowmaterialdetail
   pk: 25
   fields:
