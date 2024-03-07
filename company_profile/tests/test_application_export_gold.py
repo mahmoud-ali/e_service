@@ -27,7 +27,7 @@ class AppExportGoldTests(ProCompanyTests,TestCase):
     add_url_name = 'profile:app_export_gold_add'
     add_url_path = '/app_export_gold/add/'
     add_html_contain_ar = ['اضافة طلب صادر ذهب']
-    add_html_contain_en = ['Add exported raw material']
+    add_html_contain_en = ['Add export gold request']
 
     add_model = AppExportGold
     add_data = {
