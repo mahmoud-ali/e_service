@@ -91,6 +91,20 @@ class LkpMineral(models.Model):
         verbose_name_plural = _("Minerals")        
 
 class TblCompany(LoggingModel):
+    COMPANY_TYPE_ENTAJ = "entaj"
+    COMPANY_TYPE_MOKHALFAT = "mokhalfat"
+    COMPANY_TYPE_EMTIAZ = "emtiaz"
+    COMPANY_TYPE_SAGEER = "sageer"
+
+
+    COMPANY_TYPE_CHOICES = {
+        COMPANY_TYPE_ENTAJ: _("entaj"),
+        COMPANY_TYPE_MOKHALFAT: _("mokhalfat"),
+        COMPANY_TYPE_EMTIAZ: _("emtiaz"),
+        COMPANY_TYPE_SAGEER: _("sageer"),
+    }
+
+    company_type = models.CharField(_("company_type"),max_length=15, choices=COMPANY_TYPE_CHOICES)
     name_ar = models.CharField(_("name_ar"),max_length=200)
     name_en = models.CharField(_("name_en"),max_length=200)
     nationality = models.ForeignKey(LkpNationality, on_delete=models.PROTECT,verbose_name=_("nationality"))
