@@ -10,6 +10,11 @@ def forwards_func(apps, schema_editor):
         [
             Group(name="pro_company_application_accept"),
             Group(name="pro_company_application_approve"),
+            Group(name="company_type_entaj"),
+            Group(name="company_type_mokhalfat"),
+            Group(name="company_type_emtiaz"),
+            Group(name="company_type_sageer"),
+
         ]
     )
 
