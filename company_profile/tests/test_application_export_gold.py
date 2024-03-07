@@ -14,20 +14,20 @@ class AppExportGoldTests(ProCompanyTests,TestCase):
     list_url_name = 'profile:app_export_gold_list'
     list_url_path = '/app_export_gold/'
     list_html_contain_ar = ['قائمة طابات صادر ذهب']
-    list_html_contain_en = ['List of export gold']
+    list_html_contain_en = ['List of export gold request']
 
     show_view_class = AppExportGoldReadonlyView
     show_template_name = 'company_profile/application_readonly.html'
     show_url_name = 'profile:app_export_gold_show'
     show_url_path = '/app_export_gold/%d/show/'
     show_html_contain_ar = ['عرض طلب صادر ذهب']
-    show_html_contain_en = ['Show export gold']
+    show_html_contain_en = ['Show export gold request']
 
     add_template_name = 'company_profile/application_add.html'
     add_url_name = 'profile:app_export_gold_add'
     add_url_path = '/app_export_gold/add/'
     add_html_contain_ar = ['اضافة طلب صادر ذهب']
-    add_html_contain_en = ['Add export gold']
+    add_html_contain_en = ['Add exported raw material']
 
     add_model = AppExportGold
     add_data = {

@@ -14,20 +14,20 @@ class AppReexportEquipmentsTests(ProCompanyTests,TestCase):
     list_url_name = 'profile:app_reexport_equipments_list'
     list_url_path = '/app_reexport_equipments/'
     list_html_contain_ar = ['قائمة طلبات اعادة صادر لاليات ومعدات']
-    list_html_contain_en = ['List of Reexport Equipments']
+    list_html_contain_en = ['List of Reexport of Machinery and Equipments']
 
     show_view_class = AppReexportEquipmentsReadonlyView
     show_template_name = 'company_profile/application_readonly_master_details.html'
     show_url_name = 'profile:app_reexport_equipments_show'
     show_url_path = '/app_reexport_equipments/%d/show/'
     show_html_contain_ar = ['عرض طلب اعادة صادر لاليات ومعدات']
-    show_html_contain_en = ['Show Reexport Equipments']
+    show_html_contain_en = ['Show Reexport of Machinery and Equipments']
 
     add_template_name = 'company_profile/application_add_master_details.html'
     add_url_name = 'profile:app_reexport_equipments_add'
     add_url_path = '/app_reexport_equipments/add/'
     add_html_contain_ar = ['اضافة طلب اعادة صادر لاليات ومعدات']
-    add_html_contain_en = ['Add Reexport Equipments']
+    add_html_contain_en = ['Add Reexport of Machinery and Equipments']
 
     add_model = AppReexportEquipments
     add_data = {

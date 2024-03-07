@@ -14,20 +14,20 @@ class AppAifaaJomrkiTests(ProCompanyTests,TestCase):
     list_url_name = 'profile:app_aifaa_jomrki_list'
     list_url_path = '/app_aifaa_jomrki/'
     list_html_contain_ar = ['قائمة طلبات اعفاء جمركي']
-    list_html_contain_en = ['List of Aifaa Jomrki']
+    list_html_contain_en = ['List of customs exemption']
 
     show_view_class = AppAifaaJomrkiReadonlyView
     show_template_name = 'company_profile/application_readonly_master_details.html'
     show_url_name = 'profile:app_aifaa_jomrki_show'
     show_url_path = '/app_aifaa_jomrki/%d/show/'
     show_html_contain_ar = ['عرض اعفاء جمركي']
-    show_html_contain_en = ['Show Aifaa Jomrki']
+    show_html_contain_en = ['Show customs exemption']
 
     add_template_name = 'company_profile/application_add_master_details.html'
     add_url_name = 'profile:app_aifaa_jomrki_add'
     add_url_path = '/app_aifaa_jomrki/add/'
     add_html_contain_ar = ['اضافة اعفاء جمركي']
-    add_html_contain_en = ['Add Aifaa Jomrki']
+    add_html_contain_en = ['Add customs exemption']
 
     add_model = AppAifaaJomrki
     add_data = {

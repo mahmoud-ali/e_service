@@ -14,20 +14,20 @@ class AppAddAreaTests(ProCompanyTests,TestCase):
     list_url_name = 'profile:app_add_area_list'
     list_url_path = '/app_add_area/'
     list_html_contain_ar = ['قائمة طلبات اضافة مساحة']
-    list_html_contain_en = ['List of Added area']
+    list_html_contain_en = ['List of area extensions']
 
     show_view_class = AppAddAreaReadonlyView
     show_template_name = 'company_profile/application_readonly.html'
     show_url_name = 'profile:app_add_area_show'
     show_url_path = '/app_add_area/%d/show/'
     show_html_contain_ar = ['عرض طلب المساحة المضافة']
-    show_html_contain_en = ['Show added area']
+    show_html_contain_en = ['Show area extension']
 
     add_template_name = 'company_profile/application_add.html'
     add_url_name = 'profile:app_add_area_add'
     add_url_path = '/app_add_area/add/'
     add_html_contain_ar = ['اضافة مساحة جديدة']
-    add_html_contain_en = ['Add new area']
+    add_html_contain_en = ['Add new area extension']
 
     add_model = AppAddArea
     add_data = {

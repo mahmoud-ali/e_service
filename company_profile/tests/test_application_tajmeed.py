@@ -14,20 +14,20 @@ class AppTajmeedTests(ProCompanyTests,TestCase):
     list_url_name = 'profile:app_tajmeed_list'
     list_url_path = '/app_tajmeed/'
     list_html_contain_ar = ['قائمة طلبات التجمييد']
-    list_html_contain_en = ['List of tajmeed']
+    list_html_contain_en = ['List of suspension request']
 
     show_view_class = AppTajmeedReadonlyView
     show_template_name = 'company_profile/application_readonly.html'
     show_url_name = 'profile:app_tajmeed_show'
     show_url_path = '/app_tajmeed/%d/show/'
     show_html_contain_ar = ['عرض طلب تجمييد']
-    show_html_contain_en = ['Show tajmeed']
+    show_html_contain_en = ['Show suspension request']
 
     add_template_name = 'company_profile/application_add.html'
     add_url_name = 'profile:app_tajmeed_add'
     add_url_path = '/app_tajmeed/add/'
     add_html_contain_ar = ['اضافة طلب تجمييد']
-    add_html_contain_en = ['Add tajmeed']
+    add_html_contain_en = ['Add suspension request']
 
     add_model = AppTajmeed
     add_data = {

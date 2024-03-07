@@ -14,20 +14,20 @@ class AppTnazolShrakaTests(ProCompanyTests,TestCase):
     list_url_name = 'profile:app_tnazol_shraka_list'
     list_url_path = '/app_tnazol_shraka/'
     list_html_contain_ar = ['قائمة طلبات التنازل عن شركة او اسهم']
-    list_html_contain_en = ['List of tnazol shraka']
+    list_html_contain_en = ['List of share assignment']
 
     show_view_class = AppTnazolShrakaReadonlyView
     show_template_name = 'company_profile/application_readonly.html'
     show_url_name = 'profile:app_tnazol_shraka_show'
     show_url_path = '/app_tnazol_shraka/%d/show/'
     show_html_contain_ar = ['عرض طلب تنازل عن شركة او سهم']
-    show_html_contain_en = ['Show tnazol shraka']
+    show_html_contain_en = ['Show share assignment']
 
     add_template_name = 'company_profile/application_add.html'
     add_url_name = 'profile:app_tnazol_shraka_add'
     add_url_path = '/app_tnazol_shraka/add/'
     add_html_contain_ar = ['اضافة طلب تنازل عن شركة او سهم']
-    add_html_contain_en = ['Add tnazol shraka']
+    add_html_contain_en = ['Add share assignment']
 
     add_model = AppTnazolShraka
     add_data = {

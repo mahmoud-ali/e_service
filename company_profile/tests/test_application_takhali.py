@@ -14,20 +14,20 @@ class AppTakhaliTests(ProCompanyTests,TestCase):
     list_url_name = 'profile:app_takhali_list'
     list_url_path = '/app_takhali/'
     list_html_contain_ar = ['قائمة طلبات التخلي']
-    list_html_contain_en = ['List of takhali']
+    list_html_contain_en = ['List of abandonce']
 
     show_view_class = AppTakhaliReadonlyView
     show_template_name = 'company_profile/application_readonly.html'
     show_url_name = 'profile:app_takhali_show'
     show_url_path = '/app_takhali/%d/show/'
     show_html_contain_ar = ['عرض طلب تخلي']
-    show_html_contain_en = ['Show takhali']
+    show_html_contain_en = ['Show abandonce']
 
     add_template_name = 'company_profile/application_add.html'
     add_url_name = 'profile:app_takhali_add'
     add_url_path = '/app_takhali/add/'
     add_html_contain_ar = ['اضافة طلب تخلي']
-    add_html_contain_en = ['Add takhali']
+    add_html_contain_en = ['Add abandonce']
 
     add_model = AppTakhali
     add_data = {

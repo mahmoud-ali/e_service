@@ -14,20 +14,20 @@ class AppChangeCompanyNameTests(ProCompanyTests,TestCase):
     list_url_name = 'profile:app_change_company_name_list'
     list_url_path = '/app_change_company_name/'
     list_html_contain_ar = ['قائمة تغيير اسماء الشركات']
-    list_html_contain_en = ['List of company name changes']
+    list_html_contain_en = ['List of business name changes']
 
     show_view_class = AppChangeCompanyNameReadonlyView
     show_template_name = 'company_profile/application_readonly.html'
     show_url_name = 'profile:app_change_company_name_show'
     show_url_path = '/app_change_company_name/%d/show/'
     show_html_contain_ar = ['عرض طلب تغيير اسم شركة']
-    show_html_contain_en = ['Show company name']
+    show_html_contain_en = ['Show business name change']
 
     add_template_name = 'company_profile/application_add.html'
     add_url_name = 'profile:app_change_company_name_add'
     add_url_path = '/app_change_company_name/add/'
     add_html_contain_ar = ['اضافة اسم شركة جديد']
-    add_html_contain_en = ['Add new company name']
+    add_html_contain_en = ['Add new business name change']
 
     add_model = AppChangeCompanyName
     add_data = {

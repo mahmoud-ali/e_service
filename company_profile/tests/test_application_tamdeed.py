@@ -14,20 +14,20 @@ class AppTamdeedTests(ProCompanyTests,TestCase):
     list_url_name = 'profile:app_tamdeed_list'
     list_url_path = '/app_tamdeed/'
     list_html_contain_ar = ['قائمة طلبات التمديد']
-    list_html_contain_en = ['List of tamdeed']
+    list_html_contain_en = ['List of extention request']
 
     show_view_class = AppTamdeedReadonlyView
     show_template_name = 'company_profile/application_readonly.html'
     show_url_name = 'profile:app_tamdeed_show'
     show_url_path = '/app_tamdeed/%d/show/'
     show_html_contain_ar = ['عرض طلب تمديد']
-    show_html_contain_en = ['Show tamdeed']
+    show_html_contain_en = ['Show extention request']
 
     add_template_name = 'company_profile/application_add.html'
     add_url_name = 'profile:app_tamdeed_add'
     add_url_path = '/app_tamdeed/add/'
     add_html_contain_ar = ['اضافة طلب تمديد']
-    add_html_contain_en = ['Add tamdeed']
+    add_html_contain_en = ['Add extention request']
 
     add_model = AppTamdeed
     add_data = {

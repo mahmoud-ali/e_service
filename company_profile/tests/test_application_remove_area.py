@@ -14,20 +14,20 @@ class AppRemoveAreaTests(ProCompanyTests,TestCase):
     list_url_name = 'profile:app_remove_area_list'
     list_url_path = '/app_remove_area/'
     list_html_contain_ar = ['قائمة طلبات تنازل عن مساحة']
-    list_html_contain_en = ['List of removed area']
+    list_html_contain_en = ['List of area assignment']
 
     show_view_class = AppRemoveAreaReadonlyView
     show_template_name = 'company_profile/application_readonly.html'
     show_url_name = 'profile:app_remove_area_show'
     show_url_path = '/app_remove_area/%d/show/'
     show_html_contain_ar = ['عرض طلب تنازل عن مساحة']
-    show_html_contain_en = ['Show removed area']
+    show_html_contain_en = ['Show area assignment']
 
     add_template_name = 'company_profile/application_add.html'
     add_url_name = 'profile:app_remove_area_add'
     add_url_path = '/app_remove_area/add/'
     add_html_contain_ar = ['اضافة طلب تنازل عن مساحة']
-    add_html_contain_en = ['Add remove area application']
+    add_html_contain_en = ['Add area assignment application']
 
     add_model = AppRemoveArea
     add_data = {

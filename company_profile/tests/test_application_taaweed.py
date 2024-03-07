@@ -14,20 +14,20 @@ class AppTaaweedTests(ProCompanyTests,TestCase):
     list_url_name = 'profile:app_taaweed_list'
     list_url_path = '/app_taaweed/'
     list_html_contain_ar = ['قائمة طلبات تعويض']
-    list_html_contain_en = ['List of taaweed']
+    list_html_contain_en = ['List of compensation request']
 
     show_view_class = AppTaaweedReadonlyView
     show_template_name = 'company_profile/application_readonly.html'
     show_url_name = 'profile:app_taaweed_show'
     show_url_path = '/app_taaweed/%d/show/'
     show_html_contain_ar = ['عرض طلب تعويض']
-    show_html_contain_en = ['Show taaweed']
+    show_html_contain_en = ['Show compensation request']
 
     add_template_name = 'company_profile/application_add.html'
     add_url_name = 'profile:app_taaweed_add'
     add_url_path = '/app_taaweed/add/'
     add_html_contain_ar = ['اضافة طلب تعويض']
-    add_html_contain_en = ['Add taaweed']
+    add_html_contain_en = ['Add compensation request']
 
     add_model = AppTaaweed
     add_data = {

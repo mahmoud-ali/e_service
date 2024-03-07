@@ -14,20 +14,20 @@ class AppExportGoldRawTests(ProCompanyTests,TestCase):
     list_url_name = 'profile:app_export_gold_raw_list'
     list_url_path = '/app_export_gold_raw/'
     list_html_contain_ar = ['قائمة طلبات صادر خام']
-    list_html_contain_en = ['List of export gold raw']
+    list_html_contain_en = ['List of exported raw material']
 
     show_view_class = AppExportGoldRawReadonlyView
     show_template_name = 'company_profile/application_readonly.html'
     show_url_name = 'profile:app_export_gold_raw_show'
     show_url_path = '/app_export_gold_raw/%d/show/'
     show_html_contain_ar = ['عرض طلب صادر خام']
-    show_html_contain_en = ['Show export gold raw']
+    show_html_contain_en = ['Show exported raw material']
 
     add_template_name = 'company_profile/application_add.html'
     add_url_name = 'profile:app_export_gold_raw_add'
     add_url_path = '/app_export_gold_raw/add/'
     add_html_contain_ar = ['اضافة طلب صادر خام']
-    add_html_contain_en = ['Add export gold raw']
+    add_html_contain_en = ['Add exported raw material']
 
     add_model = AppExportGoldRaw
     add_data = {
