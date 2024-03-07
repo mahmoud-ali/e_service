@@ -239,15 +239,50 @@
     app_label: company_profile
     model: apprequirementslistmotafjeratequipments
 - model: sessions.session
-  pk: 9xg7m5skscd3x6ffhn136z8cng9j5mjz
+  pk: 0rjpvyn2c810g58crxkkfdbgoq2xbd6q
   fields:
-    session_data: .eJxVjMEOwiAQRP-Fs2lgKUv1pj9Clu0aiA1NLJyM_y41PehtZt7MvFSgVlNomzxDntVFGXX6zSLxQ8oOaFn2eCDmtZU6fDsH3oZrd1JqZqp5Lbdj9XeVaEv9h_UExhOPTiPFSSaHBsTieGYEb8HpWcRJjEg63hktgiUPXlMXDox6fwChSTtt:1rXack:v164bpH4_KwzIyyA9jzXa-P4iFCDvQu73z9QCgbRc-4
-    expire_date: 2024-02-21 05:37:30.273300+00:00
+    session_data: .eJxtUMtuhDAM_BefUZSYzQNO3f5GVSGTuCIqhBUJaqvV_nthywWpN2tmPB7PHcj7eU2lo7UMnEr0VOKcuonLMIcM7dsd_mZo4UY5f81LgAqoQKustKidUUo4a51qdAU8URw3KYUpppc8LV7kAI_3Cp4XujXz0sXdTMEJ68l_ctoJGscdFkcy8dQcdBbXU87XY-tkNVAeNh8vHSpL_qKlod6x00Yh1-bSeIO2Ri0Ds-a-NyT7D29qgzVZtJK2QeOe759yOHSn31GgwUY7t0XInPNeHn_f4vKziVA2RsrHL7mEdM4:1rXTxE:HdBN65ngz4BOHCW9PUnVDBqI_u1vzRICVcOr38KWox0
+    expire_date: 2024-02-20 22:30:12.404277+00:00
+- model: sessions.session
+  pk: cc2us2u0kwgqoq0gmtvrcu5olubckeuj
+  fields:
+    session_data: .eJxtkEFuhDAMRe_iNUImkISwanuNqkImcUXUAUY4qK1Gc_eGKRuq7iz7-_v534C8X7Y59bSlkecUPaW4zP3EaVyCQPd6g98aOriSyOeyBiiAEnSVRWdR2VqXjautcwXwRPGSlRSmOD_JtPpSAtzfCngc6DfhtY-7VwWn3kD-g-d9QJfL3i4PsPKhOcZSPp8wX46tk9VIMmYfj62qLPlGo6Gh5VabSnFtGudNZlYaA7PmYTCEw7s3tVE1WWWRcqHVzvdPNhz6P69rtEo1mUBYZI-Ov65x_c4ahc4g3n8A9zh0Ww:1rhjmZ:WE8kUO04rWOsHDzeK3qXKhnGaSRvreciiaMVn3ZXM6U
+    expire_date: 2024-03-20 05:25:35.539924+00:00
 - model: sessions.session
   pk: gd7tmtfdfrjv73h3a3vf1n252txs0enl
   fields:
     session_data: .eJxlUMtqxDAM_Bedg_FLsZ1T298oJSi2IaZ5LLFDW5b998bbXEJvYmY0mtEdyPt1X0pPexnjUpKnktaln2MZ15Che7_D3wwd3Cjnr3UL0AAV6IThrRNCcMmsccYJbCDOlKZDSmFOy0ueN89ygMdHA88L_Z7j1qdqJuCCDeQ_41IJmqYKszMZe2pOOrPXS863c-tiNVIeDx-uUaMhrgcy0iqDioR2USIp9BwxDCYoa8yAiisdHLpWS2tjRCGsVK62_P-cGPpLd8WUkgKFOSLkmHN9Xvy-pe3nEEnuWs4fvz9Lc6s:1rW1YF:77X1nM35Fqi1fFDBmXLtM-fScCEQTCLqPDjJg0VGVQU
     expire_date: 2024-02-16 21:58:23.337069+00:00
+- model: sessions.session
+  pk: hqjddyd1vcfnguuah5p98ky140sv4fq2
+  fields:
+    session_data: .eJxtkMtuhDAMRf_Fa4RMQsJj1fY3qhEyiSui8hjhoE41mn9vmLKh6sqWfX197DuQc8s2x462OPAcg6MYlrmbOA6LF2jf7_CbQwtXEvlaVg8ZUIS2qLApbaUqnSOmqFUGPFEYk5T8FOYXmVaXi4fHJYPnhm4TXruwmxVwqvXkPnneGzSOezk_yPKn5mhL_nrifDumTlYDyZB8HNaqqMiVBi31NdfGFoq1LRtnE7My6JkN970l7D-c1VZpStcgpcSone-f57Dv_t6utNUmEQiL7L_j2zWs30mjsLGIjx80qXR_:1rgkWn:WOWnPOWLoM9QYbQHULXwAKD7k6bhX7nXbvE15s0pGj0
+    expire_date: 2024-03-17 12:01:13.074749+00:00
+- model: sessions.session
+  pk: icmpps24w7m5v3eqdlsolr1izhirfy5c
+  fields:
+    session_data: .eJxtkE1uhDAMhe_iNUIhEAdYtb1GNUImcUVUfkY4qFON5u4NUzZU3Vn28_Pndwdybtnm2NEWB55jcBTDMncTx2HxAu37HX5raOFKIl_L6iEDitAWVjUV2lLrXKFpsMqAJwpjUpKfwvwi0-py8fC4ZPA80G3Caxd2rwJOvZ7cJ8_7gMZxb-cHWP7UHGPJX0-Yb8fWyWogGZKPU7UuLLnKKKS-5tpgobnEqnGoE7RRntlw3yOp_sNhibokq62iVBi98_2TDfvu7-u2KWqbCIRF9uj4dg3rd9Jo1aBSjx_snXRc:1rgkXa:sckUGtBKBHr9NxNYR058csTX87EBRcGGnXw5DKOwb_U
+    expire_date: 2024-03-17 12:02:02.114116+00:00
+- model: sessions.session
+  pk: jgjxqkz3irtcmefgfriij4hy9nh93884
+  fields:
+    session_data: .eJxVjMEOwiAQRP-Fs2lgKUv1pj9Clu0aiA1NLJyM_y41PehtZt7MvFSgVlNomzxDntVFGXX6zSLxQ8oOaFn2eCDmtZU6fDsH3oZrd1JqZqp5Lbdj9XeVaEv9h_UExhOPTiPFSSaHBsTieGYEb8HpWcRJjEg63hktgiUPXlMXDox6fwChSTtt:1rhqNq:4j_6FCwQTzZOsz_q4XHPE32DNQD-4QM2cCEeDRL81SY
+    expire_date: 2024-03-20 12:28:30.185355+00:00
+- model: sessions.session
+  pk: kagez26dmzbvzit21dw7f6e6bkgifcw4
+  fields:
+    session_data: .eJxtUMtuhDAM_BefEQqBPODU9jeqFTKJK6JCWOGgbrXaf2_YcqHqydZ4PB7PHdC5ZYupxy2NFFNwmMIS-5nSuHiG7v0Ovz10cEXmr2X1UAAm6Coj2kYbK1RZmVxNATRjmDIT_RziC8-rK9nD41LA80C_Ma192LUqOGEDuk-K-wCnaYfLw1j55BxjLl9PNt-OrZPUiDxmHSesrAy6RgmNgyWrdCWp1k3rtDS1VMITKRoGjWL4cLrWskYjjcDcKLn7-ycb8v3f121rbDbAxLwnR7drWL8zRYpWC_H4AYpldD8:1rgkfN:e4LenmXX9tFZpbLTu2gvuP7BUnX7fJbOQjJXeE-jXdY
+    expire_date: 2024-03-17 12:10:05.219283+00:00
+- model: sessions.session
+  pk: np0yzjtx1hddas3b1bxayu8mmzspryle
+  fields:
+    session_data: .eJxtUEFuhDAM_IvPCCWBmIRT229UFTKJK6IusMJBbbXavxe2XKh6s2bG4_HcgEKY1yl3tOaBp5wC5TRP3ch5mKNA-3qD3xlauJLI57xEKIAytLpRvkb0DkunrXOuAB4pXTYlxTFNTzIuoZQI97cCHge6VXjp0u6l4YT1FD542gm6XHa4PIKVD81BS_l8ivlybJ2sBpJh8wnKGd1QqK1C6h07i9pwhbUPaJrKWBWZLfc9kurfA1ZoKmpMo2gbrNnz_dMNx-7v68Z7rbcEwiJ7dfx1Tcv3pjHKo1L3HwhKdIA:1rgkSA:oxaqmcjc-wlAh-CrBaWPc_i8f3Ju_YjnFebzEMGcQZc
+    expire_date: 2024-03-17 11:56:26.863151+00:00
+- model: sessions.session
+  pk: v2ishyrc3rxagev42q27b2lc8se1lrvb
+  fields:
+    session_data: .eJxtUEFuhDAM_IvPCDkJSYBT229UFTKJK6IusMJBbbXavxe2XKh6s2bG4_HcgEKY1yl3tOaBp5wC5TRP3ch5mKNA-3qD3xlauJLI57xEKIAytMpj41Ebh6UySpm6AB4pXTYlxTFNTzIuoZQI97cCHge6VXjp0u6l4IT1FD542gm6XHa4PIKVD81BS_l8ivlybJ2sBpJh8wlYa-UpVBYd9TXX1inNxlVNcNobbTEyW-57R9i_B2ecNuS1R9oGq_d8_3TDsfv7ulVVtQUQFtmb469rWr43icbGId5_AGRTdAI:1rhjgW:ipLGlEMflQyPCTOugX-u_agapeW9kugGs43Co4JIMbk
+    expire_date: 2024-03-20 05:19:20.201106+00:00
 - model: sites.site
   fields:
     domain: 127.0.0.1:8000
@@ -2629,7 +2664,7 @@
 - model: accounts.customuser
   fields:
     password: pbkdf2_sha256$720000$tH5f7gkeFN9Es8mHafSUxJ$P28/0MeQeLvSmoLdJodz05oaT8noDhnJa2DUp0FwHP8=
-    last_login: 2024-02-07 05:37:29.975522+00:00
+    last_login: 2024-03-06 12:28:30+00:00
     is_superuser: true
     username: admin
     first_name: ''
@@ -2638,7 +2673,7 @@
     is_staff: true
     is_active: true
     date_joined: 2024-01-28 16:57:39+00:00
-    lang: ar
+    lang: en
     groups:
     - - pro_company_application_accept
     - - pro_company_application_approve
@@ -2646,7 +2681,7 @@
 - model: accounts.customuser
   fields:
     password: pbkdf2_sha256$720000$lEDPxNchkMzbWsLXvhzF7Z$79mrLMWU+1GQDMdcpWtSGnStSnwallslYXbjKxhBL3I=
-    last_login: 2024-02-06 22:14:14.890258+00:00
+    last_login: 2024-02-06 22:23:56.506974+00:00
     is_superuser: false
     username: bbb
     first_name: ''
@@ -2682,6 +2717,7 @@
     updated_at: 2024-02-06 22:52:42.012303+00:00
     updated_by:
     - admin
+    company_type: entaj
     name_ar: دويشات للتعدين المحدودة
     name_en: doishat co ltd
     nationality: 1
@@ -2706,6 +2742,7 @@
     updated_at: 2024-02-04 10:02:13.385784+00:00
     updated_by:
     - admin
+    company_type: entaj
     name_ar: جبل الذهب
     name_en: gold mountin
     nationality: 1
@@ -2730,6 +2767,7 @@
     updated_at: 2024-02-04 10:25:23.902341+00:00
     updated_by:
     - admin
+    company_type: entaj
     name_ar: bbbb
     name_en: bbb
     nationality: 1
@@ -3559,7 +3597,7 @@
     created_at: 2024-02-06 22:24:39.637106+00:00
     created_by:
     - bbb
-    updated_at: 2024-02-07 05:40:37.910307+00:00
+    updated_at: 2024-02-06 23:41:14.621462+00:00
     updated_by:
     - admin
     state: approved
@@ -4566,10 +4604,10 @@
     created_at: 2024-02-07 03:48:12.830285+00:00
     created_by:
     - admin
-    updated_at: 2024-02-07 03:51:05.419805+00:00
+    updated_at: 2024-03-06 12:25:16.898328+00:00
     updated_by:
     - admin
-    state: submitted
+    state: accepted
     notify: false
     company: 1
     reason_for_change: "asgdakjsgdjkas ajsgdjhkasgdjkhasg asgdjkasgdjkasgdkujas asgdjhasgd
@@ -5109,10 +5147,10 @@
     created_at: 2024-02-07 05:28:42.136289+00:00
     created_by:
     - bbb
-    updated_at: 2024-02-07 05:28:42.136515+00:00
+    updated_at: 2024-02-07 03:25:58.610261+00:00
     updated_by:
-    - bbb
-    state: submitted
+    - admin
+    state: accepted
     notify: false
     company: 4
     license_type: 2
@@ -5153,13 +5191,13 @@
     created_at: 2024-02-07 05:30:29.198120+00:00
     created_by:
     - bbb
-    updated_at: 2024-02-07 07:05:51.090971+00:00
+    updated_at: 2024-02-07 01:23:58.033183+00:00
     updated_by:
     - admin
     state: approved
     notify: false
     company: 4
-    license_type: 1
+    license_type: 2
     approved_requirements_list_file: company_4/applications/for_upload_PLy6eYG
     approval_from_finance_ministry_file: company_4/applications/for_upload_c4yPgY1
     final_voucher_file: company_4/applications/for_upload_1lx89YG
@@ -8742,3 +8780,94 @@
     object_repr: تقرير فني ومالي (3)
     action_flag: 2
     change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 265
+  fields:
+    action_time: 2024-02-06 23:41:14.734801+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appborrowmaterial
+    object_id: '36'
+    object_repr: استلاف مواد (36)
+    action_flag: 2
+    change_message: '[]'
+- model: admin.logentry
+  pk: 266
+  fields:
+    action_time: 2024-02-07 01:23:58.098545+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appaifaajomrki
+    object_id: '4'
+    object_repr: اعفاء جمركي (4)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["License_type"]}}]'
+- model: admin.logentry
+  pk: 267
+  fields:
+    action_time: 2024-02-07 02:37:22.445045+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appaifaajomrki
+    object_id: '2'
+    object_repr: اعفاء جمركي (2)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["license_type"]}}]'
+- model: admin.logentry
+  pk: 268
+  fields:
+    action_time: 2024-02-07 03:25:58.619925+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appaifaajomrki
+    object_id: '2'
+    object_repr: اعفاء جمركي (2)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 269
+  fields:
+    action_time: 2024-03-06 12:25:16.900425+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appchangeworkprocedure
+    object_id: '1'
+    object_repr: تغيير طريقة العمل (1)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 270
+  fields:
+    action_time: 2024-03-06 12:27:36.058722+00:00
+    user:
+    - admin
+    content_type:
+    - accounts
+    - customuser
+    object_id: '1'
+    object_repr: admin@smrc.sd
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Groups"]}}]'
+- model: admin.logentry
+  pk: 271
+  fields:
+    action_time: 2024-03-07 12:43:22.159239+00:00
+    user:
+    - admin
+    content_type:
+    - accounts
+    - customuser
+    object_id: '1'
+    object_repr: admin@smrc.sd
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Groups"]}}]'
