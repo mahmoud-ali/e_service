@@ -6,7 +6,7 @@ from django.contrib import admin
 from django.contrib.sites.models import Site
 
 
-from .models import LkpNationality,LkpState,LkpLocality,LkpMineral,LkpCompanyProductionStatus,LkpForeignerProcedureType,TblCompanyProduction, \
+from .models import AppCyanideCertificate, AppExplosivePermission, AppImportPermission, AppLocalPurchase, AppRenewalContract, AppRestartActivity, AppTemporaryExemption, LkpNationality,LkpState,LkpLocality,LkpMineral,LkpCompanyProductionStatus,LkpForeignerProcedureType,TblCompanyProduction, \
                                       LkpCompanyProductionFactoryType,TblCompanyProductionFactory,LkpCompanyProductionLicenseStatus, \
                                       TblCompanyProductionLicense,AppForignerMovement,TblCompanyProductionUserRole, \
                                       AppBorrowMaterial,AppBorrowMaterialDetail,AppWorkPlan,AppTechnicalFinancialReport, \
@@ -19,7 +19,7 @@ from .models import LkpNationality,LkpState,LkpLocality,LkpMineral,LkpCompanyPro
                                       AppRequirementsListChemicalLabEquipments,AppRequirementsListChemicalEquipments, \
                                       AppRequirementsListMotafjeratEquipments,AppRequirementsListVehiclesEquipments,TblCompany,AppVisibityStudy,AppVisibityStudyDetail
 
-from .forms import TblCompanyProductionForm,AppForignerMovementAdminForm,AppBorrowMaterialAdminForm,AppWorkPlanAdminForm, \
+from .forms import AppCyanideCertificateAdminForm, AppExplosivePermissionAdminForm, AppImportPermissionAdminForm, AppLocalPurchaseAdminForm, AppRenewalContractAdminForm, AppRestartActivityAdminForm, AppTemporaryExemptionAdminForm, TblCompanyProductionForm,AppForignerMovementAdminForm,AppBorrowMaterialAdminForm,AppWorkPlanAdminForm, \
                    AppTechnicalFinancialReportAdminForm,AppChangeCompanyNameAdminForm, AppExplorationTimeAdminForm, \
                    AppAddAreaAdminForm,AppRemoveAreaAdminForm,AppTnazolShrakaAdminForm, AppTajeelTnazolAdminForm, \
                    AppTajmeedAdminForm,AppTakhaliAdminForm,AppTamdeedAdminForm,AppTaaweedAdminForm,AppMdaAdminForm, \
@@ -501,3 +501,66 @@ class AppVisibityStudyAdmin(WorkflowAdminMixin,admin.ModelAdmin):
     view_on_site = False
 
 admin.site.register(AppVisibityStudy, AppVisibityStudyAdmin)
+
+class AppTemporaryExemptionAdmin(WorkflowAdminMixin,admin.ModelAdmin):
+    form = AppTemporaryExemptionAdminForm
+    
+    list_display = ["company", "created_at", "created_by","updated_at", "updated_by"]        
+    list_filter = ["company"]
+    view_on_site = False
+    
+admin.site.register(AppTemporaryExemption, AppTemporaryExemptionAdmin)
+
+class AppLocalPurchaseAdmin(WorkflowAdminMixin,admin.ModelAdmin):
+    form = AppLocalPurchaseAdminForm
+    
+    list_display = ["company", "created_at", "created_by","updated_at", "updated_by"]        
+    list_filter = ["company"]
+    view_on_site = False
+    
+admin.site.register(AppLocalPurchase, AppLocalPurchaseAdmin)
+
+class AppCyanideCertificateAdmin(WorkflowAdminMixin,admin.ModelAdmin):
+    form = AppCyanideCertificateAdminForm
+    
+    list_display = ["company", "created_at", "created_by","updated_at", "updated_by"]        
+    list_filter = ["company"]
+    view_on_site = False
+    
+admin.site.register(AppCyanideCertificate, AppCyanideCertificateAdmin)
+
+class AppExplosivePermissionAdmin(WorkflowAdminMixin,admin.ModelAdmin):
+    form = AppExplosivePermissionAdminForm
+    
+    list_display = ["company", "created_at", "created_by","updated_at", "updated_by"]        
+    list_filter = ["company"]
+    view_on_site = False
+    
+admin.site.register(AppExplosivePermission, AppExplosivePermissionAdmin)
+
+class AppRestartActivityAdmin(WorkflowAdminMixin,admin.ModelAdmin):
+    form = AppRestartActivityAdminForm
+    
+    list_display = ["company", "created_at", "created_by","updated_at", "updated_by"]        
+    list_filter = ["company"]
+    view_on_site = False
+    
+admin.site.register(AppRestartActivity, AppRestartActivityAdmin)
+
+class AppRenewalContractAdmin(WorkflowAdminMixin,admin.ModelAdmin):
+    form = AppRenewalContractAdminForm
+    
+    list_display = ["company", "created_at", "created_by","updated_at", "updated_by"]        
+    list_filter = ["company"]
+    view_on_site = False
+    
+admin.site.register(AppRenewalContract, AppRenewalContractAdmin)
+
+class AppImportPermissionAdmin(WorkflowAdminMixin,admin.ModelAdmin):
+    form = AppImportPermissionAdminForm
+    
+    list_display = ["company", "created_at", "created_by","updated_at", "updated_by"]        
+    list_filter = ["company"]
+    view_on_site = False
+    
+admin.site.register(AppImportPermission, AppImportPermissionAdmin)
