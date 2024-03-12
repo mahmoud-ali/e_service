@@ -885,3 +885,19 @@ class AppVisibityStudyDetail(models.Model):
     class Meta:
         verbose_name = _("Visibity Study Detail")
         verbose_name_plural = _("Visibity Study Details")
+
+class AppTemporaryExemption(WorkflowModel):
+    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
+
+    attachement_file = models.FileField(_("attachement_file"),upload_to=company_applications_path)
+
+    def __str__(self):
+        return _("Temporary Exemption") +" ("+str(self.id)+")"
+        
+    def get_absolute_url(self): 
+        return reverse('profile:app_temporary_exemption_show',args=[str(self.id)])                
+    
+    class Meta:
+        ordering = ["-id"]
+        verbose_name = _("Application: Temporary Exemption")
+        verbose_name_plural = _("Application: Temporary Exemption")
