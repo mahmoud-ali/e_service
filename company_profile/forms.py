@@ -11,7 +11,7 @@ from .models import TblCompanyProduction, AppForignerMovement,AppBorrowMaterial,
                     AppExplorationTime, AppAddArea, AppRemoveArea, AppTnazolShraka, AppTajeelTnazol,AppTajmeed,AppTakhali,AppTamdeed, \
                     AppTaaweed,AppMda,AppChangeWorkProcedure,AppExportGold,AppExportGoldRaw,AppSendSamplesForAnalysis,AppForeignerProcedure, \
                     AppAifaaJomrki,AppReexportEquipments,AppRequirementsList,TblCompanyProductionLicense,AppVisibityStudy, \
-                    AppTemporaryExemption,AppLocalPurchase
+                    AppTemporaryExemption,AppLocalPurchase,AppCyanideCertificate
 
 class LanguageForm(forms.Form):
     LANG_AR = "ar"
@@ -449,5 +449,19 @@ class AppLocalPurchaseForm(AppLocalPurchaseAdminForm):
     company = None
     class Meta:
         model = AppLocalPurchase
+        exclude = ["company","state"]
+        widgets = {}
+
+class AppCyanideCertificateAdminForm(WorkflowFormMixin,ModelForm):
+    company = forms.ModelChoiceField(queryset=TblCompanyProduction.objects.all(), disabled=True, label=_("company"))
+
+    class Meta:
+        model = AppCyanideCertificate
+        fields = ["company","state","attachement_file"] 
+        
+class AppCyanideCertificateForm(AppCyanideCertificateAdminForm):
+    company = None
+    class Meta:
+        model = AppCyanideCertificate
         exclude = ["company","state"]
         widgets = {}
