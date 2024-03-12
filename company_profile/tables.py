@@ -3,7 +3,7 @@ from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
 
 import django_tables2 as tables
-from .models import AppForignerMovement,AppBorrowMaterial,AppWorkPlan,AppTechnicalFinancialReport,AppChangeCompanyName, \
+from .models import AppCyanideCertificate, AppExplosivePermission, AppForignerMovement,AppBorrowMaterial, AppImportPermission, AppLocalPurchase, AppRenewalContract, AppRestartActivity, AppTemporaryExemption,AppWorkPlan,AppTechnicalFinancialReport,AppChangeCompanyName, \
                     AppExplorationTime, AppAddArea,AppRemoveArea,AppTnazolShraka,AppTajeelTnazol,AppTajmeed,AppTakhali, \
                     AppTamdeed, AppTaaweed, AppMda,AppChangeWorkProcedure,AppExportGold,AppExportGoldRaw, \
                     AppSendSamplesForAnalysis,AppForeignerProcedure,AppAifaaJomrki,AppReexportEquipments,AppRequirementsList, \
@@ -337,3 +337,93 @@ class AppVisibityStudyTable(AppTable):
     def render_id(self,value):
         return format_html("<a href={}>{}</a>",reverse_lazy(self.menu_name,args=(value,)),value)
 
+class AppTemporaryExemptionTable(AppTable):
+    menu_name = "profile:app_temporary_exemption_show"
+    relation_fields = []
+
+    class Meta:
+        model = AppTemporaryExemption
+        template_name = "django_tables2/bootstrap.html"
+        fields = ("id","created_at")
+        empty_text = _("No records.")
+
+    def render_id(self,value):
+        return format_html("<a href={}>{}</a>",reverse_lazy(self.menu_name,args=(value,)),value)
+
+class AppLocalPurchaseTable(AppTable):
+    menu_name = "profile:app_local_purchase_show"
+    relation_fields = []
+
+    class Meta:
+        model = AppLocalPurchase
+        template_name = "django_tables2/bootstrap.html"
+        fields = ("id","created_at")
+        empty_text = _("No records.")
+
+    def render_id(self,value):
+        return format_html("<a href={}>{}</a>",reverse_lazy(self.menu_name,args=(value,)),value)
+
+class AppCyanideCertificateTable(AppTable):
+    menu_name = "profile:app_cyanide_certificate_show"
+    relation_fields = []
+
+    class Meta:
+        model = AppCyanideCertificate
+        template_name = "django_tables2/bootstrap.html"
+        fields = ("id","created_at")
+        empty_text = _("No records.")
+
+    def render_id(self,value):
+        return format_html("<a href={}>{}</a>",reverse_lazy(self.menu_name,args=(value,)),value)
+
+class AppExplosivePermissionTable(AppTable):
+    menu_name = "profile:app_explosive_permission_show"
+    relation_fields = []
+
+    class Meta:
+        model = AppExplosivePermission
+        template_name = "django_tables2/bootstrap.html"
+        fields = ("id","created_at")
+        empty_text = _("No records.")
+
+    def render_id(self,value):
+        return format_html("<a href={}>{}</a>",reverse_lazy(self.menu_name,args=(value,)),value)
+
+class AppRestartActivityTable(AppTable):
+    menu_name = "profile:app_restart_activity_show"
+    relation_fields = []
+
+    class Meta:
+        model = AppRestartActivity
+        template_name = "django_tables2/bootstrap.html"
+        fields = ("id","created_at")
+        empty_text = _("No records.")
+
+    def render_id(self,value):
+        return format_html("<a href={}>{}</a>",reverse_lazy(self.menu_name,args=(value,)),value)
+
+class AppRenewalContractTable(AppTable):
+    menu_name = "profile:app_renewal_contract_show"
+    relation_fields = []
+
+    class Meta:
+        model = AppRenewalContract
+        template_name = "django_tables2/bootstrap.html"
+        fields = ("id","created_at")
+        empty_text = _("No records.")
+
+    def render_id(self,value):
+        return format_html("<a href={}>{}</a>",reverse_lazy(self.menu_name,args=(value,)),value)
+
+class AppImportPermissionTable(AppTable):
+    menu_name = "profile:app_import_permission_show"
+    relation_fields = []
+
+    class Meta:
+        model = AppImportPermission
+        template_name = "django_tables2/bootstrap.html"
+        fields = ("id","created_at")
+        empty_text = _("No records.")
+
+    def render_id(self,value):
+        return format_html("<a href={}>{}</a>",reverse_lazy(self.menu_name,args=(value,)),value)
