@@ -17,14 +17,15 @@ from .models import LkpNationality,LkpState,LkpLocality,LkpMineral,LkpCompanyPro
                                       AppReexportEquipments,AppReexportEquipmentsDetail,AppRequirementsList, \
                                       AppRequirementsListMangamEquipments,AppRequirementsListFactoryEquipments,AppRequirementsListElectricityEquipments, \
                                       AppRequirementsListChemicalLabEquipments,AppRequirementsListChemicalEquipments, \
-                                      AppRequirementsListMotafjeratEquipments,AppRequirementsListVehiclesEquipments,TblCompany
+                                      AppRequirementsListMotafjeratEquipments,AppRequirementsListVehiclesEquipments,TblCompany,AppVisibityStudy,AppVisibityStudyDetail
 
 from .forms import TblCompanyProductionForm,AppForignerMovementAdminForm,AppBorrowMaterialAdminForm,AppWorkPlanAdminForm, \
                    AppTechnicalFinancialReportAdminForm,AppChangeCompanyNameAdminForm, AppExplorationTimeAdminForm, \
                    AppAddAreaAdminForm,AppRemoveAreaAdminForm,AppTnazolShrakaAdminForm, AppTajeelTnazolAdminForm, \
                    AppTajmeedAdminForm,AppTakhaliAdminForm,AppTamdeedAdminForm,AppTaaweedAdminForm,AppMdaAdminForm, \
                    AppChangeWorkProcedureAdminForm,AppExportGoldAdminForm,AppExportGoldRawAdminForm,AppSendSamplesForAnalysisAdminForm, \
-                   AppForeignerProcedureAdminForm,AppAifaaJomrkiAdminForm,AppReexportEquipmentsAdminForm, AppRequirementsListAdminForm
+                   AppForeignerProcedureAdminForm,AppAifaaJomrkiAdminForm,AppReexportEquipmentsAdminForm, AppRequirementsListAdminForm, \
+                   AppVisibityStudyAdminForm
 
 from .workflow import get_state_choices,send_transition_email,ACCEPTED,APPROVED,REJECTED
 
@@ -486,3 +487,17 @@ class AppRequirementsListAdmin(WorkflowAdminMixin,admin.ModelAdmin):
     
 admin.site.register(AppRequirementsList, AppRequirementsListAdmin)
 
+class AppVisibityStudyDetailInline(admin.TabularInline):
+    model = AppVisibityStudyDetail
+    exclude = ["created_at","created_by","updated_at","updated_by"]
+    extra = 1    
+
+class AppVisibityStudyAdmin(WorkflowAdminMixin,admin.ModelAdmin):
+    form = AppVisibityStudyAdminForm
+    inlines = [AppVisibityStudyDetailInline]
+    
+    list_display = ["license_type", "created_at", "created_by","updated_at", "updated_by"]        
+    list_filter = ["company"]
+    view_on_site = False
+
+admin.site.register(AppVisibityStudy, AppVisibityStudyAdmin)

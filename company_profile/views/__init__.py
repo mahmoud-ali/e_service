@@ -46,6 +46,7 @@ from .foreigner_procedure import AppForeignerProcedureListView, AppForeignerProc
 from .aifaa_jomrki import AppAifaaJomrkiListView, AppAifaaJomrkiCreateView, AppAifaaJomrkiReadonlyView
 from .reexport_equipments import AppReexportEquipmentsListView, AppReexportEquipmentsCreateView, AppReexportEquipmentsReadonlyView
 from .requirements_list import AppRequirementsListListView, AppRequirementsListCreateView, AppRequirementsListReadonlyView
+from .visibilty_study import AppVisibityStudyListView, AppVisibityStudyCreateView, AppVisibityStudyReadonlyView
 
 class SetLanguageView(LoginRequiredMixin,View):
     def post(self,request):

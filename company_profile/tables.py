@@ -6,7 +6,8 @@ import django_tables2 as tables
 from .models import AppForignerMovement,AppBorrowMaterial,AppWorkPlan,AppTechnicalFinancialReport,AppChangeCompanyName, \
                     AppExplorationTime, AppAddArea,AppRemoveArea,AppTnazolShraka,AppTajeelTnazol,AppTajmeed,AppTakhali, \
                     AppTamdeed, AppTaaweed, AppMda,AppChangeWorkProcedure,AppExportGold,AppExportGoldRaw, \
-                    AppSendSamplesForAnalysis,AppForeignerProcedure,AppAifaaJomrki,AppReexportEquipments,AppRequirementsList
+                    AppSendSamplesForAnalysis,AppForeignerProcedure,AppAifaaJomrki,AppReexportEquipments,AppRequirementsList, \
+                    AppVisibityStudy
 
 class AppTable(tables.Table):
     menu_name = None
@@ -323,4 +324,16 @@ class AppRequirementsListTable(AppTable):
     def render_id(self,value):
         return format_html("<a href={}>{}</a>",reverse_lazy(self.menu_name,args=(value,)),value)
 
+class AppVisibityStudyTable(AppTable):
+    menu_name = "profile:app_visibility_study_show"
+    relation_fields = ["license_type"]
+
+    class Meta:
+        model = AppVisibityStudy
+        template_name = "django_tables2/bootstrap.html"
+        fields = ("id","license_type","study_area","study_type")
+        empty_text = _("No records.")
+
+    def render_id(self,value):
+        return format_html("<a href={}>{}</a>",reverse_lazy(self.menu_name,args=(value,)),value)
 

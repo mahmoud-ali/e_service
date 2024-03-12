@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-03-07 20:42+0200\n"
+"POT-Creation-Date: 2024-03-12 11:56+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -31,8 +31,8 @@ msgstr "العربية"
 msgid "English"
 msgstr ""
 
-#: company_profile/admin.py:31 company_profile/admin.py:32
-#: company_profile/admin.py:33 templates/admin/__base_site.html:6
+#: company_profile/admin.py:32 company_profile/admin.py:33
+#: company_profile/admin.py:34 templates/admin/__base_site.html:6
 msgid "Site header"
 msgstr "بوابة الخدمات الإلكترونية"
 
@@ -49,11 +49,11 @@ msgstr "بيانات التواصل"
 msgid "Company Status"
 msgstr "موقف الشركة"
 
-#: company_profile/admin.py:166
+#: company_profile/admin.py:184
 msgid "General information"
 msgstr "بيانات عامة"
 
-#: company_profile/admin.py:167
+#: company_profile/admin.py:185
 msgid "Contract information"
 msgstr "بيانات العقد"
 
@@ -80,20 +80,21 @@ msgstr "المحلية لا تتبع للولاية الصحيحة"
 #: company_profile/forms.py:296 company_profile/forms.py:309
 #: company_profile/forms.py:322 company_profile/forms.py:335
 #: company_profile/forms.py:351 company_profile/forms.py:376
-#: company_profile/forms.py:389 company_profile/models.py:151
-#: company_profile/models.py:171 company_profile/models.py:197
-#: company_profile/models.py:210 company_profile/models.py:226
-#: company_profile/models.py:252 company_profile/models.py:280
-#: company_profile/models.py:306 company_profile/models.py:327
-#: company_profile/models.py:349 company_profile/models.py:368
-#: company_profile/models.py:396 company_profile/models.py:428
-#: company_profile/models.py:456 company_profile/models.py:474
-#: company_profile/models.py:494 company_profile/models.py:512
-#: company_profile/models.py:532 company_profile/models.py:549
-#: company_profile/models.py:568 company_profile/models.py:588
-#: company_profile/models.py:620 company_profile/models.py:651
-#: company_profile/models.py:695 company_profile/models.py:729
-#: company_profile/models.py:762 company_profile/models.py:795
+#: company_profile/forms.py:389 company_profile/forms.py:402
+#: company_profile/models.py:151 company_profile/models.py:171
+#: company_profile/models.py:197 company_profile/models.py:210
+#: company_profile/models.py:226 company_profile/models.py:252
+#: company_profile/models.py:280 company_profile/models.py:306
+#: company_profile/models.py:327 company_profile/models.py:349
+#: company_profile/models.py:368 company_profile/models.py:396
+#: company_profile/models.py:428 company_profile/models.py:456
+#: company_profile/models.py:474 company_profile/models.py:494
+#: company_profile/models.py:512 company_profile/models.py:532
+#: company_profile/models.py:549 company_profile/models.py:568
+#: company_profile/models.py:588 company_profile/models.py:620
+#: company_profile/models.py:651 company_profile/models.py:695
+#: company_profile/models.py:729 company_profile/models.py:762
+#: company_profile/models.py:795 company_profile/models.py:858
 msgid "company"
 msgstr "شركة"
 
@@ -101,8 +102,9 @@ msgstr "شركة"
 msgid "company_borrow_from"
 msgstr "الشركة المستلف منها"
 
-#: company_profile/forms.py:352 company_profile/models.py:622
-#: company_profile/models.py:730
+#: company_profile/forms.py:352 company_profile/forms.py:403
+#: company_profile/models.py:622 company_profile/models.py:730
+#: company_profile/models.py:859
 msgid "license_type"
 msgstr "نوع الرخصة"
 
@@ -1290,18 +1292,62 @@ msgstr "المتفجرات"
 msgid "Application: Requirements List - Vehicles Equipments"
 msgstr "الاليات والمتحركات"
 
-#: company_profile/tables.py:23 company_profile/tables.py:36
-#: company_profile/tables.py:49 company_profile/tables.py:62
-#: company_profile/tables.py:75 company_profile/tables.py:88
-#: company_profile/tables.py:101 company_profile/tables.py:114
-#: company_profile/tables.py:127 company_profile/tables.py:140
-#: company_profile/tables.py:153 company_profile/tables.py:166
-#: company_profile/tables.py:179 company_profile/tables.py:192
-#: company_profile/tables.py:205 company_profile/tables.py:218
-#: company_profile/tables.py:240 company_profile/tables.py:253
-#: company_profile/tables.py:266 company_profile/tables.py:279
-#: company_profile/tables.py:292 company_profile/tables.py:305
-#: company_profile/tables.py:321
+#: company_profile/models.py:861
+msgid "study_area"
+msgstr "اسم منطقة الدراسة"
+
+#: company_profile/models.py:862
+msgid "study_type"
+msgstr "نوع الدراسة"
+
+#: company_profile/models.py:863
+msgid "study_comment"
+msgstr "تعليق مختصر عن الدراسة"
+
+#: company_profile/models.py:866
+msgid "attachement_file"
+msgstr "ملف المرفقات"
+
+#: company_profile/models.py:869
+msgid "Visibity Study"
+msgstr "دراسة جدوى"
+
+#: company_profile/models.py:876 company_profile/models.py:877
+msgid "Application: Visibity Study"
+msgstr "طلب دراسة جدوى"
+
+#: company_profile/models.py:881
+msgid "study_point_id"
+msgstr "Point ID"
+
+#: company_profile/models.py:882
+msgid "study_point_long"
+msgstr "Long/ East/ X"
+
+#: company_profile/models.py:883
+msgid "study_point_lat"
+msgstr "Lat/ West/ Y"
+
+#: company_profile/models.py:886
+msgid "Visibity Study Detail"
+msgstr "تفاصيل دراسة جدوى"
+
+#: company_profile/models.py:887
+msgid "Visibity Study Details"
+msgstr "تفاصيل دراسة جدوى"
+
+#: company_profile/tables.py:24 company_profile/tables.py:37
+#: company_profile/tables.py:50 company_profile/tables.py:63
+#: company_profile/tables.py:76 company_profile/tables.py:89
+#: company_profile/tables.py:102 company_profile/tables.py:115
+#: company_profile/tables.py:128 company_profile/tables.py:141
+#: company_profile/tables.py:154 company_profile/tables.py:167
+#: company_profile/tables.py:180 company_profile/tables.py:193
+#: company_profile/tables.py:206 company_profile/tables.py:219
+#: company_profile/tables.py:241 company_profile/tables.py:254
+#: company_profile/tables.py:267 company_profile/tables.py:280
+#: company_profile/tables.py:293 company_profile/tables.py:306
+#: company_profile/tables.py:322 company_profile/tables.py:335
 msgid "No records."
 msgstr "لايوجد سجل."
 
@@ -1357,15 +1403,19 @@ msgstr "الرئيسية"
 msgid "Application: Foreigner Procedure"
 msgstr "طلب اجراءات اجانب"
 
-#: company_profile/views/__init__.py:112
+#: company_profile/templates/company_profile/base.html:170
+msgid "Application: Visiblity Study"
+msgstr "طلب دراسة جدوى"
+
+#: company_profile/views/__init__.py:113
 msgid "List of foreigner movements"
 msgstr "قائمة طلبات حركة الاجانب"
 
-#: company_profile/views/__init__.py:130
+#: company_profile/views/__init__.py:131
 msgid "Add new movement"
 msgstr "اضافة طلب حركة اجنبي"
 
-#: company_profile/views/__init__.py:150 company_profile/views/__init__.py:230
+#: company_profile/views/__init__.py:151 company_profile/views/__init__.py:231
 #: company_profile/views/add_area.py:64
 #: company_profile/views/aifaa_jomrki.py:76
 #: company_profile/views/change_company_name.py:68
@@ -1385,23 +1435,24 @@ msgstr "اضافة طلب حركة اجنبي"
 #: company_profile/views/tamdeed.py:65
 #: company_profile/views/technical_financial_report.py:64
 #: company_profile/views/tnazol_shraka.py:65
+#: company_profile/views/visibilty_study.py:75
 #: company_profile/views/work_plan.py:64
 msgid "Application sent successfully."
 msgstr "تم ارسال الطلب بنجاح."
 
-#: company_profile/views/__init__.py:163
+#: company_profile/views/__init__.py:164
 msgid "Show movement"
 msgstr "عرض طلب حركة اجنبي"
 
-#: company_profile/views/__init__.py:178
+#: company_profile/views/__init__.py:179
 msgid "List of borrow materials"
 msgstr "قائمة طلبات الاستلاف"
 
-#: company_profile/views/__init__.py:197
+#: company_profile/views/__init__.py:198
 msgid "Add new borrow materials"
 msgstr "اضافة طلب اسلاف مواد"
 
-#: company_profile/views/__init__.py:248
+#: company_profile/views/__init__.py:249
 msgid "Show borrow materials"
 msgstr "عرض طلب استلاف مواد"
 
@@ -1644,6 +1695,18 @@ msgstr "اضافة طلب تنازل عن شركة او سهم"
 #: company_profile/views/tnazol_shraka.py:78
 msgid "Show tnazol shraka"
 msgstr "عرض طلب تنازل عن شركة او سهم"
+
+#: company_profile/views/visibilty_study.py:30
+msgid "List of Visibity Study"
+msgstr "قائمة طلبات دراسة الجدوى "
+
+#: company_profile/views/visibilty_study.py:50
+msgid "Add Visibity Study"
+msgstr "اضافة طلب دراسة جدوى"
+
+#: company_profile/views/visibilty_study.py:93
+msgid "Show Visibity Study"
+msgstr "عرض طلب دراسة جدوى"
 
 #: company_profile/views/work_plan.py:28
 msgid "List of work plans"

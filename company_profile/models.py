@@ -854,3 +854,34 @@ class AppRequirementsListVehiclesEquipments(AppRequirementsListDetail):
         verbose_name = _("Application: Requirements List - Vehicles Equipments")
         verbose_name_plural = _("Application: Requirements List - Vehicles Equipments")
 
+class AppVisibityStudy(WorkflowModel):
+    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
+    license_type = models.ForeignKey(TblCompanyProductionLicense, on_delete=models.PROTECT,verbose_name=_("license_type"))    
+
+    study_area = models.CharField(_("study_area"),max_length=100)
+    study_type = models.CharField(_("study_type"),max_length=100)
+    study_comment = models.TextField(_("study_comment"),max_length=1000)
+
+
+    attachement_file = models.FileField(_("attachement_file"),upload_to=company_applications_path)
+
+    def __str__(self):
+        return _("Visibity Study") +" ("+str(self.id)+")"
+        
+    def get_absolute_url(self): 
+        return reverse('profile:app_visibility_study_show',args=[str(self.id)])                
+    
+    class Meta:
+        ordering = ["-id"]
+        verbose_name = _("Application: Visibity Study")
+        verbose_name_plural = _("Application: Visibity Study")
+
+class AppVisibityStudyDetail(models.Model):
+    study_master = models.ForeignKey(AppVisibityStudy, on_delete=models.PROTECT)    
+    study_point_id = models.IntegerField(_("study_point_id"))
+    study_point_long = models.DecimalField(_("study_point_long"),max_digits=20,decimal_places=12)
+    study_point_lat = models.DecimalField(_("study_point_lat"),max_digits=20,decimal_places=12)
+
+    class Meta:
+        verbose_name = _("Visibity Study Detail")
+        verbose_name_plural = _("Visibity Study Details")

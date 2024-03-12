@@ -26,7 +26,8 @@ from .views import SetLanguageView, HomePageView, \
                    AppForeignerProcedureListView, AppForeignerProcedureCreateView, AppForeignerProcedureReadonlyView, \
                    AppAifaaJomrkiListView, AppAifaaJomrkiCreateView, AppAifaaJomrkiReadonlyView, \
                    AppReexportEquipmentsListView, AppReexportEquipmentsCreateView, AppReexportEquipmentsReadonlyView, \
-                   AppRequirementsListListView, AppRequirementsListCreateView, AppRequirementsListReadonlyView
+                   AppRequirementsListListView, AppRequirementsListCreateView, AppRequirementsListReadonlyView, \
+                   AppVisibityStudyListView, AppVisibityStudyCreateView, AppVisibityStudyReadonlyView
 
 app_name = "profile"
 urlpatterns = [                                                        
@@ -149,5 +150,10 @@ urlpatterns = [
     path('app_requirements_list/<int:type>/', AppRequirementsListListView.as_view(), name='app_requirements_list_list'),
     path('app_requirements_list/<int:pk>/show/', AppRequirementsListReadonlyView.as_view(), name='app_requirements_list_show'),    
     path('app_requirements_list/add/', AppRequirementsListCreateView.as_view(), name='app_requirements_list_add'),
+
+    path('app_visibility_study/', AppVisibityStudyListView.as_view(), name='app_visibility_study_list'),
+    path('app_visibility_study/<int:type>/', AppVisibityStudyListView.as_view(), name='app_visibility_study_list'),
+    path('app_visibility_study/<int:pk>/show/', AppVisibityStudyReadonlyView.as_view(), name='app_visibility_study_show'),    
+    path('app_visibility_study/add/', AppVisibityStudyCreateView.as_view(), name='app_visibility_study_add'),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

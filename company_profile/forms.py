@@ -10,7 +10,7 @@ from .workflow import SUBMITTED,ACCEPTED,APPROVED,REJECTED,WorkflowFormMixin
 from .models import TblCompanyProduction, AppForignerMovement,AppBorrowMaterial,AppWorkPlan,AppTechnicalFinancialReport,AppChangeCompanyName, \
                     AppExplorationTime, AppAddArea, AppRemoveArea, AppTnazolShraka, AppTajeelTnazol,AppTajmeed,AppTakhali,AppTamdeed, \
                     AppTaaweed,AppMda,AppChangeWorkProcedure,AppExportGold,AppExportGoldRaw,AppSendSamplesForAnalysis,AppForeignerProcedure, \
-                    AppAifaaJomrki,AppReexportEquipments,AppRequirementsList,TblCompanyProductionLicense
+                    AppAifaaJomrki,AppReexportEquipments,AppRequirementsList,TblCompanyProductionLicense,AppVisibityStudy
 
 class LanguageForm(forms.Form):
     LANG_AR = "ar"
@@ -398,4 +398,27 @@ class AppRequirementsListForm(AppRequirementsListAdminForm):
         exclude = ["company","state"]
         widgets = {}
 
+class AppVisibityStudyAdminForm(WorkflowFormMixin,ModelForm):
+    company = forms.ModelChoiceField(queryset=TblCompanyProduction.objects.all(), disabled=True, label=_("company"))
+    license_type = forms.ModelChoiceField(queryset=None, label=_("license_type"))
+    def __init__(self, *args,company_id = None, **kwargs):        
+        super().__init__(*args, **kwargs)
 
+        if kwargs.get('company_id'):
+            company_id = kwargs.get('company_id')
+        elif kwargs.get('instance') and kwargs['instance'].pk:
+            company_id = kwargs['instance'].company.id
+        
+        if company_id:
+            self.fields["license_type"].queryset = TblCompanyProductionLicense.objects.filter(company__id=company_id)
+
+    class Meta:
+        model = AppVisibityStudy
+        fields = ["company","license_type","study_area", "study_type", "study_comment","state","attachement_file"] 
+        
+class AppVisibityStudyForm(AppVisibityStudyAdminForm):
+    company = None
+    class Meta:
+        model = AppVisibityStudy
+        exclude = ["company","state"]
+        widgets = {}

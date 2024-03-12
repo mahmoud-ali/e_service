@@ -381,6 +381,8 @@ class ProCompanyAdminTests():
             data['state'] = state
 
             for model in qs:
+                self.set_lang('en',user=self.get_user(model))
+                
                 data['company'] = model.company.id
                 #url = admin:app_name_model_name_change
                 url = reverse("admin:"+self.change_model.__module__.split('.')[0].lower()+"_"+self.change_model.__name__.lower()+"_change",args=(model.id,))
