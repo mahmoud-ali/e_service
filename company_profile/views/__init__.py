@@ -47,6 +47,7 @@ from .aifaa_jomrki import AppAifaaJomrkiListView, AppAifaaJomrkiCreateView, AppA
 from .reexport_equipments import AppReexportEquipmentsListView, AppReexportEquipmentsCreateView, AppReexportEquipmentsReadonlyView
 from .requirements_list import AppRequirementsListListView, AppRequirementsListCreateView, AppRequirementsListReadonlyView
 from .visibilty_study import AppVisibityStudyListView, AppVisibityStudyCreateView, AppVisibityStudyReadonlyView
+from .temporary_exemption import AppTemporaryExemptionListView,AppTemporaryExemptionCreateView,AppTemporaryExemptionReadonlyView
 
 class SetLanguageView(LoginRequiredMixin,View):
     def post(self,request):
