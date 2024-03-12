@@ -28,7 +28,8 @@ from .views import SetLanguageView, HomePageView, \
                    AppReexportEquipmentsListView, AppReexportEquipmentsCreateView, AppReexportEquipmentsReadonlyView, \
                    AppRequirementsListListView, AppRequirementsListCreateView, AppRequirementsListReadonlyView, \
                    AppVisibityStudyListView, AppVisibityStudyCreateView, AppVisibityStudyReadonlyView, \
-                   AppTemporaryExemptionCreateView, AppTemporaryExemptionListView, AppTemporaryExemptionReadonlyView
+                   AppTemporaryExemptionCreateView, AppTemporaryExemptionListView, AppTemporaryExemptionReadonlyView, \
+                   AppLocalPurchaseListView,AppLocalPurchaseCreateView,AppLocalPurchaseReadonlyView
 
 app_name = "profile"
 urlpatterns = [                                                        
@@ -161,5 +162,10 @@ urlpatterns = [
     path('app_temporary_exemption/<int:type>/', AppTemporaryExemptionListView.as_view(), name='app_temporary_exemption_list'),
     path('app_temporary_exemption/<int:pk>/show/', AppTemporaryExemptionReadonlyView.as_view(), name='app_temporary_exemption_show'),    
     path('app_temporary_exemption/add/', AppTemporaryExemptionCreateView.as_view(), name='app_temporary_exemption_add'),
+
+    path('app_local_purchase/', AppLocalPurchaseListView.as_view(), name='app_local_purchase_list'),
+    path('app_local_purchase/<int:type>/', AppLocalPurchaseListView.as_view(), name='app_local_purchase_list'),
+    path('app_local_purchase/<int:pk>/show/', AppLocalPurchaseReadonlyView.as_view(), name='app_local_purchase_show'),    
+    path('app_local_purchase/add/', AppLocalPurchaseCreateView.as_view(), name='app_local_purchase_add'),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

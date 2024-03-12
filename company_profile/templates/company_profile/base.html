@@ -168,9 +168,13 @@ $(document).ready(function(){
 			 </li>
 			 <li class="{% if menu_name == 'profile:app_visibility_study_list' %}active{% endif %} ">  
 				<a href="{% url 'profile:app_visibility_study_list' %}">{% translate "Application: Visiblity Study" %}</a>
+			</li>
+			<li class="{% if menu_name == 'profile:app_temporary_exemption_list' %}active{% endif %} ">  
+			  <a href="{% url 'profile:app_temporary_exemption_list' %}">{% translate "Application: Temporary Exemption" %}</a>
+			</li>
 		 	 </li>
-			  <li class="{% if menu_name == 'profile:app_temporary_exemption_list' %}active{% endif %} ">  
-				<a href="{% url 'profile:app_temporary_exemption_list' %}">{% translate "Application: Temporary Exemption" %}</a>
+			  <li class="{% if menu_name == 'profile:app_local_purchase_list' %}active{% endif %} ">  
+				<a href="{% url 'profile:app_local_purchase_list' %}">{% translate "Application: Local Purchase" %}</a>
 		 	 </li>
 
 		  </ul>

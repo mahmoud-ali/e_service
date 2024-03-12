@@ -48,6 +48,7 @@ from .reexport_equipments import AppReexportEquipmentsListView, AppReexportEquip
 from .requirements_list import AppRequirementsListListView, AppRequirementsListCreateView, AppRequirementsListReadonlyView
 from .visibilty_study import AppVisibityStudyListView, AppVisibityStudyCreateView, AppVisibityStudyReadonlyView
 from .temporary_exemption import AppTemporaryExemptionListView,AppTemporaryExemptionCreateView,AppTemporaryExemptionReadonlyView
+from .local_purchase import AppLocalPurchaseListView,AppLocalPurchaseCreateView,AppLocalPurchaseReadonlyView
 
 class SetLanguageView(LoginRequiredMixin,View):
     def post(self,request):
