@@ -5344,8 +5344,8 @@
     - admin
     state: accepted
     notify: false
-    company: 1
-    license_type: 1
+    company: 4
+    license_type: 2
     approved_requirements_list_file: company_1/applications/info_5X3rCE4
     approval_from_finance_ministry_file: company_1/applications/info_9ho8QZh
     final_voucher_file: company_1/applications/info_VK12IfS
