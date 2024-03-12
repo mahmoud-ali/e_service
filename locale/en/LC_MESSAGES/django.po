@@ -105,7 +105,7 @@ msgstr "borrow from"
 #: company_profile/models.py:622 company_profile/models.py:730
 #: company_profile/models.py:859
 msgid "license_type"
-msgstr "license type"
+msgstr "License type"
 
 #: company_profile/models.py:16
 msgid "created_at"
@@ -1305,11 +1305,11 @@ msgstr "other attachments"
 
 #: company_profile/models.py:869
 msgid "Visibity Study"
-msgstr "Visibity Study"
+msgstr "Feasibility Study"
 
 #: company_profile/models.py:876 company_profile/models.py:877
 msgid "Application: Visibity Study"
-msgstr "Application: Visibity Study"
+msgstr "Application: Feasibility Study"
 
 #: company_profile/models.py:881
 msgid "study_point_id"
@@ -1325,11 +1325,11 @@ msgstr "Lat/ West/ Y"
 
 #: company_profile/models.py:886
 msgid "Visibity Study Detail"
-msgstr ""
+msgstr "Cordinations"
 
 #: company_profile/models.py:887
 msgid "Visibity Study Details"
-msgstr ""
+msgstr "Cordinations"
 
 #: company_profile/tables.py:24 company_profile/tables.py:37
 #: company_profile/tables.py:50 company_profile/tables.py:63
@@ -1400,7 +1400,7 @@ msgstr ""
 
 #: company_profile/templates/company_profile/base.html:170
 msgid "Application: Visiblity Study"
-msgstr "Application: Visiblity Study"
+msgstr "Application: Feasibility Study"
 
 #: company_profile/views/__init__.py:113
 msgid "List of foreigner movements"
@@ -1693,15 +1693,15 @@ msgstr "Show share assignment"
 
 #: company_profile/views/visibilty_study.py:30
 msgid "List of Visibity Study"
-msgstr "List of Visibity Studies"
+msgstr "List of Feasibility Studies"
 
 #: company_profile/views/visibilty_study.py:50
 msgid "Add Visibity Study"
-msgstr ""
+msgstr "Add Feasibility Study"
 
 #: company_profile/views/visibilty_study.py:93
 msgid "Show Visibity Study"
-msgstr ""
+msgstr "Show Feasibility Study"
 
 #: company_profile/views/work_plan.py:28
 msgid "List of work plans"

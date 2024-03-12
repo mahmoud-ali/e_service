@@ -1330,11 +1330,11 @@ msgstr "Lat/ West/ Y"
 
 #: company_profile/models.py:886
 msgid "Visibity Study Detail"
-msgstr "تفاصيل دراسة جدوى"
+msgstr "إحداثيات منطقة الدراسة"
 
 #: company_profile/models.py:887
 msgid "Visibity Study Details"
-msgstr "تفاصيل دراسة جدوى"
+msgstr "إحداثيات منطقة الدراسة"
 
 #: company_profile/tables.py:24 company_profile/tables.py:37
 #: company_profile/tables.py:50 company_profile/tables.py:63
