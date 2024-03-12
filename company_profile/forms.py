@@ -11,7 +11,7 @@ from .models import TblCompanyProduction, AppForignerMovement,AppBorrowMaterial,
                     AppExplorationTime, AppAddArea, AppRemoveArea, AppTnazolShraka, AppTajeelTnazol,AppTajmeed,AppTakhali,AppTamdeed, \
                     AppTaaweed,AppMda,AppChangeWorkProcedure,AppExportGold,AppExportGoldRaw,AppSendSamplesForAnalysis,AppForeignerProcedure, \
                     AppAifaaJomrki,AppReexportEquipments,AppRequirementsList,TblCompanyProductionLicense,AppVisibityStudy, \
-                    AppTemporaryExemption,AppLocalPurchase,AppCyanideCertificate
+                    AppTemporaryExemption,AppLocalPurchase,AppCyanideCertificate,AppExplosivePermission
 
 class LanguageForm(forms.Form):
     LANG_AR = "ar"
@@ -463,5 +463,19 @@ class AppCyanideCertificateForm(AppCyanideCertificateAdminForm):
     company = None
     class Meta:
         model = AppCyanideCertificate
+        exclude = ["company","state"]
+        widgets = {}
+
+class AppExplosivePermissionAdminForm(WorkflowFormMixin,ModelForm):
+    company = forms.ModelChoiceField(queryset=TblCompanyProduction.objects.all(), disabled=True, label=_("company"))
+
+    class Meta:
+        model = AppExplosivePermission
+        fields = ["company","state","attachement_file"] 
+        
+class AppExplosivePermissionForm(AppExplosivePermissionAdminForm):
+    company = None
+    class Meta:
+        model = AppExplosivePermission
         exclude = ["company","state"]
         widgets = {}
