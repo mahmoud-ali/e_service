@@ -11,7 +11,7 @@ from .models import TblCompanyProduction, AppForignerMovement,AppBorrowMaterial,
                     AppExplorationTime, AppAddArea, AppRemoveArea, AppTnazolShraka, AppTajeelTnazol,AppTajmeed,AppTakhali,AppTamdeed, \
                     AppTaaweed,AppMda,AppChangeWorkProcedure,AppExportGold,AppExportGoldRaw,AppSendSamplesForAnalysis,AppForeignerProcedure, \
                     AppAifaaJomrki,AppReexportEquipments,AppRequirementsList,TblCompanyProductionLicense,AppVisibityStudy, \
-                    AppTemporaryExemption
+                    AppTemporaryExemption,AppLocalPurchase
 
 class LanguageForm(forms.Form):
     LANG_AR = "ar"
@@ -429,11 +429,25 @@ class AppTemporaryExemptionAdminForm(WorkflowFormMixin,ModelForm):
 
     class Meta:
         model = AppTemporaryExemption
-        fields = ["company","license_type","study_area", "study_type", "study_comment","state","attachement_file"] 
+        fields = ["company","state","attachement_file"] 
         
 class AppTemporaryExemptionForm(AppTemporaryExemptionAdminForm):
     company = None
     class Meta:
         model = AppTemporaryExemption
+        exclude = ["company","state"]
+        widgets = {}
+
+class AppLocalPurchaseAdminForm(WorkflowFormMixin,ModelForm):
+    company = forms.ModelChoiceField(queryset=TblCompanyProduction.objects.all(), disabled=True, label=_("company"))
+
+    class Meta:
+        model = AppLocalPurchase
+        fields = ["company","state","attachement_file"] 
+        
+class AppLocalPurchaseForm(AppLocalPurchaseAdminForm):
+    company = None
+    class Meta:
+        model = AppLocalPurchase
         exclude = ["company","state"]
         widgets = {}
