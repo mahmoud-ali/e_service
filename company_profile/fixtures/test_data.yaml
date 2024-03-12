@@ -244,10 +244,10 @@
     session_data: .eJxtUMtuhDAM_BefUZSYzQNO3f5GVSGTuCIqhBUJaqvV_nthywWpN2tmPB7PHcj7eU2lo7UMnEr0VOKcuonLMIcM7dsd_mZo4UY5f81LgAqoQKustKidUUo4a51qdAU8URw3KYUpppc8LV7kAI_3Cp4XujXz0sXdTMEJ68l_ctoJGscdFkcy8dQcdBbXU87XY-tkNVAeNh8vHSpL_qKlod6x00Yh1-bSeIO2Ri0Ds-a-NyT7D29qgzVZtJK2QeOe759yOHSn31GgwUY7t0XInPNeHn_f4vKziVA2RsrHL7mEdM4:1rXTxE:HdBN65ngz4BOHCW9PUnVDBqI_u1vzRICVcOr38KWox0
     expire_date: 2024-02-20 22:30:12.404277+00:00
 - model: sessions.session
-  pk: cc2us2u0kwgqoq0gmtvrcu5olubckeuj
+  pk: 17eqr336y8fwkdgtanvpve33x576axzx
   fields:
-    session_data: .eJxtkEFuhDAMRe_iNUImkISwanuNqkImcUXUAUY4qK1Gc_eGKRuq7iz7-_v534C8X7Y59bSlkecUPaW4zP3EaVyCQPd6g98aOriSyOeyBiiAEnSVRWdR2VqXjautcwXwRPGSlRSmOD_JtPpSAtzfCngc6DfhtY-7VwWn3kD-g-d9QJfL3i4PsPKhOcZSPp8wX46tk9VIMmYfj62qLPlGo6Gh5VabSnFtGudNZlYaA7PmYTCEw7s3tVE1WWWRcqHVzvdPNhz6P69rtEo1mUBYZI-Ov65x_c4ahc4g3n8A9zh0Ww:1rhjmZ:WE8kUO04rWOsHDzeK3qXKhnGaSRvreciiaMVn3ZXM6U
-    expire_date: 2024-03-20 05:25:35.539924+00:00
+    session_data: .eJxtUMtuhDAM_BefEUoCMY9T29-oVsgkrojKY4WDutVq_71hy4WqN2tmPB7PHci5ZZtjR1sceI7BUQzL3E0ch8ULtO93-J2hhSuJfC2rhwwoQqsr1aBGY3WO2NRFozPgicKYpOSnML_ItLpcPDwuGTwvdJvw2oXdTMMJ68l98rwTNI47nB_J8qfmoCV_PeV8O7ZOVgPJkHycqo2uyJVWIfU11xa14QLLxqGpCmOVZ7bc90iq_3BYoCmoMpWiNFiz5_unHPbd399rUybvFEFYZC-Pb9ewfieRSSKlHj-2GXTJ:1rhNHf:xKiCfqTB32PE4eiPvtbUyukbeqCg5S_hpohuR9tucSA
+    expire_date: 2024-03-19 05:24:11.683749+00:00
 - model: sessions.session
   pk: gd7tmtfdfrjv73h3a3vf1n252txs0enl
   fields:
@@ -264,11 +264,6 @@
     session_data: .eJxtkE1uhDAMhe_iNUIhEAdYtb1GNUImcUVUfkY4qFON5u4NUzZU3Vn28_Pndwdybtnm2NEWB55jcBTDMncTx2HxAu37HX5raOFKIl_L6iEDitAWVjUV2lLrXKFpsMqAJwpjUpKfwvwi0-py8fC4ZPA80G3Caxd2rwJOvZ7cJ8_7gMZxb-cHWP7UHGPJX0-Yb8fWyWogGZKPU7UuLLnKKKS-5tpgobnEqnGoE7RRntlw3yOp_sNhibokq62iVBi98_2TDfvu7-u2KWqbCIRF9uj4dg3rd9Jo1aBSjx_snXRc:1rgkXa:sckUGtBKBHr9NxNYR058csTX87EBRcGGnXw5DKOwb_U
     expire_date: 2024-03-17 12:02:02.114116+00:00
 - model: sessions.session
-  pk: jgjxqkz3irtcmefgfriij4hy9nh93884
-  fields:
-    session_data: .eJxVjMEOwiAQRP-Fs2lgKUv1pj9Clu0aiA1NLJyM_y41PehtZt7MvFSgVlNomzxDntVFGXX6zSLxQ8oOaFn2eCDmtZU6fDsH3oZrd1JqZqp5Lbdj9XeVaEv9h_UExhOPTiPFSSaHBsTieGYEb8HpWcRJjEg63hktgiUPXlMXDox6fwChSTtt:1rhqNq:4j_6FCwQTzZOsz_q4XHPE32DNQD-4QM2cCEeDRL81SY
-    expire_date: 2024-03-20 12:28:30.185355+00:00
-- model: sessions.session
   pk: kagez26dmzbvzit21dw7f6e6bkgifcw4
   fields:
     session_data: .eJxtUMtuhDAM_BefEQqBPODU9jeqFTKJK6JCWOGgbrXaf2_YcqHqydZ4PB7PHdC5ZYupxy2NFFNwmMIS-5nSuHiG7v0Ovz10cEXmr2X1UAAm6Coj2kYbK1RZmVxNATRjmDIT_RziC8-rK9nD41LA80C_Ma192LUqOGEDuk-K-wCnaYfLw1j55BxjLl9PNt-OrZPUiDxmHSesrAy6RgmNgyWrdCWp1k3rtDS1VMITKRoGjWL4cLrWskYjjcDcKLn7-ycb8v3f121rbDbAxLwnR7drWL8zRYpWC_H4AYpldD8:1rgkfN:e4LenmXX9tFZpbLTu2gvuP7BUnX7fJbOQjJXeE-jXdY
@@ -279,10 +274,15 @@
     session_data: .eJxtUEFuhDAM_IvPCCWBmIRT229UFTKJK6IusMJBbbXavxe2XKh6s2bG4_HcgEKY1yl3tOaBp5wC5TRP3ch5mKNA-3qD3xlauJLI57xEKIAytLpRvkb0DkunrXOuAB4pXTYlxTFNTzIuoZQI97cCHge6VXjp0u6l4YT1FD542gm6XHa4PIKVD81BS_l8ivlybJ2sBpJh8wnKGd1QqK1C6h07i9pwhbUPaJrKWBWZLfc9kurfA1ZoKmpMo2gbrNnz_dMNx-7v68Z7rbcEwiJ7dfx1Tcv3pjHKo1L3HwhKdIA:1rgkSA:oxaqmcjc-wlAh-CrBaWPc_i8f3Ju_YjnFebzEMGcQZc
     expire_date: 2024-03-17 11:56:26.863151+00:00
 - model: sessions.session
-  pk: v2ishyrc3rxagev42q27b2lc8se1lrvb
+  pk: ojjkqeqvqtzpic54got0za954ienfh5t
   fields:
-    session_data: .eJxtUEFuhDAM_IvPCDkJSYBT229UFTKJK6IusMJBbbXavxe2XKh6s2bG4_HcgEKY1yl3tOaBp5wC5TRP3ch5mKNA-3qD3xlauJLI57xEKIAytMpj41Ebh6UySpm6AB4pXTYlxTFNTzIuoZQI97cCHge6VXjp0u6l4IT1FD542gm6XHa4PIKVD81BS_l8ivlybJ2sBpJh8wlYa-UpVBYd9TXX1inNxlVNcNobbTEyW-57R9i_B2ecNuS1R9oGq_d8_3TDsfv7ulVVtQUQFtmb469rWr43icbGId5_AGRTdAI:1rhjgW:ipLGlEMflQyPCTOugX-u_agapeW9kugGs43Co4JIMbk
-    expire_date: 2024-03-20 05:19:20.201106+00:00
+    session_data: .eJxlUMtuhDAQ-5c5I5QHhMep29-oVmiSGURUICsStK1W---FLRfa28j2WLYfgM6FdU4drmngOXmHyYe5mzgNgSK0Hw_4vaGFG8Z4DwtBBpiglZVoal1oUeZaGmVUBjyhHzeln_vwZq3NXZjgec3g5d-tkZfO71YFnDCL7pPnncBx3OH8yJW_NAcd88sp5fvxdbIaMA6bj6yocFaUsq6QKqe1Y0NKGVOomipUUpDSVPZGlFYqKhvTM1LDTIU1tRF7x__TMHV_m2uhdLMliBzjvhx_3fzyvWmUaIwQzx-E8XSW:1riI0f:4tq07TjGu3nftvOIWkBmCjzJtXtaHDkyYcQ1rfvySHQ
+    expire_date: 2024-03-21 17:58:25.375688+00:00
+- model: sessions.session
+  pk: vowh22t32p6z28v2qod1qc3hmrhpxwm4
+  fields:
+    session_data: .eJxtUEFuhDAM_IvPCJmwSYBT229UFTKJK6JCWOGgtlrt3xu2XKh6s8bj8czcgJxbtph62tLIMQVHKSyxnzmNixfoXm_wO0MHVxL5XFYPBVCCrrLYamsaxLJqUNu6AJ4pTJlJfg7xSebVleLh_lbA40G_Ca992LUqOGEDuQ-O-4KmaYfLw1j54BxrKZ9PNl-Oq5PUSDJmHYeNqiy5i0ZDQ8ONNpXi2lxaZ5StlUbPrHkYDOHw7kxtVE1WWaQ8aLX7-6cb9v2f6AoxZ88OhEX26vjrGtbvzFHYGsT7D-Z-dEg:1rhD1M:KhwUxBR0dqyHPbnbNN7E1GAaP4n8tSgF9-PMt6P240c
+    expire_date: 2024-03-18 18:26:40.247036+00:00
 - model: sites.site
   fields:
     domain: 127.0.0.1:8000
@@ -488,13 +488,13 @@
   fields:
     borrow_master: 29
     material: zzzzzzzzz
-    quantity: 77
+    quantity: 7777777
 - model: company_profile.appborrowmaterialdetail
   pk: 24
   fields:
     borrow_master: 29
     material: vvvvvvvvv
-    quantity: 777
+    quantity: 7777777777
 - model: company_profile.appborrowmaterialdetail
   pk: 25
   fields:
@@ -561,6 +561,30 @@
     borrow_master: 36
     material: مادة 2
     quantity: 350
+- model: company_profile.appborrowmaterialdetail
+  pk: 36
+  fields:
+    borrow_master: 37
+    material: hhhhh
+    quantity: 67
+- model: company_profile.appborrowmaterialdetail
+  pk: 37
+  fields:
+    borrow_master: 38
+    material: mmmmm
+    quantity: 7
+- model: company_profile.appborrowmaterialdetail
+  pk: 38
+  fields:
+    borrow_master: 39
+    material: aaa
+    quantity: 4
+- model: company_profile.appborrowmaterialdetail
+  pk: 39
+  fields:
+    borrow_master: 40
+    material: bbbb
+    quantity: 7
 - model: company_profile.appsendsamplesforanalysisdetail
   pk: 1
   fields:
@@ -2661,10 +2685,26 @@
   fields:
     name: pro_company_application_approve
     permissions: []
+- model: auth.group
+  fields:
+    name: company_type_entaj
+    permissions: []
+- model: auth.group
+  fields:
+    name: company_type_mokhalfat
+    permissions: []
+- model: auth.group
+  fields:
+    name: company_type_emtiaz
+    permissions: []
+- model: auth.group
+  fields:
+    name: company_type_sageer
+    permissions: []
 - model: accounts.customuser
   fields:
     password: pbkdf2_sha256$720000$tH5f7gkeFN9Es8mHafSUxJ$P28/0MeQeLvSmoLdJodz05oaT8noDhnJa2DUp0FwHP8=
-    last_login: 2024-03-06 12:28:30+00:00
+    last_login: 2024-03-07 17:44:17+00:00
     is_superuser: true
     username: admin
     first_name: ''
@@ -2673,15 +2713,16 @@
     is_staff: true
     is_active: true
     date_joined: 2024-01-28 16:57:39+00:00
-    lang: en
+    lang: ar
     groups:
     - - pro_company_application_accept
     - - pro_company_application_approve
+    - - company_type_entaj
     user_permissions: []
 - model: accounts.customuser
   fields:
-    password: pbkdf2_sha256$720000$lEDPxNchkMzbWsLXvhzF7Z$79mrLMWU+1GQDMdcpWtSGnStSnwallslYXbjKxhBL3I=
-    last_login: 2024-02-06 22:23:56.506974+00:00
+    password: pbkdf2_sha256$720000$57oKI9KKl7MAC767X3mDK8$rIfB9CAfwFZ4p9ND2vT9njC1k/RLFcbWXwF/QGBDu+0=
+    last_login: 2024-03-07 17:58:25.325917+00:00
     is_superuser: false
     username: bbb
     first_name: ''
@@ -3607,6 +3648,70 @@
     borrow_date: 2024-02-07
     borrow_materials_list_file: company_4/applications/for_upload_4Org9XG
     borrow_from_approval_file: company_4/applications/for_upload_NGadPYD
+- model: company_profile.appborrowmaterial
+  pk: 37
+  fields:
+    created_at: 2024-03-05 08:53:58.446593+00:00
+    created_by:
+    - admin
+    updated_at: 2024-03-05 08:53:58.446670+00:00
+    updated_by:
+    - admin
+    state: submitted
+    notify: false
+    company: 1
+    company_from: 2
+    borrow_date: 2024-03-05
+    borrow_materials_list_file: company_1/applications/طلب_إستلاف_مواد.docx
+    borrow_from_approval_file: company_1/applications/طلب_إستلاف_مواد.pdf
+- model: company_profile.appborrowmaterial
+  pk: 38
+  fields:
+    created_at: 2024-03-05 08:55:37.264076+00:00
+    created_by:
+    - admin
+    updated_at: 2024-03-05 08:55:37.264173+00:00
+    updated_by:
+    - admin
+    state: submitted
+    notify: false
+    company: 1
+    company_from: 4
+    borrow_date: 2024-03-05
+    borrow_materials_list_file: company_1/applications/طلب_إستلاف_مواد_mTwStQ1.pdf
+    borrow_from_approval_file: company_1/applications/نموذج_الدليل.docx
+- model: company_profile.appborrowmaterial
+  pk: 39
+  fields:
+    created_at: 2024-03-05 09:07:54.007104+00:00
+    created_by:
+    - admin
+    updated_at: 2024-03-05 09:07:54.007157+00:00
+    updated_by:
+    - admin
+    state: submitted
+    notify: false
+    company: 1
+    company_from: 2
+    borrow_date: 2024-03-05
+    borrow_materials_list_file: company_1/applications/طلب_إستلاف_مواد_x241c6l.pdf
+    borrow_from_approval_file: company_1/applications/طلب_إستلاف_مواد_t7BWh0W.docx
+- model: company_profile.appborrowmaterial
+  pk: 40
+  fields:
+    created_at: 2024-03-05 09:08:50.324411+00:00
+    created_by:
+    - admin
+    updated_at: 2024-03-05 09:08:50.324469+00:00
+    updated_by:
+    - admin
+    state: submitted
+    notify: false
+    company: 1
+    company_from: 4
+    borrow_date: 2024-03-05
+    borrow_materials_list_file: company_1/applications/طلب_إستلاف_مواد_5F3iFv2.pdf
+    borrow_from_approval_file: company_1/applications/طلب_إستلاف_مواد_TwaNEfv.docx
 - model: company_profile.appworkplan
   pk: 1
   fields:
@@ -4604,10 +4709,10 @@
     created_at: 2024-02-07 03:48:12.830285+00:00
     created_by:
     - admin
-    updated_at: 2024-03-06 12:25:16.898328+00:00
+    updated_at: 2024-02-07 03:51:05.419805+00:00
     updated_by:
     - admin
-    state: accepted
+    state: submitted
     notify: false
     company: 1
     reason_for_change: "asgdakjsgdjkas ajsgdjhkasgdjkhasg asgdjkasgdjkasgdkujas asgdjhasgd
@@ -8835,33 +8940,72 @@
 - model: admin.logentry
   pk: 269
   fields:
-    action_time: 2024-03-06 12:25:16.900425+00:00
-    user:
-    - admin
-    content_type:
-    - company_profile
-    - appchangeworkprocedure
-    object_id: '1'
-    object_repr: تغيير طريقة العمل (1)
-    action_flag: 2
-    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
-- model: admin.logentry
-  pk: 270
-  fields:
-    action_time: 2024-03-06 12:27:36.058722+00:00
+    action_time: 2024-03-07 17:44:51.921859+00:00
     user:
     - admin
     content_type:
     - accounts
     - customuser
-    object_id: '1'
-    object_repr: admin@smrc.sd
+    object_id: '4'
+    object_repr: info@bbb.com
     action_flag: 2
-    change_message: '[{"changed": {"fields": ["Groups"]}}]'
+    change_message: '[{"changed": {"fields": ["password"]}}]'
+- model: admin.logentry
+  pk: 270
+  fields:
+    action_time: 2024-03-07 17:46:36.662292+00:00
+    user:
+    - admin
+    content_type:
+    - auth
+    - group
+    object_id: '5'
+    object_repr: company_type_entaj
+    action_flag: 1
+    change_message: '[{"added": {}}]'
 - model: admin.logentry
   pk: 271
   fields:
-    action_time: 2024-03-07 12:43:22.159239+00:00
+    action_time: 2024-03-07 17:46:53.062032+00:00
+    user:
+    - admin
+    content_type:
+    - auth
+    - group
+    object_id: '6'
+    object_repr: company_type_mokhalfat
+    action_flag: 1
+    change_message: '[{"added": {}}]'
+- model: admin.logentry
+  pk: 272
+  fields:
+    action_time: 2024-03-07 17:47:03.711662+00:00
+    user:
+    - admin
+    content_type:
+    - auth
+    - group
+    object_id: '7'
+    object_repr: company_type_emtiaz
+    action_flag: 1
+    change_message: '[{"added": {}}]'
+- model: admin.logentry
+  pk: 273
+  fields:
+    action_time: 2024-03-07 17:47:19.779801+00:00
+    user:
+    - admin
+    content_type:
+    - auth
+    - group
+    object_id: '8'
+    object_repr: company_type_sageer
+    action_flag: 1
+    change_message: '[{"added": {}}]'
+- model: admin.logentry
+  pk: 274
+  fields:
+    action_time: 2024-03-07 17:50:18.662157+00:00
     user:
     - admin
     content_type:

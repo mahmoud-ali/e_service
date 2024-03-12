@@ -17,7 +17,7 @@ from .models import LkpNationality,LkpState,LkpLocality,LkpMineral,LkpCompanyPro
                                       AppReexportEquipments,AppReexportEquipmentsDetail,AppRequirementsList, \
                                       AppRequirementsListMangamEquipments,AppRequirementsListFactoryEquipments,AppRequirementsListElectricityEquipments, \
                                       AppRequirementsListChemicalLabEquipments,AppRequirementsListChemicalEquipments, \
-                                      AppRequirementsListMotafjeratEquipments,AppRequirementsListVehiclesEquipments
+                                      AppRequirementsListMotafjeratEquipments,AppRequirementsListVehiclesEquipments,TblCompany
 
 from .forms import TblCompanyProductionForm,AppForignerMovementAdminForm,AppBorrowMaterialAdminForm,AppWorkPlanAdminForm, \
                    AppTechnicalFinancialReportAdminForm,AppChangeCompanyNameAdminForm, AppExplorationTimeAdminForm, \
@@ -57,16 +57,28 @@ class WorkflowAdminMixin:
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
-        # if request.user.is_superuser:
-            # return qs
         filter = []
+        company_types = []
 
         if request.user.groups.filter(name="pro_company_application_accept").exists():
             filter += ["submitted"]
         if request.user.groups.filter(name="pro_company_application_approve").exists():
             filter += ["accepted","approved","rejected"]
 
-        return qs.filter(state__in=filter)
+        if request.user.groups.filter(name="company_type_entaj").exists():
+            company_types += [TblCompany.COMPANY_TYPE_ENTAJ]
+        if request.user.groups.filter(name="company_type_mokhalfat").exists():
+            company_types += [TblCompany.COMPANY_TYPE_MOKHALFAT]
+        if request.user.groups.filter(name="company_type_emtiaz").exists():
+            company_types += [TblCompany.COMPANY_TYPE_EMTIAZ]
+        if request.user.groups.filter(name="company_type_sageer").exists():
+            company_types += [TblCompany.COMPANY_TYPE_SAGEER]
+
+
+        qs = qs.filter(state__in=filter)
+        qs = qs.filter(company__company_type__in=company_types)
+
+        return qs
 
     def save_model(self, request, obj, form, change):
         if obj.pk:
@@ -100,7 +112,7 @@ class WorkflowAdminMixin:
 class TblCompanyProductionAdmin(LoggingAdminMixin,admin.ModelAdmin):
     form = TblCompanyProductionForm
     fieldsets = [
-        (None, {"fields": [("name_ar","name_en"),"nationality"]}),
+        (None, {"fields": [("company_type"),("name_ar","name_en"),"nationality"]}),
         (_("Location information"), {"fields": [("state","locality"),"location","cordinates","address",("website","email")]}),
         (_("Contact information"), {"fields": [("manager_name","manager_phone"),("rep_name","rep_phone")]}),
         (_("Company Status"), {"fields": ["status"]}),
@@ -114,16 +126,48 @@ class TblCompanyProductionAdmin(LoggingAdminMixin,admin.ModelAdmin):
 
     class Media:
         js = ('admin/js/jquery.init.js','company_profile/js/lkp_state_change.js')
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        company_types = []
+
+        if request.user.groups.filter(name="company_type_entaj").exists():
+            company_types += [TblCompany.COMPANY_TYPE_ENTAJ]
+        if request.user.groups.filter(name="company_type_mokhalfat").exists():
+            company_types += [TblCompany.COMPANY_TYPE_MOKHALFAT]
+        if request.user.groups.filter(name="company_type_emtiaz").exists():
+            company_types += [TblCompany.COMPANY_TYPE_EMTIAZ]
+        if request.user.groups.filter(name="company_type_sageer").exists():
+            company_types += [TblCompany.COMPANY_TYPE_SAGEER]
+
+        qs = qs.filter(company_type__in=company_types)
+
+        return qs
+
+    
+    def get_form(self, request, *args, **kwargs):
+        form = super(TblCompanyProductionAdmin, self).get_form(request, *args, **kwargs)
+        company_type = []
+        if request.user.groups.filter(name="company_type_entaj").exists():
+            company_type += [(TblCompany.COMPANY_TYPE_ENTAJ,_(TblCompany.COMPANY_TYPE_ENTAJ))]
+        if request.user.groups.filter(name="company_type_mokhalfat").exists():
+            company_type += [(TblCompany.COMPANY_TYPE_MOKHALFAT,_(TblCompany.COMPANY_TYPE_MOKHALFAT))]
+        if request.user.groups.filter(name="company_type_emtiaz").exists():
+            company_type += [(TblCompany.COMPANY_TYPE_EMTIAZ,_(TblCompany.COMPANY_TYPE_EMTIAZ))]
+        if request.user.groups.filter(name="company_type_sageer").exists():
+            company_type += [(TblCompany.COMPANY_TYPE_SAGEER,_(TblCompany.COMPANY_TYPE_SAGEER))]
+
+        form.choices = company_type
+        return form
     
     def save_model(self, request, obj, form, change):
         super().save_model(request, obj, form, change)                
 
-        User = get_user_model()
-        
-        com_user = User.objects.create_user(obj.name_en,obj.email,settings.ACCOUNT_DEFAULT_PASSWORD)
-    
-        u = TblCompanyProductionUserRole(company=obj,user=com_user)
-        u.save()
+        if not obj.id:
+            User = get_user_model()            
+            com_user = User.objects.create_user(obj.name_en,obj.email,settings.ACCOUNT_DEFAULT_PASSWORD)
+            u = TblCompanyProductionUserRole(company=obj,user=com_user)
+            u.save()
         
 class TblCompanyProductionFactoryAdmin(LoggingAdminMixin,admin.ModelAdmin):
     fields = ["company", ("factory_type","capacity")]

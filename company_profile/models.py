@@ -96,7 +96,6 @@ class TblCompany(LoggingModel):
     COMPANY_TYPE_EMTIAZ = "emtiaz"
     COMPANY_TYPE_SAGEER = "sageer"
 
-
     COMPANY_TYPE_CHOICES = {
         COMPANY_TYPE_ENTAJ: _("entaj"),
         COMPANY_TYPE_MOKHALFAT: _("mokhalfat"),

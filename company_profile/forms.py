@@ -24,6 +24,11 @@ class LanguageForm(forms.Form):
     language = forms.CharField(max_length=2)
 
 class TblCompanyProductionForm(ModelForm):
+    company_type = forms.ChoiceField(choices=[],label=_("company_type"))
+    def __init__(self, *args,company_id = None, **kwargs):        
+        super().__init__(*args, **kwargs)
+        if self.choices:
+            self.fields["company_type"].choices = self.choices
 
     class Meta:
         model = TblCompanyProduction
