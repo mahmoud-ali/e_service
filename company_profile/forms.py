@@ -10,7 +10,8 @@ from .workflow import SUBMITTED,ACCEPTED,APPROVED,REJECTED,WorkflowFormMixin
 from .models import TblCompanyProduction, AppForignerMovement,AppBorrowMaterial,AppWorkPlan,AppTechnicalFinancialReport,AppChangeCompanyName, \
                     AppExplorationTime, AppAddArea, AppRemoveArea, AppTnazolShraka, AppTajeelTnazol,AppTajmeed,AppTakhali,AppTamdeed, \
                     AppTaaweed,AppMda,AppChangeWorkProcedure,AppExportGold,AppExportGoldRaw,AppSendSamplesForAnalysis,AppForeignerProcedure, \
-                    AppAifaaJomrki,AppReexportEquipments,AppRequirementsList,TblCompanyProductionLicense,AppVisibityStudy
+                    AppAifaaJomrki,AppReexportEquipments,AppRequirementsList,TblCompanyProductionLicense,AppVisibityStudy, \
+                    AppTemporaryExemption
 
 class LanguageForm(forms.Form):
     LANG_AR = "ar"
@@ -420,5 +421,19 @@ class AppVisibityStudyForm(AppVisibityStudyAdminForm):
     company = None
     class Meta:
         model = AppVisibityStudy
+        exclude = ["company","state"]
+        widgets = {}
+
+class AppTemporaryExemptionAdminForm(WorkflowFormMixin,ModelForm):
+    company = forms.ModelChoiceField(queryset=TblCompanyProduction.objects.all(), disabled=True, label=_("company"))
+
+    class Meta:
+        model = AppTemporaryExemption
+        fields = ["company","license_type","study_area", "study_type", "study_comment","state","attachement_file"] 
+        
+class AppTemporaryExemptionForm(AppTemporaryExemptionAdminForm):
+    company = None
+    class Meta:
+        model = AppTemporaryExemption
         exclude = ["company","state"]
         widgets = {}
