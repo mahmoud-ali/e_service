@@ -949,3 +949,19 @@ class AppExplosivePermission(WorkflowModel):
         ordering = ["-id"]
         verbose_name = _("Application: Explosive Permission")
         verbose_name_plural = _("Application: Explosive Permission")
+
+class AppRestartActivity(WorkflowModel):
+    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
+
+    attachement_file = models.FileField(_("attachement_file"),upload_to=company_applications_path)
+
+    def __str__(self):
+        return _("Restart Activity") +" ("+str(self.id)+")"
+        
+    def get_absolute_url(self): 
+        return reverse('profile:app_restart_activity_show',args=[str(self.id)])                
+    
+    class Meta:
+        ordering = ["-id"]
+        verbose_name = _("Application: Restart Activity")
+        verbose_name_plural = _("Application: Restart Activity")
