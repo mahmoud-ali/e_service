@@ -27,7 +27,8 @@ from .views import SetLanguageView, HomePageView, \
                    AppAifaaJomrkiListView, AppAifaaJomrkiCreateView, AppAifaaJomrkiReadonlyView, \
                    AppReexportEquipmentsListView, AppReexportEquipmentsCreateView, AppReexportEquipmentsReadonlyView, \
                    AppRequirementsListListView, AppRequirementsListCreateView, AppRequirementsListReadonlyView, \
-                   AppVisibityStudyListView, AppVisibityStudyCreateView, AppVisibityStudyReadonlyView
+                   AppVisibityStudyListView, AppVisibityStudyCreateView, AppVisibityStudyReadonlyView, \
+                   AppTemporaryExemptionCreateView, AppTemporaryExemptionListView, AppTemporaryExemptionReadonlyView
 
 app_name = "profile"
 urlpatterns = [                                                        
@@ -155,5 +156,10 @@ urlpatterns = [
     path('app_visibility_study/<int:type>/', AppVisibityStudyListView.as_view(), name='app_visibility_study_list'),
     path('app_visibility_study/<int:pk>/show/', AppVisibityStudyReadonlyView.as_view(), name='app_visibility_study_show'),    
     path('app_visibility_study/add/', AppVisibityStudyCreateView.as_view(), name='app_visibility_study_add'),
+
+    path('app_temporary_exemption/', AppTemporaryExemptionListView.as_view(), name='app_temporary_exemption_list'),
+    path('app_temporary_exemption/<int:type>/', AppTemporaryExemptionListView.as_view(), name='app_temporary_exemption_list'),
+    path('app_temporary_exemption/<int:pk>/show/', AppTemporaryExemptionReadonlyView.as_view(), name='app_temporary_exemption_show'),    
+    path('app_temporary_exemption/add/', AppTemporaryExemptionCreateView.as_view(), name='app_temporary_exemption_add'),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
