@@ -7,7 +7,7 @@ from django_fsm import can_proceed
 
 from .workflow import SUBMITTED,ACCEPTED,APPROVED,REJECTED,WorkflowFormMixin
 
-from .models import AppRestartActivity, TblCompanyProduction, AppForignerMovement,AppBorrowMaterial,AppWorkPlan,AppTechnicalFinancialReport,AppChangeCompanyName, \
+from .models import AppRenewalContract, AppRestartActivity, TblCompanyProduction, AppForignerMovement,AppBorrowMaterial,AppWorkPlan,AppTechnicalFinancialReport,AppChangeCompanyName, \
                     AppExplorationTime, AppAddArea, AppRemoveArea, AppTnazolShraka, AppTajeelTnazol,AppTajmeed,AppTakhali,AppTamdeed, \
                     AppTaaweed,AppMda,AppChangeWorkProcedure,AppExportGold,AppExportGoldRaw,AppSendSamplesForAnalysis,AppForeignerProcedure, \
                     AppAifaaJomrki,AppReexportEquipments,AppRequirementsList,TblCompanyProductionLicense,AppVisibityStudy, \
@@ -491,5 +491,19 @@ class AppRestartActivityForm(AppRestartActivityAdminForm):
     company = None
     class Meta:
         model = AppRestartActivity
+        exclude = ["company","state"]
+        widgets = {}
+
+class AppRenewalContractAdminForm(WorkflowFormMixin,ModelForm):
+    company = forms.ModelChoiceField(queryset=TblCompanyProduction.objects.all(), disabled=True, label=_("company"))
+
+    class Meta:
+        model = AppRenewalContract
+        fields = ["company","state","attachement_file"] 
+        
+class AppRenewalContractForm(AppRenewalContractAdminForm):
+    company = None
+    class Meta:
+        model = AppRenewalContract
         exclude = ["company","state"]
         widgets = {}
