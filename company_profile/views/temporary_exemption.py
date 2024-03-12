@@ -58,7 +58,7 @@ class AppTemporaryExemptionCreateView(ApplicationCreateView):
         self.object.company = self.request.user.pro_company.company
         self.object.created_by = self.object.updated_by = self.request.user
 
-        self.object.approved_work_plan_file = self.request.FILES["approved_work_plan_file"]
+        self.object.attachement_file = self.request.FILES["attachement_file"]
         self.object.save()
         
         messages.add_message(self.request,messages.SUCCESS,_("Application sent successfully."))
