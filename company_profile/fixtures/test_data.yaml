@@ -246,6 +246,34 @@
   fields:
     app_label: company_profile
     model: appvisibitystudy
+- model: contenttypes.contenttype
+  fields:
+    app_label: company_profile
+    model: apprestartactivity
+- model: contenttypes.contenttype
+  fields:
+    app_label: company_profile
+    model: appcyanidecertificate
+- model: contenttypes.contenttype
+  fields:
+    app_label: company_profile
+    model: appexplosivepermission
+- model: contenttypes.contenttype
+  fields:
+    app_label: company_profile
+    model: applocalpurchase
+- model: contenttypes.contenttype
+  fields:
+    app_label: company_profile
+    model: appimportpermission
+- model: contenttypes.contenttype
+  fields:
+    app_label: company_profile
+    model: apptemporaryexemption
+- model: contenttypes.contenttype
+  fields:
+    app_label: company_profile
+    model: apprenewalcontract
 - model: sessions.session
   pk: 0rjpvyn2c810g58crxkkfdbgoq2xbd6q
   fields:
@@ -256,6 +284,11 @@
   fields:
     session_data: .eJxtUMtuhDAM_BefEUoCMY9T29-oVsgkrojKY4WDutVq_71hy4WqN2tmPB7PHci5ZZtjR1sceI7BUQzL3E0ch8ULtO93-J2hhSuJfC2rhwwoQqsr1aBGY3WO2NRFozPgicKYpOSnML_ItLpcPDwuGTwvdJvw2oXdTMMJ68l98rwTNI47nB_J8qfmoCV_PeV8O7ZOVgPJkHycqo2uyJVWIfU11xa14QLLxqGpCmOVZ7bc90iq_3BYoCmoMpWiNFiz5_unHPbd399rUybvFEFYZC-Pb9ewfieRSSKlHj-2GXTJ:1rhNHf:xKiCfqTB32PE4eiPvtbUyukbeqCg5S_hpohuR9tucSA
     expire_date: 2024-03-19 05:24:11.683749+00:00
+- model: sessions.session
+  pk: 43uuegnmv2e225qb2avns38n0d0k5tfv
+  fields:
+    session_data: .eJxtUEFuhDAM_IvPCIWEJCyntt-oqsgkrogKYYWD2mq1f2_YcqHqzRqPxzNzA_R-2VJ2uOWRUo4ec1ySmymPS2DoX2_wO0MPV2T-XNYAFWCGvrGNUK2UVtRdq7WVFdCMcSpMDHNMTzyvvuYA97cKHg_cxrS6uGs1cMIG9B-U9gVO0w7Xh7H6wTnWXD-fbL4cVyepEXksOl50srHoWy0MDh112jSSlGkv3kirpBaBSNMwGBTDuzfKSIW2hMEyaLn7-6cbCu5vdG2VaosDJua9Ovq6xvW7cKS4GCHuP9uQdD8:1rkQ9e:iUhF-jh18wbbsyvNrecx3jRNli8sGl4qZX38s2uYGaU
+    expire_date: 2024-03-27 15:04:30.908446+00:00
 - model: sessions.session
   pk: gd7tmtfdfrjv73h3a3vf1n252txs0enl
   fields:
@@ -281,11 +314,6 @@
   fields:
     session_data: .eJxtUEFuhDAM_IvPCCWBmIRT229UFTKJK6IusMJBbbXavxe2XKh6s2bG4_HcgEKY1yl3tOaBp5wC5TRP3ch5mKNA-3qD3xlauJLI57xEKIAytLpRvkb0DkunrXOuAB4pXTYlxTFNTzIuoZQI97cCHge6VXjp0u6l4YT1FD542gm6XHa4PIKVD81BS_l8ivlybJ2sBpJh8wnKGd1QqK1C6h07i9pwhbUPaJrKWBWZLfc9kurfA1ZoKmpMo2gbrNnz_dMNx-7v68Z7rbcEwiJ7dfx1Tcv3pjHKo1L3HwhKdIA:1rgkSA:oxaqmcjc-wlAh-CrBaWPc_i8f3Ju_YjnFebzEMGcQZc
     expire_date: 2024-03-17 11:56:26.863151+00:00
-- model: sessions.session
-  pk: st02t36cdiv7vfyfqgk05habjcdfqmmi
-  fields:
-    session_data: .eJxtUEFuhDAM_IvPCCUOSYBT229UFTKJK6IusMJBbbXavxe2XKh6s2bG4_HcgEKY1yl3tOaBp5wC5TRP3ch5mKNA-3qD3xlauJLI57xEKIAytNprhVVj0JWmtugqLIBHSpdNSnFM05OMSyglwv2tgMeFbhVeurSbaThhPYUPnnaCLpcdLo9k5UNz0FI-n3K-HFsnq4Fk2HyCqlF7CpVVjvqaa-s0snFVExx6g1ZFZst970j178EZh4Y8ekXbYHHP9085HLu_vze-Qq23CMIie3n8dU3L9yZC1Til7j-jTXSr:1rk1yY:bog3zs_gwnR8Qgmotk4ExvaguAIDZdhA9sukXVoUouM
-    expire_date: 2024-03-26 13:15:26.442870+00:00
 - model: sessions.session
   pk: vowh22t32p6z28v2qod1qc3hmrhpxwm4
   fields:
@@ -2783,6 +2811,202 @@
     - company_profile
     - appvisibitystudy
     codename: view_appvisibitystudy
+- model: auth.permission
+  fields:
+    name: 'Can add Application: Restart Activity'
+    content_type:
+    - company_profile
+    - apprestartactivity
+    codename: add_apprestartactivity
+- model: auth.permission
+  fields:
+    name: 'Can change Application: Restart Activity'
+    content_type:
+    - company_profile
+    - apprestartactivity
+    codename: change_apprestartactivity
+- model: auth.permission
+  fields:
+    name: 'Can delete Application: Restart Activity'
+    content_type:
+    - company_profile
+    - apprestartactivity
+    codename: delete_apprestartactivity
+- model: auth.permission
+  fields:
+    name: 'Can view Application: Restart Activity'
+    content_type:
+    - company_profile
+    - apprestartactivity
+    codename: view_apprestartactivity
+- model: auth.permission
+  fields:
+    name: 'Can add Application: Cyanide Certificate'
+    content_type:
+    - company_profile
+    - appcyanidecertificate
+    codename: add_appcyanidecertificate
+- model: auth.permission
+  fields:
+    name: 'Can change Application: Cyanide Certificate'
+    content_type:
+    - company_profile
+    - appcyanidecertificate
+    codename: change_appcyanidecertificate
+- model: auth.permission
+  fields:
+    name: 'Can delete Application: Cyanide Certificate'
+    content_type:
+    - company_profile
+    - appcyanidecertificate
+    codename: delete_appcyanidecertificate
+- model: auth.permission
+  fields:
+    name: 'Can view Application: Cyanide Certificate'
+    content_type:
+    - company_profile
+    - appcyanidecertificate
+    codename: view_appcyanidecertificate
+- model: auth.permission
+  fields:
+    name: 'Can add Application: Explosive Permission'
+    content_type:
+    - company_profile
+    - appexplosivepermission
+    codename: add_appexplosivepermission
+- model: auth.permission
+  fields:
+    name: 'Can change Application: Explosive Permission'
+    content_type:
+    - company_profile
+    - appexplosivepermission
+    codename: change_appexplosivepermission
+- model: auth.permission
+  fields:
+    name: 'Can delete Application: Explosive Permission'
+    content_type:
+    - company_profile
+    - appexplosivepermission
+    codename: delete_appexplosivepermission
+- model: auth.permission
+  fields:
+    name: 'Can view Application: Explosive Permission'
+    content_type:
+    - company_profile
+    - appexplosivepermission
+    codename: view_appexplosivepermission
+- model: auth.permission
+  fields:
+    name: 'Can add Application: Local Purchase'
+    content_type:
+    - company_profile
+    - applocalpurchase
+    codename: add_applocalpurchase
+- model: auth.permission
+  fields:
+    name: 'Can change Application: Local Purchase'
+    content_type:
+    - company_profile
+    - applocalpurchase
+    codename: change_applocalpurchase
+- model: auth.permission
+  fields:
+    name: 'Can delete Application: Local Purchase'
+    content_type:
+    - company_profile
+    - applocalpurchase
+    codename: delete_applocalpurchase
+- model: auth.permission
+  fields:
+    name: 'Can view Application: Local Purchase'
+    content_type:
+    - company_profile
+    - applocalpurchase
+    codename: view_applocalpurchase
+- model: auth.permission
+  fields:
+    name: 'Can add Application: Import Permission'
+    content_type:
+    - company_profile
+    - appimportpermission
+    codename: add_appimportpermission
+- model: auth.permission
+  fields:
+    name: 'Can change Application: Import Permission'
+    content_type:
+    - company_profile
+    - appimportpermission
+    codename: change_appimportpermission
+- model: auth.permission
+  fields:
+    name: 'Can delete Application: Import Permission'
+    content_type:
+    - company_profile
+    - appimportpermission
+    codename: delete_appimportpermission
+- model: auth.permission
+  fields:
+    name: 'Can view Application: Import Permission'
+    content_type:
+    - company_profile
+    - appimportpermission
+    codename: view_appimportpermission
+- model: auth.permission
+  fields:
+    name: 'Can add Application: Temporary Exemption'
+    content_type:
+    - company_profile
+    - apptemporaryexemption
+    codename: add_apptemporaryexemption
+- model: auth.permission
+  fields:
+    name: 'Can change Application: Temporary Exemption'
+    content_type:
+    - company_profile
+    - apptemporaryexemption
+    codename: change_apptemporaryexemption
+- model: auth.permission
+  fields:
+    name: 'Can delete Application: Temporary Exemption'
+    content_type:
+    - company_profile
+    - apptemporaryexemption
+    codename: delete_apptemporaryexemption
+- model: auth.permission
+  fields:
+    name: 'Can view Application: Temporary Exemption'
+    content_type:
+    - company_profile
+    - apptemporaryexemption
+    codename: view_apptemporaryexemption
+- model: auth.permission
+  fields:
+    name: 'Can add Application: Renewal Contract'
+    content_type:
+    - company_profile
+    - apprenewalcontract
+    codename: add_apprenewalcontract
+- model: auth.permission
+  fields:
+    name: 'Can change Application: Renewal Contract'
+    content_type:
+    - company_profile
+    - apprenewalcontract
+    codename: change_apprenewalcontract
+- model: auth.permission
+  fields:
+    name: 'Can delete Application: Renewal Contract'
+    content_type:
+    - company_profile
+    - apprenewalcontract
+    codename: delete_apprenewalcontract
+- model: auth.permission
+  fields:
+    name: 'Can view Application: Renewal Contract'
+    content_type:
+    - company_profile
+    - apprenewalcontract
+    codename: view_apprenewalcontract
 - model: auth.group
   fields:
     name: pro_company_application_accept
@@ -2810,7 +3034,7 @@
 - model: accounts.customuser
   fields:
     password: pbkdf2_sha256$720000$tH5f7gkeFN9Es8mHafSUxJ$P28/0MeQeLvSmoLdJodz05oaT8noDhnJa2DUp0FwHP8=
-    last_login: 2024-03-12 13:15:26+00:00
+    last_login: 2024-03-13 15:04:30.854443+00:00
     is_superuser: true
     username: admin
     first_name: ''
@@ -2831,7 +3055,7 @@
 - model: accounts.customuser
   fields:
     password: pbkdf2_sha256$720000$57oKI9KKl7MAC767X3mDK8$rIfB9CAfwFZ4p9ND2vT9njC1k/RLFcbWXwF/QGBDu+0=
-    last_login: 2024-03-12 13:14:03.061106+00:00
+    last_login: 2024-03-13 15:04:12.629021+00:00
     is_superuser: false
     username: bbb
     first_name: ''
@@ -5344,8 +5568,8 @@
     - admin
     state: accepted
     notify: false
-    company: 4
-    license_type: 2
+    company: 1
+    license_type: 1
     approved_requirements_list_file: company_1/applications/info_5X3rCE4
     approval_from_finance_ministry_file: company_1/applications/info_9ho8QZh
     final_voucher_file: company_1/applications/info_VK12IfS
@@ -5558,14 +5782,14 @@
   fields:
     created_at: 2024-03-12 09:52:41.281156+00:00
     created_by:
-    - bbb
+    - admin
     updated_at: 2024-03-12 09:53:59.391807+00:00
     updated_by:
     - admin
     state: approved
     notify: false
-    company: 4
-    license_type: 2
+    company: 1
+    license_type: 1
     study_area: منطقة الشوينات
     study_type: خصائص فيزيائية
     study_comment: يسبب شيبس
@@ -5575,14 +5799,14 @@
   fields:
     created_at: 2024-03-12 11:53:59.055767+00:00
     created_by:
-    - bbb
+    - admin
     updated_at: 2024-03-12 11:56:13.859411+00:00
     updated_by:
     - admin
     state: rejected
     notify: false
-    company: 4
-    license_type: 2
+    company: 1
+    license_type: 1
     study_area: كبكابية
     study_type: فنية
     study_comment: بثققصثف
@@ -5592,14 +5816,14 @@
   fields:
     created_at: 2024-03-12 11:55:36.208103+00:00
     created_by:
-    - bbb
+    - admin
     updated_at: 2024-03-12 11:55:36.208167+00:00
     updated_by:
     - admin
     state: submitted
     notify: false
-    company: 4
-    license_type: 2
+    company: 1
+    license_type: 1
     study_area: الناصرية
     study_type: اقتصادية
     study_comment: ثصقصصث
@@ -5655,6 +5879,370 @@
     study_type: c
     study_comment: c
     attachement_file: company_4/applications/for_upload_3yY8mGL
+- model: company_profile.apptemporaryexemption
+  pk: 1
+  fields:
+    created_at: 2024-03-12 23:30:20.014200+00:00
+    created_by:
+    - admin
+    updated_at: 2024-03-12 23:30:20.014273+00:00
+    updated_by:
+    - admin
+    state: submitted
+    notify: false
+    company: 1
+    attachement_file: company_1/applications/for_upload_elPVSgf
+- model: company_profile.apptemporaryexemption
+  pk: 2
+  fields:
+    created_at: 2024-03-13 13:50:40.416545+00:00
+    created_by:
+    - bbb
+    updated_at: 2024-03-13 13:50:40.416613+00:00
+    updated_by:
+    - bbb
+    state: submitted
+    notify: false
+    company: 4
+    attachement_file: company_4/applications/for_upload_eBsMgE8
+- model: company_profile.apptemporaryexemption
+  pk: 3
+  fields:
+    created_at: 2024-03-13 13:50:51.034645+00:00
+    created_by:
+    - bbb
+    updated_at: 2024-03-13 13:54:23.269313+00:00
+    updated_by:
+    - admin
+    state: rejected
+    notify: false
+    company: 4
+    attachement_file: company_4/applications/for_upload_Z5NalvF
+- model: company_profile.apptemporaryexemption
+  pk: 4
+  fields:
+    created_at: 2024-03-13 13:50:56.304478+00:00
+    created_by:
+    - bbb
+    updated_at: 2024-03-13 13:53:59.657595+00:00
+    updated_by:
+    - admin
+    state: approved
+    notify: false
+    company: 4
+    attachement_file: company_4/applications/for_upload_OsnTwDK
+- model: company_profile.applocalpurchase
+  pk: 1
+  fields:
+    created_at: 2024-03-12 23:30:05.707911+00:00
+    created_by:
+    - admin
+    updated_at: 2024-03-12 23:30:05.707980+00:00
+    updated_by:
+    - admin
+    state: submitted
+    notify: false
+    company: 1
+    attachement_file: company_1/applications/for_upload_ZBhO7ya
+- model: company_profile.applocalpurchase
+  pk: 2
+  fields:
+    created_at: 2024-03-13 13:51:05.105189+00:00
+    created_by:
+    - bbb
+    updated_at: 2024-03-13 13:51:05.105261+00:00
+    updated_by:
+    - bbb
+    state: submitted
+    notify: false
+    company: 4
+    attachement_file: company_4/applications/for_upload_xOiWXqR
+- model: company_profile.applocalpurchase
+  pk: 3
+  fields:
+    created_at: 2024-03-13 13:51:10.477263+00:00
+    created_by:
+    - bbb
+    updated_at: 2024-03-13 13:56:55.972118+00:00
+    updated_by:
+    - admin
+    state: rejected
+    notify: false
+    company: 4
+    attachement_file: company_4/applications/for_upload_puMtddA
+- model: company_profile.applocalpurchase
+  pk: 4
+  fields:
+    created_at: 2024-03-13 13:51:15.603763+00:00
+    created_by:
+    - bbb
+    updated_at: 2024-03-13 13:56:39.251635+00:00
+    updated_by:
+    - admin
+    state: approved
+    notify: false
+    company: 4
+    attachement_file: company_4/applications/for_upload_GCxGE8Z
+- model: company_profile.appcyanidecertificate
+  pk: 1
+  fields:
+    created_at: 2024-03-13 08:46:41.825748+00:00
+    created_by:
+    - admin
+    updated_at: 2024-03-13 08:46:41.825819+00:00
+    updated_by:
+    - admin
+    state: submitted
+    notify: false
+    company: 1
+    attachement_file: company_1/applications/for_upload_cMiwqTA
+- model: company_profile.appcyanidecertificate
+  pk: 2
+  fields:
+    created_at: 2024-03-13 13:51:23.517685+00:00
+    created_by:
+    - bbb
+    updated_at: 2024-03-13 13:51:23.517747+00:00
+    updated_by:
+    - bbb
+    state: submitted
+    notify: false
+    company: 4
+    attachement_file: company_4/applications/for_upload_t2qB57v
+- model: company_profile.appcyanidecertificate
+  pk: 3
+  fields:
+    created_at: 2024-03-13 13:51:29.087160+00:00
+    created_by:
+    - bbb
+    updated_at: 2024-03-13 13:58:03.549443+00:00
+    updated_by:
+    - admin
+    state: rejected
+    notify: false
+    company: 4
+    attachement_file: company_4/applications/for_upload_rBG4R8F
+- model: company_profile.appcyanidecertificate
+  pk: 4
+  fields:
+    created_at: 2024-03-13 13:51:34.157561+00:00
+    created_by:
+    - bbb
+    updated_at: 2024-03-13 13:57:54.431173+00:00
+    updated_by:
+    - admin
+    state: approved
+    notify: false
+    company: 4
+    attachement_file: company_4/applications/for_upload_A79qrIm
+- model: company_profile.appexplosivepermission
+  pk: 1
+  fields:
+    created_at: 2024-03-13 08:56:28.254828+00:00
+    created_by:
+    - admin
+    updated_at: 2024-03-13 08:56:28.254899+00:00
+    updated_by:
+    - admin
+    state: submitted
+    notify: false
+    company: 1
+    attachement_file: company_1/applications/for_upload_zH71f1e
+- model: company_profile.appexplosivepermission
+  pk: 2
+  fields:
+    created_at: 2024-03-13 13:51:41.680959+00:00
+    created_by:
+    - bbb
+    updated_at: 2024-03-13 13:51:41.681033+00:00
+    updated_by:
+    - bbb
+    state: submitted
+    notify: false
+    company: 4
+    attachement_file: company_4/applications/for_upload_VEQWz45
+- model: company_profile.appexplosivepermission
+  pk: 3
+  fields:
+    created_at: 2024-03-13 13:51:46.619125+00:00
+    created_by:
+    - bbb
+    updated_at: 2024-03-13 13:55:08.620726+00:00
+    updated_by:
+    - admin
+    state: rejected
+    notify: false
+    company: 4
+    attachement_file: company_4/applications/for_upload_5ydSuoB
+- model: company_profile.appexplosivepermission
+  pk: 4
+  fields:
+    created_at: 2024-03-13 13:51:52.606845+00:00
+    created_by:
+    - bbb
+    updated_at: 2024-03-13 13:54:59.493513+00:00
+    updated_by:
+    - admin
+    state: approved
+    notify: false
+    company: 4
+    attachement_file: company_4/applications/for_upload_8ov7G6m
+- model: company_profile.apprestartactivity
+  pk: 1
+  fields:
+    created_at: 2024-03-13 09:03:25.844200+00:00
+    created_by:
+    - admin
+    updated_at: 2024-03-13 09:03:25.844285+00:00
+    updated_by:
+    - admin
+    state: submitted
+    notify: false
+    company: 1
+    attachement_file: company_1/applications/for_upload_9VYUkUX
+- model: company_profile.apprestartactivity
+  pk: 2
+  fields:
+    created_at: 2024-03-13 13:52:01.547394+00:00
+    created_by:
+    - bbb
+    updated_at: 2024-03-13 13:52:01.547455+00:00
+    updated_by:
+    - bbb
+    state: submitted
+    notify: false
+    company: 4
+    attachement_file: company_4/applications/for_upload_2XoAt49
+- model: company_profile.apprestartactivity
+  pk: 3
+  fields:
+    created_at: 2024-03-13 13:52:08.652440+00:00
+    created_by:
+    - bbb
+    updated_at: 2024-03-13 13:59:48.205779+00:00
+    updated_by:
+    - admin
+    state: rejected
+    notify: false
+    company: 4
+    attachement_file: company_4/applications/for_upload_4IiZNbU
+- model: company_profile.apprestartactivity
+  pk: 4
+  fields:
+    created_at: 2024-03-13 13:52:13.624498+00:00
+    created_by:
+    - bbb
+    updated_at: 2024-03-13 13:59:39.157340+00:00
+    updated_by:
+    - admin
+    state: approved
+    notify: false
+    company: 4
+    attachement_file: company_4/applications/for_upload_YjJ6uvh
+- model: company_profile.apprenewalcontract
+  pk: 1
+  fields:
+    created_at: 2024-03-13 09:13:13.599500+00:00
+    created_by:
+    - admin
+    updated_at: 2024-03-13 09:13:13.599575+00:00
+    updated_by:
+    - admin
+    state: submitted
+    notify: false
+    company: 1
+    attachement_file: company_1/applications/for_upload_I5cCtqe
+- model: company_profile.apprenewalcontract
+  pk: 2
+  fields:
+    created_at: 2024-03-13 13:52:21.204456+00:00
+    created_by:
+    - bbb
+    updated_at: 2024-03-13 13:52:21.204517+00:00
+    updated_by:
+    - bbb
+    state: submitted
+    notify: false
+    company: 4
+    attachement_file: company_4/applications/for_upload_10z8HbD
+- model: company_profile.apprenewalcontract
+  pk: 3
+  fields:
+    created_at: 2024-03-13 13:52:26.213467+00:00
+    created_by:
+    - bbb
+    updated_at: 2024-03-13 13:56:05.217744+00:00
+    updated_by:
+    - admin
+    state: rejected
+    notify: false
+    company: 4
+    attachement_file: company_4/applications/for_upload_Q0hvqth
+- model: company_profile.apprenewalcontract
+  pk: 4
+  fields:
+    created_at: 2024-03-13 13:52:36.027235+00:00
+    created_by:
+    - bbb
+    updated_at: 2024-03-13 13:55:56.051911+00:00
+    updated_by:
+    - admin
+    state: approved
+    notify: false
+    company: 4
+    attachement_file: company_4/applications/for_upload_yPXPcBK
+- model: company_profile.appimportpermission
+  pk: 1
+  fields:
+    created_at: 2024-03-13 09:20:42.935857+00:00
+    created_by:
+    - admin
+    updated_at: 2024-03-13 09:20:42.935935+00:00
+    updated_by:
+    - admin
+    state: submitted
+    notify: false
+    company: 1
+    attachement_file: company_1/applications/for_upload_w9EC1c4
+- model: company_profile.appimportpermission
+  pk: 2
+  fields:
+    created_at: 2024-03-13 13:52:44.219559+00:00
+    created_by:
+    - bbb
+    updated_at: 2024-03-13 13:52:44.219619+00:00
+    updated_by:
+    - bbb
+    state: submitted
+    notify: false
+    company: 4
+    attachement_file: company_4/applications/for_upload_yCjLRb8
+- model: company_profile.appimportpermission
+  pk: 3
+  fields:
+    created_at: 2024-03-13 13:52:48.860671+00:00
+    created_by:
+    - bbb
+    updated_at: 2024-03-13 15:05:10.582935+00:00
+    updated_by:
+    - admin
+    state: rejected
+    notify: false
+    company: 4
+    attachement_file: company_4/applications/for_upload_gqrNkaQ
+- model: company_profile.appimportpermission
+  pk: 4
+  fields:
+    created_at: 2024-03-13 13:52:56.742583+00:00
+    created_by:
+    - bbb
+    updated_at: 2024-03-13 15:05:01.314267+00:00
+    updated_by:
+    - admin
+    state: approved
+    notify: false
+    company: 4
+    attachement_file: company_4/applications/for_upload_Uonnke1
 - model: account.emailaddress
   pk: 1
   fields:
@@ -9421,3 +10009,367 @@
     object_repr: bbbb
     action_flag: 2
     change_message: '[{"changed": {"fields": ["company_type"]}}]'
+- model: admin.logentry
+  pk: 290
+  fields:
+    action_time: 2024-03-13 13:53:55.587634+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - apptemporaryexemption
+    object_id: '4'
+    object_repr: افراج مؤقت (4)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 291
+  fields:
+    action_time: 2024-03-13 13:53:59.659193+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - apptemporaryexemption
+    object_id: '4'
+    object_repr: افراج مؤقت (4)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 292
+  fields:
+    action_time: 2024-03-13 13:54:17.566096+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - apptemporaryexemption
+    object_id: '3'
+    object_repr: افراج مؤقت (3)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 293
+  fields:
+    action_time: 2024-03-13 13:54:23.271036+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - apptemporaryexemption
+    object_id: '3'
+    object_repr: افراج مؤقت (3)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 294
+  fields:
+    action_time: 2024-03-13 13:54:55.583102+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appexplosivepermission
+    object_id: '4'
+    object_repr: نجديد استخدام متفجرات (4)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 295
+  fields:
+    action_time: 2024-03-13 13:54:59.494904+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appexplosivepermission
+    object_id: '4'
+    object_repr: نجديد استخدام متفجرات (4)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 296
+  fields:
+    action_time: 2024-03-13 13:55:04.648768+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appexplosivepermission
+    object_id: '3'
+    object_repr: نجديد استخدام متفجرات (3)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 297
+  fields:
+    action_time: 2024-03-13 13:55:08.622110+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appexplosivepermission
+    object_id: '3'
+    object_repr: نجديد استخدام متفجرات (3)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 298
+  fields:
+    action_time: 2024-03-13 13:55:21.217876+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - apprenewalcontract
+    object_id: '4'
+    object_repr: تجديد عقود شركات مخلفات التعدين (4)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 299
+  fields:
+    action_time: 2024-03-13 13:55:56.053881+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - apprenewalcontract
+    object_id: '4'
+    object_repr: تجديد عقود شركات مخلفات التعدين (4)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 300
+  fields:
+    action_time: 2024-03-13 13:56:01.725757+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - apprenewalcontract
+    object_id: '3'
+    object_repr: تجديد عقود شركات مخلفات التعدين (3)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 301
+  fields:
+    action_time: 2024-03-13 13:56:05.219131+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - apprenewalcontract
+    object_id: '3'
+    object_repr: تجديد عقود شركات مخلفات التعدين (3)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 302
+  fields:
+    action_time: 2024-03-13 13:56:29.210461+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - applocalpurchase
+    object_id: '4'
+    object_repr: شراء محلي (4)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 303
+  fields:
+    action_time: 2024-03-13 13:56:39.253146+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - applocalpurchase
+    object_id: '4'
+    object_repr: شراء محلي (4)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 304
+  fields:
+    action_time: 2024-03-13 13:56:52.063794+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - applocalpurchase
+    object_id: '3'
+    object_repr: شراء محلي (3)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 305
+  fields:
+    action_time: 2024-03-13 13:56:55.973481+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - applocalpurchase
+    object_id: '3'
+    object_repr: شراء محلي (3)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 306
+  fields:
+    action_time: 2024-03-13 13:57:43.784472+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appcyanidecertificate
+    object_id: '4'
+    object_repr: شهادة مستخدم سيانيد (4)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 307
+  fields:
+    action_time: 2024-03-13 13:57:54.432750+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appcyanidecertificate
+    object_id: '4'
+    object_repr: شهادة مستخدم سيانيد (4)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 308
+  fields:
+    action_time: 2024-03-13 13:58:00.207470+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appcyanidecertificate
+    object_id: '3'
+    object_repr: شهادة مستخدم سيانيد (3)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 309
+  fields:
+    action_time: 2024-03-13 13:58:03.551190+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appcyanidecertificate
+    object_id: '3'
+    object_repr: شهادة مستخدم سيانيد (3)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 310
+  fields:
+    action_time: 2024-03-13 13:59:33.770262+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - apprestartactivity
+    object_id: '4'
+    object_repr: مزاولة نشاط (4)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 311
+  fields:
+    action_time: 2024-03-13 13:59:39.158766+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - apprestartactivity
+    object_id: '4'
+    object_repr: مزاولة نشاط (4)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 312
+  fields:
+    action_time: 2024-03-13 13:59:44.181852+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - apprestartactivity
+    object_id: '3'
+    object_repr: مزاولة نشاط (3)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 313
+  fields:
+    action_time: 2024-03-13 13:59:48.207429+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - apprestartactivity
+    object_id: '3'
+    object_repr: مزاولة نشاط (3)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 314
+  fields:
+    action_time: 2024-03-13 15:04:56.065734+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appimportpermission
+    object_id: '4'
+    object_repr: اذن ادخال مواد (4)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 315
+  fields:
+    action_time: 2024-03-13 15:05:01.316333+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appimportpermission
+    object_id: '4'
+    object_repr: اذن ادخال مواد (4)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 316
+  fields:
+    action_time: 2024-03-13 15:05:05.990844+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appimportpermission
+    object_id: '3'
+    object_repr: اذن ادخال مواد (3)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 317
+  fields:
+    action_time: 2024-03-13 15:05:10.584367+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appimportpermission
+    object_id: '3'
+    object_repr: اذن ادخال مواد (3)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
