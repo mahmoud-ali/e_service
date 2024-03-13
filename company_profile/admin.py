@@ -5,6 +5,7 @@ from django import forms
 from django.contrib import admin
 from django.contrib.sites.models import Site
 
+from import_export.admin import ExportActionMixin
 
 from .models import AppCyanideCertificate, AppExplosivePermission, AppImportPermission, AppLocalPurchase, AppRenewalContract, AppRestartActivity, AppTemporaryExemption, LkpNationality,LkpState,LkpLocality,LkpMineral,LkpCompanyProductionStatus,LkpForeignerProcedureType,TblCompanyProduction, \
                                       LkpCompanyProductionFactoryType,TblCompanyProductionFactory,LkpCompanyProductionLicenseStatus, \
@@ -110,7 +111,7 @@ class WorkflowAdminMixin:
             obj.save()
         
 
-class TblCompanyProductionAdmin(LoggingAdminMixin,admin.ModelAdmin):
+class TblCompanyProductionAdmin(ExportActionMixin,LoggingAdminMixin,admin.ModelAdmin):
     form = TblCompanyProductionForm
     fieldsets = [
         (None, {"fields": [("company_type"),("name_ar","name_en"),"nationality"]}),
@@ -178,7 +179,7 @@ class TblCompanyProductionFactoryAdmin(LoggingAdminMixin,admin.ModelAdmin):
     list_filter = ["factory_type"]
     view_on_site = False
     
-class TblCompanyProductionLicenseAdmin(LoggingAdminMixin,admin.ModelAdmin):
+class TblCompanyProductionLicenseAdmin(ExportActionMixin,LoggingAdminMixin,admin.ModelAdmin):
     fieldsets = [
         (None, {"fields": ["company"]}),
         (_("General information"), {"fields": ["date",("start_date","end_date"),("sheet_no","cordinates")]}),
