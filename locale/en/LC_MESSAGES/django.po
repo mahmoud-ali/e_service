@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-03-12 11:56+0200\n"
+"POT-Creation-Date: 2024-03-13 11:23+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,11 +22,11 @@ msgstr ""
 msgid "accounts"
 msgstr ""
 
-#: accounts/models.py:11 company_profile/forms.py:20
+#: accounts/models.py:11 company_profile/forms.py:21
 msgid "Arabic"
 msgstr "العربية"
 
-#: accounts/models.py:12 company_profile/forms.py:21
+#: accounts/models.py:12 company_profile/forms.py:22
 msgid "English"
 msgstr ""
 
@@ -60,48 +60,55 @@ msgstr ""
 msgid "Company profile"
 msgstr ""
 
-#: company_profile/forms.py:27 company_profile/models.py:106
+#: company_profile/forms.py:28 company_profile/models.py:106
 msgid "company_type"
 msgstr "company type"
 
-#: company_profile/forms.py:43
+#: company_profile/forms.py:44
 msgid "locality not belong to right state."
 msgstr ""
 
-#: company_profile/forms.py:46 company_profile/forms.py:63
-#: company_profile/forms.py:91 company_profile/forms.py:107
-#: company_profile/forms.py:123 company_profile/forms.py:136
-#: company_profile/forms.py:152 company_profile/forms.py:165
-#: company_profile/forms.py:178 company_profile/forms.py:191
-#: company_profile/forms.py:204 company_profile/forms.py:220
-#: company_profile/forms.py:235 company_profile/forms.py:251
-#: company_profile/forms.py:267 company_profile/forms.py:283
-#: company_profile/forms.py:296 company_profile/forms.py:309
-#: company_profile/forms.py:322 company_profile/forms.py:335
-#: company_profile/forms.py:351 company_profile/forms.py:376
-#: company_profile/forms.py:389 company_profile/forms.py:402
-#: company_profile/models.py:151 company_profile/models.py:171
-#: company_profile/models.py:197 company_profile/models.py:210
-#: company_profile/models.py:226 company_profile/models.py:252
-#: company_profile/models.py:280 company_profile/models.py:306
-#: company_profile/models.py:327 company_profile/models.py:349
-#: company_profile/models.py:368 company_profile/models.py:396
-#: company_profile/models.py:428 company_profile/models.py:456
-#: company_profile/models.py:474 company_profile/models.py:494
-#: company_profile/models.py:512 company_profile/models.py:532
-#: company_profile/models.py:549 company_profile/models.py:568
-#: company_profile/models.py:588 company_profile/models.py:620
-#: company_profile/models.py:651 company_profile/models.py:695
-#: company_profile/models.py:729 company_profile/models.py:762
-#: company_profile/models.py:795 company_profile/models.py:858
+#: company_profile/forms.py:47 company_profile/forms.py:64
+#: company_profile/forms.py:92 company_profile/forms.py:108
+#: company_profile/forms.py:124 company_profile/forms.py:137
+#: company_profile/forms.py:153 company_profile/forms.py:166
+#: company_profile/forms.py:179 company_profile/forms.py:192
+#: company_profile/forms.py:205 company_profile/forms.py:221
+#: company_profile/forms.py:236 company_profile/forms.py:252
+#: company_profile/forms.py:268 company_profile/forms.py:284
+#: company_profile/forms.py:297 company_profile/forms.py:310
+#: company_profile/forms.py:323 company_profile/forms.py:336
+#: company_profile/forms.py:352 company_profile/forms.py:377
+#: company_profile/forms.py:390 company_profile/forms.py:403
+#: company_profile/forms.py:428 company_profile/forms.py:442
+#: company_profile/forms.py:456 company_profile/forms.py:470
+#: company_profile/forms.py:484 company_profile/forms.py:498
+#: company_profile/forms.py:512 company_profile/models.py:151
+#: company_profile/models.py:171 company_profile/models.py:197
+#: company_profile/models.py:210 company_profile/models.py:226
+#: company_profile/models.py:252 company_profile/models.py:280
+#: company_profile/models.py:306 company_profile/models.py:327
+#: company_profile/models.py:349 company_profile/models.py:368
+#: company_profile/models.py:396 company_profile/models.py:428
+#: company_profile/models.py:456 company_profile/models.py:474
+#: company_profile/models.py:494 company_profile/models.py:512
+#: company_profile/models.py:532 company_profile/models.py:549
+#: company_profile/models.py:568 company_profile/models.py:588
+#: company_profile/models.py:620 company_profile/models.py:651
+#: company_profile/models.py:695 company_profile/models.py:729
+#: company_profile/models.py:762 company_profile/models.py:795
+#: company_profile/models.py:858 company_profile/models.py:890
+#: company_profile/models.py:906 company_profile/models.py:922
+#: company_profile/models.py:938 company_profile/models.py:954
+#: company_profile/models.py:970 company_profile/models.py:986
 msgid "company"
 msgstr ""
 
-#: company_profile/forms.py:64 company_profile/models.py:253
+#: company_profile/forms.py:65 company_profile/models.py:253
 msgid "company_borrow_from"
 msgstr "borrow from"
 
-#: company_profile/forms.py:352 company_profile/forms.py:403
+#: company_profile/forms.py:353 company_profile/forms.py:404
 #: company_profile/models.py:622 company_profile/models.py:730
 #: company_profile/models.py:859
 msgid "license_type"
@@ -1299,7 +1306,10 @@ msgstr "Study type"
 msgid "study_comment"
 msgstr "comments"
 
-#: company_profile/models.py:866
+#: company_profile/models.py:866 company_profile/models.py:892
+#: company_profile/models.py:908 company_profile/models.py:924
+#: company_profile/models.py:940 company_profile/models.py:956
+#: company_profile/models.py:972 company_profile/models.py:988
 msgid "attachement_file"
 msgstr "other attachments"
 
@@ -1331,6 +1341,69 @@ msgstr "Cordinations"
 msgid "Visibity Study Details"
 msgstr "Cordinations"
 
+#: company_profile/models.py:895
+msgid "Temporary Exemption"
+msgstr ""
+
+#: company_profile/models.py:902 company_profile/models.py:903
+#: company_profile/templates/company_profile/base.html:173
+msgid "Application: Temporary Exemption"
+msgstr ""
+
+#: company_profile/models.py:911
+msgid "Local Purchase"
+msgstr ""
+
+#: company_profile/models.py:918 company_profile/models.py:919
+#: company_profile/templates/company_profile/base.html:177
+msgid "Application: Local Purchase"
+msgstr ""
+
+#: company_profile/models.py:927
+msgid "Cyanide Certificate"
+msgstr ""
+
+#: company_profile/models.py:934 company_profile/models.py:935
+#: company_profile/templates/company_profile/base.html:180
+msgid "Application: Cyanide Certificate"
+msgstr ""
+
+#: company_profile/models.py:943
+msgid "Explosive Permission"
+msgstr ""
+
+#: company_profile/models.py:950 company_profile/models.py:951
+#: company_profile/templates/company_profile/base.html:183
+msgid "Application: Explosive Permission"
+msgstr ""
+
+#: company_profile/models.py:959
+msgid "Restart Activity"
+msgstr ""
+
+#: company_profile/models.py:966 company_profile/models.py:967
+#: company_profile/templates/company_profile/base.html:186
+msgid "Application: Restart Activity"
+msgstr ""
+
+#: company_profile/models.py:975
+msgid "Renewal Contract"
+msgstr ""
+
+#: company_profile/models.py:982 company_profile/models.py:983
+#: company_profile/templates/company_profile/base.html:189
+msgid "Application: Renewal Contract"
+msgstr ""
+
+#: company_profile/models.py:991
+msgid "Import Permission"
+msgstr ""
+
+#: company_profile/models.py:998 company_profile/models.py:999
+#: company_profile/templates/company_profile/base.html:192
+msgid "Application: Import Permission"
+msgstr ""
+
 #: company_profile/tables.py:24 company_profile/tables.py:37
 #: company_profile/tables.py:50 company_profile/tables.py:63
 #: company_profile/tables.py:76 company_profile/tables.py:89
@@ -1343,6 +1416,10 @@ msgstr "Cordinations"
 #: company_profile/tables.py:267 company_profile/tables.py:280
 #: company_profile/tables.py:293 company_profile/tables.py:306
 #: company_profile/tables.py:322 company_profile/tables.py:335
+#: company_profile/tables.py:348 company_profile/tables.py:361
+#: company_profile/tables.py:374 company_profile/tables.py:387
+#: company_profile/tables.py:400 company_profile/tables.py:413
+#: company_profile/tables.py:426
 msgid "No records."
 msgstr ""
 
@@ -1402,52 +1479,58 @@ msgstr ""
 msgid "Application: Visiblity Study"
 msgstr "Application: Feasibility Study"
 
-#: company_profile/views/__init__.py:113
+#: company_profile/views/__init__.py:120
 msgid "List of foreigner movements"
 msgstr ""
 
-#: company_profile/views/__init__.py:131
+#: company_profile/views/__init__.py:138
 msgid "Add new movement"
 msgstr ""
 
-#: company_profile/views/__init__.py:151 company_profile/views/__init__.py:231
+#: company_profile/views/__init__.py:158 company_profile/views/__init__.py:238
 #: company_profile/views/add_area.py:64
 #: company_profile/views/aifaa_jomrki.py:76
 #: company_profile/views/change_company_name.py:68
 #: company_profile/views/change_work_procedure.py:65
+#: company_profile/views/cyanide_certificate.py:64
 #: company_profile/views/exploration_time.py:64
+#: company_profile/views/explosive_permission.py:64
 #: company_profile/views/export_gold.py:72
 #: company_profile/views/export_gold_raw.py:72
 #: company_profile/views/foreigner_procedure.py:71
-#: company_profile/views/mda.py:64
+#: company_profile/views/import_permission.py:64
+#: company_profile/views/local_purchase.py:64 company_profile/views/mda.py:64
 #: company_profile/views/reexport_equipments.py:71
 #: company_profile/views/remove_area.py:67
+#: company_profile/views/renewal_contract.py:64
 #: company_profile/views/requirements_list.py:92
+#: company_profile/views/restart_activity.py:64
 #: company_profile/views/send_samples_for_analysis.py:71
 #: company_profile/views/taaweed.py:63
 #: company_profile/views/tajeel_tnazol.py:64
 #: company_profile/views/tajmeed.py:65 company_profile/views/takhali.py:64
 #: company_profile/views/tamdeed.py:65
 #: company_profile/views/technical_financial_report.py:64
+#: company_profile/views/temporary_exemption.py:64
 #: company_profile/views/tnazol_shraka.py:65
 #: company_profile/views/visibilty_study.py:75
 #: company_profile/views/work_plan.py:64
 msgid "Application sent successfully."
 msgstr ""
 
-#: company_profile/views/__init__.py:164
+#: company_profile/views/__init__.py:171
 msgid "Show movement"
 msgstr ""
 
-#: company_profile/views/__init__.py:179
+#: company_profile/views/__init__.py:186
 msgid "List of borrow materials"
 msgstr ""
 
-#: company_profile/views/__init__.py:198
+#: company_profile/views/__init__.py:205
 msgid "Add new borrow materials"
 msgstr ""
 
-#: company_profile/views/__init__.py:249
+#: company_profile/views/__init__.py:256
 msgid "Show borrow materials"
 msgstr ""
 
@@ -1499,6 +1582,18 @@ msgstr "Add procedures/process change"
 msgid "Show change work procedure"
 msgstr "Show procedures/process change"
 
+#: company_profile/views/cyanide_certificate.py:28
+msgid "List of Cyanide Certificates"
+msgstr ""
+
+#: company_profile/views/cyanide_certificate.py:46
+msgid "Add Cyanide Certificate"
+msgstr ""
+
+#: company_profile/views/cyanide_certificate.py:77
+msgid "Show Cyanide Certificate"
+msgstr ""
+
 #: company_profile/views/exploration_time.py:28
 msgid "List of exploration times"
 msgstr ""
@@ -1509,6 +1604,18 @@ msgstr ""
 
 #: company_profile/views/exploration_time.py:77
 msgid "Show exploration time"
+msgstr ""
+
+#: company_profile/views/explosive_permission.py:28
+msgid "List of Explosive Permissions"
+msgstr ""
+
+#: company_profile/views/explosive_permission.py:46
+msgid "Add Explosive Permission"
+msgstr ""
+
+#: company_profile/views/explosive_permission.py:77
+msgid "Show Explosive Permission"
 msgstr ""
 
 #: company_profile/views/export_gold.py:28
@@ -1547,6 +1654,30 @@ msgstr ""
 msgid "Show foreigner procedure"
 msgstr ""
 
+#: company_profile/views/import_permission.py:28
+msgid "List of Import Permissions"
+msgstr ""
+
+#: company_profile/views/import_permission.py:46
+msgid "Add Import Permission"
+msgstr ""
+
+#: company_profile/views/import_permission.py:77
+msgid "Show Import Permission"
+msgstr ""
+
+#: company_profile/views/local_purchase.py:28
+msgid "List of Local Purchases"
+msgstr ""
+
+#: company_profile/views/local_purchase.py:46
+msgid "Add Local Purchase"
+msgstr ""
+
+#: company_profile/views/local_purchase.py:77
+msgid "Show Local Purchase"
+msgstr ""
+
 #: company_profile/views/mda.py:28
 msgid "List of mda"
 msgstr ""
@@ -1583,6 +1714,18 @@ msgstr "Add area assignment application"
 msgid "Show removed area"
 msgstr "Show area assignment"
 
+#: company_profile/views/renewal_contract.py:28
+msgid "List of Renewal Contracts"
+msgstr ""
+
+#: company_profile/views/renewal_contract.py:46
+msgid "Add Renewal Contract"
+msgstr ""
+
+#: company_profile/views/renewal_contract.py:77
+msgid "Show Renewal Contract"
+msgstr ""
+
 #: company_profile/views/requirements_list.py:34
 msgid "List of Requirements List"
 msgstr ""
@@ -1593,6 +1736,18 @@ msgstr ""
 
 #: company_profile/views/requirements_list.py:108
 msgid "Show Requirements List"
+msgstr ""
+
+#: company_profile/views/restart_activity.py:28
+msgid "List of Restart Activities"
+msgstr ""
+
+#: company_profile/views/restart_activity.py:46
+msgid "Add Restart Activity"
+msgstr ""
+
+#: company_profile/views/restart_activity.py:77
+msgid "Show Restart Activity"
 msgstr ""
 
 #: company_profile/views/send_samples_for_analysis.py:31
@@ -1677,6 +1832,18 @@ msgstr ""
 
 #: company_profile/views/technical_financial_report.py:77
 msgid "Show technical & financial report"
+msgstr ""
+
+#: company_profile/views/temporary_exemption.py:28
+msgid "List of Temporary Exemptions"
+msgstr ""
+
+#: company_profile/views/temporary_exemption.py:46
+msgid "Add Temporary Exemptions"
+msgstr ""
+
+#: company_profile/views/temporary_exemption.py:77
+msgid "Show Temporary Exemptions"
 msgstr ""
 
 #: company_profile/views/tnazol_shraka.py:28
