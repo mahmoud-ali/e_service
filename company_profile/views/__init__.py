@@ -53,6 +53,7 @@ from .cyanide_certificate import AppCyanideCertificateListView,AppCyanideCertifi
 from .explosive_permission import AppExplosivePermissionListView,AppExplosivePermissionCreateView,AppExplosivePermissionReadonlyView
 from .restart_activity import AppRestartActivityListView,AppRestartActivityCreateView,AppRestartActivityReadonlyView
 from .renewal_contract import AppRenewalContractListView,AppRenewalContractCreateView,AppRenewalContractReadonlyView
+from .import_permission import AppImportPermissionListView,AppImportPermissionCreateView,AppImportPermissionReadonlyView
 
 class SetLanguageView(LoginRequiredMixin,View):
     def post(self,request):

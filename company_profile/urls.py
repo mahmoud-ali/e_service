@@ -33,7 +33,8 @@ from .views import SetLanguageView, HomePageView, \
                    AppCyanideCertificateListView,AppCyanideCertificateCreateView,AppCyanideCertificateReadonlyView, \
                    AppExplosivePermissionListView,AppExplosivePermissionCreateView,AppExplosivePermissionReadonlyView, \
                    AppRestartActivityListView,AppRestartActivityCreateView,AppRestartActivityReadonlyView, \
-                   AppRenewalContractListView,AppRenewalContractCreateView,AppRenewalContractReadonlyView
+                   AppRenewalContractListView,AppRenewalContractCreateView,AppRenewalContractReadonlyView, \
+                   AppImportPermissionListView,AppImportPermissionCreateView,AppImportPermissionReadonlyView
 
 app_name = "profile"
 urlpatterns = [                                                        
@@ -191,5 +192,10 @@ urlpatterns = [
     path('app_renewal_contract/<int:type>/', AppRenewalContractListView.as_view(), name='app_renewal_contract_list'),
     path('app_renewal_contract/<int:pk>/show/', AppRenewalContractReadonlyView.as_view(), name='app_renewal_contract_show'),    
     path('app_renewal_contract/add/', AppRenewalContractCreateView.as_view(), name='app_renewal_contract_add'),
+
+    path('app_import_permission/', AppImportPermissionListView.as_view(), name='app_import_permission_list'),
+    path('app_import_permission/<int:type>/', AppImportPermissionListView.as_view(), name='app_import_permission_list'),
+    path('app_import_permission/<int:pk>/show/', AppImportPermissionReadonlyView.as_view(), name='app_import_permission_show'),    
+    path('app_import_permission/add/', AppImportPermissionCreateView.as_view(), name='app_import_permission_add'),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
