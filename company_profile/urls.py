@@ -30,7 +30,8 @@ from .views import SetLanguageView, HomePageView, \
                    AppVisibityStudyListView, AppVisibityStudyCreateView, AppVisibityStudyReadonlyView, \
                    AppTemporaryExemptionCreateView, AppTemporaryExemptionListView, AppTemporaryExemptionReadonlyView, \
                    AppLocalPurchaseListView,AppLocalPurchaseCreateView,AppLocalPurchaseReadonlyView, \
-                   AppCyanideCertificateListView,AppCyanideCertificateCreateView,AppCyanideCertificateReadonlyView
+                   AppCyanideCertificateListView,AppCyanideCertificateCreateView,AppCyanideCertificateReadonlyView, \
+                   AppExplosivePermissionListView,AppExplosivePermissionCreateView,AppExplosivePermissionReadonlyView
 
 app_name = "profile"
 urlpatterns = [                                                        
@@ -173,5 +174,10 @@ urlpatterns = [
     path('app_cyanide_certificate/<int:type>/', AppCyanideCertificateListView.as_view(), name='app_cyanide_certificate_list'),
     path('app_cyanide_certificate/<int:pk>/show/', AppCyanideCertificateReadonlyView.as_view(), name='app_cyanide_certificate_show'),    
     path('app_cyanide_certificate/add/', AppCyanideCertificateCreateView.as_view(), name='app_cyanide_certificate_add'),
+
+    path('app_explosive_permission/', AppExplosivePermissionListView.as_view(), name='app_explosive_permission_list'),
+    path('app_explosive_permission/<int:type>/', AppExplosivePermissionListView.as_view(), name='app_explosive_permission_list'),
+    path('app_explosive_permission/<int:pk>/show/', AppExplosivePermissionReadonlyView.as_view(), name='app_explosive_permission_show'),    
+    path('app_explosive_permission/add/', AppExplosivePermissionCreateView.as_view(), name='app_explosive_permission_add'),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
