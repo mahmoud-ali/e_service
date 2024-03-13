@@ -29,7 +29,8 @@ from .views import SetLanguageView, HomePageView, \
                    AppRequirementsListListView, AppRequirementsListCreateView, AppRequirementsListReadonlyView, \
                    AppVisibityStudyListView, AppVisibityStudyCreateView, AppVisibityStudyReadonlyView, \
                    AppTemporaryExemptionCreateView, AppTemporaryExemptionListView, AppTemporaryExemptionReadonlyView, \
-                   AppLocalPurchaseListView,AppLocalPurchaseCreateView,AppLocalPurchaseReadonlyView
+                   AppLocalPurchaseListView,AppLocalPurchaseCreateView,AppLocalPurchaseReadonlyView, \
+                   AppCyanideCertificateListView,AppCyanideCertificateCreateView,AppCyanideCertificateReadonlyView
 
 app_name = "profile"
 urlpatterns = [                                                        
@@ -167,5 +168,10 @@ urlpatterns = [
     path('app_local_purchase/<int:type>/', AppLocalPurchaseListView.as_view(), name='app_local_purchase_list'),
     path('app_local_purchase/<int:pk>/show/', AppLocalPurchaseReadonlyView.as_view(), name='app_local_purchase_show'),    
     path('app_local_purchase/add/', AppLocalPurchaseCreateView.as_view(), name='app_local_purchase_add'),
+
+    path('app_cyanide_certificate/', AppCyanideCertificateListView.as_view(), name='app_cyanide_certificate_list'),
+    path('app_cyanide_certificate/<int:type>/', AppCyanideCertificateListView.as_view(), name='app_cyanide_certificate_list'),
+    path('app_cyanide_certificate/<int:pk>/show/', AppCyanideCertificateReadonlyView.as_view(), name='app_cyanide_certificate_show'),    
+    path('app_cyanide_certificate/add/', AppCyanideCertificateCreateView.as_view(), name='app_cyanide_certificate_add'),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

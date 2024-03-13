@@ -49,6 +49,7 @@ from .requirements_list import AppRequirementsListListView, AppRequirementsListC
 from .visibilty_study import AppVisibityStudyListView, AppVisibityStudyCreateView, AppVisibityStudyReadonlyView
 from .temporary_exemption import AppTemporaryExemptionListView,AppTemporaryExemptionCreateView,AppTemporaryExemptionReadonlyView
 from .local_purchase import AppLocalPurchaseListView,AppLocalPurchaseCreateView,AppLocalPurchaseReadonlyView
+from .cyanide_certificate import AppCyanideCertificateListView,AppCyanideCertificateCreateView,AppCyanideCertificateReadonlyView
 
 class SetLanguageView(LoginRequiredMixin,View):
     def post(self,request):
