@@ -66,6 +66,8 @@ INSTALLED_APPS = [
     'bootstrap3',    
     
     'django_tables2',
+
+    'import_export',
     
     # Local                
     'accounts',
