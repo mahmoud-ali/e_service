@@ -31,7 +31,8 @@ from .views import SetLanguageView, HomePageView, \
                    AppTemporaryExemptionCreateView, AppTemporaryExemptionListView, AppTemporaryExemptionReadonlyView, \
                    AppLocalPurchaseListView,AppLocalPurchaseCreateView,AppLocalPurchaseReadonlyView, \
                    AppCyanideCertificateListView,AppCyanideCertificateCreateView,AppCyanideCertificateReadonlyView, \
-                   AppExplosivePermissionListView,AppExplosivePermissionCreateView,AppExplosivePermissionReadonlyView
+                   AppExplosivePermissionListView,AppExplosivePermissionCreateView,AppExplosivePermissionReadonlyView, \
+                   AppRestartActivityListView,AppRestartActivityCreateView,AppRestartActivityReadonlyView
 
 app_name = "profile"
 urlpatterns = [                                                        
@@ -179,5 +180,10 @@ urlpatterns = [
     path('app_explosive_permission/<int:type>/', AppExplosivePermissionListView.as_view(), name='app_explosive_permission_list'),
     path('app_explosive_permission/<int:pk>/show/', AppExplosivePermissionReadonlyView.as_view(), name='app_explosive_permission_show'),    
     path('app_explosive_permission/add/', AppExplosivePermissionCreateView.as_view(), name='app_explosive_permission_add'),
+
+    path('app_restart_activity/', AppRestartActivityListView.as_view(), name='app_restart_activity_list'),
+    path('app_restart_activity/<int:type>/', AppRestartActivityListView.as_view(), name='app_restart_activity_list'),
+    path('app_restart_activity/<int:pk>/show/', AppRestartActivityReadonlyView.as_view(), name='app_restart_activity_show'),    
+    path('app_restart_activity/add/', AppRestartActivityCreateView.as_view(), name='app_restart_activity_add'),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
