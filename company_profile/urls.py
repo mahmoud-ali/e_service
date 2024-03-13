@@ -32,7 +32,8 @@ from .views import SetLanguageView, HomePageView, \
                    AppLocalPurchaseListView,AppLocalPurchaseCreateView,AppLocalPurchaseReadonlyView, \
                    AppCyanideCertificateListView,AppCyanideCertificateCreateView,AppCyanideCertificateReadonlyView, \
                    AppExplosivePermissionListView,AppExplosivePermissionCreateView,AppExplosivePermissionReadonlyView, \
-                   AppRestartActivityListView,AppRestartActivityCreateView,AppRestartActivityReadonlyView
+                   AppRestartActivityListView,AppRestartActivityCreateView,AppRestartActivityReadonlyView, \
+                   AppRenewalContractListView,AppRenewalContractCreateView,AppRenewalContractReadonlyView
 
 app_name = "profile"
 urlpatterns = [                                                        
@@ -185,5 +186,10 @@ urlpatterns = [
     path('app_restart_activity/<int:type>/', AppRestartActivityListView.as_view(), name='app_restart_activity_list'),
     path('app_restart_activity/<int:pk>/show/', AppRestartActivityReadonlyView.as_view(), name='app_restart_activity_show'),    
     path('app_restart_activity/add/', AppRestartActivityCreateView.as_view(), name='app_restart_activity_add'),
+
+    path('app_renewal_contract/', AppRenewalContractListView.as_view(), name='app_renewal_contract_list'),
+    path('app_renewal_contract/<int:type>/', AppRenewalContractListView.as_view(), name='app_renewal_contract_list'),
+    path('app_renewal_contract/<int:pk>/show/', AppRenewalContractReadonlyView.as_view(), name='app_renewal_contract_show'),    
+    path('app_renewal_contract/add/', AppRenewalContractCreateView.as_view(), name='app_renewal_contract_add'),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

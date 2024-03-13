@@ -52,6 +52,7 @@ from .local_purchase import AppLocalPurchaseListView,AppLocalPurchaseCreateView,
 from .cyanide_certificate import AppCyanideCertificateListView,AppCyanideCertificateCreateView,AppCyanideCertificateReadonlyView
 from .explosive_permission import AppExplosivePermissionListView,AppExplosivePermissionCreateView,AppExplosivePermissionReadonlyView
 from .restart_activity import AppRestartActivityListView,AppRestartActivityCreateView,AppRestartActivityReadonlyView
+from .renewal_contract import AppRenewalContractListView,AppRenewalContractCreateView,AppRenewalContractReadonlyView
 
 class SetLanguageView(LoginRequiredMixin,View):
     def post(self,request):
