@@ -337,7 +337,7 @@ msgstr "نسبة الشركة (%)"
 
 #: company_profile/models.py:208
 msgid "royalty"
-msgstr "الامتياز"
+msgstr "العوائد الجليلة"
 
 #: company_profile/models.py:209
 msgid "zakat"
