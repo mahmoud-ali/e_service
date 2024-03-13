@@ -43,7 +43,7 @@ class AppRestartActivityCreateView(ApplicationCreateView):
     model = AppRestartActivity
     form_class = AppRestartActivityForm
     menu_name = "profile:app_restart_activity_list"
-    title = _("Add Restart Activitie")
+    title = _("Add Restart Activity")
 
     def dispatch(self, *args, **kwargs):         
         if not hasattr(self.request.user,"pro_company"):
@@ -74,7 +74,7 @@ class AppRestartActivityReadonlyView(ApplicationReadonlyView):
     model = AppRestartActivity
     form_class = AppRestartActivityForm
     menu_name = "profile:app_restart_activity_list"
-    title = _("Show Restart Activitie")
+    title = _("Show Restart Activity")
 
     def dispatch(self, *args, **kwargs):         
         if not hasattr(self.request.user,"pro_company"):
