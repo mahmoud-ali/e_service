@@ -355,6 +355,11 @@
   fields:
     state: 1
     name: ابو حمد
+- model: company_profile.lkplocality
+  pk: 2
+  fields:
+    state: 2
+    name: امدرمان
 - model: company_profile.lkpmineral
   pk: 1
   fields:
@@ -3127,10 +3132,6 @@
     name_ar: دويشات للتعدين المحدودة
     name_en: doishat co ltd
     nationality: 1
-    state: 1
-    locality: 1
-    location: bbbbbbbbbbbbb
-    cordinates: '345'
     address: '345'
     website: http://www.doishat.com
     manager_name: Mahmoud
@@ -3152,10 +3153,6 @@
     name_ar: جبل الذهب
     name_en: gold mountin
     nationality: 1
-    state: 1
-    locality: 1
-    location: '1111'
-    cordinates: erwwre
     address: werwe
     website: http://www.gold-mountin.com
     manager_name: حسن محمد
@@ -3177,10 +3174,6 @@
     name_ar: bbbb
     name_en: bbb
     nationality: 1
-    state: 1
-    locality: 1
-    location: bbb
-    cordinates: bb
     address: bb
     website: http://www.bbb.com
     manager_name: bbb
@@ -3249,13 +3242,16 @@
     created_at: 2024-01-29 16:36:43.975524+00:00
     created_by:
     - admin
-    updated_at: 2024-01-29 16:40:52.178136+00:00
+    updated_at: 2024-03-14 14:04:55.661592+00:00
     updated_by:
     - admin
     company: 1
     date: 2024-01-29
     start_date: 2024-01-29
     end_date: 2024-01-31
+    state: 2
+    locality: 2
+    location: '1'
     sheet_no: '1'
     cordinates: h
     area: 435.0
@@ -3274,13 +3270,16 @@
     created_at: 2024-02-06 22:12:37.315731+00:00
     created_by:
     - admin
-    updated_at: 2024-02-06 22:12:37.315886+00:00
+    updated_at: 2024-03-14 14:00:51.903279+00:00
     updated_by:
     - admin
     company: 4
     date: 2024-02-04
     start_date: 2024-02-21
     end_date: 2024-10-24
+    state: 1
+    locality: 1
+    location: '1'
     sheet_no: '11'
     cordinates: vcbc
     area: 4324.0
@@ -10509,3 +10508,42 @@
     object_repr: موافقة وقود (3)
     action_flag: 2
     change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 322
+  fields:
+    action_time: 2024-03-14 14:00:51.908462+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - tblcompanyproductionlicense
+    object_id: '2'
+    object_repr: bbbb( 2024-02-04 )
+    action_flag: 2
+    change_message: '[]'
+- model: admin.logentry
+  pk: 323
+  fields:
+    action_time: 2024-03-14 14:04:48.828100+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - lkplocality
+    object_id: '2'
+    object_repr: امدرمان
+    action_flag: 1
+    change_message: '[{"added": {}}]'
+- model: admin.logentry
+  pk: 324
+  fields:
+    action_time: 2024-03-14 14:04:55.666803+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - tblcompanyproductionlicense
+    object_id: '1'
+    object_repr: دويشات للتعدين المحدودة( 2024-01-29 )
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["State", "Locality"]}}]'
