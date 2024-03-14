@@ -197,7 +197,7 @@ class TblCompanyProductionLicense(LoggingModel):
     end_date = models.DateField(_("end_date"))
     state = models.ForeignKey(LkpState, on_delete=models.PROTECT,verbose_name=_("state"))
     locality = models.ForeignKey(LkpLocality, on_delete=models.PROTECT,verbose_name=_("locality"))
-    location = models.TextField(_("location"),max_length=256)
+    location = models.CharField(_("location"),max_length=100)
     sheet_no = models.CharField(_("sheet_no"),max_length=10)
     cordinates = models.TextField(_("cordinates"),max_length=256)
     area = models.FloatField(_("Area in Kilometers"))
