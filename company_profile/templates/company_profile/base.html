@@ -225,6 +225,9 @@ $(document).ready(function(){
 				<a href="{% url 'profile:app_import_permission_list' %}">{% translate "Application: Import Permission" %}</a>
 		 	</li>
 			 {% endif %}
+			 <li class="{% if menu_name == 'profile:app_fuel_permission_list' %}active{% endif %} ">  
+				<a href="{% url 'profile:app_fuel_permission_list' %}">{% translate "Application: Fuel Permission" %}</a>
+		 	</li>
 
 		  </ul>
 		  </div>	  

@@ -54,6 +54,7 @@ from .explosive_permission import AppExplosivePermissionListView,AppExplosivePer
 from .restart_activity import AppRestartActivityListView,AppRestartActivityCreateView,AppRestartActivityReadonlyView
 from .renewal_contract import AppRenewalContractListView,AppRenewalContractCreateView,AppRenewalContractReadonlyView
 from .import_permission import AppImportPermissionListView,AppImportPermissionCreateView,AppImportPermissionReadonlyView
+from .fuel_permission import AppFuelPermissionListView,AppFuelPermissionCreateView,AppFuelPermissionReadonlyView
 
 class SetLanguageView(LoginRequiredMixin,View):
     def post(self,request):

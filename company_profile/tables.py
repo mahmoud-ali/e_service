@@ -3,7 +3,7 @@ from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
 
 import django_tables2 as tables
-from .models import AppCyanideCertificate, AppExplosivePermission, AppForignerMovement,AppBorrowMaterial, AppImportPermission, AppLocalPurchase, AppRenewalContract, AppRestartActivity, AppTemporaryExemption,AppWorkPlan,AppTechnicalFinancialReport,AppChangeCompanyName, \
+from .models import AppCyanideCertificate, AppExplosivePermission, AppForignerMovement,AppBorrowMaterial, AppFuelPermission, AppImportPermission, AppLocalPurchase, AppRenewalContract, AppRestartActivity, AppTemporaryExemption,AppWorkPlan,AppTechnicalFinancialReport,AppChangeCompanyName, \
                     AppExplorationTime, AppAddArea,AppRemoveArea,AppTnazolShraka,AppTajeelTnazol,AppTajmeed,AppTakhali, \
                     AppTamdeed, AppTaaweed, AppMda,AppChangeWorkProcedure,AppExportGold,AppExportGoldRaw, \
                     AppSendSamplesForAnalysis,AppForeignerProcedure,AppAifaaJomrki,AppReexportEquipments,AppRequirementsList, \
@@ -421,6 +421,19 @@ class AppImportPermissionTable(AppTable):
 
     class Meta:
         model = AppImportPermission
+        template_name = "django_tables2/bootstrap.html"
+        fields = ("id","created_at")
+        empty_text = _("No records.")
+
+    def render_id(self,value):
+        return format_html("<a href={}>{}</a>",reverse_lazy(self.menu_name,args=(value,)),value)
+
+class AppFuelPermissionTable(AppTable):
+    menu_name = "profile:app_fuel_permission_show"
+    relation_fields = []
+
+    class Meta:
+        model = AppFuelPermission
         template_name = "django_tables2/bootstrap.html"
         fields = ("id","created_at")
         empty_text = _("No records.")

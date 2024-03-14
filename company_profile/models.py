@@ -997,3 +997,19 @@ class AppImportPermission(WorkflowModel):
         ordering = ["-id"]
         verbose_name = _("Application: Import Permission")
         verbose_name_plural = _("Application: Import Permission")
+
+class AppFuelPermission(WorkflowModel):
+    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
+
+    attachement_file = models.FileField(_("attachement_file"),upload_to=company_applications_path)
+
+    def __str__(self):
+        return _("Fuel Permission") +" ("+str(self.id)+")"
+        
+    def get_absolute_url(self): 
+        return reverse('profile:app_fuel_permission_show',args=[str(self.id)])                
+    
+    class Meta:
+        ordering = ["-id"]
+        verbose_name = _("Application: Fuel Permission")
+        verbose_name_plural = _("Application: Fuel Permission")

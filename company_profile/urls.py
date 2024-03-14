@@ -34,7 +34,8 @@ from .views import SetLanguageView, HomePageView, \
                    AppExplosivePermissionListView,AppExplosivePermissionCreateView,AppExplosivePermissionReadonlyView, \
                    AppRestartActivityListView,AppRestartActivityCreateView,AppRestartActivityReadonlyView, \
                    AppRenewalContractListView,AppRenewalContractCreateView,AppRenewalContractReadonlyView, \
-                   AppImportPermissionListView,AppImportPermissionCreateView,AppImportPermissionReadonlyView
+                   AppImportPermissionListView,AppImportPermissionCreateView,AppImportPermissionReadonlyView, \
+                   AppFuelPermissionListView,AppFuelPermissionCreateView,AppFuelPermissionReadonlyView
 
 app_name = "profile"
 urlpatterns = [                                                        
@@ -197,5 +198,10 @@ urlpatterns = [
     path('app_import_permission/<int:type>/', AppImportPermissionListView.as_view(), name='app_import_permission_list'),
     path('app_import_permission/<int:pk>/show/', AppImportPermissionReadonlyView.as_view(), name='app_import_permission_show'),    
     path('app_import_permission/add/', AppImportPermissionCreateView.as_view(), name='app_import_permission_add'),
+
+    path('app_fuel_permission/', AppFuelPermissionListView.as_view(), name='app_fuel_permission_list'),
+    path('app_fuel_permission/<int:type>/', AppFuelPermissionListView.as_view(), name='app_fuel_permission_list'),
+    path('app_fuel_permission/<int:pk>/show/', AppFuelPermissionReadonlyView.as_view(), name='app_fuel_permission_show'),    
+    path('app_fuel_permission/add/', AppFuelPermissionCreateView.as_view(), name='app_fuel_permission_add'),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
