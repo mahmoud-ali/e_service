@@ -14,20 +14,20 @@ class AppVisibityStudyTests(ProCompanyTests,TestCase):
     list_url_name = 'profile:app_visibility_study_list'
     list_url_path = '/app_visibility_study/'
     list_html_contain_ar = ['قائمة طلبات دراسة الجدوى']
-    list_html_contain_en = ['List of Visibity Studies']
+    list_html_contain_en = ['List of Feasibility Studies']
 
     show_view_class = AppVisibityStudyReadonlyView
     show_template_name = 'company_profile/application_readonly_master_details.html'
     show_url_name = 'profile:app_visibility_study_show'
     show_url_path = '/app_visibility_study/%d/show/'
     show_html_contain_ar = ['عرض طلب دراسة جدوى']
-    show_html_contain_en = ['Show Visibity Study']
+    show_html_contain_en = ['Show Feasibility Study']
 
     add_template_name = 'company_profile/application_add_master_details.html'
     add_url_name = 'profile:app_visibility_study_add'
     add_url_path = '/app_visibility_study/add/'
     add_html_contain_ar = ['اضافة طلب دراسة']
-    add_html_contain_en = ['Add Visibity Study']
+    add_html_contain_en = ['Add Feasibility Study']
 
     add_model = AppVisibityStudy
     add_data = {

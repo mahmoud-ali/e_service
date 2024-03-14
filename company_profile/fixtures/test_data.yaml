@@ -274,6 +274,10 @@
   fields:
     app_label: company_profile
     model: apprenewalcontract
+- model: contenttypes.contenttype
+  fields:
+    app_label: company_profile
+    model: appfuelpermission
 - model: sessions.session
   pk: 0rjpvyn2c810g58crxkkfdbgoq2xbd6q
   fields:
@@ -285,10 +289,10 @@
     session_data: .eJxtUMtuhDAM_BefEUoCMY9T29-oVsgkrojKY4WDutVq_71hy4WqN2tmPB7PHci5ZZtjR1sceI7BUQzL3E0ch8ULtO93-J2hhSuJfC2rhwwoQqsr1aBGY3WO2NRFozPgicKYpOSnML_ItLpcPDwuGTwvdJvw2oXdTMMJ68l98rwTNI47nB_J8qfmoCV_PeV8O7ZOVgPJkHycqo2uyJVWIfU11xa14QLLxqGpCmOVZ7bc90iq_3BYoCmoMpWiNFiz5_unHPbd399rUybvFEFYZC-Pb9ewfieRSSKlHj-2GXTJ:1rhNHf:xKiCfqTB32PE4eiPvtbUyukbeqCg5S_hpohuR9tucSA
     expire_date: 2024-03-19 05:24:11.683749+00:00
 - model: sessions.session
-  pk: 43uuegnmv2e225qb2avns38n0d0k5tfv
+  pk: bxs564fazilq81gtiat8buclo2149cu2
   fields:
-    session_data: .eJxtUEFuhDAM_IvPCIWEJCyntt-oqsgkrogKYYWD2mq1f2_YcqHqzRqPxzNzA_R-2VJ2uOWRUo4ec1ySmymPS2DoX2_wO0MPV2T-XNYAFWCGvrGNUK2UVtRdq7WVFdCMcSpMDHNMTzyvvuYA97cKHg_cxrS6uGs1cMIG9B-U9gVO0w7Xh7H6wTnWXD-fbL4cVyepEXksOl50srHoWy0MDh112jSSlGkv3kirpBaBSNMwGBTDuzfKSIW2hMEyaLn7-6cbCu5vdG2VaosDJua9Ovq6xvW7cKS4GCHuP9uQdD8:1rkQ9e:iUhF-jh18wbbsyvNrecx3jRNli8sGl4qZX38s2uYGaU
-    expire_date: 2024-03-27 15:04:30.908446+00:00
+    session_data: .eJxtUMtqxDAM_BedQ3CUxHmc2v5GWYxiq8Q0jyVy6JZl_732NpeUgg5CGo1m5g5k7bovwdAeRl6CtxT8upiZw7g6gf79Dr899HAlka91c5ABBeiLplBVrFbnnWqxwAx4Jj9FJLnZLy8ybzYXB49LBs8HZhfejE9cBZxmA9lPXtKCpimN80NY_sQca8lfTzLfjqsT1UgyRh6bJDVkq1ppGlpua10gl7rqrMamxFo55pqHQZMaPqwuNZbUYKMoNjUmff9kw878tY6IXRu9G2GRlB3frn77jiBUnVbq8QNI63R0:1rkhtu:aU1dTn0jEUdqsf9mC-bT90c9u8MPBL1BXEiUv8G3Y2k
+    expire_date: 2024-03-28 10:01:26.973314+00:00
 - model: sessions.session
   pk: gd7tmtfdfrjv73h3a3vf1n252txs0enl
   fields:
@@ -3007,6 +3011,34 @@
     - company_profile
     - apprenewalcontract
     codename: view_apprenewalcontract
+- model: auth.permission
+  fields:
+    name: 'Can add Application: Fuel Permission'
+    content_type:
+    - company_profile
+    - appfuelpermission
+    codename: add_appfuelpermission
+- model: auth.permission
+  fields:
+    name: 'Can change Application: Fuel Permission'
+    content_type:
+    - company_profile
+    - appfuelpermission
+    codename: change_appfuelpermission
+- model: auth.permission
+  fields:
+    name: 'Can delete Application: Fuel Permission'
+    content_type:
+    - company_profile
+    - appfuelpermission
+    codename: delete_appfuelpermission
+- model: auth.permission
+  fields:
+    name: 'Can view Application: Fuel Permission'
+    content_type:
+    - company_profile
+    - appfuelpermission
+    codename: view_appfuelpermission
 - model: auth.group
   fields:
     name: pro_company_application_accept
@@ -3034,7 +3066,7 @@
 - model: accounts.customuser
   fields:
     password: pbkdf2_sha256$720000$tH5f7gkeFN9Es8mHafSUxJ$P28/0MeQeLvSmoLdJodz05oaT8noDhnJa2DUp0FwHP8=
-    last_login: 2024-03-13 15:04:30.854443+00:00
+    last_login: 2024-03-14 10:01:26.918840+00:00
     is_superuser: true
     username: admin
     first_name: ''
@@ -3055,7 +3087,7 @@
 - model: accounts.customuser
   fields:
     password: pbkdf2_sha256$720000$57oKI9KKl7MAC767X3mDK8$rIfB9CAfwFZ4p9ND2vT9njC1k/RLFcbWXwF/QGBDu+0=
-    last_login: 2024-03-13 15:04:12.629021+00:00
+    last_login: 2024-03-14 10:00:51.941136+00:00
     is_superuser: false
     username: bbb
     first_name: ''
@@ -5568,8 +5600,8 @@
     - admin
     state: accepted
     notify: false
-    company: 1
-    license_type: 1
+    company: 4
+    license_type: 2
     approved_requirements_list_file: company_1/applications/info_5X3rCE4
     approval_from_finance_ministry_file: company_1/applications/info_9ho8QZh
     final_voucher_file: company_1/applications/info_VK12IfS
@@ -5788,8 +5820,8 @@
     - admin
     state: approved
     notify: false
-    company: 1
-    license_type: 1
+    company: 4
+    license_type: 2
     study_area: منطقة الشوينات
     study_type: خصائص فيزيائية
     study_comment: يسبب شيبس
@@ -5805,8 +5837,8 @@
     - admin
     state: rejected
     notify: false
-    company: 1
-    license_type: 1
+    company: 4
+    license_type: 2
     study_area: كبكابية
     study_type: فنية
     study_comment: بثققصثف
@@ -5822,8 +5854,8 @@
     - admin
     state: submitted
     notify: false
-    company: 1
-    license_type: 1
+    company: 4
+    license_type: 2
     study_area: الناصرية
     study_type: اقتصادية
     study_comment: ثصقصصث
@@ -6243,6 +6275,58 @@
     notify: false
     company: 4
     attachement_file: company_4/applications/for_upload_Uonnke1
+- model: company_profile.appfuelpermission
+  pk: 1
+  fields:
+    created_at: 2024-03-14 09:50:48.208528+00:00
+    created_by:
+    - admin
+    updated_at: 2024-03-14 09:50:48.208600+00:00
+    updated_by:
+    - admin
+    state: submitted
+    notify: false
+    company: 1
+    attachement_file: company_1/applications/for_upload_ntv5D2B
+- model: company_profile.appfuelpermission
+  pk: 2
+  fields:
+    created_at: 2024-03-14 10:01:00.572250+00:00
+    created_by:
+    - bbb
+    updated_at: 2024-03-14 10:01:00.572327+00:00
+    updated_by:
+    - bbb
+    state: submitted
+    notify: false
+    company: 4
+    attachement_file: company_4/applications/for_upload_YrF6ASf
+- model: company_profile.appfuelpermission
+  pk: 3
+  fields:
+    created_at: 2024-03-14 10:01:11.101704+00:00
+    created_by:
+    - bbb
+    updated_at: 2024-03-14 10:01:55.580097+00:00
+    updated_by:
+    - admin
+    state: rejected
+    notify: false
+    company: 4
+    attachement_file: company_4/applications/for_upload_wNQ0CD4
+- model: company_profile.appfuelpermission
+  pk: 4
+  fields:
+    created_at: 2024-03-14 10:01:16.575670+00:00
+    created_by:
+    - bbb
+    updated_at: 2024-03-14 10:01:46.735942+00:00
+    updated_by:
+    - admin
+    state: approved
+    notify: false
+    company: 4
+    attachement_file: company_4/applications/for_upload_UDZLqiq
 - model: account.emailaddress
   pk: 1
   fields:
@@ -10371,5 +10455,57 @@
     - appimportpermission
     object_id: '3'
     object_repr: اذن ادخال مواد (3)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 318
+  fields:
+    action_time: 2024-03-14 10:01:40.770582+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appfuelpermission
+    object_id: '4'
+    object_repr: موافقة وقود (4)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 319
+  fields:
+    action_time: 2024-03-14 10:01:46.737367+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appfuelpermission
+    object_id: '4'
+    object_repr: موافقة وقود (4)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 320
+  fields:
+    action_time: 2024-03-14 10:01:51.546203+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appfuelpermission
+    object_id: '3'
+    object_repr: موافقة وقود (3)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 321
+  fields:
+    action_time: 2024-03-14 10:01:55.581642+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appfuelpermission
+    object_id: '3'
+    object_repr: موافقة وقود (3)
     action_flag: 2
     change_message: '[{"changed": {"fields": ["Application_state"]}}]'
