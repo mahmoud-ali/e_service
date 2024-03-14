@@ -1468,7 +1468,7 @@ msgstr "تم الرفض"
 #: company_profile/templates/company_profile/base.html:9
 #: company_profile/templates/company_profile/base.html:61
 msgid "E-Services App"
-msgstr "نظام المعاملات الالكترونية"
+msgstr "بوابة الخدمات الإلكترونية"
 
 #: company_profile/templates/company_profile/base.html:66
 msgid "Change password"
