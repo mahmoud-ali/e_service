@@ -57,6 +57,9 @@ class WorkflowAdminMixin:
     def has_delete_permission(self, request, obj=None):
         return False
 
+    def has_add_permission(self, request, obj=None):
+        return False
+
     def get_queryset(self, request):
         qs = super().get_queryset(request)
         filter = []
@@ -205,12 +208,12 @@ admin.site.register(TblCompanyProductionFactory,TblCompanyProductionFactoryAdmin
 #admin.site.register(LkpCompanyProductionLicenseStatus)
 admin.site.register(TblCompanyProductionLicense,TblCompanyProductionLicenseAdmin)
 
-class TblCompanyProductionUserRoleAdmin( admin.ModelAdmin):
+# class TblCompanyProductionUserRoleAdmin( admin.ModelAdmin):
     
-    list_display = ["company","user"]        
-    list_filter = ["company","user"]
+#     list_display = ["company","user"]        
+#     list_filter = ["company","user"]
     
-admin.site.register(TblCompanyProductionUserRole, TblCompanyProductionUserRoleAdmin)
+# admin.site.register(TblCompanyProductionUserRole, TblCompanyProductionUserRoleAdmin)
 
 class AppForignerMovementAdmin(WorkflowAdminMixin,admin.ModelAdmin):
     form = AppForignerMovementAdminForm
