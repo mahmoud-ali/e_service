@@ -118,19 +118,15 @@ class TblCompanyProductionAdmin(ExportActionMixin,LoggingAdminMixin,admin.ModelA
     form = TblCompanyProductionForm
     fieldsets = [
         (None, {"fields": [("company_type"),("name_ar","name_en"),"nationality"]}),
-        (_("Location information"), {"fields": [("state","locality"),"location","cordinates","address",("website","email")]}),
-        (_("Contact information"), {"fields": [("manager_name","manager_phone"),("rep_name","rep_phone")]}),
+        (_("Contact information"), {"fields": [("website","email"),("manager_name","manager_phone"),("rep_name","rep_phone"),"address"]}),
         (_("Company Status"), {"fields": ["status"]}),
      ]
      
-    list_display = ["name_ar", "name_en", "state","status"]
-    list_filter = ["name_ar","name_en","state"]
+    list_display = ["name_ar", "name_en", "status"]
+    list_filter = ["name_ar","name_en"]
          
     exclude = ["created_at","created_by","updated_at","updated_by"]
     view_on_site = False
-
-    class Media:
-        js = ('admin/js/jquery.init.js','company_profile/js/lkp_state_change.js')
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
@@ -185,7 +181,8 @@ class TblCompanyProductionFactoryAdmin(LoggingAdminMixin,admin.ModelAdmin):
 class TblCompanyProductionLicenseAdmin(ExportActionMixin,LoggingAdminMixin,admin.ModelAdmin):
     fieldsets = [
         (None, {"fields": ["company"]}),
-        (_("General information"), {"fields": ["date",("start_date","end_date"),("sheet_no","cordinates")]}),
+        (_("General information"), {"fields": ["date",("start_date","end_date")]}),
+        (_("Location information"), {"fields": [("state","locality","location","sheet_no","cordinates")]}),
         (_("Contract information"), {"fields": ["area","reserve","gov_rep","rep_percent","com_percent","royalty","zakat","annual_rent","contract_status","contract_file"]}),
      ]        
     exclude = ["created_at","created_by","updated_at","updated_by"]
@@ -193,6 +190,9 @@ class TblCompanyProductionLicenseAdmin(ExportActionMixin,LoggingAdminMixin,admin
     list_display = ["company","sheet_no","date", "start_date", "end_date"]        
     list_filter = ["date","sheet_no"]
     view_on_site = False
+
+    class Media:
+        js = ('admin/js/jquery.init.js','company_profile/js/lkp_state_change.js')
      
 admin.site.register(LkpNationality)
 admin.site.register(LkpState)
