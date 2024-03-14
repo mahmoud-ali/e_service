@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-03-14 11:52+0200\n"
+"POT-Creation-Date: 2024-03-14 17:02+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -36,22 +36,22 @@ msgstr ""
 msgid "Site header"
 msgstr "بوابة الخدمات الإلكترونية"
 
-#: company_profile/admin.py:118
-msgid "Location information"
-msgstr "الموقع الجغرافي"
-
-#: company_profile/admin.py:119
+#: company_profile/admin.py:121
 msgid "Contact information"
 msgstr "بيانات التواصل"
 
-#: company_profile/admin.py:120 company_profile/models.py:135
-#: company_profile/models.py:136
+#: company_profile/admin.py:122 company_profile/models.py:132
+#: company_profile/models.py:133
 msgid "Company Status"
 msgstr "موقف الشركة"
 
-#: company_profile/admin.py:185
+#: company_profile/admin.py:184
 msgid "General information"
 msgstr "بيانات عامة"
+
+#: company_profile/admin.py:185
+msgid "Location information"
+msgstr "الموقع الجغرافي"
 
 #: company_profile/admin.py:186
 msgid "Contract information"
@@ -85,24 +85,24 @@ msgstr "المحلية لا تتبع للولاية الصحيحة"
 #: company_profile/forms.py:456 company_profile/forms.py:470
 #: company_profile/forms.py:484 company_profile/forms.py:498
 #: company_profile/forms.py:512 company_profile/forms.py:526
-#: company_profile/models.py:151 company_profile/models.py:171
-#: company_profile/models.py:197 company_profile/models.py:210
-#: company_profile/models.py:226 company_profile/models.py:252
-#: company_profile/models.py:280 company_profile/models.py:306
-#: company_profile/models.py:327 company_profile/models.py:349
-#: company_profile/models.py:368 company_profile/models.py:396
-#: company_profile/models.py:428 company_profile/models.py:456
-#: company_profile/models.py:474 company_profile/models.py:494
-#: company_profile/models.py:512 company_profile/models.py:532
-#: company_profile/models.py:549 company_profile/models.py:568
-#: company_profile/models.py:588 company_profile/models.py:620
-#: company_profile/models.py:651 company_profile/models.py:695
-#: company_profile/models.py:729 company_profile/models.py:762
-#: company_profile/models.py:795 company_profile/models.py:858
-#: company_profile/models.py:890 company_profile/models.py:906
-#: company_profile/models.py:922 company_profile/models.py:938
-#: company_profile/models.py:954 company_profile/models.py:970
-#: company_profile/models.py:986 company_profile/models.py:1002
+#: company_profile/models.py:148 company_profile/models.py:168
+#: company_profile/models.py:194 company_profile/models.py:226
+#: company_profile/models.py:252 company_profile/models.py:280
+#: company_profile/models.py:306 company_profile/models.py:327
+#: company_profile/models.py:349 company_profile/models.py:368
+#: company_profile/models.py:396 company_profile/models.py:428
+#: company_profile/models.py:456 company_profile/models.py:474
+#: company_profile/models.py:494 company_profile/models.py:512
+#: company_profile/models.py:532 company_profile/models.py:549
+#: company_profile/models.py:568 company_profile/models.py:588
+#: company_profile/models.py:620 company_profile/models.py:651
+#: company_profile/models.py:695 company_profile/models.py:729
+#: company_profile/models.py:762 company_profile/models.py:795
+#: company_profile/models.py:858 company_profile/models.py:890
+#: company_profile/models.py:906 company_profile/models.py:922
+#: company_profile/models.py:938 company_profile/models.py:954
+#: company_profile/models.py:970 company_profile/models.py:986
+#: company_profile/models.py:1002
 msgid "company"
 msgstr "شركة"
 
@@ -142,8 +142,8 @@ msgstr ""
 
 #: company_profile/models.py:53 company_profile/models.py:63
 #: company_profile/models.py:74 company_profile/models.py:84
-#: company_profile/models.py:129 company_profile/models.py:161
-#: company_profile/models.py:183 company_profile/models.py:685
+#: company_profile/models.py:126 company_profile/models.py:158
+#: company_profile/models.py:180 company_profile/models.py:685
 #: company_profile/models.py:783
 msgid "name"
 msgstr "الاسم"
@@ -164,7 +164,7 @@ msgstr "الولاية"
 msgid "States"
 msgstr "الولايات"
 
-#: company_profile/models.py:73 company_profile/models.py:110
+#: company_profile/models.py:73 company_profile/models.py:198
 msgid "state"
 msgstr "الولاية"
 
@@ -213,108 +213,108 @@ msgid "nationality"
 msgstr "الجنسية"
 
 #: company_profile/models.py:111
-msgid "locality"
-msgstr "المحلية"
-
-#: company_profile/models.py:112
-msgid "location"
-msgstr "المنطقة"
-
-#: company_profile/models.py:113 company_profile/models.py:202
-msgid "cordinates"
-msgstr "الاحداثيات"
-
-#: company_profile/models.py:114
 msgid "address"
 msgstr "العنوان"
 
-#: company_profile/models.py:115
+#: company_profile/models.py:112
 msgid "website"
 msgstr "الموقع الالكتروني"
 
-#: company_profile/models.py:116
+#: company_profile/models.py:113
 msgid "manager_name"
 msgstr "اسم المدير"
 
-#: company_profile/models.py:117
+#: company_profile/models.py:114
 msgid "manager_phone"
 msgstr "تلفون المدير"
 
-#: company_profile/models.py:118
+#: company_profile/models.py:115
 msgid "Representative name"
 msgstr "اسم ممثل الشركة"
 
-#: company_profile/models.py:119
+#: company_profile/models.py:116
 msgid "Representative phone"
 msgstr "تلفون ممثل الشركة"
 
-#: company_profile/models.py:120
+#: company_profile/models.py:117
 msgid "Official email"
 msgstr "البريد الالكتروني الرسمي"
 
-#: company_profile/models.py:140
+#: company_profile/models.py:137
 msgid "status"
 msgstr "الحالة"
 
-#: company_profile/models.py:143
+#: company_profile/models.py:140
 msgid "Production Company"
 msgstr "شركة انتاج"
 
-#: company_profile/models.py:144
+#: company_profile/models.py:141
 msgid "Production Companies"
 msgstr "شركات الانتاج"
 
-#: company_profile/models.py:157
+#: company_profile/models.py:154
 msgid "Production Company User"
 msgstr "مستخدم شركة انتاج"
 
-#: company_profile/models.py:158
+#: company_profile/models.py:155
 msgid "Production Company Users"
 msgstr "مستخدمي شركات الانتاج"
 
-#: company_profile/models.py:167
+#: company_profile/models.py:164
 msgid "Factory Type"
 msgstr "نوع المصنع"
 
-#: company_profile/models.py:168
+#: company_profile/models.py:165
 msgid "Factory Types"
 msgstr "نوع المصنع"
 
-#: company_profile/models.py:172
+#: company_profile/models.py:169
 msgid "factory_type"
 msgstr "نوع المصنع"
 
-#: company_profile/models.py:173
+#: company_profile/models.py:170
 msgid "Capacity (Tones per day)"
 msgstr "قدرة المصنع (طن في اليوم)"
 
-#: company_profile/models.py:179
+#: company_profile/models.py:176
 msgid "Production Company Factory"
 msgstr "مصنع شركة منتجة"
 
-#: company_profile/models.py:180
+#: company_profile/models.py:177
 msgid "Production Company Factories"
 msgstr "مصانع الشركات المنتجة"
 
-#: company_profile/models.py:189 company_profile/models.py:190
+#: company_profile/models.py:186 company_profile/models.py:187
 msgid "License Status"
 msgstr "حالة الترخيص"
 
-#: company_profile/models.py:198
+#: company_profile/models.py:195
 msgid "Sign date"
 msgstr "تاريخ التوقيع"
 
-#: company_profile/models.py:199
+#: company_profile/models.py:196
 msgid "start_date"
 msgstr "تاريح البداية"
 
-#: company_profile/models.py:200
+#: company_profile/models.py:197
 msgid "end_date"
 msgstr "تاريخ النهاية"
+
+#: company_profile/models.py:199
+msgid "locality"
+msgstr "المحلية"
+
+#: company_profile/models.py:200
+msgid "location"
+msgstr "المنطقة"
 
 #: company_profile/models.py:201
 msgid "sheet_no"
 msgstr "رقم المربع"
+
+#: company_profile/models.py:202
+msgid "cordinates"
+msgstr "الاحداثيات"
 
 #: company_profile/models.py:203
 msgid "Area in Kilometers"
@@ -343,6 +343,10 @@ msgstr "العوائد الجليلة"
 #: company_profile/models.py:209
 msgid "zakat"
 msgstr "الزكاة"
+
+#: company_profile/models.py:210
+msgid "annual_rent"
+msgstr "الاجار السنوي"
 
 #: company_profile/models.py:211
 msgid "contract_status"
