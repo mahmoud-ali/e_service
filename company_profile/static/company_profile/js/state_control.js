@@ -1,22 +1,21 @@
-django.jQuery(document).ready(function(){
+django.jQuery(function($){
     var val = django.jQuery("select#id_state option:selected").val();
-    django.jQuery("select#id_state option").each(function(index){
-        
+    $("select#id_state option").each(function(index){
     if (val == 'submitted'){
-        if(django.jQuery(this).attr("value")!=val && django.jQuery(this).attr("value")!='accepted'){
-            django.jQuery(this).hide();
+        if($(this).attr("value")!=val && $(this).attr("value")!='accepted'){
+            $(this).remove();
         }
     }else if (val == 'accepted'){
-        if(django.jQuery(this).attr("value")!=val && django.jQuery(this).attr("value")!='approved' && django.jQuery(this).attr("value")!='rejected'){
-            django.jQuery(this).hide();
+        if($(this).attr("value")!=val && $(this).attr("value")!='approved' && $(this).attr("value")!='rejected'){
+            $(this).remove();
         }
     }else if (val == 'approved'){
-        if(django.jQuery(this).attr("value")!=val){
-            django.jQuery(this).hide();
+        if($(this).attr("value")!=val){
+            $(this).remove();
         }
     }else if (val == 'rejected'){
-        if(django.jQuery(this).attr("value")!=val){
-            django.jQuery(this).hide();
+        if($(this).attr("value")!=val){
+            $(this).remove();
         }
     }
     });

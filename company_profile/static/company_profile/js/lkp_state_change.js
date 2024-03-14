@@ -4,7 +4,7 @@ django.jQuery(function($){
         var state = $("select#id_state").val() || 0
         var locality = $("select#id_locality").val() || initial_locality
 
-        $.get("http://127.0.0.1:8000/lkp_locality/"+state+"/"+locality+"/", function( data ) {          
+        $.get("/lkp_locality/"+state+"/"+locality+"/", function( data ) {          
             $("select#id_locality").html(data);
 
         });
