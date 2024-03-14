@@ -218,7 +218,7 @@ msgstr "المحلية"
 
 #: company_profile/models.py:112
 msgid "location"
-msgstr "الموقع"
+msgstr "المنطقة"
 
 #: company_profile/models.py:113 company_profile/models.py:202
 msgid "cordinates"
