@@ -64,20 +64,21 @@ def in_progress_apps(request):
         company_count = dict(sorted(company_count.items(),key=lambda x:x[1],reverse=True))
         app_count = dict(sorted(app_count.items(),key=lambda x:x[1],reverse=True))
 
-        return {
-            'in_progress_apps': {
-                'data':data,
-                'summary':{
-                    'company':{
-                        'name': list(company_count.keys()),
-                        'count': list(company_count.values())
-                    },
-                    'app':{
-                        'name': list(app_count.keys()),
-                        'count': list(app_count.values())
+        if data:
+            return {
+                'in_progress_apps': {
+                    'data':data,
+                    'summary':{
+                        'company':{
+                            'name': list(company_count.keys()),
+                            'count': list(company_count.values())
+                        },
+                        'app':{
+                            'name': list(app_count.keys()),
+                            'count': list(app_count.values())
+                        }
                     }
                 }
             }
-        }
     
     return {}
