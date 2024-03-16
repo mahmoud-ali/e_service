@@ -7,7 +7,7 @@ from django.contrib.sites.models import Site
 
 from import_export.admin import ExportActionMixin
 
-from .models import AppCyanideCertificate, AppExplosivePermission, AppFuelPermission, AppImportPermission, AppLocalPurchase, AppRenewalContract, AppRestartActivity, AppTemporaryExemption, LkpNationality,LkpState,LkpLocality,LkpMineral,LkpCompanyProductionStatus,LkpForeignerProcedureType,TblCompanyProduction, \
+from .models import AppCyanideCertificate, AppExplosivePermission, AppFuelPermission, AppHSEAccidentReport, AppHSEPerformanceReport, AppImportPermission, AppLocalPurchase, AppRenewalContract, AppRestartActivity, AppTemporaryExemption, LkpNationality,LkpState,LkpLocality,LkpMineral,LkpCompanyProductionStatus,LkpForeignerProcedureType,TblCompanyProduction, \
                                       LkpCompanyProductionFactoryType,TblCompanyProductionFactory,LkpCompanyProductionLicenseStatus, \
                                       TblCompanyProductionLicense,AppForignerMovement,TblCompanyProductionUserRole, \
                                       AppBorrowMaterial,AppBorrowMaterialDetail,AppWorkPlan,AppTechnicalFinancialReport, \
@@ -20,7 +20,7 @@ from .models import AppCyanideCertificate, AppExplosivePermission, AppFuelPermis
                                       AppRequirementsListChemicalLabEquipments,AppRequirementsListChemicalEquipments, \
                                       AppRequirementsListMotafjeratEquipments,AppRequirementsListVehiclesEquipments,TblCompany,AppVisibityStudy,AppVisibityStudyDetail
 
-from .forms import AppCyanideCertificateAdminForm, AppExplosivePermissionAdminForm, AppFuelPermissionAdminForm, AppImportPermissionAdminForm, AppLocalPurchaseAdminForm, AppRenewalContractAdminForm, AppRestartActivityAdminForm, AppTemporaryExemptionAdminForm, TblCompanyProductionForm,AppForignerMovementAdminForm,AppBorrowMaterialAdminForm,AppWorkPlanAdminForm, \
+from .forms import AppCyanideCertificateAdminForm, AppExplosivePermissionAdminForm, AppFuelPermissionAdminForm, AppHSEAccidentReportAdminForm, AppHSEPerformanceReportAdminForm, AppImportPermissionAdminForm, AppLocalPurchaseAdminForm, AppRenewalContractAdminForm, AppRestartActivityAdminForm, AppTemporaryExemptionAdminForm, TblCompanyProductionForm,AppForignerMovementAdminForm,AppBorrowMaterialAdminForm,AppWorkPlanAdminForm, \
                    AppTechnicalFinancialReportAdminForm,AppChangeCompanyNameAdminForm, AppExplorationTimeAdminForm, \
                    AppAddAreaAdminForm,AppRemoveAreaAdminForm,AppTnazolShrakaAdminForm, AppTajeelTnazolAdminForm, \
                    AppTajmeedAdminForm,AppTakhaliAdminForm,AppTamdeedAdminForm,AppTaaweedAdminForm,AppMdaAdminForm, \
@@ -577,4 +577,22 @@ class AppFuelPermissionAdmin(WorkflowAdminMixin,admin.ModelAdmin):
     view_on_site = False
     
 admin.site.register(AppFuelPermission, AppFuelPermissionAdmin)
+
+class AppHSEAccidentReportAdmin(WorkflowAdminMixin,admin.ModelAdmin):
+    form = AppHSEAccidentReportAdminForm
+    
+    list_display = ["company", "created_at", "created_by","updated_at", "updated_by"]        
+    list_filter = ["company"]
+    view_on_site = False
+    
+admin.site.register(AppHSEAccidentReport, AppHSEAccidentReportAdmin)
+
+class AppHSEPerformanceReportAdmin(WorkflowAdminMixin,admin.ModelAdmin):
+    form = AppHSEPerformanceReportAdminForm
+    
+    list_display = ["company", "created_at", "created_by","updated_at", "updated_by"]        
+    list_filter = ["company"]
+    view_on_site = False
+    
+admin.site.register(AppHSEPerformanceReport, AppHSEPerformanceReportAdmin)
 

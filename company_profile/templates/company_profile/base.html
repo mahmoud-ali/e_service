@@ -242,6 +242,13 @@ $(document).ready(function(){
 				<a href="{% url 'profile:app_fuel_permission_list' %}">{% translate "Application: Fuel Permission" %}</a>
 		 	</li>
 
+			 <li class="{% if menu_name == 'profile:app_hse_accident_list' %}active{% endif %} ">  
+				<a href="{% url 'profile:app_hse_accident_list' %}">{% translate "Application: HSE Accident Report" %}</a>
+		 	</li>
+			 <li class="{% if menu_name == 'profile:app_hse_performance_list' %}active{% endif %} ">  
+				<a href="{% url 'profile:app_hse_performance_list' %}">{% translate "Application: HSE Performance Report" %}</a>
+		 	</li>
+
 		  </ul>
 		  </div>	  
 

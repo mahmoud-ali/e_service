@@ -1013,3 +1013,35 @@ class AppFuelPermission(WorkflowModel):
         ordering = ["-id"]
         verbose_name = _("Application: Fuel Permission")
         verbose_name_plural = _("Application: Fuel Permission")
+
+class AppHSEAccidentReport(WorkflowModel):
+    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
+
+    attachement_file = models.FileField(_("attachement_file"),upload_to=company_applications_path)
+
+    def __str__(self):
+        return _("HSE Accident Report") +" ("+str(self.id)+")"
+        
+    def get_absolute_url(self): 
+        return reverse('profile:app_hse_accident_show',args=[str(self.id)])                
+    
+    class Meta:
+        ordering = ["-id"]
+        verbose_name = _("Application: HSE Accident Report")
+        verbose_name_plural = _("Application: HSE Accident Report")
+
+class AppHSEPerformanceReport(WorkflowModel):
+    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
+
+    attachement_file = models.FileField(_("attachement_file"),upload_to=company_applications_path)
+
+    def __str__(self):
+        return _("HSE Performance Report") +" ("+str(self.id)+")"
+        
+    def get_absolute_url(self): 
+        return reverse('profile:app_hse_performance_show',args=[str(self.id)])                
+    
+    class Meta:
+        ordering = ["-id"]
+        verbose_name = _("Application: HSE Performance Report")
+        verbose_name_plural = _("Application: HSE Performance Report")

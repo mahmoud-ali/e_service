@@ -35,7 +35,9 @@ from .views import SetLanguageView, HomePageView, \
                    AppRestartActivityListView,AppRestartActivityCreateView,AppRestartActivityReadonlyView, \
                    AppRenewalContractListView,AppRenewalContractCreateView,AppRenewalContractReadonlyView, \
                    AppImportPermissionListView,AppImportPermissionCreateView,AppImportPermissionReadonlyView, \
-                   AppFuelPermissionListView,AppFuelPermissionCreateView,AppFuelPermissionReadonlyView
+                   AppFuelPermissionListView,AppFuelPermissionCreateView,AppFuelPermissionReadonlyView, \
+                   AppHSEAccidentReportListView,AppHSEAccidentReportCreateView,AppHSEAccidentReportReadonlyView, \
+                   AppHSEPerformanceReportListView,AppHSEPerformanceReportCreateView,AppHSEPerformanceReportReadonlyView
 
 app_name = "profile"
 urlpatterns = [                                                        
@@ -203,5 +205,15 @@ urlpatterns = [
     path('app_fuel_permission/<int:type>/', AppFuelPermissionListView.as_view(), name='app_fuel_permission_list'),
     path('app_fuel_permission/<int:pk>/show/', AppFuelPermissionReadonlyView.as_view(), name='app_fuel_permission_show'),    
     path('app_fuel_permission/add/', AppFuelPermissionCreateView.as_view(), name='app_fuel_permission_add'),
+
+    path('app_hse_accident/', AppHSEAccidentReportListView.as_view(), name='app_hse_accident_list'),
+    path('app_hse_accident/<int:type>/', AppHSEAccidentReportListView.as_view(), name='app_hse_accident_list'),
+    path('app_hse_accident/<int:pk>/show/', AppHSEAccidentReportReadonlyView.as_view(), name='app_hse_accident_show'),    
+    path('app_hse_accident/add/', AppHSEAccidentReportCreateView.as_view(), name='app_hse_accident_add'),
+
+    path('app_hse_performance/', AppHSEPerformanceReportListView.as_view(), name='app_hse_performance_list'),
+    path('app_hse_performance/<int:type>/', AppHSEPerformanceReportListView.as_view(), name='app_hse_performance_list'),
+    path('app_hse_performance/<int:pk>/show/', AppHSEPerformanceReportReadonlyView.as_view(), name='app_hse_performance_show'),    
+    path('app_hse_performance/add/', AppHSEPerformanceReportCreateView.as_view(), name='app_hse_performance_add'),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
