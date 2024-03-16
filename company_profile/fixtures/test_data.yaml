@@ -503,13 +503,13 @@
   fields:
     borrow_master: 25
     material: ggggggg
-    quantity: 999999999
+    quantity: 999
 - model: company_profile.appborrowmaterialdetail
   pk: 19
   fields:
     borrow_master: 25
     material: oooooooooo
-    quantity: 8888888
+    quantity: 888
 - model: company_profile.appborrowmaterialdetail
   pk: 20
   fields:
@@ -533,13 +533,13 @@
   fields:
     borrow_master: 29
     material: zzzzzzzzz
-    quantity: 7777777
+    quantity: 777
 - model: company_profile.appborrowmaterialdetail
   pk: 24
   fields:
     borrow_master: 29
     material: vvvvvvvvv
-    quantity: 7777777777
+    quantity: 7777
 - model: company_profile.appborrowmaterialdetail
   pk: 25
   fields:
