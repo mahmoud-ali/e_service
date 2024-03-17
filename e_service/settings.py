@@ -73,6 +73,7 @@ INSTALLED_APPS = [
     # Local                
     'accounts',
     'company_profile',    
+    'check_cordinates',
 
     # Debug
     'debug_toolbar',

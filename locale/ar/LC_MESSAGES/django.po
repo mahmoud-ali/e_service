@@ -8,7 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-03-16 16:28+0200\n"
+
+
+"POT-Creation-Date: 2024-03-17 10:09+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -30,6 +32,33 @@ msgstr "العربية"
 #: accounts/models.py:12 company_profile/forms.py:22
 msgid "English"
 msgstr ""
+
+#: check_cordinates/templates/check_cordinates/application_add_master_details.html:43
+#: company_profile/templates/company_profile/application_add_master_details.html:44
+#: company_profile/templates/company_profile/views/requirements_list_add_master_details.html:45
+msgid "add_more"
+msgstr "اضافة المزيد"
+
+#: check_cordinates/templates/check_cordinates/application_add_master_details.html:49
+#: company_profile/templates/company_profile/application_add.html:15
+#: company_profile/templates/company_profile/application_add_master_details.html:50
+#: company_profile/templates/company_profile/views/requirements_list_add_master_details.html:53
+msgid "Submit"
+msgstr "ارسال"
+
+#: check_cordinates/views.py:20
+#, fuzzy
+#| msgid "cordinates"
+msgid "Enter cordinates"
+msgstr "الاحداثيات"
+
+#: check_cordinates/views.py:58
+msgid "Intersect with other data: "
+msgstr "يوجد تداخل مع بيانات اخرى: "
+
+#: check_cordinates/views.py:60
+msgid "No intersection!"
+msgstr "لايوجد تداخل!"
 
 #: company_profile/admin.py:33 company_profile/admin.py:34
 #: company_profile/admin.py:35 templates/admin/__base_site.html:6
@@ -1431,7 +1460,7 @@ msgid "HSE Accident Report"
 msgstr "تقرير التحقيق عن حادث"
 
 #: company_profile/models.py:1030 company_profile/models.py:1031
-#| msgid "Application: Technical & Financial Report"
+#: company_profile/templates/company_profile/base.html:247
 msgid "Application: HSE Accident Report"
 msgstr "تقرير التحقيق عن حادث"
 
@@ -1463,17 +1492,6 @@ msgstr "تقرير البيئة والسلامة"
 #: company_profile/tables.py:452 company_profile/tables.py:465
 msgid "No records."
 msgstr "لايوجد سجل."
-
-#: company_profile/templates/company_profile/application_add.html:15
-#: company_profile/templates/company_profile/application_add_master_details.html:50
-#: company_profile/templates/company_profile/views/requirements_list_add_master_details.html:53
-msgid "Submit"
-msgstr "ارسال"
-
-#: company_profile/templates/company_profile/application_add_master_details.html:44
-#: company_profile/templates/company_profile/views/requirements_list_add_master_details.html:45
-msgid "add_more"
-msgstr "اضافة المزيد"
 
 #: company_profile/templates/company_profile/application_list.html:14
 msgid "New application"
