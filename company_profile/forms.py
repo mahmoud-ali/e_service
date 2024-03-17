@@ -40,8 +40,8 @@ class TblCompanyProductionForm(ModelForm):
         state = cleaned_data.get("state")        
         locality = cleaned_data.get("locality") 
         
-        if state.id != locality.state.id:
-            self.add_error('locality', _('locality not belong to right state.')+' ('+state.name+')')
+        # if state.id != locality.state.id:
+        #     self.add_error('locality', _('locality not belong to right state.')+' ('+state.name+')')
            
 class AppForignerMovementAdminForm(WorkflowFormMixin,ModelForm):
     company = forms.ModelChoiceField(queryset=TblCompanyProduction.objects.all(), disabled=True, label=_("company"))

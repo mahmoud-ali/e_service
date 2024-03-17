@@ -192,6 +192,7 @@ def company_contract_path(instance, filename):
 
 class TblCompanyProductionLicense(LoggingModel): 
     company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
+    license_no = models.CharField(_("License no"),max_length=20)
     date = models.DateField(_("Sign date"))
     start_date = models.DateField(_("start_date"))
     end_date = models.DateField(_("end_date"))
@@ -202,9 +203,9 @@ class TblCompanyProductionLicense(LoggingModel):
     cordinates = models.TextField(_("cordinates"),max_length=256)
     area = models.FloatField(_("Area in Kilometers"))
     reserve = models.FloatField(_("Reserve in Tones"))
-    gov_rep = models.CharField(_("Goverment representative"),max_length=200,blank=True)
-    rep_percent = models.FloatField(_("Representative percentage(%)"),blank=True)
-    com_percent = models.FloatField(_("Company percentage(%)"),blank=True)
+    gov_rep = models.CharField(_("Goverment representative"),max_length=200,blank=True,default=0,null=True)
+    rep_percent = models.FloatField(_("Representative percentage(%)"),blank=True,default=0,null=True)
+    com_percent = models.FloatField(_("Company percentage(%)"),blank=True,default=0,null=True)
     royalty = models.FloatField(_("royalty"))
     zakat = models.FloatField(_("zakat"))
     annual_rent = models.FloatField(_("annual_rent"))
@@ -252,7 +253,7 @@ class AppBorrowMaterial(WorkflowModel):
     company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,related_name="borrow_to",verbose_name=_("company"))    
     company_from  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,related_name="borrow_from",verbose_name=_("company_borrow_from"))    
     borrow_date = models.DateField(_("borrow_date"))
-    borrow_materials_list_file = models.FileField(_("borrow_materials_list_file"),upload_to=company_applications_path)    
+    borrow_materials_list_file = models.FileField(_("borrow_materials_list_file"),blank=True,upload_to=company_applications_path)    
     borrow_from_approval_file = models.FileField(_("borrow_from_approval_file"),upload_to=company_applications_path)        
     
     def __str__(self):

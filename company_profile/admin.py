@@ -164,7 +164,7 @@ class TblCompanyProductionAdmin(ExportActionMixin,LoggingAdminMixin,admin.ModelA
     def save_model(self, request, obj, form, change):
         super().save_model(request, obj, form, change)                
 
-        if not obj.id:
+        if not change:
             User = get_user_model()            
             com_user = User.objects.create_user(obj.name_en,obj.email,settings.ACCOUNT_DEFAULT_PASSWORD)
             u = TblCompanyProductionUserRole(company=obj,user=com_user)
