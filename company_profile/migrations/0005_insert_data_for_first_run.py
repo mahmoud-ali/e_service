@@ -23,8 +23,8 @@ def forwards_func(apps, schema_editor):
         [
             LkpCompanyProductionStatus(id=1, name="منتجة"),
             LkpCompanyProductionStatus(id=2, name="مقبلة"),
-            LkpCompanyProductionStatus(id=2, name="استكشاف"),
-            LkpCompanyProductionStatus(id=3, name="متوقفة"),
+            LkpCompanyProductionStatus(id=3, name="استكشاف"),
+            LkpCompanyProductionStatus(id=4, name="متوقفة"),
         ]
     )
 
