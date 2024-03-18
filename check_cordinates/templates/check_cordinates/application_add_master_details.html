@@ -11,7 +11,7 @@
 <form  method="post"  enctype="multipart/form-data">
 {% csrf_token %}
 	<h3>{{form_title}}:</h3>
-    <p>Enter data in UTM meters.</p>
+    <p>{% translate "Enter data in UTM meters." %}</p>
     {{ detail_formset.management_form }}
     <table id="detail_table"  class="table table-bordered">
         <tr>

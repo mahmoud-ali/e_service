@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-03-18 00:15+0200\n"
+"POT-Creation-Date: 2024-03-18 11:20+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -31,6 +31,10 @@ msgstr "العربية"
 msgid "English"
 msgstr ""
 
+#: check_cordinates/templates/check_cordinates/application_add_master_details.html:14
+msgid "Enter data in UTM meters."
+msgstr "ادخل البيانات على صيغة (UTM meters)"
+
 #: check_cordinates/templates/check_cordinates/application_add_master_details.html:44
 #: company_profile/templates/company_profile/application_add_master_details.html:44
 #: company_profile/templates/company_profile/views/requirements_list_add_master_details.html:45
@@ -45,10 +49,8 @@ msgid "Submit"
 msgstr "ارسال"
 
 #: check_cordinates/views.py:20
-#, fuzzy
-#| msgid "cordinates"
 msgid "Enter cordinates"
-msgstr "الاحداثيات"
+msgstr "ادخل الاحداثيات"
 
 #: check_cordinates/views.py:58
 msgid "Intersect with other data: "
