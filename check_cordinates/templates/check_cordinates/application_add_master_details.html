@@ -6,12 +6,11 @@
 
 {% block content %}
 <h1 class="page-header">{{title}}</h1>
+<p>{% translate "Enter data in UTM meters." %}</p>
 {% bootstrap_messages %}
 
 <form  method="post"  enctype="multipart/form-data">
 {% csrf_token %}
-	<h3>{{form_title}}:</h3>
-    <p>{% translate "Enter data in UTM meters." %}</p>
     {{ detail_formset.management_form }}
     <table id="detail_table"  class="table table-bordered">
         <tr>

@@ -16,8 +16,7 @@ class CheckCordinatesView(LoginRequiredMixin,View):
     form = PointCordinateForm
     detail_formset = None
     menu_name = "check_cordinates:check_view"
-    title = ""
-    form_title = _("Enter cordinates")
+    title = _("Check cordinates")
     template_name = "check_cordinates/application_add_master_details.html"
     
     def dispatch(self, *args, **kwargs):    
@@ -27,7 +26,6 @@ class CheckCordinatesView(LoginRequiredMixin,View):
         self.extra_context = {
                             "menu_name":self.menu_name,
                             "title":self.title, 
-                            "form_title":self.form_title, 
                             "detail_formset": self.detail_formset,
          }
         return super().dispatch(*args, **kwargs)                    
