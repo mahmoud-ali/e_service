@@ -881,8 +881,8 @@ class AppVisibityStudy(WorkflowModel):
 class AppVisibityStudyDetail(models.Model):
     study_master = models.ForeignKey(AppVisibityStudy, on_delete=models.PROTECT)    
     study_point_id = models.IntegerField(_("study_point_id"))
-    study_point_long = models.DecimalField(_("study_point_long"),max_digits=20,decimal_places=12)
-    study_point_lat = models.DecimalField(_("study_point_lat"),max_digits=20,decimal_places=12)
+    study_point_long = models.FloatField(_("study_point_long"))
+    study_point_lat = models.FloatField(_("study_point_lat"))
 
     class Meta:
         verbose_name = _("Visibity Study Detail")
