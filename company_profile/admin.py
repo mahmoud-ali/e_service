@@ -7,7 +7,7 @@ from django.contrib.sites.models import Site
 
 from import_export.admin import ExportActionMixin
 
-from .models import AppCyanideCertificate, AppExplosivePermission, AppFuelPermission, AppHSEAccidentReport, AppHSEPerformanceReport, AppImportPermission, AppLocalPurchase, AppRenewalContract, AppRestartActivity, AppTemporaryExemption, LkpNationality,LkpState,LkpLocality,LkpMineral,LkpCompanyProductionStatus,LkpForeignerProcedureType,TblCompanyProduction, \
+from .models import AppCyanideCertificate, AppExplosivePermission, AppFuelPermission, AppFuelPermissionDetail, AppHSEAccidentReport, AppHSEPerformanceReport, AppImportPermission, AppImportPermissionDetail, AppLocalPurchase, AppRenewalContract, AppRestartActivity, AppTemporaryExemption, LkpNationality,LkpState,LkpLocality,LkpMineral,LkpCompanyProductionStatus,LkpForeignerProcedureType,TblCompanyProduction, \
                                       LkpCompanyProductionFactoryType,TblCompanyProductionFactory,LkpCompanyProductionLicenseStatus, \
                                       TblCompanyProductionLicense,AppForignerMovement,TblCompanyProductionUserRole, \
                                       AppBorrowMaterial,AppBorrowMaterialDetail,AppWorkPlan,AppTechnicalFinancialReport, \
@@ -560,8 +560,14 @@ class AppRenewalContractAdmin(WorkflowAdminMixin,admin.ModelAdmin):
     
 admin.site.register(AppRenewalContract, AppRenewalContractAdmin)
 
+class AppImportPermissionDetailInline(admin.TabularInline):
+    model = AppImportPermissionDetail
+    exclude = ["created_at","created_by","updated_at","updated_by"]
+    extra = 1    
+
 class AppImportPermissionAdmin(WorkflowAdminMixin,admin.ModelAdmin):
     form = AppImportPermissionAdminForm
+    inlines = [AppImportPermissionDetailInline]
     
     list_display = ["company", "created_at", "created_by","updated_at", "updated_by"]        
     list_filter = ["company"]
@@ -569,9 +575,15 @@ class AppImportPermissionAdmin(WorkflowAdminMixin,admin.ModelAdmin):
     
 admin.site.register(AppImportPermission, AppImportPermissionAdmin)
 
+class AppFuelPermissionDetailDetailInline(admin.TabularInline):
+    model = AppFuelPermissionDetail
+    exclude = ["created_at","created_by","updated_at","updated_by"]
+    extra = 1    
+
 class AppFuelPermissionAdmin(WorkflowAdminMixin,admin.ModelAdmin):
     form = AppFuelPermissionAdminForm
-    
+    inlines = [AppFuelPermissionDetailDetailInline]
+
     list_display = ["company", "created_at", "created_by","updated_at", "updated_by"]        
     list_filter = ["company"]
     view_on_site = False

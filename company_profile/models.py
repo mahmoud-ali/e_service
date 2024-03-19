@@ -433,6 +433,7 @@ class AppTnazolShraka(WorkflowModel):
 
     financial_ability_file = models.FileField(_("financial_ability_file"),upload_to=company_applications_path)
     cv_file = models.FileField(_("cv_file"),upload_to=company_applications_path)
+    agreement_file = models.FileField(_("agreement_file"),upload_to=company_applications_path)
 
     def __str__(self):
         return _("Tnazol Shraka") +" ("+str(self.id)+")"
@@ -516,7 +517,7 @@ class AppTamdeed(WorkflowModel):
     cause_for_tamdeed = models.TextField(_("cause_for_tamdeed"),max_length=1000)
 
     approved_work_plan_file = models.FileField(_("approved_work_plan_file"),upload_to=company_applications_path)
-    tnazol_file = models.FileField(_("tnazol_file"),upload_to=company_applications_path)
+    tnazol_file = models.FileField(_("tnazol_file"),upload_to=company_applications_path,blank=True)
 
     def __str__(self):
         return _("Tamdeed") +" ("+str(self.id)+")"
@@ -591,20 +592,20 @@ class AppExportGold(WorkflowModel):
     net_in_gram = models.FloatField(_("net_in_gram"))
     zakat_in_gram = models.FloatField(_("zakat_in_gram"))
     awaad_jalila_in_gram = models.FloatField(_("awaad_jalila_in_gram"))
-    arbah_amal_in_gram = models.FloatField(_("arbah_amal_in_gram"))
+    arbah_amal_in_gram = models.FloatField(_("arbah_amal_in_gram"),blank=True,default=0)
     sold_for_bank_of_sudan_in_gram = models.FloatField(_("sold_for_bank_of_sudan_in_gram"))
     amount_to_export_in_gram = models.FloatField(_("amount_to_export_in_gram"))
     remain_in_gram = models.FloatField(_("remain_in_gram"))
 
     f1 = models.FileField(_("f1"),upload_to=company_applications_path)
-    f2 = models.FileField(_("f2"),upload_to=company_applications_path)
+    # f2 = models.FileField(_("f2"),upload_to=company_applications_path)
     f3 = models.FileField(_("f3"),upload_to=company_applications_path)
     f4 = models.FileField(_("f4"),upload_to=company_applications_path)
-    f5 = models.FileField(_("f5"),upload_to=company_applications_path)
     f6 = models.FileField(_("f6"),upload_to=company_applications_path)
     f7 = models.FileField(_("f7"),upload_to=company_applications_path)
     f8 = models.FileField(_("f8"),upload_to=company_applications_path)
     f9 = models.FileField(_("f9"),upload_to=company_applications_path)
+    f5 = models.FileField(_("f5"),upload_to=company_applications_path,blank=True)
 
     def __str__(self):
         return _("Export Gold") +" ("+str(self.id)+")"
@@ -655,9 +656,9 @@ class AppSendSamplesForAnalysis(WorkflowModel):
     lab_address = models.TextField(_("lab_address"),max_length=256)
     lab_analysis_cost = models.FloatField(_("lab_analysis_cost"))
 
-    last_analysis_report_file = models.FileField(_("last_analysis_report_file"),upload_to=company_applications_path,blank=True)
     initial_voucher_file = models.FileField(_("initial_voucher_file"),upload_to=company_applications_path)
     sample_description_form_file = models.FileField(_("sample_description_form_file"),upload_to=company_applications_path)
+    last_analysis_report_file = models.FileField(_("last_analysis_report_file"),upload_to=company_applications_path,blank=True)
 
     def __str__(self):
         return _("Send samples for analysis") +" ("+str(self.id)+")"
@@ -766,7 +767,7 @@ class AppReexportEquipments(WorkflowModel):
     shipping_policy_file = models.FileField(_("shipping_policy_file"),upload_to=company_applications_path)
     voucher_file = models.FileField(_("voucher_file"),upload_to=company_applications_path)
     specifications_file = models.FileField(_("specifications_file"),upload_to=company_applications_path)
-    momentary_approval_file = models.FileField(_("momentary_approval_file"),upload_to=company_applications_path)
+    # momentary_approval_file = models.FileField(_("momentary_approval_file"),upload_to=company_applications_path)
 
     def __str__(self):
         return _("Reexport Equipments") +" ("+str(self.id)+")"
@@ -906,7 +907,8 @@ class AppTemporaryExemption(WorkflowModel):
 class AppLocalPurchase(WorkflowModel):
     company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
 
-    attachement_file = models.FileField(_("attachement_file"),upload_to=company_applications_path)
+    attachement_file = models.FileField(_("local_request_file"),upload_to=company_applications_path)
+    attachement_file2 = models.FileField(_("local_purchase_invoice_file"),upload_to=company_applications_path)
 
     def __str__(self):
         return _("Local Purchase") +" ("+str(self.id)+")"
@@ -922,7 +924,7 @@ class AppLocalPurchase(WorkflowModel):
 class AppCyanideCertificate(WorkflowModel):
     company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
 
-    attachement_file = models.FileField(_("attachement_file"),upload_to=company_applications_path)
+    attachement_file = models.FileField(_("cyanide_request_file"),upload_to=company_applications_path)
 
     def __str__(self):
         return _("Cyanide Certificate") +" ("+str(self.id)+")"
@@ -938,7 +940,9 @@ class AppCyanideCertificate(WorkflowModel):
 class AppExplosivePermission(WorkflowModel):
     company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
 
-    attachement_file = models.FileField(_("attachement_file"),upload_to=company_applications_path)
+    attachement_file = models.FileField(_("explosive_request_file"),upload_to=company_applications_path)
+    attachement_file2 = models.FileField(_("explosive_amount_file"),upload_to=company_applications_path,blank=True)
+    attachement_file3 = models.FileField(_("explosive_last_approved_request_file"),upload_to=company_applications_path,blank=True)
 
     def __str__(self):
         return _("Explosive Permission") +" ("+str(self.id)+")"
@@ -954,7 +958,7 @@ class AppExplosivePermission(WorkflowModel):
 class AppRestartActivity(WorkflowModel):
     company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
 
-    attachement_file = models.FileField(_("attachement_file"),upload_to=company_applications_path)
+    attachement_file = models.FileField(_("restart_activity_reason_file"),upload_to=company_applications_path)
 
     def __str__(self):
         return _("Restart Activity") +" ("+str(self.id)+")"
@@ -986,7 +990,7 @@ class AppRenewalContract(WorkflowModel):
 class AppImportPermission(WorkflowModel):
     company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
 
-    attachement_file = models.FileField(_("attachement_file"),upload_to=company_applications_path)
+    attachement_file = models.FileField(_("import_permission_materials_list_file"),upload_to=company_applications_path)
 
     def __str__(self):
         return _("Import Permission") +" ("+str(self.id)+")"
@@ -998,6 +1002,15 @@ class AppImportPermission(WorkflowModel):
         ordering = ["-id"]
         verbose_name = _("Application: Import Permission")
         verbose_name_plural = _("Application: Import Permission")
+
+class AppImportPermissionDetail(models.Model):
+    import_master = models.ForeignKey(AppImportPermission, on_delete=models.PROTECT)    
+    import_material_name = models.CharField(_("import_material_name"),max_length=100)
+    import_qty = models.FloatField(_("import_qty"))
+
+    class Meta:
+        verbose_name = _("Import Permission Detail")
+        verbose_name_plural = _("Import Permission Details")
 
 class AppFuelPermission(WorkflowModel):
     company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
@@ -1014,6 +1027,15 @@ class AppFuelPermission(WorkflowModel):
         ordering = ["-id"]
         verbose_name = _("Application: Fuel Permission")
         verbose_name_plural = _("Application: Fuel Permission")
+
+class AppFuelPermissionDetail(models.Model):
+    fuel_master = models.ForeignKey(AppFuelPermission, on_delete=models.PROTECT)    
+    fuel_type_name = models.CharField(_("fuel_type_name"),max_length=20)
+    fuel_qty = models.FloatField(_("fuel_qty"))
+
+    class Meta:
+        verbose_name = _("Fuel Permission Detail")
+        verbose_name_plural = _("Fuel Permission Details")
 
 class AppHSEAccidentReport(WorkflowModel):
     company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    

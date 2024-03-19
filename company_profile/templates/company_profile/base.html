@@ -130,12 +130,12 @@ $(document).ready(function(){
 					<a href="{% url 'profile:app_exploration_time_list' %}">{% translate "Application: Exploration Times" %}</a>
 			 </li>
 			 {% endif %}
-			 {% if user.pro_company.company.company_type == 'entaj' or user.pro_company.company.company_type == 'emtiaz' or user.pro_company.company.company_type == 'sageer' %}
+			 {% if user.pro_company.company.company_type == 'emtiaz' or user.pro_company.company.company_type == 'sageer' %}
 			 <li class="{% if menu_name == 'profile:app_add_area_list' %}active{% endif %} ">  
 					<a href="{% url 'profile:app_add_area_list' %}">{% translate "Application: Add Area" %}</a>
 			 </li>
 			 {% endif %}
-			 {% if user.pro_company.company.company_type == 'entaj' or user.pro_company.company.company_type == 'emtiaz' or user.pro_company.company.company_type == 'sageer' %}
+			 {% if user.pro_company.company.company_type == 'emtiaz' or user.pro_company.company.company_type == 'sageer' %}
 			 <li class="{% if menu_name == 'profile:app_remove_area_list' %}active{% endif %} ">  
 					<a href="{% url 'profile:app_remove_area_list' %}">{% translate "Application: Remove Area" %}</a>
 			 </li>
@@ -143,7 +143,7 @@ $(document).ready(function(){
 			 <li class="{% if menu_name == 'profile:app_tnazol_shraka_list' %}active{% endif %} ">  
 					<a href="{% url 'profile:app_tnazol_shraka_list' %}">{% translate "Application: Tnazol Shraka" %}</a>
 			 </li>
-			 {% if user.pro_company.company.company_type == 'emtiaz' or user.pro_company.company.company_type == 'sageer' %}
+			 {% if user.pro_company.company.company_type == 'emtiaz' %}
 			 <li class="{% if menu_name == 'profile:app_tajeel_tnazol_list' %}active{% endif %} ">  
 					<a href="{% url 'profile:app_tajeel_tnazol_list' %}">{% translate "Application: Tajeel Tnazol" %}</a>
 			 </li>

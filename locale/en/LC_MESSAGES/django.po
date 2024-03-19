@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-03-16 16:28+0200\n"
+"POT-Creation-Date: 2024-03-19 11:57+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -28,6 +28,35 @@ msgstr "العربية"
 
 #: accounts/models.py:12 company_profile/forms.py:22
 msgid "English"
+msgstr ""
+
+#: check_cordinates/templates/check_cordinates/application_add_master_details.html:9
+msgid "Enter data in UTM meters."
+msgstr ""
+
+#: check_cordinates/templates/check_cordinates/application_add_master_details.html:43
+#: company_profile/templates/company_profile/application_add_master_details.html:44
+#: company_profile/templates/company_profile/views/requirements_list_add_master_details.html:45
+msgid "add_more"
+msgstr ""
+
+#: check_cordinates/templates/check_cordinates/application_add_master_details.html:49
+#: company_profile/templates/company_profile/application_add.html:15
+#: company_profile/templates/company_profile/application_add_master_details.html:50
+#: company_profile/templates/company_profile/views/requirements_list_add_master_details.html:53
+msgid "Submit"
+msgstr ""
+
+#: check_cordinates/views.py:19
+msgid "Check cordinates"
+msgstr ""
+
+#: check_cordinates/views.py:56
+msgid "Intersect with other data: "
+msgstr ""
+
+#: check_cordinates/views.py:58
+msgid "No intersection!"
 msgstr ""
 
 #: company_profile/admin.py:33 company_profile/admin.py:34
@@ -64,10 +93,6 @@ msgstr ""
 msgid "company_type"
 msgstr "company type"
 
-#: company_profile/forms.py:44
-msgid "locality not belong to right state."
-msgstr ""
-
 #: company_profile/forms.py:47 company_profile/forms.py:64
 #: company_profile/forms.py:92 company_profile/forms.py:108
 #: company_profile/forms.py:124 company_profile/forms.py:137
@@ -86,34 +111,34 @@ msgstr ""
 #: company_profile/forms.py:512 company_profile/forms.py:526
 #: company_profile/forms.py:540 company_profile/forms.py:554
 #: company_profile/models.py:148 company_profile/models.py:168
-#: company_profile/models.py:194 company_profile/models.py:226
-#: company_profile/models.py:252 company_profile/models.py:280
-#: company_profile/models.py:306 company_profile/models.py:327
-#: company_profile/models.py:349 company_profile/models.py:368
-#: company_profile/models.py:396 company_profile/models.py:428
-#: company_profile/models.py:456 company_profile/models.py:474
-#: company_profile/models.py:494 company_profile/models.py:512
-#: company_profile/models.py:532 company_profile/models.py:549
-#: company_profile/models.py:568 company_profile/models.py:588
-#: company_profile/models.py:620 company_profile/models.py:651
-#: company_profile/models.py:695 company_profile/models.py:729
-#: company_profile/models.py:762 company_profile/models.py:795
-#: company_profile/models.py:858 company_profile/models.py:890
-#: company_profile/models.py:906 company_profile/models.py:922
-#: company_profile/models.py:938 company_profile/models.py:954
-#: company_profile/models.py:970 company_profile/models.py:986
-#: company_profile/models.py:1002 company_profile/models.py:1018
-#: company_profile/models.py:1034
+#: company_profile/models.py:194 company_profile/models.py:227
+#: company_profile/models.py:253 company_profile/models.py:281
+#: company_profile/models.py:307 company_profile/models.py:328
+#: company_profile/models.py:350 company_profile/models.py:369
+#: company_profile/models.py:397 company_profile/models.py:429
+#: company_profile/models.py:458 company_profile/models.py:476
+#: company_profile/models.py:496 company_profile/models.py:514
+#: company_profile/models.py:534 company_profile/models.py:551
+#: company_profile/models.py:570 company_profile/models.py:590
+#: company_profile/models.py:622 company_profile/models.py:653
+#: company_profile/models.py:697 company_profile/models.py:731
+#: company_profile/models.py:764 company_profile/models.py:797
+#: company_profile/models.py:860 company_profile/models.py:892
+#: company_profile/models.py:908 company_profile/models.py:925
+#: company_profile/models.py:941 company_profile/models.py:959
+#: company_profile/models.py:975 company_profile/models.py:991
+#: company_profile/models.py:1016 company_profile/models.py:1041
+#: company_profile/models.py:1057
 msgid "company"
 msgstr ""
 
-#: company_profile/forms.py:65 company_profile/models.py:253
+#: company_profile/forms.py:65 company_profile/models.py:254
 msgid "company_borrow_from"
 msgstr "borrow from"
 
 #: company_profile/forms.py:353 company_profile/forms.py:404
-#: company_profile/models.py:622 company_profile/models.py:730
-#: company_profile/models.py:859
+#: company_profile/models.py:624 company_profile/models.py:732
+#: company_profile/models.py:861
 msgid "license_type"
 msgstr "License type"
 
@@ -144,8 +169,8 @@ msgstr ""
 #: company_profile/models.py:53 company_profile/models.py:63
 #: company_profile/models.py:74 company_profile/models.py:84
 #: company_profile/models.py:126 company_profile/models.py:158
-#: company_profile/models.py:180 company_profile/models.py:685
-#: company_profile/models.py:783
+#: company_profile/models.py:180 company_profile/models.py:687
+#: company_profile/models.py:785
 msgid "name"
 msgstr ""
 
@@ -165,7 +190,7 @@ msgstr ""
 msgid "States"
 msgstr ""
 
-#: company_profile/models.py:73 company_profile/models.py:198
+#: company_profile/models.py:73 company_profile/models.py:199
 msgid "state"
 msgstr ""
 
@@ -209,7 +234,7 @@ msgstr ""
 msgid "name_en"
 msgstr ""
 
-#: company_profile/models.py:109 company_profile/models.py:232
+#: company_profile/models.py:109 company_profile/models.py:233
 msgid "nationality"
 msgstr ""
 
@@ -290,1157 +315,1238 @@ msgid "License Status"
 msgstr ""
 
 #: company_profile/models.py:195
-msgid "Sign date"
+msgid "License no"
 msgstr ""
 
 #: company_profile/models.py:196
+msgid "Sign date"
+msgstr ""
+
+#: company_profile/models.py:197
 msgid "start_date"
 msgstr "start date"
 
-#: company_profile/models.py:197
+#: company_profile/models.py:198
 msgid "end_date"
 msgstr "end date"
 
-#: company_profile/models.py:199
+#: company_profile/models.py:200
 msgid "locality"
 msgstr ""
 
-#: company_profile/models.py:200
+#: company_profile/models.py:201
 msgid "location"
 msgstr ""
 
-#: company_profile/models.py:201
+#: company_profile/models.py:202
 msgid "sheet_no"
 msgstr "sheet no"
 
-#: company_profile/models.py:202
+#: company_profile/models.py:203
 msgid "cordinates"
 msgstr ""
 
-#: company_profile/models.py:203
+#: company_profile/models.py:204
 msgid "Area in Kilometers"
 msgstr ""
 
-#: company_profile/models.py:204
+#: company_profile/models.py:205
 msgid "Reserve in Tones"
 msgstr ""
 
-#: company_profile/models.py:205
+#: company_profile/models.py:206
 msgid "Goverment representative"
 msgstr ""
 
-#: company_profile/models.py:206
+#: company_profile/models.py:207
 msgid "Representative percentage(%)"
 msgstr ""
 
-#: company_profile/models.py:207
+#: company_profile/models.py:208
 msgid "Company percentage(%)"
 msgstr ""
 
-#: company_profile/models.py:208
+#: company_profile/models.py:209
 msgid "royalty"
 msgstr ""
 
-#: company_profile/models.py:209
+#: company_profile/models.py:210
 msgid "zakat"
 msgstr ""
 
-#: company_profile/models.py:210
+#: company_profile/models.py:211
 #, fuzzy
 #| msgid "rational_reason"
 msgid "annual_rent"
 msgstr "rational base to request change"
 
-#: company_profile/models.py:211
+#: company_profile/models.py:212
 msgid "contract_status"
 msgstr "contract status"
 
-#: company_profile/models.py:212
+#: company_profile/models.py:213
 msgid "contract_file"
 msgstr "contract file"
 
-#: company_profile/models.py:218
+#: company_profile/models.py:219
 msgid "Production Company License"
 msgstr ""
 
-#: company_profile/models.py:219
+#: company_profile/models.py:220
 msgid "Production Company Licenses"
 msgstr ""
 
-#: company_profile/models.py:227
+#: company_profile/models.py:228
 msgid "route_from"
 msgstr "route from"
 
-#: company_profile/models.py:228
+#: company_profile/models.py:229
 msgid "route_to"
 msgstr "route to"
 
-#: company_profile/models.py:229
+#: company_profile/models.py:230
 msgid "period_from"
 msgstr "period from"
 
-#: company_profile/models.py:230
+#: company_profile/models.py:231
 msgid "period_to"
 msgstr "period to"
 
-#: company_profile/models.py:231
+#: company_profile/models.py:232
 msgid "address_in_sudan"
 msgstr "address in sudan"
 
-#: company_profile/models.py:233
+#: company_profile/models.py:234
 msgid "passport_no"
 msgstr "passport no"
 
-#: company_profile/models.py:234
+#: company_profile/models.py:235
 msgid "passport_expiry_date"
 msgstr "passport expiry date"
 
-#: company_profile/models.py:235 company_profile/models.py:283
-#: company_profile/models.py:701
+#: company_profile/models.py:236 company_profile/models.py:284
+#: company_profile/models.py:703
 msgid "official_letter_file"
 msgstr "letter copy"
 
-#: company_profile/models.py:236
+#: company_profile/models.py:237
 msgid "passport_copy_file"
 msgstr "passport copy"
 
-#: company_profile/models.py:237 company_profile/models.py:434
-#: company_profile/models.py:703
+#: company_profile/models.py:238 company_profile/models.py:435
+#: company_profile/models.py:705
 msgid "cv_file"
 msgstr "C.V."
 
-#: company_profile/models.py:238
+#: company_profile/models.py:239
 msgid "experiance_certificates_file"
 msgstr ""
 
-#: company_profile/models.py:241
+#: company_profile/models.py:242
 msgid "Forigner movement"
 msgstr ""
 
-#: company_profile/models.py:248
+#: company_profile/models.py:249
 msgid "Application: Forigner movement "
 msgstr ""
 
-#: company_profile/models.py:249
+#: company_profile/models.py:250
 msgid "Application: Forigner movement"
 msgstr ""
 
-#: company_profile/models.py:254
+#: company_profile/models.py:255
 msgid "borrow_date"
 msgstr "borrow date"
 
-#: company_profile/models.py:255
+#: company_profile/models.py:256
 msgid "borrow_materials_list_file"
 msgstr "material list file"
 
-#: company_profile/models.py:256
+#: company_profile/models.py:257
 msgid "borrow_from_approval_file"
 msgstr "company borrow from approval file"
 
-#: company_profile/models.py:259
+#: company_profile/models.py:260
 msgid "Borrow materials"
 msgstr ""
 
-#: company_profile/models.py:266 company_profile/models.py:267
+#: company_profile/models.py:267 company_profile/models.py:268
 #: company_profile/templates/company_profile/base.html:118
 msgid "Application: BorrowMaterials"
 msgstr "Application: Borrow Materials"
 
-#: company_profile/models.py:272
+#: company_profile/models.py:273
 msgid "borrow_material"
 msgstr "borrow material"
 
-#: company_profile/models.py:273
+#: company_profile/models.py:274
 msgid "borrow_quantity"
 msgstr "borrow quantity"
 
-#: company_profile/models.py:276 company_profile/models.py:277
+#: company_profile/models.py:277 company_profile/models.py:278
 msgid "AppBorrowMaterialDetail"
 msgstr ""
 
-#: company_profile/models.py:281
+#: company_profile/models.py:282
 msgid "plan_from"
 msgstr "from"
 
-#: company_profile/models.py:282
+#: company_profile/models.py:283
 msgid "plan_to"
 msgstr "to"
 
-#: company_profile/models.py:284
+#: company_profile/models.py:285
 msgid "work_plan_file"
 msgstr "work plan copy"
 
-#: company_profile/models.py:287
+#: company_profile/models.py:288
 msgid "Work Plan"
 msgstr "work plan"
 
-#: company_profile/models.py:294 company_profile/models.py:295
+#: company_profile/models.py:295 company_profile/models.py:296
 #: company_profile/templates/company_profile/base.html:121
 msgid "Application: Work Plan"
 msgstr ""
 
-#: company_profile/models.py:302
+#: company_profile/models.py:303
 msgid "Technical"
 msgstr ""
 
-#: company_profile/models.py:303
+#: company_profile/models.py:304
 msgid "Financial"
 msgstr ""
 
-#: company_profile/models.py:307
+#: company_profile/models.py:308
 msgid "report_from"
 msgstr "from"
 
-#: company_profile/models.py:308
+#: company_profile/models.py:309
 msgid "report_to"
 msgstr "to"
 
-#: company_profile/models.py:309
+#: company_profile/models.py:310
 msgid "report_type"
 msgstr "report type"
 
-#: company_profile/models.py:310
+#: company_profile/models.py:311
 msgid "report_comments"
 msgstr "comments"
 
-#: company_profile/models.py:312
+#: company_profile/models.py:313
 msgid "report_file"
 msgstr "report copy"
 
-#: company_profile/models.py:313
+#: company_profile/models.py:314
 msgid "other_attachments_file"
 msgstr "other attachments if any"
 
-#: company_profile/models.py:316
+#: company_profile/models.py:317
 msgid "Technical & Financial Report"
 msgstr ""
 
-#: company_profile/models.py:323
+#: company_profile/models.py:324
 msgid "Application: Technical & Financial Report"
 msgstr ""
 
-#: company_profile/models.py:324
+#: company_profile/models.py:325
 #: company_profile/templates/company_profile/base.html:124
 msgid "Application: Technical & Financial Reports"
 msgstr ""
 
-#: company_profile/models.py:328
+#: company_profile/models.py:329
 msgid "new_name"
 msgstr "new name"
 
-#: company_profile/models.py:329
+#: company_profile/models.py:330
 msgid "cause_for_change"
 msgstr "reason of change"
 
-#: company_profile/models.py:331
+#: company_profile/models.py:332
 msgid "tasis_certificate_file"
 msgstr "incorporation certificate"
 
-#: company_profile/models.py:332
+#: company_profile/models.py:333
 msgid "tasis_contract_file"
 msgstr "incorporation contract"
 
-#: company_profile/models.py:333
+#: company_profile/models.py:334
 msgid "sh7_file"
 msgstr "Sheen 7"
 
-#: company_profile/models.py:334
+#: company_profile/models.py:335
 msgid "lahat_tasis_file"
 msgstr "primary system's regulation"
 
-#: company_profile/models.py:335
+#: company_profile/models.py:336
 msgid "name_change_alert_file"
 msgstr "change name notification"
 
-#: company_profile/models.py:338
+#: company_profile/models.py:339
 msgid "Change Company Name"
 msgstr "Change business name"
 
-#: company_profile/models.py:345
+#: company_profile/models.py:346
 msgid "Application: Company Name Change"
 msgstr "Application: Business Name Change"
 
-#: company_profile/models.py:346
+#: company_profile/models.py:347
 #: company_profile/templates/company_profile/base.html:127
 msgid "Application: Company Name Changes"
 msgstr "Application: Business Name Change"
 
-#: company_profile/models.py:350
+#: company_profile/models.py:351
 msgid "expo_from"
 msgstr "from"
 
-#: company_profile/models.py:351
+#: company_profile/models.py:352
 msgid "expo_to"
 msgstr "to"
 
-#: company_profile/models.py:352
+#: company_profile/models.py:353
 msgid "expo_cause_for_timing"
 msgstr "purpose of approval timing"
 
-#: company_profile/models.py:354
+#: company_profile/models.py:355
 msgid "expo_cause_for_change_file"
 msgstr "change of approval timing reasons"
 
-#: company_profile/models.py:357
+#: company_profile/models.py:358
 msgid "Exploration Time"
 msgstr ""
 
-#: company_profile/models.py:364
+#: company_profile/models.py:365
 msgid "Application: Exploration Time"
 msgstr ""
 
-#: company_profile/models.py:365
+#: company_profile/models.py:366
 #: company_profile/templates/company_profile/base.html:131
 msgid "Application: Exploration Times"
 msgstr ""
 
-#: company_profile/models.py:369 company_profile/models.py:398
+#: company_profile/models.py:370 company_profile/models.py:399
 msgid "area_in_km2"
 msgstr "area in sq.km "
 
-#: company_profile/models.py:370
+#: company_profile/models.py:371
 msgid "cause_for_addition"
 msgstr "purpose of extension"
 
-#: company_profile/models.py:372
+#: company_profile/models.py:373
 msgid "geo_coordination_file"
 msgstr "extended coordinations"
 
-#: company_profile/models.py:375
+#: company_profile/models.py:376
 msgid "Add Area"
 msgstr "Add new area extension"
 
-#: company_profile/models.py:382 company_profile/models.py:383
+#: company_profile/models.py:383 company_profile/models.py:384
 #: company_profile/templates/company_profile/base.html:136
 msgid "Application: Add Area"
 msgstr "Application: Add Area Extension"
 
-#: company_profile/models.py:391 company_profile/models.py:452
+#: company_profile/models.py:392 company_profile/models.py:454
 msgid "first"
 msgstr ""
 
-#: company_profile/models.py:392 company_profile/models.py:453
+#: company_profile/models.py:393 company_profile/models.py:455
 msgid "second"
 msgstr ""
 
-#: company_profile/models.py:393
+#: company_profile/models.py:394
 msgid "exceptional"
 msgstr ""
 
-#: company_profile/models.py:397
+#: company_profile/models.py:398
 msgid "remove_type"
 msgstr "assignment type"
 
-#: company_profile/models.py:399
+#: company_profile/models.py:400
 msgid "area_percent_from_total"
 msgstr "area percentage from total"
 
-#: company_profile/models.py:401
+#: company_profile/models.py:402
 msgid "geo_coordinator_for_removed_area_file"
 msgstr "assignment of assignment area"
 
-#: company_profile/models.py:402
+#: company_profile/models.py:403
 msgid "geo_coordinator_for_remain_area_file"
 msgstr "coordinations of remained area"
 
-#: company_profile/models.py:403
+#: company_profile/models.py:404
 msgid "map_for_clarification_file"
 msgstr "map of assignment - remained area"
 
-#: company_profile/models.py:404
+#: company_profile/models.py:405
 msgid "technical_report_for_removed_area_file"
 msgstr "technical report"
 
-#: company_profile/models.py:407
+#: company_profile/models.py:408
 msgid "Remove Area"
 msgstr "Area assignment"
 
-#: company_profile/models.py:414 company_profile/models.py:415
+#: company_profile/models.py:415 company_profile/models.py:416
 #: company_profile/templates/company_profile/base.html:141
 msgid "Application: Remove Area"
 msgstr "Application: Area assignment"
 
-#: company_profile/models.py:423
+#: company_profile/models.py:424
 msgid "partial"
 msgstr ""
 
-#: company_profile/models.py:424
+#: company_profile/models.py:425
 msgid "complete"
 msgstr ""
 
-#: company_profile/models.py:429 company_profile/models.py:457
+#: company_profile/models.py:430 company_profile/models.py:459
 msgid "tnazol_type"
 msgstr "type of assignment"
 
-#: company_profile/models.py:430
+#: company_profile/models.py:431
 msgid "tnazol_for"
 msgstr "abandance of share to other company"
 
-#: company_profile/models.py:431
+#: company_profile/models.py:432
 msgid "cause_for_tnazol"
 msgstr "resons of assignment"
 
-#: company_profile/models.py:433
+#: company_profile/models.py:434
 msgid "financial_ability_file"
 msgstr "financial report"
 
-#: company_profile/models.py:437
+#: company_profile/models.py:436
+#, fuzzy
+#| msgid "attachement_file"
+msgid "agreement_file"
+msgstr "other attachments"
+
+#: company_profile/models.py:439
 msgid "Tnazol Shraka"
 msgstr "Share assignment"
 
-#: company_profile/models.py:444 company_profile/models.py:445
+#: company_profile/models.py:446 company_profile/models.py:447
 #: company_profile/templates/company_profile/base.html:145
 msgid "Application: Tnazol Shraka"
 msgstr "Application: Share assignment"
 
-#: company_profile/models.py:458
+#: company_profile/models.py:460
 msgid "cause_for_tajeel"
 msgstr "purpose of postponed"
 
-#: company_profile/models.py:460
+#: company_profile/models.py:462
 msgid "cause_for_tajeel_file"
 msgstr "reasons to postponed"
 
-#: company_profile/models.py:463
+#: company_profile/models.py:465
 msgid "Tajeel Tnazol"
 msgstr "Postponed Assignment"
 
-#: company_profile/models.py:470 company_profile/models.py:471
+#: company_profile/models.py:472 company_profile/models.py:473
 #: company_profile/templates/company_profile/base.html:149
 msgid "Application: Tajeel Tnazol"
 msgstr "Application: Postponed Assignment"
 
-#: company_profile/models.py:475
+#: company_profile/models.py:477
 msgid "tajmeed_from"
 msgstr "from"
 
-#: company_profile/models.py:476
+#: company_profile/models.py:478
 msgid "tajmeed_to"
 msgstr "to"
 
-#: company_profile/models.py:477
+#: company_profile/models.py:479
 msgid "cause_for_tajmeed"
 msgstr "reasons of suspension"
 
-#: company_profile/models.py:479
+#: company_profile/models.py:481
 msgid "cause_for_uncontrolled_force_file"
 msgstr "uncontrolled force purpose"
 
-#: company_profile/models.py:480
+#: company_profile/models.py:482
 msgid "letter_from_jeha_amnia_file"
 msgstr "security cover letter "
 
-#: company_profile/models.py:483
+#: company_profile/models.py:485
 msgid "Tajmeed"
 msgstr "Suspention request"
 
-#: company_profile/models.py:490 company_profile/models.py:491
+#: company_profile/models.py:492 company_profile/models.py:493
 #: company_profile/templates/company_profile/base.html:153
 msgid "Application: Tajmeed"
 msgstr "Application: Suspention request"
 
-#: company_profile/models.py:495
+#: company_profile/models.py:497
 msgid "technical_presentation_date"
 msgstr ""
 
-#: company_profile/models.py:496
+#: company_profile/models.py:498
 msgid "cause_for_takhali"
 msgstr "reasons of abandonce"
 
-#: company_profile/models.py:498
+#: company_profile/models.py:500
 msgid "technical_report_file"
 msgstr "technical report"
 
-#: company_profile/models.py:501
+#: company_profile/models.py:503
 msgid "Takhali"
 msgstr "Abandonce"
 
-#: company_profile/models.py:508 company_profile/models.py:509
+#: company_profile/models.py:510 company_profile/models.py:511
 #: company_profile/templates/company_profile/base.html:156
 msgid "Application: Takhali"
 msgstr "Application: Abandonce"
 
-#: company_profile/models.py:513
+#: company_profile/models.py:515
 msgid "tamdeed_from"
 msgstr "from"
 
-#: company_profile/models.py:514
+#: company_profile/models.py:516
 msgid "tamdeed_to"
 msgstr "to"
 
-#: company_profile/models.py:515
+#: company_profile/models.py:517
 msgid "cause_for_tamdeed"
 msgstr "extendence reasons "
 
-#: company_profile/models.py:517 company_profile/models.py:554
-#: company_profile/models.py:797
+#: company_profile/models.py:519 company_profile/models.py:556
+#: company_profile/models.py:799
 msgid "approved_work_plan_file"
 msgstr "work plan"
 
-#: company_profile/models.py:518
+#: company_profile/models.py:520
 msgid "tnazol_file"
 msgstr "partial abandance of area in sq.km"
 
-#: company_profile/models.py:521
+#: company_profile/models.py:523
 msgid "Tamdeed"
 msgstr "extention request"
 
-#: company_profile/models.py:528 company_profile/models.py:529
+#: company_profile/models.py:530 company_profile/models.py:531
 #: company_profile/templates/company_profile/base.html:159
 msgid "Application: Tamdeed"
 msgstr "Application: extention request"
 
-#: company_profile/models.py:533
+#: company_profile/models.py:535
 msgid "taaweed_from"
 msgstr "from"
 
-#: company_profile/models.py:534
+#: company_profile/models.py:536
 msgid "taaweed_to"
 msgstr "to"
 
-#: company_profile/models.py:535
+#: company_profile/models.py:537
 msgid "cause_for_taaweed"
 msgstr "reasons of compensation "
 
-#: company_profile/models.py:538
+#: company_profile/models.py:540
 msgid "Taaweed"
 msgstr "Compensation request"
 
-#: company_profile/models.py:545 company_profile/models.py:546
+#: company_profile/models.py:547 company_profile/models.py:548
 #: company_profile/templates/company_profile/base.html:162
 msgid "Application: Taaweed"
 msgstr "Application: Compensation request"
 
-#: company_profile/models.py:550
+#: company_profile/models.py:552
 msgid "mda_from"
 msgstr "from"
 
-#: company_profile/models.py:551
+#: company_profile/models.py:553
 msgid "mda_to"
 msgstr "to"
 
-#: company_profile/models.py:552
+#: company_profile/models.py:554
 msgid "cause_for_mda"
 msgstr "reasons of MDA"
 
-#: company_profile/models.py:557
+#: company_profile/models.py:559
 msgid "MDA"
 msgstr "MDA"
 
-#: company_profile/models.py:564 company_profile/models.py:565
+#: company_profile/models.py:566 company_profile/models.py:567
 #: company_profile/templates/company_profile/base.html:166
 msgid "Application: MDA"
 msgstr ""
 
-#: company_profile/models.py:569
+#: company_profile/models.py:571
 msgid "reason_for_change"
 msgstr "reasons of change"
 
-#: company_profile/models.py:570
+#: company_profile/models.py:572
 msgid "purpose_for_change"
 msgstr "purpose of change"
 
-#: company_profile/models.py:571
+#: company_profile/models.py:573
 msgid "rational_reason"
 msgstr "rational base to request change"
 
-#: company_profile/models.py:573
+#: company_profile/models.py:575
 msgid "study_about_change_reason_file"
 msgstr "study about reasons of change"
 
-#: company_profile/models.py:574
+#: company_profile/models.py:576
 msgid "study_about_new_suggestion_file"
 msgstr "study for the new proposal "
 
-#: company_profile/models.py:577
+#: company_profile/models.py:579
 msgid "Change Work Procedure"
 msgstr "Change of procedures/process "
 
-#: company_profile/models.py:584 company_profile/models.py:585
+#: company_profile/models.py:586 company_profile/models.py:587
 #: company_profile/templates/company_profile/base.html:171
 msgid "Application: Change Work Procedure"
 msgstr "Application: change of procedures/process "
 
-#: company_profile/models.py:589
+#: company_profile/models.py:591
 msgid "total_in_gram"
 msgstr "total production in gm"
 
-#: company_profile/models.py:590
+#: company_profile/models.py:592
 msgid "net_in_gram"
 msgstr "total net production in gm"
 
-#: company_profile/models.py:591
+#: company_profile/models.py:593
 msgid "zakat_in_gram"
 msgstr "Zakat in gm"
 
-#: company_profile/models.py:592
+#: company_profile/models.py:594
 msgid "awaad_jalila_in_gram"
 msgstr "royalty net in gm"
 
-#: company_profile/models.py:593
+#: company_profile/models.py:595
 msgid "arbah_amal_in_gram"
 msgstr "return profit net in gm"
 
-#: company_profile/models.py:594
+#: company_profile/models.py:596
 msgid "sold_for_bank_of_sudan_in_gram"
 msgstr "central bank of sudan net share in gm"
 
-#: company_profile/models.py:595
+#: company_profile/models.py:597
 msgid "amount_to_export_in_gram"
 msgstr "exported net amount in gm"
 
-#: company_profile/models.py:596
+#: company_profile/models.py:598
 msgid "remain_in_gram"
 msgstr "remained amount in the refinery"
 
-#: company_profile/models.py:598
+#: company_profile/models.py:600
 msgid "f1"
 msgstr "accredited production field form (Shipping and deportation)"
 
-#: company_profile/models.py:599
-msgid "f2"
-msgstr "central bank of sudan exportion approval "
-
-#: company_profile/models.py:600
+#: company_profile/models.py:602
 msgid "f3"
 msgstr "shipping form"
 
-#: company_profile/models.py:601
+#: company_profile/models.py:603
 msgid "f4"
 msgstr "refinery certificate of all deductions to the government "
 
-#: company_profile/models.py:602
-msgid "f5"
-msgstr "refinery analysis certificate"
-
-#: company_profile/models.py:603
+#: company_profile/models.py:604
 msgid "f6"
 msgstr "refinery mineral recipt form"
 
-#: company_profile/models.py:604
+#: company_profile/models.py:605
 msgid "f7"
 msgstr "SSMO analysis form (inspection of exported alloys)"
 
-#: company_profile/models.py:605
+#: company_profile/models.py:606
 msgid "f8"
 msgstr "cover letter to deputy minister of foreign trade from SSMO"
 
-#: company_profile/models.py:606
+#: company_profile/models.py:607
 msgid "f9"
 msgstr "sales contract for exported alloys"
 
-#: company_profile/models.py:609 company_profile/models.py:640
+#: company_profile/models.py:608
+msgid "f5"
+msgstr "refinery analysis certificate"
+
+#: company_profile/models.py:611 company_profile/models.py:642
 msgid "Export Gold"
 msgstr "Export gold request"
 
-#: company_profile/models.py:616 company_profile/models.py:617
+#: company_profile/models.py:618 company_profile/models.py:619
 #: company_profile/templates/company_profile/base.html:176
 msgid "Application: Export Gold"
 msgstr "Application: Export Gold Request"
 
-#: company_profile/models.py:621
+#: company_profile/models.py:623
 msgid "mineral"
 msgstr ""
 
-#: company_profile/models.py:623
+#: company_profile/models.py:625
 msgid "amount_in_gram"
 msgstr "quantity in gm"
 
-#: company_profile/models.py:624
+#: company_profile/models.py:626
 msgid "sale_price"
 msgstr "selling price "
 
-#: company_profile/models.py:625
+#: company_profile/models.py:627
 msgid "export_country"
 msgstr "destination of row exportation (country)"
 
-#: company_profile/models.py:626
+#: company_profile/models.py:628
 msgid "export_city"
 msgstr "cityo"
 
-#: company_profile/models.py:627
+#: company_profile/models.py:629
 msgid "export_address"
 msgstr "address"
 
-#: company_profile/models.py:629
+#: company_profile/models.py:631
 msgid "f11"
 msgstr "formal letter"
 
-#: company_profile/models.py:630
+#: company_profile/models.py:632
 msgid "f12"
 msgstr "total export  after shipment copy"
 
-#: company_profile/models.py:631
+#: company_profile/models.py:633
 msgid "f13"
 msgstr "accredited lab analysis result"
 
-#: company_profile/models.py:632
+#: company_profile/models.py:634
 msgid "f14"
 msgstr "row selling contract "
 
-#: company_profile/models.py:633
+#: company_profile/models.py:635
 msgid "f15"
 msgstr "export outcome after shipment"
 
-#: company_profile/models.py:634
+#: company_profile/models.py:636
 msgid "f16"
 msgstr "file of company profile  the state (province license)"
 
-#: company_profile/models.py:635
+#: company_profile/models.py:637
 msgid "f17"
 msgstr "license and registration papers "
 
-#: company_profile/models.py:636
+#: company_profile/models.py:638
 msgid "f18"
 msgstr "vaild provincial contract  (if province license)"
 
-#: company_profile/models.py:637
+#: company_profile/models.py:639
 msgid "f19"
 msgstr ""
 "in case of exportion through another company must include sales contract for "
 "the export company (in the case of the provincial license)"
 
-#: company_profile/models.py:647 company_profile/models.py:648
+#: company_profile/models.py:649 company_profile/models.py:650
 #: company_profile/templates/company_profile/base.html:181
 msgid "Application: Export Gold Raw"
 msgstr "Application: Export raw material"
 
-#: company_profile/models.py:652
+#: company_profile/models.py:654
 msgid "lab_country"
 msgstr "country"
 
-#: company_profile/models.py:653
+#: company_profile/models.py:655
 msgid "lab_city"
 msgstr "city"
 
-#: company_profile/models.py:654
+#: company_profile/models.py:656
 msgid "lab_address"
 msgstr "address"
 
-#: company_profile/models.py:655
+#: company_profile/models.py:657
 msgid "lab_analysis_cost"
 msgstr "analysis cost"
 
-#: company_profile/models.py:657
-msgid "last_analysis_report_file"
-msgstr "last analysis results if any"
-
-#: company_profile/models.py:658 company_profile/models.py:798
+#: company_profile/models.py:659 company_profile/models.py:800
 msgid "initial_voucher_file"
 msgstr "analysis's initial invoice"
 
-#: company_profile/models.py:659
+#: company_profile/models.py:660
 msgid "sample_description_form_file"
 msgstr "sample description form"
 
-#: company_profile/models.py:662
+#: company_profile/models.py:661
+msgid "last_analysis_report_file"
+msgstr "last analysis results if any"
+
+#: company_profile/models.py:664
 msgid "Send samples for analysis"
 msgstr ""
 
-#: company_profile/models.py:669 company_profile/models.py:670
+#: company_profile/models.py:671 company_profile/models.py:672
 #: company_profile/templates/company_profile/base.html:186
 msgid "Application: Send samples for analysis"
 msgstr ""
 
-#: company_profile/models.py:673
+#: company_profile/models.py:675
 msgid "sample_master"
 msgstr ""
 
-#: company_profile/models.py:674
+#: company_profile/models.py:676
 msgid "sample_type"
 msgstr "sample type"
 
-#: company_profile/models.py:675
+#: company_profile/models.py:677
 msgid "sample_weight"
 msgstr "sample weight"
 
-#: company_profile/models.py:676
+#: company_profile/models.py:678
 msgid "sample_packing_type"
 msgstr "sample packing"
 
-#: company_profile/models.py:677
+#: company_profile/models.py:679
 msgid "sample_analysis_type"
 msgstr "analysis type required"
 
-#: company_profile/models.py:678
+#: company_profile/models.py:680
 msgid "sample_analysis_cause"
 msgstr "purpose of analysis"
 
-#: company_profile/models.py:681 company_profile/models.py:682
+#: company_profile/models.py:683 company_profile/models.py:684
 msgid "Send Samples For Analysis Detail"
 msgstr ""
 
-#: company_profile/models.py:691
+#: company_profile/models.py:693
 msgid "Foreigner Procedure Type"
 msgstr "Foreigners ratification procedures "
 
-#: company_profile/models.py:692
+#: company_profile/models.py:694
 msgid "Foreigner Procedure Types"
 msgstr ""
 
-#: company_profile/models.py:696
+#: company_profile/models.py:698
 msgid "procedure_type"
 msgstr "type of ratification"
 
-#: company_profile/models.py:697
+#: company_profile/models.py:699
 msgid "procedure_from"
 msgstr "from"
 
-#: company_profile/models.py:698
+#: company_profile/models.py:700
 msgid "procedure_to"
 msgstr "to"
 
-#: company_profile/models.py:699
+#: company_profile/models.py:701
 msgid "procedure_cause"
 msgstr "purpose of ratification"
 
-#: company_profile/models.py:702
+#: company_profile/models.py:704
 msgid "passport_file"
 msgstr "passport copy"
 
-#: company_profile/models.py:704
+#: company_profile/models.py:706
 msgid "experience_certificates_file"
 msgstr "experience certificates"
 
-#: company_profile/models.py:705
+#: company_profile/models.py:707
 msgid "eqama_file"
 msgstr "visa copy &  job contract incase of wok card only"
 
-#: company_profile/models.py:706
+#: company_profile/models.py:708
 msgid "dawa_file"
 msgstr "invitation copy in case of visit"
 
-#: company_profile/models.py:709
+#: company_profile/models.py:711
 msgid "Foreigner Procedure"
 msgstr "Foreigners ratification procedures "
 
-#: company_profile/models.py:716 company_profile/models.py:717
+#: company_profile/models.py:718 company_profile/models.py:719
 msgid "Application: Foreigner procedure"
 msgstr "Application: Foreigners ratification procedures"
 
-#: company_profile/models.py:720
+#: company_profile/models.py:722
 msgid "procedure_master"
 msgstr ""
 
-#: company_profile/models.py:721
+#: company_profile/models.py:723
 msgid "employee_name"
 msgstr "full name"
 
-#: company_profile/models.py:722
+#: company_profile/models.py:724
 msgid "employee_address"
 msgstr "address"
 
-#: company_profile/models.py:725 company_profile/models.py:726
+#: company_profile/models.py:727 company_profile/models.py:728
 msgid "Foreigner Procedure Detail"
 msgstr "Foreigner Ratification Procedure Detail"
 
-#: company_profile/models.py:732
+#: company_profile/models.py:734
 msgid "approved_requirements_list_file"
 msgstr "approved requierments list"
 
-#: company_profile/models.py:733
+#: company_profile/models.py:735
 msgid "approval_from_finance_ministry_file"
 msgstr "ratification of ministry of finance"
 
-#: company_profile/models.py:734
+#: company_profile/models.py:736
 msgid "final_voucher_file"
 msgstr "final invoices"
 
-#: company_profile/models.py:735 company_profile/models.py:765
+#: company_profile/models.py:737 company_profile/models.py:767
 msgid "shipping_policy_file"
 msgstr "bill of lading"
 
-#: company_profile/models.py:736
+#: company_profile/models.py:738
 msgid "check_certificate_file"
 msgstr "inception certificate"
 
-#: company_profile/models.py:737
+#: company_profile/models.py:739
 msgid "origin_certificate_file"
 msgstr "origin certificate"
 
-#: company_profile/models.py:738
+#: company_profile/models.py:740
 msgid "packing_certificate_file"
 msgstr "packing certificate"
 
-#: company_profile/models.py:739 company_profile/models.py:767
-#: company_profile/models.py:799
+#: company_profile/models.py:741 company_profile/models.py:769
+#: company_profile/models.py:801
 msgid "specifications_file"
 msgstr "specifications"
 
-#: company_profile/models.py:740
+#: company_profile/models.py:742
 msgid "taba_file"
 msgstr "packing lists"
 
-#: company_profile/models.py:743
+#: company_profile/models.py:745
 msgid "Aifaa Jomrki"
 msgstr "Customs exemption"
 
-#: company_profile/models.py:750 company_profile/models.py:751
+#: company_profile/models.py:752 company_profile/models.py:753
 #: company_profile/templates/company_profile/base.html:193
 msgid "Application: Aifaa Jomrki"
 msgstr "Applicatio: customs exemption"
 
-#: company_profile/models.py:754 company_profile/models.py:782
+#: company_profile/models.py:756 company_profile/models.py:784
 msgid "aifaa_master"
 msgstr ""
 
-#: company_profile/models.py:755
+#: company_profile/models.py:757
 msgid "material_name"
 msgstr "required materials"
 
-#: company_profile/models.py:758
+#: company_profile/models.py:760
 msgid "Aifaa Jomrki Detail"
 msgstr "Customs exemption Detail"
 
-#: company_profile/models.py:759
+#: company_profile/models.py:761
 msgid "Aifaa Jomrki Details"
 msgstr "Customs exemption Details"
 
-#: company_profile/models.py:763
+#: company_profile/models.py:765
 msgid "cause_for_equipments"
 msgstr "purpose of requirements and compatibility with plan"
 
-#: company_profile/models.py:766
+#: company_profile/models.py:768
 msgid "voucher_file"
 msgstr "invoice"
 
-#: company_profile/models.py:768
-msgid "momentary_approval_file"
-msgstr "momentary approval"
-
-#: company_profile/models.py:771
+#: company_profile/models.py:773
 msgid "Reexport Equipments"
 msgstr "Reexport of Machinery and Equipments"
 
-#: company_profile/models.py:778 company_profile/models.py:779
+#: company_profile/models.py:780 company_profile/models.py:781
 #: company_profile/templates/company_profile/base.html:197
 msgid "Application: Reexport Equipments"
 msgstr "Application: Reexport of Machinery and Equipments"
 
-#: company_profile/models.py:784
+#: company_profile/models.py:786
 msgid "serial_id"
 msgstr "serial"
 
-#: company_profile/models.py:785
+#: company_profile/models.py:787
 msgid "policy_no"
 msgstr "bill of lading no"
 
-#: company_profile/models.py:786
+#: company_profile/models.py:788
 msgid "voucher_no"
 msgstr "invoice no"
 
-#: company_profile/models.py:787
+#: company_profile/models.py:789
 msgid "insurance_no"
 msgstr "insurance certificate no"
 
-#: company_profile/models.py:788
+#: company_profile/models.py:790
 msgid "check_certificate_no"
 msgstr "inception certificate no"
 
-#: company_profile/models.py:791
+#: company_profile/models.py:793
 msgid "Reexport Equipments Detail"
 msgstr ""
 
-#: company_profile/models.py:792
+#: company_profile/models.py:794
 msgid "Reexport Equipments Details"
 msgstr ""
 
-#: company_profile/models.py:800
+#: company_profile/models.py:802
 msgid "mshobat_jamarik_file"
 msgstr "custmos withdrawal statement if any"
 
-#: company_profile/models.py:803
+#: company_profile/models.py:805
 msgid "Requirements List"
 msgstr ""
 
-#: company_profile/models.py:810 company_profile/models.py:811
+#: company_profile/models.py:812 company_profile/models.py:813
 #: company_profile/templates/company_profile/base.html:201
 msgid "Application: Requirements List"
 msgstr ""
 
-#: company_profile/models.py:814
+#: company_profile/models.py:816
 msgid "requirements_master"
 msgstr ""
 
-#: company_profile/models.py:815
+#: company_profile/models.py:817
 msgid "item"
 msgstr "material"
 
-#: company_profile/models.py:816
+#: company_profile/models.py:818
 msgid "description"
 msgstr ""
 
-#: company_profile/models.py:817
+#: company_profile/models.py:819
 msgid "qty"
 msgstr "quantity"
 
-#: company_profile/models.py:824 company_profile/models.py:825
+#: company_profile/models.py:826 company_profile/models.py:827
 msgid "Application: Requirements List - Mangam Equipments"
 msgstr "mine equipments"
 
-#: company_profile/models.py:829 company_profile/models.py:830
+#: company_profile/models.py:831 company_profile/models.py:832
 msgid "Application: Requirements List - Factory Equipments"
 msgstr "factory equipments"
 
-#: company_profile/models.py:834 company_profile/models.py:835
+#: company_profile/models.py:836 company_profile/models.py:837
 msgid "Application: Requirements List - Electricity Equipments"
 msgstr "electrical station"
 
-#: company_profile/models.py:839 company_profile/models.py:840
+#: company_profile/models.py:841 company_profile/models.py:842
 msgid "Application: Requirements List - Chemical Lab Equipments"
 msgstr "chemical lab equipments"
 
-#: company_profile/models.py:844 company_profile/models.py:845
+#: company_profile/models.py:846 company_profile/models.py:847
 msgid "Application: Requirements List - Chemical Equipments"
 msgstr "chemical materials"
 
-#: company_profile/models.py:849 company_profile/models.py:850
+#: company_profile/models.py:851 company_profile/models.py:852
 msgid "Application: Requirements List - Motafjerat Equipments"
 msgstr "explosive"
 
-#: company_profile/models.py:854 company_profile/models.py:855
+#: company_profile/models.py:856 company_profile/models.py:857
 msgid "Application: Requirements List - Vehicles Equipments"
 msgstr "vehicles & machinery"
 
-#: company_profile/models.py:861
+#: company_profile/models.py:863
 msgid "study_area"
 msgstr "Name of study area"
 
-#: company_profile/models.py:862
+#: company_profile/models.py:864
 msgid "study_type"
 msgstr "Study type"
 
-#: company_profile/models.py:863
+#: company_profile/models.py:865
 msgid "study_comment"
 msgstr "comments"
 
-#: company_profile/models.py:866 company_profile/models.py:892
-#: company_profile/models.py:908 company_profile/models.py:924
-#: company_profile/models.py:940 company_profile/models.py:956
-#: company_profile/models.py:972 company_profile/models.py:988
-#: company_profile/models.py:1004 company_profile/models.py:1020
-#: company_profile/models.py:1036
+#: company_profile/models.py:868 company_profile/models.py:894
+#: company_profile/models.py:977 company_profile/models.py:1018
+#: company_profile/models.py:1043 company_profile/models.py:1059
 msgid "attachement_file"
 msgstr "other attachments"
 
-#: company_profile/models.py:869
+#: company_profile/models.py:871
 msgid "Visibity Study"
 msgstr "Feasibility Study"
 
-#: company_profile/models.py:876 company_profile/models.py:877
+#: company_profile/models.py:878 company_profile/models.py:879
 msgid "Application: Visibity Study"
 msgstr "Application: Feasibility Study"
 
-#: company_profile/models.py:881
+#: company_profile/models.py:883
 msgid "study_point_id"
 msgstr "Point ID"
 
-#: company_profile/models.py:882
+#: company_profile/models.py:884
 msgid "study_point_long"
 msgstr "Long/ East/ X"
 
-#: company_profile/models.py:883
+#: company_profile/models.py:885
 msgid "study_point_lat"
 msgstr "Lat/ West/ Y"
 
-#: company_profile/models.py:886
+#: company_profile/models.py:888
 msgid "Visibity Study Detail"
 msgstr "Cordinations"
 
-#: company_profile/models.py:887
+#: company_profile/models.py:889
 msgid "Visibity Study Details"
 msgstr "Cordinations"
 
-#: company_profile/models.py:895
+#: company_profile/models.py:897
 msgid "Temporary Exemption"
 msgstr ""
 
-#: company_profile/models.py:902 company_profile/models.py:903
+#: company_profile/models.py:904 company_profile/models.py:905
 #: company_profile/templates/company_profile/base.html:208
 msgid "Application: Temporary Exemption"
 msgstr ""
 
+#: company_profile/models.py:910
+#, fuzzy
+#| msgid "official_letter_file"
+msgid "local_request_file"
+msgstr "letter copy"
+
 #: company_profile/models.py:911
+msgid "local_purchase_invoice_file"
+msgstr ""
+
+#: company_profile/models.py:914
 msgid "Local Purchase"
 msgstr ""
 
-#: company_profile/models.py:918 company_profile/models.py:919
+#: company_profile/models.py:921 company_profile/models.py:922
 #: company_profile/templates/company_profile/base.html:214
 msgid "Application: Local Purchase"
 msgstr ""
 
 #: company_profile/models.py:927
+msgid "cyanide_request_file"
+msgstr ""
+
+#: company_profile/models.py:930
 msgid "Cyanide Certificate"
 msgstr ""
 
-#: company_profile/models.py:934 company_profile/models.py:935
+#: company_profile/models.py:937 company_profile/models.py:938
 #: company_profile/templates/company_profile/base.html:219
 msgid "Application: Cyanide Certificate"
 msgstr ""
 
 #: company_profile/models.py:943
+#, fuzzy
+#| msgid "approved_requirements_list_file"
+msgid "explosive_request_file"
+msgstr "approved requierments list"
+
+#: company_profile/models.py:944
+msgid "explosive_amount_file"
+msgstr ""
+
+#: company_profile/models.py:945
+#, fuzzy
+#| msgid "approved_requirements_list_file"
+msgid "explosive_last_approved_request_file"
+msgstr "approved requierments list"
+
+#: company_profile/models.py:948
 msgid "Explosive Permission"
 msgstr ""
 
-#: company_profile/models.py:950 company_profile/models.py:951
+#: company_profile/models.py:955 company_profile/models.py:956
 #: company_profile/templates/company_profile/base.html:224
 msgid "Application: Explosive Permission"
 msgstr ""
 
-#: company_profile/models.py:959
+#: company_profile/models.py:961
+#, fuzzy
+#| msgid "study_about_change_reason_file"
+msgid "restart_activity_reason_file"
+msgstr "study about reasons of change"
+
+#: company_profile/models.py:964
 msgid "Restart Activity"
 msgstr ""
 
-#: company_profile/models.py:966 company_profile/models.py:967
+#: company_profile/models.py:971 company_profile/models.py:972
 #: company_profile/templates/company_profile/base.html:229
 msgid "Application: Restart Activity"
 msgstr ""
 
-#: company_profile/models.py:975
+#: company_profile/models.py:980
 msgid "Renewal Contract"
 msgstr ""
 
-#: company_profile/models.py:982 company_profile/models.py:983
+#: company_profile/models.py:987 company_profile/models.py:988
 #: company_profile/templates/company_profile/base.html:234
 msgid "Application: Renewal Contract"
 msgstr ""
 
-#: company_profile/models.py:991
+#: company_profile/models.py:993
+#, fuzzy
+#| msgid "borrow_materials_list_file"
+msgid "import_permission_materials_list_file"
+msgstr "material list file"
+
+#: company_profile/models.py:996
 msgid "Import Permission"
 msgstr ""
 
-#: company_profile/models.py:998 company_profile/models.py:999
+#: company_profile/models.py:1003 company_profile/models.py:1004
 #: company_profile/templates/company_profile/base.html:239
 msgid "Application: Import Permission"
 msgstr ""
 
-#: company_profile/models.py:1007
+#: company_profile/models.py:1008
+#, fuzzy
+#| msgid "material_name"
+msgid "import_material_name"
+msgstr "required materials"
+
+#: company_profile/models.py:1009
+#, fuzzy
+#| msgid "report_type"
+msgid "import_qty"
+msgstr "report type"
+
+#: company_profile/models.py:1012
+msgid "Import Permission Detail"
+msgstr ""
+
+#: company_profile/models.py:1013
+msgid "Import Permission Details"
+msgstr ""
+
+#: company_profile/models.py:1021
 msgid "Fuel Permission"
 msgstr ""
 
-#: company_profile/models.py:1014 company_profile/models.py:1015
+#: company_profile/models.py:1028 company_profile/models.py:1029
 #: company_profile/templates/company_profile/base.html:243
 #, fuzzy
 #| msgid "Application: Tajeel Tnazol"
 msgid "Application: Fuel Permission"
 msgstr "Application: Postponed Assignment"
 
-#: company_profile/models.py:1023
+#: company_profile/models.py:1033
+#, fuzzy
+#| msgid "employee_name"
+msgid "fuel_type_name"
+msgstr "full name"
+
+#: company_profile/models.py:1034
+msgid "fuel_qty"
+msgstr ""
+
+#: company_profile/models.py:1037
+#, fuzzy
+#| msgid "Application: Tajeel Tnazol"
+msgid "Fuel Permission Detail"
+msgstr "Application: Postponed Assignment"
+
+#: company_profile/models.py:1038
+msgid "Fuel Permission Details"
+msgstr ""
+
+#: company_profile/models.py:1046
 msgid "HSE Accident Report"
 msgstr ""
 
-#: company_profile/models.py:1030 company_profile/models.py:1031
+#: company_profile/models.py:1053 company_profile/models.py:1054
 #: company_profile/templates/company_profile/base.html:247
 #, fuzzy
 #| msgid "Application: Export Gold"
 msgid "Application: HSE Accident Report"
 msgstr "Application: Export Gold Request"
 
-#: company_profile/models.py:1039
+#: company_profile/models.py:1062
 msgid "HSE Performance Report"
 msgstr ""
 
-#: company_profile/models.py:1046 company_profile/models.py:1047
+#: company_profile/models.py:1069 company_profile/models.py:1070
 #: company_profile/templates/company_profile/base.html:250
 #, fuzzy
 #| msgid "Application: Foreigner procedure"
@@ -1465,17 +1571,6 @@ msgstr "Application: Foreigners ratification procedures"
 #: company_profile/tables.py:426 company_profile/tables.py:439
 #: company_profile/tables.py:452 company_profile/tables.py:465
 msgid "No records."
-msgstr ""
-
-#: company_profile/templates/company_profile/application_add.html:15
-#: company_profile/templates/company_profile/application_add_master_details.html:50
-#: company_profile/templates/company_profile/views/requirements_list_add_master_details.html:53
-msgid "Submit"
-msgstr ""
-
-#: company_profile/templates/company_profile/application_add_master_details.html:44
-#: company_profile/templates/company_profile/views/requirements_list_add_master_details.html:45
-msgid "add_more"
 msgstr ""
 
 #: company_profile/templates/company_profile/application_list.html:14
@@ -2085,3 +2180,9 @@ msgstr ""
 #: templates/allauth/layouts/base.html:33
 msgid "Sign In"
 msgstr ""
+
+#~ msgid "f2"
+#~ msgstr "central bank of sudan exportion approval "
+
+#~ msgid "momentary_approval_file"
+#~ msgstr "momentary approval"

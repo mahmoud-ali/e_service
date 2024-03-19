@@ -179,7 +179,7 @@ class AppTnazolShrakaAdminForm(WorkflowFormMixin,ModelForm):
     company = forms.ModelChoiceField(queryset=TblCompanyProduction.objects.all(), disabled=True, label=_("company"))
     class Meta:
         model = AppTnazolShraka
-        fields = ["company","tnazol_type","tnazol_for","cause_for_tnazol","state","financial_ability_file", "cv_file"] 
+        fields = ["company","tnazol_type","tnazol_for","cause_for_tnazol","state","financial_ability_file", "cv_file","agreement_file"] 
         
 class AppTnazolShrakaForm(AppTnazolShrakaAdminForm):
     company = None
@@ -297,7 +297,7 @@ class AppExportGoldAdminForm(WorkflowFormMixin,ModelForm):
     company = forms.ModelChoiceField(queryset=TblCompanyProduction.objects.all(), disabled=True, label=_("company"))
     class Meta:
         model = AppExportGold
-        fields = ["company","total_in_gram","net_in_gram","zakat_in_gram", "awaad_jalila_in_gram","arbah_amal_in_gram","sold_for_bank_of_sudan_in_gram", "amount_to_export_in_gram","remain_in_gram","state", "f1","f2","f3","f4","f5","f6","f7","f8","f9"] 
+        fields = ["company","total_in_gram","net_in_gram","zakat_in_gram", "awaad_jalila_in_gram","sold_for_bank_of_sudan_in_gram", "amount_to_export_in_gram","remain_in_gram","arbah_amal_in_gram","state", "f1","f3","f4","f6","f7","f8","f9","f5"] 
         
 class AppExportGoldForm(AppExportGoldAdminForm):
     company = None
@@ -323,7 +323,7 @@ class AppSendSamplesForAnalysisAdminForm(WorkflowFormMixin,ModelForm):
     company = forms.ModelChoiceField(queryset=TblCompanyProduction.objects.all(), disabled=True, label=_("company"))
     class Meta:
         model = AppSendSamplesForAnalysis
-        fields = ["company","lab_country","lab_city","lab_address","lab_analysis_cost","state", "last_analysis_report_file","initial_voucher_file","sample_description_form_file"] 
+        fields = ["company","lab_country","lab_city","lab_address","lab_analysis_cost","state","initial_voucher_file","sample_description_form_file","last_analysis_report_file"] 
         
 class AppSendSamplesForAnalysisForm(AppSendSamplesForAnalysisAdminForm):
     company = None
@@ -377,7 +377,7 @@ class AppReexportEquipmentsAdminForm(WorkflowFormMixin,ModelForm):
     company = forms.ModelChoiceField(queryset=TblCompanyProduction.objects.all(), disabled=True, label=_("company"))
     class Meta:
         model = AppReexportEquipments
-        fields = ["company","cause_for_equipments","state", "shipping_policy_file", "voucher_file","specifications_file", "momentary_approval_file"] 
+        fields = ["company","cause_for_equipments","state", "shipping_policy_file", "voucher_file","specifications_file"] 
         
 class AppReexportEquipmentsForm(AppReexportEquipmentsAdminForm):
     company = None
@@ -443,7 +443,7 @@ class AppLocalPurchaseAdminForm(WorkflowFormMixin,ModelForm):
 
     class Meta:
         model = AppLocalPurchase
-        fields = ["company","state","attachement_file"] 
+        fields = ["company","state","attachement_file","attachement_file2"] 
         
 class AppLocalPurchaseForm(AppLocalPurchaseAdminForm):
     company = None
@@ -471,7 +471,7 @@ class AppExplosivePermissionAdminForm(WorkflowFormMixin,ModelForm):
 
     class Meta:
         model = AppExplosivePermission
-        fields = ["company","state","attachement_file"] 
+        fields = ["company","state","attachement_file","attachement_file2","attachement_file3"] 
         
 class AppExplosivePermissionForm(AppExplosivePermissionAdminForm):
     company = None
