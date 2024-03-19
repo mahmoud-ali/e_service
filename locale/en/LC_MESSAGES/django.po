@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-03-19 11:57+0200\n"
+"POT-Creation-Date: 2024-03-19 16:27+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -375,10 +375,8 @@ msgid "zakat"
 msgstr ""
 
 #: company_profile/models.py:211
-#, fuzzy
-#| msgid "rational_reason"
 msgid "annual_rent"
-msgstr "rational base to request change"
+msgstr "annual rent"
 
 #: company_profile/models.py:212
 msgid "contract_status"
@@ -714,10 +712,8 @@ msgid "financial_ability_file"
 msgstr "financial report"
 
 #: company_profile/models.py:436
-#, fuzzy
-#| msgid "attachement_file"
 msgid "agreement_file"
-msgstr "other attachments"
+msgstr "agreement file"
 
 #: company_profile/models.py:439
 msgid "Tnazol Shraka"
@@ -1342,8 +1338,8 @@ msgid "study_comment"
 msgstr "comments"
 
 #: company_profile/models.py:868 company_profile/models.py:894
-#: company_profile/models.py:977 company_profile/models.py:1018
-#: company_profile/models.py:1043 company_profile/models.py:1059
+#: company_profile/models.py:977 company_profile/models.py:1043
+#: company_profile/models.py:1059
 msgid "attachement_file"
 msgstr "other attachments"
 
@@ -1385,10 +1381,8 @@ msgid "Application: Temporary Exemption"
 msgstr ""
 
 #: company_profile/models.py:910
-#, fuzzy
-#| msgid "official_letter_file"
 msgid "local_request_file"
-msgstr "letter copy"
+msgstr "request file"
 
 #: company_profile/models.py:911
 msgid "local_purchase_invoice_file"
@@ -1417,20 +1411,16 @@ msgid "Application: Cyanide Certificate"
 msgstr ""
 
 #: company_profile/models.py:943
-#, fuzzy
-#| msgid "approved_requirements_list_file"
 msgid "explosive_request_file"
-msgstr "approved requierments list"
+msgstr "request file"
 
 #: company_profile/models.py:944
 msgid "explosive_amount_file"
 msgstr ""
 
 #: company_profile/models.py:945
-#, fuzzy
-#| msgid "approved_requirements_list_file"
 msgid "explosive_last_approved_request_file"
-msgstr "approved requierments list"
+msgstr "last explosive request file"
 
 #: company_profile/models.py:948
 msgid "Explosive Permission"
@@ -1442,10 +1432,8 @@ msgid "Application: Explosive Permission"
 msgstr ""
 
 #: company_profile/models.py:961
-#, fuzzy
-#| msgid "study_about_change_reason_file"
 msgid "restart_activity_reason_file"
-msgstr "study about reasons of change"
+msgstr "reason details file"
 
 #: company_profile/models.py:964
 msgid "Restart Activity"
@@ -1466,8 +1454,6 @@ msgid "Application: Renewal Contract"
 msgstr ""
 
 #: company_profile/models.py:993
-#, fuzzy
-#| msgid "borrow_materials_list_file"
 msgid "import_permission_materials_list_file"
 msgstr "material list file"
 
@@ -1481,16 +1467,12 @@ msgid "Application: Import Permission"
 msgstr ""
 
 #: company_profile/models.py:1008
-#, fuzzy
-#| msgid "material_name"
 msgid "import_material_name"
-msgstr "required materials"
+msgstr "materials"
 
 #: company_profile/models.py:1009
-#, fuzzy
-#| msgid "report_type"
 msgid "import_qty"
-msgstr "report type"
+msgstr "qty"
 
 #: company_profile/models.py:1012
 msgid "Import Permission Detail"
@@ -1500,32 +1482,30 @@ msgstr ""
 msgid "Import Permission Details"
 msgstr ""
 
+#: company_profile/models.py:1018
+msgid "fuel_request_file"
+msgstr "request file"
+
 #: company_profile/models.py:1021
 msgid "Fuel Permission"
 msgstr ""
 
 #: company_profile/models.py:1028 company_profile/models.py:1029
 #: company_profile/templates/company_profile/base.html:243
-#, fuzzy
-#| msgid "Application: Tajeel Tnazol"
 msgid "Application: Fuel Permission"
-msgstr "Application: Postponed Assignment"
+msgstr "Application: Fuel Permission"
 
 #: company_profile/models.py:1033
-#, fuzzy
-#| msgid "employee_name"
 msgid "fuel_type_name"
-msgstr "full name"
+msgstr "full type"
 
 #: company_profile/models.py:1034
 msgid "fuel_qty"
 msgstr ""
 
 #: company_profile/models.py:1037
-#, fuzzy
-#| msgid "Application: Tajeel Tnazol"
 msgid "Fuel Permission Detail"
-msgstr "Application: Postponed Assignment"
+msgstr "Fuel Permission Detail"
 
 #: company_profile/models.py:1038
 msgid "Fuel Permission Details"
@@ -1537,10 +1517,8 @@ msgstr ""
 
 #: company_profile/models.py:1053 company_profile/models.py:1054
 #: company_profile/templates/company_profile/base.html:247
-#, fuzzy
-#| msgid "Application: Export Gold"
 msgid "Application: HSE Accident Report"
-msgstr "Application: Export Gold Request"
+msgstr "Application: HSE Accident Report"
 
 #: company_profile/models.py:1062
 msgid "HSE Performance Report"
@@ -1548,10 +1526,8 @@ msgstr ""
 
 #: company_profile/models.py:1069 company_profile/models.py:1070
 #: company_profile/templates/company_profile/base.html:250
-#, fuzzy
-#| msgid "Application: Foreigner procedure"
 msgid "Application: HSE Performance Report"
-msgstr "Application: Foreigners ratification procedures"
+msgstr "Application: HSE Performance Report"
 
 #: company_profile/tables.py:24 company_profile/tables.py:37
 #: company_profile/tables.py:50 company_profile/tables.py:63
@@ -1638,10 +1614,10 @@ msgstr ""
 #: company_profile/views/export_gold.py:72
 #: company_profile/views/export_gold_raw.py:72
 #: company_profile/views/foreigner_procedure.py:71
-#: company_profile/views/fuel_permission.py:64
+#: company_profile/views/fuel_permission.py:70
 #: company_profile/views/hse_accident.py:64
 #: company_profile/views/hse_performance.py:64
-#: company_profile/views/import_permission.py:64
+#: company_profile/views/import_permission.py:70
 #: company_profile/views/local_purchase.py:64 company_profile/views/mda.py:64
 #: company_profile/views/reexport_equipments.py:71
 #: company_profile/views/remove_area.py:67
@@ -1797,15 +1773,15 @@ msgstr ""
 msgid "Show foreigner procedure"
 msgstr ""
 
-#: company_profile/views/fuel_permission.py:28
+#: company_profile/views/fuel_permission.py:29
 msgid "List of Fuel Permissions"
 msgstr ""
 
-#: company_profile/views/fuel_permission.py:46
+#: company_profile/views/fuel_permission.py:50
 msgid "Add Fuel Permission"
 msgstr ""
 
-#: company_profile/views/fuel_permission.py:77
+#: company_profile/views/fuel_permission.py:88
 msgid "Show Fuel Permission"
 msgstr ""
 
@@ -1833,15 +1809,15 @@ msgstr ""
 msgid "Show HSE Performance Report"
 msgstr ""
 
-#: company_profile/views/import_permission.py:28
+#: company_profile/views/import_permission.py:29
 msgid "List of Import Permissions"
 msgstr ""
 
-#: company_profile/views/import_permission.py:46
+#: company_profile/views/import_permission.py:50
 msgid "Add Import Permission"
 msgstr ""
 
-#: company_profile/views/import_permission.py:77
+#: company_profile/views/import_permission.py:88
 msgid "Show Import Permission"
 msgstr ""
 

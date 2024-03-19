@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-03-19 11:57+0200\n"
+"POT-Creation-Date: 2024-03-19 16:27+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1343,8 +1343,8 @@ msgid "study_comment"
 msgstr "تعليق مختصر عن الدراسة"
 
 #: company_profile/models.py:868 company_profile/models.py:894
-#: company_profile/models.py:977 company_profile/models.py:1018
-#: company_profile/models.py:1043 company_profile/models.py:1059
+#: company_profile/models.py:977 company_profile/models.py:1043
+#: company_profile/models.py:1059
 msgid "attachement_file"
 msgstr "ملف المرفقات"
 
@@ -1404,7 +1404,7 @@ msgstr "طلب شراء محلي"
 
 #: company_profile/models.py:927
 msgid "cyanide_request_file"
-msgstr ""
+msgstr "ملف خطاب الشركة"
 
 #: company_profile/models.py:930
 msgid "Cyanide Certificate"
@@ -1488,6 +1488,10 @@ msgstr "تفاصيل ادخال مواد"
 #: company_profile/models.py:1013
 msgid "Import Permission Details"
 msgstr "تفاصيل ادخال مواد"
+
+#: company_profile/models.py:1018
+msgid "fuel_request_file"
+msgstr "ملف خطاب الشركة"
 
 #: company_profile/models.py:1021
 msgid "Fuel Permission"
@@ -1617,10 +1621,10 @@ msgstr "اضافة طلب حركة اجنبي"
 #: company_profile/views/export_gold.py:72
 #: company_profile/views/export_gold_raw.py:72
 #: company_profile/views/foreigner_procedure.py:71
-#: company_profile/views/fuel_permission.py:64
+#: company_profile/views/fuel_permission.py:70
 #: company_profile/views/hse_accident.py:64
 #: company_profile/views/hse_performance.py:64
-#: company_profile/views/import_permission.py:64
+#: company_profile/views/import_permission.py:70
 #: company_profile/views/local_purchase.py:64 company_profile/views/mda.py:64
 #: company_profile/views/reexport_equipments.py:71
 #: company_profile/views/remove_area.py:67
@@ -1776,15 +1780,15 @@ msgstr "اضافة طلب اجراءات اجانب"
 msgid "Show foreigner procedure"
 msgstr "عرض طلب اجراءات اجانب"
 
-#: company_profile/views/fuel_permission.py:28
+#: company_profile/views/fuel_permission.py:29
 msgid "List of Fuel Permissions"
 msgstr "قائمة طلبات موافقة وقود"
 
-#: company_profile/views/fuel_permission.py:46
+#: company_profile/views/fuel_permission.py:50
 msgid "Add Fuel Permission"
 msgstr "اضافة طلب موافقة وقود"
 
-#: company_profile/views/fuel_permission.py:77
+#: company_profile/views/fuel_permission.py:88
 msgid "Show Fuel Permission"
 msgstr "عرض موافقة وقود"
 
@@ -1812,15 +1816,15 @@ msgstr "اضافة تقرير اداء البيئة والسلامة"
 msgid "Show HSE Performance Report"
 msgstr "عرض تقرير اداء البيئة والسلامة"
 
-#: company_profile/views/import_permission.py:28
+#: company_profile/views/import_permission.py:29
 msgid "List of Import Permissions"
 msgstr "قائمة طلبات اذن ادخال مواد"
 
-#: company_profile/views/import_permission.py:46
+#: company_profile/views/import_permission.py:50
 msgid "Add Import Permission"
 msgstr "اضافة طلب اذن ادخال مواد"
 
-#: company_profile/views/import_permission.py:77
+#: company_profile/views/import_permission.py:88
 msgid "Show Import Permission"
 msgstr "عرض اذن ادخال مواد"
 

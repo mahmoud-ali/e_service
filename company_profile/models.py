@@ -1015,7 +1015,7 @@ class AppImportPermissionDetail(models.Model):
 class AppFuelPermission(WorkflowModel):
     company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
 
-    attachement_file = models.FileField(_("attachement_file"),upload_to=company_applications_path)
+    attachement_file = models.FileField(_("fuel_request_file"),upload_to=company_applications_path)
 
     def __str__(self):
         return _("Fuel Permission") +" ("+str(self.id)+")"
