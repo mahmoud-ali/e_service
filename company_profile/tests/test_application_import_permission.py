@@ -31,6 +31,12 @@ class AppImportPermissionTests(ProCompanyTests,TestCase):
 
     add_model = AppImportPermission
     add_data = {
+            'appimportpermissiondetail_set-TOTAL_FORMS':1,
+            'appimportpermissiondetail_set-INITIAL_FORMS':0,
+            'appimportpermissiondetail_set-MIN_NUM_FORMS':1,
+            'appimportpermissiondetail_set-MAX_NUM_FORMS':1000,
+            'appimportpermissiondetail_set-0-import_material_name':'aaa',
+            'appimportpermissiondetail_set-0-import_qty':32,
     }
     add_file_data = ['attachement_file']
 

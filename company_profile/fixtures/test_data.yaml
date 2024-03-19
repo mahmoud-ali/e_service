@@ -290,6 +290,14 @@
   fields:
     app_label: check_cordinates
     model: smallmining
+- model: contenttypes.contenttype
+  fields:
+    app_label: company_profile
+    model: appfuelpermissiondetail
+- model: contenttypes.contenttype
+  fields:
+    app_label: company_profile
+    model: appimportpermissiondetail
 - model: sessions.session
   pk: 0rjpvyn2c810g58crxkkfdbgoq2xbd6q
   fields:
@@ -311,10 +319,20 @@
     session_data: .eJxlUMtqxDAM_Bedg_FLsZ1T298oJSi2IaZ5LLFDW5b998bbXEJvYmY0mtEdyPt1X0pPexnjUpKnktaln2MZ15Che7_D3wwd3Cjnr3UL0AAV6IThrRNCcMmsccYJbCDOlKZDSmFOy0ueN89ygMdHA88L_Z7j1qdqJuCCDeQ_41IJmqYKszMZe2pOOrPXS863c-tiNVIeDx-uUaMhrgcy0iqDioR2USIp9BwxDCYoa8yAiisdHLpWS2tjRCGsVK62_P-cGPpLd8WUkgKFOSLkmHN9Xvy-pe3nEEnuWs4fvz9Lc6s:1rW1YF:77X1nM35Fqi1fFDBmXLtM-fScCEQTCLqPDjJg0VGVQU
     expire_date: 2024-02-16 21:58:23.337069+00:00
 - model: sessions.session
+  pk: hoz0lxadzct3319pidk96n4tlfjeq9rj
+  fields:
+    session_data: .eJxlUEFuhDAM_IvPCCWBhMCp7TeqKkpiI6IFsiJBbbXavxcoF9qbNZ4Zz_gB1vu4ztnYNQ805-BtDnE2E-UhYoLu_QG_M3Rwtyl9xgWhAJuh4w1nulKiEaWQTHBeAE02jBvTjuElDWRvpY8TPD8KOA6YNdFiwu4l4YI562804yEdd7g8g5UH51yn8vUS8-1UXawGm4bNh7ctQ1k3XPaV66nVzDvUvVIcNfUCpatr3fRKICfnNWldedTOcSKvBVZ7yf-_ITR_q6utPKu2CIlS2n9HX_ewfG8kwVrF2PMHzrB2CQ:1rmUfQ:d6BuZ58jt8CK4dct_6Hg_-bJb8SqDLuXBQh0bhT7jQ8
+    expire_date: 2024-04-02 08:17:52.282821+00:00
+- model: sessions.session
   pk: hqjddyd1vcfnguuah5p98ky140sv4fq2
   fields:
     session_data: .eJxtkMtuhDAMRf_Fa4RMQsJj1fY3qhEyiSui8hjhoE41mn9vmLKh6sqWfX197DuQc8s2x462OPAcg6MYlrmbOA6LF2jf7_CbQwtXEvlaVg8ZUIS2qLApbaUqnSOmqFUGPFEYk5T8FOYXmVaXi4fHJYPnhm4TXruwmxVwqvXkPnneGzSOezk_yPKn5mhL_nrifDumTlYDyZB8HNaqqMiVBi31NdfGFoq1LRtnE7My6JkN970l7D-c1VZpStcgpcSone-f57Dv_t6utNUmEQiL7L_j2zWs30mjsLGIjx80qXR_:1rgkWn:WOWnPOWLoM9QYbQHULXwAKD7k6bhX7nXbvE15s0pGj0
     expire_date: 2024-03-17 12:01:13.074749+00:00
+- model: sessions.session
+  pk: ic8ak4h83jzklheei3p2kkktyib9obye
+  fields:
+    session_data: .eJxVjMEOgyAQRP-Fc0NEd1forf0RssAaTQ0mBU5N_73aeGiP82bmvZTnVmffijz9ktRVgbr8ssDxIfkoeF0PrDnGreWqv5uzLvq2J8l1iVyXLd_P159q5jLvHstBEBOakJLFEIiMM0QogEwT2mmA2KfOuAnAwY7GnhIIjJ0RDAOp9we-5jv4:1rmB5g:wY0aur6kreyKnEe66wqTDOJTr3kaLORqPCc2b0kgIps
+    expire_date: 2024-04-01 11:23:40.203305+00:00
 - model: sessions.session
   pk: icmpps24w7m5v3eqdlsolr1izhirfy5c
   fields:
@@ -331,6 +349,11 @@
     session_data: .eJxtUEFuhDAM_IvPCCWBmIRT229UFTKJK6IusMJBbbXavxe2XKh6s2bG4_HcgEKY1yl3tOaBp5wC5TRP3ch5mKNA-3qD3xlauJLI57xEKIAytLpRvkb0DkunrXOuAB4pXTYlxTFNTzIuoZQI97cCHge6VXjp0u6l4YT1FD542gm6XHa4PIKVD81BS_l8ivlybJ2sBpJh8wnKGd1QqK1C6h07i9pwhbUPaJrKWBWZLfc9kurfA1ZoKmpMo2gbrNnz_dMNx-7v68Z7rbcEwiJ7dfx1Tcv3pjHKo1L3HwhKdIA:1rgkSA:oxaqmcjc-wlAh-CrBaWPc_i8f3Ju_YjnFebzEMGcQZc
     expire_date: 2024-03-17 11:56:26.863151+00:00
 - model: sessions.session
+  pk: qepe1rlkk6dsp1qwmkpwjg402kfh5nu5
+  fields:
+    session_data: .eJxlUMtuhDAM_BefEUoCCQunbn-jqiInMQ91QxAJaqvV_nvDlgvtzZoZj8dzB7Q2bHPSuKWR5jRZTFOYtac0Bhehe7vD7wwdLBjjZ1gdFIAJOt5w1qi6FaJUQnJVF0Aep1tWDqUPI3pyLx5nHMgPa9iW0gYPj_cCntf0FmnV027cwAkzaD9o3gm83Xa4PFKWT81Bx_J6yvx6bJ2sRoxj9nFGEqJzje3b3nDsDaslSulaJLRM4oUL3meoIlY7xQS20l0oo86gkf3-8f-iyOm_PVSqknUuQkeKcS-SvpZp_c4iwVrF2OMHYnd8EQ:1rmC6c:qw-PZkFDqroyi8jKpgoU-hsB3EBL7irJc81sGtq-BfQ
+    expire_date: 2024-04-01 12:28:42.656253+00:00
+- model: sessions.session
   pk: skn993icp3wuccl2717r6gfjcv93kti1
   fields:
     session_data: .eJxlUMtuhDAM_BefEXKyeRBObX-jqpBJvCJaHisS1Far_fcC5UJ7s8Yz4xk_gLyfljE3tOSOxxw95TiNzcC5m0KC-v0BvzPUcKeUPqc5QAGUoRZWoLGusrZEZY1DWQAPFPuVSn18SR3TrfTTAM-PAvYLzZJ4buJmpuGEteRvPIZd2m9weSQrd86xTuXrKefboTpZdZS61cdIrbXzF2yVVJIqrgLZEFBdK63aCwphlJPUGmX81bRCBsGKrfJWYjDotpb_n8Oh-dtdO1RmTZA4pe13_HWP8_fKkegM4vMHMLh0lw:1rlpyv:nHdw6u6PXYGvxq8FInrRUg_VC3xy_wxj0y6FsoJBozI
@@ -345,6 +368,11 @@
   fields:
     session_data: .eJxtUEFuhDAM_IvPCJmwSYBT229UFTKJK6JCWOGgtlrt3xu2XKh6s8bj8czcgJxbtph62tLIMQVHKSyxnzmNixfoXm_wO0MHVxL5XFYPBVCCrrLYamsaxLJqUNu6AJ4pTJlJfg7xSebVleLh_lbA40G_Ca992LUqOGEDuQ-O-4KmaYfLw1j54BxrKZ9PNl-Oq5PUSDJmHYeNqiy5i0ZDQ8ONNpXi2lxaZ5StlUbPrHkYDOHw7kxtVE1WWaQ8aLX7-6cb9v2f6AoxZ88OhEX26vjrGtbvzFHYGsT7D-Z-dEg:1rhD1M:KhwUxBR0dqyHPbnbNN7E1GAaP4n8tSgF9-PMt6P240c
     expire_date: 2024-03-18 18:26:40.247036+00:00
+- model: sessions.session
+  pk: xhzng2dcqd7pca0hd2ka0st6n90ohsxr
+  fields:
+    session_data: .eJxVjMEOwiAQRP-Fs2lgKUv1pj9Clu0aiA1NLJyM_y41PehtZt7MvFSgVlNomzxDntVFGXX6zSLxQ8oOaFn2eCDmtZU6fDsH3oZrd1JqZqp5Lbdj9XeVaEv9h_UExhOPTiPFSSaHBsTieGYEb8HpWcRJjEg63hktgiUPXlMXDox6fwChSTtt:1rmXkN:TybxNqVQgSSX-VHn5E1X1cbe6eKdCX2RDyKGrRe1yGo
+    expire_date: 2024-04-02 11:35:11.617103+00:00
 - model: sites.site
   fields:
     domain: example.com
@@ -368,6 +396,10 @@
   pk: 1
   fields:
     name: سوداني
+- model: company_profile.lkpnationality
+  pk: 2
+  fields:
+    name: مغربية
 - model: company_profile.lkpstate
   pk: 1
   fields:
@@ -409,6 +441,10 @@
     name: مقبلة
 - model: company_profile.lkpcompanyproductionstatus
   pk: 3
+  fields:
+    name: متوقفة
+- model: company_profile.lkpcompanyproductionstatus
+  pk: 4
   fields:
     name: متوقفة
 - model: company_profile.lkpcompanyproductionfactorytype
@@ -671,6 +707,18 @@
     borrow_master: 41
     material: سيانيد- طن
     quantity: 2
+- model: company_profile.appborrowmaterialdetail
+  pk: 41
+  fields:
+    borrow_master: 42
+    material: ششششششش
+    quantity: 555
+- model: company_profile.appborrowmaterialdetail
+  pk: 42
+  fields:
+    borrow_master: 42
+    material: ﻻﻻﻻﻻﻻ
+    quantity: 777
 - model: company_profile.appsendsamplesforanalysisdetail
   pk: 1
   fields:
@@ -725,6 +773,15 @@
     sample_packing_type: rrr
     sample_analysis_type: mmm
     sample_analysis_cause: sdfsdf
+- model: company_profile.appsendsamplesforanalysisdetail
+  pk: 7
+  fields:
+    sample_master: 7
+    sample_type: ششششش
+    sample_weight: 55.0
+    sample_packing_type: اتا
+    sample_analysis_type: تتات
+    sample_analysis_cause: ةىىاتت
 - model: company_profile.lkpforeignerproceduretype
   pk: 1
   fields:
@@ -803,6 +860,12 @@
     procedure_master: 5
     employee_name: nnnn
     employee_address: jlkjlk
+- model: company_profile.appforeignerproceduredetail
+  pk: 8
+  fields:
+    procedure_master: 6
+    employee_name: اتااتتات
+    employee_address: ىﻻﻻﻻاا
 - model: company_profile.appaifaajomrkidetail
   pk: 1
   fields:
@@ -833,6 +896,16 @@
   fields:
     aifaa_master: 4
     material_name: bbbbbbb
+- model: company_profile.appaifaajomrkidetail
+  pk: 7
+  fields:
+    aifaa_master: 5
+    material_name: الاالال
+- model: company_profile.appaifaajomrkidetail
+  pk: 8
+  fields:
+    aifaa_master: 5
+    material_name: ﻻىﻻ
 - model: company_profile.appreexportequipmentsdetail
   pk: 1
   fields:
@@ -873,6 +946,16 @@
     voucher_no: '33333'
     insurance_no: '33333'
     check_certificate_no: '3333'
+- model: company_profile.appreexportequipmentsdetail
+  pk: 5
+  fields:
+    reexport_master: 5
+    name: ااااا
+    serial_id: '5656'
+    policy_no: '56'
+    voucher_no: '7676'
+    insurance_no: '767'
+    check_certificate_no: '656'
 - model: company_profile.apprequirementslistmangamequipments
   pk: 1
   fields:
@@ -1125,6 +1208,54 @@
     study_point_id: 1
     study_point_long: '23.000000000000'
     study_point_lat: '32.000000000000'
+- model: company_profile.appimportpermissiondetail
+  pk: 1
+  fields:
+    import_master: 4
+    import_material_name: a
+    import_qty: 1.0
+- model: company_profile.appimportpermissiondetail
+  pk: 2
+  fields:
+    import_master: 3
+    import_material_name: a
+    import_qty: 1.0
+- model: company_profile.appimportpermissiondetail
+  pk: 3
+  fields:
+    import_master: 2
+    import_material_name: a
+    import_qty: 1.0
+- model: company_profile.appimportpermissiondetail
+  pk: 4
+  fields:
+    import_master: 1
+    import_material_name: a
+    import_qty: 1.0
+- model: company_profile.appfuelpermissiondetail
+  pk: 1
+  fields:
+    fuel_master: 4
+    fuel_type_name: a
+    fuel_qty: 1.0
+- model: company_profile.appfuelpermissiondetail
+  pk: 2
+  fields:
+    fuel_master: 3
+    fuel_type_name: a
+    fuel_qty: 1.0
+- model: company_profile.appfuelpermissiondetail
+  pk: 3
+  fields:
+    fuel_master: 2
+    fuel_type_name: a
+    fuel_qty: 1.0
+- model: company_profile.appfuelpermissiondetail
+  pk: 4
+  fields:
+    fuel_master: 1
+    fuel_type_name: a
+    fuel_qty: 1.0
 - model: check_cordinates.smallmining
   pk: 3513
   fields:
@@ -19787,6 +19918,62 @@
     - check_cordinates
     - smallmining
     codename: view_smallmining
+- model: auth.permission
+  fields:
+    name: Can add Fuel Permission Detail
+    content_type:
+    - company_profile
+    - appfuelpermissiondetail
+    codename: add_appfuelpermissiondetail
+- model: auth.permission
+  fields:
+    name: Can change Fuel Permission Detail
+    content_type:
+    - company_profile
+    - appfuelpermissiondetail
+    codename: change_appfuelpermissiondetail
+- model: auth.permission
+  fields:
+    name: Can delete Fuel Permission Detail
+    content_type:
+    - company_profile
+    - appfuelpermissiondetail
+    codename: delete_appfuelpermissiondetail
+- model: auth.permission
+  fields:
+    name: Can view Fuel Permission Detail
+    content_type:
+    - company_profile
+    - appfuelpermissiondetail
+    codename: view_appfuelpermissiondetail
+- model: auth.permission
+  fields:
+    name: Can add Import Permission Detail
+    content_type:
+    - company_profile
+    - appimportpermissiondetail
+    codename: add_appimportpermissiondetail
+- model: auth.permission
+  fields:
+    name: Can change Import Permission Detail
+    content_type:
+    - company_profile
+    - appimportpermissiondetail
+    codename: change_appimportpermissiondetail
+- model: auth.permission
+  fields:
+    name: Can delete Import Permission Detail
+    content_type:
+    - company_profile
+    - appimportpermissiondetail
+    codename: delete_appimportpermissiondetail
+- model: auth.permission
+  fields:
+    name: Can view Import Permission Detail
+    content_type:
+    - company_profile
+    - appimportpermissiondetail
+    codename: view_appimportpermissiondetail
 - model: auth.group
   fields:
     name: pro_company_application_accept
@@ -19814,7 +20001,7 @@
 - model: accounts.customuser
   fields:
     password: pbkdf2_sha256$720000$tH5f7gkeFN9Es8mHafSUxJ$P28/0MeQeLvSmoLdJodz05oaT8noDhnJa2DUp0FwHP8=
-    last_login: 2024-03-17 22:21:13.244646+00:00
+    last_login: 2024-03-19 11:35:11.594193+00:00
     is_superuser: true
     username: admin
     first_name: ''
@@ -19865,7 +20052,7 @@
 - model: accounts.customuser
   fields:
     password: pbkdf2_sha256$720000$WGrDrGF60YWdBnK0xcZprf$UE5TZNiPXhc7zUYsosadfIPvLx4HOfxH26KULOmTSHo=
-    last_login: 2024-03-17 22:22:01.942352+00:00
+    last_login: 2024-03-18 11:23:40.178987+00:00
     is_superuser: false
     username: muaz
     first_name: ''
@@ -20590,8 +20777,8 @@
       - tblcompanyproductionuserrole
 - model: accounts.customuser
   fields:
-    password: pbkdf2_sha256$720000$JhoUwP7lukutT507kneeun$66DvZMhnqrXru5Zy6RCq1P6VUyzxwBm3HhziGz35HAQ=
-    last_login: 2024-03-17 12:51:17.056725+00:00
+    password: pbkdf2_sha256$720000$VhE9cGCxVAhp40FxZCbAT2$0abVH/z/xqKEbOCHfx2rg52bbKUkE8u28oshbLepjhw=
+    last_login: 2024-03-19 08:17:52.258208+00:00
     is_superuser: false
     username: ِAli sheak
     first_name: ''
@@ -20600,6 +20787,747 @@
     is_staff: false
     is_active: true
     date_joined: 2024-03-17 12:49:28.465282+00:00
+    lang: ar
+    groups: []
+    user_permissions: []
+- model: accounts.customuser
+  fields:
+    password: pbkdf2_sha256$720000$p6xO6wG3WGSPLZJ2m7bSDo$AdysEgLHwvFeETYOmhAmW6gVbOhuNGqtF4hrHj/aSUg=
+    last_login: 2024-03-18 12:34:00.381755+00:00
+    is_superuser: false
+    username: nazar
+    first_name: ''
+    last_name: ''
+    email: nazar@smrc.sd
+    is_staff: true
+    is_active: true
+    date_joined: 2024-03-18 11:04:19+00:00
+    lang: ar
+    groups:
+    - - pro_company_application_accept
+    - - pro_company_application_approve
+    - - company_type_entaj
+    user_permissions:
+    - - add_appaddarea
+      - company_profile
+      - appaddarea
+    - - change_appaddarea
+      - company_profile
+      - appaddarea
+    - - delete_appaddarea
+      - company_profile
+      - appaddarea
+    - - view_appaddarea
+      - company_profile
+      - appaddarea
+    - - add_appaifaajomrki
+      - company_profile
+      - appaifaajomrki
+    - - change_appaifaajomrki
+      - company_profile
+      - appaifaajomrki
+    - - delete_appaifaajomrki
+      - company_profile
+      - appaifaajomrki
+    - - view_appaifaajomrki
+      - company_profile
+      - appaifaajomrki
+    - - add_appaifaajomrkidetail
+      - company_profile
+      - appaifaajomrkidetail
+    - - change_appaifaajomrkidetail
+      - company_profile
+      - appaifaajomrkidetail
+    - - delete_appaifaajomrkidetail
+      - company_profile
+      - appaifaajomrkidetail
+    - - view_appaifaajomrkidetail
+      - company_profile
+      - appaifaajomrkidetail
+    - - add_appborrowmaterial
+      - company_profile
+      - appborrowmaterial
+    - - change_appborrowmaterial
+      - company_profile
+      - appborrowmaterial
+    - - delete_appborrowmaterial
+      - company_profile
+      - appborrowmaterial
+    - - view_appborrowmaterial
+      - company_profile
+      - appborrowmaterial
+    - - add_appborrowmaterialdetail
+      - company_profile
+      - appborrowmaterialdetail
+    - - change_appborrowmaterialdetail
+      - company_profile
+      - appborrowmaterialdetail
+    - - delete_appborrowmaterialdetail
+      - company_profile
+      - appborrowmaterialdetail
+    - - view_appborrowmaterialdetail
+      - company_profile
+      - appborrowmaterialdetail
+    - - add_appchangecompanyname
+      - company_profile
+      - appchangecompanyname
+    - - change_appchangecompanyname
+      - company_profile
+      - appchangecompanyname
+    - - delete_appchangecompanyname
+      - company_profile
+      - appchangecompanyname
+    - - view_appchangecompanyname
+      - company_profile
+      - appchangecompanyname
+    - - add_appchangeworkprocedure
+      - company_profile
+      - appchangeworkprocedure
+    - - change_appchangeworkprocedure
+      - company_profile
+      - appchangeworkprocedure
+    - - delete_appchangeworkprocedure
+      - company_profile
+      - appchangeworkprocedure
+    - - view_appchangeworkprocedure
+      - company_profile
+      - appchangeworkprocedure
+    - - add_appcyanidecertificate
+      - company_profile
+      - appcyanidecertificate
+    - - change_appcyanidecertificate
+      - company_profile
+      - appcyanidecertificate
+    - - delete_appcyanidecertificate
+      - company_profile
+      - appcyanidecertificate
+    - - view_appcyanidecertificate
+      - company_profile
+      - appcyanidecertificate
+    - - add_appexplorationtime
+      - company_profile
+      - appexplorationtime
+    - - change_appexplorationtime
+      - company_profile
+      - appexplorationtime
+    - - delete_appexplorationtime
+      - company_profile
+      - appexplorationtime
+    - - view_appexplorationtime
+      - company_profile
+      - appexplorationtime
+    - - add_appexplosivepermission
+      - company_profile
+      - appexplosivepermission
+    - - change_appexplosivepermission
+      - company_profile
+      - appexplosivepermission
+    - - delete_appexplosivepermission
+      - company_profile
+      - appexplosivepermission
+    - - view_appexplosivepermission
+      - company_profile
+      - appexplosivepermission
+    - - add_appexportgold
+      - company_profile
+      - appexportgold
+    - - change_appexportgold
+      - company_profile
+      - appexportgold
+    - - delete_appexportgold
+      - company_profile
+      - appexportgold
+    - - view_appexportgold
+      - company_profile
+      - appexportgold
+    - - add_appexportgoldraw
+      - company_profile
+      - appexportgoldraw
+    - - change_appexportgoldraw
+      - company_profile
+      - appexportgoldraw
+    - - delete_appexportgoldraw
+      - company_profile
+      - appexportgoldraw
+    - - view_appexportgoldraw
+      - company_profile
+      - appexportgoldraw
+    - - add_appforeignerprocedure
+      - company_profile
+      - appforeignerprocedure
+    - - change_appforeignerprocedure
+      - company_profile
+      - appforeignerprocedure
+    - - delete_appforeignerprocedure
+      - company_profile
+      - appforeignerprocedure
+    - - view_appforeignerprocedure
+      - company_profile
+      - appforeignerprocedure
+    - - add_appforeignerproceduredetail
+      - company_profile
+      - appforeignerproceduredetail
+    - - change_appforeignerproceduredetail
+      - company_profile
+      - appforeignerproceduredetail
+    - - delete_appforeignerproceduredetail
+      - company_profile
+      - appforeignerproceduredetail
+    - - view_appforeignerproceduredetail
+      - company_profile
+      - appforeignerproceduredetail
+    - - add_appforignermovement
+      - company_profile
+      - appforignermovement
+    - - change_appforignermovement
+      - company_profile
+      - appforignermovement
+    - - delete_appforignermovement
+      - company_profile
+      - appforignermovement
+    - - view_appforignermovement
+      - company_profile
+      - appforignermovement
+    - - add_appfuelpermission
+      - company_profile
+      - appfuelpermission
+    - - change_appfuelpermission
+      - company_profile
+      - appfuelpermission
+    - - delete_appfuelpermission
+      - company_profile
+      - appfuelpermission
+    - - view_appfuelpermission
+      - company_profile
+      - appfuelpermission
+    - - add_apphseaccidentreport
+      - company_profile
+      - apphseaccidentreport
+    - - change_apphseaccidentreport
+      - company_profile
+      - apphseaccidentreport
+    - - delete_apphseaccidentreport
+      - company_profile
+      - apphseaccidentreport
+    - - view_apphseaccidentreport
+      - company_profile
+      - apphseaccidentreport
+    - - add_apphseperformancereport
+      - company_profile
+      - apphseperformancereport
+    - - change_apphseperformancereport
+      - company_profile
+      - apphseperformancereport
+    - - delete_apphseperformancereport
+      - company_profile
+      - apphseperformancereport
+    - - view_apphseperformancereport
+      - company_profile
+      - apphseperformancereport
+    - - add_appimportpermission
+      - company_profile
+      - appimportpermission
+    - - change_appimportpermission
+      - company_profile
+      - appimportpermission
+    - - delete_appimportpermission
+      - company_profile
+      - appimportpermission
+    - - view_appimportpermission
+      - company_profile
+      - appimportpermission
+    - - add_applocalpurchase
+      - company_profile
+      - applocalpurchase
+    - - change_applocalpurchase
+      - company_profile
+      - applocalpurchase
+    - - delete_applocalpurchase
+      - company_profile
+      - applocalpurchase
+    - - view_applocalpurchase
+      - company_profile
+      - applocalpurchase
+    - - add_appmda
+      - company_profile
+      - appmda
+    - - change_appmda
+      - company_profile
+      - appmda
+    - - delete_appmda
+      - company_profile
+      - appmda
+    - - view_appmda
+      - company_profile
+      - appmda
+    - - add_appreexportequipments
+      - company_profile
+      - appreexportequipments
+    - - change_appreexportequipments
+      - company_profile
+      - appreexportequipments
+    - - delete_appreexportequipments
+      - company_profile
+      - appreexportequipments
+    - - view_appreexportequipments
+      - company_profile
+      - appreexportequipments
+    - - add_appreexportequipmentsdetail
+      - company_profile
+      - appreexportequipmentsdetail
+    - - change_appreexportequipmentsdetail
+      - company_profile
+      - appreexportequipmentsdetail
+    - - delete_appreexportequipmentsdetail
+      - company_profile
+      - appreexportequipmentsdetail
+    - - view_appreexportequipmentsdetail
+      - company_profile
+      - appreexportequipmentsdetail
+    - - add_appremovearea
+      - company_profile
+      - appremovearea
+    - - change_appremovearea
+      - company_profile
+      - appremovearea
+    - - delete_appremovearea
+      - company_profile
+      - appremovearea
+    - - view_appremovearea
+      - company_profile
+      - appremovearea
+    - - add_apprenewalcontract
+      - company_profile
+      - apprenewalcontract
+    - - change_apprenewalcontract
+      - company_profile
+      - apprenewalcontract
+    - - delete_apprenewalcontract
+      - company_profile
+      - apprenewalcontract
+    - - view_apprenewalcontract
+      - company_profile
+      - apprenewalcontract
+    - - add_apprequirementslist
+      - company_profile
+      - apprequirementslist
+    - - change_apprequirementslist
+      - company_profile
+      - apprequirementslist
+    - - delete_apprequirementslist
+      - company_profile
+      - apprequirementslist
+    - - view_apprequirementslist
+      - company_profile
+      - apprequirementslist
+    - - add_apprequirementslistchemicalequipments
+      - company_profile
+      - apprequirementslistchemicalequipments
+    - - change_apprequirementslistchemicalequipments
+      - company_profile
+      - apprequirementslistchemicalequipments
+    - - delete_apprequirementslistchemicalequipments
+      - company_profile
+      - apprequirementslistchemicalequipments
+    - - view_apprequirementslistchemicalequipments
+      - company_profile
+      - apprequirementslistchemicalequipments
+    - - add_apprequirementslistchemicallabequipments
+      - company_profile
+      - apprequirementslistchemicallabequipments
+    - - change_apprequirementslistchemicallabequipments
+      - company_profile
+      - apprequirementslistchemicallabequipments
+    - - delete_apprequirementslistchemicallabequipments
+      - company_profile
+      - apprequirementslistchemicallabequipments
+    - - view_apprequirementslistchemicallabequipments
+      - company_profile
+      - apprequirementslistchemicallabequipments
+    - - add_apprequirementslistelectricityequipments
+      - company_profile
+      - apprequirementslistelectricityequipments
+    - - change_apprequirementslistelectricityequipments
+      - company_profile
+      - apprequirementslistelectricityequipments
+    - - delete_apprequirementslistelectricityequipments
+      - company_profile
+      - apprequirementslistelectricityequipments
+    - - view_apprequirementslistelectricityequipments
+      - company_profile
+      - apprequirementslistelectricityequipments
+    - - add_apprequirementslistfactoryequipments
+      - company_profile
+      - apprequirementslistfactoryequipments
+    - - change_apprequirementslistfactoryequipments
+      - company_profile
+      - apprequirementslistfactoryequipments
+    - - delete_apprequirementslistfactoryequipments
+      - company_profile
+      - apprequirementslistfactoryequipments
+    - - view_apprequirementslistfactoryequipments
+      - company_profile
+      - apprequirementslistfactoryequipments
+    - - add_apprequirementslistmangamequipments
+      - company_profile
+      - apprequirementslistmangamequipments
+    - - change_apprequirementslistmangamequipments
+      - company_profile
+      - apprequirementslistmangamequipments
+    - - delete_apprequirementslistmangamequipments
+      - company_profile
+      - apprequirementslistmangamequipments
+    - - view_apprequirementslistmangamequipments
+      - company_profile
+      - apprequirementslistmangamequipments
+    - - add_apprequirementslistmotafjeratequipments
+      - company_profile
+      - apprequirementslistmotafjeratequipments
+    - - change_apprequirementslistmotafjeratequipments
+      - company_profile
+      - apprequirementslistmotafjeratequipments
+    - - delete_apprequirementslistmotafjeratequipments
+      - company_profile
+      - apprequirementslistmotafjeratequipments
+    - - view_apprequirementslistmotafjeratequipments
+      - company_profile
+      - apprequirementslistmotafjeratequipments
+    - - add_apprequirementslistvehiclesequipments
+      - company_profile
+      - apprequirementslistvehiclesequipments
+    - - change_apprequirementslistvehiclesequipments
+      - company_profile
+      - apprequirementslistvehiclesequipments
+    - - delete_apprequirementslistvehiclesequipments
+      - company_profile
+      - apprequirementslistvehiclesequipments
+    - - view_apprequirementslistvehiclesequipments
+      - company_profile
+      - apprequirementslistvehiclesequipments
+    - - add_apprestartactivity
+      - company_profile
+      - apprestartactivity
+    - - change_apprestartactivity
+      - company_profile
+      - apprestartactivity
+    - - delete_apprestartactivity
+      - company_profile
+      - apprestartactivity
+    - - view_apprestartactivity
+      - company_profile
+      - apprestartactivity
+    - - add_appsendsamplesforanalysis
+      - company_profile
+      - appsendsamplesforanalysis
+    - - change_appsendsamplesforanalysis
+      - company_profile
+      - appsendsamplesforanalysis
+    - - delete_appsendsamplesforanalysis
+      - company_profile
+      - appsendsamplesforanalysis
+    - - view_appsendsamplesforanalysis
+      - company_profile
+      - appsendsamplesforanalysis
+    - - add_appsendsamplesforanalysisdetail
+      - company_profile
+      - appsendsamplesforanalysisdetail
+    - - change_appsendsamplesforanalysisdetail
+      - company_profile
+      - appsendsamplesforanalysisdetail
+    - - delete_appsendsamplesforanalysisdetail
+      - company_profile
+      - appsendsamplesforanalysisdetail
+    - - view_appsendsamplesforanalysisdetail
+      - company_profile
+      - appsendsamplesforanalysisdetail
+    - - add_apptaaweed
+      - company_profile
+      - apptaaweed
+    - - change_apptaaweed
+      - company_profile
+      - apptaaweed
+    - - delete_apptaaweed
+      - company_profile
+      - apptaaweed
+    - - view_apptaaweed
+      - company_profile
+      - apptaaweed
+    - - add_apptajeeltnazol
+      - company_profile
+      - apptajeeltnazol
+    - - change_apptajeeltnazol
+      - company_profile
+      - apptajeeltnazol
+    - - delete_apptajeeltnazol
+      - company_profile
+      - apptajeeltnazol
+    - - view_apptajeeltnazol
+      - company_profile
+      - apptajeeltnazol
+    - - add_apptajmeed
+      - company_profile
+      - apptajmeed
+    - - change_apptajmeed
+      - company_profile
+      - apptajmeed
+    - - delete_apptajmeed
+      - company_profile
+      - apptajmeed
+    - - view_apptajmeed
+      - company_profile
+      - apptajmeed
+    - - add_apptakhali
+      - company_profile
+      - apptakhali
+    - - change_apptakhali
+      - company_profile
+      - apptakhali
+    - - delete_apptakhali
+      - company_profile
+      - apptakhali
+    - - view_apptakhali
+      - company_profile
+      - apptakhali
+    - - add_apptamdeed
+      - company_profile
+      - apptamdeed
+    - - change_apptamdeed
+      - company_profile
+      - apptamdeed
+    - - delete_apptamdeed
+      - company_profile
+      - apptamdeed
+    - - view_apptamdeed
+      - company_profile
+      - apptamdeed
+    - - add_apptechnicalfinancialreport
+      - company_profile
+      - apptechnicalfinancialreport
+    - - change_apptechnicalfinancialreport
+      - company_profile
+      - apptechnicalfinancialreport
+    - - delete_apptechnicalfinancialreport
+      - company_profile
+      - apptechnicalfinancialreport
+    - - view_apptechnicalfinancialreport
+      - company_profile
+      - apptechnicalfinancialreport
+    - - add_apptemporaryexemption
+      - company_profile
+      - apptemporaryexemption
+    - - change_apptemporaryexemption
+      - company_profile
+      - apptemporaryexemption
+    - - delete_apptemporaryexemption
+      - company_profile
+      - apptemporaryexemption
+    - - view_apptemporaryexemption
+      - company_profile
+      - apptemporaryexemption
+    - - add_apptnazolshraka
+      - company_profile
+      - apptnazolshraka
+    - - change_apptnazolshraka
+      - company_profile
+      - apptnazolshraka
+    - - delete_apptnazolshraka
+      - company_profile
+      - apptnazolshraka
+    - - view_apptnazolshraka
+      - company_profile
+      - apptnazolshraka
+    - - add_appvisibitystudy
+      - company_profile
+      - appvisibitystudy
+    - - change_appvisibitystudy
+      - company_profile
+      - appvisibitystudy
+    - - delete_appvisibitystudy
+      - company_profile
+      - appvisibitystudy
+    - - view_appvisibitystudy
+      - company_profile
+      - appvisibitystudy
+    - - add_appvisibitystudydetail
+      - company_profile
+      - appvisibitystudydetail
+    - - change_appvisibitystudydetail
+      - company_profile
+      - appvisibitystudydetail
+    - - delete_appvisibitystudydetail
+      - company_profile
+      - appvisibitystudydetail
+    - - view_appvisibitystudydetail
+      - company_profile
+      - appvisibitystudydetail
+    - - add_appworkplan
+      - company_profile
+      - appworkplan
+    - - change_appworkplan
+      - company_profile
+      - appworkplan
+    - - delete_appworkplan
+      - company_profile
+      - appworkplan
+    - - view_appworkplan
+      - company_profile
+      - appworkplan
+    - - add_lkpcompanyproductionfactorytype
+      - company_profile
+      - lkpcompanyproductionfactorytype
+    - - change_lkpcompanyproductionfactorytype
+      - company_profile
+      - lkpcompanyproductionfactorytype
+    - - delete_lkpcompanyproductionfactorytype
+      - company_profile
+      - lkpcompanyproductionfactorytype
+    - - view_lkpcompanyproductionfactorytype
+      - company_profile
+      - lkpcompanyproductionfactorytype
+    - - add_lkpcompanyproductionlicensestatus
+      - company_profile
+      - lkpcompanyproductionlicensestatus
+    - - change_lkpcompanyproductionlicensestatus
+      - company_profile
+      - lkpcompanyproductionlicensestatus
+    - - delete_lkpcompanyproductionlicensestatus
+      - company_profile
+      - lkpcompanyproductionlicensestatus
+    - - view_lkpcompanyproductionlicensestatus
+      - company_profile
+      - lkpcompanyproductionlicensestatus
+    - - add_lkpcompanyproductionstatus
+      - company_profile
+      - lkpcompanyproductionstatus
+    - - change_lkpcompanyproductionstatus
+      - company_profile
+      - lkpcompanyproductionstatus
+    - - delete_lkpcompanyproductionstatus
+      - company_profile
+      - lkpcompanyproductionstatus
+    - - view_lkpcompanyproductionstatus
+      - company_profile
+      - lkpcompanyproductionstatus
+    - - add_lkpforeignerproceduretype
+      - company_profile
+      - lkpforeignerproceduretype
+    - - change_lkpforeignerproceduretype
+      - company_profile
+      - lkpforeignerproceduretype
+    - - delete_lkpforeignerproceduretype
+      - company_profile
+      - lkpforeignerproceduretype
+    - - view_lkpforeignerproceduretype
+      - company_profile
+      - lkpforeignerproceduretype
+    - - add_lkplocality
+      - company_profile
+      - lkplocality
+    - - change_lkplocality
+      - company_profile
+      - lkplocality
+    - - delete_lkplocality
+      - company_profile
+      - lkplocality
+    - - view_lkplocality
+      - company_profile
+      - lkplocality
+    - - add_lkpmineral
+      - company_profile
+      - lkpmineral
+    - - change_lkpmineral
+      - company_profile
+      - lkpmineral
+    - - delete_lkpmineral
+      - company_profile
+      - lkpmineral
+    - - view_lkpmineral
+      - company_profile
+      - lkpmineral
+    - - add_lkpnationality
+      - company_profile
+      - lkpnationality
+    - - change_lkpnationality
+      - company_profile
+      - lkpnationality
+    - - delete_lkpnationality
+      - company_profile
+      - lkpnationality
+    - - view_lkpnationality
+      - company_profile
+      - lkpnationality
+    - - add_lkpstate
+      - company_profile
+      - lkpstate
+    - - change_lkpstate
+      - company_profile
+      - lkpstate
+    - - delete_lkpstate
+      - company_profile
+      - lkpstate
+    - - view_lkpstate
+      - company_profile
+      - lkpstate
+    - - add_tblcompanyproduction
+      - company_profile
+      - tblcompanyproduction
+    - - change_tblcompanyproduction
+      - company_profile
+      - tblcompanyproduction
+    - - delete_tblcompanyproduction
+      - company_profile
+      - tblcompanyproduction
+    - - view_tblcompanyproduction
+      - company_profile
+      - tblcompanyproduction
+    - - add_tblcompanyproductionfactory
+      - company_profile
+      - tblcompanyproductionfactory
+    - - change_tblcompanyproductionfactory
+      - company_profile
+      - tblcompanyproductionfactory
+    - - delete_tblcompanyproductionfactory
+      - company_profile
+      - tblcompanyproductionfactory
+    - - view_tblcompanyproductionfactory
+      - company_profile
+      - tblcompanyproductionfactory
+    - - add_tblcompanyproductionlicense
+      - company_profile
+      - tblcompanyproductionlicense
+    - - change_tblcompanyproductionlicense
+      - company_profile
+      - tblcompanyproductionlicense
+    - - delete_tblcompanyproductionlicense
+      - company_profile
+      - tblcompanyproductionlicense
+    - - view_tblcompanyproductionlicense
+      - company_profile
+      - tblcompanyproductionlicense
+    - - add_tblcompanyproductionuserrole
+      - company_profile
+      - tblcompanyproductionuserrole
+    - - change_tblcompanyproductionuserrole
+      - company_profile
+      - tblcompanyproductionuserrole
+    - - delete_tblcompanyproductionuserrole
+      - company_profile
+      - tblcompanyproductionuserrole
+    - - view_tblcompanyproductionuserrole
+      - company_profile
+      - tblcompanyproductionuserrole
+- model: accounts.customuser
+  fields:
+    password: pbkdf2_sha256$720000$5qHh002qCjjeV1Ut49ptC5$HqoaTkqv6ieKrEJsNwqxf4Iv2IoPHKYUzF9mjiZPoXo=
+    last_login: 2024-03-18 12:28:42.634145+00:00
+    is_superuser: false
+    username: Manub for mining
+    first_name: ''
+    last_name: ''
+    email: g.mohamed@managemgroup.com
+    is_staff: false
+    is_active: true
+    date_joined: 2024-03-18 12:22:35.923937+00:00
     lang: ar
     groups: []
     user_permissions: []
@@ -20687,6 +21615,27 @@
     rep_phone: 0901262200
     email: ali@sheak.com
     status: 3
+- model: company_profile.tblcompanyproduction
+  pk: 9
+  fields:
+    created_at: 2024-03-18 12:22:35.922219+00:00
+    created_by:
+    - nazar
+    updated_at: 2024-03-18 12:22:35.922247+00:00
+    updated_by:
+    - nazar
+    company_type: entaj
+    name_ar: مانوب للتعدين المحدودة
+    name_en: Manub for mining
+    nationality: 2
+    address: الخرطوم
+    website: http://managemgroup.com
+    manager_name: كريم هواري فلاحي
+    manager_phone: '0123612645'
+    rep_name: محمد قنديل
+    rep_phone: 0912314785
+    email: g.mohamed@managemgroup.com
+    status: 1
 - model: company_profile.tblcompanyproductionuserrole
   pk: 2
   fields:
@@ -20711,6 +21660,12 @@
     user:
     - ِAli sheak
     company: 8
+- model: company_profile.tblcompanyproductionuserrole
+  pk: 6
+  fields:
+    user:
+    - Manub for mining
+    company: 9
 - model: company_profile.tblcompanyproductionfactory
   pk: 1
   fields:
@@ -20834,6 +21789,35 @@
     annual_rent: 0.0
     contract_status: 1
     contract_file: company_8/contract_2024-03-17/for_upload
+- model: company_profile.tblcompanyproductionlicense
+  pk: 7
+  fields:
+    created_at: 2024-03-18 12:27:07.348350+00:00
+    created_by:
+    - nazar
+    updated_at: 2024-03-18 12:27:07.348376+00:00
+    updated_by:
+    - nazar
+    company: 9
+    license_no: '15'
+    date: 2024-03-18
+    start_date: 2013-01-01
+    end_date: 2043-01-01
+    state: 1
+    locality: 1
+    location: قبقبة
+    sheet_no: '15'
+    cordinates: '-'
+    area: 142.0
+    reserve: 0.0
+    gov_rep: وزارة المعادن
+    rep_percent: 7.0
+    com_percent: 8.0
+    royalty: 7.0
+    zakat: 1.82
+    annual_rent: 10000.0
+    contract_status: 1
+    contract_file: company_9/contract_2024-03-18/for_upload
 - model: company_profile.appforignermovement
   pk: 1
   fields:
@@ -21634,6 +22618,22 @@
     borrow_date: 2024-03-17
     borrow_materials_list_file: company_8/applications/for_upload
     borrow_from_approval_file: company_8/applications/for_upload_YIr0WC0
+- model: company_profile.appborrowmaterial
+  pk: 42
+  fields:
+    created_at: 2024-03-18 12:30:42.755510+00:00
+    created_by:
+    - Manub for mining
+    updated_at: 2024-03-18 12:34:36.209590+00:00
+    updated_by:
+    - nazar
+    state: approved
+    notify: false
+    company: 9
+    company_from: 8
+    borrow_date: 2024-03-18
+    borrow_materials_list_file: company_9/applications/for_upload
+    borrow_from_approval_file: company_9/applications/for_upload_8oiyKrm
 - model: company_profile.appworkplan
   pk: 1
   fields:
@@ -21810,6 +22810,22 @@
     plan_to: 2025-03-17
     official_letter_file: company_8/applications/for_upload_RM87yNJ
     work_plan_file: company_8/applications/for_upload_8gIRsEh
+- model: company_profile.appworkplan
+  pk: 12
+  fields:
+    created_at: 2024-03-18 12:37:28.566784+00:00
+    created_by:
+    - Manub for mining
+    updated_at: 2024-03-18 12:37:28.566811+00:00
+    updated_by:
+    - Manub for mining
+    state: submitted
+    notify: false
+    company: 9
+    plan_from: 2024-03-18
+    plan_to: 2024-03-29
+    official_letter_file: company_9/applications/for_upload_enaZ8DI
+    work_plan_file: company_9/applications/for_upload_5lUhEqk
 - model: company_profile.apptechnicalfinancialreport
   pk: 1
   fields:
@@ -21900,6 +22916,24 @@
     report_comments: بلليبليب
     report_file: company_8/applications/for_upload_wLaZntv
     other_attachments_file: company_8/applications/for_upload_uYX7pwo
+- model: company_profile.apptechnicalfinancialreport
+  pk: 6
+  fields:
+    created_at: 2024-03-18 12:38:22.779993+00:00
+    created_by:
+    - Manub for mining
+    updated_at: 2024-03-18 12:38:22.780069+00:00
+    updated_by:
+    - Manub for mining
+    state: submitted
+    notify: false
+    company: 9
+    report_from: 2024-03-18
+    report_to: 2024-03-30
+    report_type: technical
+    report_comments: غغغ
+    report_file: company_9/applications/for_upload_GxDW3gX
+    other_attachments_file: company_9/applications/for_upload_dE48FLc
 - model: company_profile.appchangecompanyname
   pk: 1
   fields:
@@ -22245,13 +23279,32 @@
     geo_coordinator_for_remain_area_file: company_4/applications/for_upload_Ntz3Mht
     map_for_clarification_file: company_4/applications/for_upload_ufmiNFy
     technical_report_for_removed_area_file: company_4/applications/for_upload_gsAwzuS
+- model: company_profile.appremovearea
+  pk: 6
+  fields:
+    created_at: 2024-03-18 11:29:08.208866+00:00
+    created_by:
+    - ِAli sheak
+    updated_at: 2024-03-18 11:29:08.208892+00:00
+    updated_by:
+    - ِAli sheak
+    state: submitted
+    notify: false
+    company: 8
+    remove_type: first
+    area_in_km2: 25
+    area_percent_from_total: 12.0
+    geo_coordinator_for_removed_area_file: company_8/applications/for_upload_lwTmtFp
+    geo_coordinator_for_remain_area_file: company_8/applications/for_upload_26Ldtrz
+    map_for_clarification_file: company_8/applications/for_upload_5MqV4f6
+    technical_report_for_removed_area_file: company_8/applications/django.pdf
 - model: company_profile.apptnazolshraka
   pk: 1
   fields:
     created_at: 2024-02-07 07:26:49.180940+00:00
     created_by:
     - admin
-    updated_at: 2024-02-07 07:27:24.920819+00:00
+    updated_at: 2024-03-19 11:43:20.964273+00:00
     updated_by:
     - admin
     state: approved
@@ -22262,15 +23315,16 @@
     cause_for_tnazol: rtertertert
     financial_ability_file: company_1/applications/info_Vqps2bz
     cv_file: company_1/applications/info_m5jzVRV
+    agreement_file: company_1/applications/for_upload_ffHJw0X
 - model: company_profile.apptnazolshraka
   pk: 2
   fields:
     created_at: 2024-02-06 22:36:48.068677+00:00
     created_by:
     - bbb
-    updated_at: 2024-02-06 22:36:48.068836+00:00
+    updated_at: 2024-03-19 11:37:58.773608+00:00
     updated_by:
-    - bbb
+    - admin
     state: submitted
     notify: false
     company: 4
@@ -22279,13 +23333,14 @@
     cause_for_tnazol: ش
     financial_ability_file: company_4/applications/for_upload_Xqd1Pty
     cv_file: company_4/applications/for_upload_a9tIFyE
+    agreement_file: company_4/applications/for_upload_BOk70wr
 - model: company_profile.apptnazolshraka
   pk: 3
   fields:
     created_at: 2024-02-06 22:37:10.575567+00:00
     created_by:
     - bbb
-    updated_at: 2024-02-07 07:13:19.366729+00:00
+    updated_at: 2024-03-19 11:37:50.078962+00:00
     updated_by:
     - admin
     state: rejected
@@ -22296,13 +23351,14 @@
     cause_for_tnazol: ﻻ
     financial_ability_file: company_4/applications/for_upload_N4EAFWy
     cv_file: company_4/applications/for_upload_WtazNzt
+    agreement_file: company_4/applications/for_upload_M5ekDIz
 - model: company_profile.apptnazolshraka
   pk: 4
   fields:
     created_at: 2024-02-06 22:37:40.897863+00:00
     created_by:
     - bbb
-    updated_at: 2024-02-07 07:13:03.698238+00:00
+    updated_at: 2024-03-19 11:37:42.327495+00:00
     updated_by:
     - admin
     state: approved
@@ -22313,6 +23369,43 @@
     cause_for_tnazol: ص
     financial_ability_file: company_4/applications/for_upload_obC8KM1
     cv_file: company_4/applications/for_upload_DdtezG1
+    agreement_file: company_4/applications/for_upload_gqXJ4ml
+- model: company_profile.apptnazolshraka
+  pk: 5
+  fields:
+    created_at: 2024-03-18 11:34:48.562282+00:00
+    created_by:
+    - ِAli sheak
+    updated_at: 2024-03-19 11:43:13.135043+00:00
+    updated_by:
+    - admin
+    state: submitted
+    notify: false
+    company: 8
+    tnazol_type: partial
+    tnazol_for: dddd
+    cause_for_tnazol: "jlkjl\r\n'kkjljlk"
+    financial_ability_file: company_8/applications/for_upload_g1Pnsd8
+    cv_file: company_8/applications/for_upload_ZIOoA6i
+    agreement_file: company_8/applications/for_upload_VgxHKxf
+- model: company_profile.apptnazolshraka
+  pk: 6
+  fields:
+    created_at: 2024-03-19 11:26:33.841103+00:00
+    created_by:
+    - ِAli sheak
+    updated_at: 2024-03-19 11:35:55.109250+00:00
+    updated_by:
+    - admin
+    state: accepted
+    notify: false
+    company: 8
+    tnazol_type: partial
+    tnazol_for: kkk
+    cause_for_tnazol: kmkk
+    financial_ability_file: company_8/applications/for_upload_PeBXZX4
+    cv_file: company_8/applications/for_upload_381kg8J
+    agreement_file: company_8/applications/for_upload_hgRmAbs
 - model: company_profile.apptajeeltnazol
   pk: 1
   fields:
@@ -22441,6 +23534,23 @@
     cause_for_tajmeed: ا
     cause_for_uncontrolled_force_file: company_4/applications/for_upload_soOh7v1
     letter_from_jeha_amnia_file: company_4/applications/for_upload_tNmMaEw
+- model: company_profile.apptajmeed
+  pk: 5
+  fields:
+    created_at: 2024-03-18 11:36:42.295161+00:00
+    created_by:
+    - ِAli sheak
+    updated_at: 2024-03-18 11:36:42.295189+00:00
+    updated_by:
+    - ِAli sheak
+    state: submitted
+    notify: false
+    company: 8
+    tajmeed_from: 2024-03-18
+    tajmeed_to: 2025-03-18
+    cause_for_tajmeed: dddddd
+    cause_for_uncontrolled_force_file: company_8/applications/for_upload_ZU0Xbk0
+    letter_from_jeha_amnia_file: company_8/applications/for_upload_8rbPoJK
 - model: company_profile.apptakhali
   pk: 1
   fields:
@@ -22501,6 +23611,21 @@
     technical_presentation_date: 2024-02-21
     cause_for_takhali: ع
     technical_report_file: company_4/applications/for_upload_InFmPE1
+- model: company_profile.apptakhali
+  pk: 5
+  fields:
+    created_at: 2024-03-18 11:37:09.595381+00:00
+    created_by:
+    - ِAli sheak
+    updated_at: 2024-03-18 11:37:09.595406+00:00
+    updated_by:
+    - ِAli sheak
+    state: submitted
+    notify: false
+    company: 8
+    technical_presentation_date: 2024-03-18
+    cause_for_takhali: dddd
+    technical_report_file: company_8/applications/for_upload_ymQ1MUR
 - model: company_profile.apptamdeed
   pk: 1
   fields:
@@ -22569,6 +23694,23 @@
     cause_for_tamdeed: ى
     approved_work_plan_file: company_4/applications/for_upload_obF7WMi
     tnazol_file: company_4/applications/for_upload_5vVE9rX
+- model: company_profile.apptamdeed
+  pk: 5
+  fields:
+    created_at: 2024-03-18 11:38:38.921813+00:00
+    created_by:
+    - ِAli sheak
+    updated_at: 2024-03-18 11:38:38.921858+00:00
+    updated_by:
+    - ِAli sheak
+    state: submitted
+    notify: false
+    company: 8
+    tamdeed_from: 2024-03-18
+    tamdeed_to: 2025-03-18
+    cause_for_tamdeed: jji
+    approved_work_plan_file: company_8/applications/for_upload_QQxQn4k
+    tnazol_file: company_8/applications/for_upload_fdApEcl
 - model: company_profile.apptaaweed
   pk: 1
   fields:
@@ -22629,6 +23771,21 @@
     taaweed_from: 2024-02-05
     taaweed_to: 2024-02-22
     cause_for_taaweed: r
+- model: company_profile.apptaaweed
+  pk: 5
+  fields:
+    created_at: 2024-03-18 11:38:58.521649+00:00
+    created_by:
+    - ِAli sheak
+    updated_at: 2024-03-18 11:38:58.521677+00:00
+    updated_by:
+    - ِAli sheak
+    state: submitted
+    notify: false
+    company: 8
+    taaweed_from: 2024-03-18
+    taaweed_to: 2024-03-18
+    cause_for_taaweed: jh
 - model: company_profile.appmda
   pk: 1
   fields:
@@ -22709,6 +23866,22 @@
     mda_to: 2024-02-16
     cause_for_mda: mm
     approved_work_plan_file: company_4/applications/for_upload_V4vJKEa
+- model: company_profile.appmda
+  pk: 6
+  fields:
+    created_at: 2024-03-18 11:39:17.821081+00:00
+    created_by:
+    - ِAli sheak
+    updated_at: 2024-03-18 11:39:17.821121+00:00
+    updated_by:
+    - ِAli sheak
+    state: submitted
+    notify: false
+    company: 8
+    mda_from: 2024-03-18
+    mda_to: 2024-03-22
+    cause_for_mda: jhjgj
+    approved_work_plan_file: company_8/applications/for_upload_e0Kdh9c
 - model: company_profile.appchangeworkprocedure
   pk: 1
   fields:
@@ -22778,6 +23951,23 @@
     rational_reason: ii
     study_about_change_reason_file: company_4/applications/for_upload_y8FIpAB
     study_about_new_suggestion_file: company_4/applications/for_upload_PCRt4R1
+- model: company_profile.appchangeworkprocedure
+  pk: 5
+  fields:
+    created_at: 2024-03-18 11:39:52.302496+00:00
+    created_by:
+    - ِAli sheak
+    updated_at: 2024-03-18 11:39:52.302525+00:00
+    updated_by:
+    - ِAli sheak
+    state: submitted
+    notify: false
+    company: 8
+    reason_for_change: hhhh
+    purpose_for_change: jjh
+    rational_reason: jhhhhh
+    study_about_change_reason_file: company_8/applications/for_upload_SUWKXdz
+    study_about_new_suggestion_file: company_8/applications/for_upload_kcBXndf
 - model: company_profile.appexportgold
   pk: 1
   fields:
@@ -22799,14 +23989,13 @@
     amount_to_export_in_gram: 3.0
     remain_in_gram: 4.0
     f1: company_1/applications/info_g1IcdfU
-    f2: company_1/applications/info_itpv7JE
     f3: company_1/applications/info_nGQ0lXI
     f4: company_1/applications/info_7Duu5R7
-    f5: company_1/applications/info_4ALctEU
     f6: company_1/applications/info_97KjnRK
     f7: company_1/applications/info_jIBQ59E
     f8: company_1/applications/info_OI2x7eo
     f9: company_1/applications/info_lwQ4JZC
+    f5: company_1/applications/info_4ALctEU
 - model: company_profile.appexportgold
   pk: 2
   fields:
@@ -22828,14 +24017,13 @@
     amount_to_export_in_gram: 4.0
     remain_in_gram: 1.0
     f1: company_4/applications/for_upload_r9mzEyk
-    f2: company_4/applications/for_upload_mZKyIsg
     f3: company_4/applications/for_upload_lWFiFxb
     f4: company_4/applications/for_upload_W4RTII9
-    f5: company_4/applications/for_upload_YKZ8BjN
     f6: company_4/applications/for_upload_kQgeeUt
     f7: company_4/applications/for_upload_YLpUODB
     f8: company_4/applications/for_upload_62BMFz8
     f9: company_4/applications/for_upload_xx4ekJQ
+    f5: company_4/applications/for_upload_YKZ8BjN
 - model: company_profile.appexportgold
   pk: 3
   fields:
@@ -22857,14 +24045,13 @@
     amount_to_export_in_gram: 10.0
     remain_in_gram: 10.0
     f1: company_4/applications/for_upload_mCLtMjo
-    f2: company_4/applications/for_upload_hIyYXdn
     f3: company_4/applications/for_upload_1YaqPxe
     f4: company_4/applications/for_upload_uTWRdh4
-    f5: company_4/applications/for_upload_Plb11U8
     f6: company_4/applications/for_upload_NvQOLz2
     f7: company_4/applications/for_upload_uUdxld3
     f8: company_4/applications/for_upload_GXVWiox
     f9: company_4/applications/for_upload_25wEaMY
+    f5: company_4/applications/for_upload_Plb11U8
 - model: company_profile.appexportgold
   pk: 4
   fields:
@@ -22886,14 +24073,13 @@
     amount_to_export_in_gram: 15.0
     remain_in_gram: 15.0
     f1: company_4/applications/for_upload_44UDiH0
-    f2: company_4/applications/for_upload_a1B2SbM
     f3: company_4/applications/for_upload_hxL4Bye
     f4: company_4/applications/for_upload_7yRVt6t
-    f5: company_4/applications/for_upload_1NBs6e9
     f6: company_4/applications/for_upload_j5419n2
     f7: company_4/applications/for_upload_tfamlXM
     f8: company_4/applications/for_upload_DNdeoW7
     f9: company_4/applications/for_upload_CLTKl1q
+    f5: company_4/applications/for_upload_1NBs6e9
 - model: company_profile.appexportgoldraw
   pk: 1
   fields:
@@ -23006,6 +24192,34 @@
     f17: company_4/applications/for_upload_EPaPfGZ
     f18: company_4/applications/for_upload_jpRZwiL
     f19: company_4/applications/for_upload_QX1HWGN
+- model: company_profile.appexportgoldraw
+  pk: 5
+  fields:
+    created_at: 2024-03-18 11:46:20.373657+00:00
+    created_by:
+    - ِAli sheak
+    updated_at: 2024-03-18 11:46:20.373692+00:00
+    updated_by:
+    - ِAli sheak
+    state: submitted
+    notify: false
+    company: 8
+    mineral: 1
+    license_type: عقد
+    amount_in_gram: 5555.0
+    sale_price: 4.0
+    export_country: لللل
+    export_city: تاات
+    export_address: تاتات
+    f11: company_8/applications/for_upload_lJQpWVB
+    f12: company_8/applications/for_upload_UwQkj1T
+    f13: company_8/applications/for_upload_UHB9jpF
+    f14: company_8/applications/for_upload_s4ZJ1y9
+    f15: company_8/applications/for_upload_kLy2cuG
+    f16: company_8/applications/for_upload_epiPqj6
+    f17: company_8/applications/for_upload_r0Z4SsP
+    f18: company_8/applications/for_upload_tPVP3TI
+    f19: company_8/applications/for_upload_EBDulnf
 - model: company_profile.appsendsamplesforanalysis
   pk: 1
   fields:
@@ -23022,9 +24236,9 @@
     lab_city: ca
     lab_address: "asdsa\r\nasd\r\nasd\r\na\r\nsd"
     lab_analysis_cost: 54.0
-    last_analysis_report_file: company_1/applications/info
     initial_voucher_file: company_1/applications/info_l8rH9rn
     sample_description_form_file: company_1/applications/info_kY9iN9S
+    last_analysis_report_file: company_1/applications/info
 - model: company_profile.appsendsamplesforanalysis
   pk: 2
   fields:
@@ -23041,9 +24255,9 @@
     lab_city: '53'
     lab_address: '345'
     lab_analysis_cost: 45.0
-    last_analysis_report_file: company_1/applications/info_LqhAh3O
     initial_voucher_file: company_1/applications/info_fi5yJUS
     sample_description_form_file: company_1/applications/info_1EhKAj1
+    last_analysis_report_file: company_1/applications/info_LqhAh3O
 - model: company_profile.appsendsamplesforanalysis
   pk: 3
   fields:
@@ -23060,9 +24274,9 @@
     lab_city: ccccccccc
     lab_address: ccccccccc
     lab_analysis_cost: 444.0
-    last_analysis_report_file: company_1/applications/info_tNYTGtQ
     initial_voucher_file: company_1/applications/info_QMEH0NG
     sample_description_form_file: company_1/applications/info_KYIaia9
+    last_analysis_report_file: company_1/applications/info_tNYTGtQ
 - model: company_profile.appsendsamplesforanalysis
   pk: 4
   fields:
@@ -23079,9 +24293,9 @@
     lab_city: fff
     lab_address: ffff
     lab_analysis_cost: 5000.0
-    last_analysis_report_file: company_4/applications/for_upload_GhqtF2g
     initial_voucher_file: company_4/applications/for_upload_sLyDbyX
     sample_description_form_file: company_4/applications/for_upload_HQew5Eh
+    last_analysis_report_file: company_4/applications/for_upload_GhqtF2g
 - model: company_profile.appsendsamplesforanalysis
   pk: 5
   fields:
@@ -23098,9 +24312,9 @@
     lab_city: vvv
     lab_address: bbbb
     lab_analysis_cost: 3500.0
-    last_analysis_report_file: company_4/applications/for_upload_JvsX7kO
     initial_voucher_file: company_4/applications/for_upload_vFTxalJ
     sample_description_form_file: company_4/applications/for_upload_ojtC6ag
+    last_analysis_report_file: company_4/applications/for_upload_JvsX7kO
 - model: company_profile.appsendsamplesforanalysis
   pk: 6
   fields:
@@ -23117,9 +24331,28 @@
     lab_city: www
     lab_address: dddd
     lab_analysis_cost: 6000.0
-    last_analysis_report_file: company_4/applications/for_upload_bejTJog
     initial_voucher_file: company_4/applications/for_upload_WKMApZM
     sample_description_form_file: company_4/applications/for_upload_rRvtFgn
+    last_analysis_report_file: company_4/applications/for_upload_bejTJog
+- model: company_profile.appsendsamplesforanalysis
+  pk: 7
+  fields:
+    created_at: 2024-03-18 11:48:02.499227+00:00
+    created_by:
+    - ِAli sheak
+    updated_at: 2024-03-18 11:48:02.499261+00:00
+    updated_by:
+    - ِAli sheak
+    state: submitted
+    notify: false
+    company: 8
+    lab_country: شش
+    lab_city: شششش
+    lab_address: شس
+    lab_analysis_cost: 522.0
+    initial_voucher_file: company_8/applications/for_upload_iZFCIln
+    sample_description_form_file: company_8/applications/for_upload_Th9NqlZ
+    last_analysis_report_file: company_8/applications/for_upload_TZtCt8N
 - model: company_profile.appforeignerprocedure
   pk: 1
   fields:
@@ -23230,6 +24463,28 @@
     experience_certificates_file: company_4/applications/for_upload_Gy4LN7a
     eqama_file: company_4/applications/for_upload_o40PHGn
     dawa_file: company_4/applications/for_upload_yAEj9CT
+- model: company_profile.appforeignerprocedure
+  pk: 6
+  fields:
+    created_at: 2024-03-18 11:49:02.016028+00:00
+    created_by:
+    - ِAli sheak
+    updated_at: 2024-03-18 11:49:02.016053+00:00
+    updated_by:
+    - ِAli sheak
+    state: submitted
+    notify: false
+    company: 8
+    procedure_type: 5
+    procedure_from: 2024-03-18
+    procedure_to: 2024-03-30
+    procedure_cause: تاااتتت
+    official_letter_file: company_8/applications/for_upload_YJh7Qx0
+    passport_file: company_8/applications/for_upload_lKyQdzO
+    cv_file: company_8/applications/for_upload_6In9Dny
+    experience_certificates_file: company_8/applications/for_upload_dxkR5kE
+    eqama_file: company_8/applications/for_upload_3zWhRIY
+    dawa_file: company_8/applications/for_upload_JGuaWGN
 - model: company_profile.appaifaajomrki
   pk: 1
   fields:
@@ -23318,6 +24573,28 @@
     packing_certificate_file: company_4/applications/for_upload_U7BFD1k
     specifications_file: company_4/applications/for_upload_bDv2Yra
     taba_file: company_4/applications/for_upload_ExWZjFq
+- model: company_profile.appaifaajomrki
+  pk: 5
+  fields:
+    created_at: 2024-03-18 11:50:09.514416+00:00
+    created_by:
+    - ِAli sheak
+    updated_at: 2024-03-18 11:50:09.514531+00:00
+    updated_by:
+    - ِAli sheak
+    state: submitted
+    notify: false
+    company: 4
+    license_type: 2
+    approved_requirements_list_file: company_8/applications/for_upload_jbRvOYD
+    approval_from_finance_ministry_file: company_8/applications/for_upload_xpqg6F4
+    final_voucher_file: company_8/applications/for_upload_LhEVuIM
+    shipping_policy_file: company_8/applications/for_upload_X1631s5
+    check_certificate_file: company_8/applications/for_upload_6qB080b
+    origin_certificate_file: company_8/applications/for_upload_xcK5iZy
+    packing_certificate_file: company_8/applications/for_upload_5FaazvL
+    specifications_file: company_8/applications/for_upload_wQT8soC
+    taba_file: company_8/applications/for_upload_JJO1j4z
 - model: company_profile.appreexportequipments
   pk: 1
   fields:
@@ -23334,7 +24611,6 @@
     shipping_policy_file: company_1/applications/info_v2Ttk9q
     voucher_file: company_1/applications/info_j9qFL23
     specifications_file: company_1/applications/info_JmTx8r5
-    momentary_approval_file: company_1/applications/info_utsvgoB
 - model: company_profile.appreexportequipments
   pk: 2
   fields:
@@ -23351,7 +24627,6 @@
     shipping_policy_file: company_4/applications/for_upload_Kfdc3oS
     voucher_file: company_4/applications/for_upload_UymDwgS
     specifications_file: company_4/applications/for_upload_99cK9Vb
-    momentary_approval_file: company_4/applications/for_upload_DkvQ4xI
 - model: company_profile.appreexportequipments
   pk: 3
   fields:
@@ -23368,7 +24643,6 @@
     shipping_policy_file: company_4/applications/for_upload_FqkQnop
     voucher_file: company_4/applications/for_upload_a0HdbeI
     specifications_file: company_4/applications/for_upload_ujyNb08
-    momentary_approval_file: company_4/applications/for_upload_lLseyVG
 - model: company_profile.appreexportequipments
   pk: 4
   fields:
@@ -23385,7 +24659,22 @@
     shipping_policy_file: company_4/applications/for_upload_ppBqbR4
     voucher_file: company_4/applications/for_upload_ZOBl0my
     specifications_file: company_4/applications/for_upload_7zJpUlB
-    momentary_approval_file: company_4/applications/for_upload_Agb3c6I
+- model: company_profile.appreexportequipments
+  pk: 5
+  fields:
+    created_at: 2024-03-18 11:50:59.344266+00:00
+    created_by:
+    - ِAli sheak
+    updated_at: 2024-03-18 11:50:59.344317+00:00
+    updated_by:
+    - ِAli sheak
+    state: submitted
+    notify: false
+    company: 8
+    cause_for_equipments: ااااااا
+    shipping_policy_file: company_8/applications/for_upload_BTb5csk
+    voucher_file: company_8/applications/for_upload_BQNFEWs
+    specifications_file: company_8/applications/for_upload_MpsQ5Fj
 - model: company_profile.apprequirementslist
   pk: 1
   fields:
@@ -23617,6 +24906,7 @@
     notify: false
     company: 1
     attachement_file: company_1/applications/for_upload_ZBhO7ya
+    attachement_file2: company_1/applications/for_upload_zH71f1e
 - model: company_profile.applocalpurchase
   pk: 2
   fields:
@@ -23630,6 +24920,7 @@
     notify: false
     company: 4
     attachement_file: company_4/applications/for_upload_xOiWXqR
+    attachement_file2: company_1/applications/for_upload_zH71f1e
 - model: company_profile.applocalpurchase
   pk: 3
   fields:
@@ -23643,6 +24934,7 @@
     notify: false
     company: 4
     attachement_file: company_4/applications/for_upload_puMtddA
+    attachement_file2: ''
 - model: company_profile.applocalpurchase
   pk: 4
   fields:
@@ -23656,6 +24948,7 @@
     notify: false
     company: 4
     attachement_file: company_4/applications/for_upload_GCxGE8Z
+    attachement_file2: company_1/applications/for_upload_zH71f1e
 - model: company_profile.appcyanidecertificate
   pk: 1
   fields:
@@ -23721,6 +25014,8 @@
     notify: false
     company: 1
     attachement_file: company_1/applications/for_upload_zH71f1e
+    attachement_file2: company_1/applications/for_upload_zH71f1e
+    attachement_file3: company_1/applications/for_upload_zH71f1e
 - model: company_profile.appexplosivepermission
   pk: 2
   fields:
@@ -23734,6 +25029,8 @@
     notify: false
     company: 4
     attachement_file: company_4/applications/for_upload_VEQWz45
+    attachement_file2: company_1/applications/for_upload_zH71f1e
+    attachement_file3: company_1/applications/for_upload_zH71f1e
 - model: company_profile.appexplosivepermission
   pk: 3
   fields:
@@ -23747,6 +25044,8 @@
     notify: false
     company: 4
     attachement_file: company_4/applications/for_upload_5ydSuoB
+    attachement_file2: company_1/applications/for_upload_zH71f1e
+    attachement_file3: company_1/applications/for_upload_zH71f1e
 - model: company_profile.appexplosivepermission
   pk: 4
   fields:
@@ -23760,6 +25059,8 @@
     notify: false
     company: 4
     attachement_file: company_4/applications/for_upload_8ov7G6m
+    attachement_file2: company_1/applications/for_upload_zH71f1e
+    attachement_file3: company_1/applications/for_upload_zH71f1e
 - model: company_profile.apprestartactivity
   pk: 1
   fields:
@@ -23870,7 +25171,7 @@
     created_at: 2024-03-13 09:20:42.935857+00:00
     created_by:
     - admin
-    updated_at: 2024-03-13 09:20:42.935935+00:00
+    updated_at: 2024-03-19 11:48:27.784802+00:00
     updated_by:
     - admin
     state: submitted
@@ -23883,9 +25184,9 @@
     created_at: 2024-03-13 13:52:44.219559+00:00
     created_by:
     - bbb
-    updated_at: 2024-03-13 13:52:44.219619+00:00
+    updated_at: 2024-03-19 11:48:21.006668+00:00
     updated_by:
-    - bbb
+    - admin
     state: submitted
     notify: false
     company: 4
@@ -23896,7 +25197,7 @@
     created_at: 2024-03-13 13:52:48.860671+00:00
     created_by:
     - bbb
-    updated_at: 2024-03-13 15:05:10.582935+00:00
+    updated_at: 2024-03-19 11:48:13.686390+00:00
     updated_by:
     - admin
     state: rejected
@@ -23909,7 +25210,7 @@
     created_at: 2024-03-13 13:52:56.742583+00:00
     created_by:
     - bbb
-    updated_at: 2024-03-13 15:05:01.314267+00:00
+    updated_at: 2024-03-19 11:48:06.840331+00:00
     updated_by:
     - admin
     state: approved
@@ -23922,7 +25223,7 @@
     created_at: 2024-03-14 09:50:48.208528+00:00
     created_by:
     - admin
-    updated_at: 2024-03-14 09:50:48.208600+00:00
+    updated_at: 2024-03-19 11:47:48.314532+00:00
     updated_by:
     - admin
     state: submitted
@@ -23935,9 +25236,9 @@
     created_at: 2024-03-14 10:01:00.572250+00:00
     created_by:
     - bbb
-    updated_at: 2024-03-14 10:01:00.572327+00:00
+    updated_at: 2024-03-19 11:47:42.324376+00:00
     updated_by:
-    - bbb
+    - admin
     state: submitted
     notify: false
     company: 4
@@ -23948,7 +25249,7 @@
     created_at: 2024-03-14 10:01:11.101704+00:00
     created_by:
     - bbb
-    updated_at: 2024-03-14 10:01:55.580097+00:00
+    updated_at: 2024-03-19 11:47:34.533649+00:00
     updated_by:
     - admin
     state: rejected
@@ -23961,7 +25262,7 @@
     created_at: 2024-03-14 10:01:16.575670+00:00
     created_by:
     - bbb
-    updated_at: 2024-03-14 10:01:46.735942+00:00
+    updated_at: 2024-03-19 11:47:27.973294+00:00
     updated_by:
     - admin
     state: approved
@@ -28514,3 +29815,349 @@
     object_repr: muaz@smrc.sd
     action_flag: 2
     change_message: '[]'
+- model: admin.logentry
+  pk: 350
+  fields:
+    action_time: 2024-03-18 11:04:20.204665+00:00
+    user:
+    - admin
+    content_type:
+    - accounts
+    - customuser
+    object_id: '6'
+    object_repr: ''
+    action_flag: 1
+    change_message: '[{"added": {}}]'
+- model: admin.logentry
+  pk: 351
+  fields:
+    action_time: 2024-03-18 11:05:36.031729+00:00
+    user:
+    - admin
+    content_type:
+    - accounts
+    - customuser
+    object_id: '6'
+    object_repr: nazar@smrc.sd
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Email address", "Groups", "User permissions"]}}]'
+- model: admin.logentry
+  pk: 352
+  fields:
+    action_time: 2024-03-18 09:09:51.934012+00:00
+    user:
+    - admin
+    content_type:
+    - accounts
+    - customuser
+    object_id: '6'
+    object_repr: nazar@smrc.sd
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Staff status"]}}]'
+- model: admin.logentry
+  pk: 353
+  fields:
+    action_time: 2024-03-18 11:23:33.373775+00:00
+    user:
+    - admin
+    content_type:
+    - accounts
+    - customuser
+    object_id: '5'
+    object_repr: ali@sheak.com
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["password"]}}]'
+- model: admin.logentry
+  pk: 354
+  fields:
+    action_time: 2024-03-18 12:18:16.282357+00:00
+    user:
+    - admin
+    content_type:
+    - accounts
+    - customuser
+    object_id: '6'
+    object_repr: nazar@smrc.sd
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["User permissions"]}}]'
+- model: admin.logentry
+  pk: 355
+  fields:
+    action_time: 2024-03-18 12:20:32.096823+00:00
+    user:
+    - nazar
+    content_type:
+    - company_profile
+    - lkpnationality
+    object_id: '2'
+    object_repr: مغربية
+    action_flag: 1
+    change_message: '[{"added": {}}]'
+- model: admin.logentry
+  pk: 356
+  fields:
+    action_time: 2024-03-18 12:22:36.137733+00:00
+    user:
+    - nazar
+    content_type:
+    - company_profile
+    - tblcompanyproduction
+    object_id: '9'
+    object_repr: مانوب للتعدين المحدودة
+    action_flag: 1
+    change_message: '[{"added": {}}]'
+- model: admin.logentry
+  pk: 357
+  fields:
+    action_time: 2024-03-18 12:27:07.351642+00:00
+    user:
+    - nazar
+    content_type:
+    - company_profile
+    - tblcompanyproductionlicense
+    object_id: '7'
+    object_repr: مانوب للتعدين المحدودة( 2024-03-18 )
+    action_flag: 1
+    change_message: '[{"added": {}}]'
+- model: admin.logentry
+  pk: 358
+  fields:
+    action_time: 2024-03-18 12:31:46.634307+00:00
+    user:
+    - nazar
+    content_type:
+    - company_profile
+    - appborrowmaterial
+    object_id: '42'
+    object_repr: استلاف مواد (42)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 359
+  fields:
+    action_time: 2024-03-18 12:33:00.281976+00:00
+    user:
+    - admin
+    content_type:
+    - accounts
+    - customuser
+    object_id: '6'
+    object_repr: nazar@smrc.sd
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Groups"]}}]'
+- model: admin.logentry
+  pk: 360
+  fields:
+    action_time: 2024-03-18 12:33:45.206622+00:00
+    user:
+    - admin
+    content_type:
+    - accounts
+    - customuser
+    object_id: '6'
+    object_repr: nazar@smrc.sd
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Groups"]}}]'
+- model: admin.logentry
+  pk: 361
+  fields:
+    action_time: 2024-03-18 12:34:36.212052+00:00
+    user:
+    - nazar
+    content_type:
+    - company_profile
+    - appborrowmaterial
+    object_id: '42'
+    object_repr: استلاف مواد (42)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 362
+  fields:
+    action_time: 2024-03-19 11:35:55.111496+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - apptnazolshraka
+    object_id: '6'
+    object_repr: Share assignment (6)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Application_state"]}}]'
+- model: admin.logentry
+  pk: 363
+  fields:
+    action_time: 2024-03-19 11:37:42.329395+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - apptnazolshraka
+    object_id: '4'
+    object_repr: Share assignment (4)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Agreement_file"]}}]'
+- model: admin.logentry
+  pk: 364
+  fields:
+    action_time: 2024-03-19 11:37:50.081036+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - apptnazolshraka
+    object_id: '3'
+    object_repr: Share assignment (3)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Agreement_file"]}}]'
+- model: admin.logentry
+  pk: 365
+  fields:
+    action_time: 2024-03-19 11:37:58.775408+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - apptnazolshraka
+    object_id: '2'
+    object_repr: Share assignment (2)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Agreement_file"]}}]'
+- model: admin.logentry
+  pk: 366
+  fields:
+    action_time: 2024-03-19 11:43:13.140403+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - apptnazolshraka
+    object_id: '5'
+    object_repr: Share assignment (5)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Agreement_file"]}}]'
+- model: admin.logentry
+  pk: 367
+  fields:
+    action_time: 2024-03-19 11:43:20.967478+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - apptnazolshraka
+    object_id: '1'
+    object_repr: Share assignment (1)
+    action_flag: 2
+    change_message: '[{"changed": {"fields": ["Agreement_file"]}}]'
+- model: admin.logentry
+  pk: 368
+  fields:
+    action_time: 2024-03-19 11:47:27.981584+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appfuelpermission
+    object_id: '4'
+    object_repr: موافقة وقود (4)
+    action_flag: 2
+    change_message: '[{"added": {"name": "Fuel Permission Detail", "object": "AppFuelPermissionDetail
+      object (1)"}}]'
+- model: admin.logentry
+  pk: 369
+  fields:
+    action_time: 2024-03-19 11:47:34.537767+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appfuelpermission
+    object_id: '3'
+    object_repr: موافقة وقود (3)
+    action_flag: 2
+    change_message: '[{"added": {"name": "Fuel Permission Detail", "object": "AppFuelPermissionDetail
+      object (2)"}}]'
+- model: admin.logentry
+  pk: 370
+  fields:
+    action_time: 2024-03-19 11:47:42.327299+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appfuelpermission
+    object_id: '2'
+    object_repr: موافقة وقود (2)
+    action_flag: 2
+    change_message: '[{"added": {"name": "Fuel Permission Detail", "object": "AppFuelPermissionDetail
+      object (3)"}}]'
+- model: admin.logentry
+  pk: 371
+  fields:
+    action_time: 2024-03-19 11:47:48.317612+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appfuelpermission
+    object_id: '1'
+    object_repr: موافقة وقود (1)
+    action_flag: 2
+    change_message: '[{"added": {"name": "Fuel Permission Detail", "object": "AppFuelPermissionDetail
+      object (4)"}}]'
+- model: admin.logentry
+  pk: 372
+  fields:
+    action_time: 2024-03-19 11:48:06.843101+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appimportpermission
+    object_id: '4'
+    object_repr: اذن ادخال مواد (4)
+    action_flag: 2
+    change_message: '[{"added": {"name": "Import Permission Detail", "object": "AppImportPermissionDetail
+      object (1)"}}]'
+- model: admin.logentry
+  pk: 373
+  fields:
+    action_time: 2024-03-19 11:48:13.688974+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appimportpermission
+    object_id: '3'
+    object_repr: اذن ادخال مواد (3)
+    action_flag: 2
+    change_message: '[{"added": {"name": "Import Permission Detail", "object": "AppImportPermissionDetail
+      object (2)"}}]'
+- model: admin.logentry
+  pk: 374
+  fields:
+    action_time: 2024-03-19 11:48:21.009510+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appimportpermission
+    object_id: '2'
+    object_repr: اذن ادخال مواد (2)
+    action_flag: 2
+    change_message: '[{"added": {"name": "Import Permission Detail", "object": "AppImportPermissionDetail
+      object (3)"}}]'
+- model: admin.logentry
+  pk: 375
+  fields:
+    action_time: 2024-03-19 11:48:27.787411+00:00
+    user:
+    - admin
+    content_type:
+    - company_profile
+    - appimportpermission
+    object_id: '1'
+    object_repr: اذن ادخال مواد (1)
+    action_flag: 2
+    change_message: '[{"added": {"name": "Import Permission Detail", "object": "AppImportPermissionDetail
+      object (4)"}}]'

@@ -31,8 +31,14 @@ class AppLocalPurchaseTests(ProCompanyTests,TestCase):
 
     add_model = AppLocalPurchase
     add_data = {
+            'applocalpurchasedetail_set-TOTAL_FORMS':1,
+            'applocalpurchasedetail_set-INITIAL_FORMS':0,
+            'applocalpurchasedetail_set-MIN_NUM_FORMS':1,
+            'applocalpurchasedetail_set-MAX_NUM_FORMS':1000,
+            'applocalpurchasedetail_set-0-import_material_name':'aaa',
+            'applocalpurchasedetail_set-0-import_qty':32,
     }
-    add_file_data = ['attachement_file']
+    add_file_data = ['attachement_file','attachement_file2']
 
     add_email_subject_contain_ar = ['تم ارسال طلب جديد']
     add_email_subject_contain_en = ['New application submitted']
