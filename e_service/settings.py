@@ -175,8 +175,8 @@ USE_TZ = True
 
 LOCALE_PATHS = [os.path.join(BASE_DIR, 'locale')]
 
-LANGUAGES = [
-	("ar","Arabic"),("en","English")]
+# LANGUAGES = [
+# 	("ar","Arabic"),("en","English")]
     
     
 # Media configurations

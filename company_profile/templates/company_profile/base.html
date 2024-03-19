@@ -80,7 +80,7 @@ $(document).ready(function(){
             <li><a href="{% url 'account_logout' %}">{% translate "Log Out" %}</a></li>
           </ul>
 		  
-		<form  class="navbar-form {% if request.LANGUAGE_CODE == 'ar' %} navbar-left {% else %} navbar-right {% endif %}" action="{% url 'profile:set_lang' %}" method="post">
+<!--		<form  class="navbar-form {% if request.LANGUAGE_CODE == 'ar' %} navbar-left {% else %} navbar-right {% endif %}" action="{% url 'profile:set_lang' %}" method="post">
 			{% csrf_token %}
 			<select  class="form-control" name="language"  onchange="this.form.submit()">
 			{% get_current_language as LANGUAGE_CODE %}
@@ -93,7 +93,7 @@ $(document).ready(function(){
 			{% endfor %}
 			</select>
 		</form>
-
+	-->
 		{% endif %}
 
         </div>
