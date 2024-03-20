@@ -4,6 +4,7 @@ from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 
 from django.contrib.auth import get_user_model
+from django.contrib.sites.models import Site
 
 from django_fsm import can_proceed,get_available_FIELD_transitions
 
@@ -37,22 +38,23 @@ def get_state_choices(state):
 def send_transition_email(state,email,url,lang):
     subject = ""
     message = ""
+    logo_url = "https://"+Site.objects.get_current().domain+"/static/company_profile/img/smrc_logo.png"
     
     if state == SUBMITTED:
         subject = _("New application submitted")
-        message = render_to_string('company_profile/email/submitted_email_{0}.html'.format(lang),{'url':url}) 
+        message = render_to_string('company_profile/email/submitted_email_{0}.html'.format(lang),{'url':url,'logo':logo_url}) 
   
     if state == ACCEPTED:
         subject = _("Application accepted")
-        message = render_to_string('company_profile/email/accepted_email_{0}.html'.format(lang),{'url':url}) 
+        message = render_to_string('company_profile/email/accepted_email_{0}.html'.format(lang),{'url':url,'logo':logo_url}) 
             
     if state == APPROVED:
         subject = _("Application approved")
-        message = render_to_string('company_profile/email/approved_email_{0}.html'.format(lang),{'url':url}) 
+        message = render_to_string('company_profile/email/approved_email_{0}.html'.format(lang),{'url':url,'logo':logo_url}) 
         
     if state == REJECTED:
         subject = _("Application rejected")
-        message = render_to_string('company_profile/email/rejected_email_{0}.html'.format(lang),{'url':url}) 
+        message = render_to_string('company_profile/email/rejected_email_{0}.html'.format(lang),{'url':url,'logo':logo_url}) 
         
     send_mail(
         subject,
