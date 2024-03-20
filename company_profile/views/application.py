@@ -70,12 +70,15 @@ class ApplicationReadonlyView(LoginRequiredMixin,SingleObjectMixin,View):
         self.extra_context = {
                             "menu_name":self.menu_name,
                             "title":self.title, 
+                            "reject_comments":self.get_object().reject_comments, 
                             "state":STATE_CHOICES[self.get_object().state], 
          }
         return super().dispatch(*args, **kwargs)        
                         
-    def get(self,request,pk=0):        
-        self.extra_context["form"] = self.form_class(instance=self.get_object())
+    def get(self,request,pk=0):     
+        obj = self.get_object()
+        self.extra_context["form"] = self.form_class(instance=obj)
+        self.extra_context["object"] = obj
         return render(request, self.template_name, self.extra_context)
 
 class ApplicationMasterDetailCreateView(LoginRequiredMixin,View):
@@ -116,14 +119,15 @@ class ApplicationMasterDetailReadonlyView(LoginRequiredMixin,DetailView):
         
     def dispatch(self, *args, **kwargs):                   
         self.detail_formset = inlineformset_factory(self.model, self.model_details, fields=self.model_details_fields,extra=0,can_delete=False)
-            
+        obj = self.get_object()
+        state_key = obj.state
         self.extra_context = {
                             "menu_name":self.menu_name,
                             "title":self.title, 
                             "form": self.form_class,
                             "detail_formset": self.detail_formset,
                             "detail_title":self.model_details._meta.verbose_name_plural,
-                            "state":STATE_CHOICES[self.get_object().state], 
+                            "state":STATE_CHOICES[state_key], 
          }
         return super().dispatch(*args, **kwargs)                    
 
@@ -131,6 +135,7 @@ class ApplicationMasterDetailReadonlyView(LoginRequiredMixin,DetailView):
         obj = self.get_object()
         self.extra_context["form"] = self.form_class(instance=obj)
         self.extra_context["detail_formset"] = self.detail_formset(instance=obj)
+        self.extra_context["object"] = obj
 
         return render(request, self.template_name, self.extra_context)
 

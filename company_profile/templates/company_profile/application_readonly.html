@@ -6,6 +6,12 @@
 <h1 class="page-header">{{title}} ({% translate state %})</h1>
 {% bootstrap_messages %}
 
+{% if object.state == 'rejected' and object.reject_comments %}
+<div class="alert alert-danger alert-dismissable">
+    <h3>{% translate "reject_comments_title" %}</h3>
+    <p>{{object.reject_comments}}</p>
+</div>
+{% endif %}
 <form  method="">
 {% csrf_token %}
     {% bootstrap_form form %}

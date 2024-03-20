@@ -23,6 +23,7 @@ class LoggingModel(models.Model):
         abstract = True
         
 class WorkflowModel(LoggingModel):
+    reject_comments = models.TextField(_("reject_comments"),max_length=256,blank=True)
     state = FSMField(_("application_state"),default=SUBMITTED, choices=STATE_CHOICES)
     notify = models.BooleanField(_("notify_user"),default=False,editable=False)
            
