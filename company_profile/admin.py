@@ -167,6 +167,8 @@ class TblCompanyProductionAdmin(ExportActionMixin,LoggingAdminMixin,admin.ModelA
         if not change:
             User = get_user_model()            
             com_user = User.objects.create_user(obj.name_en,obj.email,settings.ACCOUNT_DEFAULT_PASSWORD)
+            com_user.lang = 'ar'
+            com_user.save()
             u = TblCompanyProductionUserRole(company=obj,user=com_user)
             u.save()
         
