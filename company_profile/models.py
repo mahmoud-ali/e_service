@@ -281,6 +281,7 @@ class AppWorkPlan(WorkflowModel):
     company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
     plan_from = models.DateField(_("plan_from"))
     plan_to = models.DateField(_("plan_to"))
+    plan_comments = models.TextField(_("plan_comments"),max_length=256)
     official_letter_file = models.FileField(_("official_letter_file"),upload_to=company_applications_path)
     work_plan_file = models.FileField(_("work_plan_file"),upload_to=company_applications_path)
 
@@ -449,10 +450,14 @@ class AppTnazolShraka(WorkflowModel):
 class AppTajeelTnazol(WorkflowModel):
     TNAZOL_TYPE_FIRST = "first"
     TNAZOL_TYPE_SECOND = "second"
+    TNAZOL_TYPE_THIRD = "second"
+    TNAZOL_TYPE_FOURTH = "second"
 
     TNAZOL_TYPE_CHOICES = {
         TNAZOL_TYPE_FIRST: _("first"),
         TNAZOL_TYPE_SECOND: _("second"),
+        TNAZOL_TYPE_THIRD: _("third"),
+        TNAZOL_TYPE_FOURTH: _("fourth"),
     }
 
     company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    

@@ -201,7 +201,7 @@ admin.site.register(LkpState)
 admin.site.register(LkpLocality)
 admin.site.register(LkpMineral)
 admin.site.register(LkpForeignerProcedureType)
-#admin.site.register(LkpCompanyProductionStatus) 
+admin.site.register(LkpCompanyProductionStatus) 
 admin.site.register(TblCompanyProduction,TblCompanyProductionAdmin)
 
 #admin.site.register(LkpCompanyProductionFactoryType)

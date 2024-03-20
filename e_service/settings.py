@@ -180,6 +180,7 @@ LOCALE_PATHS = [os.path.join(BASE_DIR, 'locale')]
     
     
 # Media configurations
+MEDIA_URL = 'media/'
 MEDIA_ROOT = config('MEDIA_ROOT') #os.path.join(BASE_DIR, 'media')
 
 # Static files (CSS, JavaScript, Images)

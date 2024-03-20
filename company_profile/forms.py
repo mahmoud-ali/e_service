@@ -92,7 +92,7 @@ class AppWorkPlanAdminForm(WorkflowFormMixin,ModelForm):
     company = forms.ModelChoiceField(queryset=TblCompanyProduction.objects.all(), disabled=True, label=_("company"))
     class Meta:
         model = AppWorkPlan
-        fields = ["company","plan_from","plan_to","state","official_letter_file","work_plan_file"] 
+        fields = ["company","plan_from","plan_to","plan_comments","state","official_letter_file","work_plan_file"] 
         
 class AppWorkPlanForm(AppWorkPlanAdminForm):
     company = None

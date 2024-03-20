@@ -102,7 +102,13 @@ $(document).ready(function(){
 	
 	<div class="container-fluid">
 	  <div class="row">
-		{% if user.is_authenticated %}
+		<div class="col-sm-8 col-md-9 main">
+		  
+			{% block content %}
+			{% endblock content %}
+	  </div>	  
+
+	  {% if user.is_authenticated %}
 
 		  <div class="col-sm-4 col-md-3 sidebar">
 		  <h4 class="text-center">{% translate "Menu" %}</h4>
@@ -113,9 +119,11 @@ $(document).ready(function(){
 			 {% comment %} <li class="{% if menu_name == 'profile:app_foreigner_list' %}active{% endif %} ">  
 					<a href="{% url 'profile:app_foreigner_list' %}">{% translate "Application: Forigner movement" %}</a>
 			 </li> {% endcomment %}
+			 {% if user.pro_company.company.company_type == 'entaj' or user.pro_company.company.company_type == 'mokhalfat' or user.pro_company.company.company_type == 'sageer' %}
 			 <li class="{% if menu_name == 'profile:app_borrow_list' %}active{% endif %} ">  
 					<a href="{% url 'profile:app_borrow_list' %}">{% translate "Application: BorrowMaterials" %}</a>
 			 </li>
+			 {% endif %}
 			 <li class="{% if menu_name == 'profile:app_work_plan_list' %}active{% endif %} ">  
 					<a href="{% url 'profile:app_work_plan_list' %}">{% translate "Application: Work Plan" %}</a>
 			 </li>
@@ -254,11 +262,7 @@ $(document).ready(function(){
 
 		  {% endif %}
 
-		  <div class="col-sm-8 col-sm-offset-4 col-md-9 col-md-offset-3 main">
-		  
-				{% block content %}
-				{% endblock content %}
-		  </div>	  
+		  {% comment %} <div class="col-sm-8 col-sm-offset-4 col-md-9 col-md-offset-3 main"> {% endcomment %}
 		</div>
 	</div>
 
