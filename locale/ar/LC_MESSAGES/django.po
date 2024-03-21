@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-03-20 22:32+0200\n"
+"POT-Creation-Date: 2024-03-20 23:32+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -111,25 +111,26 @@ msgstr "نوع الشركة"
 #: company_profile/forms.py:484 company_profile/forms.py:498
 #: company_profile/forms.py:512 company_profile/forms.py:526
 #: company_profile/forms.py:540 company_profile/forms.py:554
-#: company_profile/models.py:149 company_profile/models.py:169
-#: company_profile/models.py:195 company_profile/models.py:228
-#: company_profile/models.py:254 company_profile/models.py:282
-#: company_profile/models.py:309 company_profile/models.py:330
-#: company_profile/models.py:352 company_profile/models.py:371
-#: company_profile/models.py:399 company_profile/models.py:431
-#: company_profile/models.py:464 company_profile/models.py:482
-#: company_profile/models.py:502 company_profile/models.py:520
-#: company_profile/models.py:540 company_profile/models.py:557
-#: company_profile/models.py:576 company_profile/models.py:596
-#: company_profile/models.py:628 company_profile/models.py:659
-#: company_profile/models.py:703 company_profile/models.py:737
-#: company_profile/models.py:770 company_profile/models.py:803
-#: company_profile/models.py:866 company_profile/models.py:898
-#: company_profile/models.py:914 company_profile/models.py:931
-#: company_profile/models.py:947 company_profile/models.py:965
-#: company_profile/models.py:981 company_profile/models.py:997
-#: company_profile/models.py:1022 company_profile/models.py:1047
-#: company_profile/models.py:1063
+#: company_profile/forms.py:568 company_profile/models.py:149
+#: company_profile/models.py:169 company_profile/models.py:195
+#: company_profile/models.py:228 company_profile/models.py:254
+#: company_profile/models.py:282 company_profile/models.py:309
+#: company_profile/models.py:330 company_profile/models.py:352
+#: company_profile/models.py:371 company_profile/models.py:399
+#: company_profile/models.py:431 company_profile/models.py:464
+#: company_profile/models.py:482 company_profile/models.py:502
+#: company_profile/models.py:520 company_profile/models.py:540
+#: company_profile/models.py:557 company_profile/models.py:576
+#: company_profile/models.py:596 company_profile/models.py:628
+#: company_profile/models.py:659 company_profile/models.py:703
+#: company_profile/models.py:737 company_profile/models.py:770
+#: company_profile/models.py:803 company_profile/models.py:866
+#: company_profile/models.py:898 company_profile/models.py:914
+#: company_profile/models.py:931 company_profile/models.py:947
+#: company_profile/models.py:965 company_profile/models.py:981
+#: company_profile/models.py:997 company_profile/models.py:1022
+#: company_profile/models.py:1047 company_profile/models.py:1063
+#: company_profile/models.py:1079
 msgid "company"
 msgstr "شركة"
 
@@ -1539,7 +1540,7 @@ msgid "HSE Accident Report"
 msgstr "تقرير التحقيق عن حادث"
 
 #: company_profile/models.py:1059 company_profile/models.py:1060
-#: company_profile/templates/company_profile/base.html:255
+#: company_profile/templates/company_profile/base.html:258
 msgid "Application: HSE Accident Report"
 msgstr "تقرير التحقيق عن حادث"
 
@@ -1548,9 +1549,34 @@ msgid "HSE Performance Report"
 msgstr "تقرير البيئة والسلامة"
 
 #: company_profile/models.py:1075 company_profile/models.py:1076
-#: company_profile/templates/company_profile/base.html:258
+#: company_profile/templates/company_profile/base.html:261
 msgid "Application: HSE Performance Report"
 msgstr "تقرير البيئة والسلامة"
+
+#: company_profile/models.py:1081
+msgid "whom_reason"
+msgstr "الغرض من الشهادة"
+
+#: company_profile/models.py:1082
+msgid "whom_subject"
+msgstr "الموضوع"
+
+#: company_profile/models.py:1083
+msgid "whom_attachement_file"
+msgstr "ملف شهادة لمن يهمه الامر"
+
+#: company_profile/models.py:1086
+msgid "Whom may concern"
+msgstr "الى من يهمه الامر"
+
+#: company_profile/models.py:1093
+msgid "Application: Whom may concern request"
+msgstr "طلب شهادة لمن يهمه الامر"
+
+#: company_profile/models.py:1094
+#: company_profile/templates/company_profile/base.html:254
+msgid "Application: Whom may concern requests"
+msgstr "طلب شهادة لمن يهمه الامر"
 
 #: company_profile/tables.py:24 company_profile/tables.py:37
 #: company_profile/tables.py:50 company_profile/tables.py:63
@@ -1569,6 +1595,7 @@ msgstr "تقرير البيئة والسلامة"
 #: company_profile/tables.py:400 company_profile/tables.py:413
 #: company_profile/tables.py:426 company_profile/tables.py:439
 #: company_profile/tables.py:452 company_profile/tables.py:465
+#: company_profile/tables.py:478
 msgid "No records."
 msgstr "لايوجد سجل."
 
@@ -1590,6 +1617,7 @@ msgid "Rejected"
 msgstr "تم الرفض"
 
 #: company_profile/templates/company_profile/application_readonly.html:11
+#: company_profile/templates/company_profile/application_readonly_master_details.html:13
 msgid "reject_comments_title"
 msgstr "لقد تم رفض طلبك للاتي: "
 
@@ -1622,15 +1650,15 @@ msgstr "طلب اجراءات اجانب"
 msgid "Application: Visiblity Study"
 msgstr "طلب دراسة جدوى"
 
-#: company_profile/views/__init__.py:123
+#: company_profile/views/__init__.py:124
 msgid "List of foreigner movements"
 msgstr "قائمة طلبات حركة الاجانب"
 
-#: company_profile/views/__init__.py:141
+#: company_profile/views/__init__.py:142
 msgid "Add new movement"
 msgstr "اضافة طلب حركة اجنبي"
 
-#: company_profile/views/__init__.py:161 company_profile/views/__init__.py:241
+#: company_profile/views/__init__.py:162 company_profile/views/__init__.py:242
 #: company_profile/views/add_area.py:64
 #: company_profile/views/aifaa_jomrki.py:76
 #: company_profile/views/change_company_name.py:68
@@ -1660,23 +1688,24 @@ msgstr "اضافة طلب حركة اجنبي"
 #: company_profile/views/temporary_exemption.py:64
 #: company_profile/views/tnazol_shraka.py:65
 #: company_profile/views/visibilty_study.py:75
+#: company_profile/views/whom_concern.py:64
 #: company_profile/views/work_plan.py:64
 msgid "Application sent successfully."
 msgstr "تم ارسال الطلب بنجاح."
 
-#: company_profile/views/__init__.py:174
+#: company_profile/views/__init__.py:175
 msgid "Show movement"
 msgstr "عرض طلب حركة اجنبي"
 
-#: company_profile/views/__init__.py:189
+#: company_profile/views/__init__.py:190
 msgid "List of borrow materials"
 msgstr "قائمة طلبات الاستلاف"
 
-#: company_profile/views/__init__.py:208
+#: company_profile/views/__init__.py:209
 msgid "Add new borrow materials"
 msgstr "اضافة طلب اسلاف مواد"
 
-#: company_profile/views/__init__.py:259
+#: company_profile/views/__init__.py:260
 msgid "Show borrow materials"
 msgstr "عرض طلب استلاف مواد"
 
@@ -2051,6 +2080,18 @@ msgstr "اضافة طلب دراسة جدوى"
 #: company_profile/views/visibilty_study.py:93
 msgid "Show Visibity Study"
 msgstr "عرض طلب دراسة جدوى"
+
+#: company_profile/views/whom_concern.py:28
+msgid "List of Whom may concern requests"
+msgstr "قائمة طلبات لمن يهمه الامر"
+
+#: company_profile/views/whom_concern.py:46
+msgid "Add new Whom may concern request"
+msgstr "اضافة طلب لمن يهمه الامر"
+
+#: company_profile/views/whom_concern.py:77
+msgid "Show Whom may concern request"
+msgstr "عرض طلب لمن يهمه الامر"
 
 #: company_profile/views/work_plan.py:28
 msgid "List of work plans"

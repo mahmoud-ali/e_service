@@ -57,6 +57,7 @@ from .import_permission import AppImportPermissionListView,AppImportPermissionCr
 from .fuel_permission import AppFuelPermissionListView,AppFuelPermissionCreateView,AppFuelPermissionReadonlyView
 from .hse_accident import AppHSEAccidentReportListView,AppHSEAccidentReportCreateView,AppHSEAccidentReportReadonlyView
 from .hse_performance import AppHSEPerformanceReportListView,AppHSEPerformanceReportCreateView,AppHSEPerformanceReportReadonlyView
+from .whom_concern import AppWhomConcernListView,AppWhomConcernCreateView,AppWhomConcernReadonlyView
 
 class SetLanguageView(LoginRequiredMixin,View):
     def post(self,request):

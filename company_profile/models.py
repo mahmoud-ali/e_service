@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from django.forms import ValidationError
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from django.core.validators import MaxValueValidator, MinValueValidator
@@ -26,6 +27,12 @@ class WorkflowModel(LoggingModel):
     reject_comments = models.TextField(_("reject_comments"),max_length=256,blank=True)
     state = FSMField(_("application_state"),default=SUBMITTED, choices=STATE_CHOICES)
     notify = models.BooleanField(_("notify_user"),default=False,editable=False)
+
+    def clean(self):
+        if self.state == REJECTED and not self.reject_comments:
+            raise ValidationError(
+                {"reject_comments":_("reject_comments")}
+            )
            
     def can_accept(instance):
         return True
@@ -1074,3 +1081,27 @@ class AppHSEPerformanceReport(WorkflowModel):
         ordering = ["-id"]
         verbose_name = _("Application: HSE Performance Report")
         verbose_name_plural = _("Application: HSE Performance Report")
+
+class AppWhomConcern(WorkflowModel):
+    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
+
+    whom_reason = models.CharField(_("whom_reason"),max_length=100)
+    whom_subject = models.TextField(_("whom_subject"),max_length=256)
+    whom_attachement_file = models.FileField(_("whom_attachement_file"),upload_to=company_applications_path,blank=True,null=True)
+
+    def __str__(self):
+        return _("Whom may concern") +" ("+str(self.id)+")"
+        
+    def get_absolute_url(self): 
+        return reverse('profile:app_whom_concern_show',args=[str(self.id)])                
+    
+    def clean(self):
+        if self.state == APPROVED and not self.whom_attachement_file:
+            raise ValidationError(
+                {"whom_attachement_file":_("whom_attachement_file")}
+            )
+        
+    class Meta:
+        ordering = ["-id"]
+        verbose_name = _("Application: Whom may concern request")
+        verbose_name_plural = _("Application: Whom may concern requests")

@@ -7,7 +7,7 @@ from .models import AppCyanideCertificate, AppExplosivePermission, AppFuelPermis
                     AppChangeCompanyName, AppExplorationTime, AppAddArea,AppRemoveArea, AppTnazolShraka, \
                     AppTajeelTnazol, AppTajmeed,AppTakhali,AppTamdeed,AppTaaweed,AppMda,AppChangeWorkProcedure, \
                     AppExportGold,AppExportGoldRaw,AppSendSamplesForAnalysis,AppForeignerProcedure,AppAifaaJomrki, \
-                    AppVisibityStudy,AppReexportEquipments,AppRequirementsList,TblCompany
+                    AppVisibityStudy,AppReexportEquipments,AppRequirementsList,TblCompany,AppWhomConcern
                     
 def get_admin_change_url(object):
     info = (object._meta.app_label, object._meta.model_name)
@@ -43,7 +43,7 @@ def in_progress_apps(request):
             AppChangeCompanyName, AppExplorationTime, AppAddArea,AppRemoveArea, AppTnazolShraka, 
             AppTajeelTnazol, AppTajmeed,AppTakhali,AppTamdeed,AppTaaweed,AppMda,AppChangeWorkProcedure, 
             AppExportGold,AppExportGoldRaw,AppSendSamplesForAnalysis,AppForeignerProcedure,AppAifaaJomrki,
-            AppVisibityStudy,AppReexportEquipments,AppRequirementsList
+            AppVisibityStudy,AppReexportEquipments,AppRequirementsList,AppWhomConcern
         ]
         for m in models:
             qs = m.objects.filter(state__in=filter,company__company_type__in=company_types).order_by("-updated_at").prefetch_related('company')

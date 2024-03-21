@@ -12,10 +12,16 @@
     <p>{{object.reject_comments}}</p>
 </div>
 {% endif %}
+
 <form  method="">
 {% csrf_token %}
     {% bootstrap_form form %}
 </form>
+
+{% if object.state == 'approved' and object.whom_attachement_file %}
+<a target="_blank" href="{{ MEDIA_URL }}{{ object.whom_attachement_file}}">{% translate "whom_attachement_file" %}</a>
+{% endif %}
+
 <script>
 $(document).ready(function(){
 	$('form :input').attr('readonly','readonly');

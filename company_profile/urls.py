@@ -37,7 +37,8 @@ from .views import SetLanguageView, HomePageView, \
                    AppImportPermissionListView,AppImportPermissionCreateView,AppImportPermissionReadonlyView, \
                    AppFuelPermissionListView,AppFuelPermissionCreateView,AppFuelPermissionReadonlyView, \
                    AppHSEAccidentReportListView,AppHSEAccidentReportCreateView,AppHSEAccidentReportReadonlyView, \
-                   AppHSEPerformanceReportListView,AppHSEPerformanceReportCreateView,AppHSEPerformanceReportReadonlyView
+                   AppHSEPerformanceReportListView,AppHSEPerformanceReportCreateView,AppHSEPerformanceReportReadonlyView, \
+                   AppWhomConcernListView,AppWhomConcernCreateView,AppWhomConcernReadonlyView
 
 app_name = "profile"
 urlpatterns = [                                                        
@@ -215,5 +216,10 @@ urlpatterns = [
     path('app_hse_performance/<int:type>/', AppHSEPerformanceReportListView.as_view(), name='app_hse_performance_list'),
     path('app_hse_performance/<int:pk>/show/', AppHSEPerformanceReportReadonlyView.as_view(), name='app_hse_performance_show'),    
     path('app_hse_performance/add/', AppHSEPerformanceReportCreateView.as_view(), name='app_hse_performance_add'),
+
+    path('app_whom_concern/', AppWhomConcernListView.as_view(), name='app_whom_concern_list'),
+    path('app_whom_concern/<int:type>/', AppWhomConcernListView.as_view(), name='app_whom_concern_list'),
+    path('app_whom_concern/<int:pk>/show/', AppWhomConcernReadonlyView.as_view(), name='app_whom_concern_show'),    
+    path('app_whom_concern/add/', AppWhomConcernCreateView.as_view(), name='app_whom_concern_add'),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

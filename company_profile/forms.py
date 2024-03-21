@@ -1,5 +1,5 @@
 from django import forms
-from django.forms import ModelForm
+from django.forms import ModelForm, ValidationError
 from django.contrib.admin.widgets import AdminDateWidget
 from django.utils.translation import gettext_lazy as _
 
@@ -7,7 +7,7 @@ from django_fsm import can_proceed
 
 from .workflow import SUBMITTED,ACCEPTED,APPROVED,REJECTED,WorkflowFormMixin
 
-from .models import AppFuelPermission, AppHSEAccidentReport, AppHSEPerformanceReport, AppImportPermission, AppRenewalContract, AppRestartActivity, TblCompanyProduction, AppForignerMovement,AppBorrowMaterial,AppWorkPlan,AppTechnicalFinancialReport,AppChangeCompanyName, \
+from .models import AppFuelPermission, AppHSEAccidentReport, AppHSEPerformanceReport, AppImportPermission, AppRenewalContract, AppRestartActivity, AppWhomConcern, TblCompanyProduction, AppForignerMovement,AppBorrowMaterial,AppWorkPlan,AppTechnicalFinancialReport,AppChangeCompanyName, \
                     AppExplorationTime, AppAddArea, AppRemoveArea, AppTnazolShraka, AppTajeelTnazol,AppTajmeed,AppTakhali,AppTamdeed, \
                     AppTaaweed,AppMda,AppChangeWorkProcedure,AppExportGold,AppExportGoldRaw,AppSendSamplesForAnalysis,AppForeignerProcedure, \
                     AppAifaaJomrki,AppReexportEquipments,AppRequirementsList,TblCompanyProductionLicense,AppVisibityStudy, \
@@ -562,4 +562,18 @@ class AppHSEPerformanceReportForm(AppHSEPerformanceReportAdminForm):
     class Meta:
         model = AppHSEPerformanceReport
         exclude = ["company","state","reject_comments"]
+        widgets = {}
+
+class AppWhomConcernAdminForm(WorkflowFormMixin,ModelForm):
+    company = forms.ModelChoiceField(queryset=TblCompanyProduction.objects.all(), disabled=True, label=_("company"))
+
+    class Meta:
+        model = AppWhomConcern
+        fields = ["company","whom_reason","whom_subject","whom_attachement_file","state","reject_comments"] 
+        
+class AppWhomConcernForm(AppWhomConcernAdminForm):
+    company = None
+    class Meta:
+        model = AppWhomConcern
+        exclude = ["company","state","reject_comments","whom_attachement_file"]
         widgets = {}

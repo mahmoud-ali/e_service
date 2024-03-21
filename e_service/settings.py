@@ -112,7 +112,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',   
-                'company_profile.context_processors.in_progress_apps'
+                'company_profile.context_processors.in_progress_apps',
+                'django.template.context_processors.media'
             ],
         },
     },
