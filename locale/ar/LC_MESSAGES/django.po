@@ -2190,7 +2190,7 @@ msgid "Change Password"
 msgstr "تغيير كلمة المرور"
 
 #: templates/account/password_change.html:25
-msgid "Forgot Password?"
+msgid "Forgot your password?"
 msgstr "هل نسيت كلمة المرور؟"
 
 #: templates/admin/__base_site.html:3
