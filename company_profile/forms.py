@@ -7,7 +7,7 @@ from django_fsm import can_proceed
 
 from .workflow import SUBMITTED,ACCEPTED,APPROVED,REJECTED,WorkflowFormMixin
 
-from .models import AppFuelPermission, AppHSEAccidentReport, AppHSEPerformanceReport, AppImportPermission, AppRenewalContract, AppRestartActivity, AppWhomConcern, TblCompanyProduction, AppForignerMovement,AppBorrowMaterial,AppWorkPlan,AppTechnicalFinancialReport,AppChangeCompanyName, \
+from .models import AppFuelPermission, AppGoldProduction, AppHSEAccidentReport, AppHSEPerformanceReport, AppImportPermission, AppRenewalContract, AppRestartActivity, AppWhomConcern, TblCompanyProduction, AppForignerMovement,AppBorrowMaterial,AppWorkPlan,AppTechnicalFinancialReport,AppChangeCompanyName, \
                     AppExplorationTime, AppAddArea, AppRemoveArea, AppTnazolShraka, AppTajeelTnazol,AppTajmeed,AppTakhali,AppTamdeed, \
                     AppTaaweed,AppMda,AppChangeWorkProcedure,AppExportGold,AppExportGoldRaw,AppSendSamplesForAnalysis,AppForeignerProcedure, \
                     AppAifaaJomrki,AppReexportEquipments,AppRequirementsList,TblCompanyProductionLicense,AppVisibityStudy, \
@@ -576,4 +576,18 @@ class AppWhomConcernForm(AppWhomConcernAdminForm):
     class Meta:
         model = AppWhomConcern
         exclude = ["company","state","reject_comments","whom_attachement_file"]
+        widgets = {}
+
+class AppGoldProductionAdminForm(WorkflowFormMixin,ModelForm):
+    company = forms.ModelChoiceField(queryset=TblCompanyProduction.objects.all(), disabled=True, label=_("company"))
+
+    class Meta:
+        model = AppGoldProduction
+        fields = ["company","form_no","attachement_file","state","reject_comments"] 
+        
+class AppGoldProductionForm(AppGoldProductionAdminForm):
+    company = None
+    class Meta:
+        model = AppGoldProduction
+        exclude = ["company","state","reject_comments"]
         widgets = {}

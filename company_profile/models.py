@@ -1,6 +1,6 @@
 from django.db import models
 from django.conf import settings
-from django.forms import ValidationError
+from django.forms import DateInput, ValidationError
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from django.core.validators import MaxValueValidator, MinValueValidator
@@ -1105,3 +1105,34 @@ class AppWhomConcern(WorkflowModel):
         ordering = ["-id"]
         verbose_name = _("Application: Whom may concern request")
         verbose_name_plural = _("Application: Whom may concern requests")
+
+class AppGoldProduction(WorkflowModel):
+    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
+
+    form_no = models.CharField(_("form_no"),max_length=20)
+    attachement_file = models.FileField(_("gold_production_form_file"),upload_to=company_applications_path)
+
+    def __str__(self):
+        return _("Gold Production") +" ("+str(self.id)+")"
+        
+    def get_absolute_url(self): 
+        return reverse('profile:app_gold_production_show',args=[str(self.id)])                
+    
+    class Meta:
+        ordering = ["-id"]
+        verbose_name = _("Application: Gold Production")
+        verbose_name_plural = _("Application: Gold Production")
+
+class AppGoldProductionDetail(models.Model):
+    melt_master = models.ForeignKey(AppGoldProduction, on_delete=models.PROTECT)    
+    melt_dt = models.DateField(_("melt_dt"))
+    melt_bar_no = models.CharField(_("melt_bar_no"),max_length=30)
+    melt_bar_weight = models.FloatField(_("melt_bar_weight"))
+    melt_jaf = models.FloatField(_("melt_jaf"))
+    melt_khabath = models.FloatField(_("melt_khabath"))
+    melt_added_gold = models.FloatField(_("melt_added_gold"),blank=True,null=True)
+    melt_remaind = models.FloatField(_("melt_remaind"),blank=True,null=True)
+
+    class Meta:
+        verbose_name = _("Gold Production Detail")
+        verbose_name_plural = _("Gold Production Details")

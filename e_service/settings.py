@@ -140,6 +140,7 @@ DATABASES = {
         "PORT": "5432",
         "CONN_MAX_AGE": 300,
         "CONN_HEALTH_CHECKS": True,
+        "ATOMIC_REQUESTS": True
     }    
 }
 

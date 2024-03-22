@@ -3,7 +3,7 @@ from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
 
 import django_tables2 as tables
-from .models import AppCyanideCertificate, AppExplosivePermission, AppForignerMovement,AppBorrowMaterial, AppFuelPermission, AppHSEAccidentReport, AppHSEPerformanceReport, AppImportPermission, AppLocalPurchase, AppRenewalContract, AppRestartActivity, AppTemporaryExemption, AppWhomConcern,AppWorkPlan,AppTechnicalFinancialReport,AppChangeCompanyName, \
+from .models import AppCyanideCertificate, AppExplosivePermission, AppForignerMovement,AppBorrowMaterial, AppFuelPermission, AppGoldProduction, AppHSEAccidentReport, AppHSEPerformanceReport, AppImportPermission, AppLocalPurchase, AppRenewalContract, AppRestartActivity, AppTemporaryExemption, AppWhomConcern,AppWorkPlan,AppTechnicalFinancialReport,AppChangeCompanyName, \
                     AppExplorationTime, AppAddArea,AppRemoveArea,AppTnazolShraka,AppTajeelTnazol,AppTajmeed,AppTakhali, \
                     AppTamdeed, AppTaaweed, AppMda,AppChangeWorkProcedure,AppExportGold,AppExportGoldRaw, \
                     AppSendSamplesForAnalysis,AppForeignerProcedure,AppAifaaJomrki,AppReexportEquipments,AppRequirementsList, \
@@ -475,6 +475,19 @@ class AppWhomConcernTable(AppTable):
         model = AppWhomConcern
         template_name = "django_tables2/bootstrap.html"
         fields = ("id","whom_reason")
+        empty_text = _("No records.")
+
+    def render_id(self,value):
+        return format_html("<a href={}>{}</a>",reverse_lazy(self.menu_name,args=(value,)),value)
+
+class AppGoldProductionTable(AppTable):
+    menu_name = "profile:app_gold_production_show"
+    relation_fields = []
+
+    class Meta:
+        model = AppGoldProduction
+        template_name = "django_tables2/bootstrap.html"
+        fields = ("id","form_no")
         empty_text = _("No records.")
 
     def render_id(self,value):

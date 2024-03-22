@@ -54,6 +54,9 @@
 <script type="text/javascript" src="{% static 'admin/js/core.js' %}"></script>
 {{ form.media }}
 
+<script src="{% static 'admin/js/calendar.js' %}"></script>
+<script src="{% static 'admin/js/admin/DateTimeShortcuts.js' %}"></script>
+
 <script type="text/javascript">
 
 $(document).ready(function(){
@@ -79,8 +82,11 @@ $(document).ready(function(){
     }
 
 	$('tr').attr('class','form-group');
-	$('td :input').attr('class','form-control');
-
+	$('td :input').each(function(i,e){
+        x = $(e).attr("class");
+        $(e).attr("class",'form-control '+x);
+    });
+    
     var formset_name = '{{ detail_formset.prefix }}';
     var table_id = 'detail_table';
 

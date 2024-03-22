@@ -38,7 +38,8 @@ from .views import SetLanguageView, HomePageView, \
                    AppFuelPermissionListView,AppFuelPermissionCreateView,AppFuelPermissionReadonlyView, \
                    AppHSEAccidentReportListView,AppHSEAccidentReportCreateView,AppHSEAccidentReportReadonlyView, \
                    AppHSEPerformanceReportListView,AppHSEPerformanceReportCreateView,AppHSEPerformanceReportReadonlyView, \
-                   AppWhomConcernListView,AppWhomConcernCreateView,AppWhomConcernReadonlyView
+                   AppWhomConcernListView,AppWhomConcernCreateView,AppWhomConcernReadonlyView, \
+                   AppGoldProductionListView,AppGoldProductionCreateView,AppGoldProductionReadonlyView
 
 app_name = "profile"
 urlpatterns = [                                                        
@@ -221,5 +222,10 @@ urlpatterns = [
     path('app_whom_concern/<int:type>/', AppWhomConcernListView.as_view(), name='app_whom_concern_list'),
     path('app_whom_concern/<int:pk>/show/', AppWhomConcernReadonlyView.as_view(), name='app_whom_concern_show'),    
     path('app_whom_concern/add/', AppWhomConcernCreateView.as_view(), name='app_whom_concern_add'),
+
+    path('app_gold_production/', AppGoldProductionListView.as_view(), name='app_gold_production_list'),
+    path('app_gold_production/<int:type>/', AppGoldProductionListView.as_view(), name='app_gold_production_list'),
+    path('app_gold_production/<int:pk>/show/', AppGoldProductionReadonlyView.as_view(), name='app_gold_production_show'),    
+    path('app_gold_production/add/', AppGoldProductionCreateView.as_view(), name='app_gold_production_add'),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
