@@ -28,5 +28,6 @@ urlpatterns = [
     path('accounts/', include('accounts.urls')), 
     path('check/', include('check_cordinates.urls')), 
     path("about/", flatpages_views.flatpage, {"url": "/about/"}, name="about"),
+    path('pa/', include('pa.urls')), 
     path('', include('company_profile.urls')),
 ]
