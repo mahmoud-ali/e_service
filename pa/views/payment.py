@@ -4,18 +4,18 @@ from django.utils.translation import gettext_lazy as _
 
 from django.contrib import messages
 
-from ..models import TblCompanyCommitment
-from ..forms import TblCompanyCommitmentForm
+from ..models import TblCompanyPayment
+from ..forms import TblCompanyPaymentForm
 
-from ..tables import TblCompanyCommitmentTable
+from ..tables import TblCompanyPaymentTable
 
 from .application import ApplicationListView, ApplicationCreateView, ApplicationReadonlyView
 
-class TblCompanyCommitmentListView(ApplicationListView):
-    model = TblCompanyCommitment
-    table_class = TblCompanyCommitmentTable
-    menu_name = "pa:commitment_list"
-    title = _("List of commitments")
+class TblCompanyPaymentListView(ApplicationListView):
+    model = TblCompanyPayment
+    table_class = TblCompanyPaymentTable
+    menu_name = "pa:payment_list"
+    title = _("List of payments")
     
     def dispatch(self, *args, **kwargs):         
         # if not hasattr(self.request.user,"pro_company"):
@@ -29,11 +29,11 @@ class TblCompanyCommitmentListView(ApplicationListView):
         return query
 
 
-class TblCompanyCommitmentCreateView(ApplicationCreateView):
-    model = TblCompanyCommitment
-    form_class = TblCompanyCommitmentForm
-    menu_name = "pa:commitment_list"
-    title = _("Add new commitment")
+class TblCompanyPaymentCreateView(ApplicationCreateView):
+    model = TblCompanyPayment
+    form_class = TblCompanyPaymentForm
+    menu_name = "pa:payment_list"
+    title = _("Add new payment")
 
     def dispatch(self, *args, **kwargs):         
         # if not hasattr(self.request.user,"pro_company"):
@@ -58,11 +58,11 @@ class TblCompanyCommitmentCreateView(ApplicationCreateView):
         
         return HttpResponseRedirect(self.get_success_url())
         
-class TblCompanyCommitmentReadonlyView(ApplicationReadonlyView):
-    model = TblCompanyCommitment
-    form_class = TblCompanyCommitmentForm
-    menu_name = "pa:commitment_list"
-    title = _("Show added commitment")
+class TblCompanyPaymentReadonlyView(ApplicationReadonlyView):
+    model = TblCompanyPayment
+    form_class = TblCompanyPaymentForm
+    menu_name = "pa:payment_list"
+    title = _("Show added payment")
 
     def dispatch(self, *args, **kwargs):         
         # if not hasattr(self.request.user,"pro_company"):

@@ -4,18 +4,18 @@ from django.utils.translation import gettext_lazy as _
 
 from django.contrib import messages
 
-from ..models import TblCompanyCommitment
-from ..forms import TblCompanyCommitmentForm
+from ..models import TblCompanyRequest
+from ..forms import TblCompanyRequestForm
 
-from ..tables import TblCompanyCommitmentTable
+from ..tables import TblCompanyRequestTable
 
 from .application import ApplicationListView, ApplicationCreateView, ApplicationReadonlyView
 
-class TblCompanyCommitmentListView(ApplicationListView):
-    model = TblCompanyCommitment
-    table_class = TblCompanyCommitmentTable
-    menu_name = "pa:commitment_list"
-    title = _("List of commitments")
+class TblCompanyRequestListView(ApplicationListView):
+    model = TblCompanyRequest
+    table_class = TblCompanyRequestTable
+    menu_name = "pa:request_list"
+    title = _("List of requests")
     
     def dispatch(self, *args, **kwargs):         
         # if not hasattr(self.request.user,"pro_company"):
@@ -29,11 +29,11 @@ class TblCompanyCommitmentListView(ApplicationListView):
         return query
 
 
-class TblCompanyCommitmentCreateView(ApplicationCreateView):
-    model = TblCompanyCommitment
-    form_class = TblCompanyCommitmentForm
-    menu_name = "pa:commitment_list"
-    title = _("Add new commitment")
+class TblCompanyRequestCreateView(ApplicationCreateView):
+    model = TblCompanyRequest
+    form_class = TblCompanyRequestForm
+    menu_name = "pa:request_list"
+    title = _("Add new request")
 
     def dispatch(self, *args, **kwargs):         
         # if not hasattr(self.request.user,"pro_company"):
@@ -58,11 +58,11 @@ class TblCompanyCommitmentCreateView(ApplicationCreateView):
         
         return HttpResponseRedirect(self.get_success_url())
         
-class TblCompanyCommitmentReadonlyView(ApplicationReadonlyView):
-    model = TblCompanyCommitment
-    form_class = TblCompanyCommitmentForm
-    menu_name = "pa:commitment_list"
-    title = _("Show added commitment")
+class TblCompanyRequestReadonlyView(ApplicationReadonlyView):
+    model = TblCompanyRequest
+    form_class = TblCompanyRequestForm
+    menu_name = "pa:request_list"
+    title = _("Show added request")
 
     def dispatch(self, *args, **kwargs):         
         # if not hasattr(self.request.user,"pro_company"):

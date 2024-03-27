@@ -11,8 +11,8 @@ CURRENCY_TYPE_SDG = "sdg"
 CURRENCY_TYPE_EURO = "euro"
 
 CURRENCY_TYPE_CHOICES = {
-    CURRENCY_TYPE_SDG: _("entaj"),
-    CURRENCY_TYPE_EURO: _("mokhalfat"),
+    CURRENCY_TYPE_SDG: _("sdg"),
+    CURRENCY_TYPE_EURO: _("euro"),
 }
 
 class LoggingModel(models.Model):
@@ -33,16 +33,16 @@ class LkpItem(models.Model):
     name = models.CharField(_("item_name"),max_length=50)
 
     def __str__(self):
-        return _("Item") +" ("+str(self.id)+")"
+        return _("Financial item") +" "+str(self.name)
         
 class TblCompanyCommitment(LoggingModel):
     company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
-    item  = models.ForeignKey(LkpItem, on_delete=models.PROTECT,verbose_name=_("item"))    
+    item  = models.ForeignKey(LkpItem, on_delete=models.PROTECT,verbose_name=_("financial item"))    
     amount = models.FloatField(_("amount"))
     currency = models.CharField(_("currency"),max_length=10, choices=CURRENCY_TYPE_CHOICES, default=CURRENCY_TYPE_EURO)
 
     def __str__(self):
-        return _("Financial commitment") +" ("+str(self.id)+")"
+        return self.company.__str__()+" - "+self.item.name
         
     def get_absolute_url(self): 
         return reverse('pa:commitment_show',args=[str(self.id)])                
@@ -71,7 +71,7 @@ class TblCompanyRequest(LoggingModel):
     payment_state = models.CharField(_("payment_state"),max_length=10, choices=REQUEST_PAYMENT_CHOICES, default=REQUEST_PAYMENT_NO_PAYMENT)
 
     def __str__(self):
-        return _("Financial request") +" ("+str(self.id)+")"
+        return self.commitement.__str__()+" ("+str(self.from_dt)+" - "+str(self.to_dt)+") "
         
     def get_absolute_url(self): 
         return reverse('pa:request_show',args=[str(self.id)])                
@@ -86,7 +86,7 @@ class TblCompanyPayment(LoggingModel):
     payment_dt = models.DateField(_("payment_dt"))
     amount = models.FloatField(_("amount"))
     currency = models.CharField(_("currency"),max_length=10, choices=CURRENCY_TYPE_CHOICES, default=CURRENCY_TYPE_EURO)
-    excange_rate = models.FloatField(_("excange_rate"))
+    excange_rate = models.FloatField(_("excange_rate"),default=1)
 
     def __str__(self):
         return _("Financial payment") +" ("+str(self.id)+")"

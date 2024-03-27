@@ -1,5 +1,5 @@
 from django import forms
-from django.forms import ModelForm, ValidationError
+from django.forms import ModelForm
 from django.contrib.admin.widgets import AdminDateWidget
 from django.utils.translation import gettext_lazy as _
 

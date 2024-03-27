@@ -3,20 +3,20 @@ from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
 
 import django_tables2 as tables
-from ..models import TblCompanyCommitment
+from ..models import TblCompanyRequest
 
 class BaseTable(tables.Table):
     menu_name = None
     relation_fields = []
 
-class TblCompanyCommitmentTable(BaseTable):
-    menu_name = "pa:commitment_show"
+class TblCompanyRequestTable(BaseTable):
+    menu_name = "pa:request_show"
     relation_fields = []
 
     class Meta:
-        model = TblCompanyCommitment
+        model = TblCompanyRequest
         template_name = "django_tables2/bootstrap.html"
-        fields = ("id","company","item","amount","currency")
+        fields = ("id","commitement","from_dt","to_dt","amount","currency","payment_state")
         empty_text = _("No records.")        
 
     def render_id(self,value):

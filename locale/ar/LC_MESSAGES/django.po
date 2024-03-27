@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-03-22 15:00+0200\n"
+"POT-Creation-Date: 2024-03-27 00:17+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -38,6 +38,7 @@ msgstr "ادخل البيانات على صيغة (UTM meters)"
 #: check_cordinates/templates/check_cordinates/application_add_master_details.html:43
 #: company_profile/templates/company_profile/application_add_master_details.html:44
 #: company_profile/templates/company_profile/views/requirements_list_add_master_details.html:45
+#: pa/templates/pa/application_add_master_details.html:44
 msgid "add_more"
 msgstr "اضافة المزيد"
 
@@ -45,6 +46,8 @@ msgstr "اضافة المزيد"
 #: company_profile/templates/company_profile/application_add.html:15
 #: company_profile/templates/company_profile/application_add_master_details.html:50
 #: company_profile/templates/company_profile/views/requirements_list_add_master_details.html:53
+#: pa/templates/pa/application_add.html:15
+#: pa/templates/pa/application_add_master_details.html:50
 #: templates/account/password_reset.html:10
 msgid "Submit"
 msgstr "ارسال"
@@ -132,7 +135,7 @@ msgstr "نوع الشركة"
 #: company_profile/models.py:988 company_profile/models.py:1004
 #: company_profile/models.py:1029 company_profile/models.py:1054
 #: company_profile/models.py:1070 company_profile/models.py:1086
-#: company_profile/models.py:1110
+#: company_profile/models.py:1110 pa/forms/commitment.py:11 pa/models.py:39
 msgid "company"
 msgstr "شركة"
 
@@ -146,19 +149,19 @@ msgstr "الشركة المستلف منها"
 msgid "license_type"
 msgstr "نوع الرخصة"
 
-#: company_profile/models.py:17
+#: company_profile/models.py:17 pa/models.py:23
 msgid "created_at"
 msgstr "تاريخ الانشاء"
 
-#: company_profile/models.py:18
+#: company_profile/models.py:18 pa/models.py:24
 msgid "created_by"
 msgstr "المستخدم المسئول عن الانشاء"
 
-#: company_profile/models.py:20
+#: company_profile/models.py:20 pa/models.py:26
 msgid "updated_at"
 msgstr "تاريخ اخر تعديل"
 
-#: company_profile/models.py:21
+#: company_profile/models.py:21 pa/models.py:27
 msgid "updated_by"
 msgstr "المستخدم المسئول عن التعديل"
 
@@ -1565,6 +1568,7 @@ msgstr "الموضوع"
 
 #: company_profile/models.py:1090 company_profile/models.py:1101
 #: company_profile/templates/company_profile/application_readonly.html:22
+#: pa/templates/pa/application_readonly.html:22
 msgid "whom_attachement_file"
 msgstr "ملف شهادة لمن يهمه الامر"
 
@@ -1652,6 +1656,7 @@ msgstr "تفاصيل استمارة الانتاج"
 #: company_profile/tables.py:426 company_profile/tables.py:439
 #: company_profile/tables.py:452 company_profile/tables.py:465
 #: company_profile/tables.py:478 company_profile/tables.py:491
+#: pa/tables/commitment.py:20 pa/tables/payment.py:20 pa/tables/request.py:20
 msgid "No records."
 msgstr "لايوجد سجل."
 
@@ -1674,27 +1679,34 @@ msgstr "تم الرفض"
 
 #: company_profile/templates/company_profile/application_readonly.html:11
 #: company_profile/templates/company_profile/application_readonly_master_details.html:13
+#: pa/templates/pa/application_readonly.html:11
+#: pa/templates/pa/application_readonly_master_details.html:13
 msgid "reject_comments_title"
 msgstr "لقد تم رفض طلبك للاتي: "
 
 #: company_profile/templates/company_profile/base.html:9
 #: company_profile/templates/company_profile/base.html:74
+#: pa/templates/pa/base.html:9 pa/templates/pa/base.html:74
 msgid "E-Services App"
 msgstr "بوابة الخدمات الإلكترونية"
 
 #: company_profile/templates/company_profile/base.html:79
+#: pa/templates/pa/base.html:79
 msgid "Change password"
 msgstr "تغيير كلمة المرور"
 
 #: company_profile/templates/company_profile/base.html:80
+#: pa/templates/pa/base.html:80
 msgid "Log Out"
 msgstr "خروج"
 
 #: company_profile/templates/company_profile/base.html:115
+#: pa/templates/pa/base.html:100
 msgid "Menu"
 msgstr "القائمة"
 
 #: company_profile/templates/company_profile/base.html:118
+#: pa/templates/pa/base.html:103
 msgid "Home page"
 msgstr "الرئيسية"
 
@@ -2231,6 +2243,150 @@ msgstr ""
 #: company_profile/workflow.py:111
 msgid "Wrong transition path."
 msgstr ""
+
+#: pa/models.py:14
+msgid "sdg"
+msgstr "جنيه"
+
+#: pa/models.py:15
+msgid "euro"
+msgstr "يورو"
+
+#: pa/models.py:33
+msgid "item_name"
+msgstr "اسم البند"
+
+#: pa/models.py:36
+msgid "Financial item"
+msgstr "البند"
+
+#: pa/models.py:40
+msgid "financial item"
+msgstr "البند"
+
+#: pa/models.py:41 pa/models.py:69 pa/models.py:87
+msgid "amount"
+msgstr "المبلغ"
+
+#: pa/models.py:42 pa/models.py:70 pa/models.py:88
+msgid "currency"
+msgstr "العملة"
+
+#: pa/models.py:52
+msgid "Financial commitment"
+msgstr "التزام مالي"
+
+#: pa/models.py:53
+msgid "Financial commitments"
+msgstr "التزامات مالية"
+
+#: pa/models.py:61
+msgid "no_payment"
+msgstr "غير مدفوع"
+
+#: pa/models.py:62
+msgid "partial_payment"
+msgstr "مدفوع جزئياً"
+
+#: pa/models.py:63
+msgid "full_payment"
+msgstr "مدفوع كلياً"
+
+#: pa/models.py:66 pa/models.py:85
+msgid "commitement"
+msgstr "التزام"
+
+#: pa/models.py:67
+msgid "from_dt"
+msgstr "من"
+
+#: pa/models.py:68
+msgid "to_dt"
+msgstr "الى"
+
+#: pa/models.py:71
+msgid "payment_state"
+msgstr "موقف السداد"
+
+#: pa/models.py:81
+msgid "Financial request"
+msgstr "مطالبة مالية"
+
+#: pa/models.py:82
+msgid "Financial requests"
+msgstr "مطالبات مالية"
+
+#: pa/models.py:86
+msgid "payment_dt"
+msgstr "تاريخ السداد"
+
+#: pa/models.py:89
+msgid "excange_rate"
+msgstr "سعر الصرف"
+
+#: pa/models.py:92 pa/models.py:99
+msgid "Financial payment"
+msgstr "السداد"
+
+#: pa/models.py:100
+msgid "Financial payments"
+msgstr "السداد"
+
+#: pa/templates/pa/application_list.html:14
+msgid "New record"
+msgstr "سجل جديد"
+
+#: pa/templates/pa/base.html:106
+msgid "Commitment page"
+msgstr "الالتزامات المالية"
+
+#: pa/templates/pa/base.html:109
+msgid "Request page"
+msgstr "المطالبات المالية"
+
+#: pa/templates/pa/base.html:112
+msgid "Payment page"
+msgstr "السداد"
+
+#: pa/views/commitment.py:18
+msgid "List of commitments"
+msgstr "قائمة الالتزامات المالية"
+
+#: pa/views/commitment.py:36
+msgid "Add new commitment"
+msgstr "اضافة التزام جديد"
+
+#: pa/views/commitment.py:52 pa/views/payment.py:52 pa/views/request.py:52
+msgid "Record saved successfully."
+msgstr "تم حفظ السجل بنجاح."
+
+#: pa/views/commitment.py:65
+msgid "Show added commitment"
+msgstr "عرض سجل"
+
+#: pa/views/payment.py:18
+msgid "List of payments"
+msgstr "قائمة سجلات السداد"
+
+#: pa/views/payment.py:36
+msgid "Add new payment"
+msgstr "اضافة سجل سداد"
+
+#: pa/views/payment.py:65
+msgid "Show added payment"
+msgstr "عرض سجل سداد"
+
+#: pa/views/request.py:18
+msgid "List of requests"
+msgstr "قائمة المطالبات المالية"
+
+#: pa/views/request.py:36
+msgid "Add new request"
+msgstr "اضافة مطالبة جديدة"
+
+#: pa/views/request.py:65
+msgid "Show added request"
+msgstr "عرض سجل مطالبة"
 
 #: templates/account/login.html:6
 msgid "Log In page"

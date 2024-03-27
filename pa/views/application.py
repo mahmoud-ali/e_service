@@ -18,7 +18,7 @@ class ApplicationListView(LoginRequiredMixin,SingleTableView):
     title = None
     menu_name = ""
     context_object_name = "apps"    
-    template_name = "company_profile/application_list.html"     
+    template_name = "pa/application_list.html"     
     paginator_class = LazyPaginator
     
     def dispatch(self, *args, **kwargs):         
@@ -47,7 +47,7 @@ class ApplicationCreateView(LoginRequiredMixin,CreateView):
     success_url = None
     title = None    
     menu_name = ""  
-    template_name = "company_profile/application_add.html"    
+    template_name = "pa/application_add.html"    
     
     def dispatch(self, *args, **kwargs):
         self.success_url = reverse_lazy(self.menu_name)    
@@ -62,7 +62,7 @@ class ApplicationReadonlyView(LoginRequiredMixin,SingleObjectMixin,View):
     form_class = None
     title = None    
     menu_name = ""  
-    template_name = "company_profile/application_readonly.html"    
+    template_name = "pa/application_readonly.html"    
     
     def dispatch(self, *args, **kwargs):
         self.extra_context = {
@@ -85,7 +85,7 @@ class ApplicationMasterDetailCreateView(LoginRequiredMixin,View):
     detail_formset = None
     menu_name = ""
     title = ""
-    template_name = "company_profile/application_add_master_details.html"
+    template_name = "pa/application_add_master_details.html"
     
     def dispatch(self, *args, **kwargs):         
         self.detail_formset = inlineformset_factory(self.model, self.model_details, fields=self.model_details_fields,extra=0,can_delete=False,min_num=1, validate_min=True)
@@ -111,7 +111,7 @@ class ApplicationMasterDetailReadonlyView(LoginRequiredMixin,DetailView):
     detail_formset = None
     menu_name = ""
     title = ""
-    template_name = "company_profile/application_readonly_master_details.html"
+    template_name = "pa/application_readonly_master_details.html"
         
     def dispatch(self, *args, **kwargs):                   
         self.detail_formset = inlineformset_factory(self.model, self.model_details, fields=self.model_details_fields,extra=0,can_delete=False)

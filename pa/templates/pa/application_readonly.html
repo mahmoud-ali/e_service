@@ -1,0 +1,35 @@
+{% extends 'pa/base.html' %}
+{% load i18n %}
+{% load bootstrap3 %}
+
+{% block content %}
+<h1 class="page-header">{{title}}</h1>
+{% bootstrap_messages %}
+
+{% if object.state == 'rejected' and object.reject_comments %}
+<div class="alert alert-danger alert-dismissable">
+    <h3>{% translate "reject_comments_title" %}</h3>
+    <p>{{object.reject_comments}}</p>
+</div>
+{% endif %}
+
+<form  method="">
+{% csrf_token %}
+    {% bootstrap_form form %}
+</form>
+
+{% if object.state == 'approved' and object.whom_attachement_file %}
+<a target="_blank" href="{{ MEDIA_URL }}{{ object.whom_attachement_file}}">{% translate "whom_attachement_file" %}</a>
+{% endif %}
+
+<script>
+$(document).ready(function(){
+	$('form :input').attr('disabled','true');
+    $('div.bootstrap3-multi-input').find("a").each(function(i,e){
+        var a = '<a target="_blank" href="/media/'+$(e).text()+'">'+$(e).text()+'</a>'
+        $(e).parent().html(a)
+
+    });
+});
+</script>
+{% endblock content %}

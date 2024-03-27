@@ -1,0 +1,32 @@
+{% extends 'pa/base.html' %}
+{% load i18n %}
+{% load bootstrap3 %}
+
+{% load render_table from django_tables2 %}
+
+{% block content %}
+<h1 class="page-header">{{title}}</h1>
+{% bootstrap_messages %}
+
+
+<a class="btn btn-primary" href="{% url menu_name%}add/" role="button">
+	<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+	{% translate "New record" %}
+</a>
+<br/>
+<br/>
+	{% comment %} <nav>
+	  <ul class="nav nav-tabs">
+		<li role="presentation" class="{% if type == 1 %}active{% endif %}"><a href="{% url menu_name type=1 %}" >{% translate "In progress" %}</a></li>
+		<li role="presentation" class=" {% if type == 2 %}active{% endif %}"><a href="{% url menu_name  type=2%}" >{% translate "Approved" %}</a></li>
+		<li role="presentation" class=" {% if type == 3 %}active{% endif %}"><a href="{% url menu_name  type=3 %}">{% translate "Rejected" %}</a></li>
+	  </ul>
+	</nav>
+	<br/> {% endcomment %}
+	<div  class="panel panel-default">
+
+				{% render_table table %}
+	</div>
+
+{% endblock content %}
+
