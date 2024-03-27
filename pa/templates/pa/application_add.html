@@ -12,7 +12,8 @@
 {% csrf_token %}
     {% bootstrap_form form %}
     {% buttons %}
-        <button type="submit" class="btn btn-primary">{% translate "Submit" %}</button>
+    <input type="submit" value="{% translate "Save Draft" %}" name="_save_draft" class="btn btn-primary">
+    <input type="submit" value="{% translate "Save & Confirm" %}" name="_save_confirm" class="btn btn-default">
     {% endbuttons %}
 </form>
 <script type="text/javascript" src="{% static 'company_profile/js/admin_jsi18n.js' %}"></script>

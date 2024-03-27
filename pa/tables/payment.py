@@ -18,7 +18,7 @@ class TblCompanyPaymentTable(BaseTable):
     class Meta:
         model = TblCompanyPayment
         template_name = "django_tables2/bootstrap.html"
-        fields = ("request","payment_dt","amount","currency","excange_rate")
+        fields = ("request","payment_dt","amount","currency","excange_rate","state")
         empty_text = _("No records.")        
     
     def render_request(self,value,record):
@@ -27,4 +27,8 @@ class TblCompanyPaymentTable(BaseTable):
 class PaymentFilter(FilterSet):
     class Meta:
         model = TblCompanyPayment
-        fields = {"request__commitement__company": ["exact"],"request__commitement__item": ["exact"]}
+        fields = {
+            "request__commitement__company": ["exact"],
+            "request__commitement__item": ["exact"],
+            "state": ["exact"],
+        }

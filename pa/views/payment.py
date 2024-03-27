@@ -4,7 +4,7 @@ from django.utils.translation import gettext_lazy as _
 
 from django.contrib import messages
 
-from ..models import TblCompanyPayment
+from ..models import TblCompanyPayment,STATE_TYPE_CONFIRM
 from ..forms import TblCompanyPaymentForm
 
 from ..tables import TblCompanyPaymentTable,PaymentFilter
@@ -48,6 +48,9 @@ class TblCompanyPaymentCreateView(ApplicationCreateView):
         
         print(self.request.POST)
         self.object.created_by = self.object.updated_by = self.request.user
+
+        if self.request.POST['_save_confirm']:
+            self.object.state = STATE_TYPE_CONFIRM
 
         self.object.save()
         

@@ -18,7 +18,7 @@ class TblCompanyCommitmentTable(BaseTable):
     class Meta:
         model = TblCompanyCommitment
         template_name = "django_tables2/bootstrap.html"
-        fields = ("company","item","amount","currency")
+        fields = ("company","item","amount","currency","state")
         empty_text = _("No records.")        
 
     def render_company(self,value,record):
@@ -27,4 +27,8 @@ class TblCompanyCommitmentTable(BaseTable):
 class CommitmentFilter(FilterSet):
     class Meta:
         model = TblCompanyCommitment
-        fields = {"company": ["exact"],"item": ["exact"]}
+        fields = {
+            "company": ["exact"],
+            "item": ["exact"],
+            "state": ["exact"],
+        }

@@ -4,7 +4,7 @@ from django.utils.translation import gettext_lazy as _
 
 from django.contrib import messages
 
-from ..models import TblCompanyCommitment
+from ..models import STATE_TYPE_CONFIRM, TblCompanyCommitment
 from ..forms import TblCompanyCommitmentForm
 
 from ..tables import TblCompanyCommitmentTable,CommitmentFilter
@@ -47,6 +47,9 @@ class TblCompanyCommitmentCreateView(ApplicationCreateView):
         self.object = form.save(commit=False)
         
         self.object.created_by = self.object.updated_by = self.request.user
+
+        if self.request.POST['_save_confirm']:
+            self.object.state = STATE_TYPE_CONFIRM
 
         self.object.save()
         

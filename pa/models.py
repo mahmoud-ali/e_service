@@ -15,6 +15,14 @@ CURRENCY_TYPE_CHOICES = {
     CURRENCY_TYPE_EURO: _("euro"),
 }
 
+STATE_TYPE_DRAFT = 'draft'
+STATE_TYPE_CONFIRM = 'confirm'
+
+STATE_TYPE_CHOICES = {
+    STATE_TYPE_DRAFT: _("draft"),
+    STATE_TYPE_CONFIRM: _("confirm"),
+}
+
 class LoggingModel(models.Model):
     """
     An abstract base class model that provides self-
@@ -40,6 +48,7 @@ class TblCompanyCommitment(LoggingModel):
     item  = models.ForeignKey(LkpItem, on_delete=models.PROTECT,verbose_name=_("financial item"))    
     amount = models.FloatField(_("amount"))
     currency = models.CharField(_("currency"),max_length=10, choices=CURRENCY_TYPE_CHOICES, default=CURRENCY_TYPE_EURO)
+    state = models.CharField(_("record_state"),max_length=10, choices=STATE_TYPE_CHOICES, default=STATE_TYPE_DRAFT)
 
     def __str__(self):
         return self.company.__str__()+" - "+self.item.name
@@ -69,7 +78,8 @@ class TblCompanyRequest(LoggingModel):
     amount = models.FloatField(_("amount"))
     currency = models.CharField(_("currency"),max_length=10, choices=CURRENCY_TYPE_CHOICES, default=CURRENCY_TYPE_EURO)
     payment_state = models.CharField(_("payment_state"),max_length=10, choices=REQUEST_PAYMENT_CHOICES, default=REQUEST_PAYMENT_NO_PAYMENT)
-
+    state = models.CharField(_("record_state"),max_length=10, choices=STATE_TYPE_CHOICES, default=STATE_TYPE_DRAFT)
+    
     def __str__(self):
         return self.commitement.__str__()+" ("+str(self.from_dt)+" - "+str(self.to_dt)+") "
         
@@ -87,7 +97,8 @@ class TblCompanyPayment(LoggingModel):
     amount = models.FloatField(_("amount"))
     currency = models.CharField(_("currency"),max_length=10, choices=CURRENCY_TYPE_CHOICES, default=CURRENCY_TYPE_EURO)
     excange_rate = models.FloatField(_("excange_rate"),default=1)
-
+    state = models.CharField(_("record_state"),max_length=10, choices=STATE_TYPE_CHOICES, default=STATE_TYPE_DRAFT)
+    
     def __str__(self):
         return _("Financial payment") +" ("+str(self.id)+")"
         
