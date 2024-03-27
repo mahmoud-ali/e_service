@@ -13,11 +13,12 @@ class TblCompanyPaymentAdminForm(ModelForm):
         fields = ["request","payment_dt","amount","currency","excange_rate"] 
         
 class TblCompanyPaymentForm(TblCompanyPaymentAdminForm):
-    company = forms.ModelChoiceField(queryset=TblCompanyProduction.objects.all(), label=_("company"))
-    item = forms.ModelChoiceField(queryset=LkpItem.objects.filter(id=-1), label=_("item"))
+    # company = forms.ModelChoiceField(queryset=TblCompanyProduction.objects.all(), label=_("company"))
+    # item = forms.ModelChoiceField(queryset=LkpItem.objects.filter(id=-1), label=_("item"))
     class Meta:
         model = TblCompanyPayment        
-        fields = ["company","item","request","payment_dt","amount","currency","excange_rate"] 
+        # fields = ["company","item","request","payment_dt","amount","currency","excange_rate"] 
+        fields = ["request","payment_dt","amount","currency","excange_rate"] 
         widgets = {
             "payment_dt":AdminDateWidget(),
         }

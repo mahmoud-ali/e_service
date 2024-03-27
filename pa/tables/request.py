@@ -3,6 +3,8 @@ from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
 
 import django_tables2 as tables
+from django_filters import FilterSet
+
 from ..models import TblCompanyRequest
 
 class BaseTable(tables.Table):
@@ -16,8 +18,13 @@ class TblCompanyRequestTable(BaseTable):
     class Meta:
         model = TblCompanyRequest
         template_name = "django_tables2/bootstrap.html"
-        fields = ("id","commitement","from_dt","to_dt","amount","currency","payment_state")
+        fields = ("commitement","from_dt","to_dt","amount","currency","payment_state")
         empty_text = _("No records.")        
 
-    def render_id(self,value):
-        return format_html("<a href={}>{}</a>",reverse_lazy(self.menu_name,args=(value,)),value)
+    def render_commitement(self,value,record):
+        return format_html("<a href={}>{}</a>",reverse_lazy(self.menu_name,args=(record.id,)),value)
+
+class RequestFilter(FilterSet):
+    class Meta:
+        model = TblCompanyRequest
+        fields = {"commitement__company": ["exact"],"commitement__item": ["exact"]}

@@ -5,6 +5,7 @@ django-bootstrap3>=23.6
 django-debug-toolbar>=4.3.0
 django-fsm>=2.8.1
 django-tables2>=2.7.0
+django-filter
 python-decouple>=3.8
 pyyaml>=6.0.1
 psycopg[binary]

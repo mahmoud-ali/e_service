@@ -7,26 +7,27 @@ from django.contrib import messages
 from ..models import TblCompanyPayment
 from ..forms import TblCompanyPaymentForm
 
-from ..tables import TblCompanyPaymentTable
+from ..tables import TblCompanyPaymentTable,PaymentFilter
 
 from .application import ApplicationListView, ApplicationCreateView, ApplicationReadonlyView
 
 class TblCompanyPaymentListView(ApplicationListView):
     model = TblCompanyPayment
     table_class = TblCompanyPaymentTable
+    filterset_class = PaymentFilter
     menu_name = "pa:payment_list"
     title = _("List of payments")
     
-    def dispatch(self, *args, **kwargs):         
-        # if not hasattr(self.request.user,"pro_company"):
-        #     return HttpResponseRedirect(reverse_lazy("pa:home"))    
+    # def dispatch(self, *args, **kwargs):         
+    #     # if not hasattr(self.request.user,"pro_company"):
+    #     #     return HttpResponseRedirect(reverse_lazy("pa:home"))    
             
-        return super().dispatch(*args, **kwargs)        
+    #     return super().dispatch(*args, **kwargs)        
             
-    def get_queryset(self):
+    # def get_queryset(self):
 
-        query = super().get_queryset()        
-        return query
+    #     query = super().get_queryset()        
+    #     return query
 
 
 class TblCompanyPaymentCreateView(ApplicationCreateView):
@@ -45,6 +46,7 @@ class TblCompanyPaymentCreateView(ApplicationCreateView):
     def form_valid(self, form):
         self.object = form.save(commit=False)
         
+        print(self.request.POST)
         self.object.created_by = self.object.updated_by = self.request.user
 
         self.object.save()

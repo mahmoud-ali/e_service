@@ -3,6 +3,8 @@ from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
 
 import django_tables2 as tables
+from django_filters import FilterSet
+
 from ..models import TblCompanyCommitment
 
 class BaseTable(tables.Table):
@@ -16,8 +18,13 @@ class TblCompanyCommitmentTable(BaseTable):
     class Meta:
         model = TblCompanyCommitment
         template_name = "django_tables2/bootstrap.html"
-        fields = ("id","company","item","amount","currency")
+        fields = ("company","item","amount","currency")
         empty_text = _("No records.")        
 
-    def render_id(self,value):
-        return format_html("<a href={}>{}</a>",reverse_lazy(self.menu_name,args=(value,)),value)
+    def render_company(self,value,record):
+        return format_html("<a href={}>{}</a>",reverse_lazy(self.menu_name,args=(record.id,)),value)
+
+class CommitmentFilter(FilterSet):
+    class Meta:
+        model = TblCompanyCommitment
+        fields = {"company": ["exact"],"item": ["exact"]}

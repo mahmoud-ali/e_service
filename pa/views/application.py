@@ -15,6 +15,7 @@ from django_tables2.paginators import LazyPaginator
 class ApplicationListView(LoginRequiredMixin,SingleTableView):
     model = None
     table_class = None
+    filterset_class = None
     title = None
     menu_name = ""
     context_object_name = "apps"    
@@ -26,6 +27,7 @@ class ApplicationListView(LoginRequiredMixin,SingleTableView):
                             "type":kwargs.get("type",1),
                             "menu_name":self.menu_name,
                             "title":self.title,
+                            "filter":self.filterset_class(self.request.GET) if self.filterset_class else None
          }
         return super().dispatch(*args, **kwargs)       
         
@@ -39,6 +41,8 @@ class ApplicationListView(LoginRequiredMixin,SingleTableView):
         #     query_filter = [REJECTED]
                 
         query = super().get_queryset()
+        if self.filterset_class:
+            query = self.filterset_class(self.request.GET,queryset=query).qs
         return query
         
 class ApplicationCreateView(LoginRequiredMixin,CreateView):

@@ -6,27 +6,29 @@ from django.contrib import messages
 
 from ..models import TblCompanyRequest
 from ..forms import TblCompanyRequestForm
+from django_filters.views import FilterView
 
-from ..tables import TblCompanyRequestTable
+from ..tables import TblCompanyRequestTable,RequestFilter
 
 from .application import ApplicationListView, ApplicationCreateView, ApplicationReadonlyView
 
-class TblCompanyRequestListView(ApplicationListView):
+class TblCompanyRequestListView(ApplicationListView,FilterView):
     model = TblCompanyRequest
     table_class = TblCompanyRequestTable
+    filterset_class = RequestFilter
     menu_name = "pa:request_list"
     title = _("List of requests")
     
-    def dispatch(self, *args, **kwargs):         
-        # if not hasattr(self.request.user,"pro_company"):
-        #     return HttpResponseRedirect(reverse_lazy("pa:home"))    
+    # def dispatch(self, *args, **kwargs):         
+    #     # if not hasattr(self.request.user,"pro_company"):
+    #     #     return HttpResponseRedirect(reverse_lazy("pa:home"))    
             
-        return super().dispatch(*args, **kwargs)        
+    #     return super().dispatch(*args, **kwargs)        
             
-    def get_queryset(self):
+    # def get_queryset(self):
 
-        query = super().get_queryset()        
-        return query
+    #     query = super().get_queryset()        
+    #     return query
 
 
 class TblCompanyRequestCreateView(ApplicationCreateView):

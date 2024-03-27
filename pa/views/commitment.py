@@ -7,26 +7,27 @@ from django.contrib import messages
 from ..models import TblCompanyCommitment
 from ..forms import TblCompanyCommitmentForm
 
-from ..tables import TblCompanyCommitmentTable
+from ..tables import TblCompanyCommitmentTable,CommitmentFilter
 
 from .application import ApplicationListView, ApplicationCreateView, ApplicationReadonlyView
 
 class TblCompanyCommitmentListView(ApplicationListView):
     model = TblCompanyCommitment
     table_class = TblCompanyCommitmentTable
+    filterset_class = CommitmentFilter
     menu_name = "pa:commitment_list"
     title = _("List of commitments")
     
-    def dispatch(self, *args, **kwargs):         
-        # if not hasattr(self.request.user,"pro_company"):
-        #     return HttpResponseRedirect(reverse_lazy("pa:home"))    
+    # def dispatch(self, *args, **kwargs):         
+    #     # if not hasattr(self.request.user,"pro_company"):
+    #     #     return HttpResponseRedirect(reverse_lazy("pa:home"))    
             
-        return super().dispatch(*args, **kwargs)        
+    #     return super().dispatch(*args, **kwargs)        
             
-    def get_queryset(self):
+    # def get_queryset(self):
 
-        query = super().get_queryset()        
-        return query
+    #     query = super().get_queryset()        
+    #     return query
 
 
 class TblCompanyCommitmentCreateView(ApplicationCreateView):
