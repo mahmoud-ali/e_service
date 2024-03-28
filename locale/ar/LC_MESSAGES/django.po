@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-03-27 23:19+0200\n"
+"POT-Creation-Date: 2024-03-28 15:07+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1655,7 +1655,7 @@ msgstr "تفاصيل استمارة الانتاج"
 #: company_profile/tables.py:426 company_profile/tables.py:439
 #: company_profile/tables.py:452 company_profile/tables.py:465
 #: company_profile/tables.py:478 company_profile/tables.py:491
-#: pa/tables/commitment.py:22 pa/tables/payment.py:22 pa/tables/request.py:22
+#: pa/tables/commitment.py:23 pa/tables/payment.py:23 pa/tables/request.py:23
 msgid "No records."
 msgstr "لايوجد سجل."
 
@@ -2242,6 +2242,14 @@ msgstr ""
 msgid "Wrong transition path."
 msgstr ""
 
+#: pa/forms/payment.py:14
+msgid "request"
+msgstr "المطالبة"
+
+#: pa/forms/request.py:14 pa/models.py:75 pa/models.py:95
+msgid "commitement"
+msgstr "التزام"
+
 #: pa/models.py:14
 msgid "sdg"
 msgstr "جنيه"
@@ -2302,10 +2310,6 @@ msgstr "مدفوع جزئياً"
 msgid "full_payment"
 msgstr "مدفوع كلياً"
 
-#: pa/models.py:75 pa/models.py:95
-msgid "commitement"
-msgstr "التزام"
-
 #: pa/models.py:76
 msgid "from_dt"
 msgstr "من"
@@ -2342,6 +2346,14 @@ msgstr "السداد"
 msgid "Financial payments"
 msgstr "السداد"
 
+#: pa/tables/commitment.py:30
+msgid "confirm_btn"
+msgstr "تأكيد"
+
+#: pa/tables/payment.py:30 pa/tables/request.py:30
+msgid "change state to"
+msgstr "تغير إلى "
+
 #: pa/templates/pa/application_add.html:15
 msgid "Save Draft"
 msgstr "حفظ مسودة"
@@ -2365,6 +2377,10 @@ msgstr "المطالبات المالية"
 #: pa/templates/pa/base.html:113
 msgid "Payment page"
 msgstr "السداد"
+
+#: pa/views/application.py:97
+msgid "Record confirmed successfully."
+msgstr "تم تأكيد السجل بنجاح."
 
 #: pa/views/commitment.py:19
 msgid "List of commitments"

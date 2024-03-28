@@ -9,7 +9,7 @@ from ..forms import TblCompanyPaymentForm
 
 from ..tables import TblCompanyPaymentTable,PaymentFilter
 
-from .application import ApplicationListView, ApplicationCreateView, ApplicationReadonlyView
+from .application import ApplicationConfirmStateView, ApplicationListView, ApplicationCreateView, ApplicationReadonlyView
 
 class TblCompanyPaymentListView(ApplicationListView):
     model = TblCompanyPayment
@@ -46,10 +46,9 @@ class TblCompanyPaymentCreateView(ApplicationCreateView):
     def form_valid(self, form):
         self.object = form.save(commit=False)
         
-        print(self.request.POST)
         self.object.created_by = self.object.updated_by = self.request.user
 
-        if self.request.POST['_save_confirm']:
+        if self.request.POST.get('_save_confirm'):
             self.object.state = STATE_TYPE_CONFIRM
 
         self.object.save()
@@ -78,3 +77,6 @@ class TblCompanyPaymentReadonlyView(ApplicationReadonlyView):
         query = super().get_queryset()        
         return query
 
+class TblCompanyPaymentConfirmStateView(ApplicationConfirmStateView):
+    model = TblCompanyPayment
+    menu_name = "pa:payment_show"

@@ -9,7 +9,7 @@ from ..forms import TblCompanyCommitmentForm
 
 from ..tables import TblCompanyCommitmentTable,CommitmentFilter
 
-from .application import ApplicationListView, ApplicationCreateView, ApplicationReadonlyView
+from .application import ApplicationConfirmStateView, ApplicationListView, ApplicationCreateView, ApplicationReadonlyView
 
 class TblCompanyCommitmentListView(ApplicationListView):
     model = TblCompanyCommitment
@@ -48,7 +48,7 @@ class TblCompanyCommitmentCreateView(ApplicationCreateView):
         
         self.object.created_by = self.object.updated_by = self.request.user
 
-        if self.request.POST['_save_confirm']:
+        if self.request.POST.get('_save_confirm'):
             self.object.state = STATE_TYPE_CONFIRM
 
         self.object.save()
@@ -77,3 +77,6 @@ class TblCompanyCommitmentReadonlyView(ApplicationReadonlyView):
         query = super().get_queryset()        
         return query
 
+class TblCompanyCommitmentConfirmStateView(ApplicationConfirmStateView):
+    model = TblCompanyCommitment
+    menu_name = "pa:commitment_show"

@@ -9,8 +9,12 @@ from django.forms import inlineformset_factory
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 
+from django.contrib import messages
+
 from django_tables2 import SingleTableView
 from django_tables2.paginators import LazyPaginator
+
+from ..models import STATE_TYPE_CONFIRM
 
 class ApplicationListView(LoginRequiredMixin,SingleTableView):
     model = None
@@ -80,6 +84,21 @@ class ApplicationReadonlyView(LoginRequiredMixin,SingleObjectMixin,View):
         self.extra_context["form"] = self.form_class(instance=obj)
         self.extra_context["object"] = obj
         return render(request, self.template_name, self.extra_context)
+
+class ApplicationConfirmStateView(LoginRequiredMixin,SingleObjectMixin,View):
+    model = None
+    menu_name = None
+
+    def get(self,request,pk=0):     
+        obj = self.get_object()
+        obj.state = STATE_TYPE_CONFIRM
+        obj.save()
+
+        messages.add_message(self.request,messages.SUCCESS,_("Record confirmed successfully."))
+
+        url = reverse_lazy(self.menu_name,args=(obj.id,))
+
+        return HttpResponseRedirect(url)
 
 class ApplicationMasterDetailCreateView(LoginRequiredMixin,View):
     model = None

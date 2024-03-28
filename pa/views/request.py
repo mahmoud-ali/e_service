@@ -10,7 +10,7 @@ from django_filters.views import FilterView
 
 from ..tables import TblCompanyRequestTable,RequestFilter
 
-from .application import ApplicationListView, ApplicationCreateView, ApplicationReadonlyView
+from .application import ApplicationConfirmStateView, ApplicationListView, ApplicationCreateView, ApplicationReadonlyView
 
 class TblCompanyRequestListView(ApplicationListView,FilterView):
     model = TblCompanyRequest
@@ -49,7 +49,7 @@ class TblCompanyRequestCreateView(ApplicationCreateView):
         
         self.object.created_by = self.object.updated_by = self.request.user
 
-        if self.request.POST['_save_confirm']:
+        if self.request.POST.get('_save_confirm'):
             self.object.state = STATE_TYPE_CONFIRM
 
         self.object.save()
@@ -78,3 +78,6 @@ class TblCompanyRequestReadonlyView(ApplicationReadonlyView):
         query = super().get_queryset()        
         return query
 
+class TblCompanyRequestConfirmStateView(ApplicationConfirmStateView):
+    model = TblCompanyRequest
+    menu_name = "pa:request_show"
