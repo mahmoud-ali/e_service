@@ -9,7 +9,7 @@ from ..forms import TblCompanyPaymentForm
 
 from ..tables import TblCompanyPaymentTable,PaymentFilter
 
-from .application import ApplicationConfirmStateView, ApplicationListView, ApplicationCreateView, ApplicationReadonlyView
+from .application import ApplicationDeleteView, ApplicationListView, ApplicationCreateView, ApplicationReadonlyView, ApplicationUpdateView
 
 class TblCompanyPaymentListView(ApplicationListView):
     model = TblCompanyPayment
@@ -61,11 +61,34 @@ class TblCompanyPaymentCreateView(ApplicationCreateView):
         # send_transition_email(self.object.state,resp_user.email,url,resp_user.lang.lower())
         
         return HttpResponseRedirect(self.get_success_url())
+
+class TblCompanyPaymentUpdateView(ApplicationUpdateView):
+    model = TblCompanyPayment
+    form_class = TblCompanyPaymentForm
+    menu_name = "pa:payment_list"
+    menu_show_name = "pa:payment_show"
+    title = _("Edit payment")
+
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
         
+        self.object.updated_by = self.request.user
+
+        if self.request.POST.get('_save_confirm'):
+            self.object.state = STATE_TYPE_CONFIRM
+
+        self.object.save()
+        
+        messages.add_message(self.request,messages.SUCCESS,_("Record saved successfully."))
+                
+        return HttpResponseRedirect(self.get_success_url())
+
 class TblCompanyPaymentReadonlyView(ApplicationReadonlyView):
     model = TblCompanyPayment
     form_class = TblCompanyPaymentForm
     menu_name = "pa:payment_list"
+    menu_edit_name = "pa:payment_edit"
+    menu_delete_name = "pa:payment_delete"
     title = _("Show added payment")
 
     def dispatch(self, *args, **kwargs):         
@@ -77,6 +100,8 @@ class TblCompanyPaymentReadonlyView(ApplicationReadonlyView):
         query = super().get_queryset()        
         return query
 
-class TblCompanyPaymentConfirmStateView(ApplicationConfirmStateView):
+class TblCompanyPaymentDeleteView(ApplicationDeleteView):
     model = TblCompanyPayment
-    menu_name = "pa:payment_show"
+    form_class = TblCompanyPaymentForm
+    menu_name = "pa:payment_list"
+    title = _("Delete payment")

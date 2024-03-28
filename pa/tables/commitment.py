@@ -13,7 +13,6 @@ class BaseTable(tables.Table):
 
 class TblCompanyCommitmentTable(BaseTable):
     menu_name = "pa:commitment_show"
-    menu_confirm_name = "pa:commitment_confirm"
     relation_fields = []
 
     class Meta:
@@ -26,10 +25,7 @@ class TblCompanyCommitmentTable(BaseTable):
         return format_html("<a href={}>{}</a>",reverse_lazy(self.menu_name,args=(record.id,)),value)
 
     def render_state(self,value,record):
-        if record.state == STATE_TYPE_DRAFT:
-            return format_html('{} <br /> <a class="btn btn-success" href={}>{}</a>',value,reverse_lazy(self.menu_confirm_name,args=(record.id,)),_("confirm_btn"))
-        else:
-            return format_html("{}",value)
+        return format_html("{}",value)
 
 class CommitmentFilter(FilterSet):
     class Meta:

@@ -1,5 +1,5 @@
 from django.urls import reverse_lazy
-from django.views.generic import View,ListView,CreateView,DetailView
+from django.views.generic import View,UpdateView,CreateView,DetailView,DeleteView
 from django.views.generic.detail import SingleObjectMixin
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
@@ -14,7 +14,7 @@ from django.contrib import messages
 from django_tables2 import SingleTableView
 from django_tables2.paginators import LazyPaginator
 
-from ..models import STATE_TYPE_CONFIRM
+from ..models import STATE_TYPE_CONFIRM, STATE_TYPE_DRAFT
 
 class ApplicationListView(LoginRequiredMixin,SingleTableView):
     model = None
@@ -64,17 +64,52 @@ class ApplicationCreateView(LoginRequiredMixin,CreateView):
                             "title":self.title, 
          }
         return super().dispatch(*args, **kwargs)        
-        
+
+class ApplicationUpdateView(LoginRequiredMixin,UpdateView):
+    model = None
+    form_class = None
+    title = None    
+    menu_name = ""  
+    menu_show_name = ""  
+    template_name = "pa/application_add.html"    
+    
+    def dispatch(self, *args, **kwargs):
+        self.extra_context = {
+                            "menu_name":self.menu_name,
+                            "menu_show_name":self.menu_show_name,
+                            "title":self.title, 
+         }
+        return super().dispatch(*args, **kwargs)        
+                        
+    def get_queryset(self):
+        query = super().get_queryset()        
+        return query.filter(state=STATE_TYPE_DRAFT)
+
+    def get(self,request,pk=0):     
+        obj = self.get_object()
+        self.extra_context["form"] = self.form_class(instance=obj)
+        self.extra_context["object"] = obj
+        return render(request, self.template_name, self.extra_context)
+    
+    def post(self,*args, **kwargs):     
+        obj = self.get_object()
+        self.success_url = reverse_lazy(self.menu_name,args=(obj.id,))    
+        return super().post(*args, **kwargs)        
+
 class ApplicationReadonlyView(LoginRequiredMixin,SingleObjectMixin,View):
     model = None
     form_class = None
     title = None    
     menu_name = ""  
+    menu_edit_name = ""
+    menu_delete_name = ""
     template_name = "pa/application_readonly.html"    
     
     def dispatch(self, *args, **kwargs):
         self.extra_context = {
                             "menu_name":self.menu_name,
+                            "menu_edit_name":self.menu_edit_name,
+                            "menu_delete_name":self.menu_delete_name,
                             "title":self.title, 
          }
         return super().dispatch(*args, **kwargs)        
@@ -85,20 +120,45 @@ class ApplicationReadonlyView(LoginRequiredMixin,SingleObjectMixin,View):
         self.extra_context["object"] = obj
         return render(request, self.template_name, self.extra_context)
 
-class ApplicationConfirmStateView(LoginRequiredMixin,SingleObjectMixin,View):
+class ApplicationDeleteView(DeleteView):
     model = None
-    menu_name = None
+    form_class = None
+    title = None    
+    menu_name = ""  
+    template_name = "pa/application_delete.html"    
 
+    def dispatch(self, *args, **kwargs):
+        self.success_url = reverse_lazy(self.menu_name)
+        self.extra_context = {
+                            "menu_name":self.menu_name,
+                            "title":self.title, 
+         }
+        return super().dispatch(*args, **kwargs)        
+
+    def get_queryset(self):
+        query = super().get_queryset()        
+        return query.filter(state=STATE_TYPE_DRAFT)
+    
     def get(self,request,pk=0):     
         obj = self.get_object()
-        obj.state = STATE_TYPE_CONFIRM
-        obj.save()
+        self.extra_context["form"] = self.form_class(instance=obj)
+        self.extra_context["object"] = obj
+        return render(request, self.template_name, self.extra_context)
 
-        messages.add_message(self.request,messages.SUCCESS,_("Record confirmed successfully."))
+# class ApplicationConfirmStateView(LoginRequiredMixin,SingleObjectMixin,View):
+#     model = None
+#     menu_name = None
 
-        url = reverse_lazy(self.menu_name,args=(obj.id,))
+#     def get(self,request,pk=0):     
+#         obj = self.get_object()
+#         obj.state = STATE_TYPE_CONFIRM
+#         obj.save()
 
-        return HttpResponseRedirect(url)
+#         messages.add_message(self.request,messages.SUCCESS,_("Record confirmed successfully."))
+
+#         url = reverse_lazy(self.menu_name,args=(obj.id,))
+
+#         return HttpResponseRedirect(url)
 
 class ApplicationMasterDetailCreateView(LoginRequiredMixin,View):
     model = None

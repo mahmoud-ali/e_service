@@ -3,9 +3,11 @@ from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
 
 import django_tables2 as tables
-from django_filters import FilterSet
+from django_filters import FilterSet,ModelChoiceFilter,ChoiceFilter
 
-from ..models import TblCompanyRequest,STATE_TYPE_CHOICES,STATE_TYPE_DRAFT,STATE_TYPE_CONFIRM
+from company_profile.models import TblCompanyProduction
+
+from ..models import LkpItem, TblCompanyRequest,STATE_TYPE_CHOICES,STATE_TYPE_DRAFT,STATE_TYPE_CONFIRM
 
 class BaseTable(tables.Table):
     menu_name = None
@@ -13,7 +15,6 @@ class BaseTable(tables.Table):
 
 class TblCompanyRequestTable(BaseTable):
     menu_name = "pa:request_show"
-    menu_confirm_name = "pa:request_confirm"
     relation_fields = []
 
     class Meta:
@@ -26,17 +27,13 @@ class TblCompanyRequestTable(BaseTable):
         return format_html("<a href={}>{}</a>",reverse_lazy(self.menu_name,args=(record.id,)),value)
 
     def render_state(self,value,record):
-        if record.state == STATE_TYPE_DRAFT:
-            return format_html('{} <br /> <a class="btn btn-success" href={}>{}</a>',value,reverse_lazy(self.menu_confirm_name,args=(record.id,)),_("confirm_btn"))
-        else:
-            return format_html("{}",value)
+        return format_html("{}",value)
 
 class RequestFilter(FilterSet):
+    company = ModelChoiceFilter(queryset=TblCompanyProduction.objects.all(),field_name='commitement__company', label=_('company'))   
+    item = ModelChoiceFilter(queryset=LkpItem.objects.all(),field_name='commitement__item', label=_('item'))   
+    payment_state = ChoiceFilter(choices=TblCompanyRequest.REQUEST_PAYMENT_CHOICES,field_name='payment_state', label=_('payment_state'))   
+    state = ChoiceFilter(choices=STATE_TYPE_CHOICES,field_name='state', label=_('record_state'))   
     class Meta:
         model = TblCompanyRequest
-        fields = {
-            "commitement__company": ["exact"],
-            "commitement__item": ["exact"],
-            "payment_state": ["exact"],
-            "state": ["exact"],
-        }
+        fields = {}

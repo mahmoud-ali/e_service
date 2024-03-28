@@ -10,7 +10,7 @@ from django_filters.views import FilterView
 
 from ..tables import TblCompanyRequestTable,RequestFilter
 
-from .application import ApplicationConfirmStateView, ApplicationListView, ApplicationCreateView, ApplicationReadonlyView
+from .application import ApplicationDeleteView, ApplicationListView, ApplicationCreateView, ApplicationReadonlyView, ApplicationUpdateView
 
 class TblCompanyRequestListView(ApplicationListView,FilterView):
     model = TblCompanyRequest
@@ -62,11 +62,34 @@ class TblCompanyRequestCreateView(ApplicationCreateView):
         # send_transition_email(self.object.state,resp_user.email,url,resp_user.lang.lower())
         
         return HttpResponseRedirect(self.get_success_url())
+
+class TblCompanyRequestUpdateView(ApplicationUpdateView):
+    model = TblCompanyRequest
+    form_class = TblCompanyRequestForm
+    menu_name = "pa:request_list"
+    menu_show_name = "pa:request_show"
+    title = _("Edit request")
+
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
         
+        self.object.updated_by = self.request.user
+
+        if self.request.POST.get('_save_confirm'):
+            self.object.state = STATE_TYPE_CONFIRM
+
+        self.object.save()
+        
+        messages.add_message(self.request,messages.SUCCESS,_("Record saved successfully."))
+                
+        return HttpResponseRedirect(self.get_success_url())
+
 class TblCompanyRequestReadonlyView(ApplicationReadonlyView):
     model = TblCompanyRequest
     form_class = TblCompanyRequestForm
     menu_name = "pa:request_list"
+    menu_edit_name = "pa:request_edit"
+    menu_delete_name = "pa:request_delete"
     title = _("Show added request")
 
     def dispatch(self, *args, **kwargs):         
@@ -78,6 +101,8 @@ class TblCompanyRequestReadonlyView(ApplicationReadonlyView):
         query = super().get_queryset()        
         return query
 
-class TblCompanyRequestConfirmStateView(ApplicationConfirmStateView):
+class TblCompanyRequestDeleteView(ApplicationDeleteView):
     model = TblCompanyRequest
-    menu_name = "pa:request_show"
+    form_class = TblCompanyRequestForm
+    menu_name = "pa:request_list"
+    title = _("Delete request")

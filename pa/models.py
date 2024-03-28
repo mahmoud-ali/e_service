@@ -92,7 +92,7 @@ class TblCompanyRequest(LoggingModel):
         verbose_name_plural = _("Financial requests")
 
 class TblCompanyPayment(LoggingModel):
-    request  = models.ForeignKey(TblCompanyRequest, on_delete=models.PROTECT,verbose_name=_("commitement"))    
+    request  = models.ForeignKey(TblCompanyRequest, on_delete=models.PROTECT,verbose_name=_("request"))    
     payment_dt = models.DateField(_("payment_dt"))
     amount = models.FloatField(_("amount"))
     currency = models.CharField(_("currency"),max_length=10, choices=CURRENCY_TYPE_CHOICES, default=CURRENCY_TYPE_EURO)

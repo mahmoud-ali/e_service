@@ -9,7 +9,7 @@ from ..forms import TblCompanyCommitmentForm
 
 from ..tables import TblCompanyCommitmentTable,CommitmentFilter
 
-from .application import ApplicationConfirmStateView, ApplicationListView, ApplicationCreateView, ApplicationReadonlyView
+from .application import ApplicationDeleteView, ApplicationListView, ApplicationCreateView, ApplicationReadonlyView, ApplicationUpdateView
 
 class TblCompanyCommitmentListView(ApplicationListView):
     model = TblCompanyCommitment
@@ -61,11 +61,34 @@ class TblCompanyCommitmentCreateView(ApplicationCreateView):
         # send_transition_email(self.object.state,resp_user.email,url,resp_user.lang.lower())
         
         return HttpResponseRedirect(self.get_success_url())
+
+class TblCompanyCommitmentUpdateView(ApplicationUpdateView):
+    model = TblCompanyCommitment
+    form_class = TblCompanyCommitmentForm
+    menu_name = "pa:commitment_list"
+    menu_show_name = "pa:commitment_show"
+    title = _("Edit commitment")
+
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
         
+        self.object.updated_by = self.request.user
+
+        if self.request.POST.get('_save_confirm'):
+            self.object.state = STATE_TYPE_CONFIRM
+
+        self.object.save()
+        
+        messages.add_message(self.request,messages.SUCCESS,_("Record saved successfully."))
+                
+        return HttpResponseRedirect(self.get_success_url())
+
 class TblCompanyCommitmentReadonlyView(ApplicationReadonlyView):
     model = TblCompanyCommitment
     form_class = TblCompanyCommitmentForm
     menu_name = "pa:commitment_list"
+    menu_edit_name = "pa:commitment_edit"
+    menu_delete_name = "pa:commitment_delete"
     title = _("Show added commitment")
 
     def dispatch(self, *args, **kwargs):         
@@ -77,6 +100,12 @@ class TblCompanyCommitmentReadonlyView(ApplicationReadonlyView):
         query = super().get_queryset()        
         return query
 
-class TblCompanyCommitmentConfirmStateView(ApplicationConfirmStateView):
+class TblCompanyCommitmentDeleteView(ApplicationDeleteView):
     model = TblCompanyCommitment
-    menu_name = "pa:commitment_show"
+    form_class = TblCompanyCommitmentForm
+    menu_name = "pa:commitment_list"
+    title = _("Delete commitment")
+
+# class TblCompanyCommitmentConfirmStateView(ApplicationConfirmStateView):
+#     model = TblCompanyCommitment
+#     menu_name = "pa:commitment_show"
