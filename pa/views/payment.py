@@ -1,10 +1,11 @@
+from django.forms import ValidationError
 from django.urls import reverse_lazy
 from django.http import HttpResponseRedirect
 from django.utils.translation import gettext_lazy as _
 
 from django.contrib import messages
 
-from ..models import TblCompanyPayment,STATE_TYPE_CONFIRM
+from ..models import TblCompanyPayment,TblCompanyRequest,STATE_TYPE_CONFIRM
 from ..forms import TblCompanyPaymentForm
 
 from ..tables import TblCompanyPaymentTable,PaymentFilter
@@ -49,9 +50,12 @@ class TblCompanyPaymentCreateView(ApplicationCreateView):
         self.object.created_by = self.object.updated_by = self.request.user
 
         if self.request.POST.get('_save_confirm'):
-            self.object.state = STATE_TYPE_CONFIRM
+            self.object.state = STATE_TYPE_CONFIRM            
 
         self.object.save()
+
+        if self.object.state == STATE_TYPE_CONFIRM:
+            self.object.request.update_payment_state()
         
         messages.add_message(self.request,messages.SUCCESS,_("Record saved successfully."))
         
@@ -75,9 +79,12 @@ class TblCompanyPaymentUpdateView(ApplicationUpdateView):
         self.object.updated_by = self.request.user
 
         if self.request.POST.get('_save_confirm'):
-            self.object.state = STATE_TYPE_CONFIRM
+            self.object.state = STATE_TYPE_CONFIRM            
 
         self.object.save()
+
+        if self.object.state == STATE_TYPE_CONFIRM:
+            self.object.request.update_payment_state()
         
         messages.add_message(self.request,messages.SUCCESS,_("Record saved successfully."))
                 

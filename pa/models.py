@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from django.forms import ValidationError
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
@@ -22,6 +23,10 @@ STATE_TYPE_CHOICES = {
     STATE_TYPE_DRAFT: _("draft"),
     STATE_TYPE_CONFIRM: _("confirm"),
 }
+
+def validate_positive(value):
+    if value <= 0:
+        raise ValidationError(_("value should be positive"))
 
 class LoggingModel(models.Model):
     """
@@ -51,7 +56,7 @@ class TblCompanyCommitment(LoggingModel):
     state = models.CharField(_("record_state"),max_length=10, choices=STATE_TYPE_CHOICES, default=STATE_TYPE_DRAFT)
 
     def __str__(self):
-        return self.company.__str__()+" - "+self.item.name
+        return self.company.__str__()+"/"+self.item.name
         
     def get_absolute_url(self): 
         return reverse('pa:commitment_show',args=[str(self.id)])                
@@ -75,17 +80,76 @@ class TblCompanyRequest(LoggingModel):
     commitement  = models.ForeignKey(TblCompanyCommitment, on_delete=models.PROTECT,verbose_name=_("commitement"))    
     from_dt = models.DateField(_("from_dt"))
     to_dt = models.DateField(_("to_dt"))
-    amount = models.FloatField(_("amount"))
+    amount = models.FloatField(_("amount"),validators=[validate_positive])
     currency = models.CharField(_("currency"),max_length=10, choices=CURRENCY_TYPE_CHOICES, default=CURRENCY_TYPE_EURO)
     payment_state = models.CharField(_("payment_state"),max_length=10, choices=REQUEST_PAYMENT_CHOICES, default=REQUEST_PAYMENT_NO_PAYMENT)
     state = models.CharField(_("record_state"),max_length=10, choices=STATE_TYPE_CHOICES, default=STATE_TYPE_DRAFT)
     
     def __str__(self):
-        return self.commitement.__str__()+" ("+str(self.from_dt)+" - "+str(self.to_dt)+") "
+        return self.commitement.__str__()+" ("+str(self.amount)+" "+CURRENCY_TYPE_CHOICES[self.currency]+")" #+" ("+str(self.from_dt)+" - "+str(self.to_dt)+") "
         
     def get_absolute_url(self): 
         return reverse('pa:request_show',args=[str(self.id)])                
-    
+
+    def clean(self):        
+        qs = TblCompanyRequest.objects.filter(
+            commitement__company__id=self.commitement.company.id,
+            commitement__item__id=self.commitement.item.id,
+        )
+        if self.id:
+            qs = qs.exclude(id=self.id)
+
+        if self.to_dt < self.from_dt:
+            raise ValidationError(
+                {"to_dt":_("to_dt should be great or equal than from_dt")}
+            )
+        
+        if qs.filter(from_dt__lte=self.from_dt, to_dt__gte=self.from_dt).count() > 0:
+            raise ValidationError(
+                {"from_dt":_("conflicted date")}
+            )
+        
+        if qs.filter(from_dt__lte=self.to_dt, to_dt__gte=self.to_dt).count() > 0:
+            raise ValidationError(
+                {"to_dt":_("conflicted date")}
+            )
+        
+        if qs.filter(from_dt__gte=self.from_dt, to_dt__lte=self.to_dt).count() > 0:
+            raise ValidationError(
+                {
+                    "from_dt":_("conflicted date"),
+                    "to_dt":_("conflicted date"),
+                }
+            )
+
+    def sum_of_payment(self,exclude=0,confirmed_only=False):
+        sum = 0
+        qs = self.tblcompanypayment_set
+        if exclude:
+            qs = qs.exclude(id=exclude)
+        else:
+            qs = qs.all()
+
+        if confirmed_only:
+            qs = qs.filter(state=STATE_TYPE_CONFIRM)
+
+        for p in qs:
+            if p.currency == self.currency:
+                sum += p.amount
+            else:
+                sum += p.amount*p.excange_rate
+
+        return sum
+
+    def update_payment_state(self):
+        sum = self.sum_of_payment(confirmed_only=True)
+        if sum == self.amount:
+            self.payment_state =  self.REQUEST_PAYMENT_FULL_PAYMENT
+        elif sum < self.amount:
+            self.payment_state =  self.REQUEST_PAYMENT_PARTIAL_PAYMENT
+
+        self.save()
+
     class Meta:
         ordering = ["-id"]
         verbose_name = _("Financial request")
@@ -94,9 +158,9 @@ class TblCompanyRequest(LoggingModel):
 class TblCompanyPayment(LoggingModel):
     request  = models.ForeignKey(TblCompanyRequest, on_delete=models.PROTECT,verbose_name=_("request"))    
     payment_dt = models.DateField(_("payment_dt"))
-    amount = models.FloatField(_("amount"))
+    amount = models.FloatField(_("amount"),validators=[validate_positive])
     currency = models.CharField(_("currency"),max_length=10, choices=CURRENCY_TYPE_CHOICES, default=CURRENCY_TYPE_EURO)
-    excange_rate = models.FloatField(_("excange_rate"),default=1)
+    excange_rate = models.FloatField(_("excange_rate"),validators=[validate_positive],default=1)
     state = models.CharField(_("record_state"),max_length=10, choices=STATE_TYPE_CHOICES, default=STATE_TYPE_DRAFT)
     
     def __str__(self):
@@ -104,7 +168,19 @@ class TblCompanyPayment(LoggingModel):
         
     def get_absolute_url(self): 
         return reverse('pa:payment_show',args=[str(self.id)])                
-    
+
+    def clean(self):
+        sum = self.request.sum_of_payment(exclude=self.id)
+        if self.currency == self.request.currency:
+            sum += self.amount
+        else:
+            sum += self.amount*self.excange_rate
+
+        if sum > self.request.amount:
+            raise ValidationError(
+                {"amount":_("sum of payments more than request amount: ")+str(self.request.amount)+ " "+CURRENCY_TYPE_CHOICES[self.request.currency]}
+            )
+
     class Meta:
         ordering = ["-id"]
         verbose_name = _("Financial payment")
