@@ -15,7 +15,7 @@ class BaseTable(tables.Table):
 
 class TblCompanyRequestTable(BaseTable):
     menu_name = "pa:request_show"
-    relation_fields = []
+    relation_fields = ["commitement","commitement__company","commitement__item"]
 
     class Meta:
         model = TblCompanyRequest

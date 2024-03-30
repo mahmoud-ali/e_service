@@ -121,6 +121,12 @@ class TblCompanyCommitment(LoggingModel):
             models.UniqueConstraint(fields=['company', 'item'], name='unique_commitment')
         ]
 
+        indexes = [
+            models.Index(fields=["company", "item"]),
+            models.Index(fields=["company"]),
+            models.Index(fields=["item"]),
+        ]
+
 class TblCompanyRequest(LoggingModel):
     REQUEST_PAYMENT_NO_PAYMENT = "no"
     REQUEST_PAYMENT_PARTIAL_PAYMENT = "partial"
@@ -220,6 +226,9 @@ class TblCompanyRequest(LoggingModel):
         ordering = ["-id"]
         verbose_name = _("Financial request")
         verbose_name_plural = _("Financial requests")
+        indexes = [
+            models.Index(fields=["commitement"]),
+        ]
 
 class TblCompanyPayment(LoggingModel):
     request  = models.ForeignKey(TblCompanyRequest, on_delete=models.PROTECT,verbose_name=_("request"))    
@@ -251,3 +260,6 @@ class TblCompanyPayment(LoggingModel):
         ordering = ["-id"]
         verbose_name = _("Financial payment")
         verbose_name_plural = _("Financial payments")
+        indexes = [
+            models.Index(fields=["request"]),
+        ]

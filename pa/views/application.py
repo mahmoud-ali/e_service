@@ -22,6 +22,7 @@ class ApplicationListView(LoginRequiredMixin,SingleTableView):
     filterset_class = None
     title = None
     menu_name = ""
+    relation_fields = []
     context_object_name = "apps"    
     template_name = "pa/application_list.html"     
     paginator_class = LazyPaginator
@@ -47,7 +48,7 @@ class ApplicationListView(LoginRequiredMixin,SingleTableView):
         query = super().get_queryset()
         if self.filterset_class:
             query = self.filterset_class(self.request.GET,queryset=query).qs
-        return query
+        return query.prefetch_related(*self.table_class.relation_fields)
         
 class ApplicationCreateView(LoginRequiredMixin,CreateView):
     model = None

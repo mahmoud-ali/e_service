@@ -14,7 +14,9 @@ class BaseTable(tables.Table):
 
 class TblCompanyPaymentTable(BaseTable):
     menu_name = "pa:payment_show"
-    relation_fields = []
+    relation_fields = ["request","request__commitement","request__commitement__company","request__commitement__item"]
+        # relation_fields = ["request__commitement__company","request__commitement__item"]
+
 
     class Meta:
         model = TblCompanyPayment

@@ -13,7 +13,7 @@ class BaseTable(tables.Table):
 
 class TblCompanyCommitmentTable(BaseTable):
     menu_name = "pa:commitment_show"
-    relation_fields = []
+    relation_fields = ["company","item"]
 
     class Meta:
         model = TblCompanyCommitment

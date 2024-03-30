@@ -99,10 +99,6 @@ class TblCompanyRequestReadonlyView(ApplicationReadonlyView):
         #     return HttpResponseRedirect(reverse_lazy("pa:home"))               
         return super().dispatch(*args, **kwargs)        
 
-    def get_queryset(self):
-        query = super().get_queryset()        
-        return query
-
 class TblCompanyRequestDeleteView(ApplicationDeleteView):
     model = TblCompanyRequest
     form_class = TblCompanyRequestForm

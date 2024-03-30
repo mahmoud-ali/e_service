@@ -6,7 +6,7 @@ from django.utils.translation import gettext_lazy as _
 from django.contrib import messages
 
 from ..models import TblCompanyPayment,TblCompanyRequest,STATE_TYPE_CONFIRM
-from ..forms import TblCompanyPaymentForm
+from ..forms import TblCompanyPaymentShowForm,TblCompanyPaymentEditForm
 
 from ..tables import TblCompanyPaymentTable,PaymentFilter
 
@@ -33,7 +33,7 @@ class TblCompanyPaymentListView(ApplicationListView):
 
 class TblCompanyPaymentCreateView(ApplicationCreateView):
     model = TblCompanyPayment
-    form_class = TblCompanyPaymentForm
+    form_class = TblCompanyPaymentEditForm
     menu_name = "pa:payment_list"
     title = _("Add new payment")
 
@@ -68,7 +68,7 @@ class TblCompanyPaymentCreateView(ApplicationCreateView):
 
 class TblCompanyPaymentUpdateView(ApplicationUpdateView):
     model = TblCompanyPayment
-    form_class = TblCompanyPaymentForm
+    form_class = TblCompanyPaymentEditForm
     menu_name = "pa:payment_list"
     menu_show_name = "pa:payment_show"
     title = _("Edit payment")
@@ -92,7 +92,7 @@ class TblCompanyPaymentUpdateView(ApplicationUpdateView):
 
 class TblCompanyPaymentReadonlyView(ApplicationReadonlyView):
     model = TblCompanyPayment
-    form_class = TblCompanyPaymentForm
+    form_class = TblCompanyPaymentShowForm
     menu_name = "pa:payment_list"
     menu_edit_name = "pa:payment_edit"
     menu_delete_name = "pa:payment_delete"
@@ -109,6 +109,6 @@ class TblCompanyPaymentReadonlyView(ApplicationReadonlyView):
 
 class TblCompanyPaymentDeleteView(ApplicationDeleteView):
     model = TblCompanyPayment
-    form_class = TblCompanyPaymentForm
+    form_class = TblCompanyPaymentShowForm
     menu_name = "pa:payment_list"
     title = _("Delete payment")
