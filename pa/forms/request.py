@@ -11,7 +11,7 @@ class TblCompanyRequestAdminForm(ModelForm):
         fields = ["commitement","from_dt","to_dt","amount","currency"] 
         
 class TblCompanyRequestForm(TblCompanyRequestAdminForm):
-    commitement = forms.ModelChoiceField(queryset=TblCompanyCommitment.objects.filter(state=STATE_TYPE_CONFIRM), label=_("commitement"))
+    commitement = forms.ModelChoiceField(queryset=TblCompanyCommitment.objects.filter(state=STATE_TYPE_CONFIRM).order_by("company"), label=_("commitement"))
     class Meta:
         model = TblCompanyRequest        
         fields = ["commitement","from_dt","to_dt","amount","currency"] 

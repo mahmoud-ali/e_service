@@ -117,6 +117,9 @@ class TblCompanyCommitment(LoggingModel):
         ordering = ["-id"]
         verbose_name = _("Financial commitment")
         verbose_name_plural = _("Financial commitments")
+        constraints = [
+            models.UniqueConstraint(fields=['company', 'item'], name='unique_commitment')
+        ]
 
 class TblCompanyRequest(LoggingModel):
     REQUEST_PAYMENT_NO_PAYMENT = "no"
