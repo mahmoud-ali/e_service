@@ -11,11 +11,13 @@ class TblCompanyCommitmentAdminForm(ModelForm):
     # company = forms.ModelChoiceField(queryset=TblCompanyProduction.objects.all(), label=_("company"))
     class Meta:
         model = TblCompanyCommitment
-        fields = ["company","item","amount","currency"] 
+        fields = ["company","item","amount","currency","request_interval","request_next_interval_dt","request_auto_confirm"] 
         
 class TblCompanyCommitmentForm(TblCompanyCommitmentAdminForm):
     # company = None
     class Meta:
         model = TblCompanyCommitment        
-        fields = ["company","item","amount","currency"] 
-        widgets = {}
+        fields = ["company","item","amount","currency","request_interval","request_next_interval_dt","request_auto_confirm"] 
+        widgets = {
+            "request_next_interval_dt":AdminDateWidget(),
+        }

@@ -53,6 +53,7 @@ class TblCompanyRequestCreateView(ApplicationCreateView):
             self.object.state = STATE_TYPE_CONFIRM
 
         self.object.save()
+        self.object.send_email()
         
         messages.add_message(self.request,messages.SUCCESS,_("Record saved successfully."))
         
@@ -79,6 +80,7 @@ class TblCompanyRequestUpdateView(ApplicationUpdateView):
             self.object.state = STATE_TYPE_CONFIRM
 
         self.object.save()
+        self.object.send_email()
         
         messages.add_message(self.request,messages.SUCCESS,_("Record saved successfully."))
                 

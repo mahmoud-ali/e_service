@@ -52,6 +52,9 @@ class TblCompanyCommitmentCreateView(ApplicationCreateView):
             self.object.state = STATE_TYPE_CONFIRM
 
         self.object.save()
+
+        if self.object.state == STATE_TYPE_CONFIRM:
+            self.object.generate_request()
         
         messages.add_message(self.request,messages.SUCCESS,_("Record saved successfully."))
         
@@ -78,6 +81,9 @@ class TblCompanyCommitmentUpdateView(ApplicationUpdateView):
             self.object.state = STATE_TYPE_CONFIRM
 
         self.object.save()
+
+        if self.object.state == STATE_TYPE_CONFIRM:
+            self.object.generate_request()
         
         messages.add_message(self.request,messages.SUCCESS,_("Record saved successfully."))
                 

@@ -1,10 +1,13 @@
+import datetime
+
 from django.db import models
 from django.conf import settings
 from django.forms import ValidationError
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
+from django.utils import timezone
 
-from django_fsm import FSMField, transition
+from django.contrib.auth import get_user_model
 
 from company_profile.models import TblCompanyProduction
 
@@ -49,18 +52,67 @@ class LkpItem(models.Model):
         return _("Financial item") +" "+str(self.name)
         
 class TblCompanyCommitment(LoggingModel):
+    INTERVAL_TYPE_MANUAL = 'manual'
+    INTERVAL_TYPE_YEAR = 'year'
+
+    INTERVAL_TYPE_CHOICES = {
+        INTERVAL_TYPE_MANUAL: _('manual'),
+        INTERVAL_TYPE_YEAR: _('yearly'),
+    }
+
     company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
     item  = models.ForeignKey(LkpItem, on_delete=models.PROTECT,verbose_name=_("financial item"))    
     amount = models.FloatField(_("amount"))
     currency = models.CharField(_("currency"),max_length=10, choices=CURRENCY_TYPE_CHOICES, default=CURRENCY_TYPE_EURO)
     state = models.CharField(_("record_state"),max_length=10, choices=STATE_TYPE_CHOICES, default=STATE_TYPE_DRAFT)
 
+    request_interval = models.CharField(_("interval"),max_length=10, choices=INTERVAL_TYPE_CHOICES, default=INTERVAL_TYPE_MANUAL)
+    request_next_interval_dt = models.DateField(_("next_interval_dt"),null=True,blank=True)
+    request_auto_confirm = models.BooleanField(_("request_auto_confirm"),default=False)
+    
     def __str__(self):
         return self.company.__str__()+"/"+self.item.name
         
     def get_absolute_url(self): 
         return reverse('pa:commitment_show',args=[str(self.id)])                
-    
+
+    def clean(self):
+        if self.request_interval != self.INTERVAL_TYPE_MANUAL and not self.request_next_interval_dt:
+            raise ValidationError(
+                {"request_next_interval_dt":_("field is required")}
+            )
+        
+    def generate_request(self):
+        if self.state == STATE_TYPE_DRAFT:
+            return
+        
+        if self.request_interval != self.INTERVAL_TYPE_MANUAL and self.request_next_interval_dt <= timezone.now().date():
+            to_date = self.request_next_interval_dt
+            if self.request_interval == self.INTERVAL_TYPE_YEAR:
+                to_date += datetime.timedelta(days=364)
+
+            state_val = STATE_TYPE_DRAFT
+            if self.request_auto_confirm:
+                state_val = STATE_TYPE_CONFIRM
+
+            admin_user = get_user_model().objects.get(id=1)
+
+            request = TblCompanyRequest.objects.create(
+                commitement=self,
+                from_dt=self.request_next_interval_dt,
+                to_dt = to_date,
+                amount = self.amount,
+                currency = self.currency,
+                state = state_val,
+                created_by = admin_user,
+                updated_by = admin_user
+            )
+
+            request.send_email()
+
+            self.request_next_interval_dt = to_date + datetime.timedelta(days=1)
+            self.save()
+
     class Meta:
         ordering = ["-id"]
         verbose_name = _("Financial commitment")
@@ -123,6 +175,9 @@ class TblCompanyRequest(LoggingModel):
             )
 
     def sum_of_payment(self,exclude=0,confirmed_only=False):
+        if self.state == STATE_TYPE_DRAFT:
+            return 0
+        
         sum = 0
         qs = self.tblcompanypayment_set
         if exclude:
@@ -142,6 +197,8 @@ class TblCompanyRequest(LoggingModel):
         return sum
 
     def update_payment_state(self):
+        if self.state == STATE_TYPE_DRAFT:
+            return
         sum = self.sum_of_payment(confirmed_only=True)
         if sum == self.amount:
             self.payment_state =  self.REQUEST_PAYMENT_FULL_PAYMENT
@@ -149,6 +206,12 @@ class TblCompanyRequest(LoggingModel):
             self.payment_state =  self.REQUEST_PAYMENT_PARTIAL_PAYMENT
 
         self.save()
+
+    def send_email(self):
+        if self.state == STATE_TYPE_DRAFT:
+            return
+        
+        print("Not implemented yet!")
 
     class Meta:
         ordering = ["-id"]
