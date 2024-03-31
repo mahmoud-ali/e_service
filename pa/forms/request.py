@@ -13,8 +13,8 @@ class TblCompanyRequestAdminForm(ModelForm):
         model = TblCompanyRequest
         fields = ["commitement","from_dt","to_dt","amount","currency"] 
         
-class TblCompanyRequestShowForm(TblCompanyRequestAdminForm):
-    commitement = forms.ModelChoiceField(queryset=commitement_confirmed_qs.all().order_by("company"), label=_("commitement"))
+class TblCompanyRequestShowEditForm(TblCompanyRequestAdminForm):
+    commitement = forms.ModelChoiceField(queryset=commitement_confirmed_qs.all().order_by("company"),disabled=True, label=_("commitement"))
     class Meta:
         model = TblCompanyRequest        
         fields = ["commitement","from_dt","to_dt","amount","currency"] 
@@ -23,7 +23,7 @@ class TblCompanyRequestShowForm(TblCompanyRequestAdminForm):
             "to_dt":AdminDateWidget(),
         }
 
-class TblCompanyRequestEditForm(TblCompanyRequestAdminForm):
+class TblCompanyRequestAddForm(TblCompanyRequestAdminForm):
     commitement = forms.ModelChoiceField(queryset=commitement_confirmed_qs.filter(request_interval=TblCompanyCommitment.INTERVAL_TYPE_MANUAL).order_by("company"), label=_("commitement"))
     class Meta:
         model = TblCompanyRequest        

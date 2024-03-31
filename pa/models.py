@@ -89,7 +89,7 @@ class TblCompanyCommitment(LoggingModel):
     def generate_request(self):
         if self.state == STATE_TYPE_DRAFT:
             return
-        
+
         if self.request_interval != self.INTERVAL_TYPE_MANUAL and self.request_next_interval_dt <= timezone.now().date():
             to_date = self.request_next_interval_dt
             if self.request_interval == self.INTERVAL_TYPE_YEAR:
@@ -112,7 +112,7 @@ class TblCompanyCommitment(LoggingModel):
                 updated_by = admin_user
             )
 
-            request.send_email()
+            #request.send_email()
 
             self.request_next_interval_dt = to_date + datetime.timedelta(days=1)
             self.save()
@@ -213,10 +213,11 @@ class TblCompanyRequest(LoggingModel):
         if self.state == STATE_TYPE_DRAFT:
             return
         sum = self.sum_of_payment(confirmed_only=True)
-        if sum == self.amount:
-            self.payment_state =  self.REQUEST_PAYMENT_FULL_PAYMENT
-        elif sum < self.amount:
+
+        if sum < self.amount:
             self.payment_state =  self.REQUEST_PAYMENT_PARTIAL_PAYMENT
+        else:
+            self.payment_state =  self.REQUEST_PAYMENT_FULL_PAYMENT
 
         self.save()
 

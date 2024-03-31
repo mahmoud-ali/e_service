@@ -36,15 +36,7 @@ class ApplicationListView(LoginRequiredMixin,SingleTableView):
          }
         return super().dispatch(*args, **kwargs)       
         
-    def get_queryset(self):
-        # query_filter = []
-        # if self.extra_context["type"] == 1:
-        #     query_filter = [SUBMITTED,ACCEPTED]
-        # elif self.extra_context["type"] == 2:
-        #     query_filter = [APPROVED]
-        # elif self.extra_context["type"] == 3:
-        #     query_filter = [REJECTED]
-                
+    def get_queryset(self):                
         query = super().get_queryset()
         if self.filterset_class:
             query = self.filterset_class(self.request.GET,queryset=query).qs
@@ -64,7 +56,21 @@ class ApplicationCreateView(LoginRequiredMixin,CreateView):
                             "menu_name":self.menu_name,
                             "title":self.title, 
          }
-        return super().dispatch(*args, **kwargs)        
+        return super().dispatch(*args, **kwargs)
+    
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        
+        self.object.created_by = self.object.updated_by = self.request.user
+
+        if self.request.POST.get('_save_confirm'):
+            self.object.state = STATE_TYPE_CONFIRM
+
+        self.object.save()
+
+        messages.add_message(self.request,messages.SUCCESS,_("Record saved successfully."))
+        
+        return HttpResponseRedirect(self.get_success_url())
 
 class ApplicationUpdateView(LoginRequiredMixin,UpdateView):
     model = None
@@ -96,6 +102,20 @@ class ApplicationUpdateView(LoginRequiredMixin,UpdateView):
         obj = self.get_object()
         self.success_url = reverse_lazy(self.menu_name,args=(obj.id,))    
         return super().post(*args, **kwargs)        
+    
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        
+        self.object.updated_by = self.request.user
+
+        if self.request.POST.get('_save_confirm'):
+            self.object.state = STATE_TYPE_CONFIRM
+
+        self.object.save()
+
+        messages.add_message(self.request,messages.SUCCESS,_("Record saved successfully."))
+                
+        return HttpResponseRedirect(self.get_success_url())
 
 class ApplicationReadonlyView(LoginRequiredMixin,SingleObjectMixin,View):
     model = None
@@ -145,76 +165,3 @@ class ApplicationDeleteView(DeleteView):
         self.extra_context["form"] = self.form_class(instance=obj)
         self.extra_context["object"] = obj
         return render(request, self.template_name, self.extra_context)
-
-# class ApplicationConfirmStateView(LoginRequiredMixin,SingleObjectMixin,View):
-#     model = None
-#     menu_name = None
-
-#     def get(self,request,pk=0):     
-#         obj = self.get_object()
-#         obj.state = STATE_TYPE_CONFIRM
-#         obj.save()
-
-#         messages.add_message(self.request,messages.SUCCESS,_("Record confirmed successfully."))
-
-#         url = reverse_lazy(self.menu_name,args=(obj.id,))
-
-#         return HttpResponseRedirect(url)
-
-class ApplicationMasterDetailCreateView(LoginRequiredMixin,View):
-    model = None
-    model_details = None
-    model_details_fields = []
-    form_class = None
-    detail_formset = None
-    menu_name = ""
-    title = ""
-    template_name = "pa/application_add_master_details.html"
-    
-    def dispatch(self, *args, **kwargs):         
-        self.detail_formset = inlineformset_factory(self.model, self.model_details, fields=self.model_details_fields,extra=0,can_delete=False,min_num=1, validate_min=True)
-            
-        self.success_url = reverse_lazy(self.menu_name)    
-        self.extra_context = {
-                            "menu_name":self.menu_name,
-                            "title":self.title, 
-                            "form": self.form_class,
-                            "detail_formset": self.detail_formset,
-                            "detail_title":self.model_details._meta.verbose_name_plural,
-         }
-        return super().dispatch(*args, **kwargs)                    
-
-    def get(self,request):        
-        return render(request, self.template_name, self.extra_context)
-
-class ApplicationMasterDetailReadonlyView(LoginRequiredMixin,DetailView):
-    model = None
-    model_details = None
-    model_details_fields = []
-    form_class = None
-    detail_formset = None
-    menu_name = ""
-    title = ""
-    template_name = "pa/application_readonly_master_details.html"
-        
-    def dispatch(self, *args, **kwargs):                   
-        self.detail_formset = inlineformset_factory(self.model, self.model_details, fields=self.model_details_fields,extra=0,can_delete=False)
-        obj = self.get_object()
-        state_key = obj.state
-        self.extra_context = {
-                            "menu_name":self.menu_name,
-                            "title":self.title, 
-                            "form": self.form_class,
-                            "detail_formset": self.detail_formset,
-                            "detail_title":self.model_details._meta.verbose_name_plural,
-         }
-        return super().dispatch(*args, **kwargs)                    
-
-    def get(self,request,pk=0):        
-        obj = self.get_object()
-        self.extra_context["form"] = self.form_class(instance=obj)
-        self.extra_context["detail_formset"] = self.detail_formset(instance=obj)
-        self.extra_context["object"] = obj
-
-        return render(request, self.template_name, self.extra_context)
-

@@ -1,3 +1,3 @@
 from .commitment import TblCompanyCommitmentForm, TblCompanyCommitmentAdminForm
-from .request import TblCompanyRequestShowForm,TblCompanyRequestEditForm,TblCompanyRequestAdminForm
-from .payment import TblCompanyPaymentShowForm,TblCompanyPaymentEditForm,TblCompanyPaymentAdminForm
+from .request import TblCompanyRequestShowEditForm,TblCompanyRequestAddForm,TblCompanyRequestAdminForm
+from .payment import TblCompanyPaymentShowEditForm,TblCompanyPaymentAddForm,TblCompanyPaymentAdminForm
