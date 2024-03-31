@@ -104,7 +104,7 @@ class WorkflowAdminMixin:
         email = None
         lang = None
         
-        url = 'https://'+Site.objects.get_current().domain #settings.BASE_URL
+        url = 'https://'+Site.objects.get_current().domain+'/app' #settings.BASE_URL
         
         if obj.notify:
             # print("next transition*****",obj.state)

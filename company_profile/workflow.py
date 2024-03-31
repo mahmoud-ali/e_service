@@ -38,7 +38,7 @@ def get_state_choices(state):
 def send_transition_email(state,email,url,lang):
     subject = ""
     message = ""
-    logo_url = "https://"+Site.objects.get_current().domain+"/static/company_profile/img/smrc_logo.png"
+    logo_url = "https://"+Site.objects.get_current().domain+"/app/static/company_profile/img/smrc_logo.png"
     
     if state == SUBMITTED:
         subject = _("New application submitted")
