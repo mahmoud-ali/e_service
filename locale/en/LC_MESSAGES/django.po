@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-03-27 00:17+0200\n"
+"POT-Creation-Date: 2024-03-31 23:18+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -45,7 +45,6 @@ msgstr ""
 #: company_profile/templates/company_profile/application_add.html:15
 #: company_profile/templates/company_profile/application_add_master_details.html:50
 #: company_profile/templates/company_profile/views/requirements_list_add_master_details.html:53
-#: pa/templates/pa/application_add.html:15
 #: pa/templates/pa/application_add_master_details.html:50
 #: templates/account/password_reset.html:10
 msgid "Submit"
@@ -134,7 +133,8 @@ msgstr "company type"
 #: company_profile/models.py:988 company_profile/models.py:1004
 #: company_profile/models.py:1029 company_profile/models.py:1054
 #: company_profile/models.py:1070 company_profile/models.py:1086
-#: company_profile/models.py:1110 pa/forms/commitment.py:11 pa/models.py:39
+#: company_profile/models.py:1110 pa/models.py:67 pa/tables/payment.py:34
+#: pa/tables/request.py:33
 msgid "company"
 msgstr ""
 
@@ -148,19 +148,19 @@ msgstr "borrow from"
 msgid "license_type"
 msgstr "License type"
 
-#: company_profile/models.py:17 pa/models.py:23
+#: company_profile/models.py:17 pa/models.py:43
 msgid "created_at"
 msgstr "created at"
 
-#: company_profile/models.py:18 pa/models.py:24
+#: company_profile/models.py:18 pa/models.py:44
 msgid "created_by"
 msgstr "created by"
 
-#: company_profile/models.py:20 pa/models.py:26
+#: company_profile/models.py:20 pa/models.py:46
 msgid "updated_at"
 msgstr "updated at"
 
-#: company_profile/models.py:21 pa/models.py:27
+#: company_profile/models.py:21 pa/models.py:47
 msgid "updated_by"
 msgstr "updated by"
 
@@ -1311,7 +1311,8 @@ msgstr ""
 msgid "requirements_master"
 msgstr ""
 
-#: company_profile/models.py:830
+#: company_profile/models.py:830 pa/tables/payment.py:35
+#: pa/tables/request.py:34
 msgid "item"
 msgstr "material"
 
@@ -1567,7 +1568,7 @@ msgstr ""
 
 #: company_profile/models.py:1090 company_profile/models.py:1101
 #: company_profile/templates/company_profile/application_readonly.html:22
-#: pa/templates/pa/application_readonly.html:22
+#: pa/templates/pa/application_readonly.html:40
 #, fuzzy
 #| msgid "attachement_file"
 msgid "whom_attachement_file"
@@ -1671,7 +1672,7 @@ msgstr "Fuel Permission Detail"
 #: company_profile/tables.py:426 company_profile/tables.py:439
 #: company_profile/tables.py:452 company_profile/tables.py:465
 #: company_profile/tables.py:478 company_profile/tables.py:491
-#: pa/tables/commitment.py:20 pa/tables/payment.py:20 pa/tables/request.py:20
+#: pa/tables/commitment.py:22 pa/tables/payment.py:25 pa/tables/request.py:24
 msgid "No records."
 msgstr ""
 
@@ -1723,7 +1724,6 @@ msgid "Menu"
 msgstr ""
 
 #: company_profile/templates/company_profile/base.html:118
-#: pa/templates/pa/base.html:103
 msgid "Home page"
 msgstr ""
 
@@ -2261,177 +2261,306 @@ msgstr ""
 msgid "Wrong transition path."
 msgstr ""
 
-#: pa/models.py:14
+#: pa/forms/payment.py:16 pa/forms/payment.py:25 pa/models.py:271
+#, fuzzy
+#| msgid "Add new area"
+msgid "request"
+msgstr "Add new area extension"
+
+#: pa/forms/request.py:17 pa/forms/request.py:27 pa/models.py:145
+msgid "commitement"
+msgstr ""
+
+#: pa/models.py:22
 msgid "sdg"
 msgstr ""
 
-#: pa/models.py:15
+#: pa/models.py:23
 msgid "euro"
 msgstr ""
 
-#: pa/models.py:33
+#: pa/models.py:30
+msgid "draft"
+msgstr ""
+
+#: pa/models.py:31
+msgid "confirm"
+msgstr ""
+
+#: pa/models.py:36
+msgid "value should be positive"
+msgstr ""
+
+#: pa/models.py:53
 #, fuzzy
 #| msgid "new_name"
 msgid "item_name"
 msgstr "new name"
 
-#: pa/models.py:36
+#: pa/models.py:56
 #, fuzzy
 #| msgid "financial_ability_file"
 msgid "Financial item"
 msgstr "financial report"
 
-#: pa/models.py:40
+#: pa/models.py:63
+msgid "manual"
+msgstr ""
+
+#: pa/models.py:64
+msgid "yearly"
+msgstr ""
+
+#: pa/models.py:68
 #, fuzzy
 #| msgid "financial_ability_file"
 msgid "financial item"
 msgstr "financial report"
 
-#: pa/models.py:41 pa/models.py:69 pa/models.py:87
+#: pa/models.py:69 pa/models.py:148 pa/models.py:273
 #, fuzzy
 #| msgid "amount_in_gram"
 msgid "amount"
 msgstr "quantity in gm"
 
-#: pa/models.py:42 pa/models.py:70 pa/models.py:88
+#: pa/models.py:70 pa/models.py:149 pa/models.py:274
 msgid "currency"
 msgstr ""
 
-#: pa/models.py:52
+#: pa/models.py:71 pa/models.py:151 pa/models.py:276 pa/tables/payment.py:36
+#: pa/tables/request.py:36
+msgid "record_state"
+msgstr ""
+
+#: pa/models.py:73
+msgid "interval"
+msgstr ""
+
+#: pa/models.py:74
+msgid "next_interval_dt"
+msgstr ""
+
+#: pa/models.py:75
+msgid "request_auto_confirm"
+msgstr ""
+
+#: pa/models.py:86
+msgid "field is required"
+msgstr ""
+
+#: pa/models.py:122
 msgid "Financial commitment"
 msgstr ""
 
-#: pa/models.py:53
+#: pa/models.py:123
 msgid "Financial commitments"
 msgstr ""
 
-#: pa/models.py:61
+#: pa/models.py:140
 msgid "no_payment"
 msgstr ""
 
-#: pa/models.py:62
+#: pa/models.py:141
 #, fuzzy
 #| msgid "material_name"
 msgid "partial_payment"
 msgstr "required materials"
 
-#: pa/models.py:63
+#: pa/models.py:142
 msgid "full_payment"
 msgstr ""
 
-#: pa/models.py:66 pa/models.py:85
-msgid "commitement"
-msgstr ""
-
-#: pa/models.py:67
+#: pa/models.py:146
 msgid "from_dt"
 msgstr ""
 
-#: pa/models.py:68
+#: pa/models.py:147
 msgid "to_dt"
 msgstr ""
 
-#: pa/models.py:71
+#: pa/models.py:150 pa/tables/request.py:35
 msgid "payment_state"
 msgstr ""
 
-#: pa/models.py:81
+#: pa/models.py:169
+msgid "to_dt should be great or equal than from_dt"
+msgstr ""
+
+#: pa/models.py:174 pa/models.py:179 pa/models.py:185 pa/models.py:186
+msgid "conflicted date"
+msgstr ""
+
+#: pa/models.py:240
+#, fuzzy
+#| msgid "List of tajmeed"
+msgid "Request wait for payment"
+msgstr "List of suspension request"
+
+#: pa/models.py:246
+msgid "Request paied"
+msgstr ""
+
+#: pa/models.py:264
 msgid "Financial request"
 msgstr ""
 
-#: pa/models.py:82
+#: pa/models.py:265
 msgid "Financial requests"
 msgstr ""
 
-#: pa/models.py:86
+#: pa/models.py:272
 msgid "payment_dt"
 msgstr ""
 
-#: pa/models.py:89
+#: pa/models.py:275
 msgid "excange_rate"
 msgstr ""
 
-#: pa/models.py:92 pa/models.py:99
+#: pa/models.py:279 pa/models.py:298
 msgid "Financial payment"
 msgstr ""
 
-#: pa/models.py:100
+#: pa/models.py:293
+msgid "sum of payments more than request amount: "
+msgstr ""
+
+#: pa/models.py:299
 msgid "Financial payments"
 msgstr ""
 
+#: pa/templates/pa/application_add.html:15
+msgid "Save Draft"
+msgstr ""
+
+#: pa/templates/pa/application_add.html:16
+msgid "Save & Confirm"
+msgstr ""
+
+#: pa/templates/pa/application_delete.html:15
+msgid "Delete Draft"
+msgstr ""
+
 #: pa/templates/pa/application_list.html:14
+msgid "Search"
+msgstr ""
+
+#: pa/templates/pa/application_list.html:27
 msgid "New record"
 msgstr ""
 
-#: pa/templates/pa/base.html:106
+#: pa/templates/pa/application_readonly.html:23
+msgid "edit_btn"
+msgstr ""
+
+#: pa/templates/pa/application_readonly.html:27
+msgid "delete_btn"
+msgstr ""
+
+#: pa/templates/pa/base.html:107
 msgid "Commitment page"
 msgstr ""
 
-#: pa/templates/pa/base.html:109
+#: pa/templates/pa/base.html:110
 msgid "Request page"
 msgstr ""
 
-#: pa/templates/pa/base.html:112
+#: pa/templates/pa/base.html:113
 msgid "Payment page"
 msgstr ""
 
-#: pa/views/commitment.py:18
+#: pa/views/application.py:71 pa/views/application.py:116
+msgid "Record saved successfully."
+msgstr ""
+
+#: pa/views/commitment.py:19
 #, fuzzy
 #| msgid "List of Reexport Equipments"
 msgid "List of commitments"
 msgstr "List of Reexport of Machinery and Equipments"
 
-#: pa/views/commitment.py:36
+#: pa/views/commitment.py:25
 #, fuzzy
 #| msgid "Add new company name"
 msgid "Add new commitment"
 msgstr "Add new business name change"
 
-#: pa/views/commitment.py:52 pa/views/payment.py:52 pa/views/request.py:52
-msgid "Record saved successfully."
-msgstr ""
+#: pa/views/commitment.py:32
+#, fuzzy
+#| msgid "List of Reexport Equipments"
+msgid "Edit commitment"
+msgstr "List of Reexport of Machinery and Equipments"
 
-#: pa/views/commitment.py:65
+#: pa/views/commitment.py:40
 #, fuzzy
 #| msgid "Show added area"
 msgid "Show added commitment"
 msgstr "Show area extension"
 
-#: pa/views/payment.py:18
+#: pa/views/commitment.py:46
+#, fuzzy
+#| msgid "Add new company name"
+msgid "Delete commitment"
+msgstr "Add new business name change"
+
+#: pa/views/payment.py:20
 #, fuzzy
 #| msgid "List of tajmeed"
 msgid "List of payments"
 msgstr "List of suspension request"
 
-#: pa/views/payment.py:36
+#: pa/views/payment.py:26
 #, fuzzy
 #| msgid "Add new company name"
 msgid "Add new payment"
 msgstr "Add new business name change"
 
-#: pa/views/payment.py:65
+#: pa/views/payment.py:33
+#, fuzzy
+#| msgid "List of tajmeed"
+msgid "Edit payment"
+msgstr "List of suspension request"
+
+#: pa/views/payment.py:41
 #, fuzzy
 #| msgid "Show added area"
 msgid "Show added payment"
 msgstr "Show area extension"
 
-#: pa/views/request.py:18
+#: pa/views/payment.py:47
+#, fuzzy
+#| msgid "Add new company name"
+msgid "Delete payment"
+msgstr "Add new business name change"
+
+#: pa/views/request.py:20
 #, fuzzy
 #| msgid "List of Reexport Equipments"
 msgid "List of requests"
 msgstr "List of Reexport of Machinery and Equipments"
 
-#: pa/views/request.py:36
+#: pa/views/request.py:26
 #, fuzzy
 #| msgid "Add new area"
 msgid "Add new request"
 msgstr "Add new area extension"
 
-#: pa/views/request.py:65
+#: pa/views/request.py:33
+#, fuzzy
+#| msgid "List of Reexport Equipments"
+msgid "Edit request"
+msgstr "List of Reexport of Machinery and Equipments"
+
+#: pa/views/request.py:41
 #, fuzzy
 #| msgid "Show added area"
 msgid "Show added request"
 msgstr "Show area extension"
+
+#: pa/views/request.py:47
+#, fuzzy
+#| msgid "Add new area"
+msgid "Delete request"
+msgstr "Add new area extension"
 
 #: templates/account/login.html:6
 msgid "Log In page"
