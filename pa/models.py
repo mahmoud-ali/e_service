@@ -6,10 +6,14 @@ from django.forms import ValidationError
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
+from django.utils.html import strip_tags
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
 
 from django.contrib.auth import get_user_model
+from django.contrib.sites.models import Site
 
-from company_profile.models import TblCompanyProduction
+from company_profile.models import TblCompanyProduction, TblCompanyProductionUserRole
 
 CURRENCY_TYPE_SDG = "sdg"
 CURRENCY_TYPE_EURO = "euro"
@@ -216,11 +220,43 @@ class TblCompanyRequest(LoggingModel):
 
         self.save()
 
+        if self.payment_state == self.REQUEST_PAYMENT_FULL_PAYMENT:
+            self.send_email()
+
     def send_email(self):
         if self.state == STATE_TYPE_DRAFT:
             return
         
-        print("Not implemented yet!")
+        lang = TblCompanyProductionUserRole.objects.filter(company=self.commitement.company)[0].user.lang
+        email = self.commitement.company.email
+        url = 'https://'+Site.objects.get_current().domain+"/app"+reverse(settings.SHOW_REQUESTS_URL,args=[str(self.id)]) 
+        logo_url = "https://"+Site.objects.get_current().domain+"/app/static/company_profile/img/smrc_logo.png"
+
+        subject = None
+        message = None
+        
+        if self.payment_state == self.REQUEST_PAYMENT_NO_PAYMENT:
+            subject = _("Request wait for payment")+" ("+self.commitement.__str__()+")"
+            message = render_to_string('pa/email/request_created_email_{0}.html'.format(lang),{
+                'url':url,
+                'logo':logo_url
+            }) 
+        elif self.payment_state == self.REQUEST_PAYMENT_FULL_PAYMENT:
+            subject = _("Request paied")+" ("+self.commitement.__str__()+")"
+            message = render_to_string('pa/email/request_paied_email_{0}.html'.format(lang),{
+                'url':url,
+                'logo':logo_url
+            }) 
+        
+        if subject and message:
+            send_mail(
+                subject,
+                strip_tags(message),
+                None,
+                [email],
+                html_message=message,
+                fail_silently=False,
+            )        
 
     class Meta:
         ordering = ["-id"]

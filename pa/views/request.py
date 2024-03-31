@@ -5,7 +5,7 @@ from django.utils.translation import gettext_lazy as _
 from django.contrib import messages
 
 from ..models import STATE_TYPE_CONFIRM, TblCompanyRequest
-from ..forms import TblCompanyRequestForm
+from ..forms import TblCompanyRequestEditForm, TblCompanyRequestShowForm
 from django_filters.views import FilterView
 
 from ..tables import TblCompanyRequestTable,RequestFilter
@@ -33,7 +33,7 @@ class TblCompanyRequestListView(ApplicationListView,FilterView):
 
 class TblCompanyRequestCreateView(ApplicationCreateView):
     model = TblCompanyRequest
-    form_class = TblCompanyRequestForm
+    form_class = TblCompanyRequestEditForm
     menu_name = "pa:request_list"
     title = _("Add new request")
 
@@ -53,7 +53,9 @@ class TblCompanyRequestCreateView(ApplicationCreateView):
             self.object.state = STATE_TYPE_CONFIRM
 
         self.object.save()
-        self.object.send_email()
+
+        if self.object.state == STATE_TYPE_CONFIRM:
+            self.object.send_email()
         
         messages.add_message(self.request,messages.SUCCESS,_("Record saved successfully."))
         
@@ -66,7 +68,7 @@ class TblCompanyRequestCreateView(ApplicationCreateView):
 
 class TblCompanyRequestUpdateView(ApplicationUpdateView):
     model = TblCompanyRequest
-    form_class = TblCompanyRequestForm
+    form_class = TblCompanyRequestEditForm
     menu_name = "pa:request_list"
     menu_show_name = "pa:request_show"
     title = _("Edit request")
@@ -80,7 +82,9 @@ class TblCompanyRequestUpdateView(ApplicationUpdateView):
             self.object.state = STATE_TYPE_CONFIRM
 
         self.object.save()
-        self.object.send_email()
+
+        if self.object.state == STATE_TYPE_CONFIRM:
+            self.object.send_email()
         
         messages.add_message(self.request,messages.SUCCESS,_("Record saved successfully."))
                 
@@ -88,7 +92,7 @@ class TblCompanyRequestUpdateView(ApplicationUpdateView):
 
 class TblCompanyRequestReadonlyView(ApplicationReadonlyView):
     model = TblCompanyRequest
-    form_class = TblCompanyRequestForm
+    form_class = TblCompanyRequestShowForm
     menu_name = "pa:request_list"
     menu_edit_name = "pa:request_edit"
     menu_delete_name = "pa:request_delete"
@@ -101,6 +105,6 @@ class TblCompanyRequestReadonlyView(ApplicationReadonlyView):
 
 class TblCompanyRequestDeleteView(ApplicationDeleteView):
     model = TblCompanyRequest
-    form_class = TblCompanyRequestForm
+    form_class = TblCompanyRequestShowForm
     menu_name = "pa:request_list"
     title = _("Delete request")
