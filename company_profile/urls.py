@@ -3,6 +3,8 @@ from django.conf.urls.static import static
 
 from django.conf import settings
 
+from company_profile.views.pa_request import AppRequestListView, AppRequestReadonlyView
+
 from .views import SetLanguageView, HomePageView, \
                    AppForignerMovementListView,AppForignerMovementCreateView,AppForignerMovementReadonlyView, \
                    AppBorrowMaterialListView,AppBorrowMaterialCreateView,AppBorrowMaterialReadonlyView, \
@@ -227,5 +229,10 @@ urlpatterns = [
     path('app_gold_production/<int:type>/', AppGoldProductionListView.as_view(), name='app_gold_production_list'),
     path('app_gold_production/<int:pk>/show/', AppGoldProductionReadonlyView.as_view(), name='app_gold_production_show'),    
     path('app_gold_production/add/', AppGoldProductionCreateView.as_view(), name='app_gold_production_add'),
+
+    path('pa_request/', AppRequestListView.as_view(), name='pa_request_list'),
+    path('pa_request/<int:type>/', AppRequestListView.as_view(), name='pa_request_list'),
+    path('pa_request/<int:pk>/show/', AppRequestReadonlyView.as_view(), name='pa_request_show'),    
+
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

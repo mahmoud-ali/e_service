@@ -3,7 +3,10 @@
 {% load bootstrap3 %}
 
 {% block content %}
-<h1 class="page-header">{{title}} ({% translate state %})</h1>
+<h1 class="page-header">{{title}} 
+    {% if state%} ({% translate state %}) {% endif %}
+    {% if payment_state%} ({% translate payment_state %}) {% endif %}
+</h1>
 {% bootstrap_messages %}
 
 {% if object.state == 'rejected' and object.reject_comments %}

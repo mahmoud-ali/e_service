@@ -8,6 +8,7 @@
 <h1 class="page-header">{{title}}</h1>
 {% bootstrap_messages %}
 
+{% if menu_name != 'profile:pa_request_list'%}
 
 <a class="btn btn-primary" href="{% url menu_name%}add/" role="button">
 	<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
@@ -23,6 +24,7 @@
 	  </ul>
 	</nav>
 	<br/>
+{% endif %}
 	<div  class="panel panel-default">
 
 				{% render_table table %}

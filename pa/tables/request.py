@@ -28,6 +28,19 @@ class TblCompanyRequestTable(BaseTable):
 
     def render_state(self,value,record):
         return format_html("{}",value)
+    
+class TblCompanyRequestCompanyTable(BaseTable):
+    menu_name = "profile:pa_request_show"
+    relation_fields = ["commitement","commitement__company","commitement__item"]
+
+    class Meta:
+        model = TblCompanyRequest
+        template_name = "django_tables2/bootstrap.html"
+        fields = ("commitement__item","from_dt","to_dt","amount","currency","payment_state")
+        empty_text = _("No records.")        
+
+    def render_commitement__item(self,value,record):
+        return format_html("<a href={}>{}</a>",reverse_lazy(self.menu_name,args=(record.id,)),value)
 
 class RequestFilter(FilterSet):
     company = ModelChoiceFilter(queryset=TblCompanyProduction.objects.all(),field_name='commitement__company', label=_('company'))   

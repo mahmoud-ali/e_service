@@ -116,7 +116,10 @@ $(document).ready(function(){
 			 <li class="{% if menu_name == 'profile:home' %}active{% endif %} ">  
 					<a href="{% url 'profile:home' %}">{% translate "Home page" %}</a>
 			 </li>
-			 {% comment %} <li class="{% if menu_name == 'profile:app_foreigner_list' %}active{% endif %} ">  
+			 <li class="{% if menu_name == 'profile:pa_request_list' %}active{% endif %} ">  
+				<a href="{% url 'profile:pa_request_list' %}">{% translate "Request page" %}</a>
+		 	</li>
+		 {% comment %} <li class="{% if menu_name == 'profile:app_foreigner_list' %}active{% endif %} ">  
 					<a href="{% url 'profile:app_foreigner_list' %}">{% translate "Application: Forigner movement" %}</a>
 			 </li> {% endcomment %}
 			 {% if user.pro_company.company.company_type == 'entaj' %}

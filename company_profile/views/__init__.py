@@ -59,6 +59,7 @@ from .hse_accident import AppHSEAccidentReportListView,AppHSEAccidentReportCreat
 from .hse_performance import AppHSEPerformanceReportListView,AppHSEPerformanceReportCreateView,AppHSEPerformanceReportReadonlyView
 from .whom_concern import AppWhomConcernListView,AppWhomConcernCreateView,AppWhomConcernReadonlyView
 from .gold_production import AppGoldProductionListView,AppGoldProductionCreateView,AppGoldProductionReadonlyView
+from .pa_request import AppRequestListView,AppRequestReadonlyView
 
 class SetLanguageView(LoginRequiredMixin,View):
     def post(self,request):

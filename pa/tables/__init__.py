@@ -1,3 +1,3 @@
 from .commitment import TblCompanyCommitmentTable,CommitmentFilter
-from .request import TblCompanyRequestTable,RequestFilter
+from .request import TblCompanyRequestTable,TblCompanyRequestCompanyTable,RequestFilter
 from .payment import TblCompanyPaymentTable,PaymentFilter
