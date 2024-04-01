@@ -1,3 +1,4 @@
+from django.forms import inlineformset_factory
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import View
@@ -14,7 +15,7 @@ from django.contrib.sites.models import Site
 from django_tables2 import SingleTableView
 from django_tables2.paginators import LazyPaginator
 
-from pa.models import TblCompanyRequest
+from pa.models import TblCompanyRequest,TblCompanyPayment
 from pa.forms import TblCompanyRequestShowEditForm
 
 from pa.tables import TblCompanyRequestCompanyTable
@@ -48,18 +49,24 @@ class AppRequestListView(LoginRequiredMixin,SingleTableView):
 
 class AppRequestReadonlyView(LoginRequiredMixin,SingleObjectMixin,View):
     model = TblCompanyRequest
+    model_details = TblCompanyPayment
+    model_details_fields = ["request","payment_dt","amount","currency","excange_rate"]
     form_class = TblCompanyRequestShowEditForm
     menu_name = "profile:pa_request_list"
     title = _("Show added request")
-    template_name = "company_profile/application_readonly.html"    
+    template_name = "company_profile/application_readonly_master_details.html"    
 
     def dispatch(self, *args, **kwargs):         
         if not hasattr(self.request.user,"pro_company"):
             return HttpResponseRedirect(reverse_lazy("profile:home"))  
 
+        self.detail_formset = inlineformset_factory(self.model, self.model_details, fields=self.model_details_fields,extra=0,can_delete=False)
+
         self.extra_context = {
                             "menu_name":self.menu_name,
                             "title":self.title, 
+                            "detail_formset": self.detail_formset,
+                            "detail_title":self.model_details._meta.verbose_name_plural,
          }
         return super().dispatch(*args, **kwargs)        
 
@@ -71,5 +78,7 @@ class AppRequestReadonlyView(LoginRequiredMixin,SingleObjectMixin,View):
         obj = self.get_object()
         self.extra_context["form"] = self.form_class(instance=obj)
         self.extra_context["object"] = obj
+        self.extra_context["detail_formset"] = self.detail_formset(instance=obj)
         self.extra_context["payment_state"] = TblCompanyRequest.REQUEST_PAYMENT_CHOICES[obj.payment_state]
+        
         return render(request, self.template_name, self.extra_context)

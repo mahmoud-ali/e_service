@@ -5,7 +5,10 @@
 {% load bootstrap3 %}
 
 {% block content %}
-<h1 class="page-header">{% translate title %} ({% translate state %})</h1>
+<h1 class="page-header">{{title}} 
+    {% if state%} ({% translate state %}) {% endif %}
+    {% if payment_state%} ({% translate payment_state %}) {% endif %}
+</h1>
 {% bootstrap_messages %}
 
 {% if object.state == 'rejected' and object.reject_comments %}
@@ -18,6 +21,7 @@
 <form  method="post">
 {% csrf_token %}
     {% bootstrap_form form %}
+    {% if detail_formset|length %}
 	<h3>{{detail_title}}:</h3>
 
     <table id="detail_table"  class="table table-bordered">
@@ -46,7 +50,7 @@
         </tr>
     {% endfor %}        	
     </table>
-	
+	{% endif%}
 </form>
 <script>
 $(document).ready(function(){
