@@ -231,24 +231,24 @@ INTERNAL_IPS = [
     "127.0.0.1",
 ]
 
-# ANYMAIL = {
-#     # (exact settings here depend on your ESP...)
-#     "host":"smtp.mailersend.net",
-#     "port":587,
-#     "username":config('EMAIL_HOST_USER'),
-#     "password":config('EMAIL_HOST_PASSWORD'),
-#     "use_tls":True,
-#     "MAILERSEND_SENDER_DOMAIN": 'mineralsgate.com',  # your MailerSend domain, if needed
-# }
-# MAILERSEND_API_TOKEN = config('MAILERSEND_KEY')
-# EMAIL_BACKEND = "anymail.backends.mailersend.EmailBackend"
-# DEFAULT_FROM_EMAIL = "info@mineralsgate.com"  # if you don't already have this in settings
-# SERVER_EMAIL = "system@mineralsgate.com"  # ditto (default from-email for Django errors)
+ANYMAIL = {
+    # (exact settings here depend on your ESP...)
+    "host":"smtp.mailersend.net",
+    "port":587,
+    "username":config('EMAIL_HOST_USER'),
+    "password":config('EMAIL_HOST_PASSWORD'),
+    "use_tls":True,
+    "MAILERSEND_SENDER_DOMAIN": 'mineralsgate.com',  # your MailerSend domain, if needed
+}
+MAILERSEND_API_TOKEN = config('MAILERSEND_KEY')
+EMAIL_BACKEND = "anymail.backends.mailersend.EmailBackend"
+DEFAULT_FROM_EMAIL = "info@mineralsgate.com"  # if you don't already have this in settings
+SERVER_EMAIL = "system@mineralsgate.com"  # ditto (default from-email for Django errors)
 
-# EMAIL_HOST = "smtp.mailersend.net"
-# EMAIL_PORT = 587
-# EMAIL_USE_TLS = True
-# EMAIL_HOST_USER = config('EMAIL_HOST_USER')
-# EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+EMAIL_HOST = "smtp.mailersend.net"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 
-SHOW_REQUESTS_URL = "profile:app_borrow_show"
+SHOW_REQUESTS_URL = "profile:pa_request_show"
