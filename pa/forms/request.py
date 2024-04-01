@@ -14,7 +14,18 @@ class TblCompanyRequestAdminForm(ModelForm):
         fields = ["commitement","from_dt","to_dt","amount","currency"] 
         
 class TblCompanyRequestShowEditForm(TblCompanyRequestAdminForm):
-    commitement = forms.ModelChoiceField(queryset=commitement_confirmed_qs.all().order_by("company"),disabled=True, label=_("commitement"))
+    commitement = forms.ModelChoiceField(queryset=None,disabled=True, label=_("commitement"))
+
+    def __init__(self, *args, **kwargs):        
+        super().__init__(*args, **kwargs)
+        pk = None
+
+        if kwargs.get('instance') and kwargs['instance'].pk:
+            pk = kwargs['instance'].commitement.id
+        
+        if pk:
+            self.fields["commitement"].queryset = commitement_all_qs.filter(id=pk)
+
     class Meta:
         model = TblCompanyRequest        
         fields = ["commitement","from_dt","to_dt","amount","currency"] 

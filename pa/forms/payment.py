@@ -14,6 +14,17 @@ class TblCompanyPaymentAdminForm(ModelForm):
         
 class TblCompanyPaymentShowEditForm(TblCompanyPaymentAdminForm):
     request = forms.ModelChoiceField(queryset=request_all_qs,disabled=True, label=_("request"))
+
+    def __init__(self, *args, **kwargs):        
+        super().__init__(*args, **kwargs)
+        pk = None
+
+        if kwargs.get('instance') and kwargs['instance'].pk:
+            pk = kwargs['instance'].request.id
+        
+        if pk:
+            self.fields["request"].queryset = request_all_qs.filter(id=pk)
+
     class Meta:
         model = TblCompanyPayment        
         fields = ["request","payment_dt","amount","currency","excange_rate"] 
