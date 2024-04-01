@@ -1,8 +1,10 @@
+from django.conf import settings
 from django.urls import reverse_lazy
 from django.views.generic import View,UpdateView,CreateView,DetailView,DeleteView
 from django.views.generic.detail import SingleObjectMixin
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
+from django.utils import translation
 from django.utils.translation import gettext_lazy as _
 
 from django.forms import inlineformset_factory
@@ -41,6 +43,15 @@ class ApplicationListView(LoginRequiredMixin,SingleTableView):
         if self.filterset_class:
             query = self.filterset_class(self.request.GET,queryset=query).qs
         return query.prefetch_related(*self.table_class.relation_fields)
+    
+    def get(self,request,*args, **kwargs):  
+        response = super().get(request,*args, **kwargs)
+
+        if not request.COOKIES.get(settings.LANGUAGE_COOKIE_NAME):
+            translation.activate(request.user.lang)
+            response.set_cookie(settings.LANGUAGE_COOKIE_NAME,request.user.lang)
+
+        return response
         
 class ApplicationCreateView(LoginRequiredMixin,CreateView):
     model = None

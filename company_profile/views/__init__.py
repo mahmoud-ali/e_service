@@ -105,14 +105,14 @@ class HomePageView(LoginRequiredMixin,TemplateView):
          }
         return super().dispatch(*args, **kwargs)    
 
-    def get(self, request, *args, **kwargs):
+    def get(self,request,*args, **kwargs):  
+        response = super().get(request,*args, **kwargs)
+
         if not request.COOKIES.get(settings.LANGUAGE_COOKIE_NAME):
             translation.activate(request.user.lang)
-            response = HttpResponseRedirect(reverse_lazy("profile:home"))
             response.set_cookie(settings.LANGUAGE_COOKIE_NAME,request.user.lang)
-            return response
 
-        return super().get(self, request, *args, **kwargs)
+        return response
 
 class LkpLocalitySelectView(LkpSelectView):
     def get_queryset(self):

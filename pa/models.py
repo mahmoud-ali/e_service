@@ -282,6 +282,11 @@ class TblCompanyPayment(LoggingModel):
         return reverse('pa:payment_show',args=[str(self.id)])                
 
     def clean(self):
+        if self.currency == self.request.currency and self.excange_rate != 1:
+            raise ValidationError(
+                {"excange_rate":_("payment currency equal to request currency")}
+            )
+
         sum = self.request.sum_of_payment(exclude=self.id)
         if self.currency == self.request.currency:
             sum += self.amount

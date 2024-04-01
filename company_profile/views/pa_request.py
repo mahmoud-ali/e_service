@@ -4,6 +4,7 @@ from django.urls import reverse_lazy
 from django.views.generic import View
 from django.views.generic.detail import SingleObjectMixin
 from django.http import HttpResponseRedirect
+from django.utils import translation
 from django.utils.translation import gettext_lazy as _
 
 from django.conf import settings
@@ -46,6 +47,15 @@ class AppRequestListView(LoginRequiredMixin,SingleTableView):
         query = super().get_queryset()        
         query = query.filter(commitement__company__id=self.request.user.pro_company.company.id)
         return query
+    
+    def get(self,request,*args, **kwargs):  
+        response = super().get(request,*args, **kwargs)
+
+        if not request.COOKIES.get(settings.LANGUAGE_COOKIE_NAME):
+            translation.activate(request.user.lang)
+            response.set_cookie(settings.LANGUAGE_COOKIE_NAME,request.user.lang)
+
+        return response
 
 class AppRequestReadonlyView(LoginRequiredMixin,SingleObjectMixin,View):
     model = TblCompanyRequest
