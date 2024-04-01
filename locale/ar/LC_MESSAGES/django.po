@@ -2270,7 +2270,7 @@ msgstr "مؤكد"
 
 #: pa/models.py:36
 msgid "value should be positive"
-msgstr ""
+msgstr "قيمة الحقل يجب ان تكون موجبة"
 
 #: pa/models.py:53
 msgid "item_name"
@@ -2282,11 +2282,11 @@ msgstr "البند"
 
 #: pa/models.py:63
 msgid "manual"
-msgstr ""
+msgstr "يدوي"
 
 #: pa/models.py:64
 msgid "yearly"
-msgstr ""
+msgstr "سنوي"
 
 #: pa/models.py:68
 msgid "financial item"
@@ -2307,19 +2307,19 @@ msgstr "الحالة"
 
 #: pa/models.py:73
 msgid "interval"
-msgstr ""
+msgstr "التكرار"
 
 #: pa/models.py:74
 msgid "next_interval_dt"
-msgstr ""
+msgstr "تاريخ التكرار التالي"
 
 #: pa/models.py:75
 msgid "request_auto_confirm"
-msgstr ""
+msgstr "تاكيد المطالبة الياً"
 
 #: pa/models.py:86
 msgid "field is required"
-msgstr ""
+msgstr "ادخال الحقل اجباري"
 
 #: pa/models.py:122
 msgid "Financial commitment"
@@ -2355,7 +2355,7 @@ msgstr "موقف السداد"
 
 #: pa/models.py:169
 msgid "to_dt should be great or equal than from_dt"
-msgstr ""
+msgstr "حقل تاريخ النهاية يجب ان يكون اكبر او يساوي حقل تاريخ البداية"
 
 #: pa/models.py:174 pa/models.py:179 pa/models.py:185 pa/models.py:186
 msgid "conflicted date"
@@ -2391,7 +2391,7 @@ msgstr "السداد"
 
 #: pa/models.py:293
 msgid "sum of payments more than request amount: "
-msgstr ""
+msgstr "مجموع قيم السداد اكبر من قيمة المطالبة"
 
 #: pa/models.py:299
 msgid "Financial payments"
