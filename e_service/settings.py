@@ -221,6 +221,7 @@ ACCOUNT_MAX_EMAIL_ADDRESSES = 1
 
 ACCOUNT_ADAPTER = 'accounts.adapter.NoNewUsersAccountAdapter'
 
+LOGIN_URL = '/app/accounts/login/'
 LOGIN_REDIRECT_URL = 'profile:home'
 ACCOUNT_LOGOUT_REDIRECT_URL = 'profile:home'
 
