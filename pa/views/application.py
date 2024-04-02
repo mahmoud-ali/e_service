@@ -45,10 +45,10 @@ class ApplicationListView(LoginRequiredMixin,SingleTableView):
         return query.prefetch_related(*self.table_class.relation_fields)
     
     def get(self,request,*args, **kwargs):  
+        translation.activate(request.user.lang)
         response = super().get(request,*args, **kwargs)
 
         if not request.COOKIES.get(settings.LANGUAGE_COOKIE_NAME):
-            translation.activate(request.user.lang)
             response.set_cookie(settings.LANGUAGE_COOKIE_NAME,request.user.lang)
 
         return response
