@@ -32,7 +32,7 @@ class TblCompanyPaymentTable(BaseTable):
 
 class PaymentFilter(FilterSet):
     company = ModelChoiceFilter(queryset=TblCompanyProduction.objects.all(),field_name='request__commitement__company', label=_('company'))   
-    item = ModelChoiceFilter(queryset=LkpItem.objects.all(),field_name='request__commitement__item', label=_('item'))   
+    item = ModelChoiceFilter(queryset=LkpItem.objects.all(),field_name='request__commitement__item', label=_('financial item'))   
     state = ChoiceFilter(choices=STATE_TYPE_CHOICES,field_name='state', label=_('record_state'))   
     class Meta:
         model = TblCompanyPayment
