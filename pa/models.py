@@ -205,7 +205,7 @@ class TblCompanyRequest(LoggingModel):
             if p.currency == self.currency:
                 sum += p.amount
             else:
-                sum += p.amount*p.excange_rate
+                sum += p.amount*p.exchange_rate
 
         return sum
 
@@ -272,7 +272,7 @@ class TblCompanyPayment(LoggingModel):
     payment_dt = models.DateField(_("payment_dt"))
     amount = models.FloatField(_("amount"),validators=[validate_positive])
     currency = models.CharField(_("currency"),max_length=10, choices=CURRENCY_TYPE_CHOICES, default=CURRENCY_TYPE_EURO)
-    excange_rate = models.FloatField(_("excange_rate"),validators=[validate_positive],default=1)
+    exchange_rate = models.FloatField(_("exchange_rate"),validators=[validate_positive],default=1)
     state = models.CharField(_("record_state"),max_length=10, choices=STATE_TYPE_CHOICES, default=STATE_TYPE_DRAFT)
     
     def __str__(self):
@@ -282,16 +282,16 @@ class TblCompanyPayment(LoggingModel):
         return reverse('pa:payment_show',args=[str(self.id)])                
 
     def clean(self):
-        if self.currency == self.request.currency and self.excange_rate != 1:
+        if self.currency == self.request.currency and self.exchange_rate != 1:
             raise ValidationError(
-                {"excange_rate":_("payment currency equal to request currency")}
+                {"exchange_rate":_("payment currency equal to request currency")}
             )
 
         sum = self.request.sum_of_payment(exclude=self.id)
         if self.currency == self.request.currency:
             sum += self.amount
         else:
-            sum += self.amount*self.excange_rate
+            sum += self.amount*self.exchange_rate
 
         if sum > self.request.amount:
             raise ValidationError(

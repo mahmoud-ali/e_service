@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-04-01 22:16+0200\n"
+"POT-Creation-Date: 2024-04-03 01:38+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -134,8 +134,8 @@ msgstr "نوع الشركة"
 #: company_profile/models.py:988 company_profile/models.py:1004
 #: company_profile/models.py:1029 company_profile/models.py:1054
 #: company_profile/models.py:1070 company_profile/models.py:1086
-#: company_profile/models.py:1110 pa/models.py:67 pa/tables/payment.py:34
-#: pa/tables/request.py:46
+#: company_profile/models.py:1110 pa/forms/daily.py:8 pa/models.py:67
+#: pa/tables/payment.py:34 pa/tables/request.py:46
 msgid "company"
 msgstr "شركة"
 
@@ -1312,8 +1312,7 @@ msgstr "طلب كشف احتياجات"
 msgid "requirements_master"
 msgstr ""
 
-#: company_profile/models.py:830 pa/tables/payment.py:35
-#: pa/tables/request.py:47
+#: company_profile/models.py:830 pa/tables/request.py:47
 msgid "item"
 msgstr "الصنف"
 
@@ -1658,7 +1657,7 @@ msgstr "تفاصيل استمارة الانتاج"
 #: company_profile/tables.py:452 company_profile/tables.py:465
 #: company_profile/tables.py:478 company_profile/tables.py:491
 #: pa/tables/commitment.py:22 pa/tables/payment.py:25 pa/tables/request.py:24
-#: pa/tables/request.py:40
+#: pa/tables/request.py:40 pa/templates/pa/pa_daily.html:42
 msgid "No records."
 msgstr "لايوجد سجل."
 
@@ -1988,11 +1987,11 @@ msgstr "اضافة طلب MDA"
 msgid "Show mda"
 msgstr "عرض طلب MDA"
 
-#: company_profile/views/pa_request.py:27 pa/views/request.py:20
+#: company_profile/views/pa_request.py:28 pa/views/request.py:20
 msgid "List of requests"
 msgstr "قائمة المطالبات المالية"
 
-#: company_profile/views/pa_request.py:56 pa/views/request.py:41
+#: company_profile/views/pa_request.py:66 pa/views/request.py:41
 msgid "Show added request"
 msgstr "عرض سجل مطالبة"
 
@@ -2258,6 +2257,14 @@ msgstr ""
 msgid "Wrong transition path."
 msgstr ""
 
+#: pa/forms/daily.py:9 pa/models.py:146
+msgid "from_dt"
+msgstr "من"
+
+#: pa/forms/daily.py:10 pa/models.py:147
+msgid "to_dt"
+msgstr "الى"
+
 #: pa/forms/payment.py:16 pa/forms/payment.py:36 pa/models.py:271
 msgid "request"
 msgstr "المطالبة"
@@ -2302,7 +2309,7 @@ msgstr "يدوي"
 msgid "yearly"
 msgstr "سنوي"
 
-#: pa/models.py:68
+#: pa/models.py:68 pa/tables/payment.py:35 pa/templates/pa/pa_daily.html:47
 msgid "financial item"
 msgstr "البند"
 
@@ -2311,6 +2318,7 @@ msgid "amount"
 msgstr "المبلغ"
 
 #: pa/models.py:70 pa/models.py:149 pa/models.py:274
+#: pa/templates/pa/pa_daily.html:48
 msgid "currency"
 msgstr "العملة"
 
@@ -2355,14 +2363,6 @@ msgstr "مدفوع جزئياً"
 msgid "full_payment"
 msgstr "مدفوع كلياً"
 
-#: pa/models.py:146
-msgid "from_dt"
-msgstr "من"
-
-#: pa/models.py:147
-msgid "to_dt"
-msgstr "الى"
-
 #: pa/models.py:150 pa/tables/request.py:48
 msgid "payment_state"
 msgstr "موقف السداد"
@@ -2395,8 +2395,8 @@ msgstr "مطالبات مالية"
 msgid "payment_dt"
 msgstr "تاريخ السداد"
 
-#: pa/models.py:275
-msgid "excange_rate"
+#: pa/models.py:275 pa/templates/pa/pa_daily.html:49
+msgid "exchange_rate"
 msgstr "سعر الصرف"
 
 #: pa/models.py:279 pa/models.py:303
@@ -2427,7 +2427,7 @@ msgstr "حفظ وتأكيد"
 msgid "Delete Draft"
 msgstr "حذف المسودة"
 
-#: pa/templates/pa/application_list.html:14
+#: pa/templates/pa/application_list.html:14 pa/templates/pa/pa_daily.html:27
 msgid "Search"
 msgstr "بحث"
 
@@ -2451,7 +2451,23 @@ msgstr "الالتزامات المالية"
 msgid "Payment page"
 msgstr "السداد"
 
-#: pa/views/application.py:71 pa/views/application.py:116
+#: pa/templates/pa/base.html:116
+msgid "Pa_daily page"
+msgstr "يومية حسابات الانتاج"
+
+#: pa/templates/pa/pa_daily.html:46
+msgid "date"
+msgstr "التاريخ"
+
+#: pa/templates/pa/pa_daily.html:50
+msgid "debit"
+msgstr "مدين"
+
+#: pa/templates/pa/pa_daily.html:51
+msgid "credit"
+msgstr "دائن"
+
+#: pa/views/application.py:82 pa/views/application.py:127
 msgid "Record saved successfully."
 msgstr "تم حفظ السجل بنجاح."
 
@@ -2475,7 +2491,7 @@ msgstr "عرض سجل التزام"
 msgid "Delete commitment"
 msgstr "حذف التزام"
 
-#: pa/views/payment.py:20
+#: pa/views/daily.py:16 pa/views/payment.py:20
 msgid "List of payments"
 msgstr "قائمة سجلات السداد"
 

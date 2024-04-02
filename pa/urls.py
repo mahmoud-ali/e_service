@@ -4,6 +4,7 @@ from django.conf.urls.static import static
 from django.conf import settings
 
 from pa.views.commitment import TblCompanyCommitmentDeleteView, TblCompanyCommitmentUpdateView
+from pa.views.daily import PaDailyView
 from pa.views.payment import TblCompanyPaymentDeleteView, TblCompanyPaymentUpdateView
 from pa.views.request import TblCompanyRequestDeleteView, TblCompanyRequestUpdateView
 
@@ -36,5 +37,7 @@ urlpatterns = [
     path('payment/<int:pk>/show/', TblCompanyPaymentReadonlyView.as_view(), name='payment_show'),    
     path('payment/<int:pk>/delete/', TblCompanyPaymentDeleteView.as_view(), name='payment_delete'),    
     path('payment/add/', TblCompanyPaymentCreateView.as_view(), name='payment_add'),
+
+    path('daily/', PaDailyView.as_view(), name='daily_list'),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

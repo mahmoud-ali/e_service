@@ -111,6 +111,9 @@ $(document).ready(function(){
 			 <li class="{% if menu_name == 'pa:payment_list' %}active{% endif %} ">  
 				<a href="{% url 'pa:payment_list' %}">{% translate "Payment page" %}</a>
 		 	</li>
+			 <li class="{% if menu_name == 'pa:daily_list' %}active{% endif %} ">  
+				<a href="{% url 'pa:daily_list' %}">{% translate "Pa_daily page" %}</a>
+		 	</li>
 
 		</ul>
 		<br/>

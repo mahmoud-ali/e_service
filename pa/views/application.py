@@ -18,7 +18,17 @@ from django_tables2.paginators import LazyPaginator
 
 from ..models import STATE_TYPE_CONFIRM, STATE_TYPE_DRAFT
 
-class ApplicationListView(LoginRequiredMixin,SingleTableView):
+class TranslationMixin:
+    def get(self,request,*args, **kwargs):  
+        translation.activate(request.user.lang)
+        response = super().get(request,*args, **kwargs)
+
+        if not request.COOKIES.get(settings.LANGUAGE_COOKIE_NAME):
+            response.set_cookie(settings.LANGUAGE_COOKIE_NAME,request.user.lang)
+
+        return response
+
+class ApplicationListView(LoginRequiredMixin,TranslationMixin,SingleTableView):
     model = None
     table_class = None
     filterset_class = None
@@ -31,7 +41,6 @@ class ApplicationListView(LoginRequiredMixin,SingleTableView):
     
     def dispatch(self, *args, **kwargs):         
         self.extra_context = {
-                            "type":kwargs.get("type",1),
                             "menu_name":self.menu_name,
                             "title":self.title,
                             "filter":self.filterset_class(self.request.GET) if self.filterset_class else None
@@ -43,16 +52,7 @@ class ApplicationListView(LoginRequiredMixin,SingleTableView):
         if self.filterset_class:
             query = self.filterset_class(self.request.GET,queryset=query).qs
         return query.prefetch_related(*self.table_class.relation_fields)
-    
-    def get(self,request,*args, **kwargs):  
-        translation.activate(request.user.lang)
-        response = super().get(request,*args, **kwargs)
-
-        if not request.COOKIES.get(settings.LANGUAGE_COOKIE_NAME):
-            response.set_cookie(settings.LANGUAGE_COOKIE_NAME,request.user.lang)
-
-        return response
-        
+            
 class ApplicationCreateView(LoginRequiredMixin,CreateView):
     model = None
     form_class = None

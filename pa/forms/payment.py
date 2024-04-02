@@ -10,7 +10,7 @@ request_all_qs = TblCompanyRequest.objects.prefetch_related("commitement","commi
 class TblCompanyPaymentAdminForm(ModelForm):
     class Meta:
         model = TblCompanyPayment
-        fields = ["request","payment_dt","amount","currency","excange_rate"] 
+        fields = ["request","payment_dt","amount","currency","exchange_rate"] 
         
 class TblCompanyPaymentShowEditForm(TblCompanyPaymentAdminForm):
     request = forms.ModelChoiceField(queryset=request_all_qs,disabled=True, label=_("request"))
@@ -27,7 +27,7 @@ class TblCompanyPaymentShowEditForm(TblCompanyPaymentAdminForm):
 
     class Meta:
         model = TblCompanyPayment        
-        fields = ["request","payment_dt","amount","currency","excange_rate"] 
+        fields = ["request","payment_dt","amount","currency","exchange_rate"] 
         widgets = {
             "payment_dt":AdminDateWidget(),
         }
@@ -36,7 +36,7 @@ class TblCompanyPaymentAddForm(TblCompanyPaymentAdminForm):
     request = forms.ModelChoiceField(queryset=request_all_qs.filter(state=STATE_TYPE_CONFIRM,payment_state__in=(TblCompanyRequest.REQUEST_PAYMENT_NO_PAYMENT,TblCompanyRequest.REQUEST_PAYMENT_PARTIAL_PAYMENT)), label=_("request"))
     class Meta:
         model = TblCompanyPayment        
-        fields = ["request","payment_dt","amount","currency","excange_rate"] 
+        fields = ["request","payment_dt","amount","currency","exchange_rate"] 
         widgets = {
             "payment_dt":AdminDateWidget(),
         }
