@@ -72,6 +72,8 @@ INSTALLED_APPS = [
     'import_export',
 
     'anymail',
+
+    'django_crontab',
     
     # Local                
     'accounts',
@@ -253,3 +255,7 @@ EMAIL_HOST_USER = config('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 
 SHOW_REQUESTS_URL = "profile:pa_request_show"
+
+CRONJOBS = [
+    ('*/5 * * * *', 'pa.cron.generate_requests')
+]
