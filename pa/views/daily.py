@@ -13,7 +13,7 @@ from ..models import TblCompanyRequest,TblCompanyPayment,STATE_TYPE_CONFIRM
 class PaDailyView(LoginRequiredMixin,TranslationMixin,View):
     form = PaDailyForm
     menu_name = "pa:daily_list"
-    title = _("List of payments")
+    title = _("Pa_daily page")
     template_name = "pa/pa_daily.html"     
 
     def dispatch(self, *args, **kwargs):         
