@@ -229,29 +229,51 @@ ACCOUNT_LOGOUT_REDIRECT_URL = 'profile:home'
 
 ACCOUNT_DEFAULT_PASSWORD = "changethispassword"
 
+# logging 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'filters': {
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse'
+        }
+    },
+    'formatters': {
+        'verbose': {
+            'format': '[contactor] %(levelname)s %(asctime)s %(message)s'
+        },
+    },
+    'handlers': {
+        # Send all messages to console
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        # This is the "catch all" logger
+        '': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+    }
+}
+
 # Debug
 INTERNAL_IPS = [
     "127.0.0.1",
 ]
 
 if not DEBUG:
-    ANYMAIL = {
-        # (exact settings here depend on your ESP...)
-        "host":"smtp.mailersend.net",
-        "port":587,
-        "username":config('EMAIL_HOST_USER'),
-        "password":config('EMAIL_HOST_PASSWORD'),
-        "use_tls":True,
-        "MAILERSEND_SENDER_DOMAIN": 'mineralsgate.com',  # your MailerSend domain, if needed
-    }
-    MAILERSEND_API_TOKEN = config('MAILERSEND_KEY')
-    EMAIL_BACKEND = "anymail.backends.mailersend.EmailBackend"
-    DEFAULT_FROM_EMAIL = "info@mineralsgate.com"  # if you don't already have this in settings
+    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+    DEFAULT_FROM_EMAIL = "system@mineralsgate.com"  # if you don't already have this in settings
     SERVER_EMAIL = "system@mineralsgate.com"  # ditto (default from-email for Django errors)
 
-    EMAIL_HOST = "smtp.mailersend.net"
+    EMAIL_HOST = "smtp.zoho.com"
     EMAIL_PORT = 587
     EMAIL_USE_TLS = True
+    EMAIL_USE_SSL = False
     EMAIL_HOST_USER = config('EMAIL_HOST_USER')
     EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 
