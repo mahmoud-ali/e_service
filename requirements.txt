@@ -9,6 +9,7 @@ django-filter
 python-decouple>=3.8
 pyyaml>=6.0.1
 psycopg[binary]
+psycopg[c]
 django-import-export
 django-anymail[mailersend]
 django-crontab
