@@ -46,8 +46,8 @@ class PaDailyView(LoginRequiredMixin,TranslationMixin,View):
             to_dt = form.cleaned_data["to_dt"]
             request_qs = TblCompanyRequest.objects.filter(
                     commitement__company=company,
-                    created_at__gte=from_dt,
-                    created_at__lte=to_dt,
+                    created_at__date__gte=from_dt,
+                    created_at__date__lte=to_dt,
                     state=STATE_TYPE_CONFIRM,
                 ).annotate(
                     exchange_rate=Value('1', output_field=FloatField()),
