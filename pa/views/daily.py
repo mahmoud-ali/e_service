@@ -8,7 +8,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .application import TranslationMixin
 from ..forms import PaDailyForm
-from ..models import TblCompanyRequest,TblCompanyPayment
+from ..models import TblCompanyRequest,TblCompanyPayment,STATE_TYPE_CONFIRM
 
 class PaDailyView(LoginRequiredMixin,TranslationMixin,View):
     form = PaDailyForm
@@ -48,6 +48,7 @@ class PaDailyView(LoginRequiredMixin,TranslationMixin,View):
                     commitement__company=company,
                     created_at__gte=from_dt,
                     created_at__lte=to_dt,
+                    state=STATE_TYPE_CONFIRM,
                 ).annotate(
                     exchange_rate=Value('1', output_field=FloatField()),
                     type=Value('request', output_field=CharField()),
@@ -61,6 +62,7 @@ class PaDailyView(LoginRequiredMixin,TranslationMixin,View):
                     request__commitement__company=company,
                     created_at__date__gte=from_dt,
                     created_at__date__lte=to_dt,
+                    state=STATE_TYPE_CONFIRM,
                 ).annotate(
                     type=Value('payment', output_field=CharField()),
                 )
