@@ -7,10 +7,30 @@ body {
   padding-top: 50px;
   margin: 0;
   padding: 0;
-  font-size: 1.5em;
+  font-family: Yantramanav,sans-serif !important;
+  font-size: 24px;
   font-family: var(--font-family-primary);
   color: var(--body-fg);
   background: var(--body-bg);
+}
+
+body,h1,h2,h3,h4,h5,h6,p,input,button,select,.btn{
+  font-family: Yantramanav,sans-serif !important;
+  font-style: normal;
+}
+
+body,p,input,select,button,.btn{
+  font-weight: 400 !important;
+  font-size: 20px !important;
+
+}
+
+h1,h2,h3{
+  font-weight: 600 !important;
+}
+
+h4,h5,h6{
+  font-weight: 500 !important;
 }
 
 
@@ -46,6 +66,10 @@ body {
     overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
     background-color: #f5f5f5;
   }
+
+  .sidebar h4{
+    font-size: 28px;
+  }  
 }
 
 /* Sidebar navigation */
@@ -63,6 +87,11 @@ body {
 .nav-sidebar > .active > a:focus {
   color: #fff;
   background-color: #428bca;
+}
+
+
+.navbar-brand {
+  font-size: 32px;
 }
 
 
