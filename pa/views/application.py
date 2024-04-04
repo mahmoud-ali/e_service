@@ -1,3 +1,4 @@
+import datetime
 from django.conf import settings
 from django.urls import reverse_lazy
 from django.views.generic import View,UpdateView,CreateView,DetailView,DeleteView
@@ -19,12 +20,14 @@ from django_tables2.paginators import LazyPaginator
 from ..models import STATE_TYPE_CONFIRM, STATE_TYPE_DRAFT
 
 class TranslationMixin:
-    def get(self,request,*args, **kwargs):  
+    def dispatch(self,request,*args, **kwargs):  
+        response = super().dispatch(request,*args, **kwargs)
         translation.activate(request.user.lang)
-        response = super().get(request,*args, **kwargs)
 
-        if not request.COOKIES.get(settings.LANGUAGE_COOKIE_NAME):
-            response.set_cookie(settings.LANGUAGE_COOKIE_NAME,request.user.lang)
+        lang_cookie = request.COOKIES.get(settings.LANGUAGE_COOKIE_NAME)
+
+        if not lang_cookie or lang_cookie != request.user.lang:
+            response.set_cookie(settings.LANGUAGE_COOKIE_NAME,request.user.lang,max_age=datetime.timedelta(days=365))
 
         return response
 

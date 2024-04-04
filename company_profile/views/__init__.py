@@ -24,7 +24,7 @@ from ..workflow import STATE_CHOICES,SUBMITTED,ACCEPTED,APPROVED,REJECTED,send_t
 from ..tables import AppForignerMovementTable,AppBorrowMaterialTable
 
 from .application import ApplicationListView, ApplicationCreateView, ApplicationReadonlyView, \
-                         ApplicationMasterDetailCreateView, ApplicationMasterDetailReadonlyView
+                         ApplicationMasterDetailCreateView, ApplicationMasterDetailReadonlyView, TranslationMixin
 from .work_plan import AppWorkPlanListView,AppWorkPlanCreateView,AppWorkPlanReadonlyView
 from .technical_financial_report import AppTechnicalFinancialReportListView, AppTechnicalFinancialReportCreateView, AppTechnicalFinancialReportReadonlyView
 from .change_company_name import AppChangeCompanyNameListView, AppChangeCompanyNameCreateView, AppChangeCompanyNameReadonlyView
@@ -95,7 +95,7 @@ class LkpSelectView(LoginRequiredMixin,TemplateView):
     def get(self, request, *args, **kwargs):                   
         return render(request, self.template_name, self.extra_context)    
 
-class HomePageView(LoginRequiredMixin,TemplateView):
+class HomePageView(LoginRequiredMixin,TranslationMixin,TemplateView):
     template_name = 'company_profile/home.html'
     menu_name = 'profile:home'
     def dispatch(self, *args, **kwargs):                   
@@ -104,15 +104,6 @@ class HomePageView(LoginRequiredMixin,TemplateView):
                             "menu_name":self.menu_name,
          }
         return super().dispatch(*args, **kwargs)    
-
-    def get(self,request,*args, **kwargs):  
-        response = super().get(request,*args, **kwargs)
-
-        if not request.COOKIES.get(settings.LANGUAGE_COOKIE_NAME):
-            translation.activate(request.user.lang)
-            response.set_cookie(settings.LANGUAGE_COOKIE_NAME,request.user.lang)
-
-        return response
 
 class LkpLocalitySelectView(LkpSelectView):
     def get_queryset(self):

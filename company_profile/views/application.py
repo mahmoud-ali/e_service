@@ -17,7 +17,19 @@ from django_tables2.paginators import LazyPaginator
 
 from ..workflow import STATE_CHOICES,SUBMITTED,ACCEPTED,APPROVED,REJECTED,send_transition_email,get_sumitted_responsible
 
-class ApplicationListView(LoginRequiredMixin,SingleTableView):
+class TranslationMixin:
+    def dispatch(self,request,*args, **kwargs):  
+        response = super().dispatch(request,*args, **kwargs)
+        translation.activate(request.user.lang)
+
+        lang_cookie = request.COOKIES.get(settings.LANGUAGE_COOKIE_NAME)
+
+        if not lang_cookie or lang_cookie != request.user.lang:
+            response.set_cookie(settings.LANGUAGE_COOKIE_NAME,request.user.lang,max_age=datetime.timedelta(days=365))
+
+        return response
+
+class ApplicationListView(LoginRequiredMixin,TranslationMixin,SingleTableView):
     model = None
     table_class = None
     title = None
@@ -45,15 +57,6 @@ class ApplicationListView(LoginRequiredMixin,SingleTableView):
                 
         query = super().get_queryset()
         return query.filter(state__in=query_filter).prefetch_related(*self.table_class.relation_fields)
-
-    def get(self,request,*args, **kwargs):  
-        response = super().get(request,*args, **kwargs)
-
-        if not request.COOKIES.get(settings.LANGUAGE_COOKIE_NAME):
-            translation.activate(request.user.lang)
-            response.set_cookie(settings.LANGUAGE_COOKIE_NAME,request.user.lang)
-
-        return response
 
 class ApplicationCreateView(LoginRequiredMixin,CreateView):
     model = None
