@@ -1,6 +1,6 @@
 {% load i18n %}
 <!doctype html>
-<html lang="ar" dir="rtl">
+<html {% if request.LANGUAGE_CODE == "ar" %} lang="ar" dir="rtl" {% endif %}>
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">

@@ -138,6 +138,24 @@ h4,h5,h6{
     width:200px;
 }*/
 
-.calendarbox, .clockbox{
-    width:25em
+.calendarbox, .clockbox{  
+  width: 40em;
+}
+
+.calendarbox caption{
+  font-size: 18px ;
+}
+
+.calendar td,.calendar th{
+  font-family: Yantramanav,sans-serif !important;
+}
+.calendar th{
+  font-size: 12px ;
+}
+.calendar td{
+  font-size: 18px ;
+}
+
+.calendar-shortcuts{
+  font-size: 18px;
 }

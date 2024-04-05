@@ -15,7 +15,7 @@ from .views import TblCompanyCommitmentListView,TblCompanyCommitmentCreateView,T
 
 app_name = "pa"
 urlpatterns = [                                                        
-    # path('', HomePageView.as_view(), name='home'),
+    path('', PaDailyView.as_view(), name='home'),
 
     path('commitment/', TblCompanyCommitmentListView.as_view(), name='commitment_list'),
     path('commitment/<int:type>/', TblCompanyCommitmentListView.as_view(), name='commitment_list'),
