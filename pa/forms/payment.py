@@ -13,6 +13,7 @@ class TblCompanyPaymentAdminForm(ModelForm):
         fields = ["request","payment_dt","amount","currency","exchange_rate"] 
         
 class TblCompanyPaymentShowEditForm(TblCompanyPaymentAdminForm):
+    layout = [["request","",""],["payment_dt","",""],["amount","currency","exchange_rate"]]
     request = forms.ModelChoiceField(queryset=request_all_qs,disabled=True, label=_("request"))
 
     def __init__(self, *args, **kwargs):        
@@ -33,6 +34,7 @@ class TblCompanyPaymentShowEditForm(TblCompanyPaymentAdminForm):
         }
 
 class TblCompanyPaymentAddForm(TblCompanyPaymentAdminForm):
+    layout = [["request","",""],["payment_dt","",""],["amount","currency","exchange_rate"]]
     request = forms.ModelChoiceField(queryset=request_all_qs.filter(state=STATE_TYPE_CONFIRM,payment_state__in=(TblCompanyRequest.REQUEST_PAYMENT_NO_PAYMENT,TblCompanyRequest.REQUEST_PAYMENT_PARTIAL_PAYMENT)), label=_("request"))
     class Meta:
         model = TblCompanyPayment        

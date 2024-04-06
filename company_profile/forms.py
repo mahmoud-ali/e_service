@@ -80,6 +80,7 @@ class AppBorrowMaterialAdminForm(WorkflowFormMixin,ModelForm):
         
 
 class AppBorrowMaterialForm(AppBorrowMaterialAdminForm):
+    layout = ["company_from","borrow_date",["borrow_materials_list_file","borrow_from_approval_file"]]
     company = None
     class Meta:
         model = AppBorrowMaterial        
@@ -95,6 +96,7 @@ class AppWorkPlanAdminForm(WorkflowFormMixin,ModelForm):
         fields = ["company","plan_from","plan_to","plan_comments","state","reject_comments","official_letter_file","work_plan_file"] 
         
 class AppWorkPlanForm(AppWorkPlanAdminForm):
+    layout = [["plan_from","plan_to"],"plan_comments",["official_letter_file","work_plan_file"]]
     company = None
     class Meta:
         model = AppWorkPlan        
@@ -108,9 +110,10 @@ class AppTechnicalFinancialReportAdminForm(WorkflowFormMixin,ModelForm):
     company = forms.ModelChoiceField(queryset=TblCompanyProduction.objects.all(), disabled=True, label=_("company"))
     class Meta:
         model = AppTechnicalFinancialReport
-        fields = ["company","report_from","report_to","report_type","state","reject_comments","report_file","other_attachments_file"] 
+        fields = ["company","report_type","report_from","report_to","report_comments","state","reject_comments","report_file","other_attachments_file"] 
         
 class AppTechnicalFinancialReportForm(AppTechnicalFinancialReportAdminForm):
+    layout = ["report_type",["report_from","report_to"],"report_comments",["report_file","other_attachments_file"]]
     company = None
     class Meta:
         model = AppTechnicalFinancialReport        
@@ -124,9 +127,10 @@ class AppChangeCompanyNameAdminForm(WorkflowFormMixin,ModelForm):
     company = forms.ModelChoiceField(queryset=TblCompanyProduction.objects.all(), disabled=True, label=_("company"))
     class Meta:
         model = AppChangeCompanyName
-        fields = ["company","new_name","state","reject_comments","tasis_certificate_file","tasis_contract_file","sh7_file","lahat_tasis_file","name_change_alert_file"] 
+        fields = ["company","new_name","cause_for_change","state","reject_comments","tasis_certificate_file","tasis_contract_file","sh7_file","lahat_tasis_file","name_change_alert_file"] 
         
 class AppChangeCompanyNameForm(AppChangeCompanyNameAdminForm):
+    layout = ["new_name","cause_for_change",["tasis_certificate_file","tasis_contract_file","sh7_file"],["lahat_tasis_file","name_change_alert_file",""]]
     company = None
     class Meta:
         model = AppChangeCompanyName        
@@ -140,6 +144,7 @@ class AppExplorationTimeAdminForm(WorkflowFormMixin,ModelForm):
         fields = ["company","expo_from","expo_to","expo_cause_for_timing","state","reject_comments","expo_cause_for_change_file"] 
         
 class AppExplorationTimeForm(AppExplorationTimeAdminForm):
+    layout = [["expo_from","expo_to"],"expo_cause_for_timing","expo_cause_for_change_file"] 
     company = None
     class Meta:
         model = AppExplorationTime        
@@ -169,6 +174,7 @@ class AppRemoveAreaAdminForm(WorkflowFormMixin,ModelForm):
         fields = ["company","remove_type","area_in_km2","area_percent_from_total","state","reject_comments","geo_coordinator_for_removed_area_file", "geo_coordinator_for_remain_area_file","map_for_clarification_file","technical_report_for_removed_area_file"] 
         
 class AppRemoveAreaForm(AppRemoveAreaAdminForm):
+    layout = ["remove_type","area_in_km2","area_percent_from_total",["geo_coordinator_for_removed_area_file", "geo_coordinator_for_remain_area_file"],["map_for_clarification_file","technical_report_for_removed_area_file"]]
     company = None
     class Meta:
         model = AppRemoveArea        
@@ -208,6 +214,7 @@ class AppTajmeedAdminForm(WorkflowFormMixin,ModelForm):
         fields = ["company","tajmeed_from","tajmeed_to","cause_for_tajmeed","state","reject_comments","cause_for_uncontrolled_force_file","letter_from_jeha_amnia_file"] 
         
 class AppTajmeedForm(AppTajmeedAdminForm):
+    layout = [["tajmeed_from","tajmeed_to"],"cause_for_tajmeed",["cause_for_uncontrolled_force_file","letter_from_jeha_amnia_file"]]
     company = None
     class Meta:
         model = AppTajmeed        
@@ -239,6 +246,7 @@ class AppTamdeedAdminForm(WorkflowFormMixin,ModelForm):
         fields = ["company","tamdeed_from","tamdeed_to","cause_for_tamdeed","state","reject_comments","approved_work_plan_file","tnazol_file"] 
         
 class AppTamdeedForm(AppTamdeedAdminForm):
+    layout = [["tamdeed_from","tamdeed_to"],"cause_for_tamdeed",["approved_work_plan_file","tnazol_file"]]
     company = None
     class Meta:
         model = AppTamdeed        
@@ -255,6 +263,7 @@ class AppTaaweedAdminForm(WorkflowFormMixin,ModelForm):
         fields = ["company","taaweed_from","taaweed_to","cause_for_taaweed","state","reject_comments"] 
         
 class AppTaaweedForm(AppTaaweedAdminForm):
+    layout = [["taaweed_from","taaweed_to"],"cause_for_taaweed"] 
     company = None
     class Meta:
         model = AppTaaweed        
@@ -271,6 +280,7 @@ class AppMdaAdminForm(WorkflowFormMixin,ModelForm):
         fields = ["company","mda_from","mda_to","cause_for_mda","state","reject_comments","approved_work_plan_file"] 
         
 class AppMdaForm(AppMdaAdminForm):
+    layout = [["mda_from","mda_to"],"cause_for_mda","approved_work_plan_file"] 
     company = None
     class Meta:
         model = AppMda
@@ -339,6 +349,7 @@ class AppForeignerProcedureAdminForm(WorkflowFormMixin,ModelForm):
         fields = ["company","procedure_type","procedure_from","procedure_to","procedure_cause","state","reject_comments", "official_letter_file","passport_file","cv_file","experience_certificates_file","eqama_file","dawa_file"] 
         
 class AppForeignerProcedureForm(AppForeignerProcedureAdminForm):
+    layout = ["procedure_type",["procedure_from","procedure_to"],"procedure_cause",["official_letter_file","passport_file","cv_file"],["experience_certificates_file","eqama_file","dawa_file"]]
     company = None
     class Meta:
         model = AppForeignerProcedure
@@ -367,6 +378,7 @@ class AppAifaaJomrkiAdminForm(WorkflowFormMixin,ModelForm):
         fields = ["company","license_type","state","reject_comments", "approved_requirements_list_file", "approval_from_finance_ministry_file","final_voucher_file", "shipping_policy_file","check_certificate_file","origin_certificate_file", "packing_certificate_file","specifications_file","taba_file"] 
         
 class AppAifaaJomrkiForm(AppAifaaJomrkiAdminForm):
+    layout = ["license_type", ["approved_requirements_list_file", "approval_from_finance_ministry_file","final_voucher_file", "shipping_policy_file"],["check_certificate_file","origin_certificate_file", "packing_certificate_file","specifications_file"],"taba_file"] 
     company = None
     class Meta:
         model = AppAifaaJomrki
@@ -380,6 +392,7 @@ class AppReexportEquipmentsAdminForm(WorkflowFormMixin,ModelForm):
         fields = ["company","cause_for_equipments","state","reject_comments", "shipping_policy_file", "voucher_file","specifications_file"] 
         
 class AppReexportEquipmentsForm(AppReexportEquipmentsAdminForm):
+    layout = ["cause_for_equipments", ["shipping_policy_file", "voucher_file","specifications_file"]] 
     company = None
     class Meta:
         model = AppReexportEquipments
@@ -393,6 +406,7 @@ class AppRequirementsListAdminForm(WorkflowFormMixin,ModelForm):
         fields = ["company","state","reject_comments", "approved_work_plan_file", "initial_voucher_file","specifications_file", "mshobat_jamarik_file"] 
         
 class AppRequirementsListForm(AppRequirementsListAdminForm):
+    layout = [["approved_work_plan_file", "initial_voucher_file"],["specifications_file", "mshobat_jamarik_file"]]
     company = None
     class Meta:
         model = AppRequirementsList

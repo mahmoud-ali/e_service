@@ -14,6 +14,7 @@ class TblCompanyRequestAdminForm(ModelForm):
         fields = ["commitement","from_dt","to_dt","amount","currency"] 
         
 class TblCompanyRequestShowEditForm(TblCompanyRequestAdminForm):
+    layout = ["commitement",["from_dt","to_dt"],["amount","currency"]]
     commitement = forms.ModelChoiceField(queryset=None,disabled=True, label=_("commitement"))
 
     def __init__(self, *args, **kwargs):        
@@ -35,6 +36,7 @@ class TblCompanyRequestShowEditForm(TblCompanyRequestAdminForm):
         }
 
 class TblCompanyRequestAddForm(TblCompanyRequestAdminForm):
+    layout = ["commitement",["from_dt","to_dt"],["amount","currency"]]
     commitement = forms.ModelChoiceField(queryset=commitement_confirmed_qs.filter(request_interval=TblCompanyCommitment.INTERVAL_TYPE_MANUAL).order_by("company"), label=_("commitement"))
     class Meta:
         model = TblCompanyRequest        

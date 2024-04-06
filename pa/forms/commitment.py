@@ -15,6 +15,7 @@ class TblCompanyCommitmentAdminForm(ModelForm):
         
 class TblCompanyCommitmentForm(TblCompanyCommitmentAdminForm):
     # company = None
+    layout = [["company","item"],["amount","currency"],["request_interval","request_next_interval_dt"],"request_auto_confirm"]
     class Meta:
         model = TblCompanyCommitment        
         fields = ["company","item","amount","currency","request_interval","request_next_interval_dt","request_auto_confirm"] 

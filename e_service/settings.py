@@ -282,3 +282,7 @@ SHOW_REQUESTS_URL = "profile:pa_request_show"
 CRONJOBS = [
     ('*/5 * * * *', 'pa.cron.generate_requests')
 ]
+
+BOOTSTRAP3 = {
+    "form_renderers": {"default": "e_service.renderers.FormRenderer"},
+}
