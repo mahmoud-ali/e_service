@@ -60,7 +60,7 @@ class AppRequestListView(LoginRequiredMixin,SingleTableView):
 class AppRequestReadonlyView(LoginRequiredMixin,SingleObjectMixin,View):
     model = TblCompanyRequest
     model_details = TblCompanyPayment
-    model_details_fields = ["request","payment_dt","amount","currency","excange_rate"]
+    model_details_fields = ["request","payment_dt","amount","currency","exchange_rate"]
     form_class = TblCompanyRequestShowEditForm
     menu_name = "profile:pa_request_list"
     title = _("Show added request")
