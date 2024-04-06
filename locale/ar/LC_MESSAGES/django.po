@@ -1459,10 +1459,8 @@ msgid "Application: Explosive Permission"
 msgstr "طلب تجديد استخدام متفجرات"
 
 #: company_profile/models.py:974
-#, fuzzy
-#| msgid "study_about_change_reason_file"
 msgid "restart_activity_reason_file"
-msgstr "دراسة عن اسباب التغيير"
+msgstr "اسباب مزاولة النشاط"
 
 #: company_profile/models.py:977
 msgid "Restart Activity"

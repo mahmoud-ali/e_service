@@ -159,3 +159,8 @@ h4,h5,h6{
 .calendar-shortcuts{
   font-size: 18px;
 }
+
+.form-control{
+  height: 40px;
+  font-size: 18px;
+}
