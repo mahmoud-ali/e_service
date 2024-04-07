@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-04-03 01:38+0200\n"
+"POT-Creation-Date: 2024-04-08 01:20+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -98,23 +98,23 @@ msgid "company_type"
 msgstr "نوع الشركة"
 
 #: company_profile/forms.py:47 company_profile/forms.py:64
-#: company_profile/forms.py:92 company_profile/forms.py:108
-#: company_profile/forms.py:124 company_profile/forms.py:137
-#: company_profile/forms.py:153 company_profile/forms.py:166
-#: company_profile/forms.py:179 company_profile/forms.py:192
-#: company_profile/forms.py:205 company_profile/forms.py:221
-#: company_profile/forms.py:236 company_profile/forms.py:252
-#: company_profile/forms.py:268 company_profile/forms.py:284
-#: company_profile/forms.py:297 company_profile/forms.py:310
-#: company_profile/forms.py:323 company_profile/forms.py:336
-#: company_profile/forms.py:352 company_profile/forms.py:377
-#: company_profile/forms.py:390 company_profile/forms.py:403
-#: company_profile/forms.py:428 company_profile/forms.py:442
-#: company_profile/forms.py:456 company_profile/forms.py:470
-#: company_profile/forms.py:484 company_profile/forms.py:498
-#: company_profile/forms.py:512 company_profile/forms.py:526
-#: company_profile/forms.py:540 company_profile/forms.py:554
-#: company_profile/forms.py:568 company_profile/forms.py:582
+#: company_profile/forms.py:93 company_profile/forms.py:110
+#: company_profile/forms.py:127 company_profile/forms.py:141
+#: company_profile/forms.py:158 company_profile/forms.py:171
+#: company_profile/forms.py:185 company_profile/forms.py:198
+#: company_profile/forms.py:211 company_profile/forms.py:228
+#: company_profile/forms.py:243 company_profile/forms.py:260
+#: company_profile/forms.py:277 company_profile/forms.py:294
+#: company_profile/forms.py:307 company_profile/forms.py:320
+#: company_profile/forms.py:333 company_profile/forms.py:346
+#: company_profile/forms.py:363 company_profile/forms.py:389
+#: company_profile/forms.py:403 company_profile/forms.py:417
+#: company_profile/forms.py:442 company_profile/forms.py:456
+#: company_profile/forms.py:470 company_profile/forms.py:484
+#: company_profile/forms.py:498 company_profile/forms.py:512
+#: company_profile/forms.py:526 company_profile/forms.py:540
+#: company_profile/forms.py:554 company_profile/forms.py:568
+#: company_profile/forms.py:582 company_profile/forms.py:596
 #: company_profile/models.py:156 company_profile/models.py:176
 #: company_profile/models.py:202 company_profile/models.py:235
 #: company_profile/models.py:261 company_profile/models.py:289
@@ -143,7 +143,7 @@ msgstr "شركة"
 msgid "company_borrow_from"
 msgstr "الشركة المستلف منها"
 
-#: company_profile/forms.py:353 company_profile/forms.py:404
+#: company_profile/forms.py:364 company_profile/forms.py:418
 #: company_profile/models.py:637 company_profile/models.py:745
 #: company_profile/models.py:874
 msgid "license_type"
@@ -1566,7 +1566,7 @@ msgstr "الموضوع"
 
 #: company_profile/models.py:1090 company_profile/models.py:1101
 #: company_profile/templates/company_profile/application_readonly.html:25
-#: pa/templates/pa/application_readonly.html:40
+#: pa/templates/pa/application_readonly.html:39
 msgid "whom_attachement_file"
 msgstr "ملف شهادة لمن يهمه الامر"
 
@@ -1655,7 +1655,7 @@ msgstr "تفاصيل استمارة الانتاج"
 #: company_profile/tables.py:452 company_profile/tables.py:465
 #: company_profile/tables.py:478 company_profile/tables.py:491
 #: pa/tables/commitment.py:22 pa/tables/payment.py:25 pa/tables/request.py:24
-#: pa/tables/request.py:40 pa/templates/pa/pa_daily.html:42
+#: pa/tables/request.py:40 pa/templates/pa/pa_daily.html:44
 msgid "No records."
 msgstr "لايوجد سجل."
 
@@ -1678,7 +1678,7 @@ msgstr "تم الرفض"
 
 #: company_profile/templates/company_profile/application_readonly.html:14
 #: company_profile/templates/company_profile/application_readonly_master_details.html:16
-#: pa/templates/pa/application_readonly.html:11
+#: pa/templates/pa/application_readonly.html:12
 #: pa/templates/pa/application_readonly_master_details.html:13
 msgid "reject_comments_title"
 msgstr "لقد تم رفض طلبك للاتي: "
@@ -1721,15 +1721,15 @@ msgstr "طلب اجراءات اجانب"
 msgid "Application: Visiblity Study"
 msgstr "طلب دراسة جدوى"
 
-#: company_profile/views/__init__.py:126
+#: company_profile/views/__init__.py:117
 msgid "List of foreigner movements"
 msgstr "قائمة طلبات حركة الاجانب"
 
-#: company_profile/views/__init__.py:144
+#: company_profile/views/__init__.py:135
 msgid "Add new movement"
 msgstr "اضافة طلب حركة اجنبي"
 
-#: company_profile/views/__init__.py:164 company_profile/views/__init__.py:244
+#: company_profile/views/__init__.py:155 company_profile/views/__init__.py:235
 #: company_profile/views/add_area.py:64
 #: company_profile/views/aifaa_jomrki.py:76
 #: company_profile/views/change_company_name.py:68
@@ -1765,19 +1765,19 @@ msgstr "اضافة طلب حركة اجنبي"
 msgid "Application sent successfully."
 msgstr "تم ارسال الطلب بنجاح."
 
-#: company_profile/views/__init__.py:177
+#: company_profile/views/__init__.py:168
 msgid "Show movement"
 msgstr "عرض طلب حركة اجنبي"
 
-#: company_profile/views/__init__.py:192
+#: company_profile/views/__init__.py:183
 msgid "List of borrow materials"
 msgstr "قائمة طلبات الاستلاف"
 
-#: company_profile/views/__init__.py:211
+#: company_profile/views/__init__.py:202
 msgid "Add new borrow materials"
 msgstr "اضافة طلب اسلاف مواد"
 
-#: company_profile/views/__init__.py:262
+#: company_profile/views/__init__.py:253
 msgid "Show borrow materials"
 msgstr "عرض طلب استلاف مواد"
 
@@ -2263,11 +2263,11 @@ msgstr "من"
 msgid "to_dt"
 msgstr "الى"
 
-#: pa/forms/payment.py:16 pa/forms/payment.py:36 pa/models.py:271
+#: pa/forms/payment.py:17 pa/forms/payment.py:38 pa/models.py:271
 msgid "request"
 msgstr "المطالبة"
 
-#: pa/forms/request.py:17 pa/forms/request.py:38 pa/models.py:145
+#: pa/forms/request.py:18 pa/forms/request.py:40 pa/models.py:145
 msgid "commitement"
 msgstr "التزام"
 
@@ -2307,7 +2307,7 @@ msgstr "يدوي"
 msgid "yearly"
 msgstr "سنوي"
 
-#: pa/models.py:68 pa/tables/payment.py:35 pa/templates/pa/pa_daily.html:47
+#: pa/models.py:68 pa/tables/payment.py:35 pa/templates/pa/pa_daily.html:49
 msgid "financial item"
 msgstr "البند"
 
@@ -2316,7 +2316,7 @@ msgid "amount"
 msgstr "المبلغ"
 
 #: pa/models.py:70 pa/models.py:149 pa/models.py:274
-#: pa/templates/pa/pa_daily.html:48
+#: pa/templates/pa/pa_daily.html:50
 msgid "currency"
 msgstr "العملة"
 
@@ -2393,7 +2393,7 @@ msgstr "مطالبات مالية"
 msgid "payment_dt"
 msgstr "تاريخ السداد"
 
-#: pa/models.py:275 pa/templates/pa/pa_daily.html:49
+#: pa/models.py:275 pa/templates/pa/pa_daily.html:51
 msgid "exchange_rate"
 msgstr "سعر الصرف"
 
@@ -2413,11 +2413,11 @@ msgstr "مجموع قيم السداد اكبر من قيمة المطالبة"
 msgid "Financial payments"
 msgstr "السداد"
 
-#: pa/templates/pa/application_add.html:15
+#: pa/templates/pa/application_add.html:16
 msgid "Save Draft"
 msgstr "حفظ مسودة"
 
-#: pa/templates/pa/application_add.html:16
+#: pa/templates/pa/application_add.html:18
 msgid "Save & Confirm"
 msgstr "حفظ وتأكيد"
 
@@ -2425,19 +2425,19 @@ msgstr "حفظ وتأكيد"
 msgid "Delete Draft"
 msgstr "حذف المسودة"
 
-#: pa/templates/pa/application_list.html:14 pa/templates/pa/pa_daily.html:27
+#: pa/templates/pa/application_list.html:15 pa/templates/pa/pa_daily.html:28
 msgid "Search"
 msgstr "بحث"
 
-#: pa/templates/pa/application_list.html:27
+#: pa/templates/pa/application_list.html:28
 msgid "New record"
 msgstr "سجل جديد"
 
-#: pa/templates/pa/application_readonly.html:23
+#: pa/templates/pa/application_readonly.html:25
 msgid "edit_btn"
 msgstr "تعديل سجل"
 
-#: pa/templates/pa/application_readonly.html:27
+#: pa/templates/pa/application_readonly.html:30
 msgid "delete_btn"
 msgstr "حذف سجل"
 
@@ -2449,25 +2449,29 @@ msgstr "الالتزامات المالية"
 msgid "Payment page"
 msgstr "السداد"
 
-#: pa/templates/pa/base.html:116
+#: pa/templates/pa/base.html:116 pa/views/daily.py:16
 msgid "Pa_daily page"
 msgstr "يومية حسابات الانتاج"
 
-#: pa/templates/pa/pa_daily.html:46
+#: pa/templates/pa/pa_daily.html:48
 msgid "date"
 msgstr "التاريخ"
 
-#: pa/templates/pa/pa_daily.html:50
+#: pa/templates/pa/pa_daily.html:52
 msgid "debit"
 msgstr "مدين"
 
-#: pa/templates/pa/pa_daily.html:51
+#: pa/templates/pa/pa_daily.html:53
 msgid "credit"
 msgstr "دائن"
 
-#: pa/views/application.py:82 pa/views/application.py:127
+#: pa/views/application.py:96 pa/views/application.py:142
 msgid "Record saved successfully."
 msgstr "تم حفظ السجل بنجاح."
+
+#: pa/views/application.py:205
+msgid "Record removed successfully."
+msgstr "تم حذف السجل بنجاح."
 
 #: pa/views/commitment.py:19
 msgid "List of commitments"
@@ -2489,7 +2493,7 @@ msgstr "عرض سجل التزام"
 msgid "Delete commitment"
 msgstr "حذف التزام"
 
-#: pa/views/daily.py:16 pa/views/payment.py:20
+#: pa/views/payment.py:20
 msgid "List of payments"
 msgstr "قائمة سجلات السداد"
 
