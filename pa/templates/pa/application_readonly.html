@@ -1,6 +1,7 @@
 {% extends 'pa/base.html' %}
 {% load i18n %}
 {% load bootstrap3 %}
+{% load auth_extras %}
 
 {% block content %}
 <h1 class="page-header">{{title}} ({% translate object.state %})</h1>
@@ -18,20 +19,19 @@
     {% bootstrap_form form %}
 
     {% if object.id and object.state == 'draft' %}
+
     <a class="btn btn-success" href="{% url menu_edit_name object.id%}" role="button">
         <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
         {% translate "edit_btn" %}
     </a>
+    {% if request.user|has_group:"pa_manager" %}
     <a class="btn btn-danger" href="{% url menu_delete_name object.id%}" role="button">
         <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
         {% translate "delete_btn" %}
     </a>
+    {% endif %}
 
-    {% comment %} <a class="btn btn-success" href="{% url menu_confirm_name object.id%}" role="button">
-        <span class="glyphicon glyphicon-save" aria-hidden="true"></span>
-        {% translate "confirm_btn" %}
-    </a> {% endcomment %}
-        {% endif %}
+    {% endif %}
 
 </form>
 

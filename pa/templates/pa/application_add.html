@@ -3,6 +3,7 @@
 
 {% load i18n %}
 {% load bootstrap3 %}
+{% load auth_extras %}
 
 {% block content %}
 <h1 class="page-header">{{title}}</h1>
@@ -13,7 +14,9 @@
     {% bootstrap_form form %}
     {% buttons %}
     <input type="submit" value="{% translate "Save Draft" %}" name="_save_draft" class="btn btn-primary">
+    {% if request.user|has_group:"pa_manager" %}
     <input type="submit" value="{% translate "Save & Confirm" %}" name="_save_confirm" class="btn btn-default">
+    {% endif %}
     {% endbuttons %}
 </form>
 <script type="text/javascript" src="{% static 'company_profile/js/admin_jsi18n.js' %}"></script>
