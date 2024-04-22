@@ -13,7 +13,7 @@ from django.template.loader import render_to_string
 from django.contrib.auth import get_user_model
 from django.contrib.sites.models import Site
 
-from company_profile.models import TblCompanyProduction, TblCompanyProductionUserRole
+from company_profile.models import TblCompany,TblCompanyProduction, TblCompanyProductionUserRole
 
 CURRENCY_TYPE_SDG = "sdg"
 CURRENCY_TYPE_EURO = "euro"
@@ -51,7 +51,8 @@ class LoggingModel(models.Model):
         
 class LkpItem(models.Model):
     name = models.CharField(_("item_name"),max_length=50)
-
+    company_type = models.CharField(_("company_type"),max_length=15, choices=TblCompany.COMPANY_TYPE_CHOICES)
+    
     def __str__(self):
         return _("Financial item") +" "+str(self.name)
         
