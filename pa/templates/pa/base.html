@@ -105,6 +105,9 @@ $(document).ready(function(){
 			 <li class="{% if menu_name == 'pa:commitment_list' %}active{% endif %} ">  
 				<a href="{% url 'pa:commitment_list' %}">{% translate "Commitment page" %}</a>
 		 	</li>
+			 <li class="{% if menu_name == 'pa:commitment_schedule_list' %}active{% endif %} ">  
+				<a href="{% url 'pa:commitment_schedule_list' %}">{% translate "Commitment Schedule page" %}</a>
+		 	</li>
 			 <li class="{% if menu_name == 'pa:request_list' %}active{% endif %} ">  
 				<a href="{% url 'pa:request_list' %}">{% translate "Request page" %}</a>
 		 	</li>

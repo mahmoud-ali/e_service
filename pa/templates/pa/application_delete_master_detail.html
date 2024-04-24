@@ -1,0 +1,73 @@
+{% extends 'pa/base.html' %}
+{% load static  %}
+
+{% load i18n %}
+{% load bootstrap3 %}
+{% load auth_extras %}
+
+{% block content %}
+<h1 class="page-header">{{title}}</h1>
+{% bootstrap_messages %}
+
+<form  method="post" enctype="multipart/form-data">
+{% csrf_token %}
+    {% bootstrap_form form %}
+
+    {% for detail in details %}
+	<h3>{{detail.title}}:</h3>
+    {{ detail.formset.management_form }}
+
+    <table id="detail_table{{ forloop.counter }}"  class="table table-bordered">
+        <tr>
+        {% for field in detail.formset|first %}
+            {% if field.is_hidden is not True %}
+            <th>
+            {{ field.label }}
+            </th>
+            {% endif %}
+        {% endfor %}
+        </tr>
+    {% for form in detail.formset %}
+        {% for hidden in form.hidden_fields %}
+            {{ hidden }}
+        {% endfor %}        
+
+        <tr>
+        {% for field in form.visible_fields %}
+            <td>
+            {{ field.errors }}
+            {{ field }}
+            {% if field.help_text %}
+            <p class="help" id="{{ field.auto_id }}_helptext">
+            {{ field.help_text|safe }}
+            </p>
+            {% endif %}
+            </td>
+        {% endfor %}
+        </tr>
+        {% endfor %}        	
+    </table>
+<br/>
+<br/>
+{{ form.media }}
+{% endfor %}        	
+    
+    {% buttons %}
+    <input type="submit" value="{% translate "Delete Draft" %}" id="btn_delete_draft" name="_delete_draft" class="btn btn-primary">
+    {% endbuttons %}
+</form>
+<script type="text/javascript" src="{% static 'company_profile/js/admin_jsi18n.js' %}"></script>
+<script type="text/javascript" src="{% static 'admin/js/core.js' %}"></script>
+{{ form.media }}
+<script>
+    $(document).ready(function(){
+        {% comment %} $('form :input').not('#btn_delete_draft').not('input[type=hidden]').attr('disabled','true'); {% endcomment %}
+        $('div.bootstrap3-multi-input').find("a").each(function(i,e){
+            var a = '<a target="_blank" href="/media/'+$(e).text()+'">'+$(e).text()+'</a>'
+            $(e).parent().html(a)
+    
+        });
+    });
+    </script>
+
+{% endblock content %}

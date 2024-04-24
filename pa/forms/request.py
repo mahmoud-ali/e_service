@@ -3,46 +3,53 @@ from django.forms import ModelForm
 from django.contrib.admin.widgets import AdminDateWidget
 from django.utils.translation import gettext_lazy as _
 
-from ..models import TblCompanyCommitment,TblCompanyRequest,STATE_TYPE_CONFIRM
+from ..models import TblCompanyCommitmentMaster, TblCompanyCommitmentSchedular,TblCompanyRequestMaster,STATE_TYPE_CONFIRM
 
-commitement_all_qs = TblCompanyCommitment.objects.prefetch_related("company","item")
-commitement_confirmed_qs = commitement_all_qs.filter(state=STATE_TYPE_CONFIRM)
+commitment_all_qs = TblCompanyCommitmentMaster.objects.prefetch_related("company")
+commitment_confirmed_qs = commitment_all_qs.filter(state=STATE_TYPE_CONFIRM)
 
 class TblCompanyRequestAdminForm(ModelForm):
     class Meta:
-        model = TblCompanyRequest
-        fields = ["commitement","from_dt","to_dt","amount","currency"] 
+        model = TblCompanyRequestMaster
+        fields = ["commitment","from_dt","to_dt","currency","state"] 
         
 class TblCompanyRequestShowEditForm(TblCompanyRequestAdminForm):
-    layout = ["commitement",["from_dt","to_dt"],["amount","currency"]]
-    commitement = forms.ModelChoiceField(queryset=None,disabled=True, label=_("commitement"))
+    layout = ["commitment",["from_dt","to_dt"],["currency"]]
+    commitment = forms.ModelChoiceField(queryset=None,disabled=True, label=_("commitment"))
 
     def __init__(self, *args, **kwargs):        
         super().__init__(*args, **kwargs)
         pk = None
 
         if kwargs.get('instance') and kwargs['instance'].pk:
-            pk = kwargs['instance'].commitement.id
+            pk = kwargs['instance'].commitment.id
         
         if pk:
-            self.fields["commitement"].queryset = commitement_all_qs.filter(id=pk)
+            self.fields["commitment"].queryset = commitment_all_qs.filter(id=pk)
 
     class Meta:
-        model = TblCompanyRequest        
-        fields = ["commitement","from_dt","to_dt","amount","currency"] 
+        model = TblCompanyRequestMaster
+        fields = ["commitment","from_dt","to_dt","currency"] 
         widgets = {
             "from_dt":AdminDateWidget(),
             "to_dt":AdminDateWidget(),
         }
 
 class TblCompanyRequestAddForm(TblCompanyRequestAdminForm):
-    layout = ["commitement",["from_dt","to_dt"],["amount","currency"]]
-    commitement = forms.ModelChoiceField(queryset=commitement_confirmed_qs.filter(request_interval=TblCompanyCommitment.INTERVAL_TYPE_MANUAL).order_by("company"), label=_("commitement"))
+    layout = ["commitment",["from_dt","to_dt"],["currency"]]
+    commitment = forms.ModelChoiceField(queryset=commitment_confirmed_qs.order_by("company"), label=_("commitment")) #.filter(commitment_schedular__request_interval=TblCompanyCommitmentSchedular.INTERVAL_TYPE_MANUAL)
     class Meta:
-        model = TblCompanyRequest        
-        fields = ["commitement","from_dt","to_dt","amount","currency"] 
+        model = TblCompanyRequestMaster      
+        fields = ["commitment","from_dt","to_dt","currency"] 
         widgets = {
             "from_dt":AdminDateWidget(),
             "to_dt":AdminDateWidget(),
         }
+
+class TblCompanyRequestChooseCommitmentForm(forms.Form):
+    layout = ["commitment"]
+    commitment = forms.ModelChoiceField(queryset=commitment_confirmed_qs.order_by("company"), label=_("commitment")) #.filter(commitment_schedular__request_interval=TblCompanyCommitmentSchedular.INTERVAL_TYPE_MANUAL)
+    class Meta:
+        model = TblCompanyRequestMaster      
+        fields = ["commitment"] 
 

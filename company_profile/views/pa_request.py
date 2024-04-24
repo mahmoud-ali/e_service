@@ -16,13 +16,13 @@ from django.contrib.sites.models import Site
 from django_tables2 import SingleTableView
 from django_tables2.paginators import LazyPaginator
 
-from pa.models import TblCompanyRequest,TblCompanyPayment
+from pa.models import TblCompanyRequestMaster,TblCompanyPaymentMaster
 from pa.forms import TblCompanyRequestShowEditForm
 
 from pa.tables import TblCompanyRequestCompanyTable
 
 class AppRequestListView(LoginRequiredMixin,SingleTableView):
-    model = TblCompanyRequest
+    model = TblCompanyRequestMaster
     table_class = TblCompanyRequestCompanyTable
     menu_name = "profile:pa_request_list"
     title = _("List of requests")
@@ -45,7 +45,7 @@ class AppRequestListView(LoginRequiredMixin,SingleTableView):
     def get_queryset(self):
 
         query = super().get_queryset()        
-        query = query.filter(commitement__company__id=self.request.user.pro_company.company.id)
+        query = query.filter(commitment__company__id=self.request.user.pro_company.company.id)
         return query
     
     def get(self,request,*args, **kwargs):  
@@ -58,8 +58,8 @@ class AppRequestListView(LoginRequiredMixin,SingleTableView):
         return response
 
 class AppRequestReadonlyView(LoginRequiredMixin,SingleObjectMixin,View):
-    model = TblCompanyRequest
-    model_details = TblCompanyPayment
+    model = TblCompanyRequestMaster
+    model_details = TblCompanyPaymentMaster
     model_details_fields = ["request","payment_dt","amount","currency","exchange_rate"]
     form_class = TblCompanyRequestShowEditForm
     menu_name = "profile:pa_request_list"
@@ -89,6 +89,6 @@ class AppRequestReadonlyView(LoginRequiredMixin,SingleObjectMixin,View):
         self.extra_context["form"] = self.form_class(instance=obj)
         self.extra_context["object"] = obj
         self.extra_context["detail_formset"] = self.detail_formset(instance=obj)
-        self.extra_context["payment_state"] = TblCompanyRequest.REQUEST_PAYMENT_CHOICES[obj.payment_state]
+        self.extra_context["payment_state"] = TblCompanyRequestMaster.REQUEST_PAYMENT_CHOICES[obj.payment_state]
         
         return render(request, self.template_name, self.extra_context)

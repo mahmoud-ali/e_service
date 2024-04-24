@@ -8,7 +8,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .application import TranslationMixin
 from ..forms import PaDailyForm
-from ..models import TblCompanyRequest,TblCompanyPayment,STATE_TYPE_CONFIRM
+from ..models import TblCompanyPaymentDetail, TblCompanyRequestDetail, TblCompanyRequestMaster,TblCompanyPaymentMaster,STATE_TYPE_CONFIRM
 
 class PaDailyView(LoginRequiredMixin,TranslationMixin,View):
     form = PaDailyForm
@@ -42,40 +42,69 @@ class PaDailyView(LoginRequiredMixin,TranslationMixin,View):
 
         if form.is_valid():
             company = form.cleaned_data["company"]
+            currency = form.cleaned_data["currency"]
             from_dt = form.cleaned_data["from_dt"]
             to_dt = form.cleaned_data["to_dt"]
-            request_qs = TblCompanyRequest.objects.filter(
-                    commitement__company=company,
-                    created_at__date__gte=from_dt,
-                    created_at__date__lte=to_dt,
-                    state=STATE_TYPE_CONFIRM,
+            request_qs = TblCompanyRequestDetail.objects.filter(
+                    request_master__created_at__date__gte=from_dt,
+                    request_master__created_at__date__lte=to_dt,
+                    request_master__state=STATE_TYPE_CONFIRM,
                 ).annotate(
-                    exchange_rate=Value('1', output_field=FloatField()),
+                    exchange_rate=Value('1.0', output_field=FloatField()),
                     type=Value('request', output_field=CharField()),
                 )
+            if company:
+                request_qs = request_qs.filter(
+                        request_master__commitment__company=company,
+                )
+            if currency:
+                request_qs = request_qs.filter(
+                        request_master__currency=currency,
+                )
+            request_qs
+            request_total = request_qs.aggregate(total=Sum("amount"))['total']
             
-            request_total = request_qs.aggregate(Sum("amount"))['amount__sum']
-            
-            request_qs = request_qs.values_list("id","created_at","commitement__item__name","amount","currency","exchange_rate","type")
-            
-            payment_qs = TblCompanyPayment.objects.filter(
-                    request__commitement__company=company,
-                    created_at__date__gte=from_dt,
-                    created_at__date__lte=to_dt,
-                    state=STATE_TYPE_CONFIRM,
+            request_qs = request_qs.values_list("request_master__id","request_master__created_at","item__name","amount","request_master__currency","exchange_rate","type") #,"request_master__commitment__company__name_ar"
+
+            payment_qs = TblCompanyPaymentDetail.objects.filter(
+                    payment_master__created_at__date__gte=from_dt,
+                    payment_master__created_at__date__lte=to_dt,
+                    payment_master__state=STATE_TYPE_CONFIRM,
                 ).annotate(
                     type=Value('payment', output_field=CharField()),
                 )
             
-            payment_total = payment_qs.aggregate(amount__sum=Sum(F("amount")*F("exchange_rate")))['amount__sum']
-
-            payment_qs = payment_qs.values_list("id","created_at","request__commitement__item__name","amount","currency","exchange_rate","type")
+            if company:
+                payment_qs = payment_qs.filter(
+                        payment_master__request__commitment__company=company,
+                )
+            if currency:
+                payment_qs = payment_qs.filter(
+                        payment_master__request__currency=currency,
+                )
             
-            qs = request_qs.union(payment_qs).order_by("created_at")
+            payment_total = payment_qs.aggregate(amount__sum=Sum(F("amount")*F("payment_master__exchange_rate")))['amount__sum']
 
-        self.extra_context["form"] = form
-        self.extra_context["qs"] = qs
-        self.extra_context["request_total"] = request_total or 0
-        self.extra_context["payment_total"] = payment_total or 0
+            payment_qs = payment_qs.values_list("payment_master__id","payment_master__created_at","item__name","amount","payment_master__currency","payment_master__exchange_rate","type") #,"payment_master__request__commitment__company__name_ar"
+
+            qs = request_qs.union(payment_qs).order_by("request_master__created_at")
+
+            data = []
+            balance = 0
+            for d in qs:
+                a = list(d)
+                if a[6] == 'payment':
+                    balance -= a[3]
+                else:
+                    balance += a[3]
+
+                a.append(balance)
+                data.append(a)
+
+            self.extra_context["form"] = form
+            self.extra_context["qs"] = data
+            self.extra_context["request_total"] = request_total or 0
+            self.extra_context["payment_total"] = payment_total or 0
+            self.extra_context["balance_total"] = balance or 0
         
         return render(request, self.template_name, self.extra_context)

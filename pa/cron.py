@@ -1,5 +1,5 @@
-from .models import TblCompanyCommitment
+from .models import TblCompanyCommitmentSchedular
 
 def generate_requests():
-    for commitement in TblCompanyCommitment.objects.exclude(request_interval=TblCompanyCommitment.INTERVAL_TYPE_MANUAL):
-        commitement.generate_request()
+    for sch in TblCompanyCommitmentSchedular.objects.exclude(request_interval=TblCompanyCommitmentSchedular.INTERVAL_TYPE_MANUAL):
+        sch.generate_request()

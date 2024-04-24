@@ -5,7 +5,7 @@ from django.utils.translation import gettext_lazy as _
 import django_tables2 as tables
 from django_filters import FilterSet
 
-from ..models import TblCompanyCommitment,STATE_TYPE_CHOICES,STATE_TYPE_DRAFT,STATE_TYPE_CONFIRM
+from ..models import TblCompanyCommitmentMaster,STATE_TYPE_CHOICES,STATE_TYPE_DRAFT,STATE_TYPE_CONFIRM
 
 class BaseTable(tables.Table):
     menu_name = None
@@ -13,12 +13,12 @@ class BaseTable(tables.Table):
 
 class TblCompanyCommitmentTable(BaseTable):
     menu_name = "pa:commitment_show"
-    relation_fields = ["company","item"]
+    relation_fields = ["company"]
 
     class Meta:
-        model = TblCompanyCommitment
+        model = TblCompanyCommitmentMaster
         template_name = "django_tables2/bootstrap.html"
-        fields = ("company","item","amount","currency","state")
+        fields = ("company","currency","state")
         empty_text = _("No records.")        
 
     def render_company(self,value,record):
@@ -29,9 +29,8 @@ class TblCompanyCommitmentTable(BaseTable):
 
 class CommitmentFilter(FilterSet):
     class Meta:
-        model = TblCompanyCommitment
+        model = TblCompanyCommitmentMaster
         fields = {
             "company": ["exact"],
-            "item": ["exact"],
             "state": ["exact"],
         }

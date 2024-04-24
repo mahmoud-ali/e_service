@@ -4,6 +4,7 @@ from django.conf.urls.static import static
 from django.conf import settings
 
 from pa.views.commitment import TblCompanyCommitmentDeleteView, TblCompanyCommitmentUpdateView
+from pa.views.commitment_schedular import TblCompanyCommitmentScheduleCreateView, TblCompanyCommitmentScheduleDeleteView, TblCompanyCommitmentScheduleListView, TblCompanyCommitmentScheduleReadonlyView, TblCompanyCommitmentScheduleUpdateView
 from pa.views.daily import PaDailyView
 from pa.views.payment import TblCompanyPaymentDeleteView, TblCompanyPaymentUpdateView
 from pa.views.request import TblCompanyRequestDeleteView, TblCompanyRequestUpdateView
@@ -23,6 +24,13 @@ urlpatterns = [
     path('commitment/<int:pk>/show/', TblCompanyCommitmentReadonlyView.as_view(), name='commitment_show'),    
     path('commitment/<int:pk>/delete/', TblCompanyCommitmentDeleteView.as_view(), name='commitment_delete'),    
     path('commitment/add/', TblCompanyCommitmentCreateView.as_view(), name='commitment_add'),
+
+    path('commitment_schedule/', TblCompanyCommitmentScheduleListView.as_view(), name='commitment_schedule_list'),
+    path('commitment_schedule/<int:type>/', TblCompanyCommitmentScheduleListView.as_view(), name='commitment_schedule_list'),
+    path('commitment_schedule/<int:pk>/edit/', TblCompanyCommitmentScheduleUpdateView.as_view(), name='commitment_schedule_edit'),    
+    path('commitment_schedule/<int:pk>/show/', TblCompanyCommitmentScheduleReadonlyView.as_view(), name='commitment_schedule_show'),    
+    path('commitment_schedule/<int:pk>/delete/', TblCompanyCommitmentScheduleDeleteView.as_view(), name='commitment_schedule_delete'),    
+    path('commitment_schedule/add/', TblCompanyCommitmentScheduleCreateView.as_view(), name='commitment_schedule_add'),
 
     path('request/', TblCompanyRequestListView.as_view(), name='request_list'),
     path('request/<int:type>/', TblCompanyRequestListView.as_view(), name='request_list'),

@@ -2268,7 +2268,7 @@ msgid "request"
 msgstr "Add new area extension"
 
 #: pa/forms/request.py:17 pa/forms/request.py:27 pa/models.py:145
-msgid "commitement"
+msgid "commitment"
 msgstr ""
 
 #: pa/models.py:22

@@ -3,19 +3,29 @@
 {% load static  %}
 
 {% load bootstrap3 %}
+{% load auth_extras %}
 
 {% block content %}
+<script type="text/javascript" src="{% static 'company_profile/js/admin_jsi18n.js' %}"></script>
+<script type="text/javascript" src="{% static 'admin/js/core.js' %}"></script>
+
+<script src="{% static 'admin/js/calendar.js' %}"></script>
+<script src="{% static 'admin/js/admin/DateTimeShortcuts.js' %}"></script>
+
 <h1 class="page-header">{{title}}</h1>
 {% bootstrap_messages %}
 
 <form  method="post"  enctype="multipart/form-data">
 {% csrf_token %}
+
     {% bootstrap_form form %}
-	<h3>{{detail_title}}:</h3>
-    {{ detail_formset.management_form }}
-    <table id="detail_table"  class="table table-bordered">
+    {% for detail in details %}
+	<h3>{{detail.title}}:</h3>
+    {{ detail.formset.management_form }}
+
+    <table id="detail_table{{ forloop.counter }}"  class="table table-bordered">
         <tr>
-        {% for field in detail_formset|first %}
+        {% for field in detail.formset|first %}
             {% if field.is_hidden is not True %}
             <th>
             {{ field.label }}
@@ -23,7 +33,11 @@
             {% endif %}
         {% endfor %}
         </tr>
-    {% for form in detail_formset %}
+    {% for form in detail.formset %}
+        {% for hidden in form.hidden_fields %}
+            {{ hidden }}
+        {% endfor %}        
+
         <tr>
         {% for field in form.visible_fields %}
             <td>
@@ -37,25 +51,24 @@
             </td>
         {% endfor %}
         </tr>
-    {% endfor %}        	
+        {% endfor %}        	
     </table>
-    <button id="add_row_btn" style="float:{% if request.LANGUAGE_CODE == 'ar' %} left {% else %} right {% endif %}" type="button" class="btn btn-default">
+    <button id="add_row_btn{{ forloop.counter }}" style="float:{% if request.LANGUAGE_CODE == 'ar' %} left {% else %} right {% endif %}" type="button" class="btn btn-default">
         <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
         {% translate "add_more" %}
     </button>
 <br/>
 <br/>
-	
+{{ form.media }}
+{% endfor %}        	
+
     {% buttons %}
-        <button type="submit" class="btn btn-primary">{% translate "Submit" %}</button>
+    <input type="submit" value="{% translate "Save Draft" %}" name="_save_draft" class="btn btn-primary">
+    {% if request.user|has_group:"pa_manager" %}
+    <input type="submit" value="{% translate "Save & Confirm" %}" name="_save_confirm" class="btn btn-default">
+    {% endif %}
     {% endbuttons %}
 </form>
-<script type="text/javascript" src="{% static 'company_profile/js/admin_jsi18n.js' %}"></script>
-<script type="text/javascript" src="{% static 'admin/js/core.js' %}"></script>
-{{ form.media }}
-
-<script src="{% static 'admin/js/calendar.js' %}"></script>
-<script src="{% static 'admin/js/admin/DateTimeShortcuts.js' %}"></script>
 
 <script type="text/javascript">
 
@@ -87,13 +100,15 @@ $(document).ready(function(){
         $(e).attr("class",'form-control '+x);
     });
     
-    var formset_name = '{{ detail_formset.prefix }}';
-    var table_id = 'detail_table';
+    {% for detail in details %}
+        var formset_name{{ forloop.counter }} = '{{ detail.formset.prefix }}';
+        var table_id{{ forloop.counter }} = 'detail_table{{ forloop.counter }}';
 
-    $("#add_row_btn").bind('click',function(e){
-        add_new_row(formset_name,table_id);
-        
-    });
+        $("#add_row_btn{{ forloop.counter }}").bind('click',function(e){
+            add_new_row(formset_name{{ forloop.counter }},table_id{{ forloop.counter }});
+            
+        });
+    {% endfor %}
 
     
 

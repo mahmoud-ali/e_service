@@ -7,7 +7,7 @@ from django_filters import FilterSet,ModelChoiceFilter,ChoiceFilter
 
 from company_profile.models import TblCompanyProduction
 
-from ..models import LkpItem, TblCompanyRequest,STATE_TYPE_CHOICES,STATE_TYPE_DRAFT,STATE_TYPE_CONFIRM
+from ..models import LkpItem, TblCompanyRequestMaster,STATE_TYPE_CHOICES,STATE_TYPE_DRAFT,STATE_TYPE_CONFIRM
 
 class BaseTable(tables.Table):
     menu_name = None
@@ -15,38 +15,42 @@ class BaseTable(tables.Table):
 
 class TblCompanyRequestTable(BaseTable):
     menu_name = "pa:request_show"
-    relation_fields = ["commitement","commitement__company","commitement__item"]
+    relation_fields = ["commitment","commitment__company"]
+    total = tables.Column(verbose_name= _('request_total'))
+    sum_of_payment = tables.Column(verbose_name= _('payments total'))
 
     class Meta:
-        model = TblCompanyRequest
+        model = TblCompanyRequestMaster
         template_name = "django_tables2/bootstrap.html"
-        fields = ("commitement","from_dt","to_dt","amount","currency","payment_state","state")
+        fields = ("commitment","from_dt","to_dt","currency","payment_state","total","sum_of_payment","state")
         empty_text = _("No records.")        
 
-    def render_commitement(self,value,record):
+    def render_commitment(self,value,record):
         return format_html("<a href={}>{}</a>",reverse_lazy(self.menu_name,args=(record.id,)),value)
 
     def render_state(self,value,record):
         return format_html("{}",value)
     
+    
 class TblCompanyRequestCompanyTable(BaseTable):
     menu_name = "profile:pa_request_show"
-    relation_fields = ["commitement","commitement__company","commitement__item"]
+    relation_fields = ["commitment","commitment__company"]
+    total = tables.Column(verbose_name= _('request_total'))
+    sum_of_payment = tables.Column(verbose_name= _('payments total'))
 
     class Meta:
-        model = TblCompanyRequest
+        model = TblCompanyRequestMaster
         template_name = "django_tables2/bootstrap.html"
-        fields = ("commitement__item","from_dt","to_dt","amount","currency","payment_state")
+        fields = ("from_dt","to_dt","currency","total","sum_of_payment","payment_state")
         empty_text = _("No records.")        
 
-    def render_commitement__item(self,value,record):
-        return format_html("<a href={}>{}</a>",reverse_lazy(self.menu_name,args=(record.id,)),value)
+    # def render_from_dt(self,value,record):
+    #     return format_html("<a href={}>{}</a>",reverse_lazy(self.menu_name,args=(record.id,)),value)
 
 class RequestFilter(FilterSet):
-    company = ModelChoiceFilter(queryset=TblCompanyProduction.objects.all(),field_name='commitement__company', label=_('company'))   
-    item = ModelChoiceFilter(queryset=LkpItem.objects.all(),field_name='commitement__item', label=_('item'))   
-    payment_state = ChoiceFilter(choices=TblCompanyRequest.REQUEST_PAYMENT_CHOICES,field_name='payment_state', label=_('payment_state'))   
+    company = ModelChoiceFilter(queryset=TblCompanyProduction.objects.all(),field_name='commitment__company', label=_('company'))   
+    payment_state = ChoiceFilter(choices=TblCompanyRequestMaster.REQUEST_PAYMENT_CHOICES,field_name='payment_state', label=_('payment_state'))   
     state = ChoiceFilter(choices=STATE_TYPE_CHOICES,field_name='state', label=_('record_state'))   
     class Meta:
-        model = TblCompanyRequest
+        model = TblCompanyRequestMaster
         fields = {}

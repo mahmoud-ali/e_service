@@ -1,0 +1,22 @@
+{% extends 'pa/base.html' %}
+{% load static  %}
+
+{% load i18n %}
+{% load bootstrap3 %}
+{% load auth_extras %}
+
+{% block content %}
+<h1 class="page-header">{{title}}</h1>
+{% bootstrap_messages %}
+
+<form  method="get" enctype="multipart/form-data">
+    {% bootstrap_form form %}
+    {% buttons %}
+    <input type="submit" value="{% translate "Choose" %}" name="_choose_btn" class="btn btn-primary">
+    {% endbuttons %}
+</form>
+<script type="text/javascript" src="{% static 'company_profile/js/admin_jsi18n.js' %}"></script>
+<script type="text/javascript" src="{% static 'admin/js/core.js' %}"></script>
+{{ form.media }}
+
+{% endblock content %}
