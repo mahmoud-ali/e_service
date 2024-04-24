@@ -71,6 +71,7 @@ class TblCompanyRequestCreateView(ApplicationMasterDetailCreateView):
                         {'item':c.item,'amount':c.item.calculate_value(c.amount_factor,obj.company)} \
                         for c in obj.tblcompanycommitmentdetail_set.all()
                 ]
+                detail['formset'].extra=len(d_obj)-1
                 formset = detail['formset'](initial=d_obj)
                 detail['formset'] = formset
 
