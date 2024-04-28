@@ -16,10 +16,11 @@ from django.contrib.sites.models import Site
 from django_tables2 import SingleTableView
 from django_tables2.paginators import LazyPaginator
 
-from pa.models import TblCompanyRequestMaster,TblCompanyPaymentMaster
+from pa.models import TblCompanyRequestDetail, TblCompanyRequestMaster,TblCompanyPaymentMaster
 from pa.forms import TblCompanyRequestShowEditForm
 
 from pa.tables import TblCompanyRequestCompanyTable
+from pa.views.application import ApplicationReadonlyView
 
 class AppRequestListView(LoginRequiredMixin,SingleTableView):
     model = TblCompanyRequestMaster
@@ -57,38 +58,71 @@ class AppRequestListView(LoginRequiredMixin,SingleTableView):
 
         return response
 
-class AppRequestReadonlyView(LoginRequiredMixin,SingleObjectMixin,View):
-    model = TblCompanyRequestMaster
-    model_details = TblCompanyPaymentMaster
-    model_details_fields = ["request","payment_dt","amount","currency","exchange_rate"]
+# class AppRequestReadonlyView(LoginRequiredMixin,SingleObjectMixin,View):
+#     model = TblCompanyRequestMaster
+#     model_details = TblCompanyPaymentMaster
+#     model_details_fields = ["request","payment_dt","amount","currency","exchange_rate"]
+#     form_class = TblCompanyRequestShowEditForm
+#     menu_name = "profile:pa_request_list"
+#     title = _("Show added request")
+#     template_name = "company_profile/application_readonly_master_details.html"    
+
+#     def dispatch(self, *args, **kwargs):         
+#         if not hasattr(self.request.user,"pro_company"):
+#             return HttpResponseRedirect(reverse_lazy("profile:home"))  
+
+#         self.detail_formset = inlineformset_factory(self.model, self.model_details, fields=self.model_details_fields,extra=0,can_delete=False)
+
+#         self.extra_context = {
+#                             "menu_name":self.menu_name,
+#                             "title":self.title, 
+#                             "detail_formset": self.detail_formset,
+#                             "detail_title":self.model_details._meta.verbose_name_plural,
+#          }
+#         return super().dispatch(*args, **kwargs)        
+
+#     def get_queryset(self):
+#         query = super().get_queryset()        
+#         return query.filter(commitement__company__id=self.request.user.pro_company.company.id)
+
+#     def get(self,request,pk=0):     
+#         obj = self.get_object()
+#         self.extra_context["form"] = self.form_class(instance=obj)
+#         self.extra_context["object"] = obj
+#         self.extra_context["detail_formset"] = self.detail_formset(instance=obj)
+#         self.extra_context["payment_state"] = TblCompanyRequestMaster.REQUEST_PAYMENT_CHOICES[obj.payment_state]
+        
+#         return render(request, self.template_name, self.extra_context)
+
+model_master = TblCompanyRequestMaster
+details = [
+        {
+            "id":1,
+            "title":"تفاصيل المطالبة",
+            "args":[
+                model_master,
+                TblCompanyRequestDetail
+            ],
+            "kwargs":{
+               "fields":['item','amount'],
+                "extra":0,
+                "can_delete":False,
+                "min_num":1, 
+                "validate_min":True
+            },
+        },
+    ]
+
+class AppRequestReadonlyView(ApplicationReadonlyView):
+    model = model_master
     form_class = TblCompanyRequestShowEditForm
+    details = details
     menu_name = "profile:pa_request_list"
+    menu_edit_name = None
+    menu_delete_name = None
     title = _("Show added request")
-    template_name = "company_profile/application_readonly_master_details.html"    
-
-    def dispatch(self, *args, **kwargs):         
-        if not hasattr(self.request.user,"pro_company"):
-            return HttpResponseRedirect(reverse_lazy("profile:home"))  
-
-        self.detail_formset = inlineformset_factory(self.model, self.model_details, fields=self.model_details_fields,extra=0,can_delete=False)
-
-        self.extra_context = {
-                            "menu_name":self.menu_name,
-                            "title":self.title, 
-                            "detail_formset": self.detail_formset,
-                            "detail_title":self.model_details._meta.verbose_name_plural,
-         }
-        return super().dispatch(*args, **kwargs)        
+    template_name = "company_profile/application_readonly_master_details2.html"    
 
     def get_queryset(self):
         query = super().get_queryset()        
-        return query.filter(commitement__company__id=self.request.user.pro_company.company.id)
-
-    def get(self,request,pk=0):     
-        obj = self.get_object()
-        self.extra_context["form"] = self.form_class(instance=obj)
-        self.extra_context["object"] = obj
-        self.extra_context["detail_formset"] = self.detail_formset(instance=obj)
-        self.extra_context["payment_state"] = TblCompanyRequestMaster.REQUEST_PAYMENT_CHOICES[obj.payment_state]
-        
-        return render(request, self.template_name, self.extra_context)
+        return query.filter(commitment__company__id=self.request.user.pro_company.company.id)

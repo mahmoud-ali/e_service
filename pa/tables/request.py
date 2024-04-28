@@ -44,8 +44,8 @@ class TblCompanyRequestCompanyTable(BaseTable):
         fields = ("from_dt","to_dt","currency","total","sum_of_payment","payment_state")
         empty_text = _("No records.")        
 
-    # def render_from_dt(self,value,record):
-    #     return format_html("<a href={}>{}</a>",reverse_lazy(self.menu_name,args=(record.id,)),value)
+    def render_from_dt(self,value,record):
+        return format_html("<a href={}>{}</a>",reverse_lazy(self.menu_name,args=(record.id,)),value)
 
 class RequestFilter(FilterSet):
     company = ModelChoiceFilter(queryset=TblCompanyProduction.objects.all(),field_name='commitment__company', label=_('company'))   
