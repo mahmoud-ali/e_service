@@ -14,12 +14,12 @@ body {
   background: var(--body-bg);
 }
 
-body,h1,h2,h3,h4,h5,h6,p,input,button,select,.btn{
+body,h1,h2,h3,h4,h5,h6,p,input,button,select,.btn,.select2-container--bootstrap .select2-selection{
   font-family: Yantramanav,sans-serif !important;
   font-style: normal;
 }
 
-body,p,input,select,button,.btn{
+body,p,input,select,button,.btn,.select2-container--bootstrap .select2-selection{
   font-weight: 400 !important;
   font-size: 20px !important;
 

@@ -1,6 +1,6 @@
 {% load i18n %}
 <!doctype html>
-<html {% if request.LANGUAGE_CODE == "ar" %} lang="ar" dir="rtl" {% endif %}>
+<html lang="en" {% if request.LANGUAGE_CODE == "ar" %} dir="rtl" {% endif %}>
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -39,6 +39,9 @@
       <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
       <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
     <![endif]-->
+<link rel="stylesheet" type="text/css" href="{% static 'pa/css/select2.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'pa/css/select2-bootstrap.css' %}" />
+
 <link rel="stylesheet" type="text/css" href="{% static 'company_profile/css/base.css' %}" />
 
 	
@@ -51,14 +54,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Yantramanav:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
 
-<script>
-$(document).ready(function(){
-	$("th.asc").append('<span class="glyphicon glyphicon-sort-by-alphabet" aria-hidden="true"></span>');
-	$("th.desc").append('<span class="glyphicon glyphicon-sort-by-alphabet-alt" aria-hidden="true"></span>');
+<script src="{% static 'pa/js/select2.js' %}"></script>
 
-});
-
-</script>
 	
 </head>
 <body>
@@ -146,6 +143,17 @@ $(document).ready(function(){
 		  {% comment %} <div class="col-sm-8 col-sm-offset-4 col-md-9 col-md-offset-3 main"> {% endcomment %}
 		</div>
 	</div>
-
+	<script>
+		$(document).ready(function(){
+			$("th.asc").append('<span class="glyphicon glyphicon-sort-by-alphabet" aria-hidden="true"></span>');
+			$("th.desc").append('<span class="glyphicon glyphicon-sort-by-alphabet-alt" aria-hidden="true"></span>');
+			$("select").select2({
+				theme: "bootstrap",
+			});
+		});
+		
+		</script>
+	
 </body>
+	
 </html>
