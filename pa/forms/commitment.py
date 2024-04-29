@@ -24,6 +24,10 @@ class TblCompanyCommitmentForm(TblCompanyCommitmentAdminForm):
         fields = ["company","currency"] 
         widgets = {}
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["company"].widget.attrs.update({"class": "select2"})
+
 class TblCompanyCommitmentDetailForm(ModelForm):
     class Meta:
         model = TblCompanyCommitmentDetail     
