@@ -365,6 +365,16 @@ class TblCompanyRequestDetail(models.Model):
             sum += c.item.calculate_value(c.amount_factor,self.request_master.commitment.company)
 
         return sum
+    
+    def get_item_payed_amount(self):
+        qs = TblCompanyPaymentDetail.objects \
+            .filter(payment_master__request=self.request_master,item=self.item)
+        
+        sum = 0
+        for c in qs:
+            sum += c.amount
+
+        return sum
 
     def clean(self):
         if not self.id and self.request_master.state == STATE_TYPE_CONFIRM:

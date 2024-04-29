@@ -2,8 +2,11 @@
 {% load i18n %}
 {% load bootstrap3 %}
 {% load static  %}
+{% load l10n %}
+{% load humanize %}
 
 {% block content %}
+{% localize off %}
 <h1 class="page-header">{{title}}</h1>
 {% bootstrap_messages %}
 
@@ -43,9 +46,6 @@
 {%if not is_get%}
 
 	<div  class="panel panel-default">
-		{%if not qs%}
-		{%translate "No records."%}
-		{%else%}
 		<table class="table">
 			<tr>
 				<th>{%translate "date"%}</th>
@@ -58,7 +58,18 @@
 				{% comment %} <th>{%translate "company"%}</th> {% endcomment %}
 				<th>{%translate "type"%}</th>
 			</tr>
-			{%for m in qs %}
+			<tr>
+				<th>{%translate "before"%} {%translate request.POST.from_dt%}</th>
+				<th>{%translate "opening_balance"%}</th>
+				<th>{%translate request.POST.currency%}</th>
+				<th>1.0</th>
+				<th>{{payment_opening|unlocalize|intcomma}}</th>
+				<th>{{request_opening|unlocalize|intcomma}}</th>
+				<th>{{balance_opening|unlocalize|intcomma}}</th>
+				{% comment %} <th>{%translate "company"%}</th> {% endcomment %}
+				<th>opening</th>
+			</tr>
+			{%for m in data %}
 			<tr>
 				<td>{{m.1|date}}</td>
 				{%if m.6 == 'request'%}
@@ -72,7 +83,7 @@
 					{%if m.6 == 'request'%}
 					&nbsp;
 					{% else %}
-					{{m.3}}
+					{{m.3|unlocalize|intcomma}}
 					&nbsp;
 					{% endif %}
 				</td>
@@ -80,10 +91,10 @@
 					{%if m.6 == 'payment'%}
 					&nbsp;
 					{% else %}
-					{{m.3}}
+					{{m.3|unlocalize|intcomma}}
 					{% endif %}
 				</td>
-				<th>{{m.7}}</th>
+				<th>{{m.7|unlocalize|intcomma}}</th>
 				{% comment %} <th>{{m.8}}</th> {% endcomment %}
 				<th>{{m.6}}</th>
 			</tr>
@@ -93,16 +104,15 @@
 				<th>&nbsp;</th>
 				<th>&nbsp;</th>
 				<th>&nbsp;</th>
-				<th>{{request_total}}</th>
-				<th>{{payment_total}}</th>
-				<th>{{balance_total}}</th>
+				<th>{{request_total|unlocalize|intcomma}}</th>
+				<th>{{payment_total|unlocalize|intcomma}}</th>
+				<th>{{balance_total|unlocalize|intcomma}}</th>
 				<th>&nbsp;</th>
 				<th>&nbsp;</th>
 			</tr>
 		</table>
-		{%endif%}
 	</div>
 {%endif%}
-
+{% endlocalize %}
 {% endblock content %}
 

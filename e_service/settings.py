@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'django.contrib.flatpages',
     'django.contrib.gis',
+    'django.contrib.humanize',
     
     # 3rd party
     'allauth', 
@@ -171,13 +172,18 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
-LANGUAGE_CODE = 'ar'  #en-us
+LANGUAGE_CODE = 'en'  #en-us
 
 TIME_ZONE = 'Africa/Khartoum'
 
 USE_I18N = True
 
 USE_TZ = True
+
+# USE_THOUSAND_SEPARATOR = True
+# THOUSAND_SEPARATOR = ','
+# DECIMAL_SEPARATOR = '.'
+# NUMBER_GROUPING = 3
 
 LOCALE_PATHS = [os.path.join(BASE_DIR, 'locale')]
 

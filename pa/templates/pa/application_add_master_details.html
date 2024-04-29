@@ -23,7 +23,7 @@
 	<h3>{{detail.title}}:</h3>
     {{ detail.formset.management_form }}
 
-    <table id="detail_table{{ forloop.counter }}"  class="table table-bordered">
+    <table id="detail_table{{ forloop.counter }}"  class="table table-bordered detail_table">
         <tr>
         {% for field in detail.formset|first %}
             {% if field.is_hidden is not True %}
@@ -41,25 +41,18 @@
         <tr>
         {% for field in form.visible_fields %}
             <td>
-            {{ field.errors }}
-            {{ field }}
-            {% if field.help_text %}
-            <p class="help" id="{{ field.auto_id }}_helptext">
-            {{ field.help_text|safe }}
-            </p>
-            {% endif %}
+            {% bootstrap_field field show_label=False%}
             </td>
         {% endfor %}
         </tr>
         {% endfor %}        	
     </table>
-    <button id="add_row_btn{{ forloop.counter }}" style="float:{% if request.LANGUAGE_CODE == 'ar' %} left {% else %} right {% endif %}" type="button" class="btn btn-default">
+    <button id="add_row_btn{{ forloop.counter }}" style="float:{% if request.LANGUAGE_CODE == 'ar' %} left {% else %} right {% endif %}" type="button" class="btn btn-link">
         <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
         {% translate "add_more" %}
     </button>
 <br/>
 <br/>
-{{ form.media }}
 {% endfor %}        	
 
     {% buttons %}
@@ -86,6 +79,8 @@ $(document).ready(function(){
         x = x.replace(/[0-9]+/,row_id);
         $(e).attr("name",x);
 
+        $(e).attr("value","");
+        $(e).find("option").removeAttr('selected')
       });
 
       $("#"+table_id).append('<tr>'+temp.html()+'</tr>');

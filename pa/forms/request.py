@@ -40,7 +40,7 @@ class TblCompanyRequestShowEditForm(TblCompanyRequestAdminForm):
 
 class TblCompanyRequestAddForm(TblCompanyRequestAdminForm):
     layout = ["commitment",["from_dt","to_dt"],["currency"]]
-    commitment = forms.ModelChoiceField(queryset=commitment_confirmed_qs.order_by("company"), label=_("commitment")) #.filter(commitment_schedular__request_interval=TblCompanyCommitmentSchedular.INTERVAL_TYPE_MANUAL)
+    commitment = forms.ModelChoiceField(queryset=None, label=_("commitment")) #.filter(commitment_schedular__request_interval=TblCompanyCommitmentSchedular.INTERVAL_TYPE_MANUAL)
     class Meta:
         model = TblCompanyRequestMaster      
         fields = ["commitment","from_dt","to_dt","currency"] 
@@ -49,10 +49,18 @@ class TblCompanyRequestAddForm(TblCompanyRequestAdminForm):
             "to_dt":AdminDateWidget(),
         }
 
+    def __init__(self, *args,commitment_id=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        if commitment_id:
+            self.fields["commitment"].queryset = commitment_all_qs.filter(id=commitment_id)
+
 class TblCompanyRequestChooseCommitmentForm(forms.Form):
-    layout = ["commitment"]
+    layout = [["commitment",""]]
     commitment = forms.ModelChoiceField(queryset=commitment_confirmed_qs.order_by("company"), label=_("commitment")) #.filter(commitment_schedular__request_interval=TblCompanyCommitmentSchedular.INTERVAL_TYPE_MANUAL)
     class Meta:
         model = TblCompanyRequestMaster      
         fields = ["commitment"] 
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["commitment"].widget.attrs.update({"class": "select2"})

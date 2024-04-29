@@ -309,6 +309,8 @@ class ApplicationReadonlyView(LoginRequiredMixin,UserPermissionMixin,SingleObjec
     def dispatch(self, *args, **kwargs):         
         self.details_formset = []
         for d in self.details:
+            if d['kwargs'].get('can_delete'):
+                d['kwargs']['can_delete'] = False
             self.details_formset.append({
                 "title":d['title'],
                 "formset":inlineformset_factory(*d['args'], **d['kwargs']),

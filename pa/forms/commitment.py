@@ -38,3 +38,7 @@ class TblCompanyCommitmentScheduleForm(ModelForm):
         widgets = {
             "request_next_interval_dt":AdminDateWidget(),
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["commitment"].widget.attrs.update({"class": "select2"})

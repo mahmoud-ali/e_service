@@ -10,3 +10,7 @@ class PaDailyForm(forms.Form):
     currency = forms.ChoiceField(choices=CURRENCY_TYPE_CHOICES,label=_("currency"))
     from_dt = forms.DateField(label=_("from_dt"),widget=AdminDateWidget)
     to_dt = forms.DateField(label=_("to_dt"),widget=AdminDateWidget)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["company"].widget.attrs.update({"class": "select2"})

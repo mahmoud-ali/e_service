@@ -164,3 +164,9 @@ h4,h5,h6{
   height: 40px;
   font-size: 18px;
 }
+
+
+input[type="checkbox"] {
+    width: 15px !important;
+    top: -10px;
+}

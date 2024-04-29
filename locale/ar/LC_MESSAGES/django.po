@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-04-24 21:20+0200\n"
+"POT-Creation-Date: 2024-04-28 17:42+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1565,6 +1565,7 @@ msgstr "الموضوع"
 
 #: company_profile/models.py:1091 company_profile/models.py:1102
 #: company_profile/templates/company_profile/application_readonly.html:25
+#: company_profile/templates/company_profile/application_readonly_master_details2.html:67
 #: pa/templates/pa/application_readonly.html:39
 #: pa/templates/pa/application_readonly_master_details.html:67
 msgid "whom_attachement_file"
@@ -1656,7 +1657,6 @@ msgstr "تفاصيل استمارة الانتاج"
 #: company_profile/tables.py:478 company_profile/tables.py:491
 #: pa/tables/commitment.py:22 pa/tables/commitment_schedule.py:22
 #: pa/tables/payment.py:24 pa/tables/request.py:26 pa/tables/request.py:45
-#: pa/templates/pa/pa_daily.html:47
 msgid "No records."
 msgstr "لايوجد سجل."
 
@@ -1683,24 +1683,36 @@ msgstr "تم الرفض"
 msgid "reject_comments_title"
 msgstr "لقد تم رفض طلبك للاتي: "
 
+#: company_profile/templates/company_profile/application_readonly_master_details2.html:53
+#: pa/templates/pa/application_readonly.html:25
+#: pa/templates/pa/application_readonly_master_details.html:53
+msgid "edit_btn"
+msgstr "تعديل سجل"
+
+#: company_profile/templates/company_profile/application_readonly_master_details2.html:58
+#: pa/templates/pa/application_readonly.html:30
+#: pa/templates/pa/application_readonly_master_details.html:58
+msgid "delete_btn"
+msgstr "حذف سجل"
+
 #: company_profile/templates/company_profile/base.html:9
 #: company_profile/templates/company_profile/base.html:74
-#: pa/templates/pa/base.html:9 pa/templates/pa/base.html:74
+#: pa/templates/pa/base.html:9 pa/templates/pa/base.html:71
 msgid "E-Services App"
 msgstr "بوابة الخدمات الإلكترونية"
 
 #: company_profile/templates/company_profile/base.html:79
-#: pa/templates/pa/base.html:79
+#: pa/templates/pa/base.html:76
 msgid "Change password"
 msgstr "تغيير كلمة المرور"
 
 #: company_profile/templates/company_profile/base.html:80
-#: pa/templates/pa/base.html:80
+#: pa/templates/pa/base.html:77
 msgid "Log Out"
 msgstr "خروج"
 
 #: company_profile/templates/company_profile/base.html:115
-#: pa/templates/pa/base.html:100
+#: pa/templates/pa/base.html:97
 msgid "Menu"
 msgstr "القائمة"
 
@@ -1709,7 +1721,7 @@ msgid "Home page"
 msgstr "الرئيسية"
 
 #: company_profile/templates/company_profile/base.html:121
-#: pa/templates/pa/base.html:113
+#: pa/templates/pa/base.html:110
 msgid "Request page"
 msgstr "المطالبات المالية"
 
@@ -1986,11 +1998,11 @@ msgstr "اضافة طلب MDA"
 msgid "Show mda"
 msgstr "عرض طلب MDA"
 
-#: company_profile/views/pa_request.py:28 pa/views/request.py:43
+#: company_profile/views/pa_request.py:29 pa/views/request.py:43
 msgid "List of requests"
 msgstr "قائمة المطالبات المالية"
 
-#: company_profile/views/pa_request.py:66 pa/views/request.py:96
+#: company_profile/views/pa_request.py:123 pa/views/request.py:97
 msgid "Show added request"
 msgstr "عرض سجل مطالبة"
 
@@ -2260,8 +2272,8 @@ msgstr ""
 msgid "Production Accounting"
 msgstr "حسابات الانتاج"
 
-#: pa/forms/commitment.py:34 pa/forms/request.py:18 pa/forms/request.py:40
-#: pa/forms/request.py:51 pa/models.py:134 pa/models.py:225
+#: pa/forms/commitment.py:34 pa/forms/request.py:18 pa/forms/request.py:43
+#: pa/forms/request.py:54 pa/models.py:134 pa/models.py:225
 msgid "commitment"
 msgstr "التزام"
 
@@ -2270,7 +2282,7 @@ msgid "all"
 msgstr "الكل"
 
 #: pa/forms/daily.py:10 pa/models.py:92 pa/models.py:228 pa/models.py:395
-#: pa/templates/pa/pa_daily.html:53
+#: pa/templates/pa/pa_daily.html:50
 msgid "currency"
 msgstr "العملة"
 
@@ -2285,6 +2297,10 @@ msgstr "الى"
 #: pa/forms/payment.py:17 pa/forms/payment.py:38 pa/models.py:393
 msgid "request"
 msgstr "المطالبة"
+
+#: pa/forms/request.py:19 pa/tables/request.py:20 pa/tables/request.py:39
+msgid "payments total"
+msgstr "مجموع السداد"
 
 #: pa/models.py:23
 msgid "sdg"
@@ -2348,7 +2364,7 @@ msgid "Financial commitments"
 msgstr "التزامات مالية"
 
 #: pa/models.py:111 pa/models.py:356 pa/models.py:440
-#: pa/templates/pa/pa_daily.html:52
+#: pa/templates/pa/pa_daily.html:49
 msgid "financial item"
 msgstr "البند"
 
@@ -2465,7 +2481,7 @@ msgstr "اسم المستلم"
 msgid "payment_dt"
 msgstr "تاريخ السداد"
 
-#: pa/models.py:396 pa/templates/pa/pa_daily.html:54
+#: pa/models.py:396 pa/templates/pa/pa_daily.html:51
 msgid "exchange_rate"
 msgstr "سعر الصرف"
 
@@ -2517,10 +2533,6 @@ msgstr "الرقم المرجعي"
 msgid "request_total"
 msgstr "مجموع المطالبة"
 
-#: pa/tables/request.py:20 pa/tables/request.py:39
-msgid "payments total"
-msgstr "مجموع السداد"
-
 #: pa/templates/pa/application_add.html:16
 #: pa/templates/pa/application_add_master_details.html:66
 msgid "Save Draft"
@@ -2548,51 +2560,49 @@ msgstr "بحث"
 msgid "New record"
 msgstr "سجل جديد"
 
-#: pa/templates/pa/application_readonly.html:25
-#: pa/templates/pa/application_readonly_master_details.html:53
-msgid "edit_btn"
-msgstr "تعديل سجل"
-
-#: pa/templates/pa/application_readonly.html:30
-#: pa/templates/pa/application_readonly_master_details.html:58
-msgid "delete_btn"
-msgstr "حذف سجل"
-
-#: pa/templates/pa/base.html:107
+#: pa/templates/pa/base.html:104
 msgid "Commitment page"
 msgstr "الالتزامات المالية"
 
-#: pa/templates/pa/base.html:110
+#: pa/templates/pa/base.html:107
 msgid "Commitment Schedule page"
 msgstr "جدولة الالتزامات المالية"
 
-#: pa/templates/pa/base.html:116
+#: pa/templates/pa/base.html:113
 msgid "Payment page"
 msgstr "السداد"
 
-#: pa/templates/pa/base.html:119 pa/views/daily.py:16
+#: pa/templates/pa/base.html:116 pa/views/daily.py:16
 msgid "Pa_daily page"
 msgstr "يومية حسابات الانتاج"
 
-#: pa/templates/pa/pa_daily.html:51
+#: pa/templates/pa/pa_daily.html:48
 msgid "date"
 msgstr "التاريخ"
 
-#: pa/templates/pa/pa_daily.html:55
+#: pa/templates/pa/pa_daily.html:52
 msgid "credit"
 msgstr "دائن"
 
-#: pa/templates/pa/pa_daily.html:56
+#: pa/templates/pa/pa_daily.html:53
 msgid "debit"
 msgstr "مدين"
 
-#: pa/templates/pa/pa_daily.html:57
+#: pa/templates/pa/pa_daily.html:54
 msgid "balance"
 msgstr "الرصيد"
 
-#: pa/templates/pa/pa_daily.html:60
+#: pa/templates/pa/pa_daily.html:57
 msgid "type"
 msgstr "النوع"
+
+#: pa/templates/pa/pa_daily.html:60
+msgid "before"
+msgstr "قبل"
+
+#: pa/templates/pa/pa_daily.html:61
+msgid "opening_balance"
+msgstr "الرصيد الافتتاحي"
 
 #: pa/views/application.py:97 pa/views/application.py:208
 msgid "Record saved successfully."
@@ -2666,11 +2676,11 @@ msgstr "حذف سجل سداد"
 msgid "Add new request"
 msgstr "اضافة مطالبة جديدة"
 
-#: pa/views/request.py:87
+#: pa/views/request.py:88
 msgid "Edit request"
 msgstr "تعديل مطالبة "
 
-#: pa/views/request.py:103
+#: pa/views/request.py:104
 msgid "Delete request"
 msgstr "حذف سجل مطالبة"
 

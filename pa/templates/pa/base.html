@@ -147,7 +147,8 @@
 		$(document).ready(function(){
 			$("th.asc").append('<span class="glyphicon glyphicon-sort-by-alphabet" aria-hidden="true"></span>');
 			$("th.desc").append('<span class="glyphicon glyphicon-sort-by-alphabet-alt" aria-hidden="true"></span>');
-			$("select").select2({
+			{% comment %} $("select").not("table.detail_table select").select2({ {% endcomment %}
+			$("select.select2").select2({
 				theme: "bootstrap",
 			});
 		});

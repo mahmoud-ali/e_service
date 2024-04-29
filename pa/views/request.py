@@ -28,9 +28,9 @@ details = [
             "kwargs":{
                "fields":['item','amount'],
                 "extra":0,
-                "can_delete":False,
+                "can_delete":True,
                 "min_num":1, 
-                "validate_min":True
+                "validate_min":True,
             },
         },
     ]
@@ -58,7 +58,7 @@ class TblCompanyRequestCreateView(ApplicationMasterDetailCreateView):
         
         obj = TblCompanyCommitmentMaster.objects.get(id=commitment_id)
         license = TblCompanyProductionLicense.objects.filter(company=obj.company).first()
-        form = self.form_class(initial={
+        form = self.form_class(commitment_id=obj.id,initial={
             "commitment": obj,
             "currency": obj.currency,
             "from_dt": license.start_date,
