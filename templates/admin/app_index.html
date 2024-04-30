@@ -22,9 +22,9 @@
       {% for record in in_progress_apps.data %}
       <tr>
         <td>{{record.company}}</td>
-        <td>{{record.app}}</td>
-        <td>{{record.updated_at|date:"Y-m-d"}}</td>
-        <td><a href="{{ record.url }}" class="changelink">{% translate 'View' %}</a></td>
+        <td>{% translate record.app%}</td>
+        <td><span style="float:left;direction:ltr">{{record.updated_at|date:"Y/m/d h:i"}}</span></td>
+        <td><a href="{% url record.url record.id %}" class="changelink">{% translate 'View' %}</a></td>
       </tr>      
       {% endfor %}
     </tbody>
@@ -32,7 +32,7 @@
 
 </div>
 <script src="https://code.jquery.com/jquery-3.7.1.js"  crossorigin="anonymous"></script>
-<script src="https://cdn.datatables.net/2.0.2/js/dataTables.js"  crossorigin="anonymous"></script>
+{% comment %} <script src="https://cdn.datatables.net/2.0.2/js/dataTables.js"  crossorigin="anonymous"></script>
 <script>
   new DataTable('#latest_apps', {
     order: {
@@ -47,7 +47,7 @@
     searching:false,
     info: false
   });
-</script>
+</script> {% endcomment %}
   {% endif %}
   {% comment %} {% include "admin/app_list.html" with app_list=app_list show_changelinks=True %} {% endcomment %}
 </div>

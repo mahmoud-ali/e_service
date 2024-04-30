@@ -1,25 +1,16 @@
 from collections import defaultdict
 
-from django.urls import reverse_lazy
 from django.utils.safestring import mark_safe
-from .models import AppCyanideCertificate, AppExplosivePermission, AppFuelPermission, AppImportPermission, \
-                    AppBorrowMaterial,AppWorkPlan,AppTechnicalFinancialReport, \
-                    AppChangeCompanyName, AppExplorationTime, AppAddArea,AppRemoveArea, AppTnazolShraka, \
-                    AppTajeelTnazol, AppTajmeed,AppTakhali,AppTamdeed,AppTaaweed,AppMda,AppChangeWorkProcedure, \
-                    AppExportGold,AppExportGoldRaw,AppSendSamplesForAnalysis,AppForeignerProcedure,AppAifaaJomrki, \
-                    AppVisibityStudy,AppReexportEquipments,AppRequirementsList,TblCompany,AppWhomConcern,AppHSEAccidentReport, AppHSEPerformanceReport
+from django.utils.translation import gettext_lazy as _
+
+from .models import TblCompany
+from .utils import get_app_metrics
                     
-def get_admin_change_url(object):
-    info = (object._meta.app_label, object._meta.model_name)
-    url = reverse_lazy('admin:%s_%s_change' % info, args=(object.id,))
-    return url
-
 def in_progress_apps(request):
-    data = []
-    company_count = defaultdict(int)
-    app_count = defaultdict(int)
-
     if request.path == '/managers/company_profile/':
+        data = []
+        company_count = defaultdict(int)
+        app_count = defaultdict(int)
         filter = []
         company_types = []
 
@@ -37,29 +28,25 @@ def in_progress_apps(request):
         if request.user.groups.filter(name="company_type_sageer").exists():
             company_types += [TblCompany.COMPANY_TYPE_SAGEER]
 
-        models = [
-            AppCyanideCertificate, AppExplosivePermission, AppFuelPermission, AppImportPermission, 
-            AppBorrowMaterial,AppWorkPlan,AppTechnicalFinancialReport,
-            AppChangeCompanyName, AppExplorationTime, AppAddArea,AppRemoveArea, AppTnazolShraka, 
-            AppTajeelTnazol, AppTajmeed,AppTakhali,AppTamdeed,AppTaaweed,AppMda,AppChangeWorkProcedure, 
-            AppExportGold,AppExportGoldRaw,AppSendSamplesForAnalysis,AppForeignerProcedure,AppAifaaJomrki,
-            AppVisibityStudy,AppReexportEquipments,AppRequirementsList,AppWhomConcern,AppHSEAccidentReport, AppHSEPerformanceReport
-        ]
-        for m in models:
-            qs = m.objects.filter(state__in=filter,company__company_type__in=company_types).order_by("-updated_at").prefetch_related('company')
-            for r in qs:
-                key1 = r.company.__str__()
-                company_count[key1] += 1 
+        qs = get_app_metrics( \
+            ['id','company','state','updated_at'], #fields
+            {'state__in':filter,'company__company_type__in':company_types}, #filter
+            ['company'], #select_related
+            ["-updated_at"] #order_by
+        )
+        for r in qs:
+            key1 = r.company.__str__()
+            company_count[key1] += 1 
 
-                key2 = r._meta.verbose_name
-                app_count[key2] += 1 
+            key2 = _(r.app)
+            app_count[key2] += 1 
 
-                data.append( {
-                    'company': r.company.__str__(),
-                    'app': r.__str__(),
-                    'updated_at': r.updated_at,
-                    'url': get_admin_change_url(r),
-                })
+            data.append( {
+                'company': r.company.__str__(),
+                'app': r.app,
+                'updated_at': r.updated_at,
+                'url': r.url,
+            })
 
         company_count = dict(sorted(company_count.items(),key=lambda x:x[1],reverse=True))
         app_count = dict(sorted(app_count.items(),key=lambda x:x[1],reverse=True))
@@ -67,7 +54,7 @@ def in_progress_apps(request):
         if data:
             return {
                 'in_progress_apps': {
-                    'data':data,
+                    'data':qs,
                     'summary':{
                         'company':{
                             'name': list(company_count.keys()),
