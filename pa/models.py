@@ -506,5 +506,11 @@ class TblCompanyPaymentMethod(models.Model):
     payment_master  = models.ForeignKey(TblCompanyPaymentMaster, on_delete=models.PROTECT)
     amount = models.FloatField(_("amount"))
     method  = models.ForeignKey(LkpPaymentMethod, on_delete=models.PROTECT,verbose_name=_("Payment method"))    
-    ref_key = models.CharField(_("reference_key"),max_length=50,blank=True)
-    attachement_file = models.FileField(_("attachement_file"),upload_to=attachement_path,blank=True)
+    ref_key = models.CharField(_("reference_key"),max_length=50)
+    attachement_file = models.FileField(_("attachement_file"),upload_to=attachement_path)
+
+    # def clean(self):
+    #     if self.ref_key and not self.attachement_file:
+    #         raise ValidationError(
+    #             {"attachement_file":_("attach document")}
+    #         )
