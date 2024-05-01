@@ -17,6 +17,8 @@ from django.contrib.sites.models import Site
 from django_tables2 import SingleTableView
 from django_tables2.paginators import LazyPaginator
 
+from company_profile.utils import get_app_metrics
+
 from ..models import LkpState,LkpLocality,TblCompanyProduction,AppForignerMovement,AppBorrowMaterial,AppBorrowMaterialDetail
 from ..forms import LanguageForm,AppForignerMovementForm,AppBorrowMaterialForm
 
@@ -98,10 +100,33 @@ class LkpSelectView(LoginRequiredMixin,TemplateView):
 class HomePageView(LoginRequiredMixin,TranslationMixin,TemplateView):
     template_name = 'company_profile/home.html'
     menu_name = 'profile:home'
-    def dispatch(self, *args, **kwargs):                   
-        
+    def dispatch(self, *args, **kwargs): 
+        in_progress_qs = get_app_metrics( \
+            ['id','company','created_at','updated_at'], #fields
+            {'state__in':[SUBMITTED,ACCEPTED],'company__id':self.request.user.pro_company.company.id}, #filter
+            ['company'], #select_related
+            ["-created_at"] #order_by
+        )[:10]
+   
+        accepted_qs = get_app_metrics( \
+            ['id','company','created_at','updated_at'], #fields
+            {'state__in':[APPROVED],'company__id':self.request.user.pro_company.company.id}, #filter
+            ['company'], #select_related
+            ["-created_at"] #order_by
+        )[:10]
+
+        rejected_qs = get_app_metrics( \
+            ['id','company','created_at','updated_at'], #fields
+            {'state__in':[REJECTED],'company__id':self.request.user.pro_company.company.id}, #filter
+            ['company'], #select_related
+            ["-created_at"] #order_by
+        )[:10]
+
         self.extra_context = {
-                            "menu_name":self.menu_name,
+            "accepted_progress":accepted_qs,
+            "rejected_progress":rejected_qs,
+            "in_progress":in_progress_qs,
+            "menu_name":self.menu_name,
          }
         return super().dispatch(*args, **kwargs)    
 

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-05-01 16:28+0200\n"
+"POT-Creation-Date: 2024-05-01 22:00+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -148,7 +148,10 @@ msgstr "الشركة المستلف منها"
 msgid "license_type"
 msgstr "نوع الرخصة"
 
-#: company_profile/models.py:17 pa/models.py:46
+#: company_profile/models.py:17
+#: company_profile/templates/company_profile/home.html:16
+#: company_profile/templates/company_profile/home.html:38
+#: company_profile/templates/company_profile/home.html:59 pa/models.py:46
 msgid "created_at"
 msgstr "تاريخ الانشاء"
 
@@ -156,7 +159,10 @@ msgstr "تاريخ الانشاء"
 msgid "created_by"
 msgstr "المستخدم المسئول عن الانشاء"
 
-#: company_profile/models.py:20 pa/models.py:49
+#: company_profile/models.py:20
+#: company_profile/templates/company_profile/home.html:17
+#: company_profile/templates/company_profile/home.html:39
+#: company_profile/templates/company_profile/home.html:60 pa/models.py:49
 msgid "updated_at"
 msgstr "تاريخ اخر تعديل"
 
@@ -1656,6 +1662,9 @@ msgstr "تفاصيل استمارة الانتاج"
 #: company_profile/tables.py:426 company_profile/tables.py:439
 #: company_profile/tables.py:452 company_profile/tables.py:465
 #: company_profile/tables.py:478 company_profile/tables.py:491
+#: company_profile/templates/company_profile/home.html:29
+#: company_profile/templates/company_profile/home.html:51
+#: company_profile/templates/company_profile/home.html:72
 #: pa/tables/commitment.py:22 pa/tables/commitment_schedule.py:22
 #: pa/tables/openning_balance.py:22 pa/tables/payment.py:24
 #: pa/tables/request.py:26 pa/tables/request.py:45
@@ -1736,15 +1745,33 @@ msgstr "طلب اجراءات اجانب"
 msgid "Application: Visiblity Study"
 msgstr "طلب دراسة جدوى"
 
-#: company_profile/views/__init__.py:117
+#: company_profile/templates/company_profile/home.html:12
+msgid "latest application accepted"
+msgstr "اخر الطلبات التي تم التصديق عليها"
+
+#: company_profile/templates/company_profile/home.html:15
+#: company_profile/templates/company_profile/home.html:37
+#: company_profile/templates/company_profile/home.html:58
+msgid "application"
+msgstr "الطلب"
+
+#: company_profile/templates/company_profile/home.html:34
+msgid "latest application in rejected"
+msgstr "اخر الطلبات التي تم رفضها"
+
+#: company_profile/templates/company_profile/home.html:55
+msgid "latest application in progress"
+msgstr "اخر الطلبات قيد الاجراء"
+
+#: company_profile/views/__init__.py:142
 msgid "List of foreigner movements"
 msgstr "قائمة طلبات حركة الاجانب"
 
-#: company_profile/views/__init__.py:135
+#: company_profile/views/__init__.py:160
 msgid "Add new movement"
 msgstr "اضافة طلب حركة اجنبي"
 
-#: company_profile/views/__init__.py:155 company_profile/views/__init__.py:235
+#: company_profile/views/__init__.py:180 company_profile/views/__init__.py:260
 #: company_profile/views/add_area.py:64
 #: company_profile/views/aifaa_jomrki.py:76
 #: company_profile/views/change_company_name.py:68
@@ -1781,19 +1808,19 @@ msgstr "اضافة طلب حركة اجنبي"
 msgid "Application sent successfully."
 msgstr "تم ارسال الطلب بنجاح."
 
-#: company_profile/views/__init__.py:168
+#: company_profile/views/__init__.py:193
 msgid "Show movement"
 msgstr "عرض طلب حركة اجنبي"
 
-#: company_profile/views/__init__.py:183
+#: company_profile/views/__init__.py:208
 msgid "List of borrow materials"
 msgstr "قائمة طلبات الاستلاف"
 
-#: company_profile/views/__init__.py:202
+#: company_profile/views/__init__.py:227
 msgid "Add new borrow materials"
 msgstr "اضافة طلب اسلاف مواد"
 
-#: company_profile/views/__init__.py:253
+#: company_profile/views/__init__.py:278
 msgid "Show borrow materials"
 msgstr "عرض طلب استلاف مواد"
 
@@ -2275,8 +2302,8 @@ msgstr ""
 msgid "Production Accounting"
 msgstr "حسابات الانتاج"
 
-#: pa/forms/commitment.py:38 pa/forms/request.py:18 pa/forms/request.py:43
-#: pa/forms/request.py:59 pa/models.py:172 pa/models.py:263
+#: pa/forms/commitment.py:38 pa/forms/request.py:27 pa/forms/request.py:52
+#: pa/forms/request.py:68 pa/models.py:172 pa/models.py:263
 msgid "commitment"
 msgstr "التزام"
 
@@ -2302,7 +2329,7 @@ msgstr "الى"
 msgid "request"
 msgstr "المطالبة"
 
-#: pa/forms/request.py:19 pa/tables/request.py:20 pa/tables/request.py:39
+#: pa/forms/request.py:28 pa/tables/request.py:20 pa/tables/request.py:39
 msgid "payments total"
 msgstr "مجموع السداد"
 
@@ -2620,19 +2647,15 @@ msgstr "مدين"
 msgid "balance"
 msgstr "الرصيد"
 
-#: pa/templates/pa/pa_daily.html:60
-msgid "type"
-msgstr "النوع"
-
-#: pa/templates/pa/pa_daily.html:64
+#: pa/templates/pa/pa_daily.html:65
 msgid "opening_balance"
 msgstr "الرصيد الافتتاحي"
 
-#: pa/templates/pa/pa_daily.html:75
+#: pa/templates/pa/pa_daily.html:77
 msgid "before"
 msgstr "قبل"
 
-#: pa/templates/pa/pa_daily.html:76
+#: pa/templates/pa/pa_daily.html:78
 msgid "befor_balance"
 msgstr "الرصيد السابق"
 
@@ -2808,6 +2831,9 @@ msgstr "خروج"
 #: templates/allauth/layouts/base.html:33
 msgid "Sign In"
 msgstr "دخول"
+
+#~ msgid "type"
+#~ msgstr "النوع"
 
 #~ msgid "confirm_btn"
 #~ msgstr "تأكيد"

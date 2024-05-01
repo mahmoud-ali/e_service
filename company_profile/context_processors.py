@@ -45,7 +45,7 @@ def in_progress_apps(request):
                 'company': r.company.__str__(),
                 'app': r.app,
                 'updated_at': r.updated_at,
-                'url': r.url,
+                'url': r.admin_url,
             })
 
         company_count = dict(sorted(company_count.items(),key=lambda x:x[1],reverse=True))

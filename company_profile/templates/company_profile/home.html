@@ -3,9 +3,72 @@
 {% load bootstrap3 %}
 
 {% block content %}
-<h1 class="page-header">Home page here.</h1>
+{% comment %} <h1 class="page-header">Home page here.</h1> {% endcomment %}
 {% bootstrap_messages %}
 <br/>
 
+{%if accepted_progress%}
+<h3>{% translate "latest application accepted" %}:</h3>
+<table id="detail_table"  class="table table-bordered">
+    <tr>
+        <th style="width:40%">{% translate 'application'%}</th>
+        <th>{% translate 'created_at'%}</th>
+        <th>{% translate 'updated_at'%}</th>
+    </tr>
+    {% for record in accepted_progress %}
+    <tr>
+        <td><a href="{% url record.app_url record.id %}" class="changelink">{% translate record.app%}</a></td>
+        <td>{{record.created_at}}</td>
+        <td>{{record.updated_at}}</td>
+    </tr>
+    {% endfor %}
+
+</table>
+{%else%}
+<p>{%translate "No records."%}</p>
+
+{%endif%}
+
+{%if rejected_progress%}
+<h3>{% translate "latest application in rejected" %}:</h3>
+<table id="detail_table"  class="table table-bordered">
+    <tr>
+        <th style="width:40%">{% translate 'application'%}</th>
+        <th>{% translate 'created_at'%}</th>
+        <th>{% translate 'updated_at'%}</th>
+    </tr>
+    {% for record in rejected_progress %}
+    <tr>
+        <td><a href="{% url record.app_url record.id %}" class="changelink">{% translate record.app%}</a></td>
+        <td>{{record.created_at}}</td>
+        <td>{{record.updated_at}}</td>
+    </tr>
+    {% endfor %}
+
+</table>
+{%else%}
+<p>{%translate "No records."%}</p>
+{%endif%}
+
+{%if in_progress%}
+<h3>{% translate "latest application in progress" %}:</h3>
+<table id="detail_table"  class="table table-bordered">
+    <tr>
+        <th style="width:40%">{% translate 'application'%}</th>
+        <th>{% translate 'created_at'%}</th>
+        <th>{% translate 'updated_at'%}</th>
+    </tr>
+    {% for record in in_progress %}
+    <tr>
+        <td><a href="{% url record.app_url record.id %}" class="changelink">{% translate record.app%}</a></td>
+        <td>{{record.created_at}}</td>
+        <td>{{record.updated_at}}</td>
+    </tr>
+    {% endfor %}
+
+</table>
+{%else%}
+<p>{%translate "No records."%}</p>
+{%endif%}
 
 {% endblock content %}
