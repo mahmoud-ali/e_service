@@ -7,7 +7,7 @@ from .models import TblCompany
 from .utils import get_app_metrics
                     
 def in_progress_apps(request):
-    if request.path == '/managers/company_profile/':
+    if  '/managers/company_profile/' in request.path:
         data = []
         company_count = defaultdict(int)
         app_count = defaultdict(int)
