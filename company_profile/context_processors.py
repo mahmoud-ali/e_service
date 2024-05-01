@@ -42,6 +42,7 @@ def in_progress_apps(request):
             app_count[key2] += 1 
 
             data.append( {
+                'id':r.id,
                 'company': r.company.__str__(),
                 'app': r.app,
                 'updated_at': r.updated_at,
@@ -54,7 +55,7 @@ def in_progress_apps(request):
         if data:
             return {
                 'in_progress_apps': {
-                    'data':qs,
+                    'data':data,
                     'summary':{
                         'company':{
                             'name': list(company_count.keys()),
