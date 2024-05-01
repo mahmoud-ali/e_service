@@ -99,6 +99,9 @@
 			{% comment %} <li class="{% if menu_name == 'pa:home' %}active{% endif %} ">  
 				<a href="{% url 'pa:home' %}">{% translate "Home page" %}</a>
 		 	</li> {% endcomment %}
+			 <li class="{% if menu_name == 'pa:openning_balance_list' %}active{% endif %} ">  
+				<a href="{% url 'pa:openning_balance_list' %}">{% translate "Openning Balance page" %}</a>
+		 	</li>
 			 <li class="{% if menu_name == 'pa:commitment_list' %}active{% endif %} ">  
 				<a href="{% url 'pa:commitment_list' %}">{% translate "Commitment page" %}</a>
 		 	</li>

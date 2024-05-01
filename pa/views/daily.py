@@ -8,7 +8,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .application import TranslationMixin
 from ..forms import PaDailyForm
-from ..models import TblCompanyPaymentDetail, TblCompanyRequestDetail, TblCompanyRequestMaster,TblCompanyPaymentMaster,STATE_TYPE_CONFIRM
+from ..models import TblCompanyOpenningBalanceDetail, TblCompanyOpenningBalanceMaster, TblCompanyPaymentDetail, TblCompanyRequestDetail, TblCompanyRequestMaster,TblCompanyPaymentMaster,STATE_TYPE_CONFIRM
 
 class PaDailyView(LoginRequiredMixin,TranslationMixin,View):
     form = PaDailyForm
@@ -45,6 +45,17 @@ class PaDailyView(LoginRequiredMixin,TranslationMixin,View):
             currency = form.cleaned_data["currency"]
             from_dt = form.cleaned_data["from_dt"]
             to_dt = form.cleaned_data["to_dt"]
+            openning_qs_all = TblCompanyOpenningBalanceDetail.objects.filter(
+                commitment_master__state=STATE_TYPE_CONFIRM,
+            )
+
+            if company:
+                openning_qs_all = openning_qs_all.filter(
+                    commitment_master__company=company,
+                )
+
+            openning_total = openning_qs_all.aggregate(total=Sum("amount"))['total'] or 0
+
             request_qs_all = TblCompanyRequestDetail.objects.filter(
                     request_master__state=STATE_TYPE_CONFIRM,
                 ).annotate(
@@ -99,7 +110,7 @@ class PaDailyView(LoginRequiredMixin,TranslationMixin,View):
             qs = request_qs.union(payment_qs).order_by("request_master__created_at")
 
             data = []
-            balance_opening = request_total_befor - payment_total_before
+            balance_opening = openning_total + request_total_befor - payment_total_before
             balance = balance_opening
             for d in qs:
                 a = list(d)
@@ -112,6 +123,7 @@ class PaDailyView(LoginRequiredMixin,TranslationMixin,View):
 
             self.extra_context["form"] = form
             self.extra_context["data"] = data
+            self.extra_context["opening"] = openning_total or 0
             self.extra_context["request_opening"] = request_total_befor or 0
             self.extra_context["payment_opening"] = payment_total_before or 0
             self.extra_context["balance_opening"] = balance_opening or 0

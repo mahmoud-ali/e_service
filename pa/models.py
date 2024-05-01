@@ -18,10 +18,12 @@ from company_profile.models import TblCompany,TblCompanyProduction, TblCompanyPr
 
 CURRENCY_TYPE_SDG = "sdg"
 CURRENCY_TYPE_EURO = "euro"
+CURRENCY_TYPE_DOLLAR = "dollar"
 
 CURRENCY_TYPE_CHOICES = {
     CURRENCY_TYPE_SDG: _("sdg"),
     CURRENCY_TYPE_EURO: _("euro"),
+    CURRENCY_TYPE_DOLLAR: _("dollar"),
 }
 
 STATE_TYPE_DRAFT = 'draft'
@@ -87,6 +89,42 @@ class LkpItem(models.Model):
                             .count()
             return factor*total_contracts
         
+class TblCompanyOpenningBalanceMaster(LoggingModel):
+    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
+    currency = models.CharField(_("currency"),max_length=10, choices=CURRENCY_TYPE_CHOICES, default=CURRENCY_TYPE_EURO)
+    state = models.CharField(_("record_state"),max_length=10, choices=STATE_TYPE_CHOICES, default=STATE_TYPE_DRAFT)
+    
+    def __str__(self):
+        return self.company.__str__()+"/"+self.currency
+        
+    def get_absolute_url(self): 
+        return reverse('pa:openning_balance_show',args=[str(self.id)])                
+
+    class Meta:
+        ordering = ["-id"]
+        verbose_name = _("Openning balance")
+        verbose_name_plural = _("Openning balances")
+        indexes = [
+            models.Index(fields=["company"]),
+        ]
+
+class TblCompanyOpenningBalanceDetail(models.Model):
+    commitment_master  = models.ForeignKey(TblCompanyOpenningBalanceMaster, on_delete=models.PROTECT)
+    item  = models.ForeignKey(LkpItem, on_delete=models.PROTECT,verbose_name=_("financial item"))    
+    amount = models.FloatField(_("amount"))
+
+    class Meta:
+        ordering = ["id"]
+        verbose_name = _("Openning balance detail")
+        verbose_name_plural = _("Openning balance details")
+
+    def clean(self):
+        if self.commitment_master.company.company_type != self.item.company_type:
+            raise ValidationError(
+                {"item":_("item type should match company type")}
+            )
+
+
 class TblCompanyCommitmentMaster(LoggingModel):
     company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
     currency = models.CharField(_("currency"),max_length=10, choices=CURRENCY_TYPE_CHOICES, default=CURRENCY_TYPE_EURO)
@@ -239,36 +277,6 @@ class TblCompanyRequestMaster(LoggingModel):
     def get_absolute_url(self): 
         return reverse('pa:request_show',args=[str(self.id)])                
 
-    def clean(self):        
-        qs = TblCompanyRequestMaster.objects.filter(
-            commitment__company__id=self.commitment.company.id,
-        )
-        if self.id:
-            qs = qs.exclude(id=self.id)
-
-        if self.to_dt < self.from_dt:
-            raise ValidationError(
-                {"to_dt":_("to_dt should be great or equal than from_dt")}
-            )
-        
-        if qs.filter(from_dt__lte=self.from_dt, to_dt__gte=self.from_dt).count() > 0:
-            raise ValidationError(
-                {"from_dt":_("conflicted date")}
-            )
-        
-        if qs.filter(from_dt__lte=self.to_dt, to_dt__gte=self.to_dt).count() > 0:
-            raise ValidationError(
-                {"to_dt":_("conflicted date")}
-            )
-        
-        if qs.filter(from_dt__gte=self.from_dt, to_dt__lte=self.to_dt).count() > 0:
-            raise ValidationError(
-                {
-                    "from_dt":_("conflicted date"),
-                    "to_dt":_("conflicted date"),
-                }
-            )
-
     def sum_of_payment(self,exclude=0,confirmed_only=False):
         if self.state == STATE_TYPE_DRAFT:
             return 0
@@ -290,6 +298,10 @@ class TblCompanyRequestMaster(LoggingModel):
                 sum += p.total*p.exchange_rate
 
         return sum
+
+    @property
+    def sum_of_confirmed_payment(self,exclude=0):
+        return self.sum_of_payment(exclude,confirmed_only=True)
 
     def update_payment_state(self):
         if self.state == STATE_TYPE_DRAFT:
@@ -343,6 +355,36 @@ class TblCompanyRequestMaster(LoggingModel):
                 fail_silently=False,
             )        
 
+    def clean(self):        
+        qs = TblCompanyRequestMaster.objects.filter(
+            commitment__company__id=self.commitment.company.id,
+        )
+        if self.id:
+            qs = qs.exclude(id=self.id)
+
+        if self.to_dt < self.from_dt:
+            raise ValidationError(
+                {"to_dt":_("to_dt should be great or equal than from_dt")}
+            )
+        
+        if qs.filter(from_dt__lte=self.from_dt, to_dt__gte=self.from_dt).count() > 0:
+            raise ValidationError(
+                {"from_dt":_("conflicted date")}
+            )
+        
+        if qs.filter(from_dt__lte=self.to_dt, to_dt__gte=self.to_dt).count() > 0:
+            raise ValidationError(
+                {"to_dt":_("conflicted date")}
+            )
+        
+        if qs.filter(from_dt__gte=self.from_dt, to_dt__lte=self.to_dt).count() > 0:
+            raise ValidationError(
+                {
+                    "from_dt":_("conflicted date"),
+                    "to_dt":_("conflicted date"),
+                }
+            )
+
     class Meta:
         ordering = ["-id"]
         verbose_name = _("Financial request")
@@ -352,9 +394,15 @@ class TblCompanyRequestMaster(LoggingModel):
         ]
 
 class TblCompanyRequestDetail(models.Model):
+    def attachement_path(self, filename):
+        company = self.request_master.commitment.company
+        date = self.request_master.created_at
+        return "company_{0}/requests/{1}/{2}".format(company.id,date, filename)    
+
     request_master  = models.ForeignKey(TblCompanyRequestMaster, on_delete=models.PROTECT)
     item  = models.ForeignKey(LkpItem, on_delete=models.PROTECT,verbose_name=_("financial item"))    
     amount = models.FloatField(_("amount"))
+    attachement_file = models.FileField(_("attachement_file"),upload_to=attachement_path,blank=True)
 
     def get_commitment_item_amount(self):
         qs =  self.request_master.commitment.tblcompanycommitmentdetail_set \
@@ -446,9 +494,15 @@ class TblCompanyPaymentMaster(LoggingModel):
         ]
 
 class TblCompanyPaymentDetail(models.Model):
+    def attachement_path(self, filename):
+        company = self.payment_master.request.commitment.company
+        date = self.payment_master.payment_dt
+        return "company_{0}/payments/{1}/{2}".format(company.id,date, filename)    
+
     payment_master  = models.ForeignKey(TblCompanyPaymentMaster, on_delete=models.PROTECT)
     item  = models.ForeignKey(LkpItem, on_delete=models.PROTECT,verbose_name=_("financial item"))    
     amount = models.FloatField(_("amount"))
+    attachement_file = models.FileField(_("attachement_file"),upload_to=attachement_path,blank=True)
 
     def get_request_item_amount(self):
         return self.payment_master.exchange_rate * (self.payment_master.request.tblcompanyrequestdetail_set \

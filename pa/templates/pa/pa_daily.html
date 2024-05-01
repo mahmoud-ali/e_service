@@ -56,18 +56,29 @@
 				<th>{%translate "debit"%}</th>
 				<th>{%translate "balance"%}</th>
 				{% comment %} <th>{%translate "company"%}</th> {% endcomment %}
-				<th>{%translate "type"%}</th>
+				{% comment %} <th>{%translate "type"%}</th> {% endcomment %}
+			</tr>
+			<tr>
+				<th>&nbsp;</th>
+				<th>{%translate "opening_balance"%}</th>
+				<th>{%translate request.POST.currency%}</th>
+				<th>1.0</th>
+				<th>&nbsp;</th>
+				<th>&nbsp;</th>
+				<th>{{opening|unlocalize|intcomma}}</th>
+				{% comment %} <th>{%translate "company"%}</th> {% endcomment %}
+				{% comment %} <th>opening</th> {% endcomment %}
 			</tr>
 			<tr>
 				<th>{%translate "before"%} {%translate request.POST.from_dt%}</th>
-				<th>{%translate "opening_balance"%}</th>
+				<th>{%translate "befor_balance"%}</th>
 				<th>{%translate request.POST.currency%}</th>
 				<th>1.0</th>
 				<th>{{payment_opening|unlocalize|intcomma}}</th>
 				<th>{{request_opening|unlocalize|intcomma}}</th>
 				<th>{{balance_opening|unlocalize|intcomma}}</th>
 				{% comment %} <th>{%translate "company"%}</th> {% endcomment %}
-				<th>opening</th>
+				{% comment %} <th>opening</th> {% endcomment %}
 			</tr>
 			{%for m in data %}
 			<tr>
@@ -96,7 +107,7 @@
 				</td>
 				<th>{{m.7|unlocalize|intcomma}}</th>
 				{% comment %} <th>{{m.8}}</th> {% endcomment %}
-				<th>{{m.6}}</th>
+				{% comment %} <th>{{m.6}}</th> {% endcomment %}
 			</tr>
 			{%endfor%}
 			<tr>
@@ -108,7 +119,7 @@
 				<th>{{payment_total|unlocalize|intcomma}}</th>
 				<th>{{balance_total|unlocalize|intcomma}}</th>
 				<th>&nbsp;</th>
-				<th>&nbsp;</th>
+				{% comment %} <th>&nbsp;</th> {% endcomment %}
 			</tr>
 		</table>
 	</div>
