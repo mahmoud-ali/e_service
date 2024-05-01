@@ -2,12 +2,21 @@ from django import forms
 from django.forms import ModelForm
 from django.contrib.admin.widgets import AdminDateWidget
 from django.utils.translation import gettext_lazy as _
+from django.db.models import Q
 
-from ..models import TblCompanyCommitmentMaster, TblCompanyCommitmentSchedular,TblCompanyRequestMaster,STATE_TYPE_CONFIRM
+from ..models import TblCompanyCommitmentMaster, TblCompanyCommitmentSchedular,TblCompanyRequestMaster,STATE_TYPE_CONFIRM,STATE_TYPE_DRAFT
 
 commitment_all_qs = TblCompanyCommitmentMaster.objects.prefetch_related("company")
 commitment_confirmed_qs = commitment_all_qs.filter(state=STATE_TYPE_CONFIRM)
-
+commitment_confirmed_manual_qs = commitment_confirmed_qs \
+    .filter(
+        Q(commitment_schedular__isnull=True)|
+        Q(commitment_schedular__state=STATE_TYPE_DRAFT)|
+        Q(
+            commitment_schedular__request_interval=TblCompanyCommitmentSchedular.INTERVAL_TYPE_MANUAL, \
+            commitment_schedular__state=STATE_TYPE_CONFIRM
+        )
+    )
 class TblCompanyRequestAdminForm(ModelForm):
     class Meta:
         model = TblCompanyRequestMaster
@@ -56,7 +65,7 @@ class TblCompanyRequestAddForm(TblCompanyRequestAdminForm):
 
 class TblCompanyRequestChooseCommitmentForm(forms.Form):
     layout = [["commitment",""]]
-    commitment = forms.ModelChoiceField(queryset=commitment_confirmed_qs.order_by("company"), label=_("commitment")) #.filter(commitment_schedular__request_interval=TblCompanyCommitmentSchedular.INTERVAL_TYPE_MANUAL)
+    commitment = forms.ModelChoiceField(queryset=commitment_confirmed_manual_qs.order_by("company"), label=_("commitment")) #.filter(commitment_schedular__request_interval=TblCompanyCommitmentSchedular.INTERVAL_TYPE_MANUAL)
     class Meta:
         model = TblCompanyRequestMaster      
         fields = ["commitment"] 
