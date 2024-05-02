@@ -146,10 +146,11 @@ class TblCompanyCommitmentMaster(LoggingModel):
         ]
 
     def clean(self):
-        if self.company != self.license.company:
-            raise ValidationError(
-                {"license":_("choose license belong to company")}
-            )
+        if self.company and self.license:
+            if self.company != self.license.company:
+                raise ValidationError(
+                    {"license":_("choose license belong to company")}
+                )
         if not self.license and self.company.company_type in (TblCompany.COMPANY_TYPE_EMTIAZ,TblCompany.COMPANY_TYPE_ENTAJ,TblCompany.COMPANY_TYPE_MOKHALFAT):
             raise ValidationError(
                 {"license":""}
