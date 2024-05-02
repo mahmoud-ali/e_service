@@ -555,14 +555,16 @@ class AppHSEAccidentReportAdminForm(WorkflowFormMixin,ModelForm):
 
     class Meta:
         model = AppHSEAccidentReport
-        fields = ["company","state","reject_comments","attachement_file"] 
+        fields = ["company","accident_dt","accident_place","accident_type","accident_class","reject_comments","state","attachement_file"] 
         
 class AppHSEAccidentReportForm(AppHSEAccidentReportAdminForm):
     company = None
     class Meta:
         model = AppHSEAccidentReport
         exclude = ["company","state","reject_comments"]
-        widgets = {}
+        widgets = {
+            "accident_dt":AdminDateWidget(),
+        }
 
 class AppHSEPerformanceReportAdminForm(WorkflowFormMixin,ModelForm):
     company = forms.ModelChoiceField(queryset=TblCompanyProduction.objects.all(), disabled=True, label=_("company"))

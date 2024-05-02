@@ -448,7 +448,7 @@ class AppHSEAccidentReportTable(AppTable):
     class Meta:
         model = AppHSEAccidentReport
         template_name = "django_tables2/bootstrap.html"
-        fields = ("id","created_at")
+        fields = ("id","accident_dt","accident_place","accident_type","accident_class")
         empty_text = _("No records.")
 
     def render_id(self,value):

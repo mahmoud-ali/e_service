@@ -1051,8 +1051,33 @@ class AppFuelPermissionDetail(models.Model):
         verbose_name = _("Fuel Permission Detail")
         verbose_name_plural = _("Fuel Permission Details")
 
+class LkpAccidentType(models.Model):
+    name = models.CharField(_("name"),max_length=20)
+    
+    def __str__(self):
+        return self.name    
+        
+    class Meta:
+        verbose_name = _("Accident Type")
+        verbose_name_plural = _("Accident Types")
+
+
 class AppHSEAccidentReport(WorkflowModel):
+    ACCIDENT_CLASS_MINOR = 'minor'
+    ACCIDENT_CLASS_MODERATE = 'moderate'
+    ACCIDENT_CLASS_MAJOR = 'major'
+
+    ACCIDENT_CLASS_CHOICES = {
+        ACCIDENT_CLASS_MINOR: _("minor"),
+        ACCIDENT_CLASS_MODERATE: _("moderate"),
+        ACCIDENT_CLASS_MAJOR: _("major"),
+    }
+
     company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
+    accident_place = models.CharField(_("accident_place"),max_length=100)
+    accident_dt = models.DateTimeField(_("accident_dt"))
+    accident_type  = models.ForeignKey(LkpAccidentType, on_delete=models.PROTECT,verbose_name=_("accident_type"))    
+    accident_class = models.CharField(_("accident_class"),max_length=10, choices=ACCIDENT_CLASS_CHOICES)
 
     attachement_file = models.FileField(_("attachement_file"),upload_to=company_applications_path)
 

@@ -7,7 +7,7 @@ from django.contrib.sites.models import Site
 
 from import_export.admin import ExportActionMixin
 
-from .models import AppCyanideCertificate, AppExplosivePermission, AppFuelPermission, AppFuelPermissionDetail, AppGoldProduction, AppGoldProductionDetail, AppHSEAccidentReport, AppHSEPerformanceReport, AppImportPermission, AppImportPermissionDetail, AppLocalPurchase, AppRenewalContract, AppRestartActivity, AppTemporaryExemption, AppWhomConcern, LkpNationality,LkpState,LkpLocality,LkpMineral,LkpCompanyProductionStatus,LkpForeignerProcedureType,TblCompanyProduction, \
+from .models import AppCyanideCertificate, AppExplosivePermission, AppFuelPermission, AppFuelPermissionDetail, AppGoldProduction, AppGoldProductionDetail, AppHSEAccidentReport, AppHSEPerformanceReport, AppImportPermission, AppImportPermissionDetail, AppLocalPurchase, AppRenewalContract, AppRestartActivity, AppTemporaryExemption, AppWhomConcern, LkpAccidentType, LkpNationality,LkpState,LkpLocality,LkpMineral,LkpCompanyProductionStatus,LkpForeignerProcedureType,TblCompanyProduction, \
                                       LkpCompanyProductionFactoryType,TblCompanyProductionFactory,LkpCompanyProductionLicenseStatus, \
                                       TblCompanyProductionLicense,AppForignerMovement,TblCompanyProductionUserRole, \
                                       AppBorrowMaterial,AppBorrowMaterialDetail,AppWorkPlan,AppTechnicalFinancialReport, \
@@ -211,6 +211,7 @@ admin.site.register(LkpMineral)
 admin.site.register(LkpForeignerProcedureType)
 admin.site.register(LkpCompanyProductionStatus) 
 admin.site.register(TblCompanyProduction,TblCompanyProductionAdmin)
+admin.site.register(LkpAccidentType) 
 
 #admin.site.register(LkpCompanyProductionFactoryType)
 admin.site.register(TblCompanyProductionFactory,TblCompanyProductionFactoryAdmin)
@@ -603,7 +604,7 @@ admin.site.register(AppFuelPermission, AppFuelPermissionAdmin)
 class AppHSEAccidentReportAdmin(WorkflowAdminMixin,admin.ModelAdmin):
     form = AppHSEAccidentReportAdminForm
     
-    list_display = ["company", "created_at", "created_by","updated_at", "updated_by"]        
+    list_display = ["company","accident_dt","accident_place","accident_type","accident_class", "created_at", "created_by","updated_at", "updated_by"]        
     list_filter = ["company"]
     view_on_site = False
     
