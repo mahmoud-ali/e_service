@@ -35,6 +35,12 @@ details = [
         },
     ]
 
+def get_company_details(commitment:TblCompanyCommitmentMaster):
+    return {
+        "name":commitment.company.name_ar,
+        "address":commitment.company.address
+    }
+
 class TblCompanyRequestListView(ApplicationListView,FilterView):
     model = model_master
     table_class = TblCompanyRequestTable
@@ -75,6 +81,7 @@ class TblCompanyRequestCreateView(ApplicationMasterDetailCreateView):
                 formset = detail['formset'](initial=d_obj)
                 detail['formset'] = formset
 
+        self.extra_context['company'] = get_company_details(obj)
         self.extra_context['form'] = form
         self.extra_context['details'] = self.details_formset
         return render(request, self.template_name, self.extra_context)
@@ -87,6 +94,11 @@ class TblCompanyRequestUpdateView(ApplicationMasterDetailUpdateView):
     menu_show_name = "pa:request_show"
     title = _("Edit request")
 
+    def get(self,request,*args, **kwargs):        
+        obj = self.get_object()
+        self.extra_context['company'] = get_company_details(obj.commitment)
+        return super().get(request,*args, **kwargs)
+
 class TblCompanyRequestReadonlyView(ApplicationReadonlyView):
     model = model_master
     form_class = TblCompanyRequestShowEditForm
@@ -96,9 +108,19 @@ class TblCompanyRequestReadonlyView(ApplicationReadonlyView):
     menu_delete_name = "pa:request_delete"
     title = _("Show added request")
 
+    def get(self,request,*args, **kwargs):        
+        obj = self.get_object()
+        self.extra_context['company'] = get_company_details(obj.commitment)
+        return super().get(request,*args, **kwargs)
+
 class TblCompanyRequestDeleteView(ApplicationDeleteMasterDetailView):
     model = model_master
     form_class = TblCompanyRequestShowEditForm
     details = details
     menu_name = "pa:request_list"
     title = _("Delete request")
+
+    def get(self,request,*args, **kwargs):        
+        obj = self.get_object()
+        self.extra_context['company'] = get_company_details(obj.commitment)
+        return super().get(request,*args, **kwargs)

@@ -1,0 +1,14 @@
+{% load i18n %}
+
+{%if company%}
+<div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title">{% translate "company details" %}
+    </h3>
+    </div>
+    <div class="panel-body">
+        {% translate "name_ar" %}: {{company.name}} <br/> 
+        {% translate "address" %}: {{company.address}}
+    </div>
+  </div>
+{% endif %}

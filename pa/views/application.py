@@ -327,7 +327,7 @@ class ApplicationReadonlyView(LoginRequiredMixin,UserPermissionMixin,SingleObjec
          }
         return super().dispatch(*args, **kwargs)                    
 
-    def get(self,request,pk):        
+    def get(self,request,*args, **kwargs):        
         obj = self.get_object()
         self.extra_context["form"] = self.form_class(instance=obj)
         self.extra_context["object"] = obj

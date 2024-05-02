@@ -9,6 +9,8 @@
 <h1 class="page-header">{% translate title %}</h1>
 {% bootstrap_messages %}
 
+{% include "pa/company_panel.html" %}
+
 <form >
 {% csrf_token %}
     {% bootstrap_form form %}
