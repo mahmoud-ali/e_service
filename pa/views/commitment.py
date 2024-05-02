@@ -1,13 +1,14 @@
+from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.http import HttpResponseRedirect
 from django.utils.translation import gettext_lazy as _
 
 from django.contrib import messages
 
-from pa.forms.commitment import TblCompanyCommitmentDetailForm
+from company_profile.models import TblCompanyProduction
+from pa.forms.commitment import TblCompanyAddCommitmentForm, TblCompanyCommitmentDetailForm, TblCompanyRequestChooseCompanyForm, TblCompanyShowEditCommitmentForm
 
 from ..models import STATE_TYPE_CONFIRM, TblCompanyCommitmentDetail, TblCompanyCommitmentMaster
-from ..forms import TblCompanyCommitmentForm
 
 from ..tables import TblCompanyCommitmentTable,CommitmentFilter
 
@@ -32,6 +33,12 @@ details = [
         },
     ]
 
+def get_company_details(commitment:TblCompanyCommitmentMaster):
+    return {
+        "name":commitment.company.name_ar,
+        "address":commitment.company.address
+    }
+
 class TblCompanyCommitmentListView(ApplicationListView):
     model = model_master
     table_class = TblCompanyCommitmentTable
@@ -41,31 +48,75 @@ class TblCompanyCommitmentListView(ApplicationListView):
     
 class TblCompanyCommitmentCreateView(ApplicationMasterDetailCreateView):
     model = model_master
-    form_class = TblCompanyCommitmentForm
+    form_class = TblCompanyAddCommitmentForm
     details = details
     menu_name = "pa:commitment_list"
     title = _("Add new commitment")            
 
+    def get(self,request, *args, **kwargs):   
+        company_id = request.GET.get('company')
+        if not company_id:
+            self.extra_context['form'] = TblCompanyRequestChooseCompanyForm
+            self.extra_context['details'] = []
+            return render(request, 'pa/application_choose.html', self.extra_context)
+        
+        obj = TblCompanyProduction.objects.get(id=company_id)
+        form = self.form_class(company_id=obj.id,initial={
+            "company": obj,
+        })
+
+        self.extra_context['form'] = form
+        return render(request, self.template_name, self.extra_context)
+    
+    def post(self,request,*args, **kwargs):        
+        company_id = request.POST.get('company')
+
+        form = self.form_class(request.POST,request.FILES,company_id=company_id)
+
+        for detail in self.details_formset:
+            formset = detail['formset'](request.POST,request.FILES)
+            detail['formset'] = formset
+
+        self.extra_context['form'] = form
+        self.extra_context['details'] = self.details_formset
+        return super().post(request,*args, **kwargs)
+
 class TblCompanyCommitmentUpdateView(ApplicationMasterDetailUpdateView):
     model = model_master
-    form_class = TblCompanyCommitmentForm
+    form_class = TblCompanyShowEditCommitmentForm
     details = details
     menu_name = "pa:commitment_list"
     menu_show_name = "pa:commitment_show"
     title = _("Edit commitment")
 
+    def get(self,request,*args, **kwargs):        
+        obj = self.get_object()
+        self.extra_context['company'] = get_company_details(obj)
+        return super().get(request,*args, **kwargs)
+
 class TblCompanyCommitmentReadonlyView(ApplicationReadonlyView):
     model = model_master
-    form_class = TblCompanyCommitmentForm
+    form_class = TblCompanyShowEditCommitmentForm
     details = details
     menu_name = "pa:commitment_list"
     menu_edit_name = "pa:commitment_edit"
     menu_delete_name = "pa:commitment_delete"
     title = _("Show added commitment")
 
+    def get(self,request,*args, **kwargs):        
+        obj = self.get_object()
+        self.extra_context['company'] = get_company_details(obj)
+        return super().get(request,*args, **kwargs)
+
 class TblCompanyCommitmentDeleteView(ApplicationDeleteMasterDetailView):
     model = model_master
-    form_class = TblCompanyCommitmentForm
+    form_class = TblCompanyShowEditCommitmentForm
     details = details
     menu_name = "pa:commitment_list"
     title = _("Delete commitment")
+
+    def get(self,request,*args, **kwargs):        
+        obj = self.get_object()
+        self.extra_context['company'] = get_company_details(obj)
+        return super().get(request,*args, **kwargs)
+

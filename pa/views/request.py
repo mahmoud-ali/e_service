@@ -85,6 +85,21 @@ class TblCompanyRequestCreateView(ApplicationMasterDetailCreateView):
         self.extra_context['form'] = form
         self.extra_context['details'] = self.details_formset
         return render(request, self.template_name, self.extra_context)
+    
+    def post(self,request,*args, **kwargs):        
+        commitment_id = request.POST.get('commitment')
+        commitment = TblCompanyCommitmentMaster.objects.get(id=commitment_id)
+
+        form = self.form_class(request.POST,request.FILES,commitment_id=commitment_id)
+
+        for detail in self.details_formset:
+            formset = detail['formset'](request.POST,request.FILES)
+            detail['formset'] = formset
+
+        self.extra_context['company'] = get_company_details(commitment)
+        self.extra_context['form'] = form
+        self.extra_context['details'] = self.details_formset
+        return super().post(request,*args, **kwargs)
 
 class TblCompanyRequestUpdateView(ApplicationMasterDetailUpdateView):
     model = model_master

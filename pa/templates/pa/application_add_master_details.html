@@ -17,7 +17,7 @@
 
 {% include "pa/company_panel.html" %}
 
-<form  method="post"  enctype="multipart/form-data">
+<form  method="post"  enctype="multipart/form-data" novalidate>
 {% csrf_token %}
 
     {% bootstrap_form form %}

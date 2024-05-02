@@ -12,7 +12,6 @@ from pa.forms.request import TblCompanyRequestChooseCommitmentForm
 from pa.tables.commitment_schedule import CommitmentScheduleFilter, TblCompanyCommitmentScheduleTable
 
 from ..models import STATE_TYPE_CONFIRM, TblCompanyCommitmentDetail, TblCompanyCommitmentMaster, TblCompanyCommitmentSchedular
-from ..forms import TblCompanyCommitmentForm
 
 from ..tables import TblCompanyCommitmentTable,CommitmentFilter
 

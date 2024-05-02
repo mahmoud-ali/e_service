@@ -127,6 +127,7 @@ class TblCompanyOpenningBalanceDetail(models.Model):
 
 class TblCompanyCommitmentMaster(LoggingModel):
     company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
+    license  = models.ForeignKey(TblCompanyProductionLicense, on_delete=models.PROTECT,verbose_name=_("license"),null=True)    
     currency = models.CharField(_("currency"),max_length=10, choices=CURRENCY_TYPE_CHOICES, default=CURRENCY_TYPE_EURO)
     state = models.CharField(_("record_state"),max_length=10, choices=STATE_TYPE_CHOICES, default=STATE_TYPE_DRAFT)
     
@@ -144,6 +145,12 @@ class TblCompanyCommitmentMaster(LoggingModel):
             models.Index(fields=["company"]),
         ]
 
+    def clean(self):
+        if not self.license and self.company.company_type in (TblCompany.COMPANY_TYPE_EMTIAZ,TblCompany.COMPANY_TYPE_ENTAJ,TblCompany.COMPANY_TYPE_MOKHALFAT):
+            raise ValidationError(
+                {"license":""}
+            )
+
 class TblCompanyCommitmentDetail(models.Model):
     commitment_master  = models.ForeignKey(TblCompanyCommitmentMaster, on_delete=models.PROTECT)
     item  = models.ForeignKey(LkpItem, on_delete=models.PROTECT,verbose_name=_("financial item"))    
@@ -155,10 +162,11 @@ class TblCompanyCommitmentDetail(models.Model):
         verbose_name_plural = _("Financial commitment details")
 
     def clean(self):
-        if self.commitment_master.company.company_type != self.item.company_type:
-            raise ValidationError(
-                {"item":_("item type should match company type")}
-            )
+        if hasattr(self.commitment_master,'company'):
+            if self.commitment_master.company.company_type != self.item.company_type:
+                raise ValidationError(
+                    {"item":_("item type should match company type")}
+                )
 
 class TblCompanyCommitmentSchedular(LoggingModel):
     INTERVAL_TYPE_MANUAL = 'manual'
@@ -356,34 +364,40 @@ class TblCompanyRequestMaster(LoggingModel):
             )        
 
     def clean(self):        
+        if not hasattr(self,'commitment'):
+            raise ValidationError(
+                {"commitment":""}
+            )
+        
         qs = TblCompanyRequestMaster.objects.filter(
             commitment__company__id=self.commitment.company.id,
         )
         if self.id:
             qs = qs.exclude(id=self.id)
 
-        if self.to_dt < self.from_dt:
-            raise ValidationError(
-                {"to_dt":_("to_dt should be great or equal than from_dt")}
-            )
+        if self.to_dt and self.from_dt:
+            if self.to_dt < self.from_dt:
+                raise ValidationError(
+                    {"to_dt":_("to_dt should be great or equal than from_dt")}
+                )
         
-        if qs.filter(from_dt__lte=self.from_dt, to_dt__gte=self.from_dt).count() > 0:
-            raise ValidationError(
-                {"from_dt":_("conflicted date")}
-            )
-        
-        if qs.filter(from_dt__lte=self.to_dt, to_dt__gte=self.to_dt).count() > 0:
-            raise ValidationError(
-                {"to_dt":_("conflicted date")}
-            )
-        
-        if qs.filter(from_dt__gte=self.from_dt, to_dt__lte=self.to_dt).count() > 0:
-            raise ValidationError(
-                {
-                    "from_dt":_("conflicted date"),
-                    "to_dt":_("conflicted date"),
-                }
-            )
+            if qs.filter(from_dt__lte=self.from_dt, to_dt__gte=self.from_dt).count() > 0:
+                raise ValidationError(
+                    {"from_dt":_("conflicted date")}
+                )
+            
+            if qs.filter(from_dt__lte=self.to_dt, to_dt__gte=self.to_dt).count() > 0:
+                raise ValidationError(
+                    {"to_dt":_("conflicted date")}
+                )
+            
+            if qs.filter(from_dt__gte=self.from_dt, to_dt__lte=self.to_dt).count() > 0:
+                raise ValidationError(
+                    {
+                        "from_dt":_("conflicted date"),
+                        "to_dt":_("conflicted date"),
+                    }
+                )
 
     class Meta:
         ordering = ["-id"]
@@ -425,6 +439,9 @@ class TblCompanyRequestDetail(models.Model):
         return sum
 
     def clean(self):
+        if not hasattr(self,"request_master") or not hasattr(self.request_master,"commitment"):
+            return
+        
         if not self.id and self.request_master.state == STATE_TYPE_CONFIRM:
             raise ValidationError(
                 {"item":_("request already confirmed!")}
@@ -505,11 +522,17 @@ class TblCompanyPaymentDetail(models.Model):
     attachement_file = models.FileField(_("attachement_file"),upload_to=attachement_path,blank=True)
 
     def get_request_item_amount(self):
+        if not hasattr(self.payment_master,"request"):
+            return -1
+        
         return self.payment_master.exchange_rate * (self.payment_master.request.tblcompanyrequestdetail_set \
                .filter(item=self.item) \
                .aggregate(total=Sum('amount'))['total'] or 0)
     
     def get_payment_item_total(self,exclude=0):
+        if not hasattr(self.payment_master,"request"):
+            return -1
+
         sum =0
         qs = TblCompanyPaymentDetail.objects \
                 .filter(payment_master__request=self.payment_master.request) \
@@ -521,6 +544,9 @@ class TblCompanyPaymentDetail(models.Model):
         return sum
     
     def clean(self):
+        if not hasattr(self.payment_master,"request"):
+            return 
+        
         if not self.id and self.payment_master.state == STATE_TYPE_CONFIRM:
             raise ValidationError(
                 {"item":_("payment already confirmed!")}

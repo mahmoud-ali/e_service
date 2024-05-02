@@ -132,7 +132,11 @@ class ApplicationMasterDetailCreateView(LoginRequiredMixin,View):
         return render(request, self.template_name, self.extra_context)
     
     def post(self, request, *args, **kwargs):
-        form = self.form_class(request.POST,request.FILES)
+        form = None
+        if self.extra_context["form"]:
+            form = self.extra_context["form"]
+        else:
+            form = self.form_class(request.POST,request.FILES)
         
         if form.is_valid():
             self.object = form.save(commit=False)
@@ -293,7 +297,7 @@ class ApplicationMasterDetailUpdateView(LoginRequiredMixin,UserPermissionMixin,S
                 messages.add_message(request,messages.SUCCESS,_("Application sent successfully."))
                 return HttpResponseRedirect(self.success_url)
             
-            return render(request, self.template_name, self.extra_context)
+        return render(request, self.template_name, self.extra_context)
                 
 
 class ApplicationReadonlyView(LoginRequiredMixin,UserPermissionMixin,SingleObjectMixin,View):

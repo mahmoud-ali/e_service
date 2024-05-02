@@ -6,6 +6,7 @@ from django.db.models import Q
 
 from ..models import TblCompanyCommitmentMaster, TblCompanyCommitmentSchedular,TblCompanyRequestMaster,STATE_TYPE_CONFIRM,STATE_TYPE_DRAFT
 
+commitment_none = TblCompanyCommitmentMaster.objects.none()
 commitment_all_qs = TblCompanyCommitmentMaster.objects.prefetch_related("company")
 commitment_confirmed_qs = commitment_all_qs.filter(state=STATE_TYPE_CONFIRM)
 commitment_confirmed_manual_qs = commitment_confirmed_qs \
@@ -24,7 +25,7 @@ class TblCompanyRequestAdminForm(ModelForm):
         
 class TblCompanyRequestShowEditForm(TblCompanyRequestAdminForm):
     layout = ["commitment",["from_dt","to_dt"],["currency","total_payment"]]
-    commitment = forms.ModelChoiceField(queryset=None,disabled=True, label=_("commitment"))
+    commitment = forms.ModelChoiceField(queryset=commitment_none,disabled=True, label=_("commitment"))
     total_payment = forms.FloatField(label=_('payments total'),disabled=True)
     def __init__(self, *args, **kwargs):        
         super().__init__(*args, **kwargs)
@@ -49,7 +50,7 @@ class TblCompanyRequestShowEditForm(TblCompanyRequestAdminForm):
 
 class TblCompanyRequestAddForm(TblCompanyRequestAdminForm):
     layout = ["commitment",["from_dt","to_dt"],["currency"]]
-    commitment = forms.ModelChoiceField(queryset=None, label=_("commitment")) #.filter(commitment_schedular__request_interval=TblCompanyCommitmentSchedular.INTERVAL_TYPE_MANUAL)
+    commitment = forms.ModelChoiceField(queryset=commitment_none, label=_("commitment")) #.filter(commitment_schedular__request_interval=TblCompanyCommitmentSchedular.INTERVAL_TYPE_MANUAL)
     class Meta:
         model = TblCompanyRequestMaster      
         fields = ["commitment","from_dt","to_dt","currency"] 

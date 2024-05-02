@@ -8,7 +8,7 @@ from django.contrib import messages
 
 from pa.forms.payment import TblCompanyPaymentChooseRequestForm
 
-from ..models import TblCompanyPaymentDetail, TblCompanyPaymentMaster, TblCompanyPaymentMethod,TblCompanyRequestMaster,STATE_TYPE_CONFIRM
+from ..models import TblCompanyCommitmentMaster, TblCompanyPaymentDetail, TblCompanyPaymentMaster, TblCompanyPaymentMethod,TblCompanyRequestMaster,STATE_TYPE_CONFIRM
 from ..forms import TblCompanyPaymentShowEditForm,TblCompanyPaymentAddForm
 
 from ..tables import TblCompanyPaymentTable,PaymentFilter
@@ -49,6 +49,12 @@ details = [
         },
     ]
 
+def get_company_details(commitment:TblCompanyCommitmentMaster):
+    return {
+        "name":commitment.company.name_ar,
+        "address":commitment.company.address
+    }
+
 class TblCompanyPaymentListView(ApplicationListView):
     model = model_master
     table_class = TblCompanyPaymentTable
@@ -87,9 +93,25 @@ class TblCompanyPaymentCreateView(ApplicationMasterDetailCreateView):
                 formset = detail['formset'](initial=d_obj)
                 detail['formset'] = formset
 
+        self.extra_context['company'] = get_company_details(obj.commitment)
         self.extra_context['form'] = form
         self.extra_context['details'] = self.details_formset
         return render(request, self.template_name, self.extra_context)
+
+    def post(self,request,*args, **kwargs):        
+        request_id = request.GET.get('request')
+        obj = TblCompanyRequestMaster.objects.get(id=request_id)
+
+        form = self.form_class(request.POST,request.FILES,request_id=request_id)
+
+        for detail in self.details_formset:
+            formset = detail['formset'](request.POST,request.FILES)
+            detail['formset'] = formset
+
+        self.extra_context['company'] = get_company_details(obj.commitment)
+        self.extra_context['form'] = form
+        self.extra_context['details'] = self.details_formset
+        return super().post(request,*args, **kwargs)
 
 class TblCompanyPaymentUpdateView(ApplicationMasterDetailUpdateView):
     model = model_master
@@ -111,6 +133,7 @@ class TblCompanyPaymentUpdateView(ApplicationMasterDetailUpdateView):
                     f.fields['item'].queryset = f.fields['item'].queryset.filter(company_type=obj.request.commitment.company.company_type)
             detail['formset'] = formset
 
+        self.extra_context['company'] = get_company_details(obj.request.commitment)
         self.extra_context['details'] = self.details_formset
 
         return render(request, self.template_name, self.extra_context)
@@ -124,9 +147,19 @@ class TblCompanyPaymentReadonlyView(ApplicationReadonlyView):
     menu_delete_name = "pa:payment_delete"
     title = _("Show added payment")
 
+    def get(self,request,*args, **kwargs):        
+        obj = self.get_object()
+        self.extra_context['company'] = get_company_details(obj.request.commitment)
+        return super().get(request,*args, **kwargs)
+
 class TblCompanyPaymentDeleteView(ApplicationDeleteMasterDetailView):
     model = model_master
     form_class = TblCompanyPaymentShowEditForm
     details = details
     menu_name = "pa:payment_list"
     title = _("Delete payment")
+
+    def get(self,request,*args, **kwargs):        
+        obj = self.get_object()
+        self.extra_context['company'] = get_company_details(obj.request.commitment)
+        return super().get(request,*args, **kwargs)
