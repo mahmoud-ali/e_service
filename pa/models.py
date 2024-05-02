@@ -127,7 +127,7 @@ class TblCompanyOpenningBalanceDetail(models.Model):
 
 class TblCompanyCommitmentMaster(LoggingModel):
     company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
-    license  = models.ForeignKey(TblCompanyProductionLicense, on_delete=models.PROTECT,verbose_name=_("license"),null=True)    
+    license  = models.ForeignKey(TblCompanyProductionLicense, on_delete=models.PROTECT,verbose_name=_("license"),null=True,blank=True)    
     currency = models.CharField(_("currency"),max_length=10, choices=CURRENCY_TYPE_CHOICES, default=CURRENCY_TYPE_EURO)
     state = models.CharField(_("record_state"),max_length=10, choices=STATE_TYPE_CHOICES, default=STATE_TYPE_DRAFT)
     
@@ -146,6 +146,10 @@ class TblCompanyCommitmentMaster(LoggingModel):
         ]
 
     def clean(self):
+        if self.company != self.license.company:
+            raise ValidationError(
+                {"license":_("choose license belong to company")}
+            )
         if not self.license and self.company.company_type in (TblCompany.COMPANY_TYPE_EMTIAZ,TblCompany.COMPANY_TYPE_ENTAJ,TblCompany.COMPANY_TYPE_MOKHALFAT):
             raise ValidationError(
                 {"license":""}
@@ -162,7 +166,7 @@ class TblCompanyCommitmentDetail(models.Model):
         verbose_name_plural = _("Financial commitment details")
 
     def clean(self):
-        if hasattr(self.commitment_master,'company'):
+        if hasattr(self.commitment_master,'company') and hasattr(self,"item"):
             if self.commitment_master.company.company_type != self.item.company_type:
                 raise ValidationError(
                     {"item":_("item type should match company type")}
