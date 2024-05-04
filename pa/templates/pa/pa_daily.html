@@ -10,7 +10,7 @@
 <h1 class="page-header">{{title}}</h1>
 {% bootstrap_messages %}
 
-<form action="" method="post">
+<form action="" method="post" class="screen_only">
 	{% csrf_token %}
 	<div class="row">
 		<div class="col-md-6">
@@ -37,90 +37,113 @@
 	</div>
 </form>
 
+<div class="print_only">
+	<div class="filter">
+		<label>{%translate "company"%}:</label> {% if form.company.value%} {{form.company.display}} {%else%} {{"الكل"}} {%endif%}
+		<label>{%translate "currency"%}:</label> {% translate form.currency.value%}
+	</div>
+	<div class="filter">
+		<label>{%translate "from_dt"%}:</label> {{form.from_dt.value}}
+		<label>{%translate "to_dt"%}:</label> {{form.to_dt.value}}
+	</div>
+</div>
+
 <script type="text/javascript" src="{% static 'company_profile/js/admin_jsi18n.js' %}"></script>
 <script type="text/javascript" src="{% static 'admin/js/core.js' %}"></script>
 {{ form.media }}
 
-<br/>
-<br/>
 {%if not is_get%}
+
+	<div class="screen_only">
+		<br/>
+		<a class="btn btn-default"  onClick="window.print()" href="#" role="button">
+			<span class="glyphicon glyphicon-print" aria-hidden="true"></span>
+			{% translate "Print" %}
+		</a>
+		<br/>
+	</div>
+	<br/>
 
 	<div  class="panel panel-default">
 		<table class="table">
-			<tr>
-				<th>{%translate "date"%}</th>
-				<th>{%translate "financial item"%}</th>
-				<th>{%translate "currency"%}</th>
-				<th>{%translate "exchange_rate"%}</th>
-				<th>{%translate "credit"%}</th>
-				<th>{%translate "debit"%}</th>
-				<th>{%translate "balance"%}</th>
-				{% comment %} <th>{%translate "company"%}</th> {% endcomment %}
-				{% comment %} <th>{%translate "type"%}</th> {% endcomment %}
-			</tr>
-			<tr>
-				<th>&nbsp;</th>
-				<th>{%translate "opening_balance"%}</th>
-				<th>{%translate request.POST.currency%}</th>
-				<th>1.0</th>
-				<th>&nbsp;</th>
-				<th>&nbsp;</th>
-				<th>{{opening|unlocalize|intcomma}}</th>
-				{% comment %} <th>{%translate "company"%}</th> {% endcomment %}
-				{% comment %} <th>opening</th> {% endcomment %}
-			</tr>
-			<tr>
-				<th>{%translate "before"%} {%translate request.POST.from_dt%}</th>
-				<th>{%translate "befor_balance"%}</th>
-				<th>{%translate request.POST.currency%}</th>
-				<th>1.0</th>
-				<th>{{payment_opening|unlocalize|intcomma}}</th>
-				<th>{{request_opening|unlocalize|intcomma}}</th>
-				<th>{{balance_opening|unlocalize|intcomma}}</th>
-				{% comment %} <th>{%translate "company"%}</th> {% endcomment %}
-				{% comment %} <th>opening</th> {% endcomment %}
-			</tr>
-			{%for m in data %}
-			<tr>
-				<td>{{m.1|date}}</td>
-				{%if m.6 == 'request'%}
-					<td><a href="{% url 'pa:request_show' m.0 %}">{{m.2}}</a></td>
-				{% elif m.6 == 'payment' %}
-					<td><a href="{% url 'pa:payment_show' m.0 %}">{{m.2}}</a></td>
-				{% endif %}
-				<td>{% translate m.4%}</td>
-				<td>{{m.5}}</td>
-				<td>
+			<thead>
+				<tr>
+					<th>{%translate "date"%}</th>
+					<th>{%translate "financial item"%}</th>
+					<th>{%translate "currency"%}</th>
+					<th>{%translate "exchange_rate"%}</th>
+					<th>{%translate "credit"%}</th>
+					<th>{%translate "debit"%}</th>
+					<th>{%translate "balance"%}</th>
+					{% comment %} <th>{%translate "company"%}</th> {% endcomment %}
+					{% comment %} <th>{%translate "type"%}</th> {% endcomment %}
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<th>&nbsp;</th>
+					<th>{%translate "opening_balance"%}</th>
+					<th>{%translate request.POST.currency%}</th>
+					<th>1.0</th>
+					<th>&nbsp;</th>
+					<th>&nbsp;</th>
+					<th>{{opening|unlocalize|intcomma}}</th>
+					{% comment %} <th>{%translate "company"%}</th> {% endcomment %}
+					{% comment %} <th>opening</th> {% endcomment %}
+				</tr>
+				<tr>
+					<th>{%translate "before"%} {%translate request.POST.from_dt%}</th>
+					<th>{%translate "befor_balance"%}</th>
+					<th>{%translate request.POST.currency%}</th>
+					<th>1.0</th>
+					<th>{{payment_opening|unlocalize|intcomma}}</th>
+					<th>{{request_opening|unlocalize|intcomma}}</th>
+					<th>{{balance_opening|unlocalize|intcomma}}</th>
+					{% comment %} <th>{%translate "company"%}</th> {% endcomment %}
+					{% comment %} <th>opening</th> {% endcomment %}
+				</tr>
+				{%for m in data %}
+				<tr>
+					<td>{{m.1|date}}</td>
 					{%if m.6 == 'request'%}
-					&nbsp;
-					{% else %}
-					{{m.3|unlocalize|intcomma}}
-					&nbsp;
+						<td><a href="{% url 'pa:request_show' m.0 %}">{{m.2}}</a></td>
+					{% elif m.6 == 'payment' %}
+						<td><a href="{% url 'pa:payment_show' m.0 %}">{{m.2}}</a></td>
 					{% endif %}
-				</td>
-				<td>
-					{%if m.6 == 'payment'%}
-					&nbsp;
-					{% else %}
-					{{m.3|unlocalize|intcomma}}
-					{% endif %}
-				</td>
-				<th>{{m.7|unlocalize|intcomma}}</th>
-				{% comment %} <th>{{m.8}}</th> {% endcomment %}
-				{% comment %} <th>{{m.6}}</th> {% endcomment %}
-			</tr>
-			{%endfor%}
-			<tr>
-				<th>&nbsp;</th>
-				<th>&nbsp;</th>
-				<th>&nbsp;</th>
-				<th>&nbsp;</th>
-				<th>{{payment_total|unlocalize|intcomma}}</th>
-				<th>{{request_total|unlocalize|intcomma}}</th>
-				<th>{{balance_total|unlocalize|intcomma}}</th>
-				<th>&nbsp;</th>
-				{% comment %} <th>&nbsp;</th> {% endcomment %}
-			</tr>
+					<td>{% translate m.4%}</td>
+					<td>{{m.5}}</td>
+					<td>
+						{%if m.6 == 'request'%}
+						&nbsp;
+						{% else %}
+						{{m.3|unlocalize|intcomma}}
+						&nbsp;
+						{% endif %}
+					</td>
+					<td>
+						{%if m.6 == 'payment'%}
+						&nbsp;
+						{% else %}
+						{{m.3|unlocalize|intcomma}}
+						{% endif %}
+					</td>
+					<th>{{m.7|unlocalize|intcomma}}</th>
+					{% comment %} <th>{{m.8}}</th> {% endcomment %}
+					{% comment %} <th>{{m.6}}</th> {% endcomment %}
+				</tr>
+				{%endfor%}
+				<tr>
+					<th>&nbsp;</th>
+					<th>&nbsp;</th>
+					<th>&nbsp;</th>
+					<th>&nbsp;</th>
+					<th>{{payment_total|unlocalize|intcomma}}</th>
+					<th>{{request_total|unlocalize|intcomma}}</th>
+					<th>{{balance_total|unlocalize|intcomma}}</th>
+					<th>&nbsp;</th>
+					{% comment %} <th>&nbsp;</th> {% endcomment %}
+				</tr>
+			</tbody>
 		</table>
 	</div>
 {%endif%}
