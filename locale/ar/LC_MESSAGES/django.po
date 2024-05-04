@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-05-04 17:24+0200\n"
+"POT-Creation-Date: 2024-05-05 00:02+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -36,16 +36,16 @@ msgid "Enter data in UTM meters."
 msgstr "ادخل البيانات على صيغة (UTM meters)"
 
 #: check_cordinates/templates/check_cordinates/application_add_master_details.html:43
-#: company_profile/templates/company_profile/application_add_master_details.html:44
-#: company_profile/templates/company_profile/views/requirements_list_add_master_details.html:45
+#: company_profile/templates/company_profile/application_add_master_details.html:38
+#: company_profile/templates/company_profile/views/requirements_list_add_master_details.html:39
 #: pa/templates/pa/application_add_master_details.html:54
 msgid "add_more"
 msgstr "اضافة المزيد"
 
 #: check_cordinates/templates/check_cordinates/application_add_master_details.html:49
 #: company_profile/templates/company_profile/application_add.html:15
-#: company_profile/templates/company_profile/application_add_master_details.html:50
-#: company_profile/templates/company_profile/views/requirements_list_add_master_details.html:53
+#: company_profile/templates/company_profile/application_add_master_details.html:44
+#: company_profile/templates/company_profile/views/requirements_list_add_master_details.html:47
 #: templates/account/password_reset.html:10
 msgid "Submit"
 msgstr "ارسال"
@@ -344,7 +344,7 @@ msgstr "تاريخ التوقيع"
 msgid "start_date"
 msgstr "تاريح البداية"
 
-#: company_profile/models.py:206
+#: company_profile/models.py:206 pa/templates/pa/company_panel.html:24
 msgid "end_date"
 msgstr "تاريخ النهاية"
 
@@ -365,11 +365,11 @@ msgid "cordinates"
 msgstr "الاحداثيات"
 
 #: company_profile/models.py:212 company_profile/models.py:637
-#: pa/templates/pa/company_panel.html:25
+#: pa/templates/pa/company_panel.html:26
 msgid "mineral"
 msgstr "المعدن"
 
-#: company_profile/models.py:213 pa/templates/pa/company_panel.html:24
+#: company_profile/models.py:213 pa/templates/pa/company_panel.html:25
 msgid "Area in Kilometers"
 msgstr "المساحة بالكيلوميتر"
 
@@ -401,7 +401,7 @@ msgstr "الزكاة"
 msgid "annual_rent"
 msgstr "الاجار السنوي"
 
-#: company_profile/models.py:221 pa/templates/pa/company_panel.html:26
+#: company_profile/models.py:221 pa/templates/pa/company_panel.html:27
 msgid "contract_status"
 msgstr "حالة العقد"
 
@@ -1611,7 +1611,7 @@ msgstr "الموضوع"
 
 #: company_profile/models.py:1116 company_profile/models.py:1127
 #: company_profile/templates/company_profile/application_readonly.html:25
-#: company_profile/templates/company_profile/application_readonly_master_details2.html:67
+#: company_profile/templates/company_profile/application_readonly_master_details2.html:61
 #: pa/templates/pa/application_readonly.html:39
 #: pa/templates/pa/application_readonly_master_details.html:63
 msgid "whom_attachement_file"
@@ -1733,13 +1733,13 @@ msgstr "تم الرفض"
 msgid "reject_comments_title"
 msgstr "لقد تم رفض طلبك للاتي: "
 
-#: company_profile/templates/company_profile/application_readonly_master_details2.html:53
+#: company_profile/templates/company_profile/application_readonly_master_details2.html:47
 #: pa/templates/pa/application_readonly.html:25
 #: pa/templates/pa/application_readonly_master_details.html:49
 msgid "edit_btn"
 msgstr "تعديل سجل"
 
-#: company_profile/templates/company_profile/application_readonly_master_details2.html:58
+#: company_profile/templates/company_profile/application_readonly_master_details2.html:52
 #: pa/templates/pa/application_readonly.html:30
 #: pa/templates/pa/application_readonly_master_details.html:54
 msgid "delete_btn"
@@ -2686,6 +2686,10 @@ msgstr "عرض بيانات الشركة"
 #: pa/templates/pa/company_panel.html:15
 msgid "company details"
 msgstr "بيانات الشركة"
+
+#: pa/templates/pa/company_panel.html:31
+msgid "No. of contracts"
+msgstr "عدد العقود"
 
 #: pa/templates/pa/pa_daily.html:65
 msgid "Print"

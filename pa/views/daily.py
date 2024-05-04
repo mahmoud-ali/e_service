@@ -121,7 +121,6 @@ class PaDailyView(LoginRequiredMixin,TranslationMixin,View):
                 a.append(balance)
                 data.append(a)
 
-            self.extra_context["form"] = form
             self.extra_context["data"] = data
             self.extra_context["from_dt"] = from_dt
             self.extra_context["opening"] = openning_total or 0
@@ -131,5 +130,6 @@ class PaDailyView(LoginRequiredMixin,TranslationMixin,View):
             self.extra_context["request_total"] = request_total or 0
             self.extra_context["payment_total"] = payment_total or 0
             self.extra_context["balance_total"] = balance or 0
-        
+
+        self.extra_context["form"] = form
         return render(request, self.template_name, self.extra_context)

@@ -14,7 +14,7 @@
 <h1 class="page-header">{{title}}</h1>
 {% bootstrap_messages %}
 
-<form action="" method="post" class="screen_only">
+<form action="" method="post" class="screen_only" novalidate>
 	{% csrf_token %}
 	<div class="row">
 		<div class="col-md-6">
@@ -56,7 +56,7 @@
 <script type="text/javascript" src="{% static 'admin/js/core.js' %}"></script>
 {{ form.media }}
 
-{%if not is_get%}
+{%if form.is_valid %}
 
 	<div class="screen_only">
 		<br/>
