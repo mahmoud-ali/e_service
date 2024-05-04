@@ -76,7 +76,7 @@ class AppFuelPermissionCreateView(ApplicationMasterDetailCreateView):
                 
                 return HttpResponseRedirect(self.success_url)
             
-            return render(request, self.template_name, self.extra_context)
+        return render(request, self.template_name, self.extra_context)
 
 class AppFuelPermissionReadonlyView(ApplicationMasterDetailReadonlyView):
     model = AppFuelPermission

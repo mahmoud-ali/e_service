@@ -38,13 +38,7 @@
         <tr>
         {% for field in form.visible_fields %}
             <td>
-            {{ field.errors }}
-            {{ field }}
-            {% if field.help_text %}
-            <p class="help" id="{{ field.auto_id }}_helptext">
-            {{ field.help_text|safe }}
-            </p>
-            {% endif %}
+                {% bootstrap_field field show_label=False%}
             </td>
         {% endfor %}
         </tr>

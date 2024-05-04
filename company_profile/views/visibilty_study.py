@@ -81,7 +81,7 @@ class AppVisibityStudyCreateView(ApplicationMasterDetailCreateView):
                 
                 return HttpResponseRedirect(self.success_url)
             
-            return render(request, self.template_name, self.extra_context)
+        return render(request, self.template_name, self.extra_context)
 
 class AppVisibityStudyReadonlyView(ApplicationMasterDetailReadonlyView):
     model = AppVisibityStudy

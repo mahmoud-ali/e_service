@@ -97,7 +97,7 @@ class AppGoldProductionCreateView(LoginRequiredMixin,View):
                 
                 return HttpResponseRedirect(self.success_url)
             
-            return render(request, self.template_name, self.extra_context)
+        return render(request, self.template_name, self.extra_context)
 
 class AppGoldProductionReadonlyView(ApplicationMasterDetailReadonlyView):
     model = AppGoldProduction
