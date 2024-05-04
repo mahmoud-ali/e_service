@@ -1,14 +1,36 @@
 {% load i18n %}
 
 {%if company%}
-<div class="panel panel-default">
-    <div class="panel-heading">
-      <h3 class="panel-title">{% translate "company details" %}
-    </h3>
-    </div>
-    <div class="panel-body">
-        {% translate "name_ar" %}: {{company.name}} <br/> 
-        {% translate "address" %}: {{company.address}}
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-link btn" style="float:left" data-toggle="modal" data-target="#showCompany">
+  {% translate "display company details" %}
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="showCompany" tabindex="-1" role="dialog" aria-labelledby="showCompanyLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">{% translate "company details" %}</h4>
+      </div>
+      <div class="modal-body">
+        <label>{% translate "name_ar" %}:</label> {{company.name}} <br/> 
+        <label>{% translate "address" %}:</label> {{company.address}}<br/> 
+        {% if company.license%}
+          <label>{% translate "state" %}:</label> {{company.license.state}}<br/> 
+          <label>{% translate "sheet_no" %}:</label> {{company.license.sheet_no}}<br/> 
+          <label>{% translate "start_date" %}:</label> {{company.license.start_date}}<br/> 
+          <label>{% translate "end_date" %}:</label> {{company.license.end_date}}<br/> 
+          <label>{% translate "Area in Kilometers" %}:</label> {{company.license.area}}<br/> 
+          <label>{% translate "mineral" %}:</label> {{company.license.mineral}}<br/> 
+          <label>{% translate "contract_status" %}:</label> {{company.license.contract_status}}<br/> 
+        {%endif%}
+      </div>
     </div>
   </div>
+</div>
+<br/>
+<br/>
+
 {% endif %}

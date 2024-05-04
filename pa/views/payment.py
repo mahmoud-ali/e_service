@@ -14,6 +14,7 @@ from ..forms import TblCompanyPaymentShowEditForm,TblCompanyPaymentAddForm
 from ..tables import TblCompanyPaymentTable,PaymentFilter
 
 from .application import ApplicationDeleteMasterDetailView, ApplicationDeleteView, ApplicationListView, ApplicationCreateView, ApplicationMasterDetailCreateView, ApplicationMasterDetailUpdateView, ApplicationReadonlyView, ApplicationUpdateView
+from .utils import get_company_details
 
 model_master = TblCompanyPaymentMaster
 details = [
@@ -48,12 +49,6 @@ details = [
             },
         },
     ]
-
-def get_company_details(commitment:TblCompanyCommitmentMaster):
-    return {
-        "name":commitment.company.name_ar,
-        "address":commitment.company.address
-    }
 
 class TblCompanyPaymentListView(ApplicationListView):
     model = model_master

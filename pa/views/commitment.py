@@ -13,6 +13,7 @@ from ..models import STATE_TYPE_CONFIRM, TblCompanyCommitmentDetail, TblCompanyC
 from ..tables import TblCompanyCommitmentTable,CommitmentFilter
 
 from .application import ApplicationDeleteMasterDetailView, ApplicationDeleteView, ApplicationListView, ApplicationCreateView, ApplicationMasterDetailCreateView, ApplicationMasterDetailUpdateView, ApplicationReadonlyView, ApplicationUpdateView
+from .utils import get_company_details
 
 model_master = TblCompanyCommitmentMaster
 details = [
@@ -33,11 +34,6 @@ details = [
         },
     ]
 
-def get_company_details(commitment:TblCompanyCommitmentMaster):
-    return {
-        "name":commitment.company.name_ar,
-        "address":commitment.company.address
-    }
 
 class TblCompanyCommitmentListView(ApplicationListView):
     model = model_master

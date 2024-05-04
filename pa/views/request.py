@@ -16,6 +16,8 @@ from django_filters.views import FilterView
 from ..tables import TblCompanyRequestTable,RequestFilter
 
 from .application import ApplicationDeleteMasterDetailView, ApplicationDeleteView, ApplicationListView, ApplicationCreateView, ApplicationMasterDetailCreateView, ApplicationMasterDetailUpdateView, ApplicationReadonlyView, ApplicationUpdateView
+from .utils import get_company_details
+
 model_master = TblCompanyRequestMaster
 details = [
         {
@@ -34,12 +36,6 @@ details = [
             },
         },
     ]
-
-def get_company_details(commitment:TblCompanyCommitmentMaster):
-    return {
-        "name":commitment.company.name_ar,
-        "address":commitment.company.address
-    }
 
 class TblCompanyRequestListView(ApplicationListView,FilterView):
     model = model_master

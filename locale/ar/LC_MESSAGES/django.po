@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-05-04 16:17+0200\n"
+"POT-Creation-Date: 2024-05-04 17:24+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -208,6 +208,7 @@ msgid "States"
 msgstr "الولايات"
 
 #: company_profile/models.py:81 company_profile/models.py:207
+#: pa/templates/pa/company_panel.html:21
 msgid "state"
 msgstr "الولاية"
 
@@ -243,7 +244,7 @@ msgstr "امتياز استكشاف"
 msgid "sageer"
 msgstr "تعدين صغير"
 
-#: company_profile/models.py:115 pa/templates/pa/company_panel.html:10
+#: company_profile/models.py:115 pa/templates/pa/company_panel.html:18
 msgid "name_ar"
 msgstr "الاسم العربي"
 
@@ -255,7 +256,7 @@ msgstr "الاسم الانجليزي"
 msgid "nationality"
 msgstr "الجنسية"
 
-#: company_profile/models.py:119 pa/templates/pa/company_panel.html:11
+#: company_profile/models.py:119 pa/templates/pa/company_panel.html:19
 msgid "address"
 msgstr "العنوان"
 
@@ -339,7 +340,7 @@ msgstr "رقم الترخيص/العقد"
 msgid "Sign date"
 msgstr "تاريخ التوقيع"
 
-#: company_profile/models.py:205
+#: company_profile/models.py:205 pa/templates/pa/company_panel.html:23
 msgid "start_date"
 msgstr "تاريح البداية"
 
@@ -355,7 +356,7 @@ msgstr "المحلية"
 msgid "location"
 msgstr "المنطقة"
 
-#: company_profile/models.py:210
+#: company_profile/models.py:210 pa/templates/pa/company_panel.html:22
 msgid "sheet_no"
 msgstr "رقم المربع"
 
@@ -364,10 +365,11 @@ msgid "cordinates"
 msgstr "الاحداثيات"
 
 #: company_profile/models.py:212 company_profile/models.py:637
+#: pa/templates/pa/company_panel.html:25
 msgid "mineral"
 msgstr "المعدن"
 
-#: company_profile/models.py:213
+#: company_profile/models.py:213 pa/templates/pa/company_panel.html:24
 msgid "Area in Kilometers"
 msgstr "المساحة بالكيلوميتر"
 
@@ -399,7 +401,7 @@ msgstr "الزكاة"
 msgid "annual_rent"
 msgstr "الاجار السنوي"
 
-#: company_profile/models.py:221
+#: company_profile/models.py:221 pa/templates/pa/company_panel.html:26
 msgid "contract_status"
 msgstr "حالة العقد"
 
@@ -2065,11 +2067,11 @@ msgstr "اضافة طلب MDA"
 msgid "Show mda"
 msgstr "عرض طلب MDA"
 
-#: company_profile/views/pa_request.py:29 pa/views/request.py:49
+#: company_profile/views/pa_request.py:29 pa/views/request.py:45
 msgid "List of requests"
 msgstr "قائمة المطالبات المالية"
 
-#: company_profile/views/pa_request.py:123 pa/views/request.py:126
+#: company_profile/views/pa_request.py:123 pa/views/request.py:122
 msgid "Show added request"
 msgstr "عرض سجل مطالبة"
 
@@ -2678,6 +2680,10 @@ msgid "Pa_daily page"
 msgstr "يومية حسابات الانتاج"
 
 #: pa/templates/pa/company_panel.html:6
+msgid "display company details"
+msgstr "عرض بيانات الشركة"
+
+#: pa/templates/pa/company_panel.html:15
 msgid "company details"
 msgstr "بيانات الشركة"
 
@@ -2721,23 +2727,23 @@ msgstr "تم حفظ السجل بنجاح."
 msgid "Record removed successfully."
 msgstr "تم حذف السجل بنجاح."
 
-#: pa/views/commitment.py:47
+#: pa/views/commitment.py:43
 msgid "List of commitments"
 msgstr "قائمة الالتزامات المالية"
 
-#: pa/views/commitment.py:54
+#: pa/views/commitment.py:50
 msgid "Add new commitment"
 msgstr "اضافة التزام جديد"
 
-#: pa/views/commitment.py:92
+#: pa/views/commitment.py:88
 msgid "Edit commitment"
 msgstr "تعديل التزام"
 
-#: pa/views/commitment.py:106
+#: pa/views/commitment.py:102
 msgid "Show added commitment"
 msgstr "عرض سجل التزام"
 
-#: pa/views/commitment.py:118
+#: pa/views/commitment.py:114
 msgid "Delete commitment"
 msgstr "حذف التزام"
 
@@ -2781,35 +2787,35 @@ msgstr "عرض الرصيد الافتتاحي"
 msgid "Delete openning balance"
 msgstr "حذف الرصيد الافتتاحي"
 
-#: pa/views/payment.py:63
+#: pa/views/payment.py:58
 msgid "List of payments"
 msgstr "قائمة سجلات السداد"
 
-#: pa/views/payment.py:70
+#: pa/views/payment.py:65
 msgid "Add new payment"
 msgstr "اضافة سجل سداد"
 
-#: pa/views/payment.py:124
+#: pa/views/payment.py:119
 msgid "Edit payment"
 msgstr "تعديل سداد"
 
-#: pa/views/payment.py:150
+#: pa/views/payment.py:145
 msgid "Show added payment"
 msgstr "عرض سجل سداد"
 
-#: pa/views/payment.py:162
+#: pa/views/payment.py:157
 msgid "Delete payment"
 msgstr "حذف سجل سداد"
 
-#: pa/views/request.py:56
+#: pa/views/request.py:52
 msgid "Add new request"
 msgstr "اضافة مطالبة جديدة"
 
-#: pa/views/request.py:112
+#: pa/views/request.py:108
 msgid "Edit request"
 msgstr "تعديل مطالبة "
 
-#: pa/views/request.py:138
+#: pa/views/request.py:134
 msgid "Delete request"
 msgstr "حذف سجل مطالبة"
 
