@@ -5,6 +5,10 @@
 {% load l10n %}
 {% load humanize %}
 
+{% block title %}
+	{{title}}
+{% endblock %}
+
 {% block content %}
 {% localize off %}
 <h1 class="page-header">{{title}}</h1>
@@ -92,7 +96,7 @@
 					{% comment %} <th>opening</th> {% endcomment %}
 				</tr>
 				<tr>
-					<th>{%translate "before"%} {%translate request.POST.from_dt%}</th>
+					<th>{%translate "before"%} ({{from_dt|date:"d-m-Y"}})</th>
 					<th>{%translate "befor_balance"%}</th>
 					<th>{%translate request.POST.currency%}</th>
 					<th>1.0</th>
@@ -104,7 +108,7 @@
 				</tr>
 				{%for m in data %}
 				<tr>
-					<td>{{m.1|date}}</td>
+					<td>{{m.1|date:"Y-m-d"}}</td>
 					{%if m.6 == 'request'%}
 						<td><a href="{% url 'pa:request_show' m.0 %}">{{m.2}}</a></td>
 					{% elif m.6 == 'payment' %}

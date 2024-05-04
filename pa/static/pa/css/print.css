@@ -1,16 +1,22 @@
 @media print {
     @page {
         size: A4 landscape;
-        margin-top: 2cm;
-        @top-right-corner { 
-            content: "This page is intentionally left blank." 
-        }    
+        margin:0;
+        margin-bottom: 0.2in;
+        border: solid 1px black ;
     }
 
-    @page:first {
-        margin-top: 0.5cm;
+    html
+    {
+        background-color: #FFFFFF; 
+        margin: 0px;  /* this affects the margin on the html before sending to printer */
     }
 
+    table thead::before {
+        content: "";
+        line-height:0.1in !important;
+    }
+    
     a[href]:after { 
         content: none !important; 
     }

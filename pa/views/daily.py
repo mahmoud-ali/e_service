@@ -123,6 +123,7 @@ class PaDailyView(LoginRequiredMixin,TranslationMixin,View):
 
             self.extra_context["form"] = form
             self.extra_context["data"] = data
+            self.extra_context["from_dt"] = from_dt
             self.extra_context["opening"] = openning_total or 0
             self.extra_context["request_opening"] = request_total_befor or 0
             self.extra_context["payment_opening"] = payment_total_before or 0
