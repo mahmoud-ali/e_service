@@ -44,10 +44,10 @@ class LoggingModel(models.Model):
     updating ``created_at`` and ``updated_at`` fields for responsable user.
     """
     created_at = models.DateTimeField(_("created_at"),auto_now_add=True,editable=False,)
-    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT,related_name="+",editable=False,verbose_name=_("created_by")) 
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,related_name="+",editable=False,verbose_name=_("created_by")) 
     
     updated_at = models.DateTimeField(_("updated_at"),auto_now=True,editable=False)
-    updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT,related_name="+",editable=False,verbose_name=_("updated_by"))
+    updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,related_name="+",editable=False,verbose_name=_("updated_by"))
     
     class Meta:
         abstract = True
@@ -90,7 +90,7 @@ class LkpItem(models.Model):
             return factor*total_contracts
         
 class TblCompanyOpenningBalanceMaster(LoggingModel):
-    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
+    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.CASCADE,verbose_name=_("company"))    
     currency = models.CharField(_("currency"),max_length=10, choices=CURRENCY_TYPE_CHOICES, default=CURRENCY_TYPE_EURO)
     state = models.CharField(_("record_state"),max_length=10, choices=STATE_TYPE_CHOICES, default=STATE_TYPE_DRAFT)
     
@@ -109,8 +109,8 @@ class TblCompanyOpenningBalanceMaster(LoggingModel):
         ]
 
 class TblCompanyOpenningBalanceDetail(models.Model):
-    commitment_master  = models.ForeignKey(TblCompanyOpenningBalanceMaster, on_delete=models.PROTECT)
-    item  = models.ForeignKey(LkpItem, on_delete=models.PROTECT,verbose_name=_("financial item"))    
+    commitment_master  = models.ForeignKey(TblCompanyOpenningBalanceMaster, on_delete=models.CASCADE)
+    item  = models.ForeignKey(LkpItem, on_delete=models.CASCADE,verbose_name=_("financial item"))    
     amount = models.FloatField(_("amount"))
 
     class Meta:
@@ -126,8 +126,8 @@ class TblCompanyOpenningBalanceDetail(models.Model):
 
 
 class TblCompanyCommitmentMaster(LoggingModel):
-    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
-    license  = models.ForeignKey(TblCompanyProductionLicense, on_delete=models.PROTECT,verbose_name=_("license"),null=True,blank=True)    
+    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.CASCADE,verbose_name=_("company"))    
+    license  = models.ForeignKey(TblCompanyProductionLicense, on_delete=models.CASCADE,verbose_name=_("license"),null=True,blank=True)    
     currency = models.CharField(_("currency"),max_length=10, choices=CURRENCY_TYPE_CHOICES, default=CURRENCY_TYPE_EURO)
     state = models.CharField(_("record_state"),max_length=10, choices=STATE_TYPE_CHOICES, default=STATE_TYPE_DRAFT)
     
@@ -157,8 +157,8 @@ class TblCompanyCommitmentMaster(LoggingModel):
             )
 
 class TblCompanyCommitmentDetail(models.Model):
-    commitment_master  = models.ForeignKey(TblCompanyCommitmentMaster, on_delete=models.PROTECT)
-    item  = models.ForeignKey(LkpItem, on_delete=models.PROTECT,verbose_name=_("financial item"))    
+    commitment_master  = models.ForeignKey(TblCompanyCommitmentMaster, on_delete=models.CASCADE)
+    item  = models.ForeignKey(LkpItem, on_delete=models.CASCADE,verbose_name=_("financial item"))    
     amount_factor = models.FloatField(_("amount_factor"))
 
     class Meta:
@@ -182,7 +182,7 @@ class TblCompanyCommitmentSchedular(LoggingModel):
         INTERVAL_TYPE_YEAR: _('yearly'),
     }
 
-    commitment = models.OneToOneField(TblCompanyCommitmentMaster, on_delete=models.PROTECT,related_name="commitment_schedular",verbose_name=_("commitment"))
+    commitment = models.OneToOneField(TblCompanyCommitmentMaster, on_delete=models.CASCADE,related_name="commitment_schedular",verbose_name=_("commitment"))
     request_interval = models.CharField(_("interval"),max_length=10, choices=INTERVAL_TYPE_CHOICES, default=INTERVAL_TYPE_MANUAL)
     request_next_interval_dt = models.DateField(_("next_interval_dt"),null=True,blank=True)
     request_auto_confirm = models.BooleanField(_("request_auto_confirm"),default=False)
@@ -273,7 +273,7 @@ class TblCompanyRequestMaster(LoggingModel):
         REQUEST_PAYMENT_FULL_PAYMENT: _("full_payment"),
     }
 
-    commitment  = models.ForeignKey(TblCompanyCommitmentMaster, on_delete=models.PROTECT,verbose_name=_("commitment"))    
+    commitment  = models.ForeignKey(TblCompanyCommitmentMaster, on_delete=models.CASCADE,verbose_name=_("commitment"))    
     from_dt = models.DateField(_("from_dt"))
     to_dt = models.DateField(_("to_dt"))
     currency = models.CharField(_("currency"),max_length=10, choices=CURRENCY_TYPE_CHOICES, default=CURRENCY_TYPE_EURO)
@@ -418,8 +418,8 @@ class TblCompanyRequestDetail(models.Model):
         date = self.request_master.created_at
         return "company_{0}/requests/{1}/{2}".format(company.id,date, filename)    
 
-    request_master  = models.ForeignKey(TblCompanyRequestMaster, on_delete=models.PROTECT)
-    item  = models.ForeignKey(LkpItem, on_delete=models.PROTECT,verbose_name=_("financial item"))    
+    request_master  = models.ForeignKey(TblCompanyRequestMaster, on_delete=models.CASCADE)
+    item  = models.ForeignKey(LkpItem, on_delete=models.CASCADE,verbose_name=_("financial item"))    
     amount = models.FloatField(_("amount"))
     attachement_file = models.FileField(_("attachement_file"),upload_to=attachement_path,blank=True)
 
@@ -460,7 +460,7 @@ class TblCompanyRequestDetail(models.Model):
             )
         
 class TblCompanyRequestReceive(models.Model):
-    request_master  = models.ForeignKey(TblCompanyRequestMaster, on_delete=models.PROTECT)
+    request_master  = models.ForeignKey(TblCompanyRequestMaster, on_delete=models.CASCADE)
     receive_dt = models.DateField(_("receive_dt"))
     receiver_name = models.CharField(_("receiver_name"),max_length=50)
 
@@ -470,7 +470,7 @@ class TblCompanyPaymentMaster(LoggingModel):
         date = self.payment_dt
         return "company_{0}/exchange_rate/{1}/{2}".format(company.id,date, filename)    
 
-    request  = models.ForeignKey(TblCompanyRequestMaster, on_delete=models.PROTECT,verbose_name=_("request"))    
+    request  = models.ForeignKey(TblCompanyRequestMaster, on_delete=models.CASCADE,verbose_name=_("request"))    
     payment_dt = models.DateField(_("payment_dt"))
     currency = models.CharField(_("currency"),max_length=10, choices=CURRENCY_TYPE_CHOICES, default=CURRENCY_TYPE_EURO)
     exchange_rate = models.FloatField(_("exchange_rate"),validators=[validate_positive],default=1)
@@ -521,8 +521,8 @@ class TblCompanyPaymentDetail(models.Model):
         date = self.payment_master.payment_dt
         return "company_{0}/payments/{1}/{2}".format(company.id,date, filename)    
 
-    payment_master  = models.ForeignKey(TblCompanyPaymentMaster, on_delete=models.PROTECT)
-    item  = models.ForeignKey(LkpItem, on_delete=models.PROTECT,verbose_name=_("financial item"))    
+    payment_master  = models.ForeignKey(TblCompanyPaymentMaster, on_delete=models.CASCADE)
+    item  = models.ForeignKey(LkpItem, on_delete=models.CASCADE,verbose_name=_("financial item"))    
     amount = models.FloatField(_("amount"))
     attachement_file = models.FileField(_("attachement_file"),upload_to=attachement_path,blank=True)
 
@@ -588,9 +588,9 @@ class TblCompanyPaymentMethod(models.Model):
         date = self.payment_master.payment_dt
         return "company_{0}/payments/{1}/{2}".format(company.id,date, filename)    
 
-    payment_master  = models.ForeignKey(TblCompanyPaymentMaster, on_delete=models.PROTECT)
+    payment_master  = models.ForeignKey(TblCompanyPaymentMaster, on_delete=models.CASCADE)
     amount = models.FloatField(_("amount"))
-    method  = models.ForeignKey(LkpPaymentMethod, on_delete=models.PROTECT,verbose_name=_("Payment method"))    
+    method  = models.ForeignKey(LkpPaymentMethod, on_delete=models.CASCADE,verbose_name=_("Payment method"))    
     ref_key = models.CharField(_("reference_key"),max_length=50)
     attachement_file = models.FileField(_("attachement_file"),upload_to=attachement_path)
 
