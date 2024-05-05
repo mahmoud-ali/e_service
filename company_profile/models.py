@@ -15,10 +15,10 @@ class LoggingModel(models.Model):
     updating ``created_at`` and ``updated_at`` fields for responsable user.
     """
     created_at = models.DateTimeField(_("created_at"),auto_now_add=True,editable=False,)
-    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,related_name="+",editable=False,verbose_name=_("created_by")) 
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT,related_name="+",editable=False,verbose_name=_("created_by")) 
     
     updated_at = models.DateTimeField(_("updated_at"),auto_now=True,editable=False)
-    updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,related_name="+",editable=False,verbose_name=_("updated_by"))
+    updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT,related_name="+",editable=False,verbose_name=_("updated_by"))
     
     class Meta:
         abstract = True
@@ -78,7 +78,7 @@ class LkpState(models.Model):
         verbose_name_plural = _("States")
 
 class LkpLocality(models.Model):
-    state = models.ForeignKey(LkpState, on_delete=models.CASCADE,verbose_name=_("state"))
+    state = models.ForeignKey(LkpState, on_delete=models.PROTECT,verbose_name=_("state"))
     name = models.CharField(_("name"),max_length=100)
     
     def __str__(self):
@@ -114,7 +114,7 @@ class TblCompany(LoggingModel):
     company_type = models.CharField(_("company_type"),max_length=15, choices=COMPANY_TYPE_CHOICES)
     name_ar = models.CharField(_("name_ar"),max_length=200)
     name_en = models.CharField(_("name_en"),max_length=200)
-    nationality = models.ForeignKey(LkpNationality, on_delete=models.CASCADE,verbose_name=_("nationality"))
+    nationality = models.ForeignKey(LkpNationality, on_delete=models.PROTECT,verbose_name=_("nationality"))
 #    cordinates = models.TextField(_("cordinates"),max_length=256)
     address = models.TextField(_("address"),max_length=256)
     website = models.URLField(_("website"),max_length=200)
@@ -142,7 +142,7 @@ class LkpCompanyProductionStatus(models.Model):
         
     
 class TblCompanyProduction(TblCompany):
-    status = models.ForeignKey(LkpCompanyProductionStatus, on_delete=models.CASCADE,verbose_name=_("status"))
+    status = models.ForeignKey(LkpCompanyProductionStatus, on_delete=models.PROTECT,verbose_name=_("status"))
     
     class Meta:
         verbose_name = _("Production Company")
@@ -152,8 +152,8 @@ class TblCompanyProduction(TblCompany):
         return reverse('profile:pro_company_detail', args=[str(self.id)])        
 
 class TblCompanyProductionUserRole(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,related_name="pro_company")
-    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.CASCADE,verbose_name=_("company"))
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.PROTECT,related_name="pro_company")
+    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))
 
     def __str__(self):
         return self.user.email+" ("+self.company.name_ar+") "        
@@ -173,8 +173,8 @@ class LkpCompanyProductionFactoryType(models.Model):
         verbose_name_plural = _("Factory Types")
         
 class TblCompanyProductionFactory(LoggingModel): 
-    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.CASCADE,verbose_name=_("company"))
-    factory_type  = models.ForeignKey(LkpCompanyProductionFactoryType, on_delete=models.CASCADE,verbose_name=_("factory_type"))
+    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))
+    factory_type  = models.ForeignKey(LkpCompanyProductionFactoryType, on_delete=models.PROTECT,verbose_name=_("factory_type"))
     capacity = models.FloatField(_("Capacity (Tones per day)"))
     
     def __str__(self):
@@ -199,17 +199,17 @@ def company_contract_path(instance, filename):
     return "company_{0}/contract_{1}/{2}".format(instance.company.id,instance.date, filename)    
 
 class TblCompanyProductionLicense(LoggingModel): 
-    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.CASCADE,verbose_name=_("company"))    
+    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
     license_no = models.CharField(_("License no"),max_length=20)
     date = models.DateField(_("Sign date"))
     start_date = models.DateField(_("start_date"))
     end_date = models.DateField(_("end_date"))
-    state = models.ForeignKey(LkpState, on_delete=models.CASCADE,verbose_name=_("state"))
-    locality = models.ForeignKey(LkpLocality, on_delete=models.CASCADE,verbose_name=_("locality"))
+    state = models.ForeignKey(LkpState, on_delete=models.PROTECT,verbose_name=_("state"))
+    locality = models.ForeignKey(LkpLocality, on_delete=models.PROTECT,verbose_name=_("locality"))
     location = models.CharField(_("location"),max_length=100)
     sheet_no = models.CharField(_("sheet_no"),max_length=10)
     cordinates = models.TextField(_("cordinates"),max_length=256)
-    mineral = models.ForeignKey(LkpMineral, on_delete=models.CASCADE,verbose_name=_("mineral"))
+    mineral = models.ForeignKey(LkpMineral, on_delete=models.PROTECT,verbose_name=_("mineral"))
     area = models.FloatField(_("Area in Kilometers"))
     reserve = models.FloatField(_("Reserve in Tones"))
     gov_rep = models.CharField(_("Goverment representative"),max_length=200,blank=True,default=0,null=True)
@@ -218,7 +218,7 @@ class TblCompanyProductionLicense(LoggingModel):
     royalty = models.FloatField(_("royalty"))
     zakat = models.FloatField(_("zakat"))
     annual_rent = models.FloatField(_("annual_rent"))
-    contract_status  = models.ForeignKey(LkpCompanyProductionLicenseStatus, on_delete=models.CASCADE,verbose_name=_("contract_status"))
+    contract_status  = models.ForeignKey(LkpCompanyProductionLicenseStatus, on_delete=models.PROTECT,verbose_name=_("contract_status"))
     contract_file = models.FileField(_("contract_file"),upload_to=company_contract_path)
 
     def __str__(self):
@@ -233,13 +233,13 @@ def company_applications_path(instance, filename):
     return "company_{0}/applications/{1}".format(instance.company.id, filename)    
 
 class AppForignerMovement(WorkflowModel):
-    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.CASCADE,verbose_name=_("company"))    
+    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
     route_from = models.CharField(_("route_from"),max_length=200)
     route_to = models.CharField(_("route_to"),max_length=200)
     period_from = models.DateField(_("period_from"))
     period_to = models.DateField(_("period_to"))
     address_in_sudan = models.TextField(_("address_in_sudan"),max_length=256)
-    nationality = models.ForeignKey(LkpNationality, on_delete=models.CASCADE,verbose_name=_("nationality"))
+    nationality = models.ForeignKey(LkpNationality, on_delete=models.PROTECT,verbose_name=_("nationality"))
     passport_no = models.CharField(_("passport_no"),max_length=20)
     passport_expiry_date = models.DateField(_("passport_expiry_date"))
     official_letter_file = models.FileField(_("official_letter_file"),upload_to=company_applications_path)    
@@ -259,8 +259,8 @@ class AppForignerMovement(WorkflowModel):
         verbose_name_plural = _("Application: Forigner movement")
     
 class AppBorrowMaterial(WorkflowModel):
-    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.CASCADE,related_name="borrow_to",verbose_name=_("company"))    
-    company_from  = models.ForeignKey(TblCompanyProduction, on_delete=models.CASCADE,related_name="borrow_from",verbose_name=_("company_borrow_from"))    
+    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,related_name="borrow_to",verbose_name=_("company"))    
+    company_from  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,related_name="borrow_from",verbose_name=_("company_borrow_from"))    
     borrow_date = models.DateField(_("borrow_date"))
     borrow_materials_list_file = models.FileField(_("borrow_materials_list_file"),blank=True,upload_to=company_applications_path)    
     borrow_from_approval_file = models.FileField(_("borrow_from_approval_file"),upload_to=company_applications_path)        
@@ -278,7 +278,7 @@ class AppBorrowMaterial(WorkflowModel):
     
     
 class AppBorrowMaterialDetail(models.Model):
-    borrow_master  = models.ForeignKey(AppBorrowMaterial, on_delete=models.CASCADE)    
+    borrow_master  = models.ForeignKey(AppBorrowMaterial, on_delete=models.PROTECT)    
     material = models.CharField(_("borrow_material"),max_length=200)
     quantity = models.IntegerField(_("borrow_quantity"))
 
@@ -287,7 +287,7 @@ class AppBorrowMaterialDetail(models.Model):
         verbose_name_plural = _("AppBorrowMaterialDetail")
 
 class AppWorkPlan(WorkflowModel):
-    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.CASCADE,verbose_name=_("company"))    
+    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
     plan_from = models.DateField(_("plan_from"))
     plan_to = models.DateField(_("plan_to"))
     plan_comments = models.TextField(_("plan_comments"),max_length=256)
@@ -314,7 +314,7 @@ class AppTechnicalFinancialReport(WorkflowModel):
         REPORT_TYPE_FINANCIAL: _("Financial"),
     }
             
-    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.CASCADE,verbose_name=_("company"))    
+    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
     report_from = models.DateField(_("report_from"))
     report_to = models.DateField(_("report_to"))
     report_type = models.CharField(_("report_type"),max_length=15, choices=REPORT_TYPE_CHOICES)
@@ -335,7 +335,7 @@ class AppTechnicalFinancialReport(WorkflowModel):
         verbose_name_plural = _("Application: Technical & Financial Reports")
 
 class AppChangeCompanyName(WorkflowModel):
-    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.CASCADE,verbose_name=_("company"))    
+    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
     new_name = models.CharField(_("new_name"),max_length=200)
     cause_for_change = models.TextField(_("cause_for_change"),max_length=1000)
 
@@ -357,7 +357,7 @@ class AppChangeCompanyName(WorkflowModel):
         verbose_name_plural = _("Application: Company Name Changes")
 
 class AppExplorationTime(WorkflowModel):
-    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.CASCADE,verbose_name=_("company"))    
+    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
     expo_from = models.DateField(_("expo_from"))
     expo_to = models.DateField(_("expo_to"))
     expo_cause_for_timing = models.TextField(_("expo_cause_for_timing"),max_length=1000)
@@ -376,7 +376,7 @@ class AppExplorationTime(WorkflowModel):
         verbose_name_plural = _("Application: Exploration Times")
 
 class AppAddArea(WorkflowModel):
-    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.CASCADE,verbose_name=_("company"))    
+    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
     area_in_km2 = models.IntegerField(_("area_in_km2"))
     cause_for_addition = models.TextField(_("cause_for_addition"),max_length=1000)
 
@@ -404,7 +404,7 @@ class AppRemoveArea(WorkflowModel):
         TNAZOL_TYPE_EXCEPTIONAL: _("exceptional"),
     }
 
-    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.CASCADE,verbose_name=_("company"))    
+    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
     remove_type = models.CharField(_("remove_type"),max_length=15, choices=TNAZOL_TYPE_CHOICES)
     area_in_km2 = models.IntegerField(_("area_in_km2"))
     area_percent_from_total = models.FloatField(_("area_percent_from_total"),validators=[MinValueValidator(limit_value=0),MaxValueValidator(limit_value=100)])
@@ -436,7 +436,7 @@ class AppTnazolShraka(WorkflowModel):
 
     }
 
-    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.CASCADE,verbose_name=_("company"))    
+    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
     tnazol_type = models.CharField(_("tnazol_type"),max_length=15, choices=TNAZOL_TYPE_CHOICES)
     tnazol_for = models.CharField(_("tnazol_for"),max_length=200)
     cause_for_tnazol = models.TextField(_("cause_for_tnazol"),max_length=1000)
@@ -469,7 +469,7 @@ class AppTajeelTnazol(WorkflowModel):
         TNAZOL_TYPE_FOURTH: _("fourth"),
     }
 
-    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.CASCADE,verbose_name=_("company"))    
+    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
     tnazol_type = models.CharField(_("tnazol_type"),max_length=15, choices=TNAZOL_TYPE_CHOICES)
     cause_for_tajeel = models.TextField(_("cause_for_tajeel"),max_length=1000)
 
@@ -487,7 +487,7 @@ class AppTajeelTnazol(WorkflowModel):
         verbose_name_plural = _("Application: Tajeel Tnazol")
 
 class AppTajmeed(WorkflowModel):
-    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.CASCADE,verbose_name=_("company"))    
+    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
     tajmeed_from = models.DateField(_("tajmeed_from"))
     tajmeed_to = models.DateField(_("tajmeed_to"))
     cause_for_tajmeed = models.TextField(_("cause_for_tajmeed"),max_length=1000)
@@ -507,7 +507,7 @@ class AppTajmeed(WorkflowModel):
         verbose_name_plural = _("Application: Tajmeed")
 
 class AppTakhali(WorkflowModel):
-    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.CASCADE,verbose_name=_("company"))    
+    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
     technical_presentation_date = models.DateField(_("technical_presentation_date"))
     cause_for_takhali = models.TextField(_("cause_for_takhali"),max_length=1000)
 
@@ -525,7 +525,7 @@ class AppTakhali(WorkflowModel):
         verbose_name_plural = _("Application: Takhali")
 
 class AppTamdeed(WorkflowModel):
-    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.CASCADE,verbose_name=_("company"))    
+    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
     tamdeed_from = models.DateField(_("tamdeed_from"))
     tamdeed_to = models.DateField(_("tamdeed_to"))
     cause_for_tamdeed = models.TextField(_("cause_for_tamdeed"),max_length=1000)
@@ -545,7 +545,7 @@ class AppTamdeed(WorkflowModel):
         verbose_name_plural = _("Application: Tamdeed")
 
 class AppTaaweed(WorkflowModel):
-    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.CASCADE,verbose_name=_("company"))    
+    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
     taaweed_from = models.DateField(_("taaweed_from"))
     taaweed_to = models.DateField(_("taaweed_to"))
     cause_for_taaweed = models.TextField(_("cause_for_taaweed"),max_length=1000)
@@ -562,7 +562,7 @@ class AppTaaweed(WorkflowModel):
         verbose_name_plural = _("Application: Taaweed")
 
 class AppMda(WorkflowModel):
-    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.CASCADE,verbose_name=_("company"))    
+    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
     mda_from = models.DateField(_("mda_from"))
     mda_to = models.DateField(_("mda_to"))
     cause_for_mda = models.TextField(_("cause_for_mda"),max_length=1000)
@@ -581,7 +581,7 @@ class AppMda(WorkflowModel):
         verbose_name_plural = _("Application: MDA")
 
 class AppChangeWorkProcedure(WorkflowModel):
-    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.CASCADE,verbose_name=_("company"))    
+    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
     reason_for_change = models.TextField(_("reason_for_change"),max_length=1000)
     purpose_for_change = models.TextField(_("purpose_for_change"),max_length=1000)
     rational_reason = models.TextField(_("rational_reason"),max_length=1000)
@@ -601,7 +601,7 @@ class AppChangeWorkProcedure(WorkflowModel):
         verbose_name_plural = _("Application: Change Work Procedure")
 
 class AppExportGold(WorkflowModel):
-    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.CASCADE,verbose_name=_("company"))    
+    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
     total_in_gram = models.FloatField(_("total_in_gram"))
     net_in_gram = models.FloatField(_("net_in_gram"))
     zakat_in_gram = models.FloatField(_("zakat_in_gram"))
@@ -633,8 +633,8 @@ class AppExportGold(WorkflowModel):
         verbose_name_plural = _("Application: Export Gold")
 
 class AppExportGoldRaw(WorkflowModel):
-    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.CASCADE,verbose_name=_("company"))   
-    mineral = models.ForeignKey(LkpMineral, on_delete=models.CASCADE,verbose_name=_("mineral"))
+    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))   
+    mineral = models.ForeignKey(LkpMineral, on_delete=models.PROTECT,verbose_name=_("mineral"))
     license_type = models.CharField(_("license_type"),max_length=50)
     amount_in_gram = models.FloatField(_("amount_in_gram"))
     sale_price = models.FloatField(_("sale_price"))
@@ -664,7 +664,7 @@ class AppExportGoldRaw(WorkflowModel):
         verbose_name_plural = _("Application: Export Gold Raw")
 
 class AppSendSamplesForAnalysis(WorkflowModel):
-    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.CASCADE,verbose_name=_("company"))    
+    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
     lab_country = models.CharField(_("lab_country"),max_length=100)
     lab_city = models.CharField(_("lab_city"),max_length=100)
     lab_address = models.TextField(_("lab_address"),max_length=256)
@@ -686,7 +686,7 @@ class AppSendSamplesForAnalysis(WorkflowModel):
         verbose_name_plural = _("Application: Send samples for analysis")
 
 class AppSendSamplesForAnalysisDetail(models.Model):
-    sample_master = models.ForeignKey(AppSendSamplesForAnalysis, on_delete=models.CASCADE,verbose_name=_("sample_master"))    
+    sample_master = models.ForeignKey(AppSendSamplesForAnalysis, on_delete=models.PROTECT,verbose_name=_("sample_master"))    
     sample_type = models.CharField(_("sample_type"),max_length=100)
     sample_weight = models.FloatField(_("sample_weight"))
     sample_packing_type = models.CharField(_("sample_packing_type"),max_length=100)
@@ -708,8 +708,8 @@ class LkpForeignerProcedureType(models.Model):
         verbose_name_plural = _("Foreigner Procedure Types")
 
 class AppForeignerProcedure(WorkflowModel):
-    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.CASCADE,verbose_name=_("company"))    
-    procedure_type = models.ForeignKey(LkpForeignerProcedureType, on_delete=models.CASCADE,verbose_name=_("procedure_type"))    
+    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
+    procedure_type = models.ForeignKey(LkpForeignerProcedureType, on_delete=models.PROTECT,verbose_name=_("procedure_type"))    
     procedure_from = models.DateField(_("procedure_from"))
     procedure_to = models.DateField(_("procedure_to"))
     procedure_cause = models.TextField(_("procedure_cause"),max_length=1000)
@@ -733,7 +733,7 @@ class AppForeignerProcedure(WorkflowModel):
         verbose_name_plural = _("Application: Foreigner procedure")
 
 class AppForeignerProcedureDetail(models.Model):
-    procedure_master = models.ForeignKey(AppForeignerProcedure, on_delete=models.CASCADE,verbose_name=_("procedure_master"))    
+    procedure_master = models.ForeignKey(AppForeignerProcedure, on_delete=models.PROTECT,verbose_name=_("procedure_master"))    
     employee_name = models.CharField(_("employee_name"),max_length=100)
     employee_address = models.TextField(_("employee_address"),max_length=200)
 
@@ -742,8 +742,8 @@ class AppForeignerProcedureDetail(models.Model):
         verbose_name_plural = _("Foreigner Procedure Detail")
 
 class AppAifaaJomrki(WorkflowModel):
-    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.CASCADE,verbose_name=_("company"))    
-    license_type = models.ForeignKey(TblCompanyProductionLicense, on_delete=models.CASCADE,verbose_name=_("license_type"))    
+    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
+    license_type = models.ForeignKey(TblCompanyProductionLicense, on_delete=models.PROTECT,verbose_name=_("license_type"))    
 
     approved_requirements_list_file = models.FileField(_("approved_requirements_list_file"),upload_to=company_applications_path)
     approval_from_finance_ministry_file = models.FileField(_("approval_from_finance_ministry_file"),upload_to=company_applications_path)
@@ -767,7 +767,7 @@ class AppAifaaJomrki(WorkflowModel):
         verbose_name_plural = _("Application: Aifaa Jomrki")
 
 class AppAifaaJomrkiDetail(models.Model):
-    aifaa_master = models.ForeignKey(AppAifaaJomrki, on_delete=models.CASCADE,verbose_name=_("aifaa_master"))    
+    aifaa_master = models.ForeignKey(AppAifaaJomrki, on_delete=models.PROTECT,verbose_name=_("aifaa_master"))    
     material_name = models.CharField(_("material_name"),max_length=200)
 
     class Meta:
@@ -775,7 +775,7 @@ class AppAifaaJomrkiDetail(models.Model):
         verbose_name_plural = _("Aifaa Jomrki Details")
 
 class AppReexportEquipments(WorkflowModel):
-    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.CASCADE,verbose_name=_("company"))    
+    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
     cause_for_equipments = models.TextField(_("cause_for_equipments"),max_length=1000)
 
     shipping_policy_file = models.FileField(_("shipping_policy_file"),upload_to=company_applications_path)
@@ -795,7 +795,7 @@ class AppReexportEquipments(WorkflowModel):
         verbose_name_plural = _("Application: Reexport Equipments")
 
 class AppReexportEquipmentsDetail(models.Model):
-    reexport_master = models.ForeignKey(AppReexportEquipments, on_delete=models.CASCADE,verbose_name=_("aifaa_master"))    
+    reexport_master = models.ForeignKey(AppReexportEquipments, on_delete=models.PROTECT,verbose_name=_("aifaa_master"))    
     name = models.CharField(_("name"),max_length=50)
     serial_id = models.CharField(_("serial_id"),max_length=50)
     policy_no = models.CharField(_("policy_no"),max_length=50)
@@ -808,7 +808,7 @@ class AppReexportEquipmentsDetail(models.Model):
         verbose_name_plural = _("Reexport Equipments Details")
 
 class AppRequirementsList(WorkflowModel):
-    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.CASCADE,verbose_name=_("company"))    
+    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
 
     approved_work_plan_file = models.FileField(_("approved_work_plan_file"),upload_to=company_applications_path)
     initial_voucher_file = models.FileField(_("initial_voucher_file"),upload_to=company_applications_path)
@@ -827,7 +827,7 @@ class AppRequirementsList(WorkflowModel):
         verbose_name_plural = _("Application: Requirements List")
 
 class AppRequirementsListDetail(models.Model):
-    requirements_master = models.ForeignKey(AppRequirementsList, on_delete=models.CASCADE,verbose_name=_("requirements_master"))
+    requirements_master = models.ForeignKey(AppRequirementsList, on_delete=models.PROTECT,verbose_name=_("requirements_master"))
     item = models.CharField(_("item"),max_length=100)
     description = models.TextField(_("description"),max_length=256)
     qty = models.IntegerField(_("qty"))
@@ -871,8 +871,8 @@ class AppRequirementsListVehiclesEquipments(AppRequirementsListDetail):
         verbose_name_plural = _("Application: Requirements List - Vehicles Equipments")
 
 class AppVisibityStudy(WorkflowModel):
-    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.CASCADE,verbose_name=_("company"))    
-    license_type = models.ForeignKey(TblCompanyProductionLicense, on_delete=models.CASCADE,verbose_name=_("license_type"))    
+    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
+    license_type = models.ForeignKey(TblCompanyProductionLicense, on_delete=models.PROTECT,verbose_name=_("license_type"))    
 
     study_area = models.CharField(_("study_area"),max_length=100)
     study_type = models.CharField(_("study_type"),max_length=100)
@@ -893,7 +893,7 @@ class AppVisibityStudy(WorkflowModel):
         verbose_name_plural = _("Application: Visibity Study")
 
 class AppVisibityStudyDetail(models.Model):
-    study_master = models.ForeignKey(AppVisibityStudy, on_delete=models.CASCADE)    
+    study_master = models.ForeignKey(AppVisibityStudy, on_delete=models.PROTECT)    
     study_point_id = models.IntegerField(_("study_point_id"))
     study_point_long = models.FloatField(_("study_point_long"))
     study_point_lat = models.FloatField(_("study_point_lat"))
@@ -903,7 +903,7 @@ class AppVisibityStudyDetail(models.Model):
         verbose_name_plural = _("Visibity Study Details")
 
 class AppTemporaryExemption(WorkflowModel):
-    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.CASCADE,verbose_name=_("company"))    
+    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
 
     attachement_file = models.FileField(_("attachement_file"),upload_to=company_applications_path)
 
@@ -919,7 +919,7 @@ class AppTemporaryExemption(WorkflowModel):
         verbose_name_plural = _("Application: Temporary Exemption")
 
 class AppLocalPurchase(WorkflowModel):
-    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.CASCADE,verbose_name=_("company"))    
+    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
 
     attachement_file = models.FileField(_("local_request_file"),upload_to=company_applications_path)
     attachement_file2 = models.FileField(_("local_purchase_invoice_file"),upload_to=company_applications_path)
@@ -936,7 +936,7 @@ class AppLocalPurchase(WorkflowModel):
         verbose_name_plural = _("Application: Local Purchase")
 
 class AppCyanideCertificate(WorkflowModel):
-    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.CASCADE,verbose_name=_("company"))    
+    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
 
     attachement_file = models.FileField(_("cyanide_request_file"),upload_to=company_applications_path)
 
@@ -952,7 +952,7 @@ class AppCyanideCertificate(WorkflowModel):
         verbose_name_plural = _("Application: Cyanide Certificate")
 
 class AppExplosivePermission(WorkflowModel):
-    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.CASCADE,verbose_name=_("company"))    
+    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
 
     attachement_file = models.FileField(_("explosive_request_file"),upload_to=company_applications_path)
     attachement_file2 = models.FileField(_("explosive_amount_file"),upload_to=company_applications_path,blank=True)
@@ -970,7 +970,7 @@ class AppExplosivePermission(WorkflowModel):
         verbose_name_plural = _("Application: Explosive Permission")
 
 class AppRestartActivity(WorkflowModel):
-    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.CASCADE,verbose_name=_("company"))    
+    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
 
     attachement_file = models.FileField(_("restart_activity_reason_file"),upload_to=company_applications_path)
 
@@ -986,7 +986,7 @@ class AppRestartActivity(WorkflowModel):
         verbose_name_plural = _("Application: Restart Activity")
 
 class AppRenewalContract(WorkflowModel):
-    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.CASCADE,verbose_name=_("company"))    
+    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
 
     attachement_file = models.FileField(_("attachement_file"),upload_to=company_applications_path)
 
@@ -1002,7 +1002,7 @@ class AppRenewalContract(WorkflowModel):
         verbose_name_plural = _("Application: Renewal Contract")
 
 class AppImportPermission(WorkflowModel):
-    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.CASCADE,verbose_name=_("company"))    
+    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
 
     attachement_file = models.FileField(_("import_permission_materials_list_file"),upload_to=company_applications_path)
 
@@ -1018,7 +1018,7 @@ class AppImportPermission(WorkflowModel):
         verbose_name_plural = _("Application: Import Permission")
 
 class AppImportPermissionDetail(models.Model):
-    import_master = models.ForeignKey(AppImportPermission, on_delete=models.CASCADE)    
+    import_master = models.ForeignKey(AppImportPermission, on_delete=models.PROTECT)    
     import_material_name = models.CharField(_("import_material_name"),max_length=100)
     import_qty = models.FloatField(_("import_qty"))
 
@@ -1027,7 +1027,7 @@ class AppImportPermissionDetail(models.Model):
         verbose_name_plural = _("Import Permission Details")
 
 class AppFuelPermission(WorkflowModel):
-    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.CASCADE,verbose_name=_("company"))    
+    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
 
     attachement_file = models.FileField(_("fuel_request_file"),upload_to=company_applications_path)
 
@@ -1043,7 +1043,7 @@ class AppFuelPermission(WorkflowModel):
         verbose_name_plural = _("Application: Fuel Permission")
 
 class AppFuelPermissionDetail(models.Model):
-    fuel_master = models.ForeignKey(AppFuelPermission, on_delete=models.CASCADE)    
+    fuel_master = models.ForeignKey(AppFuelPermission, on_delete=models.PROTECT)    
     fuel_type_name = models.CharField(_("fuel_type_name"),max_length=20)
     fuel_qty = models.FloatField(_("fuel_qty"))
 
@@ -1073,10 +1073,10 @@ class AppHSEAccidentReport(WorkflowModel):
         ACCIDENT_CLASS_MAJOR: _("major"),
     }
 
-    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.CASCADE,verbose_name=_("company"))    
+    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
     accident_place = models.CharField(_("accident_place"),max_length=100)
     accident_dt = models.DateTimeField(_("accident_dt"))
-    accident_type  = models.ForeignKey(LkpAccidentType, on_delete=models.CASCADE,verbose_name=_("accident_type"))    
+    accident_type  = models.ForeignKey(LkpAccidentType, on_delete=models.PROTECT,verbose_name=_("accident_type"))    
     accident_class = models.CharField(_("accident_class"),max_length=10, choices=ACCIDENT_CLASS_CHOICES)
 
     attachement_file = models.FileField(_("attachement_file"),upload_to=company_applications_path)
@@ -1093,7 +1093,7 @@ class AppHSEAccidentReport(WorkflowModel):
         verbose_name_plural = _("Application: HSE Accident Report")
 
 class AppHSEPerformanceReport(WorkflowModel):
-    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.CASCADE,verbose_name=_("company"))    
+    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
 
     attachement_file = models.FileField(_("attachement_file"),upload_to=company_applications_path)
 
@@ -1109,7 +1109,7 @@ class AppHSEPerformanceReport(WorkflowModel):
         verbose_name_plural = _("Application: HSE Performance Report")
 
 class AppWhomConcern(WorkflowModel):
-    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.CASCADE,verbose_name=_("company"))    
+    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
 
     whom_reason = models.CharField(_("whom_reason"),max_length=100)
     whom_subject = models.TextField(_("whom_subject"),max_length=256)
@@ -1133,7 +1133,7 @@ class AppWhomConcern(WorkflowModel):
         verbose_name_plural = _("Application: Whom may concern requests")
 
 class AppGoldProduction(WorkflowModel):
-    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.CASCADE,verbose_name=_("company"))    
+    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
 
     form_no = models.CharField(_("form_no"),max_length=20)
     attachement_file = models.FileField(_("gold_production_form_file"),upload_to=company_applications_path)
@@ -1150,7 +1150,7 @@ class AppGoldProduction(WorkflowModel):
         verbose_name_plural = _("Application: Gold Production")
 
 class AppGoldProductionDetail(models.Model):
-    melt_master = models.ForeignKey(AppGoldProduction, on_delete=models.CASCADE)    
+    melt_master = models.ForeignKey(AppGoldProduction, on_delete=models.PROTECT)    
     melt_dt = models.DateField(_("melt_dt"))
     melt_bar_no = models.CharField(_("melt_bar_no"),max_length=30)
     melt_bar_weight = models.FloatField(_("melt_bar_weight"))
