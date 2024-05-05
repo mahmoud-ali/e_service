@@ -19,6 +19,7 @@ from django.views.generic import TemplateView
 
 from django.contrib import admin
 from django.contrib.flatpages import views as flatpages_views
+from django.conf import settings
 
 
 urlpatterns = [
@@ -31,3 +32,6 @@ urlpatterns = [
     path('pa/', include('pa.urls')), 
     path('', include('company_profile.urls')),
 ]
+
+if settings.DEBUG:
+    urlpatterns = [path('app/', include(urlpatterns))]
