@@ -75,7 +75,7 @@
 		{% if user.is_authenticated %}	
           <ul class="nav navbar-nav {% if request.LANGUAGE_CODE == 'ar' %} navbar-left {% else %} navbar-right {% endif %}">
             <li><a href="{% url 'account_change_password'%}">{% translate "Change password" %}</a></li>
-            <li><a href="{% url 'account_logout' %}?next=/pa/">{% translate "Log Out" %}</a></li>
+            <li><a href="{% url 'account_logout' %}?next=/app/pa/">{% translate "Log Out" %}</a></li>
           </ul>
 		  	
 		{% endif %}
