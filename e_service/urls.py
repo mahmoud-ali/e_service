@@ -35,3 +35,12 @@ urlpatterns = [
 
 if settings.DEBUG:
     urlpatterns = [path('app/', include(urlpatterns))]
+
+    from django.urls import reverse
+    from django.shortcuts import redirect
+    def redirect_to_home(request):
+        return redirect(reverse('profile:home'))
+    
+    urlpatterns.append(
+        path('', redirect_to_home)
+    )
