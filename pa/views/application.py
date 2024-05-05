@@ -163,8 +163,13 @@ class ApplicationMasterDetailCreateView(LoginRequiredMixin,View):
                 
                 messages.add_message(request,messages.SUCCESS,_("Application sent successfully."))
                 return HttpResponseRedirect(self.success_url)
-            
+        else:   
+            for detail in self.details_formset:
+                detail['formset'] = detail['formset'](request.POST,request.FILES)
+
         self.extra_context["form"] = form
+        self.extra_context['details'] = self.details_formset
+
         return render(request, self.template_name, self.extra_context)
                 
 class ApplicationUpdateView(LoginRequiredMixin,UserPermissionMixin,UpdateView):
@@ -296,7 +301,14 @@ class ApplicationMasterDetailUpdateView(LoginRequiredMixin,UserPermissionMixin,S
 
                 messages.add_message(request,messages.SUCCESS,_("Application sent successfully."))
                 return HttpResponseRedirect(self.success_url)
-            
+
+        else:   
+            for detail in self.details_formset:
+                detail['formset'] = detail['formset'](request.POST,request.FILES)
+
+        self.extra_context["form"] = form
+        self.extra_context['details'] = self.details_formset
+
         return render(request, self.template_name, self.extra_context)
                 
 

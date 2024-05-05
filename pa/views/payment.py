@@ -96,15 +96,7 @@ class TblCompanyPaymentCreateView(ApplicationMasterDetailCreateView):
     def post(self,request,*args, **kwargs):        
         request_id = request.GET.get('request')
         obj = TblCompanyRequestMaster.objects.get(id=request_id)
-
         form = self.form_class(request.POST,request.FILES,request_id=request_id)
-
-        if not form.is_valid():
-            for detail in self.details_formset:
-                formset = detail['formset'](request.POST,request.FILES)
-                detail['formset'] = formset
-
-            self.extra_context['details'] = self.details_formset
 
         self.extra_context['company'] = get_company_details(obj.commitment)
         self.extra_context['form'] = form
