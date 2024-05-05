@@ -101,33 +101,34 @@ class HomePageView(LoginRequiredMixin,TranslationMixin,TemplateView):
     template_name = 'company_profile/home.html'
     menu_name = 'profile:home'
     def dispatch(self, *args, **kwargs): 
-        in_progress_qs = get_app_metrics( \
-            ['id','company','created_at','updated_at'], #fields
-            {'state__in':[SUBMITTED,ACCEPTED],'company__id':self.request.user.pro_company.company.id}, #filter
-            ['company'], #select_related
-            ["-created_at"] #order_by
-        )[:10]
-   
-        accepted_qs = get_app_metrics( \
-            ['id','company','created_at','updated_at'], #fields
-            {'state__in':[APPROVED],'company__id':self.request.user.pro_company.company.id}, #filter
-            ['company'], #select_related
-            ["-created_at"] #order_by
-        )[:10]
+        if hasattr(self.request.user,'pro_company'):
+            in_progress_qs = get_app_metrics( \
+                ['id','company','created_at','updated_at'], #fields
+                {'state__in':[SUBMITTED,ACCEPTED],'company__id':self.request.user.pro_company.company.id}, #filter
+                ['company'], #select_related
+                ["-created_at"] #order_by
+            )[:10]
+    
+            accepted_qs = get_app_metrics( \
+                ['id','company','created_at','updated_at'], #fields
+                {'state__in':[APPROVED],'company__id':self.request.user.pro_company.company.id}, #filter
+                ['company'], #select_related
+                ["-created_at"] #order_by
+            )[:10]
 
-        rejected_qs = get_app_metrics( \
-            ['id','company','created_at','updated_at'], #fields
-            {'state__in':[REJECTED],'company__id':self.request.user.pro_company.company.id}, #filter
-            ['company'], #select_related
-            ["-created_at"] #order_by
-        )[:10]
+            rejected_qs = get_app_metrics( \
+                ['id','company','created_at','updated_at'], #fields
+                {'state__in':[REJECTED],'company__id':self.request.user.pro_company.company.id}, #filter
+                ['company'], #select_related
+                ["-created_at"] #order_by
+            )[:10]
 
-        self.extra_context = {
-            "accepted_progress":accepted_qs,
-            "rejected_progress":rejected_qs,
-            "in_progress":in_progress_qs,
-            "menu_name":self.menu_name,
-         }
+            self.extra_context = {
+                "accepted_progress":accepted_qs,
+                "rejected_progress":rejected_qs,
+                "in_progress":in_progress_qs,
+                "menu_name":self.menu_name,
+            }
         return super().dispatch(*args, **kwargs)    
 
 class LkpLocalitySelectView(LkpSelectView):
