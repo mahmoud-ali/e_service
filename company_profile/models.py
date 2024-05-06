@@ -119,9 +119,9 @@ class TblCompany(LoggingModel):
     address = models.TextField(_("address"),max_length=256)
     website = models.URLField(_("website"),max_length=200)
     manager_name = models.CharField(_("manager_name"),max_length=200)
-    manager_phone = models.CharField(_("manager_phone"),max_length=20)
+    manager_phone = models.CharField(_("manager_phone"),max_length=50)
     rep_name = models.CharField(_("Representative name"),max_length=200)
-    rep_phone = models.CharField(_("Representative phone"),max_length=20)
+    rep_phone = models.CharField(_("Representative phone"),max_length=50)
     email = models.EmailField(_("Official email"),max_length=100,unique=True)
     
     class Meta:
