@@ -30,6 +30,7 @@
 {% endif %}
 
 {% load static  %}
+{% load help_request %}
 
 <!-- <link rel="stylesheet" type="text/css" href="{% static 'admin/css/base.css' %}" /> -->
 <link rel="stylesheet" type="text/css" href="{% static 'admin/css/widgets.css' %}" />
@@ -61,7 +62,7 @@ $(document).ready(function(){
 	
 </head>
 <body>
-
+	{% help_model 'company_profile' %}
     <nav class="navbar navbar-inverse navbar-fixed-top">
       <div class="container-fluid">
         <div class="navbar-header">
@@ -76,6 +77,7 @@ $(document).ready(function(){
         <div id="navbar" class="navbar-collapse collapse">
 		{% if user.is_authenticated %}	
           <ul class="nav navbar-nav {% if request.LANGUAGE_CODE == 'ar' %} navbar-left {% else %} navbar-right {% endif %}">
+            <li>{% help_link 'company_profile' %}</li>
             <li><a href="{% url 'account_change_password'%}">{% translate "Change password" %}</a></li>
             <li><a href="{% url 'account_logout' %}">{% translate "Log Out" %}</a></li>
           </ul>
