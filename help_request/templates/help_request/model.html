@@ -1,0 +1,71 @@
+{% load i18n %}
+{% load bootstrap3 %}
+
+<!-- Modal -->
+<div class="modal fade" id="helpRequest{{app_name}}" tabindex="-1" role="dialog" aria-labelledby="helpRequestLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="helpRequestLabel">{% translate "help_form_title" %}</h4>
+            </div>
+            <div class="modal-body">
+                <form id="help_request_form"  method="post" enctype="multipart/form-data">
+                    {% bootstrap_form form %}
+                    <input type="button" value="{% translate "submit" %}" id="help_submit" name="_submit" class="btn btn-primary">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="{{html2canvas_lib}}"></script>
+<script>
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie != '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = jQuery.trim(cookies[i]);
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    $('#help_submit').bind('click',function(event){
+        event.preventDefault();
+
+        let myform = document.getElementById("help_request_form");
+        let fd = new FormData(myform );
+
+        if(fd.get('issue_txt').length == 0) return;
+
+        fd.set('issue_app','{{app_name}}');
+
+        html2canvas(document.querySelector('{{dom_selector}}')).then(canvas => {
+            fd.set('issue_img',canvas.toDataURL());
+            fd.set('csrfmiddlewaretoken',getCookie('csrftoken'));
+
+            $.ajax({
+                url: "{%url 'help_request:help' %}",
+                data: fd,
+                cache: false,
+                processData: false,
+                contentType: false,
+                dataType:'text',
+                type: 'POST',
+                success: function (data,status,xhr) {
+                    $('#id_issue_txt').val('');
+                    $('#helpRequest{{app_name}}').modal('hide');
+                },
+            });
+        });
+
+
+        return false;
+    });
+</script>
