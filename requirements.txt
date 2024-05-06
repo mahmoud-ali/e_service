@@ -13,4 +13,3 @@ psycopg[c]
 django-import-export
 django-crontab
 Pillow
-olefileer
