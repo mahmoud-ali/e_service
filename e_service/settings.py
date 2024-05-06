@@ -81,6 +81,7 @@ INSTALLED_APPS = [
     'company_profile',    
     'check_cordinates',
     'pa',
+    'help_request',
 
     # Debug
     'debug_toolbar',

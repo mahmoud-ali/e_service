@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-05-05 00:02+0200\n"
+"POT-Creation-Date: 2024-05-06 23:06+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -152,11 +152,12 @@ msgstr "نوع الرخصة"
 #: company_profile/models.py:17
 #: company_profile/templates/company_profile/home.html:16
 #: company_profile/templates/company_profile/home.html:38
-#: company_profile/templates/company_profile/home.html:59 pa/models.py:46
+#: company_profile/templates/company_profile/home.html:59
+#: help_request/models.py:6 pa/models.py:46
 msgid "created_at"
 msgstr "تاريخ الانشاء"
 
-#: company_profile/models.py:18 pa/models.py:47
+#: company_profile/models.py:18 help_request/models.py:7 pa/models.py:47
 msgid "created_by"
 msgstr "المستخدم المسئول عن الانشاء"
 
@@ -1747,23 +1748,23 @@ msgstr "حذف سجل"
 
 #: company_profile/templates/company_profile/base.html:9
 #: company_profile/templates/company_profile/base.html:74
-#: pa/templates/pa/base.html:9 pa/templates/pa/base.html:72
+#: pa/templates/pa/base.html:9 pa/templates/pa/base.html:79
 #: templates/account/base.html:9 templates/account/base.html:71
 msgid "E-Services App"
 msgstr "بوابة الخدمات الإلكترونية"
 
 #: company_profile/templates/company_profile/base.html:79
-#: pa/templates/pa/base.html:77 templates/account/base.html:76
+#: pa/templates/pa/base.html:85 templates/account/base.html:76
 msgid "Change password"
 msgstr "تغيير كلمة المرور"
 
 #: company_profile/templates/company_profile/base.html:80
-#: pa/templates/pa/base.html:78 templates/account/base.html:77
+#: pa/templates/pa/base.html:86 templates/account/base.html:77
 msgid "Log Out"
 msgstr "خروج"
 
 #: company_profile/templates/company_profile/base.html:115
-#: pa/templates/pa/base.html:98
+#: pa/templates/pa/base.html:106
 msgid "Menu"
 msgstr "القائمة"
 
@@ -1772,7 +1773,7 @@ msgid "Home page"
 msgstr "الرئيسية"
 
 #: company_profile/templates/company_profile/base.html:121
-#: pa/templates/pa/base.html:114
+#: pa/templates/pa/base.html:122
 msgid "Request page"
 msgstr "المطالبات المالية"
 
@@ -1802,15 +1803,15 @@ msgstr "اخر الطلبات التي تم رفضها"
 msgid "latest application in progress"
 msgstr "اخر الطلبات قيد الاجراء"
 
-#: company_profile/views/__init__.py:142
+#: company_profile/views/__init__.py:143
 msgid "List of foreigner movements"
 msgstr "قائمة طلبات حركة الاجانب"
 
-#: company_profile/views/__init__.py:160
+#: company_profile/views/__init__.py:161
 msgid "Add new movement"
 msgstr "اضافة طلب حركة اجنبي"
 
-#: company_profile/views/__init__.py:180 company_profile/views/__init__.py:260
+#: company_profile/views/__init__.py:181 company_profile/views/__init__.py:261
 #: company_profile/views/add_area.py:64
 #: company_profile/views/aifaa_jomrki.py:76
 #: company_profile/views/change_company_name.py:68
@@ -1843,23 +1844,23 @@ msgstr "اضافة طلب حركة اجنبي"
 #: company_profile/views/visibilty_study.py:75
 #: company_profile/views/whom_concern.py:64
 #: company_profile/views/work_plan.py:64 pa/views/application.py:164
-#: pa/views/application.py:297
+#: pa/views/application.py:302
 msgid "Application sent successfully."
 msgstr "تم ارسال الطلب بنجاح."
 
-#: company_profile/views/__init__.py:193
+#: company_profile/views/__init__.py:194
 msgid "Show movement"
 msgstr "عرض طلب حركة اجنبي"
 
-#: company_profile/views/__init__.py:208
+#: company_profile/views/__init__.py:209
 msgid "List of borrow materials"
 msgstr "قائمة طلبات الاستلاف"
 
-#: company_profile/views/__init__.py:227
+#: company_profile/views/__init__.py:228
 msgid "Add new borrow materials"
 msgstr "اضافة طلب اسلاف مواد"
 
-#: company_profile/views/__init__.py:278
+#: company_profile/views/__init__.py:279
 msgid "Show borrow materials"
 msgstr "عرض طلب استلاف مواد"
 
@@ -2071,7 +2072,7 @@ msgstr "عرض طلب MDA"
 msgid "List of requests"
 msgstr "قائمة المطالبات المالية"
 
-#: company_profile/views/pa_request.py:123 pa/views/request.py:122
+#: company_profile/views/pa_request.py:123 pa/views/request.py:115
 msgid "Show added request"
 msgstr "عرض سجل مطالبة"
 
@@ -2336,6 +2337,30 @@ msgstr ""
 #: company_profile/workflow.py:111
 msgid "Wrong transition path."
 msgstr ""
+
+#: help_request/models.py:8
+msgid "app name"
+msgstr "اسم التطبيق"
+
+#: help_request/models.py:9
+msgid "describe issue"
+msgstr "وصف المشكلة"
+
+#: help_request/models.py:10
+msgid "capture"
+msgstr "صورة"
+
+#: help_request/templates/help_request/model.html:10
+msgid "help_form_title"
+msgstr "طلب مساعدة"
+
+#: help_request/templates/help_request/model.html:15
+msgid "submit"
+msgstr "ارسال"
+
+#: help_request/templatetags/help_request.py:13
+msgid "help_link"
+msgstr "طلب مساعدة"
 
 #: pa/apps.py:8
 msgid "Production Accounting"
@@ -2659,23 +2684,23 @@ msgstr "بحث"
 msgid "New record"
 msgstr "سجل جديد"
 
-#: pa/templates/pa/base.html:105
+#: pa/templates/pa/base.html:113
 msgid "Openning Balance page"
 msgstr "الرصيد الافتتاحي"
 
-#: pa/templates/pa/base.html:108
+#: pa/templates/pa/base.html:116
 msgid "Commitment page"
 msgstr "الالتزامات المالية"
 
-#: pa/templates/pa/base.html:111
+#: pa/templates/pa/base.html:119
 msgid "Commitment Schedule page"
 msgstr "جدولة الالتزامات الدورية"
 
-#: pa/templates/pa/base.html:117
+#: pa/templates/pa/base.html:125
 msgid "Payment page"
 msgstr "السداد"
 
-#: pa/templates/pa/base.html:120 pa/views/daily.py:16
+#: pa/templates/pa/base.html:128 pa/views/daily.py:16
 msgid "Pa_daily page"
 msgstr "يومية حسابات الانتاج"
 
@@ -2723,11 +2748,11 @@ msgstr "قبل"
 msgid "befor_balance"
 msgstr "الرصيد السابق"
 
-#: pa/views/application.py:97 pa/views/application.py:212
+#: pa/views/application.py:97 pa/views/application.py:217
 msgid "Record saved successfully."
 msgstr "تم حفظ السجل بنجاح."
 
-#: pa/views/application.py:377 pa/views/application.py:433
+#: pa/views/application.py:389 pa/views/application.py:445
 msgid "Record removed successfully."
 msgstr "تم حذف السجل بنجاح."
 
@@ -2739,15 +2764,15 @@ msgstr "قائمة الالتزامات المالية"
 msgid "Add new commitment"
 msgstr "اضافة التزام جديد"
 
-#: pa/views/commitment.py:88
+#: pa/views/commitment.py:81
 msgid "Edit commitment"
 msgstr "تعديل التزام"
 
-#: pa/views/commitment.py:102
+#: pa/views/commitment.py:95
 msgid "Show added commitment"
 msgstr "عرض سجل التزام"
 
-#: pa/views/commitment.py:114
+#: pa/views/commitment.py:107
 msgid "Delete commitment"
 msgstr "حذف التزام"
 
@@ -2799,15 +2824,15 @@ msgstr "قائمة سجلات السداد"
 msgid "Add new payment"
 msgstr "اضافة سجل سداد"
 
-#: pa/views/payment.py:119
+#: pa/views/payment.py:111
 msgid "Edit payment"
 msgstr "تعديل سداد"
 
-#: pa/views/payment.py:145
+#: pa/views/payment.py:137
 msgid "Show added payment"
 msgstr "عرض سجل سداد"
 
-#: pa/views/payment.py:157
+#: pa/views/payment.py:149
 msgid "Delete payment"
 msgstr "حذف سجل سداد"
 
@@ -2815,11 +2840,11 @@ msgstr "حذف سجل سداد"
 msgid "Add new request"
 msgstr "اضافة مطالبة جديدة"
 
-#: pa/views/request.py:108
+#: pa/views/request.py:101
 msgid "Edit request"
 msgstr "تعديل مطالبة "
 
-#: pa/views/request.py:134
+#: pa/views/request.py:127
 msgid "Delete request"
 msgstr "حذف سجل مطالبة"
 

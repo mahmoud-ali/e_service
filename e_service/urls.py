@@ -30,6 +30,7 @@ urlpatterns = [
     path('check/', include('check_cordinates.urls')), 
     path("about/", flatpages_views.flatpage, {"url": "/about/"}, name="about"),
     path('pa/', include('pa.urls')), 
+    path('help/', include('help_request.urls')), 
     path('', include('company_profile.urls')),
 ]
 

@@ -12,3 +12,4 @@ psycopg[binary]
 psycopg[c]
 django-import-export
 django-crontab
+olefileer
