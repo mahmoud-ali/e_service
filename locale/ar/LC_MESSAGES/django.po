@@ -294,7 +294,7 @@ msgstr "شركة انتاج"
 
 #: company_profile/models.py:149
 msgid "Production Companies"
-msgstr "شركات الانتاج"
+msgstr "الشركات"
 
 #: company_profile/models.py:162
 msgid "Production Company User"
@@ -302,7 +302,7 @@ msgstr "مستخدم شركة انتاج"
 
 #: company_profile/models.py:163
 msgid "Production Company Users"
-msgstr "مستخدمي شركات الانتاج"
+msgstr "مستخدمي الشركات"
 
 #: company_profile/models.py:172
 msgid "Factory Type"
@@ -326,7 +326,7 @@ msgstr "مصنع شركة منتجة"
 
 #: company_profile/models.py:185
 msgid "Production Company Factories"
-msgstr "مصانع الشركات المنتجة"
+msgstr "مصانع الشركات"
 
 #: company_profile/models.py:194 company_profile/models.py:195
 msgid "License Status"
@@ -415,7 +415,7 @@ msgstr "رخصة شركة منتجة"
 
 #: company_profile/models.py:229
 msgid "Production Company Licenses"
-msgstr "رخص الشركات المنتجة"
+msgstr "رخص الشركات"
 
 #: company_profile/models.py:237
 msgid "route_from"
