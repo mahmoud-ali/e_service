@@ -16,8 +16,8 @@ class HelpView(LoginRequiredMixin,View):
         format, imgstr = img.split(';base64,') 
         ext = format.split('/')[-1] 
         img = ContentFile(base64.b64decode(imgstr), name=f'{self.request.user.id}.' + ext)
-
         updated_request.update({'issue_img': img})
+
         form = HelpForm(updated_request)
         
         if form.is_valid():
@@ -25,4 +25,6 @@ class HelpView(LoginRequiredMixin,View):
             self.object.created_by = self.request.user
             self.object.save()
 
-        return JsonResponse({"message":"record added."})
+            return JsonResponse({"message":"record added."})
+        
+        return JsonResponse({})

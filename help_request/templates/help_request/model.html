@@ -45,6 +45,7 @@
         if(fd.get('issue_txt').length == 0) return;
 
         fd.set('issue_app','{{app_name}}');
+        fd.set('issue_url',window.location.href);
 
         html2canvas(document.querySelector('{{dom_selector}}')).then(canvas => {
             fd.set('issue_img',canvas.toDataURL());
