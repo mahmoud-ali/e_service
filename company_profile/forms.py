@@ -1,7 +1,8 @@
 from django import forms
 from django.forms import ModelForm, ValidationError
-from django.contrib.admin.widgets import AdminDateWidget
 from django.utils.translation import gettext_lazy as _
+
+from bootstrap_datepicker_plus.widgets import DatePickerInput
 
 from django_fsm import can_proceed
 
@@ -55,9 +56,9 @@ class AppForignerMovementForm(AppForignerMovementAdminForm):
         model = AppForignerMovement        
         exclude = ["company","state","reject_comments"]
         widgets = {
-            "period_from":AdminDateWidget(),
-            "period_to":AdminDateWidget(),
-            "passport_expiry_date":AdminDateWidget(),
+            "period_from":DatePickerInput(),
+            "period_to":DatePickerInput(),
+            "passport_expiry_date":DatePickerInput(),
         }
         
 class AppBorrowMaterialAdminForm(WorkflowFormMixin,ModelForm):
@@ -86,7 +87,7 @@ class AppBorrowMaterialForm(AppBorrowMaterialAdminForm):
         model = AppBorrowMaterial        
         exclude = ["company","state","reject_comments","reject_comments"]
         widgets = {
-            "borrow_date":AdminDateWidget(),
+            "borrow_date":DatePickerInput(),
         }
         
 class AppWorkPlanAdminForm(WorkflowFormMixin,ModelForm):
@@ -102,8 +103,8 @@ class AppWorkPlanForm(AppWorkPlanAdminForm):
         model = AppWorkPlan        
         exclude = ["company","state","reject_comments"]
         widgets = {
-            "plan_from":AdminDateWidget(),
-            "plan_to":AdminDateWidget(),
+            "plan_from":DatePickerInput(),
+            "plan_to":DatePickerInput(),
         }
 
 class AppTechnicalFinancialReportAdminForm(WorkflowFormMixin,ModelForm):
@@ -119,8 +120,8 @@ class AppTechnicalFinancialReportForm(AppTechnicalFinancialReportAdminForm):
         model = AppTechnicalFinancialReport        
         exclude = ["company","state","reject_comments"]
         widgets = {
-            "report_from":AdminDateWidget(),
-            "report_to":AdminDateWidget(),
+            "report_from":DatePickerInput(),
+            "report_to":DatePickerInput(),
         }
 
 class AppChangeCompanyNameAdminForm(WorkflowFormMixin,ModelForm):
@@ -150,8 +151,8 @@ class AppExplorationTimeForm(AppExplorationTimeAdminForm):
         model = AppExplorationTime        
         exclude = ["company","state","reject_comments"]
         widgets = {
-            "expo_from":AdminDateWidget(),
-            "expo_to":AdminDateWidget(),
+            "expo_from":DatePickerInput(),
+            "expo_to":DatePickerInput(),
         }
 
 class AppAddAreaAdminForm(WorkflowFormMixin,ModelForm):
@@ -220,8 +221,8 @@ class AppTajmeedForm(AppTajmeedAdminForm):
         model = AppTajmeed        
         exclude = ["company","state","reject_comments"]
         widgets = {
-            "tajmeed_from":AdminDateWidget(),
-            "tajmeed_to":AdminDateWidget(),
+            "tajmeed_from":DatePickerInput(),
+            "tajmeed_to":DatePickerInput(),
         }
 
 class AppTakhaliAdminForm(WorkflowFormMixin,ModelForm):
@@ -236,7 +237,7 @@ class AppTakhaliForm(AppTakhaliAdminForm):
         model = AppTakhali        
         exclude = ["company","state","reject_comments"]
         widgets = {
-            "technical_presentation_date":AdminDateWidget(),
+            "technical_presentation_date":DatePickerInput(),
         }
 
 class AppTamdeedAdminForm(WorkflowFormMixin,ModelForm):
@@ -252,8 +253,8 @@ class AppTamdeedForm(AppTamdeedAdminForm):
         model = AppTamdeed        
         exclude = ["company","state","reject_comments"]
         widgets = {
-            "tamdeed_from":AdminDateWidget(),
-            "tamdeed_to":AdminDateWidget(),
+            "tamdeed_from":DatePickerInput(),
+            "tamdeed_to":DatePickerInput(),
         }
 
 class AppTaaweedAdminForm(WorkflowFormMixin,ModelForm):
@@ -269,8 +270,8 @@ class AppTaaweedForm(AppTaaweedAdminForm):
         model = AppTaaweed        
         exclude = ["company","state","reject_comments"]
         widgets = {
-            "taaweed_from":AdminDateWidget(),
-            "taaweed_to":AdminDateWidget(),
+            "taaweed_from":DatePickerInput(),
+            "taaweed_to":DatePickerInput(),
         }
 
 class AppMdaAdminForm(WorkflowFormMixin,ModelForm):
@@ -286,8 +287,8 @@ class AppMdaForm(AppMdaAdminForm):
         model = AppMda
         exclude = ["company","state","reject_comments"]
         widgets = {
-            "mda_from":AdminDateWidget(),
-            "mda_to":AdminDateWidget(),
+            "mda_from":DatePickerInput(),
+            "mda_to":DatePickerInput(),
         }
 
 class AppChangeWorkProcedureAdminForm(WorkflowFormMixin,ModelForm):
@@ -355,8 +356,8 @@ class AppForeignerProcedureForm(AppForeignerProcedureAdminForm):
         model = AppForeignerProcedure
         exclude = ["company","state","reject_comments"]
         widgets = {
-            "procedure_from":AdminDateWidget(),
-            "procedure_to":AdminDateWidget(),
+            "procedure_from":DatePickerInput(),
+            "procedure_to":DatePickerInput(),
         }
 
 class AppAifaaJomrkiAdminForm(WorkflowFormMixin,ModelForm):
@@ -563,7 +564,7 @@ class AppHSEAccidentReportForm(AppHSEAccidentReportAdminForm):
         model = AppHSEAccidentReport
         exclude = ["company","state","reject_comments"]
         widgets = {
-            "accident_dt":AdminDateWidget(),
+            "accident_dt":DatePickerInput(),
         }
 
 class AppHSEPerformanceReportAdminForm(WorkflowFormMixin,ModelForm):
