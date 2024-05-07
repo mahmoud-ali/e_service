@@ -97,6 +97,8 @@ class AppRequirementsListCreateView(LoginRequiredMixin,View):
             send_transition_email(self.object.state,resp_user.email,url,resp_user.lang.lower())
                 
             return HttpResponseRedirect(self.success_url)            
+        
+        return render(request, self.template_name, self.extra_context)
 
 class AppRequirementsListReadonlyView(LoginRequiredMixin,DetailView):
     model = AppRequirementsList
