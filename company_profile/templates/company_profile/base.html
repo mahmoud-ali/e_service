@@ -8,6 +8,11 @@
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 <title>{% block title %}{% translate "E-Services App" %}{% endblock title %}</title>
 <style>
+	{% if request.LANGUAGE_CODE == "ar" %}
+	.form-control{
+		text-align:right !important;
+	}
+	{% endif %}
 	@media (min-width: 768px) {
 		.sidebar {
 	  {% if request.LANGUAGE_CODE == "ar" %}
