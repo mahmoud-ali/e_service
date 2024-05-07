@@ -72,7 +72,7 @@ INSTALLED_APPS = [
 
     'import_export',
 
-    'anymail',
+    'bootstrap_datepicker_plus',
 
     'django_crontab',
     

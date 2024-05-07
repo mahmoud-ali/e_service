@@ -1,8 +1,9 @@
 from django import forms
 from django.forms import ModelForm
-from django.contrib.admin.widgets import AdminDateWidget
 from django.utils.translation import gettext_lazy as _
 from django.db.models import Q
+
+from bootstrap_datepicker_plus.widgets import DatePickerInput
 
 from ..models import TblCompanyCommitmentMaster, TblCompanyCommitmentSchedular,TblCompanyRequestMaster,STATE_TYPE_CONFIRM,STATE_TYPE_DRAFT
 
@@ -44,8 +45,8 @@ class TblCompanyRequestShowEditForm(TblCompanyRequestAdminForm):
         model = TblCompanyRequestMaster
         fields = ["commitment","from_dt","to_dt","currency"] 
         widgets = {
-            "from_dt":AdminDateWidget(),
-            "to_dt":AdminDateWidget(),
+            "from_dt":DatePickerInput(),
+            "to_dt":DatePickerInput(),
         }
 
 class TblCompanyRequestAddForm(TblCompanyRequestAdminForm):
@@ -55,8 +56,8 @@ class TblCompanyRequestAddForm(TblCompanyRequestAdminForm):
         model = TblCompanyRequestMaster      
         fields = ["commitment","from_dt","to_dt","currency"] 
         widgets = {
-            "from_dt":AdminDateWidget(),
-            "to_dt":AdminDateWidget(),
+            "from_dt":DatePickerInput(),
+            "to_dt":DatePickerInput(),
         }
 
     def __init__(self, *args,commitment_id=None, **kwargs):

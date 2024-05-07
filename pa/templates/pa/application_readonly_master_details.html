@@ -11,6 +11,7 @@
 
 {% include "pa/company_panel.html" %}
 
+{{ form.media }}
 <form >
 {% csrf_token %}
     {% bootstrap_form form %}

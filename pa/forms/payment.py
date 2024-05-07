@@ -1,7 +1,8 @@
 from django import forms
 from django.forms import ModelForm
-from django.contrib.admin.widgets import AdminDateWidget
 from django.utils.translation import gettext_lazy as _
+
+from bootstrap_datepicker_plus.widgets import DatePickerInput
 
 from ..models import TblCompanyRequestMaster,TblCompanyPaymentMaster,STATE_TYPE_CONFIRM
 
@@ -35,7 +36,7 @@ class TblCompanyPaymentShowEditForm(TblCompanyPaymentAdminForm):
         model = TblCompanyPaymentMaster
         fields = ["request","payment_dt","currency","exchange_rate","exchange_attachement_file"] 
         widgets = {
-            "payment_dt":AdminDateWidget(),
+            "payment_dt":DatePickerInput(),
         }
 
 class TblCompanyPaymentAddForm(TblCompanyPaymentAdminForm):
@@ -45,7 +46,7 @@ class TblCompanyPaymentAddForm(TblCompanyPaymentAdminForm):
         model = TblCompanyPaymentMaster
         fields = ["request","payment_dt","currency","exchange_rate","exchange_attachement_file"] 
         widgets = {
-            "payment_dt":AdminDateWidget(),
+            "payment_dt":DatePickerInput(),
         }
 
     def __init__(self, *args, **kwargs):
