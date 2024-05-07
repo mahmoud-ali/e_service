@@ -6,15 +6,16 @@ from django.conf import settings
 from django.db.models import FloatField, CharField, Value,Sum,F
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from .application import TranslationMixin
+from .application import TranslationMixin, UserPermissionMixin
 from ..forms import PaDailyForm
 from ..models import TblCompanyOpenningBalanceDetail, TblCompanyOpenningBalanceMaster, TblCompanyPaymentDetail, TblCompanyRequestDetail, TblCompanyRequestMaster,TblCompanyPaymentMaster,STATE_TYPE_CONFIRM
 
-class PaDailyView(LoginRequiredMixin,TranslationMixin,View):
+class PaDailyView(LoginRequiredMixin,UserPermissionMixin,TranslationMixin,View):
     form = PaDailyForm
     menu_name = "pa:daily_list"
     title = _("Pa_daily page")
     template_name = "pa/pa_daily.html"     
+    user_groups = ['pa_data_entry','pa_manager']
 
     def dispatch(self, *args, **kwargs):         
         self.extra_context = {

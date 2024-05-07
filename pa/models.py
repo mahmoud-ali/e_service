@@ -415,7 +415,7 @@ class TblCompanyRequestMaster(LoggingModel):
 class TblCompanyRequestDetail(models.Model):
     def attachement_path(self, filename):
         company = self.request_master.commitment.company
-        date = self.request_master.created_at
+        date = self.request_master.created_at.date()
         return "company_{0}/requests/{1}/{2}".format(company.id,date, filename)    
 
     request_master  = models.ForeignKey(TblCompanyRequestMaster, on_delete=models.PROTECT)
