@@ -1,7 +1,8 @@
 from django import forms
 from django.forms import ModelForm
-from django.contrib.admin.widgets import AdminDateWidget
 from django.utils.translation import gettext_lazy as _
+
+from bootstrap_datepicker_plus.widgets import DatePickerInput
 
 from company_profile.models import TblCompanyProduction, TblCompanyProductionLicense
 
@@ -76,7 +77,7 @@ class TblCompanyCommitmentScheduleForm(ModelForm):
         model = TblCompanyCommitmentSchedular     
         fields = ["commitment","request_interval","request_next_interval_dt","request_auto_confirm"] 
         widgets = {
-            "request_next_interval_dt":AdminDateWidget(),
+            "request_next_interval_dt":DatePickerInput(),
         }
 
     def __init__(self, *args, **kwargs):
