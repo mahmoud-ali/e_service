@@ -173,7 +173,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
-LANGUAGE_CODE = 'en'  #en-us
+LANGUAGE_CODE = 'ar'  #en-us
 
 TIME_ZONE = 'Africa/Khartoum'
 
@@ -188,8 +188,10 @@ USE_TZ = True
 
 LOCALE_PATHS = [os.path.join(BASE_DIR, 'locale')]
 
-# LANGUAGES = [
-# 	("ar","Arabic"),("en","English")]
+LANGUAGES = [
+	("ar","Arabic"),
+    ("en","English"),
+]
     
     
 # Media configurations
