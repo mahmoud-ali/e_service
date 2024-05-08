@@ -65,11 +65,16 @@ def send_transition_email(state,email,url,lang):
         fail_silently=False,
     )        
         
-def get_sumitted_responsible(app):
+def get_sumitted_responsible(app,company_type):
     User = get_user_model()
     if app == 'pro_company':
-        user = User.objects.filter(groups__name="pro_company_application_accept").first()
-        return user
+        qs = User.objects.filter(
+            groups__name="company_type_"+company_type,
+        ).filter(
+            groups__name="pro_company_application_accept",
+        )
+
+        return qs.first()
 
 def can_do_transition(instance, user):
     ###logic here!
