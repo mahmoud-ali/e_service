@@ -21731,6 +21731,7 @@
     annual_rent: 345.0
     contract_status: 1
     contract_file: company_1/license_2024-01-29/info
+    mineral_id: 1
 - model: company_profile.tblcompanyproductionlicense
   pk: 2
   fields:
@@ -21760,6 +21761,7 @@
     annual_rent: 324.0
     contract_status: 1
     contract_file: company_4/contract_2024-02-04/for_upload
+    mineral_id: 1
 - model: company_profile.tblcompanyproductionlicense
   pk: 6
   fields:
@@ -21789,6 +21791,7 @@
     annual_rent: 0.0
     contract_status: 1
     contract_file: company_8/contract_2024-03-17/for_upload
+    mineral_id: 1
 - model: company_profile.tblcompanyproductionlicense
   pk: 7
   fields:
@@ -21818,6 +21821,7 @@
     annual_rent: 10000.0
     contract_status: 1
     contract_file: company_9/contract_2024-03-18/for_upload
+    mineral_id: 1
 - model: company_profile.appforignermovement
   pk: 1
   fields:

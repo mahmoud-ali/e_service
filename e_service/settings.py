@@ -190,7 +190,7 @@ LOCALE_PATHS = [os.path.join(BASE_DIR, 'locale')]
 
 LANGUAGES = [
 	("ar","Arabic"),
-    ("en","English"),
+    # ("en","English"),
 ]
     
     

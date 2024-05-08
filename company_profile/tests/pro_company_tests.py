@@ -6,6 +6,7 @@ from django.conf import settings
 
 from django.core import mail
 from django.template.loader import render_to_string
+from django.utils.html import strip_tags
 
 from django.contrib.auth import get_user_model
 from django.contrib.sites.models import Site
@@ -16,6 +17,7 @@ class ProCompanyTests():
     fixtures = ['test_data.yaml']
 
     username = "bbb"
+    company_type = 'entaj'
 
     list_view_class = None 
     list_template_name = ''
@@ -53,12 +55,13 @@ class ProCompanyTests():
         self.user = User.objects.get(username=self.username)
         self.client.force_login(self.user,settings.AUTHENTICATION_BACKENDS[0])
 
-        self.add_email_to = get_sumitted_responsible('pro_company').email
+        self.add_email_to = get_sumitted_responsible('pro_company',self.company_type).email
 
     def set_lang(self,lang,user=None):
         if user:
             user.lang = lang
             user.save()
+            user.refresh_from_db()
         else:
             self.user.lang = lang
             self.user.save()
@@ -119,7 +122,7 @@ class ProCompanyTests():
             self.assertTemplateUsed(self.response, self.show_template_name)
 
     def test_view_list_contain_array_of_text_en(self):
-        resp_user = get_sumitted_responsible('pro_company')
+        resp_user = get_sumitted_responsible('pro_company',self.company_type)
         self.set_lang('en',user=resp_user)
 
         url = reverse(self.list_url_name)
@@ -129,7 +132,7 @@ class ProCompanyTests():
             self.assertContains(self.response, c)
 
     def test_view_list_contain_array_of_text_ar(self):
-        resp_user = get_sumitted_responsible('pro_company')
+        resp_user = get_sumitted_responsible('pro_company',self.company_type)
         self.set_lang('ar',user=resp_user)
 
         url = reverse(self.list_url_name)
@@ -140,7 +143,7 @@ class ProCompanyTests():
 
 
     def test_view_add_contain_array_of_text_ar(self):
-        resp_user = get_sumitted_responsible('pro_company')
+        resp_user = get_sumitted_responsible('pro_company',self.company_type)
         self.set_lang('ar',user=resp_user)
 
         url = reverse(self.add_url_name)
@@ -149,7 +152,7 @@ class ProCompanyTests():
             self.assertContains(self.response, c)
 
     def test_view_add_contain_array_of_text_en(self):
-        resp_user = get_sumitted_responsible('pro_company')
+        resp_user = get_sumitted_responsible('pro_company',self.company_type)
         self.set_lang('en',user=resp_user)
 
         url = reverse(self.add_url_name)
@@ -158,7 +161,7 @@ class ProCompanyTests():
             self.assertContains(self.response, c)
 
     def test_view_show_contain_array_of_text_ar(self):
-        resp_user = get_sumitted_responsible('pro_company')
+        resp_user = get_sumitted_responsible('pro_company',self.company_type)
         self.set_lang('ar',user=resp_user)
 
         url = reverse(self.list_url_name)
@@ -173,7 +176,7 @@ class ProCompanyTests():
                 self.assertContains(self.response, c)
 
     def test_view_show_contain_array_of_text_en(self):
-        resp_user = get_sumitted_responsible('pro_company')
+        resp_user = get_sumitted_responsible('pro_company',self.company_type)
         self.set_lang('en',user=resp_user)
 
         url = reverse(self.list_url_name)
@@ -282,7 +285,7 @@ class ProCompanyTests():
         self.assertGreaterEqual(count,1)
 
     def test_view_add_post_valid_data_not_raise_errors(self):
-        resp_user = get_sumitted_responsible('pro_company')
+        resp_user = get_sumitted_responsible('pro_company',self.company_type)
         self.set_lang('en',user=resp_user)
 
         attachments = {}
@@ -347,7 +350,7 @@ class ProCompanyTests():
             attachments[k].close()
 
     def test_view_add_post_valid_data_send_email_with_correct_subject_ar(self):
-        resp_user = get_sumitted_responsible('pro_company')
+        resp_user = get_sumitted_responsible('pro_company',self.company_type)
         self.set_lang('ar',user=resp_user)
 
         attachments = {}
@@ -366,7 +369,7 @@ class ProCompanyTests():
             attachments[k].close()
 
     def test_view_add_post_valid_data_send_email_with_correct_subject_en(self):
-        resp_user = get_sumitted_responsible('pro_company')
+        resp_user = get_sumitted_responsible('pro_company',self.company_type)
         self.set_lang('en',user=resp_user)
 
         attachments = {}
@@ -385,7 +388,7 @@ class ProCompanyTests():
             attachments[k].close()
 
     def test_view_add_post_valid_data_send_email_with_correct_body_ar(self):
-        resp_user = get_sumitted_responsible('pro_company')
+        resp_user = get_sumitted_responsible('pro_company',self.company_type)
         self.set_lang('ar',user=resp_user)
 
         attachments = {}
@@ -399,16 +402,16 @@ class ProCompanyTests():
 
         change_model = self.add_model.objects.order_by("-id").first()
         info = (change_model._meta.app_label, change_model._meta.model_name)
-        admin_url = 'https://'+Site.objects.get_current().domain+reverse('admin:%s_%s_change' % info, args=(change_model.id,))
-        messsage = render_to_string(self.add_email_body_template_ar,{'url':admin_url})
-
-        self.assertEqual(messsage, mail.outbox[0].body) #correct email body
+        admin_url = 'https://'+Site.objects.get_current().domain+'/app'+reverse('admin:%s_%s_change' % info, args=(change_model.id,))
+        logo_url = "https://"+Site.objects.get_current().domain+"/app/static/company_profile/img/smrc_logo.png"
+        messsage = render_to_string(self.add_email_body_template_ar,{'url':admin_url,'logo':logo_url})
+        self.assertEqual(strip_tags(messsage), mail.outbox[0].body) #correct email body
 
         for k in attachments.keys():
             attachments[k].close()
 
     def test_view_add_post_valid_data_send_email_with_correct_body_en(self):
-        resp_user = get_sumitted_responsible('pro_company')
+        resp_user = get_sumitted_responsible('pro_company',self.company_type)
         self.set_lang('en',user=resp_user)
         attachments = {}
         data = self.add_data
@@ -421,7 +424,7 @@ class ProCompanyTests():
 
         change_model = self.add_model.objects.order_by("-id").first()
         info = (change_model._meta.app_label, change_model._meta.model_name)
-        admin_url = 'https://'+Site.objects.get_current().domain+reverse('admin:%s_%s_change' % info, args=(change_model.id,))
+        admin_url = 'https://'+Site.objects.get_current().domain+'/app'+reverse('admin:%s_%s_change' % info, args=(change_model.id,))
         messsage = render_to_string(self.add_email_body_template_en,{'url':admin_url})
 
         self.assertEqual(messsage, mail.outbox[0].body) #correct email body
