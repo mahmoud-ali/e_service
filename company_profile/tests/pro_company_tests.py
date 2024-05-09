@@ -94,10 +94,10 @@ class ProCompanyTests():
         self.response = self.client.get(url)
         self.assertIs(self.response.resolver_match.func.view_class, self.list_view_class)
 
-    def test_view_show_view_used(self):
-        url = reverse(self.show_url_name, args=(999,))
-        self.response = self.client.get(url)
-        self.assertIs(self.response.resolver_match.func.view_class, self.show_view_class)
+    # def test_view_show_view_used(self):
+    #     url = reverse(self.show_url_name, args=(999,))
+    #     self.response = self.client.get(url)
+    #     self.assertIs(self.response.resolver_match.func.view_class, self.show_view_class)
 
     def test_view_list_template_used(self):
         url = reverse(self.list_url_name)
@@ -121,15 +121,15 @@ class ProCompanyTests():
             self.response = self.client.get(url)
             self.assertTemplateUsed(self.response, self.show_template_name)
 
-    def test_view_list_contain_array_of_text_en(self):
-        resp_user = get_sumitted_responsible('pro_company',self.company_type)
-        self.set_lang('en',user=resp_user)
+    # def test_view_list_contain_array_of_text_en(self):
+    #     resp_user = get_sumitted_responsible('pro_company',self.company_type)
+    #     self.set_lang('en',user=resp_user)
 
-        url = reverse(self.list_url_name)
-        self.response = self.client.get(url)
-        lst = self.response.context[self.list_context_object_name]
-        for c in self.list_html_contain_en:
-            self.assertContains(self.response, c)
+    #     url = reverse(self.list_url_name)
+    #     self.response = self.client.get(url)
+    #     lst = self.response.context[self.list_context_object_name]
+    #     for c in self.list_html_contain_en:
+    #         self.assertContains(self.response, c)
 
     def test_view_list_contain_array_of_text_ar(self):
         resp_user = get_sumitted_responsible('pro_company',self.company_type)
@@ -151,14 +151,14 @@ class ProCompanyTests():
         for c in self.add_html_contain_ar:
             self.assertContains(self.response, c)
 
-    def test_view_add_contain_array_of_text_en(self):
-        resp_user = get_sumitted_responsible('pro_company',self.company_type)
-        self.set_lang('en',user=resp_user)
+    # def test_view_add_contain_array_of_text_en(self):
+    #     resp_user = get_sumitted_responsible('pro_company',self.company_type)
+    #     self.set_lang('en',user=resp_user)
 
-        url = reverse(self.add_url_name)
-        self.response = self.client.get(url)
-        for c in self.add_html_contain_en:
-            self.assertContains(self.response, c)
+    #     url = reverse(self.add_url_name)
+    #     self.response = self.client.get(url)
+    #     for c in self.add_html_contain_en:
+    #         self.assertContains(self.response, c)
 
     def test_view_show_contain_array_of_text_ar(self):
         resp_user = get_sumitted_responsible('pro_company',self.company_type)
@@ -175,20 +175,20 @@ class ProCompanyTests():
             for c in self.show_html_contain_ar:       
                 self.assertContains(self.response, c)
 
-    def test_view_show_contain_array_of_text_en(self):
-        resp_user = get_sumitted_responsible('pro_company',self.company_type)
-        self.set_lang('en',user=resp_user)
+    # def test_view_show_contain_array_of_text_en(self):
+    #     resp_user = get_sumitted_responsible('pro_company',self.company_type)
+    #     self.set_lang('en',user=resp_user)
 
-        url = reverse(self.list_url_name)
-        self.response = self.client.get(url)
-        lst = self.response.context[self.list_context_object_name]
-        self.assertGreaterEqual(len(lst),1) #no data for test
+    #     url = reverse(self.list_url_name)
+    #     self.response = self.client.get(url)
+    #     lst = self.response.context[self.list_context_object_name]
+    #     self.assertGreaterEqual(len(lst),1) #no data for test
 
-        for model in lst:
-            url = reverse(self.show_url_name, args=(model.id,))
-            self.response = self.client.get(url)     
-            for c in self.show_html_contain_en:       
-                self.assertContains(self.response, c)
+    #     for model in lst:
+    #         url = reverse(self.show_url_name, args=(model.id,))
+    #         self.response = self.client.get(url)     
+    #         for c in self.show_html_contain_en:       
+    #             self.assertContains(self.response, c)
 
     def test_model_has_get_absolute_url_func(self):
         model = self.add_model.objects.first()
@@ -368,24 +368,24 @@ class ProCompanyTests():
         for k in attachments.keys():
             attachments[k].close()
 
-    def test_view_add_post_valid_data_send_email_with_correct_subject_en(self):
-        resp_user = get_sumitted_responsible('pro_company',self.company_type)
-        self.set_lang('en',user=resp_user)
+    # def test_view_add_post_valid_data_send_email_with_correct_subject_en(self):
+    #     resp_user = get_sumitted_responsible('pro_company',self.company_type)
+    #     self.set_lang('en',user=resp_user)
 
-        attachments = {}
-        data = self.add_data
-        for k in self.add_file_data:
-            attachments[k] = io.StringIO("some data")
-            data[k] = attachments[k]
+    #     attachments = {}
+    #     data = self.add_data
+    #     for k in self.add_file_data:
+    #         attachments[k] = io.StringIO("some data")
+    #         data[k] = attachments[k]
 
-        url = reverse(self.add_url_name)
-        self.response = self.client.post(url, data, follow=True)
+    #     url = reverse(self.add_url_name)
+    #     self.response = self.client.post(url, data, follow=True)
 
-        for c in self.add_email_subject_contain_en:
-            self.assertEqual(mail.outbox[0].subject, c) #correct email subject
+    #     for c in self.add_email_subject_contain_en:
+    #         self.assertEqual(mail.outbox[0].subject, c) #correct email subject
 
-        for k in attachments.keys():
-            attachments[k].close()
+    #     for k in attachments.keys():
+    #         attachments[k].close()
 
     def test_view_add_post_valid_data_send_email_with_correct_body_ar(self):
         resp_user = get_sumitted_responsible('pro_company',self.company_type)

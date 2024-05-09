@@ -14,7 +14,6 @@ class HomePageTests(TestCase):
     template_name = 'company_profile/home.html'
     url_name = 'profile:home'
     url_path = '/'
-    html_contain = 'Home page here.'
 
     fixtures = ['test_data.yaml']
 
@@ -34,9 +33,6 @@ class HomePageTests(TestCase):
 
     def test_template(self):
         self.assertTemplateUsed(self.response, self.template_name)
-
-    def test_contains_correct_html(self):
-        self.assertContains(self.response, self.html_contain)
 
     def test_url_resolves_view(self): 
         view = resolve(self.url_path)

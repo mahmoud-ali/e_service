@@ -11,5 +11,6 @@ class AppWorkPlanAdminTests(ProCompanyAdminTests,TestCase):
     change_data = {
             'plan_from':'2024-02-02',
             'plan_to':'2024-02-06',
+            'plan_comments': 'comment',
     }
 

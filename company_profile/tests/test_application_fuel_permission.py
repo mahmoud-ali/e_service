@@ -17,13 +17,13 @@ class AppFuelPermissionTests(ProCompanyTests,TestCase):
     list_html_contain_en = ['List of Fuel Permissions']
 
     show_view_class = AppFuelPermissionReadonlyView
-    show_template_name = 'company_profile/application_readonly.html'
+    show_template_name = 'company_profile/application_readonly_master_details.html'
     show_url_name = 'profile:app_fuel_permission_show'
     show_url_path = '/app_fuel_permission/%d/show/'
     show_html_contain_ar = ['عرض موافقة وقود']
     show_html_contain_en = ['Show Fuel Permission']
 
-    add_template_name = 'company_profile/application_add.html'
+    add_template_name = 'company_profile/application_add_master_details.html'
     add_url_name = 'profile:app_fuel_permission_add'
     add_url_path = '/app_fuel_permission/add/'
     add_html_contain_ar = ['اضافة طلب موافقة وقود']

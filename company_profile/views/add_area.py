@@ -66,7 +66,6 @@ class AppAddAreaCreateView(ApplicationCreateView):
         info = (self.object._meta.app_label, self.object._meta.model_name)
         resp_user = get_sumitted_responsible('pro_company',self.object.company.company_type)
         url = 'https://'+Site.objects.get_current().domain+'/app'+reverse_lazy('admin:%s_%s_change' % info, args=(self.object.id,))
-        print("eeeee",self.object.state,resp_user.email,url,resp_user.lang.lower())
 
         send_transition_email(self.object.state,resp_user.email,url,resp_user.lang.lower())
         

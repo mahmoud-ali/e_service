@@ -17,13 +17,13 @@ class AppImportPermissionTests(ProCompanyTests,TestCase):
     list_html_contain_en = ['List of Import Permissions']
 
     show_view_class = AppImportPermissionReadonlyView
-    show_template_name = 'company_profile/application_readonly.html'
+    show_template_name = 'company_profile/application_readonly_master_details.html'
     show_url_name = 'profile:app_import_permission_show'
     show_url_path = '/app_import_permission/%d/show/'
     show_html_contain_ar = ['عرض اذن ادخال مواد']
     show_html_contain_en = ['Show Import Permission']
 
-    add_template_name = 'company_profile/application_add.html'
+    add_template_name = 'company_profile/application_add_master_details.html'
     add_url_name = 'profile:app_import_permission_add'
     add_url_path = '/app_import_permission/add/'
     add_html_contain_ar = ['اضافة طلب اذن ادخال مواد']
