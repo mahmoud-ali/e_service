@@ -331,11 +331,11 @@ msgstr "مصانع الشركات"
 
 #: company_profile/models.py:194 company_profile/models.py:195
 msgid "License Status"
-msgstr "حالة الترخيص"
+msgstr "حالة الاتفاقية/العقد"
 
 #: company_profile/models.py:203
 msgid "License no"
-msgstr "رقم الترخيص/العقد"
+msgstr "رقم الاتفاقية/العقد"
 
 #: company_profile/models.py:204
 msgid "Sign date"
@@ -404,11 +404,11 @@ msgstr "الاجار السنوي"
 
 #: company_profile/models.py:221 pa/templates/pa/company_panel.html:27
 msgid "contract_status"
-msgstr "حالة العقد"
+msgstr "حالة الاتفاقية/العقد"
 
 #: company_profile/models.py:222
 msgid "contract_file"
-msgstr "ملف العقد"
+msgstr "ملف الاتفاقية/العقد"
 
 #: company_profile/models.py:228
 msgid "Production Company License"
