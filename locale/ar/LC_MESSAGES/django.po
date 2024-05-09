@@ -412,11 +412,11 @@ msgstr "ملف العقد"
 
 #: company_profile/models.py:228
 msgid "Production Company License"
-msgstr "رخصة شركة منتجة"
+msgstr "اتفاقية/عقد شركة منتجة"
 
 #: company_profile/models.py:229
 msgid "Production Company Licenses"
-msgstr "رخص الشركات"
+msgstr "اتفاقيات/عقود الشركات"
 
 #: company_profile/models.py:237
 msgid "route_from"
