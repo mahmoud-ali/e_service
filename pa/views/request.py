@@ -2,7 +2,7 @@ import datetime
 from django.urls import reverse_lazy
 from django.http import HttpResponseRedirect
 from django.utils.translation import gettext_lazy as _
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 
 from django.contrib import messages
 
@@ -58,7 +58,7 @@ class TblCompanyRequestCreateView(ApplicationMasterDetailCreateView):
             self.extra_context['details'] = []
             return render(request, 'pa/application_choose.html', self.extra_context)
         
-        obj = TblCompanyCommitmentMaster.objects.get(id=commitment_id)
+        obj = get_object_or_404(TblCompanyCommitmentMaster,id=commitment_id)
         license = TblCompanyProductionLicense.objects.filter(company=obj.company).first()
         form = self.form_class(commitment_id=obj.id,initial={
             "commitment": obj,
@@ -84,7 +84,7 @@ class TblCompanyRequestCreateView(ApplicationMasterDetailCreateView):
     
     def post(self,request,*args, **kwargs):        
         commitment_id = request.POST.get('commitment')
-        commitment = TblCompanyCommitmentMaster.objects.get(id=commitment_id)
+        commitment = get_object_or_404(TblCompanyCommitmentMaster,id=commitment_id)
 
         form = self.form_class(request.POST,request.FILES,commitment_id=commitment_id)
 

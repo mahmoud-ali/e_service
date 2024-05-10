@@ -142,9 +142,6 @@ class ApplicationMasterDetailCreateView(LoginRequiredMixin,UserPermissionMixin,V
             self.object = form.save(commit=False)
             
             self.object.created_by = self.object.updated_by = request.user
-
-            if self.request.POST.get('_save_confirm') and self.test_group('pa_manager'):
-                self.object.state = STATE_TYPE_CONFIRM
             
             flag = True
             formset_list = []
@@ -156,6 +153,9 @@ class ApplicationMasterDetailCreateView(LoginRequiredMixin,UserPermissionMixin,V
                 
                 formset_list.append(formset)
                 
+            if self.request.POST.get('_save_confirm') and self.test_group('pa_manager'):
+                self.object.state = STATE_TYPE_CONFIRM
+
             if flag:
                 self.object.save()
                 for formset in formset_list:
@@ -279,9 +279,6 @@ class ApplicationMasterDetailUpdateView(LoginRequiredMixin,UserPermissionMixin,S
                 self.object.updated_by = request.user
                 self.object.updated_at = timezone.now()
 
-            if self.request.POST.get('_save_confirm') and self.test_group('pa_manager'):
-                self.object.state = STATE_TYPE_CONFIRM
-            
             flag = True
             formset_list = []
             for detail in self.details_formset:
@@ -293,7 +290,10 @@ class ApplicationMasterDetailUpdateView(LoginRequiredMixin,UserPermissionMixin,S
                 formset_list.append( formset)
 
             self.extra_context['details'] = self.details_formset
-                
+            
+            if self.request.POST.get('_save_confirm') and self.test_group('pa_manager'):
+                self.object.state = STATE_TYPE_CONFIRM
+            
             if flag:
                 self.object.save()
                 for formset in formset_list:                    
