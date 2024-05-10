@@ -98,7 +98,7 @@ class ApplicationCreateView(LoginRequiredMixin,UserPermissionMixin,CreateView):
         
         return HttpResponseRedirect(self.get_success_url())
 
-class ApplicationMasterDetailCreateView(LoginRequiredMixin,View):
+class ApplicationMasterDetailCreateView(LoginRequiredMixin,UserPermissionMixin,View):
     model = None
     form_class = None
     details = []

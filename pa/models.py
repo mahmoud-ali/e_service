@@ -146,7 +146,11 @@ class TblCompanyCommitmentMaster(LoggingModel):
         ]
 
     def clean(self):
-        if self.company and self.license:
+        if not hasattr(self,'company'):
+            raise ValidationError(
+                {"company":''}
+            )
+        if self.company and hasattr(self,'license') and self.license:
             if self.company != self.license.company:
                 raise ValidationError(
                     {"license":_("choose license belong to company")}
