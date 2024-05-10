@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404,render
 from django.urls import reverse_lazy
 from django.http import HttpResponseRedirect
 from django.utils.translation import gettext_lazy as _
@@ -56,7 +56,7 @@ class TblCompanyCommitmentCreateView(ApplicationMasterDetailCreateView):
             self.extra_context['details'] = []
             return render(request, 'pa/application_choose.html', self.extra_context)
         
-        obj = TblCompanyProduction.objects.get(id=company_id)
+        obj = get_object_or_404(TblCompanyProduction,id=company_id)
         form = self.form_class(company_id=obj.id,initial={
             "company": obj,
         })
