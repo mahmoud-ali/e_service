@@ -133,11 +133,12 @@ class ApplicationMasterDetailCreateView(LoginRequiredMixin,UserPermissionMixin,V
     
     def post(self, request, *args, **kwargs):
         form = None
-        if self.extra_context["form"]:
+
+        if isinstance(self.extra_context["form"],self.form_class) :
             form = self.extra_context["form"]
         else:
             form = self.form_class(request.POST,request.FILES)
-        
+
         if form.is_valid():
             self.object = form.save(commit=False)
             
