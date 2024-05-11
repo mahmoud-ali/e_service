@@ -68,7 +68,7 @@ class CommonViewTests():
     def test_add_view_used(self):
         url = reverse(self.add_url_name)
         self.response = self.client.get(url)
-        self.assertIs(self.response.resolver_match.func.view_class, self.list_view_class)
+        self.assertIs(self.response.resolver_match.func.view_class, self.add_view_class)
 
     def test_add_template_used(self):
         url = reverse(self.add_url_name)

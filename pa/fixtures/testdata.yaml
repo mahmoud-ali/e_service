@@ -383,11 +383,6 @@
     app_label: help_request
     model: helprecord
 - model: sessions.session
-  pk: 0ns7amlpesm0llh92ky8sr869scezc50
-  fields:
-    session_data: .eJxtkE1uhDAMhe_iNULBkARYtb1GNUImcUVUfkY4qFON5u4NUzZU3Vn28_Pndwdybtnm2NEWB55jcBTDMncTx2HxAu37HX5raOFKIl_L6iEDitAWttBYo1aYm7rWxlYZ8ERhTFLyU5hfZFpdLh4elwyeF7pNeO3CblbAqdeT--R5H9A47u38IMufmmMs-euJ8-3YOlkNJEPycarGwpKrtDLU15wIC-TSVI0zaMvE7Zk1970h1X84UxosyaJVlAqNO98_4bDv_v7eWNQmEQiL7Nnx7RrW76RB1RilHj9Ai3SN:1s59Ko:lfN3q_vyNeg7H3jwv9T_CSwb4okkQY2SjennvHo6vcI
-    expire_date: 2024-05-23 19:21:42.713455+00:00
-- model: sessions.session
   pk: 0rjpvyn2c810g58crxkkfdbgoq2xbd6q
   fields:
     session_data: .eJxtUMtuhDAM_BefUZSYzQNO3f5GVSGTuCIqhBUJaqvV_nthywWpN2tmPB7PHcj7eU2lo7UMnEr0VOKcuonLMIcM7dsd_mZo4UY5f81LgAqoQKustKidUUo4a51qdAU8URw3KYUpppc8LV7kAI_3Cp4XujXz0sXdTMEJ68l_ctoJGscdFkcy8dQcdBbXU87XY-tkNVAeNh8vHSpL_qKlod6x00Yh1-bSeIO2Ri0Ds-a-NyT7D29qgzVZtJK2QeOe759yOHSn31GgwUY7t0XInPNeHn_f4vKziVA2RsrHL7mEdM4:1rXTxE:HdBN65ngz4BOHCW9PUnVDBqI_u1vzRICVcOr38KWox0
@@ -477,6 +472,11 @@
   fields:
     session_data: .eJxtUEFuhDAM_IvPCCWBmIRT229UFTKJK6IusMJBbbXavxe2XKh6s2bG4_HcgEKY1yl3tOaBp5wC5TRP3ch5mKNA-3qD3xlauJLI57xEKIAytLpRvkb0DkunrXOuAB4pXTYlxTFNTzIuoZQI97cCHge6VXjp0u6l4YT1FD542gm6XHa4PIKVD81BS_l8ivlybJ2sBpJh8wnKGd1QqK1C6h07i9pwhbUPaJrKWBWZLfc9kurfA1ZoKmpMo2gbrNnz_dMNx-7v68Z7rbcEwiJ7dfx1Tcv3pjHKo1L3HwhKdIA:1rgkSA:oxaqmcjc-wlAh-CrBaWPc_i8f3Ju_YjnFebzEMGcQZc
     expire_date: 2024-03-17 11:56:26.863151+00:00
+- model: sessions.session
+  pk: pl9ddp5qmondukeoawgmkyexj62pvcyj
+  fields:
+    session_data: .eJxtUMtqxDAM_BedQ7CdyHmc2v5GWYJiq8Q0jyVy6JZl_73ONpeUgg5iNBqN5g7k3LLNsaMtDjzH4CiGZe4mjsPiBdr3O_z20MKVRL6W1UMGFKHVlcayQNNgrhTWJWIGPFEYE5X8FOYXmVaXi4fHJYPnhW4TXruwi2k4YT25T573AY3jDueHs_zJOcaSv558vh1bJ6mBZEg6TtVGV-RKVJb6mmu02nBhy8ZZUxUGlWdG7ntLqv9wtrCmoMpUilKDZvf3Tzjsu7-_a5MqORAW2bPj2zWs34ljVGOVevwANYR0cQ:1s5n5D:G0hdkl4Ie3uRYaBuaDGv9n7mlj19uadcC6I5qchefVg
+    expire_date: 2024-05-25 13:48:15.040182+00:00
 - model: sessions.session
   pk: pwps81e6n7k53o6nrjga9n2ghem1a72y
   fields:
@@ -665,6 +665,18 @@
     name: بونص توقيع
     company_type: mokhalfat
     calculation_method: fixed_value
+- model: pa.tblcompanyopenningbalancedetail
+  pk: 3
+  fields:
+    commitment_master: 3
+    item: 1
+    amount: 500.0
+- model: pa.tblcompanyopenningbalancedetail
+  pk: 4
+  fields:
+    commitment_master: 4
+    item: 1
+    amount: 50.0
 - model: pa.tblcompanycommitmentdetail
   pk: 29
   fields:
@@ -724,6 +736,20 @@
     item: 1
     amount: 1000.0
     attachement_file: ''
+- model: pa.tblcompanypaymentdetail
+  pk: 18
+  fields:
+    payment_master: 13
+    item: 1
+    amount: 1000.0
+    attachement_file: ''
+- model: pa.tblcompanypaymentdetail
+  pk: 19
+  fields:
+    payment_master: 14
+    item: 1
+    amount: 500.0
+    attachement_file: ''
 - model: pa.lkppaymentmethod
   pk: 1
   fields:
@@ -768,6 +794,22 @@
     method: 1
     ref_key: '1'
     attachement_file: company_10/payments/2024-05-11/for_upload
+- model: pa.tblcompanypaymentmethod
+  pk: 8
+  fields:
+    payment_master: 13
+    amount: 1000.0
+    method: 2
+    ref_key: '1'
+    attachement_file: company_10/payments/2024-05-11/for_upload_9929F0H
+- model: pa.tblcompanypaymentmethod
+  pk: 9
+  fields:
+    payment_master: 14
+    amount: 1.0
+    method: 1
+    ref_key: '1'
+    attachement_file: company_10/payments/2024-05-11/for_upload_ibxKlWI
 - model: auth.permission
   fields:
     name: Can add log entry
@@ -3491,7 +3533,7 @@
 - model: accounts.customuser
   fields:
     password: pbkdf2_sha256$720000$tH5f7gkeFN9Es8mHafSUxJ$P28/0MeQeLvSmoLdJodz05oaT8noDhnJa2DUp0FwHP8=
-    last_login: 2024-05-09 19:21:42.694717+00:00
+    last_login: 2024-05-11 13:48:15.010698+00:00
     is_superuser: true
     username: admin
     first_name: ''
@@ -6166,7 +6208,7 @@
 - model: accounts.customuser
   fields:
     password: pbkdf2_sha256$720000$xqFF5Aom68QnxCjHv5q9kG$+rUeMfvsEbdLepRFde43Ej4Y50l3Bc+kYinpFl76SLg=
-    last_login: 2024-05-08 14:25:14.095885+00:00
+    last_login: 2024-05-11 13:14:50.412706+00:00
     is_superuser: false
     username: Abd Almahmoud
     first_name: ''
@@ -6271,6 +6313,30 @@
     plan_comments: f
     official_letter_file: company_10/applications/for_upload_nZlL6Lt
     work_plan_file: company_10/applications/for_upload_v1E6beU
+- model: pa.tblcompanyopenningbalancemaster
+  pk: 3
+  fields:
+    created_at: 2024-05-11 14:08:59.344765+00:00
+    created_by:
+    - admin
+    updated_at: 2024-05-11 14:08:59.344793+00:00
+    updated_by:
+    - admin
+    company: 10
+    currency: euro
+    state: confirm
+- model: pa.tblcompanyopenningbalancemaster
+  pk: 4
+  fields:
+    created_at: 2024-05-11 14:19:07.809852+00:00
+    created_by:
+    - admin
+    updated_at: 2024-05-11 14:19:07.809891+00:00
+    updated_by:
+    - admin
+    company: 10
+    currency: euro
+    state: draft
 - model: pa.tblcompanycommitmentmaster
   pk: 37
   fields:
@@ -6372,14 +6438,14 @@
     created_at: 2024-05-10 22:14:00.743016+00:00
     created_by:
     - admin
-    updated_at: 2024-05-11 00:10:10.734288+00:00
+    updated_at: 2024-05-11 13:09:49.493693+00:00
     updated_by:
     - admin
     commitment: 37
     from_dt: 2027-05-05
     to_dt: 2028-05-04
     currency: euro
-    payment_state: 'no'
+    payment_state: partial
     state: confirm
 - model: pa.tblcompanypaymentmaster
   pk: 10
@@ -6426,6 +6492,36 @@
     exchange_rate: 1.0
     exchange_attachement_file: ''
     state: draft
+- model: pa.tblcompanypaymentmaster
+  pk: 13
+  fields:
+    created_at: 2024-05-11 13:06:31.134024+00:00
+    created_by:
+    - admin
+    updated_at: 2024-05-11 13:06:43.667286+00:00
+    updated_by:
+    - admin
+    request: 20
+    payment_dt: 2024-05-11
+    currency: euro
+    exchange_rate: 1.0
+    exchange_attachement_file: ''
+    state: confirm
+- model: pa.tblcompanypaymentmaster
+  pk: 14
+  fields:
+    created_at: 2024-05-11 13:09:37.240835+00:00
+    created_by:
+    - admin
+    updated_at: 2024-05-11 13:09:49.487288+00:00
+    updated_by:
+    - admin
+    request: 20
+    payment_dt: 2024-05-11
+    currency: euro
+    exchange_rate: 1.0
+    exchange_attachement_file: ''
+    state: confirm
 - model: help_request.helprecord
   pk: 1
   fields:
