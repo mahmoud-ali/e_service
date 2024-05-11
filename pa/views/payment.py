@@ -1,5 +1,5 @@
 from django.forms import ValidationError
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 from django.urls import reverse_lazy
 from django.http import HttpResponseRedirect
 from django.utils.translation import gettext_lazy as _
@@ -71,7 +71,7 @@ class TblCompanyPaymentCreateView(ApplicationMasterDetailCreateView):
             self.extra_context['details'] = []
             return render(request, 'pa/application_choose.html', self.extra_context)
         
-        obj = TblCompanyRequestMaster.objects.get(id=request_id)
+        obj = get_object_or_404(TblCompanyRequestMaster,id=request_id)
         form = self.form_class(request_id=request_id,initial={
             "request": obj,
             "currency": obj.currency,
@@ -94,8 +94,8 @@ class TblCompanyPaymentCreateView(ApplicationMasterDetailCreateView):
         return render(request, self.template_name, self.extra_context)
 
     def post(self,request,*args, **kwargs):        
-        request_id = request.GET.get('request')
-        obj = TblCompanyRequestMaster.objects.get(id=request_id)
+        request_id = request.POST.get('request')
+        obj = get_object_or_404(TblCompanyRequestMaster,id=request_id)
         form = self.form_class(request.POST,request.FILES,request_id=request_id)
 
         self.extra_context['company'] = get_company_details(obj.commitment)

@@ -10,7 +10,8 @@ from django.utils.translation import gettext_lazy as _
 from django.conf import settings
 
 from django.contrib import messages
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin,UserPassesTestMixin
+
 from django.contrib.sites.models import Site
 
 from django_tables2 import SingleTableView
@@ -20,7 +21,6 @@ from pa.models import TblCompanyRequestDetail, TblCompanyRequestMaster,TblCompan
 from pa.forms import TblCompanyRequestShowEditForm
 
 from pa.tables import TblCompanyRequestCompanyTable
-from pa.views.application import ApplicationReadonlyView
 
 class AppRequestListView(LoginRequiredMixin,SingleTableView):
     model = TblCompanyRequestMaster
@@ -46,7 +46,10 @@ class AppRequestListView(LoginRequiredMixin,SingleTableView):
     def get_queryset(self):
 
         query = super().get_queryset()        
-        query = query.filter(commitment__company__id=self.request.user.pro_company.company.id)
+        if not hasattr(self.request.user,'pro_company'):
+            query = query.none()
+        else:
+            query = query.filter(commitment__company__id=self.request.user.pro_company.company.id)
         return query
     
     def get(self,request,*args, **kwargs):  
@@ -112,6 +115,49 @@ details = [
             },
         },
     ]
+class ApplicationReadonlyView(LoginRequiredMixin,UserPassesTestMixin,SingleObjectMixin,View):
+    model = None
+    form_class = None
+    details = []
+    success_url = None
+    title = None    
+    user_groups = ['pa_data_entry','pa_manager']
+    menu_name = ""  
+    template_name = "pa/application_readonly_master_details.html"
+    
+    def test_func(self):
+        return hasattr(self.request.user,'pro_company')
+
+    def dispatch(self, *args, **kwargs):         
+        self.details_formset = []
+        for d in self.details:
+            if d['kwargs'].get('can_delete'):
+                d['kwargs']['can_delete'] = False
+            self.details_formset.append({
+                "title":d['title'],
+                "formset":inlineformset_factory(*d['args'], **d['kwargs']),
+            })
+            
+        self.success_url = reverse_lazy(self.menu_name)    
+        self.extra_context = {
+                            "menu_name":self.menu_name,
+                            "menu_edit_name":self.menu_edit_name,
+                            "menu_delete_name":self.menu_delete_name,
+                            "title":self.title, 
+                            "form": self.form_class,
+                            "details": self.details_formset,
+         }
+        return super().dispatch(*args, **kwargs)                    
+
+    def get(self,request,*args, **kwargs):        
+        obj = self.get_object()
+        self.extra_context["form"] = self.form_class(instance=obj)
+        self.extra_context["object"] = obj
+        for detail in self.details_formset:
+            formset = detail['formset'](instance=obj)
+            detail['formset'] = formset
+        return render(request, self.template_name, self.extra_context)
+
 
 class AppRequestReadonlyView(ApplicationReadonlyView):
     model = model_master
@@ -125,4 +171,8 @@ class AppRequestReadonlyView(ApplicationReadonlyView):
 
     def get_queryset(self):
         query = super().get_queryset()        
-        return query.filter(commitment__company__id=self.request.user.pro_company.company.id)
+        if not hasattr(self.request.user,'pro_company'):
+            query = query.none()
+        else:
+            query = query.filter(commitment__company__id=self.request.user.pro_company.company.id)
+        return query
