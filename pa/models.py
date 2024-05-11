@@ -205,7 +205,20 @@ class TblCompanyCommitmentSchedular(LoggingModel):
         return to_date
     
     def clean(self):
-        if self.request_interval != self.INTERVAL_TYPE_MANUAL and not self.request_next_interval_dt:
+        if not hasattr(self,'commitment') or not self.commitment:
+            raise ValidationError(
+                {"commitment":_("field is required")}
+            )
+        if not self.request_interval:
+            raise ValidationError(
+                {"request_interval":_("field is required")}
+            )
+        if not self.request_next_interval_dt:
+            raise ValidationError(
+                {"request_next_interval_dt":_("field is required")}
+            )
+        if self.request_interval != self.INTERVAL_TYPE_MANUAL \
+            and not self.request_next_interval_dt:
             raise ValidationError(
                 {"request_next_interval_dt":_("field is required")}
             )

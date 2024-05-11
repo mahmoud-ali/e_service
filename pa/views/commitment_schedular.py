@@ -1,5 +1,5 @@
 import datetime
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 from django.urls import reverse_lazy
 from django.http import HttpResponseRedirect
 from django.utils.translation import gettext_lazy as _
@@ -38,7 +38,7 @@ class TblCompanyCommitmentScheduleCreateView(ApplicationCreateView):
             self.extra_context['form'] = TblCompanyRequestChooseCommitmentForm
             return render(request, 'pa/application_choose.html', self.extra_context)
         
-        obj = TblCompanyCommitmentMaster.objects.get(id=commitment_id)
+        obj = get_object_or_404(TblCompanyCommitmentMaster,id=commitment_id)
         license = TblCompanyProductionLicense.objects.filter(company=obj.company).first()
         form = self.form_class(initial={
             "commitment": obj,
