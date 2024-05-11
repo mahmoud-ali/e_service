@@ -36,6 +36,8 @@ class CommonViewTests():
     delete_template_name = ''
     delete_url_name = ''
 
+    invalid_data = {}
+
     def setUp(self):
         User = get_user_model()
         self.user = User.objects.get(username=self.username)
@@ -89,7 +91,7 @@ class CommonViewTests():
 
     def test_add_post_invalid_data_raise_errors(self):
         attachments = {}
-        data = {}
+        data = self.invalid_data
         for k in self.add_file_data:
             attachments[k] = io.StringIO("some data")
             data[k] = attachments[k]
@@ -113,6 +115,7 @@ class CommonViewTests():
 
         url = reverse(self.add_url_name)
         self.response = self.client.post(url, data, follow=True)
+
         new_count = self.add_model.objects.count()
         
         self.assertEqual(new_count, old_count+1) #new record added
@@ -234,7 +237,7 @@ class CommonViewTests():
         url = reverse(self.list_url_name)
         self.response = self.client.get(url)
         lst = self.response.context[self.list_context_object_name]
-        
+
         self.assertGreaterEqual(len(lst),1) #no data for test #no data for test
 
         for model in lst.filter(state=STATE_TYPE_CONFIRM):

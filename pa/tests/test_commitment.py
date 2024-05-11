@@ -41,6 +41,8 @@ class CommitmentViewTests(CommonViewTests,TestCase):
     delete_template_name = 'pa/application_delete_master_detail.html'
     delete_url_name = 'pa:commitment_delete'
 
+    invalid_data = {}
+
     choose_template = 'pa/application_choose.html'
 
     def test_add_status_code(self):
