@@ -715,6 +715,13 @@
     item: 1
     amount: 150000.0
     attachement_file: ''
+- model: pa.tblcompanyrequestdetail
+  pk: 18
+  fields:
+    request_master: 21
+    item: 1
+    amount: 150000.0
+    attachement_file: ''
 - model: pa.tblcompanypaymentdetail
   pk: 15
   fields:
@@ -6447,6 +6454,21 @@
     currency: euro
     payment_state: partial
     state: confirm
+- model: pa.tblcompanyrequestmaster
+  pk: 21
+  fields:
+    created_at: 2024-05-11 14:34:22.158840+00:00
+    created_by:
+    - admin
+    updated_at: 2024-05-11 14:34:22.158887+00:00
+    updated_by:
+    - admin
+    commitment: 38
+    from_dt: 2026-05-05
+    to_dt: 2027-05-04
+    currency: euro
+    payment_state: 'no'
+    state: draft
 - model: pa.tblcompanypaymentmaster
   pk: 10
   fields:
