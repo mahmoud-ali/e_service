@@ -132,7 +132,8 @@ class TblCompanyProductionAdmin(ExportActionMixin,LoggingAdminMixin,admin.ModelA
      
     list_display = ["company_type","name_ar", "name_en", "status"]
     list_filter = ["company_type","name_ar","name_en"]
-         
+    search_fields = ["name_ar","name_en"]
+
     exclude = ["created_at","created_by","updated_at","updated_by"]
     view_on_site = False
 
@@ -199,6 +200,7 @@ class TblCompanyProductionLicenseAdmin(ExportActionMixin,LoggingAdminMixin,admin
     
     list_display = ["company","company_type","license_no","sheet_no","date", "start_date", "end_date"]        
     list_filter = ["date","company","company__company_type","sheet_no","license_no"]
+    search_fields = ["company__name_ar","company__name_en","sheet_no","license_no"]
     view_on_site = False
 
     class Media:
