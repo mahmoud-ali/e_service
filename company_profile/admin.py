@@ -197,12 +197,16 @@ class TblCompanyProductionLicenseAdmin(ExportActionMixin,LoggingAdminMixin,admin
      ]        
     exclude = ["created_at","created_by","updated_at","updated_by"]
     
-    list_display = ["company","license_no","sheet_no","date", "start_date", "end_date"]        
-    list_filter = ["date","license_no","sheet_no"]
+    list_display = ["company","company_type","license_no","sheet_no","date", "start_date", "end_date"]        
+    list_filter = ["date","company","company__company_type","sheet_no","license_no"]
     view_on_site = False
 
     class Media:
         js = ('admin/js/jquery.init.js','company_profile/js/lkp_state_change.js')
+
+    @admin.display(description=_("company_type"))
+    def company_type(self,obj):
+        return _(obj.company.company_type)
      
 admin.site.register(LkpNationality)
 admin.site.register(LkpState)
