@@ -199,7 +199,7 @@ class TblCompanyProductionLicenseAdmin(ExportActionMixin,LoggingAdminMixin,admin
     exclude = ["created_at","created_by","updated_at","updated_by"]
     
     list_display = ["company","company_type","license_no","sheet_no","date", "start_date", "end_date"]        
-    list_filter = ["date","company","company__company_type","sheet_no","license_no"]
+    list_filter = ["date","company__company_type","company","sheet_no","license_no"]
     search_fields = ["company__name_ar","company__name_en","sheet_no","license_no"]
     view_on_site = False
 
