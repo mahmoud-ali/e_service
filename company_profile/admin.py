@@ -130,8 +130,8 @@ class TblCompanyProductionAdmin(ExportActionMixin,LoggingAdminMixin,admin.ModelA
         (_("Company Status"), {"fields": ["status"]}),
      ]
      
-    list_display = ["name_ar", "name_en", "status"]
-    list_filter = ["name_ar","name_en"]
+    list_display = ["company_type","name_ar", "name_en", "status"]
+    list_filter = ["company_type","name_ar","name_en"]
          
     exclude = ["created_at","created_by","updated_at","updated_by"]
     view_on_site = False
