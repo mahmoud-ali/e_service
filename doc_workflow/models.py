@@ -1,0 +1,230 @@
+from django.db import models
+from django.conf import settings
+from django.forms import ValidationError
+from django.urls import reverse
+from django.utils.translation import gettext_lazy as _
+from django.utils import timezone
+from django.core.mail import send_mail
+
+from django.contrib.auth import get_user_model
+
+from company_profile.models import TblCompany,TblCompanyProduction
+
+class LoggingModel(models.Model):
+    """
+    An abstract base class model that provides self-
+    updating ``created_at`` and ``updated_at`` fields for responsable user.
+    """
+    created_at = models.DateTimeField(_("created_at"),auto_now_add=True,editable=False,)
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT,related_name="+",editable=False,verbose_name=_("created_by")) 
+    
+    updated_at = models.DateTimeField(_("updated_at"),auto_now=True,editable=False)
+    updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT,related_name="+",editable=False,verbose_name=_("updated_by"))
+    
+    class Meta:
+        abstract = True
+
+class ApplicationType(models.Model):
+    name = models.CharField(_("name"),max_length=50)
+
+    class Meta:
+        ordering = ["id"]
+        verbose_name = _("Application type")
+        verbose_name_plural = _("Application types")
+
+    def __str__(self):
+        return _("Application type") +" "+str(self.name)
+
+class ActionType(models.Model):
+    name = models.CharField(_("name"),max_length=50)
+
+    class Meta:
+        ordering = ["id"]
+        verbose_name = _("Action type")
+        verbose_name_plural = _("Action types")
+
+    def __str__(self):
+        return _("Action type") +" "+str(self.name)
+
+class Department(models.Model):
+    name = models.CharField(_("name"),max_length=50)
+
+    class Meta:
+        ordering = ["id"]
+        verbose_name = _("department")
+        verbose_name_plural = _("departments")
+
+    def __str__(self):
+        return _("Department") +" "+str(self.name)
+
+class Destination(models.Model):
+    name = models.CharField(_("name"),max_length=50)
+
+    class Meta:
+        ordering = ["id"]
+        verbose_name = _("department")
+        verbose_name_plural = _("departments")
+
+    def __str__(self):
+        return _("Department") +" "+str(self.name)
+
+class ApplicationRecord(LoggingModel):
+    STATE_TYPE_NEW = 'new'
+    STATE_TYPE_PROCESSING_DEPARTMENT = 'processing_department'
+    STATE_TYPE_PROCESSING_EXECUTIVE = 'processing_executive'
+    STATE_TYPE_DELIVERY_READY = 'delivery_ready'
+    STATE_TYPE_DELIVERY_PARTIAL = 'delivery_partial'
+    STATE_TYPE_DELIVERY_COMPLETE = 'delivery_complete'
+
+    STATE_TYPE_CHOICES = {
+        STATE_TYPE_NEW: _("new"),
+        STATE_TYPE_PROCESSING_DEPARTMENT: _("processing_department"),
+        STATE_TYPE_PROCESSING_EXECUTIVE: _("processing_executive"),
+        STATE_TYPE_DELIVERY_READY: _("delivery_ready"),
+        STATE_TYPE_DELIVERY_PARTIAL: _("delivery_partial"),
+        STATE_TYPE_DELIVERY_COMPLETE: _("delivery_complete"),
+    }
+
+    def attachement_path(self, filename):
+        company = self.company
+        date = self.created_at.date()
+        return "company_{0}/app/{1}/{2}".format(company.id,date, filename)    
+
+    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
+    app_type = models.ForeignKey(ApplicationType, on_delete=models.PROTECT,verbose_name=_("app_type"))    
+    attachement_file = models.FileField(_("attachement_file"),upload_to=attachement_path)
+    state = models.CharField(_("record_state"),max_length=25, choices=STATE_TYPE_CHOICES, default=STATE_TYPE_NEW)
+
+    def __str__(self):
+        return self.company.__str__()+"/"+self.app_type.name
+        
+    def get_absolute_url(self): 
+        return reverse('doc_workflow:app_record_show',args=[str(self.id)])                
+
+    class Meta:
+        ordering = ["-id"]
+        verbose_name = _("Application record")
+        verbose_name_plural = _("Application records")
+        indexes = [
+            models.Index(fields=["company"]),
+            models.Index(fields=["app_type"]),
+            models.Index(fields=["state"]),
+        ]
+
+    def goto_processing_executive(self):
+        qs = ApplicationDepartmentProcessing.objects.filter(app_record=self.id)
+        count_all = qs.count()
+        count_confirmed = qs.filter(action_state=ApplicationDepartmentProcessing.STATE_TYPE_CONFIRM).count()
+        if(count_all == count_confirmed):
+            self.state = self.STATE_TYPE_PROCESSING_EXECUTIVE
+            self.save()
+
+    def goto_delivery_ready(self):
+        qs = ApplicationExectiveProcessing.objects.filter(app_record=self.id)
+        count_all = qs.count()
+        count_confirmed = qs.filter(action_state=ApplicationExectiveProcessing.STATE_TYPE_CONFIRM).count()
+        if(count_all == count_confirmed):
+            self.state = self.STATE_TYPE_DELIVERY_READY
+            self.save()
+            print("*********","confirmed")
+
+    def clean(self):
+        pass
+
+class ApplicationDepartmentProcessing(LoggingModel):
+    STATE_TYPE_DRAFT = 'draft'
+    STATE_TYPE_CONFIRM = 'confirm'
+
+    STATE_TYPE_CHOICES = {
+        STATE_TYPE_DRAFT: _("draft"),
+        STATE_TYPE_CONFIRM: _("confirm"),
+    }
+
+    def attachement_path(self, filename):
+        company = self.app_record.company
+        date = self.created_at.date()
+        return "company_{0}/app/{1}/{2}".format(company.id,date, filename)    
+
+    app_record  = models.ForeignKey(ApplicationRecord, on_delete=models.PROTECT)    
+    department = models.ForeignKey(Department, on_delete=models.PROTECT,verbose_name=_("department"))    
+    action_type = models.ForeignKey(ActionType, on_delete=models.PROTECT,verbose_name=_("action_type"))    
+    attachement_file = models.FileField(_("attachement_file"),upload_to=attachement_path,blank=True)
+    action_state = models.CharField(_("action_state"),max_length=10, choices=STATE_TYPE_CHOICES, default=STATE_TYPE_DRAFT) 
+    
+    def __str__(self):
+        return self.app_record.__str__()+"/"+self.department.name
+        
+    def get_absolute_url(self): 
+        return reverse('doc_workflow:app_department_processing_show',args=[str(self.id)])                
+
+    class Meta:
+        ordering = ["-id"]
+        verbose_name = _("Application department processing")
+        verbose_name_plural = _("Application department processing")
+        indexes = [
+            models.Index(fields=["department"]),
+            models.Index(fields=["action_type"]),
+        ]
+
+    def clean(self):
+        pass
+
+class ApplicationExectiveProcessing(LoggingModel):
+    STATE_TYPE_DRAFT = 'draft'
+    STATE_TYPE_CONFIRM = 'confirm'
+
+    STATE_TYPE_CHOICES = {
+        STATE_TYPE_DRAFT: _("draft"),
+        STATE_TYPE_CONFIRM: _("confirm"),
+    }
+
+    def attachement_path(self, filename):
+        company = self.department_processing.app_record.company
+        date = self.created_at.date()
+        return "company_{0}/app/{1}/{2}".format(company.id,date, filename)    
+
+    department_processing = models.OneToOneField(ApplicationDepartmentProcessing, on_delete=models.PROTECT,related_name="exective_processing")
+    attachement_file = models.FileField(_("attachement_file"),upload_to=attachement_path,blank=True)
+    action_state = models.CharField(_("action_state"),max_length=10, choices=STATE_TYPE_CHOICES, default=STATE_TYPE_DRAFT) 
+    
+    def __str__(self):
+        return self.department_processing.__str__()+"/executive"
+        
+    def get_absolute_url(self): 
+        return reverse('doc_workflow:app_executive_processing_show',args=[str(self.id)])                
+
+    class Meta:
+        ordering = ["-id"]
+        verbose_name = _("Application executive processing")
+        verbose_name_plural = _("Application executive processing")
+
+    def clean(self):
+        pass
+
+class ApplicationDelivery(LoggingModel):
+    STATE_TYPE_DRAFT = 'draft'
+    STATE_TYPE_CONFIRM = 'confirm'
+
+    STATE_TYPE_CHOICES = {
+        STATE_TYPE_DRAFT: _("draft"),
+        STATE_TYPE_CONFIRM: _("confirm"),
+    }
+
+    app_record  = models.ForeignKey(ApplicationRecord, on_delete=models.PROTECT)    
+    destination = models.ForeignKey(Destination, on_delete=models.PROTECT,verbose_name=_("destination"))    
+    delivery_state = models.CharField(_("delivery_state"),max_length=10, choices=STATE_TYPE_CHOICES, default=STATE_TYPE_DRAFT) 
+    
+    def __str__(self):
+        return self.app_record.__str__()+"/"+self.destination.name+"/"+self.delivery_state
+        
+    def get_absolute_url(self): 
+        return reverse('doc_workflow:app_delivery_show',args=[str(self.id)])                
+
+    class Meta:
+        ordering = ["-id"]
+        verbose_name = _("Application delivery")
+        verbose_name_plural = _("Application delivery")
+
+    def clean(self):
+        pass
+
