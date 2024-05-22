@@ -5,32 +5,32 @@ from django.utils.translation import gettext_lazy as _
 import django_tables2 as tables
 from django_filters import FilterSet
 
-from ..models import TblCompanyOpenningBalanceMaster
+from ..models import ApplicationDelivery
 
 class BaseTable(tables.Table):
     menu_name = None
     relation_fields = []
 
-class TblCompanyOpenningBalanceTable(BaseTable):
-    menu_name = "pa:openning_balance_show"
-    relation_fields = ["company"]
+class ApplicationDeliveryTable(BaseTable):
+    menu_name = "doc_workflow:app_delivery_show"
+    relation_fields = []
 
     class Meta:
-        model = TblCompanyOpenningBalanceMaster
+        model = ApplicationDelivery
         template_name = "django_tables2/bootstrap.html"
-        fields = ("company","currency","state")
+        fields = ("destination","app_record__company","app_record__app_type","delivery_state")
         empty_text = _("No records.")        
 
-    def render_company(self,value,record):
+    def render_destination(self,value,record):
         return format_html("<a href={}>{}</a>",reverse_lazy(self.menu_name,args=(record.id,)),value)
 
-    def render_state(self,value,record):
+    def render_delivery_state(self,value,record):
         return format_html("{}",value)
 
-class OpenningBalanceFilter(FilterSet):
+class ApplicationDeliveryFilter(FilterSet):
     class Meta:
-        model = TblCompanyOpenningBalanceMaster
+        model = ApplicationDelivery
         fields = {
-            "company": ["exact"],
-            "state": ["exact"],
+            "destination": ["exact"],
+            "delivery_state": ["exact"],
         }

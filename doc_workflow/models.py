@@ -1,14 +1,22 @@
 from django.db import models
+from django.db.models import CheckConstraint, Q, F
 from django.conf import settings
 from django.forms import ValidationError
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
 from django.core.mail import send_mail
-
 from django.contrib.auth import get_user_model
 
 from company_profile.models import TblCompany,TblCompanyProduction
+
+STATE_TYPE_DRAFT = 'draft'
+STATE_TYPE_CONFIRM = 'confirm'
+
+STATE_TYPE_CHOICES = {
+    STATE_TYPE_DRAFT: _("draft"),
+    STATE_TYPE_CONFIRM: _("confirm"),
+}
 
 class LoggingModel(models.Model):
     """
@@ -33,7 +41,7 @@ class ApplicationType(models.Model):
         verbose_name_plural = _("Application types")
 
     def __str__(self):
-        return _("Application type") +" "+str(self.name)
+        return str(self.name)
 
 class ActionType(models.Model):
     name = models.CharField(_("name"),max_length=50)
@@ -44,7 +52,7 @@ class ActionType(models.Model):
         verbose_name_plural = _("Action types")
 
     def __str__(self):
-        return _("Action type") +" "+str(self.name)
+        return str(self.name)
 
 class Department(models.Model):
     name = models.CharField(_("name"),max_length=50)
@@ -55,7 +63,7 @@ class Department(models.Model):
         verbose_name_plural = _("departments")
 
     def __str__(self):
-        return _("Department") +" "+str(self.name)
+        return str(self.name)
 
 class Destination(models.Model):
     name = models.CharField(_("name"),max_length=50)
@@ -66,7 +74,7 @@ class Destination(models.Model):
         verbose_name_plural = _("departments")
 
     def __str__(self):
-        return _("Department") +" "+str(self.name)
+        return str(self.name)
 
 class ApplicationRecord(LoggingModel):
     STATE_TYPE_NEW = 'new'
@@ -82,7 +90,7 @@ class ApplicationRecord(LoggingModel):
         STATE_TYPE_PROCESSING_EXECUTIVE: _("processing_executive"),
         STATE_TYPE_DELIVERY_READY: _("delivery_ready"),
         STATE_TYPE_DELIVERY_PARTIAL: _("delivery_partial"),
-        STATE_TYPE_DELIVERY_COMPLETE: _("delivery_complete"),
+        STATE_TYPE_DELIVERY_COMPLETE: _("delivery_completed"),
     }
 
     def attachement_path(self, filename):
@@ -114,32 +122,35 @@ class ApplicationRecord(LoggingModel):
     def goto_processing_executive(self):
         qs = ApplicationDepartmentProcessing.objects.filter(app_record=self.id)
         count_all = qs.count()
-        count_confirmed = qs.filter(action_state=ApplicationDepartmentProcessing.STATE_TYPE_CONFIRM).count()
+        count_confirmed = qs.filter(action_state=STATE_TYPE_CONFIRM).count()
         if(count_all == count_confirmed):
             self.state = self.STATE_TYPE_PROCESSING_EXECUTIVE
             self.save()
 
     def goto_delivery_ready(self):
-        qs = ApplicationExectiveProcessing.objects.filter(app_record=self.id)
+        qs = ApplicationExectiveProcessing.objects.filter(department_processing__app_record=self.id)
         count_all = qs.count()
-        count_confirmed = qs.filter(action_state=ApplicationExectiveProcessing.STATE_TYPE_CONFIRM).count()
+        count_confirmed = qs.filter(action_state=STATE_TYPE_CONFIRM).count()
         if(count_all == count_confirmed):
             self.state = self.STATE_TYPE_DELIVERY_READY
             self.save()
-            print("*********","confirmed")
+
+    def goto_delivery_complete(self):
+        qs = ApplicationDelivery.objects.filter(app_record=self.id)
+        count_all = qs.count()
+        count_confirmed = qs.filter(delivery_state=STATE_TYPE_CONFIRM).count()
+        
+        if(count_all == count_confirmed):
+            self.state = self.STATE_TYPE_DELIVERY_COMPLETE
+            self.save()
+        elif(count_confirmed > 0):
+            self.state = self.STATE_TYPE_DELIVERY_PARTIAL
+            self.save()
 
     def clean(self):
         pass
 
 class ApplicationDepartmentProcessing(LoggingModel):
-    STATE_TYPE_DRAFT = 'draft'
-    STATE_TYPE_CONFIRM = 'confirm'
-
-    STATE_TYPE_CHOICES = {
-        STATE_TYPE_DRAFT: _("draft"),
-        STATE_TYPE_CONFIRM: _("confirm"),
-    }
-
     def attachement_path(self, filename):
         company = self.app_record.company
         date = self.created_at.date()
@@ -166,18 +177,28 @@ class ApplicationDepartmentProcessing(LoggingModel):
             models.Index(fields=["action_type"]),
         ]
 
+    def save(self, *args, **kwargs):
+        self.clean()
+        super().save(*args, **kwargs)
+        
+    def add_executive_processing_record(self):
+        if self.action_state == STATE_TYPE_CONFIRM and not hasattr(self,'exective_processing'):
+            ApplicationExectiveProcessing.objects.create(
+                department_processing=self, \
+                created_by=self.created_by, \
+                updated_by=self.updated_by, \
+                app_record=self.app_record, \
+                department=self.department, \
+                action_type=self.action_type
+            )
+
     def clean(self):
-        pass
+        if self.action_state == STATE_TYPE_CONFIRM and not self.attachement_file:
+            raise ValidationError(
+                {"attachement_file":_("field is required")}
+            )
 
 class ApplicationExectiveProcessing(LoggingModel):
-    STATE_TYPE_DRAFT = 'draft'
-    STATE_TYPE_CONFIRM = 'confirm'
-
-    STATE_TYPE_CHOICES = {
-        STATE_TYPE_DRAFT: _("draft"),
-        STATE_TYPE_CONFIRM: _("confirm"),
-    }
-
     def attachement_path(self, filename):
         company = self.department_processing.app_record.company
         date = self.created_at.date()
@@ -187,6 +208,11 @@ class ApplicationExectiveProcessing(LoggingModel):
     attachement_file = models.FileField(_("attachement_file"),upload_to=attachement_path,blank=True)
     action_state = models.CharField(_("action_state"),max_length=10, choices=STATE_TYPE_CHOICES, default=STATE_TYPE_DRAFT) 
     
+    #duplicated to UI
+    app_record  = models.ForeignKey(ApplicationRecord, on_delete=models.PROTECT)    
+    department = models.ForeignKey(Department, on_delete=models.PROTECT,verbose_name=_("department"))    
+    action_type = models.ForeignKey(ActionType, on_delete=models.PROTECT,verbose_name=_("action_type"))    
+
     def __str__(self):
         return self.department_processing.__str__()+"/executive"
         
@@ -198,18 +224,32 @@ class ApplicationExectiveProcessing(LoggingModel):
         verbose_name = _("Application executive processing")
         verbose_name_plural = _("Application executive processing")
 
+    def save(self, *args, **kwargs):
+        self.clean()
+        super().save(*args, **kwargs)
+
     def clean(self):
-        pass
+        if self.action_state == STATE_TYPE_CONFIRM and not self.attachement_file:
+            raise ValidationError(
+                {"attachement_file":_("field is required")}
+            )
+        
+        if self.department_processing.app_record != self.app_record:
+            raise ValidationError(
+                {"app_record":_("field not match relation")}
+            )
+
+        if self.department_processing.department != self.department:
+            raise ValidationError(
+                {"department":_("field not match relation")}
+            )
+
+        if self.department_processing.action_type != self.action_type:
+            raise ValidationError(
+                {"action_type":_("field not match relation")}
+            )
 
 class ApplicationDelivery(LoggingModel):
-    STATE_TYPE_DRAFT = 'draft'
-    STATE_TYPE_CONFIRM = 'confirm'
-
-    STATE_TYPE_CHOICES = {
-        STATE_TYPE_DRAFT: _("draft"),
-        STATE_TYPE_CONFIRM: _("confirm"),
-    }
-
     app_record  = models.ForeignKey(ApplicationRecord, on_delete=models.PROTECT)    
     destination = models.ForeignKey(Destination, on_delete=models.PROTECT,verbose_name=_("destination"))    
     delivery_state = models.CharField(_("delivery_state"),max_length=10, choices=STATE_TYPE_CHOICES, default=STATE_TYPE_DRAFT) 

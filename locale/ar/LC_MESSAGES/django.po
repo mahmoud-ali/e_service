@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-05-15 14:44+0200\n"
+"POT-Creation-Date: 2024-05-22 14:29+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -38,6 +38,7 @@ msgstr "ادخل البيانات على صيغة (UTM meters)"
 #: check_cordinates/templates/check_cordinates/application_add_master_details.html:43
 #: company_profile/templates/company_profile/application_add_master_details.html:38
 #: company_profile/templates/company_profile/views/requirements_list_add_master_details.html:39
+#: doc_workflow/templates/doc_workflow/application_add_master_details.html:52
 #: pa/templates/pa/application_add_master_details.html:52
 msgid "add_more"
 msgstr "اضافة المزيد"
@@ -76,25 +77,26 @@ msgstr "بيانات التواصل"
 msgid "Company Status"
 msgstr "موقف الشركة"
 
-#: company_profile/admin.py:194
+#: company_profile/admin.py:195
 msgid "General information"
 msgstr "بيانات عامة"
 
-#: company_profile/admin.py:195
+#: company_profile/admin.py:196
 msgid "Location information"
 msgstr "الموقع الجغرافي"
 
-#: company_profile/admin.py:196
+#: company_profile/admin.py:197
 msgid "Contract information"
 msgstr "بيانات العقد"
+
+#: company_profile/admin.py:209 company_profile/forms.py:29
+#: company_profile/models.py:114 pa/models.py:67
+msgid "company_type"
+msgstr "نوع الشركة"
 
 #: company_profile/apps.py:7
 msgid "Company profile"
 msgstr "ملف الشركة"
-
-#: company_profile/forms.py:29 company_profile/models.py:114 pa/models.py:67
-msgid "company_type"
-msgstr "نوع الشركة"
 
 #: company_profile/forms.py:48 company_profile/forms.py:65
 #: company_profile/forms.py:94 company_profile/forms.py:111
@@ -133,9 +135,11 @@ msgstr "نوع الشركة"
 #: company_profile/models.py:989 company_profile/models.py:1005
 #: company_profile/models.py:1030 company_profile/models.py:1076
 #: company_profile/models.py:1096 company_profile/models.py:1112
-#: company_profile/models.py:1136 pa/forms/commitment.py:65 pa/forms/daily.py:9
-#: pa/models.py:93 pa/models.py:129 pa/tables/payment.py:33
-#: pa/tables/request.py:51 pa/templates/pa/pa_daily.html:46
+#: company_profile/models.py:1136 doc_workflow/models.py:101
+#: doc_workflow/templates/doc_workflow/pa_daily.html:46
+#: pa/forms/commitment.py:65 pa/forms/daily.py:9 pa/models.py:93
+#: pa/models.py:129 pa/tables/payment.py:33 pa/tables/request.py:51
+#: pa/templates/pa/pa_daily.html:46
 msgid "company"
 msgstr "شركة"
 
@@ -153,22 +157,24 @@ msgstr "نوع الرخصة"
 #: company_profile/templates/company_profile/home.html:16
 #: company_profile/templates/company_profile/home.html:38
 #: company_profile/templates/company_profile/home.html:59
-#: help_request/models.py:11 pa/models.py:46
+#: doc_workflow/models.py:26 help_request/models.py:11 pa/models.py:46
 msgid "created_at"
 msgstr "تاريخ الانشاء"
 
-#: company_profile/models.py:18 help_request/models.py:12 pa/models.py:47
+#: company_profile/models.py:18 doc_workflow/models.py:27
+#: help_request/models.py:12 pa/models.py:47
 msgid "created_by"
 msgstr "المستخدم المسئول عن الانشاء"
 
 #: company_profile/models.py:20
 #: company_profile/templates/company_profile/home.html:17
 #: company_profile/templates/company_profile/home.html:39
-#: company_profile/templates/company_profile/home.html:60 pa/models.py:49
+#: company_profile/templates/company_profile/home.html:60
+#: doc_workflow/models.py:29 pa/models.py:49
 msgid "updated_at"
 msgstr "تاريخ اخر تعديل"
 
-#: company_profile/models.py:21 pa/models.py:50
+#: company_profile/models.py:21 doc_workflow/models.py:30 pa/models.py:50
 msgid "updated_by"
 msgstr "المستخدم المسئول عن التعديل"
 
@@ -189,6 +195,8 @@ msgstr ""
 #: company_profile/models.py:134 company_profile/models.py:166
 #: company_profile/models.py:188 company_profile/models.py:701
 #: company_profile/models.py:799 company_profile/models.py:1055
+#: doc_workflow/models.py:36 doc_workflow/models.py:47
+#: doc_workflow/models.py:58 doc_workflow/models.py:69
 msgid "name"
 msgstr "الاسم"
 
@@ -1375,8 +1383,9 @@ msgstr "تعليق مختصر عن الدراسة"
 
 #: company_profile/models.py:882 company_profile/models.py:908
 #: company_profile/models.py:991 company_profile/models.py:1082
-#: company_profile/models.py:1098 pa/models.py:441 pa/models.py:544
-#: pa/models.py:612
+#: company_profile/models.py:1098 doc_workflow/models.py:103
+#: doc_workflow/models.py:162 doc_workflow/models.py:208 pa/models.py:441
+#: pa/models.py:544 pa/models.py:612
 msgid "attachement_file"
 msgstr "المرفقات"
 
@@ -1613,6 +1622,11 @@ msgstr "الموضوع"
 #: company_profile/models.py:1116 company_profile/models.py:1127
 #: company_profile/templates/company_profile/application_readonly.html:25
 #: company_profile/templates/company_profile/application_readonly_master_details2.html:61
+#: doc_workflow/templates/doc_workflow/application_readonly.html:40
+#: doc_workflow/templates/doc_workflow/application_readonly_master_details.html:64
+#: doc_workflow/templates/doc_workflow/views/application_delivery.html:58
+#: doc_workflow/templates/doc_workflow/views/application_readonly.html:58
+#: doc_workflow/templates/doc_workflow/views/application_record_readonly.html:64
 #: pa/templates/pa/application_readonly.html:40
 #: pa/templates/pa/application_readonly_master_details.html:64
 msgid "whom_attachement_file"
@@ -1705,9 +1719,12 @@ msgstr "تفاصيل استمارة الانتاج"
 #: company_profile/templates/company_profile/home.html:29
 #: company_profile/templates/company_profile/home.html:51
 #: company_profile/templates/company_profile/home.html:72
-#: pa/tables/commitment.py:22 pa/tables/commitment_schedule.py:22
-#: pa/tables/openning_balance.py:22 pa/tables/payment.py:24
-#: pa/tables/request.py:26 pa/tables/request.py:45
+#: doc_workflow/tables/application_delivery.py:22
+#: doc_workflow/tables/application_department_processing.py:22
+#: doc_workflow/tables/application_executive_processing.py:22
+#: doc_workflow/tables/application_record.py:22 pa/tables/commitment.py:22
+#: pa/tables/commitment_schedule.py:22 pa/tables/openning_balance.py:22
+#: pa/tables/payment.py:24 pa/tables/request.py:26 pa/tables/request.py:45
 msgid "No records."
 msgstr "لايوجد سجل."
 
@@ -1730,17 +1747,26 @@ msgstr "تم الرفض"
 
 #: company_profile/templates/company_profile/application_readonly.html:14
 #: company_profile/templates/company_profile/application_readonly_master_details.html:16
+#: doc_workflow/templates/doc_workflow/application_readonly.html:12
 #: pa/templates/pa/application_readonly.html:12
 msgid "reject_comments_title"
 msgstr "لقد تم رفض طلبك للاتي: "
 
 #: company_profile/templates/company_profile/application_readonly_master_details2.html:47
+#: doc_workflow/templates/doc_workflow/application_readonly.html:26
+#: doc_workflow/templates/doc_workflow/application_readonly_master_details.html:50
+#: doc_workflow/templates/doc_workflow/views/application_delivery.html:50
+#: doc_workflow/templates/doc_workflow/views/application_readonly.html:50
+#: doc_workflow/templates/doc_workflow/views/application_record_readonly.html:50
 #: pa/templates/pa/application_readonly.html:26
 #: pa/templates/pa/application_readonly_master_details.html:50
 msgid "edit_btn"
 msgstr "تعديل سجل"
 
 #: company_profile/templates/company_profile/application_readonly_master_details2.html:52
+#: doc_workflow/templates/doc_workflow/application_readonly.html:31
+#: doc_workflow/templates/doc_workflow/application_readonly_master_details.html:55
+#: doc_workflow/templates/doc_workflow/views/application_record_readonly.html:55
 #: pa/templates/pa/application_readonly.html:31
 #: pa/templates/pa/application_readonly_master_details.html:55
 msgid "delete_btn"
@@ -1748,22 +1774,27 @@ msgstr "حذف سجل"
 
 #: company_profile/templates/company_profile/base.html:9
 #: company_profile/templates/company_profile/base.html:80
-#: pa/templates/pa/base.html:9 pa/templates/pa/base.html:79
-#: templates/account/base.html:9 templates/account/base.html:78
+#: doc_workflow/templates/doc_workflow/base.html:9
+#: doc_workflow/templates/doc_workflow/base.html:79 pa/templates/pa/base.html:9
+#: pa/templates/pa/base.html:79 templates/account/base.html:9
+#: templates/account/base.html:78
 msgid "E-Services App"
 msgstr "بوابة الخدمات الإلكترونية"
 
 #: company_profile/templates/company_profile/base.html:86
+#: doc_workflow/templates/doc_workflow/base.html:85
 #: pa/templates/pa/base.html:85 templates/account/base.html:84
 msgid "Change password"
 msgstr "تغيير كلمة المرور"
 
 #: company_profile/templates/company_profile/base.html:87
+#: doc_workflow/templates/doc_workflow/base.html:86
 #: pa/templates/pa/base.html:86 templates/account/base.html:85
 msgid "Log Out"
 msgstr "خروج"
 
 #: company_profile/templates/company_profile/base.html:122
+#: doc_workflow/templates/doc_workflow/base.html:106
 #: pa/templates/pa/base.html:106
 msgid "Menu"
 msgstr "القائمة"
@@ -1843,7 +1874,13 @@ msgstr "اضافة طلب حركة اجنبي"
 #: company_profile/views/tnazol_shraka.py:65
 #: company_profile/views/visibilty_study.py:75
 #: company_profile/views/whom_concern.py:64
-#: company_profile/views/work_plan.py:64 pa/views/application.py:165
+#: company_profile/views/work_plan.py:64 doc_workflow/views/application.py:165
+#: doc_workflow/views/application.py:303
+#: doc_workflow/views/application_delivery.py:63
+#: doc_workflow/views/application_department_processing.py:63
+#: doc_workflow/views/application_executive_processing.py:63
+#: doc_workflow/views/application_record.py:156
+#: doc_workflow/views/application_record.py:221 pa/views/application.py:165
 #: pa/views/application.py:303
 msgid "Application sent successfully."
 msgstr "تم ارسال الطلب بنجاح."
@@ -2338,13 +2375,314 @@ msgstr ""
 msgid "Wrong transition path."
 msgstr ""
 
+#: doc_workflow/apps.py:9
+msgid "Executive workflow"
+msgstr "الدورة المستندية للمكتب التنفيذي"
+
+#: doc_workflow/forms/application_department_processing.py:25
+#: doc_workflow/forms/application_executive_processing.py:25
+#: doc_workflow/models.py:62 doc_workflow/models.py:73
+#: doc_workflow/models.py:160 doc_workflow/models.py:213
+msgid "department"
+msgstr "الادارة"
+
+#: doc_workflow/forms/application_department_processing.py:26
+#: doc_workflow/forms/application_executive_processing.py:26
+#: doc_workflow/models.py:161 doc_workflow/models.py:214
+msgid "action_type"
+msgstr "نوع الاجراء"
+
+#: doc_workflow/forms/application_department_processing.py:27
+#: doc_workflow/forms/application_executive_processing.py:27
+msgid "main_attachement_file"
+msgstr "الخطاب الوارد"
+
+#: doc_workflow/models.py:17 pa/models.py:33
+msgid "draft"
+msgstr "مسودة"
+
+#: doc_workflow/models.py:18 pa/models.py:34
+msgid "confirm"
+msgstr "مؤكد"
+
+#: doc_workflow/models.py:40
+msgid "Application type"
+msgstr "نوع الطلب"
+
+#: doc_workflow/models.py:41
+msgid "Application types"
+msgstr "انواع الطلبات"
+
+#: doc_workflow/models.py:51
+msgid "Action type"
+msgstr "نوع الاجراء"
+
+#: doc_workflow/models.py:52
+msgid "Action types"
+msgstr "انواع الاجراءات"
+
+#: doc_workflow/models.py:63 doc_workflow/models.py:74
+msgid "departments"
+msgstr "الادارات"
+
+#: doc_workflow/models.py:88
+msgid "new"
+msgstr "جديد"
+
+#: doc_workflow/models.py:89
+msgid "processing_department"
+msgstr "معالجة الادارة المختصة"
+
+#: doc_workflow/models.py:90
+msgid "processing_executive"
+msgstr "معالجة المكتب التنفيذي"
+
+#: doc_workflow/models.py:91
+msgid "delivery_ready"
+msgstr "جاهز للاستلام"
+
+#: doc_workflow/models.py:92
+msgid "delivery_partial"
+msgstr "استلام جزئي"
+
+#: doc_workflow/models.py:93
+msgid "delivery_completed"
+msgstr "تم التسليم"
+
+#: doc_workflow/models.py:102
+msgid "app_type"
+msgstr "نوع المعاملة"
+
+#: doc_workflow/models.py:104 pa/models.py:95 pa/models.py:132 pa/models.py:193
+#: pa/models.py:298 pa/models.py:495 pa/tables/payment.py:34
+#: pa/tables/request.py:53
+msgid "record_state"
+msgstr "الحالة"
+
+#: doc_workflow/models.py:114
+msgid "Application record"
+msgstr "طلب وارد"
+
+#: doc_workflow/models.py:115 doc_workflow/templates/doc_workflow/base.html:113
+msgid "Application records"
+msgstr "الطلبات الواردة"
+
+#: doc_workflow/models.py:163 doc_workflow/models.py:209
+msgid "action_state"
+msgstr "موقف الاجراء"
+
+#: doc_workflow/models.py:173 doc_workflow/models.py:174
+#: doc_workflow/templates/doc_workflow/base.html:116
+msgid "Application department processing"
+msgstr "معالجة الطلب بواسطة الادارة المختصة"
+
+#: doc_workflow/models.py:198 doc_workflow/models.py:234 pa/models.py:210
+#: pa/models.py:214 pa/models.py:218 pa/models.py:223
+msgid "field is required"
+msgstr "ادخال الحقل اجباري"
+
+#: doc_workflow/models.py:224 doc_workflow/models.py:225
+#: doc_workflow/templates/doc_workflow/base.html:119
+msgid "Application executive processing"
+msgstr "معالجة الطلب بواسطة المكتب التنفيذي"
+
+#: doc_workflow/models.py:239 doc_workflow/models.py:244
+#: doc_workflow/models.py:249
+msgid "field not match relation"
+msgstr ""
+
+#: doc_workflow/models.py:254
+msgid "destination"
+msgstr "جهة الصادر"
+
+#: doc_workflow/models.py:255
+msgid "delivery_state"
+msgstr "موقف التسليم"
+
+#: doc_workflow/models.py:265 doc_workflow/models.py:266
+#: doc_workflow/templates/doc_workflow/base.html:122
+msgid "Application delivery"
+msgstr "تسليم الطلب"
+
+#: doc_workflow/templates/doc_workflow/application_add.html:16
+#: doc_workflow/templates/doc_workflow/application_add_master_details.html:59
+#: pa/templates/pa/application_add.html:16
+#: pa/templates/pa/application_add_master_details.html:59
+msgid "Save Draft"
+msgstr "حفظ مسودة"
+
+#: doc_workflow/templates/doc_workflow/application_add.html:18
+#: doc_workflow/templates/doc_workflow/application_add_master_details.html:61
+#: pa/templates/pa/application_add.html:18
+#: pa/templates/pa/application_add_master_details.html:61
+msgid "Save & Confirm"
+msgstr "حفظ وتأكيد"
+
+#: doc_workflow/templates/doc_workflow/application_choose.html:15
+#: pa/templates/pa/application_choose.html:15
+msgid "Choose"
+msgstr "اختيار"
+
+#: doc_workflow/templates/doc_workflow/application_delete.html:15
+#: doc_workflow/templates/doc_workflow/application_delete_master_detail.html:58
+#: pa/templates/pa/application_delete.html:15
+#: pa/templates/pa/application_delete_master_detail.html:58
+msgid "Delete Draft"
+msgstr "حذف المسودة"
+
+#: doc_workflow/templates/doc_workflow/application_list.html:15
+#: doc_workflow/templates/doc_workflow/pa_daily.html:38
+#: doc_workflow/templates/doc_workflow/views/application_list_without_add.html:15
+#: pa/templates/pa/application_list.html:15 pa/templates/pa/pa_daily.html:38
+msgid "Search"
+msgstr "بحث"
+
+#: doc_workflow/templates/doc_workflow/application_list.html:28
+#: pa/templates/pa/application_list.html:28
+msgid "New record"
+msgstr "سجل جديد"
+
+#: doc_workflow/templates/doc_workflow/pa_daily.html:47
+#: doc_workflow/templates/doc_workflow/pa_daily.html:77 pa/forms/daily.py:10
+#: pa/models.py:94 pa/models.py:131 pa/models.py:296 pa/models.py:492
+#: pa/templates/pa/pa_daily.html:47 pa/templates/pa/pa_daily.html:77
+msgid "currency"
+msgstr "العملة"
+
+#: doc_workflow/templates/doc_workflow/pa_daily.html:50 pa/forms/daily.py:11
+#: pa/models.py:294 pa/templates/pa/pa_daily.html:50
+msgid "from_dt"
+msgstr "من"
+
+#: doc_workflow/templates/doc_workflow/pa_daily.html:51 pa/forms/daily.py:12
+#: pa/models.py:295 pa/templates/pa/pa_daily.html:51
+msgid "to_dt"
+msgstr "الى"
+
+#: doc_workflow/templates/doc_workflow/pa_daily.html:65
+#: pa/templates/pa/pa_daily.html:65
+msgid "Print"
+msgstr "طباعة"
+
+#: doc_workflow/templates/doc_workflow/pa_daily.html:75
+#: pa/templates/pa/pa_daily.html:75
+msgid "date"
+msgstr "التاريخ"
+
+#: doc_workflow/templates/doc_workflow/pa_daily.html:76 pa/models.py:113
+#: pa/models.py:165 pa/models.py:439 pa/models.py:542
+#: pa/templates/pa/pa_daily.html:76
+msgid "financial item"
+msgstr "البند"
+
+#: doc_workflow/templates/doc_workflow/pa_daily.html:78 pa/models.py:493
+#: pa/templates/pa/pa_daily.html:78
+msgid "exchange_rate"
+msgstr "سعر الصرف"
+
+#: doc_workflow/templates/doc_workflow/pa_daily.html:79
+#: pa/templates/pa/pa_daily.html:79
+msgid "credit"
+msgstr "دائن"
+
+#: doc_workflow/templates/doc_workflow/pa_daily.html:80
+#: pa/templates/pa/pa_daily.html:80
+msgid "debit"
+msgstr "مدين"
+
+#: doc_workflow/templates/doc_workflow/pa_daily.html:81
+#: pa/templates/pa/pa_daily.html:81
+msgid "balance"
+msgstr "الرصيد"
+
+#: doc_workflow/templates/doc_workflow/pa_daily.html:91
+#: pa/templates/pa/pa_daily.html:91
+msgid "opening_balance"
+msgstr "الرصيد الافتتاحي"
+
+#: doc_workflow/templates/doc_workflow/pa_daily.html:103
+#: pa/templates/pa/pa_daily.html:103
+msgid "before"
+msgstr "قبل"
+
+#: doc_workflow/templates/doc_workflow/pa_daily.html:104
+#: pa/templates/pa/pa_daily.html:104
+msgid "befor_balance"
+msgstr "الرصيد السابق"
+
+#: doc_workflow/views/application.py:97 doc_workflow/views/application.py:218
+#: pa/views/application.py:97 pa/views/application.py:218
+msgid "Record saved successfully."
+msgstr "تم حفظ السجل بنجاح."
+
+#: doc_workflow/views/application.py:390 doc_workflow/views/application.py:446
+#: pa/views/application.py:390 pa/views/application.py:446
+msgid "Record removed successfully."
+msgstr "تم حذف السجل بنجاح."
+
+#: doc_workflow/views/application_delivery.py:27
+msgid "List of application ready for delivery"
+msgstr "قائمة الخطابات الجاهزة للتسليم"
+
+#: doc_workflow/views/application_delivery.py:37
+msgid "Edit application ready for delivery"
+msgstr "تعديل بيانات خطاب جاهز للتسليم"
+
+#: doc_workflow/views/application_delivery.py:80
+msgid "Show application ready for delivery"
+msgstr "عرض بيانات خطاب جاهز للتسليم"
+
+#: doc_workflow/views/application_department_processing.py:27
+msgid "List of application in development processing"
+msgstr "قائمة الخطابات في مرحلة معالجة الادارة المختصة"
+
+#: doc_workflow/views/application_department_processing.py:37
+msgid "Edit application in development processing"
+msgstr "تعديل الخطابات في مرحلة معالجة الادارة المختصة"
+
+#: doc_workflow/views/application_department_processing.py:80
+msgid "Show application in development processing"
+msgstr "عرض الخطابات في مرحلة معالجة الادارة المختصة"
+
+#: doc_workflow/views/application_executive_processing.py:27
+msgid "List of application in executive processing"
+msgstr "قائمة الخطابات في مرحلة معالجة المكتب التنفيذي"
+
+#: doc_workflow/views/application_executive_processing.py:37
+msgid "Edit application in executive processing"
+msgstr "تعديل الخطابات في مرحلة معالجة المكتب التنفيذي"
+
+#: doc_workflow/views/application_executive_processing.py:80
+msgid "Show application in executive processing"
+msgstr "عرض الخطابات في مرحلة معالجة المكتب التنفيذي"
+
+#: doc_workflow/views/application_record.py:108
+msgid "List of application records"
+msgstr "قائمة الخطابات الواردة"
+
+#: doc_workflow/views/application_record.py:116
+msgid "Add new application record"
+msgstr "اضافة خطاب وارد"
+
+#: doc_workflow/views/application_record.py:174
+msgid "Edit application record"
+msgstr "تعديل بيانات خطاب وارد"
+
+#: doc_workflow/views/application_record.py:241
+msgid "Show application record"
+msgstr "عرض بيانات خطاب وارد"
+
+#: doc_workflow/views/application_record.py:250
+msgid "Delete application record"
+msgstr "حذف خطاب وارد"
+
 #: help_request/models.py:13
 msgid "app name"
 msgstr "اسم التطبيق"
 
 #: help_request/models.py:14
 msgid "page url"
-msgstr ""
+msgstr "رابط الصفحة"
 
 #: help_request/models.py:15
 msgid "describe issue"
@@ -2379,20 +2717,6 @@ msgstr "التزام"
 msgid "all"
 msgstr "الكل"
 
-#: pa/forms/daily.py:10 pa/models.py:94 pa/models.py:131 pa/models.py:296
-#: pa/models.py:492 pa/templates/pa/pa_daily.html:47
-#: pa/templates/pa/pa_daily.html:77
-msgid "currency"
-msgstr "العملة"
-
-#: pa/forms/daily.py:11 pa/models.py:294 pa/templates/pa/pa_daily.html:50
-msgid "from_dt"
-msgstr "من"
-
-#: pa/forms/daily.py:12 pa/models.py:295 pa/templates/pa/pa_daily.html:51
-msgid "to_dt"
-msgstr "الى"
-
 #: pa/forms/payment.py:23 pa/forms/payment.py:44 pa/forms/payment.py:58
 #: pa/models.py:490
 msgid "request"
@@ -2413,14 +2737,6 @@ msgstr "يورو"
 #: pa/models.py:26
 msgid "dollar"
 msgstr "دولار"
-
-#: pa/models.py:33
-msgid "draft"
-msgstr "مسودة"
-
-#: pa/models.py:34
-msgid "confirm"
-msgstr "مؤكد"
 
 #: pa/models.py:39
 msgid "value should be positive"
@@ -2454,11 +2770,6 @@ msgstr "البند"
 msgid "Financial items"
 msgstr "البنود"
 
-#: pa/models.py:95 pa/models.py:132 pa/models.py:193 pa/models.py:298
-#: pa/models.py:495 pa/tables/payment.py:34 pa/tables/request.py:53
-msgid "record_state"
-msgstr "الحالة"
-
 #: pa/models.py:105
 msgid "Openning balance"
 msgstr "الرصيد الافتتاحي"
@@ -2466,11 +2777,6 @@ msgstr "الرصيد الافتتاحي"
 #: pa/models.py:106
 msgid "Openning balances"
 msgstr "الارصدة الافتتاحية"
-
-#: pa/models.py:113 pa/models.py:165 pa/models.py:439 pa/models.py:542
-#: pa/templates/pa/pa_daily.html:76
-msgid "financial item"
-msgstr "البند"
 
 #: pa/models.py:114 pa/models.py:440 pa/models.py:543 pa/models.py:609
 msgid "amount"
@@ -2544,10 +2850,6 @@ msgstr "جدولة التزامات مالية"
 msgid "Financial commitment schedulars"
 msgstr "جدولة التزامات مالية"
 
-#: pa/models.py:210 pa/models.py:214 pa/models.py:218 pa/models.py:223
-msgid "field is required"
-msgstr "ادخال الحقل اجباري"
-
 #: pa/models.py:237 pa/models.py:403
 msgid "to_dt should be great or equal than from_dt"
 msgstr "حقل تاريخ النهاية يجب ان يكون اكبر او يساوي حقل تاريخ البداية"
@@ -2609,10 +2911,6 @@ msgstr "اسم المستلم"
 msgid "payment_dt"
 msgstr "تاريخ السداد"
 
-#: pa/models.py:493 pa/templates/pa/pa_daily.html:78
-msgid "exchange_rate"
-msgstr "سعر الصرف"
-
 #: pa/models.py:494
 msgid "exchange_attachement_file"
 msgstr "مرفق سعر الصرف"
@@ -2661,33 +2959,6 @@ msgstr "الرقم المرجعي"
 msgid "request_total"
 msgstr "مجموع المطالبة"
 
-#: pa/templates/pa/application_add.html:16
-#: pa/templates/pa/application_add_master_details.html:59
-msgid "Save Draft"
-msgstr "حفظ مسودة"
-
-#: pa/templates/pa/application_add.html:18
-#: pa/templates/pa/application_add_master_details.html:61
-msgid "Save & Confirm"
-msgstr "حفظ وتأكيد"
-
-#: pa/templates/pa/application_choose.html:15
-msgid "Choose"
-msgstr "اختيار"
-
-#: pa/templates/pa/application_delete.html:15
-#: pa/templates/pa/application_delete_master_detail.html:58
-msgid "Delete Draft"
-msgstr "حذف المسودة"
-
-#: pa/templates/pa/application_list.html:15 pa/templates/pa/pa_daily.html:38
-msgid "Search"
-msgstr "بحث"
-
-#: pa/templates/pa/application_list.html:28
-msgid "New record"
-msgstr "سجل جديد"
-
 #: pa/templates/pa/base.html:113
 msgid "Openning Balance page"
 msgstr "الرصيد الافتتاحي"
@@ -2719,46 +2990,6 @@ msgstr "بيانات الشركة"
 #: pa/templates/pa/company_panel.html:31
 msgid "No. of contracts"
 msgstr "عدد العقود"
-
-#: pa/templates/pa/pa_daily.html:65
-msgid "Print"
-msgstr "طباعة"
-
-#: pa/templates/pa/pa_daily.html:75
-msgid "date"
-msgstr "التاريخ"
-
-#: pa/templates/pa/pa_daily.html:79
-msgid "credit"
-msgstr "دائن"
-
-#: pa/templates/pa/pa_daily.html:80
-msgid "debit"
-msgstr "مدين"
-
-#: pa/templates/pa/pa_daily.html:81
-msgid "balance"
-msgstr "الرصيد"
-
-#: pa/templates/pa/pa_daily.html:91
-msgid "opening_balance"
-msgstr "الرصيد الافتتاحي"
-
-#: pa/templates/pa/pa_daily.html:103
-msgid "before"
-msgstr "قبل"
-
-#: pa/templates/pa/pa_daily.html:104
-msgid "befor_balance"
-msgstr "الرصيد السابق"
-
-#: pa/views/application.py:97 pa/views/application.py:218
-msgid "Record saved successfully."
-msgstr "تم حفظ السجل بنجاح."
-
-#: pa/views/application.py:390 pa/views/application.py:446
-msgid "Record removed successfully."
-msgstr "تم حذف السجل بنجاح."
 
 #: pa/views/commitment.py:43
 msgid "List of commitments"
@@ -2924,6 +3155,9 @@ msgstr "خروج"
 #: templates/allauth/layouts/base.html:33
 msgid "Sign In"
 msgstr "دخول"
+
+#~ msgid "Department"
+#~ msgstr "الادارة"
 
 #~ msgid "type"
 #~ msgstr "النوع"

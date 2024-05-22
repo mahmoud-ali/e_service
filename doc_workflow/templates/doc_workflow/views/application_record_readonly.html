@@ -1,0 +1,77 @@
+{% extends 'doc_workflow/base.html' %}
+{% load i18n %}
+{% load static  %}
+
+{% load bootstrap3 %}
+{% load auth_extras %}
+
+{% block content %}
+<h1 class="page-header">{% translate title %}</h1>
+{% bootstrap_messages %}
+
+{% include "pa/company_panel.html" %}
+
+{{ form.media }}
+<form >
+{% csrf_token %}
+    {% bootstrap_form form %}
+    
+    {% for detail in details %}
+        <h3>{{detail.title}}:</h3>
+        {{ detail.formset.management_form }}
+        <table id="detail_table{{ forloop.counter }}"  class="table table-bordered">
+            <tr>
+            {% for field in detail.formset|first %}
+                {% if field.is_hidden is not True %}
+                <th>
+                {{ field.label }}
+                </th>
+                {% endif %}
+            {% endfor %}
+            </tr>
+        {% for form in detail.formset %}
+            <tr>
+            {% for field in form.visible_fields %}
+                <td>
+                    {% bootstrap_field field show_label=False%}
+                </td>
+            {% endfor %}
+            </tr>
+        {% endfor %}        	
+        </table>
+    <br/>
+    <br/>
+    {% endfor %}        	
+    
+    {% if object.id and object.state == 'new' %}
+
+    <a class="btn btn-success" href="{% url menu_edit_name object.id%}" role="button">
+        <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+        {% translate "edit_btn" %}
+    </a>
+    {% if request.user|has_group:"pa_manager" %}
+    <a class="btn btn-danger" href="{% url menu_delete_name object.id%}" role="button">
+        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+        {% translate "delete_btn" %}
+    </a>
+    {% endif %}
+
+    {% endif %}
+        
+</form>
+
+{% if object.state == 'approved' and object.whom_attachement_file %}
+<a target="_blank" href="{{ MEDIA_URL }}{{ object.whom_attachement_file}}">{% translate "whom_attachement_file" %}</a>
+{% endif %}
+
+<script>
+    $(document).ready(function(){
+        $('div.main form :input').attr('disabled','true');
+        $('div.bootstrap3-multi-input').find("a").each(function(i,e){
+            var a = '<a target="_blank" href="/media/'+$(e).text()+'">'+$(e).text()+'</a>'
+            $(e).parent().html(a)
+    
+        });
+    });
+    </script>
+    {% endblock content %}

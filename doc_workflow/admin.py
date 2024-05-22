@@ -9,12 +9,12 @@ admin.site.register(Destination)
 
 class ApplicationDepartmentProcessingInline(admin.TabularInline):
     model = ApplicationDepartmentProcessing
-    exclude = ["created_at","created_by","updated_at","updated_by","attachement_file","action_state"]
+    exclude = ["created_at","created_by","updated_at","updated_by","action_state"] #,"attachement_file"
     extra = 1    
 
 class ApplicationDeliveryInline(admin.TabularInline):
     model = ApplicationDelivery
-    exclude = ["created_at","created_by","updated_at","updated_by","delivery_state"]
+    exclude = ["created_at","created_by","updated_at","updated_by"] #,"delivery_state"
     extra = 1    
 
 class ApplicationRecordAdmin(admin.ModelAdmin):

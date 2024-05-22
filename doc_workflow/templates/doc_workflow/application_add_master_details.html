@@ -1,0 +1,113 @@
+{% extends 'doc_workflow/base.html' %}
+{% load i18n %}
+{% load static  %}
+
+{% load bootstrap3 %}
+{% load auth_extras %}
+
+{% block content %}
+<script type="text/javascript" src="{% static 'company_profile/js/admin_jsi18n.js' %}"></script>
+<script type="text/javascript" src="{% static 'admin/js/core.js' %}"></script>
+
+<h1 class="page-header">{{title}}</h1>
+{% bootstrap_messages %}
+
+{% include "pa/company_panel.html" %}
+
+{{ form.media }}
+<form  method="post"  enctype="multipart/form-data" novalidate>
+{% csrf_token %}
+
+    {% bootstrap_form form %}
+    {% for detail in details %}
+	<h3>{{detail.title}}:</h3>
+    {{ detail.formset.management_form }}
+
+    <table id="detail_table{{ forloop.counter }}"  class="table table-bordered detail_table">
+        <tr>
+        {% for field in detail.formset|first %}
+            {% if field.is_hidden is not True %}
+            <th>
+            {{ field.label }}
+            </th>
+            {% endif %}
+        {% endfor %}
+        </tr>
+    {% for form in detail.formset %}
+        {% for hidden in form.hidden_fields %}
+            {{ hidden }}
+        {% endfor %}        
+
+        <tr>
+        {% for field in form.visible_fields %}
+            <td>
+            {% bootstrap_field field show_label=False%}
+            </td>
+        {% endfor %}
+        </tr>
+        {% endfor %}        	
+    </table>
+    <button id="add_row_btn{{ forloop.counter }}" style="float:{% if request.LANGUAGE_CODE == 'ar' %} left {% else %} right {% endif %}" type="button" class="btn btn-link">
+        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+        {% translate "add_more" %}
+    </button>
+<br/>
+<br/>
+{% endfor %}        	
+
+    {% buttons %}
+    <input type="submit" value="{% translate "Save Draft" %}" name="_save_draft" class="btn btn-primary">
+    {% if request.user|has_group:"pa_manager" %}
+    <input type="submit" value="{% translate "Save & Confirm" %}" name="_save_confirm" class="btn btn-default">
+    {% endif %}
+    {% endbuttons %}
+</form>
+
+<script type="text/javascript">
+
+$(document).ready(function(){
+    function add_new_row(formset_name,table_id){
+      var row_id = parseInt($("input[name="+formset_name+"-TOTAL_FORMS]").val())
+      var temp = $("#"+table_id+" tr").last().clone()
+
+      temp.find(":input").each(function(i,e){
+        x = $(e).attr("id");
+        x = x.replace(/[0-9]+/,row_id);
+        $(e).attr("id",x);
+
+        x = $(e).attr("name");
+        x = x.replace(/[0-9]+/,row_id);
+        $(e).attr("name",x);
+
+        $(e).attr("value","");
+        $(e).find("option").removeAttr('selected')
+      });
+
+      $("#"+table_id).append('<tr>'+temp.html()+'</tr>');
+      var v = row_id+1
+      $("input[name="+formset_name+"-TOTAL_FORMS]").val(v);
+
+    }
+
+	$('tr').attr('class','form-group');
+	$('td :input').each(function(i,e){
+        x = $(e).attr("class");
+        $(e).attr("class",'form-control '+x);
+    });
+    
+    {% for detail in details %}
+        var formset_name{{ forloop.counter }} = '{{ detail.formset.prefix }}';
+        var table_id{{ forloop.counter }} = 'detail_table{{ forloop.counter }}';
+
+        $("#add_row_btn{{ forloop.counter }}").bind('click',function(e){
+            add_new_row(formset_name{{ forloop.counter }},table_id{{ forloop.counter }});
+            
+        });
+    {% endfor %}
+
+    
+
+
+});
+</script>
+{% endblock content %}

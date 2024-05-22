@@ -10,13 +10,25 @@ class DocWorkflowConfig(AppConfig):
 
     def ready(self) -> None:
         #register & call signals
-        from .models import ApplicationDepartmentProcessing
+        from .models import ApplicationDepartmentProcessing,ApplicationExectiveProcessing,ApplicationDelivery
         from . import signals
 
         post_save.connect(
             signals.update_application_record_state_from_department_processing,
             sender=ApplicationDepartmentProcessing, 
             dispatch_uid="update_application_record_from_department_processing_signal_id",
+        )
+
+        post_save.connect(
+            signals.update_application_record_state_from_executive_processing,
+            sender=ApplicationExectiveProcessing, 
+            dispatch_uid="update_application_record_state_from_executive_processing_signal_id",
+        )
+
+        post_save.connect(
+            signals.update_application_record_state_from_delivery_ready,
+            sender=ApplicationDelivery, 
+            dispatch_uid="update_application_record_state_from_delivery_ready_signal_id",
         )
 
         return super().ready()

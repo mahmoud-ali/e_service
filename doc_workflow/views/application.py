@@ -50,7 +50,7 @@ class ApplicationListView(LoginRequiredMixin,UserPermissionMixin,TranslationMixi
     menu_name = ""
     relation_fields = []
     context_object_name = "apps"    
-    template_name = "pa/application_list.html"     
+    template_name = "doc_workflow/application_list.html"     
     paginator_class = LazyPaginator
     
     def dispatch(self, *args, **kwargs):         
@@ -74,7 +74,7 @@ class ApplicationCreateView(LoginRequiredMixin,UserPermissionMixin,CreateView):
     title = None    
     user_groups = ['pa_data_entry','pa_manager']
     menu_name = ""  
-    template_name = "pa/application_add.html"    
+    template_name = "doc_workflow/application_add.html"    
     
     def dispatch(self, *args, **kwargs):
         self.success_url = reverse_lazy(self.menu_name)    
@@ -106,7 +106,7 @@ class ApplicationMasterDetailCreateView(LoginRequiredMixin,UserPermissionMixin,V
     title = None    
     user_groups = ['pa_data_entry','pa_manager']
     menu_name = ""  
-    template_name = "pa/application_add_master_details.html"
+    template_name = "doc_workflow/application_add_master_details.html"
     
     def dispatch(self, *args, **kwargs):         
         self.details_formset = []
@@ -180,7 +180,7 @@ class ApplicationUpdateView(LoginRequiredMixin,UserPermissionMixin,UpdateView):
     user_groups = ['pa_data_entry','pa_manager']
     menu_name = ""  
     menu_show_name = ""  
-    template_name = "pa/application_add.html"    
+    template_name = "doc_workflow/application_add.html"    
     
     def dispatch(self, *args, **kwargs):
         self.extra_context = {
@@ -227,7 +227,7 @@ class ApplicationMasterDetailUpdateView(LoginRequiredMixin,UserPermissionMixin,S
     title = None    
     user_groups = ['pa_data_entry','pa_manager']
     menu_name = ""  
-    template_name = "pa/application_add_master_details.html"
+    template_name = "doc_workflow/application_add_master_details.html"
     
     def dispatch(self, *args, **kwargs):         
         self.details_formset = []
@@ -321,7 +321,7 @@ class ApplicationReadonlyView(LoginRequiredMixin,UserPermissionMixin,SingleObjec
     title = None    
     user_groups = ['pa_data_entry','pa_manager']
     menu_name = ""  
-    template_name = "pa/application_readonly_master_details.html"
+    template_name = "doc_workflow/application_readonly_master_details.html"
     
     def dispatch(self, *args, **kwargs):         
         self.details_formset = []
@@ -359,7 +359,7 @@ class ApplicationDeleteView(LoginRequiredMixin,UserPermissionMixin,UpdateView):
     title = None    
     user_groups = ['pa_manager']
     menu_name = ""  
-    template_name = "pa/application_delete.html"    
+    template_name = "doc_workflow/application_delete.html"    
 
     def dispatch(self, *args, **kwargs):
         self.extra_context = {
@@ -399,7 +399,7 @@ class ApplicationDeleteMasterDetailView(LoginRequiredMixin,UserPermissionMixin,S
     title = None    
     user_groups = ['pa_data_entry','pa_manager']
     menu_name = ""  
-    template_name = "pa/application_delete_master_detail.html"
+    template_name = "doc_workflow/application_delete_master_detail.html"
     
     def dispatch(self, *args, **kwargs):         
         self.details_formset = []

@@ -31,6 +31,7 @@ urlpatterns = [
     path("about/", flatpages_views.flatpage, {"url": "/about/"}, name="about"),
     path('pa/', include('pa.urls')), 
     path('help/', include('help_request.urls')), 
+    path('workflow/', include('doc_workflow.urls')), 
     path('', include('company_profile.urls')),
 ]
 
