@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-05-22 14:29+0200\n"
+"POT-Creation-Date: 2024-05-22 14:43+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2381,8 +2381,8 @@ msgstr "الدورة المستندية للمكتب التنفيذي"
 
 #: doc_workflow/forms/application_department_processing.py:25
 #: doc_workflow/forms/application_executive_processing.py:25
-#: doc_workflow/models.py:62 doc_workflow/models.py:73
-#: doc_workflow/models.py:160 doc_workflow/models.py:213
+#: doc_workflow/models.py:62 doc_workflow/models.py:160
+#: doc_workflow/models.py:213
 msgid "department"
 msgstr "الادارة"
 
@@ -2421,9 +2421,17 @@ msgstr "نوع الاجراء"
 msgid "Action types"
 msgstr "انواع الاجراءات"
 
-#: doc_workflow/models.py:63 doc_workflow/models.py:74
+#: doc_workflow/models.py:63
 msgid "departments"
 msgstr "الادارات"
+
+#: doc_workflow/models.py:73 doc_workflow/models.py:254
+msgid "destination"
+msgstr "جهة الصادر"
+
+#: doc_workflow/models.py:74
+msgid "destinations"
+msgstr "جهات الصادر"
 
 #: doc_workflow/models.py:88
 msgid "new"
@@ -2490,10 +2498,6 @@ msgstr "معالجة الطلب بواسطة المكتب التنفيذي"
 #: doc_workflow/models.py:249
 msgid "field not match relation"
 msgstr ""
-
-#: doc_workflow/models.py:254
-msgid "destination"
-msgstr "جهة الصادر"
 
 #: doc_workflow/models.py:255
 msgid "delivery_state"

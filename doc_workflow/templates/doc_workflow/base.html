@@ -28,6 +28,7 @@
 	  }
 </style>
 {% load bootstrap3 %}
+{% load auth_extras %}
 
 {% bootstrap_css %}
 
@@ -111,15 +112,19 @@
 			 <li class="{% if menu_name == 'doc_workflow:app_record_list' %}active{% endif %} ">  
 				<a href="{% url 'doc_workflow:app_record_list' %}">{% translate "Application records" %}</a>
 		 	</li>
+			 {% if request.user|has_group:"doc_department" %}
 			 <li class="{% if menu_name == 'doc_workflow:department_processing_list' %}active{% endif %} ">  
 				<a href="{% url 'doc_workflow:department_processing_list' %}">{% translate "Application department processing" %}</a>
 		 	</li>
+			 {% endif %}
+			 {% if request.user|has_group:"doc_executive" %}
 			 <li class="{% if menu_name == 'doc_workflow:executive_processing_list' %}active{% endif %} ">  
 				<a href="{% url 'doc_workflow:executive_processing_list' %}">{% translate "Application executive processing" %}</a>
 		 	</li>
 			 <li class="{% if menu_name == 'doc_workflow:app_delivery_list' %}active{% endif %} ">  
 				<a href="{% url 'doc_workflow:app_delivery_list' %}">{% translate "Application delivery" %}</a>
 		 	</li>
+			{% endif %}
 
 		</ul>
 		<br/>

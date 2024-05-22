@@ -27,6 +27,13 @@ class ApplicationDepartmentProcessingListView(ApplicationListView):
     title = _("List of application in development processing")
     template_name = "doc_workflow/views/application_list_without_add.html"
 
+    def get_queryset(self):                
+        query = super().get_queryset()
+        query = query.filter(department__group__name__in=list(self.request.user.groups.values_list('name', flat = True)))
+        if self.filterset_class:
+            query = self.filterset_class(self.request.GET,queryset=query).qs
+        return query.prefetch_related(*self.table_class.relation_fields)
+
 class ApplicationDepartmentProcessingUpdateView(ApplicationMasterDetailUpdateView):
     model = model_master
     form_class = ApplicationDepartmentProcessingShowEditForm
@@ -79,3 +86,8 @@ class ApplicationDepartmentProcessingReadonlyView(ApplicationReadonlyView):
     menu_delete_name = None
     title = _("Show application in development processing")
     template_name = "doc_workflow/views/application_readonly.html"
+
+    def get_queryset(self):                
+        query = super().get_queryset()
+        query = query.filter(department__group__name__in=list(self.request.user.groups.values_list('name', flat = True)))
+        return query

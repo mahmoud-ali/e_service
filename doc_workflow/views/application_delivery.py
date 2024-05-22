@@ -22,7 +22,7 @@ class ApplicationDeliveryListView(ApplicationListView):
     model = model_master
     table_class = ApplicationDeliveryTable
     filterset_class = ApplicationDeliveryFilter
-    user_groups = ['doc_executive','doc_department']
+    user_groups = ['doc_executive']
     menu_name = "doc_workflow:app_delivery_list"
     title = _("List of application ready for delivery")
     template_name = "doc_workflow/views/application_list_without_add.html"
@@ -31,7 +31,7 @@ class ApplicationDeliveryUpdateView(ApplicationMasterDetailUpdateView):
     model = model_master
     form_class = ApplicationDeliveryShowEditForm
     details = details
-    user_groups = ['doc_department']
+    user_groups = ['doc_executive']
     menu_name = "doc_workflow:app_delivery_list"
     menu_show_name = "doc_workflow:app_delivery_show"
     title = _("Edit application ready for delivery")
@@ -54,7 +54,7 @@ class ApplicationDeliveryUpdateView(ApplicationMasterDetailUpdateView):
                 self.object.updated_by = request.user
                 self.object.updated_at = timezone.now()
             
-            if self.request.POST.get('_save_confirm') and self.test_group('doc_department'):
+            if self.request.POST.get('_save_confirm') and self.test_group('doc_executive'):
                 self.object.delivery_state = STATE_TYPE_CONFIRM
             
             # self.object.clean()
@@ -73,7 +73,7 @@ class ApplicationDeliveryReadonlyView(ApplicationReadonlyView):
     model = model_master
     form_class = ApplicationDeliveryShowEditForm
     details = details
-    user_groups = ['doc_executive','doc_department']
+    user_groups = ['doc_executive']
     menu_name = "doc_workflow:app_delivery_list"
     menu_edit_name = "doc_workflow:app_delivery_edit"
     menu_delete_name = None

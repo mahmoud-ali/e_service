@@ -106,7 +106,15 @@ class ApplicationRecordListView(ApplicationListView):
     user_groups = ['doc_executive','doc_department']
     menu_name = "doc_workflow:app_record_list"
     title = _("List of application records")
-    
+    template_name = "doc_workflow/views/application_list_with_controled_add.html"
+
+    # def get_queryset(self):                
+    #     query = super().get_queryset()
+    #     query = query.filter(department__group=list(self.request.user.groups.values_list('name', flat = True)))
+    #     if self.filterset_class:
+    #         query = self.filterset_class(self.request.GET,queryset=query).qs
+    #     return query.prefetch_related(*self.table_class.relation_fields)
+
 class ApplicationRecordCreateView(ApplicationMasterDetailCreateView):
     model = model_master
     form_class = ApplicationRecordAddForm
@@ -240,6 +248,11 @@ class ApplicationRecordReadonlyView(ApplicationReadonlyView):
     menu_delete_name = "doc_workflow:app_record_delete"
     title = _("Show application record")
     template_name = "doc_workflow/views/application_record_readonly.html"
+
+    def get(self,request,*args, **kwargs):        
+        obj = self.get_object()
+        self.extra_context["state"] = ApplicationRecord.STATE_TYPE_CHOICES[obj.state] 
+        return super().get(request,*args, **kwargs)
 
 class ApplicationRecordDeleteView(ApplicationDeleteMasterDetailView):
     model = model_master

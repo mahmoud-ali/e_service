@@ -6,7 +6,7 @@
 {% load auth_extras %}
 
 {% block content %}
-<h1 class="page-header">{% translate title %}</h1>
+<h1 class="page-header">{% translate title %} ({% translate state %})</h1>
 {% bootstrap_messages %}
 
 {% include "pa/company_panel.html" %}

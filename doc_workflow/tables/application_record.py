@@ -14,11 +14,12 @@ class BaseTable(tables.Table):
 class ApplicationRecordTable(BaseTable):
     menu_name = "doc_workflow:app_record_show"
     relation_fields = ["company"]
+    # execution_time = tables.Column(verbose_name= _('execution_time'))
 
     class Meta:
         model = ApplicationRecord
         template_name = "django_tables2/bootstrap.html"
-        fields = ("company","app_type","state","created_at","updated_at")
+        fields = ("company","app_type","state","created_at","updated_at") #,"execution_time"
         empty_text = _("No records.")        
 
     def render_company(self,value,record):
@@ -26,6 +27,9 @@ class ApplicationRecordTable(BaseTable):
 
     def render_state(self,value,record):
         return format_html("{}",value)
+
+    # def render_execution_time(self,value,record):
+    #     return format_html("{}",value)
 
 class ApplicationRecordFilter(FilterSet):
     class Meta:

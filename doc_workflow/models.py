@@ -7,6 +7,7 @@ from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
 from django.core.mail import send_mail
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import Group
 
 from company_profile.models import TblCompany,TblCompanyProduction
 
@@ -56,6 +57,7 @@ class ActionType(models.Model):
 
 class Department(models.Model):
     name = models.CharField(_("name"),max_length=50)
+    group = models.ForeignKey(Group,null=True,blank=True,on_delete=models.CASCADE)
 
     class Meta:
         ordering = ["id"]
@@ -70,8 +72,8 @@ class Destination(models.Model):
 
     class Meta:
         ordering = ["id"]
-        verbose_name = _("department")
-        verbose_name_plural = _("departments")
+        verbose_name = _("destination")
+        verbose_name_plural = _("destinations")
 
     def __str__(self):
         return str(self.name)
@@ -100,7 +102,7 @@ class ApplicationRecord(LoggingModel):
 
     company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
     app_type = models.ForeignKey(ApplicationType, on_delete=models.PROTECT,verbose_name=_("app_type"))    
-    attachement_file = models.FileField(_("attachement_file"),upload_to=attachement_path)
+    attachement_file = models.FileField(_("main_attachement_file"),upload_to=attachement_path)
     state = models.CharField(_("record_state"),max_length=25, choices=STATE_TYPE_CHOICES, default=STATE_TYPE_NEW)
 
     def __str__(self):
@@ -149,6 +151,12 @@ class ApplicationRecord(LoggingModel):
 
     def clean(self):
         pass
+
+    def execution_time(self):
+        delta = self.updated_at - self.created_at
+        print(delta.microseconds.__repr__())
+        delta.microseconds.__repr__()
+        return delta
 
 class ApplicationDepartmentProcessing(LoggingModel):
     def attachement_path(self, filename):
