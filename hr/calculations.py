@@ -90,13 +90,13 @@ class Badalat_3lawat():
             yield(p[0],p[1])
     
     def __str__(self) -> str:
-        return 'Badalat => \n'+'\n'.join([f'{b[0]}: {round(b[1],2)}' for b in self.__iter__()])
+        return 'Badalat => '+', '.join([f'{b[0]}: {round(b[1],2)}' for b in self.__iter__()])
 
 class Khosomat():
-    def __init__(self,Badalat:Badalat_3lawat,zakat_kafaf,zakat_nisab,m3ash=0,salafiat=0,jazaat=0,damga=1,sandog=0,sandog_kahraba=0):
+    def __init__(self,Badalat:Badalat_3lawat,zaka_kafaf,zaka_nisab,m3ash=0,salafiat=0,jazaat=0,damga=1,sandog=0,sandog_kahraba=0):
         self.Badalat = Badalat
-        self._zakat_kafaf = zakat_kafaf
-        self._zakat_nisab = zakat_nisab
+        self._zaka_kafaf = zaka_kafaf
+        self._zaka_nisab = zaka_nisab
         self._m3ash = m3ash
         self._salafiat = salafiat
         self._jazaat = jazaat
@@ -144,8 +144,8 @@ class Khosomat():
 
     @property
     def zakat(self):
-        x = self.Badalat.ajmali_almoratab -self._zakat_kafaf
-        if x > self._zakat_nisab:
+        x = self.Badalat.ajmali_almoratab -self._zaka_kafaf
+        if x > self._zaka_nisab:
             return x *0.025
         return 0
 
@@ -187,8 +187,8 @@ class Khosomat():
             yield(p[0],p[1])
     
     def __str__(self) -> str:
-        return 'Khosomat => \n'+'\n'.join([f'{b[0]}: {round(b[1],2)}' for b in self.__iter__()])
-
+        return 'Khosomat => '+', '.join([f'{b[0]}: {round(b[1],2)}' for b in self.__iter__()])
+    
 def example():
     badal = Badalat_3lawat(15022.0281121467,10708.1720490482,gasima=25000,atfal=60000,moahil=20000,ma3adin=52736.6266882452)
     khosomat = Khosomat(badal,215617,156159,sandog=20000)
