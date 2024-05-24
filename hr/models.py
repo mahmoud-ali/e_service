@@ -2,6 +2,18 @@ from django.db import models
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 
+MOAHIL_THANOI = 'thanoi'
+MOAHIL_BAKLARIOS = 'baklarios'
+MOAHIL_MAJSTEAR = 'majstear'
+MOAHIL_DECTORA = 'dectora'
+
+MOAHIL_CHOICES = {
+    MOAHIL_THANOI: _('MOAHIL_THANOI'),
+    MOAHIL_BAKLARIOS: _('MOAHIL_BAKLARIOS'),
+    MOAHIL_MAJSTEAR: _('MOAHIL_MAJSTEAR'),
+    MOAHIL_DECTORA: _('MOAHIL_DECTORA'),
+}
+
 class LoggingModel(models.Model):
     """
     An abstract base class model that provides self-
@@ -15,6 +27,40 @@ class LoggingModel(models.Model):
     
     class Meta:
         abstract = True
+
+class Settings(LoggingModel):
+    MOAHIL_PREFIX = 'moahil_'
+
+    SETTINGS_ZAKA_KAFAF = 'zaka_kafaf'
+    SETTINGS_ZAKA_NISAB = 'zaka_nisab'
+    SETTINGS_GASIMA = 'gasima'
+    SETTINGS_ATFAL = 'atfal'
+    SETTINGS_SANDOG = 'sandog'
+
+    SETTINGS_CHOICES = {
+        SETTINGS_ZAKA_KAFAF: _('SETTINGS_ZAKAT_KAFAF'),
+        SETTINGS_ZAKA_NISAB: _('SETTINGS_ZAKAT_NISAB'),
+        SETTINGS_GASIMA: _('SETTINGS_GASIMA'),
+        SETTINGS_ATFAL: _('SETTINGS_ATFAL'),
+        SETTINGS_SANDOG: _('SETTINGS_SANDOG'),
+    }
+
+    for moahil in MOAHIL_CHOICES:
+        key = MOAHIL_PREFIX + moahil
+        SETTINGS_CHOICES[key] = MOAHIL_CHOICES[moahil]
+
+    code = models.CharField(_("code"), choices=SETTINGS_CHOICES,max_length=20)
+    value = models.FloatField(_("value"))
+
+    def __str__(self) -> str:
+        return f'{self.code}: {self.value}'
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['code'],name="unique_setting_code")
+        ]
+        verbose_name = _("HR Setting")
+        verbose_name_plural = _("HR Settings")
 
 class Drajat3lawat(LoggingModel):
     DRAJAT_TALTA_KHASA = -3
@@ -67,30 +113,84 @@ class Drajat3lawat(LoggingModel):
         ALAWAT_TA3AKOD: _('ALAWAT_TA3AKOD'),
     }
 
-    draja_wazifia = models.IntegerField(_("draja_wazifia"),max_length=2, choices=DRAJAT_CHOICES)
-    alawa_sanawia = models.IntegerField(_("alawa_sanawia"),max_length=2, choices=ALAWAT_CHOICES)
-    abtdai = models.FloatField(_("abtdai"))
-    galaa_m3isha = models.FloatField(_("galaa_m3isha"))
-    shakhsia = models.FloatField(_("shakhsia"))
-    ma3adin = models.FloatField(_("ma3adin"))
-    aadoa = models.FloatField(_("aadoa"))
+    draja_wazifia = models.IntegerField(_("draja_wazifia"), choices=DRAJAT_CHOICES)
+    alawa_sanawia = models.IntegerField(_("alawa_sanawia"), choices=ALAWAT_CHOICES)
+    abtdai = models.FloatField(_("abtdai"),default=0)
+    galaa_m3isha = models.FloatField(_("galaa_m3isha"),default=0)
+    shakhsia = models.FloatField(_("shakhsia"),default=0)
+    ma3adin = models.FloatField(_("ma3adin"),default=0)
+    aadoa = models.FloatField(_("aadoa"),default=0)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['draja_wazifia','alawa_sanawia'],name="unique_draja_3lawa")
+        ]
+
+        indexes = [
+            models.Index(fields=["draja_wazifia", "alawa_sanawia"]),
+        ]
+        verbose_name = _("Drajat & 3lawat")
+        verbose_name_plural = _("Drajat & 3lawat")
 
 class MosamaWazifi(models.Model):
     name = models.CharField(_("mosama_wazifi"),max_length=100)
 
+    def __str__(self) -> str:
+        return self.name
+    
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['name'],name="unique_mosama_wazifi")
+        ]
+        verbose_name = _("Mosama Wazifi")
+        verbose_name_plural = _("Mosama Wazifi")
+
 class Edara3ama(models.Model):
-    name = models.CharField(_("edara3ama"),max_length=150)
+    name = models.CharField(_("edara_3ama"),max_length=150)
+
+    def __str__(self) -> str:
+        return self.name
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['name'],name="unique_edara_3ama")
+        ]
+        verbose_name = _("Edara 3ama")
+        verbose_name_plural = _("Edara 3ama")
 
 class Edarafar3ia(models.Model):
-    name = models.CharField(_("edarafar3ia"),max_length=150)
+    name = models.CharField(_("edara_far3ia"),max_length=150)
     edara_3ama = models.ForeignKey(Edara3ama, on_delete=models.PROTECT,verbose_name=_("edara3ama"))
+
+    def __str__(self) -> str:
+        return self.edara_3ama.name+'/'+self.name
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['name','edara_3ama'],name="unique_edara_far3ia")
+        ]
+        verbose_name = _("Edara far3ia")
+        verbose_name_plural = _("Edara far3ia")
 
 class EmployeeBasic(LoggingModel):
     name = models.CharField(_("employee_name"),max_length=150)
     mosama_wazifi = models.ForeignKey(MosamaWazifi, on_delete=models.PROTECT,verbose_name=_("mosama_wazifi"))
     edara_3ama = models.ForeignKey(Edara3ama, on_delete=models.PROTECT,verbose_name=_("edara_3ama"))
     edara_far3ia = models.ForeignKey(Edarafar3ia, on_delete=models.PROTECT,verbose_name=_("edara_far3ia"))
-    draja_wazifia = models.IntegerField(_("draja_wazifia"),max_length=2, choices=Drajat3lawat.DRAJAT_CHOICES)
-    alawa_sanawia = models.IntegerField(_("alawa_sanawia"),max_length=2, choices=Drajat3lawat.ALAWAT_CHOICES)
+    draja_wazifia = models.IntegerField(_("draja_wazifia"), choices=Drajat3lawat.DRAJAT_CHOICES)
+    alawa_sanawia = models.IntegerField(_("alawa_sanawia"), choices=Drajat3lawat.ALAWAT_CHOICES)
     tarikh_ta3in = models.DateField(_("tarikh_ta3in"))
-    
+    gasima = models.BooleanField(_("gasima"),default=False)
+    atfal = models.IntegerField(_("3dad_atfal"),default=0)
+    moahil = models.CharField(_("moahil"),max_length=20, choices=MOAHIL_CHOICES,default=MOAHIL_BAKLARIOS)
+
+    def __str__(self) -> str:
+        return f'{self.name} / {self.edara_3ama.name}'
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['name','tarikh_ta3in'],name="unique_employee")
+        ]
+        verbose_name = _("Employee data")
+        verbose_name_plural = _("Employee data")
+
