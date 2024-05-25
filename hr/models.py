@@ -1,6 +1,35 @@
 from django.db import models
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
+from django.forms import ValidationError
+
+MONTH_JAN = 1
+MONTH_FEB = 2
+MONTH_MAR = 3
+MONTH_APR = 4
+MONTH_MAY = 5
+MONTH_JUN = 6
+MONTH_JLY = 7
+MONTH_AUG = 8
+MONTH_SEP = 9
+MONTH_OCT = 10
+MONTH_NOV = 11
+MONTH_DEC = 12
+
+MONTH_CHOICES = {
+    MONTH_JAN: _('MONTH_JAN'),
+    MONTH_FEB: _('MONTH_FEB'),
+    MONTH_MAR: _('MONTH_MAR'),
+    MONTH_APR: _('MONTH_APR'),
+    MONTH_MAY: _('MONTH_MAY'),
+    MONTH_JUN: _('MONTH_JUN'),
+    MONTH_JLY: _('MONTH_JLY'),
+    MONTH_AUG: _('MONTH_AUG'),
+    MONTH_SEP: _('MONTH_SEP'),
+    MONTH_OCT: _('MONTH_OCT'),
+    MONTH_NOV: _('MONTH_NOV'),
+    MONTH_DEC: _('MONTH_DEC'),
+}
 
 MOAHIL_THANOI = 'thanoi'
 MOAHIL_BAKLARIOS = 'baklarios'
@@ -35,6 +64,7 @@ class Settings(LoggingModel):
     SETTINGS_ZAKA_NISAB = 'zaka_nisab'
     SETTINGS_GASIMA = 'gasima'
     SETTINGS_ATFAL = 'atfal'
+    SETTINGS_DAMGA = 'damga'
     SETTINGS_SANDOG = 'sandog'
 
     SETTINGS_CHOICES = {
@@ -42,6 +72,7 @@ class Settings(LoggingModel):
         SETTINGS_ZAKA_NISAB: _('SETTINGS_ZAKAT_NISAB'),
         SETTINGS_GASIMA: _('SETTINGS_GASIMA'),
         SETTINGS_ATFAL: _('SETTINGS_ATFAL'),
+        SETTINGS_DAMGA: _('SETTINGS_DAMGA'),
         SETTINGS_SANDOG: _('SETTINGS_SANDOG'),
     }
 
@@ -183,6 +214,7 @@ class EmployeeBasic(LoggingModel):
     gasima = models.BooleanField(_("gasima"),default=False)
     atfal = models.IntegerField(_("3dad_atfal"),default=0)
     moahil = models.CharField(_("moahil"),max_length=20, choices=MOAHIL_CHOICES,default=MOAHIL_BAKLARIOS)
+    m3ash = models.FloatField(_("m3ash"),default=0)
 
     def __str__(self) -> str:
         return f'{self.name} / {self.edara_3ama.name}'
@@ -194,3 +226,74 @@ class EmployeeBasic(LoggingModel):
         verbose_name = _("Employee data")
         verbose_name_plural = _("Employee data")
 
+    def clean(self):
+        if hasattr(self.edara_far3ia,'edara_3ama'):
+            if self.edara_far3ia.edara_3ama != self.edara_3ama:
+                raise ValidationError(
+                    {"edara_far3ia":_("al2dara alfr3ia la tatba3 lil al2dara al3ama")}
+                )
+            
+        if self.draja_wazifia == Drajat3lawat.DRAJAT_TA3AKOD:
+            if self.alawa_sanawia != Drajat3lawat.ALAWAT_TA3AKOD:
+                raise ValidationError(
+                    {"alawa_sanawia":_("akhtar 3lawat t3akod")}
+                )
+        else:
+            if self.alawa_sanawia == Drajat3lawat.ALAWAT_TA3AKOD:
+                raise ValidationError(
+                    {"alawa_sanawia":_("akhtar 3lawat gair t3akod")}
+                )
+
+class Salafiat(LoggingModel):
+    employee = models.ForeignKey(EmployeeBasic, on_delete=models.PROTECT)
+    year = models.IntegerField(_("year"))
+    month = models.IntegerField(_("month"), choices=MONTH_CHOICES)
+    note = models.CharField(_("note"),max_length=150)
+    amount = models.FloatField(_("amount"))
+    deducted = models.BooleanField(_("deducted"),default=False)
+
+    class Meta:
+        indexes = [
+            models.Index(fields=["employee", "year","month"]),
+        ]
+        verbose_name = _("Salafiat")
+        verbose_name_plural = _("Salafiat")
+
+class Jazaat(LoggingModel):
+    employee = models.ForeignKey(EmployeeBasic, on_delete=models.PROTECT)
+    year = models.IntegerField(_("year"))
+    month = models.IntegerField(_("month"), choices=MONTH_CHOICES)
+    note = models.CharField(_("note"),max_length=150)
+    amount = models.FloatField(_("amount"))
+    deducted = models.BooleanField(_("deducted"),default=False)
+
+    class Meta:
+        indexes = [
+            models.Index(fields=["employee", "year","month"]),
+        ]
+        verbose_name = _("Jazaat")
+        verbose_name_plural = _("Jazaat")
+
+class PayrollMaster(LoggingModel):
+    year = models.IntegerField(_("year"))
+    month = models.IntegerField(_("month"), choices=MONTH_CHOICES)
+    zaka_kafaf = models.FloatField(_("zaka_kafaf"),default=0)
+    zaka_nisab = models.FloatField(_("zaka_nisab"),default=0)
+
+class PayrollDetail(models.Model):
+    payroll_master = models.ForeignKey(PayrollMaster, on_delete=models.PROTECT)
+    employee = models.ForeignKey(EmployeeBasic, on_delete=models.PROTECT)
+    abtdai = models.FloatField(_("abtdai"),default=0)
+    galaa_m3isha = models.FloatField(_("galaa_m3isha"),default=0)
+    shakhsia = models.FloatField(_("shakhsia"),default=0)
+    aadoa = models.FloatField(_("aadoa"),default=0)
+    gasima = models.FloatField(_("gasima"),default=0)
+    atfal = models.FloatField(_("atfal"),default=0)
+    moahil = models.FloatField(_("moahil"),default=0)
+    ma3adin = models.FloatField(_("ma3adin"),default=0)
+    m3ash = models.FloatField(_("m3ash"),default=0)
+    salafiat = models.FloatField(_("salafiat"),default=0)
+    jazaat = models.FloatField(_("jazaat"),default=0)
+    damga = models.FloatField(_("damga"),default=0)
+    sandog = models.FloatField(_("sandog"),default=0)
+    sandog_kahraba = models.FloatField(_("sandog_kahraba"),default=0)

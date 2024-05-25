@@ -76,7 +76,12 @@ def payroll_summary():
             khosomat = Khosomat(
                 badal,hr_settings.get_by_code(Settings.SETTINGS_ZAKA_KAFAF),
                 hr_settings.get_by_code(Settings.SETTINGS_ZAKA_NISAB),
-                sandog=hr_settings.get_by_code(Settings.SETTINGS_SANDOG)
+                damga=hr_settings.get_by_code(Settings.SETTINGS_DAMGA),
+                m3ash=emp.m3ash,
+                salafiat=0,
+                jazaat=0,
+                sandog_kahraba=0,
+                sandog=hr_settings.get_by_code(Settings.SETTINGS_SANDOG),
             )
 
             print(f'Name: {emp.name}')
