@@ -50,7 +50,7 @@ admin.site.register(Settings,SettingsAdmin)
 class SalafiatAdmin(admin.ModelAdmin):
     exclude = ["created_at","created_by","updated_at","updated_by"]
     
-    list_display = ["employee", "year","month","note","amount"] 
+    list_display = ["employee", "year","month","note","amount","deducted"] 
     list_filter = ["year","month"]
     view_on_site = False
 
@@ -66,7 +66,7 @@ admin.site.register(Salafiat,SalafiatAdmin)
 class JazaatAdmin(admin.ModelAdmin):
     exclude = ["created_at","created_by","updated_at","updated_by"]
     
-    list_display = ["employee", "year","month","note","amount"] 
+    list_display = ["employee", "year","month","note","amount","deducted"] 
     list_filter = ["year","month"]
     view_on_site = False
 
@@ -85,23 +85,28 @@ class PayrollDetailInline(admin.TabularInline):
     exclude = ["created_at","created_by","updated_at","updated_by"]
     extra = 0
     readonly_fields = ['employee','abtdai','galaa_m3isha','shakhsia','aadoa','gasima','atfal','moahil','ma3adin','m3ash','salafiat','jazaat','damga','sandog','sandog_kahraba']
+    can_delete = False
+    list_select_related = True
+    def has_add_permission(self,request, obj):
+        return False
     
 class PayrollMasterAdmin(admin.ModelAdmin):
     exclude = ["created_at","created_by","updated_at","updated_by"]
     inlines = [PayrollDetailInline]
 
-    list_display = ["year","month"] 
-    list_filter = ["year","month"]
+    list_display = ["year","month","confirmed"] 
+    list_filter = ["year","month","confirmed"]
     view_on_site = False
+    list_select_related = True
 
-    # list_select_related = (EmployeeBasic,Edara3ama,Edarafar3ia)
+    readonly_fields = ["year","month","zaka_kafaf","zaka_nisab","confirmed"]
 
-    def save_model(self, request, obj, form, change):
-        if obj.pk:
-            obj.updated_by = request.user
-        else:
-            obj.created_by = obj.updated_by = request.user
-        super().save_model(request, obj, form, change)                
+    # def save_model(self, request, obj, form, change):
+    #     if obj.pk:
+    #         obj.updated_by = request.user
+    #     else:
+    #         obj.created_by = obj.updated_by = request.user
+    #     super().save_model(request, obj, form, change)                
 
 
 admin.site.register(PayrollMaster,PayrollMasterAdmin)

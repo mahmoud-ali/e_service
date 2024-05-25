@@ -68,10 +68,6 @@ class Payroll():
             )
 
             return (employee,badal,khosomat)
-            # print(f'Name: {employee.name}')
-            # print(badal)
-            # print(khosomat)
-            # print("\n")
         except Drajat3lawat.DoesNotExist as e:
             pass
             # print(e)
@@ -172,8 +168,8 @@ class Payroll():
             self.payroll_master.confirmed = True
             self.payroll_master.save(update_fields=['confirmed'])
 
-            self.salafiat_qs.update(confirmed = True)
-            self.jazaat_qs.update(confirmed = True)
+            self.salafiat_qs.update(deducted = True)
+            self.jazaat_qs.update(deducted = True)
 
             return True
         

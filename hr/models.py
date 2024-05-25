@@ -250,7 +250,7 @@ class Salafiat(LoggingModel):
     month = models.IntegerField(_("month"), choices=MONTH_CHOICES)
     note = models.CharField(_("note"),max_length=150)
     amount = models.FloatField(_("amount"))
-    confirmed = models.BooleanField(_("confirmed"),default=False)
+    deducted = models.BooleanField(_("deducted"),default=False)
 
     class Meta:
         constraints = [
@@ -268,7 +268,7 @@ class Jazaat(LoggingModel):
     month = models.IntegerField(_("month"), choices=MONTH_CHOICES)
     note = models.CharField(_("note"),max_length=150)
     amount = models.FloatField(_("amount"))
-    confirmed = models.BooleanField(_("confirmed"),default=False)
+    deducted = models.BooleanField(_("deducted"),default=False)
 
     class Meta:
         constraints = [
@@ -291,6 +291,8 @@ class PayrollMaster(LoggingModel):
         constraints = [
             models.UniqueConstraint(fields=['year','month'],name="unique_payroll_year_month")
         ]
+        verbose_name = _("Payroll")
+        verbose_name_plural = _("Payroll")
 
 class PayrollDetail(models.Model):
     payroll_master = models.ForeignKey(PayrollMaster, on_delete=models.PROTECT)
