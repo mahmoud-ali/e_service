@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-05-25 13:03+0200\n"
+"POT-Creation-Date: 2024-05-25 20:29+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2375,53 +2375,51 @@ msgstr "الموارد البشرية"
 
 #: hr/models.py:20
 msgid "MONTH_JAN"
-msgstr ""
+msgstr "يناير"
 
 #: hr/models.py:21
 msgid "MONTH_FEB"
-msgstr ""
+msgstr "فبراير"
 
 #: hr/models.py:22
 msgid "MONTH_MAR"
-msgstr ""
+msgstr "مارس"
 
 #: hr/models.py:23
 msgid "MONTH_APR"
-msgstr ""
+msgstr "ابريل"
 
 #: hr/models.py:24
 msgid "MONTH_MAY"
-msgstr ""
+msgstr "مايو"
 
 #: hr/models.py:25
 msgid "MONTH_JUN"
-msgstr ""
+msgstr "يونيو"
 
 #: hr/models.py:26
 msgid "MONTH_JLY"
-msgstr ""
+msgstr "يوليو"
 
 #: hr/models.py:27
 msgid "MONTH_AUG"
-msgstr ""
+msgstr "اغسطس"
 
 #: hr/models.py:28
 msgid "MONTH_SEP"
-msgstr ""
+msgstr "سبتمبر"
 
 #: hr/models.py:29
 msgid "MONTH_OCT"
-msgstr ""
+msgstr "اكتوبر"
 
 #: hr/models.py:30
 msgid "MONTH_NOV"
-msgstr ""
+msgstr "نوفمبر"
 
 #: hr/models.py:31
-#, fuzzy
-#| msgid "MOAHIL_DECTORA"
 msgid "MONTH_DEC"
-msgstr "مؤهل دكتورة"
+msgstr "ديسمبر"
 
 #: hr/models.py:40
 msgid "MOAHIL_THANOI"
@@ -2456,10 +2454,8 @@ msgid "SETTINGS_ATFAL"
 msgstr "علاوة الطفل"
 
 #: hr/models.py:75
-#, fuzzy
-#| msgid "SETTINGS_GASIMA"
 msgid "SETTINGS_DAMGA"
-msgstr "قيمة القسيمة"
+msgstr "الدمغة"
 
 #: hr/models.py:76
 msgid "SETTINGS_SANDOG"
@@ -2573,23 +2569,23 @@ msgstr "الدرجة الوظيفية"
 msgid "alawa_sanawia"
 msgstr "العلاوة السنوية"
 
-#: hr/models.py:149 hr/models.py:286
+#: hr/models.py:149 hr/models.py:298
 msgid "abtdai"
 msgstr "ابتدائية"
 
-#: hr/models.py:150 hr/models.py:287
+#: hr/models.py:150 hr/models.py:299
 msgid "galaa_m3isha"
 msgstr "غلاء معيشة"
 
-#: hr/models.py:151 hr/models.py:288
+#: hr/models.py:151 hr/models.py:300
 msgid "shakhsia"
 msgstr "علاوة شخصية"
 
-#: hr/models.py:152 hr/models.py:293
+#: hr/models.py:152 hr/models.py:305
 msgid "ma3adin"
 msgstr "معادن"
 
-#: hr/models.py:153 hr/models.py:289
+#: hr/models.py:153 hr/models.py:301
 msgid "aadoa"
 msgstr "عدوى"
 
@@ -2629,21 +2625,21 @@ msgstr "الادارة الفرعية"
 msgid "tarikh_ta3in"
 msgstr "تاريخ التعيين"
 
-#: hr/models.py:214 hr/models.py:290
+#: hr/models.py:214 hr/models.py:302
 msgid "gasima"
-msgstr "علاوة اجتماعية - قسيمة"
+msgstr "علاوة اجتماعية-قسيمة"
 
 #: hr/models.py:215
 msgid "3dad_atfal"
-msgstr "عدد الاطفال"
+msgstr "علاوة اجتماعية-اطفال"
 
-#: hr/models.py:216 hr/models.py:292
+#: hr/models.py:216 hr/models.py:304
 msgid "moahil"
 msgstr "المؤهل"
 
-#: hr/models.py:217 hr/models.py:294
+#: hr/models.py:217 hr/models.py:306
 msgid "m3ash"
-msgstr ""
+msgstr "معاش"
 
 #: hr/models.py:226 hr/models.py:227
 msgid "Employee data"
@@ -2661,64 +2657,64 @@ msgstr "اختر علاوة تعاقد"
 msgid "akhtar 3lawat gair t3akod"
 msgstr "اختر علاوة غير تعاقد"
 
-#: hr/models.py:249 hr/models.py:264 hr/models.py:278
+#: hr/models.py:249 hr/models.py:267 hr/models.py:284
 msgid "year"
 msgstr "السنة"
 
-#: hr/models.py:250 hr/models.py:265 hr/models.py:279
+#: hr/models.py:250 hr/models.py:268 hr/models.py:285
 msgid "month"
 msgstr "الشهر"
 
-#: hr/models.py:251 hr/models.py:266
+#: hr/models.py:251 hr/models.py:269
 msgid "note"
 msgstr "البيان"
 
-#: hr/models.py:252 hr/models.py:267 pa/models.py:114 pa/models.py:440
+#: hr/models.py:252 hr/models.py:270 pa/models.py:114 pa/models.py:440
 #: pa/models.py:543 pa/models.py:609
 msgid "amount"
 msgstr "المبلغ"
 
-#: hr/models.py:253 hr/models.py:268
-msgid "deducted"
-msgstr "تم الخسم"
+#: hr/models.py:253 hr/models.py:271 hr/models.py:288
+msgid "confirmed"
+msgstr "مؤكد"
 
-#: hr/models.py:259 hr/models.py:260
+#: hr/models.py:262 hr/models.py:263
 msgid "Salafiat"
 msgstr "السلفيات"
 
-#: hr/models.py:274 hr/models.py:275
+#: hr/models.py:280 hr/models.py:281
 msgid "Jazaat"
 msgstr "الجزاءات"
 
-#: hr/models.py:280
+#: hr/models.py:286
 msgid "zaka_kafaf"
 msgstr "زكاة/حدالكفاف"
 
-#: hr/models.py:281
+#: hr/models.py:287
 msgid "zaka_nisab"
 msgstr "زكاة/النصاب"
 
-#: hr/models.py:291
+#: hr/models.py:303
 msgid "atfal"
 msgstr "عدد الاطفال"
 
-#: hr/models.py:295
+#: hr/models.py:307
 msgid "salafiat"
 msgstr "السلفيات"
 
-#: hr/models.py:296
+#: hr/models.py:308
 msgid "jazaat"
 msgstr ".الجزاءات"
 
-#: hr/models.py:297
+#: hr/models.py:309
 msgid "damga"
 msgstr "الدمغة"
 
-#: hr/models.py:298
+#: hr/models.py:310
 msgid "sandog"
 msgstr "الصندوق"
 
-#: hr/models.py:299
+#: hr/models.py:311
 msgid "sandog_kahraba"
 msgstr "الصندوق كهرباء"
 
@@ -3276,6 +3272,9 @@ msgstr "خروج"
 #: templates/allauth/layouts/base.html:33
 msgid "Sign In"
 msgstr "دخول"
+
+#~ msgid "deducted"
+#~ msgstr "تم الخسم"
 
 #~ msgid "type"
 #~ msgstr "النوع"

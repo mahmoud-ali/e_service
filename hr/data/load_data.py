@@ -2,21 +2,7 @@ import csv
 
 from django.contrib.auth import get_user_model
 
-from hr.calculations import Badalat_3lawat, Khosomat
-from django.db.models import Sum
-
-from ..models import Jazaat, MosamaWazifi,Edara3ama,Edarafar3ia,EmployeeBasic,Drajat3lawat,Settings,Salafiat
-
-class HrSettings():
-    def __init__(self) -> None:
-        self.values = {}
-        
-        for val in Settings.objects.values('code','value'):
-            code = val.get('code')
-            self.values[code] = val.get('value')
-
-    def get_by_code(self,code):            
-        return self.values.get(code,0)
+from ..models import MosamaWazifi,Edara3ama,Edarafar3ia,EmployeeBasic,Settings
 
 def show_data():
     with open('./hr/data/employee.csv', newline='') as csvfile:
@@ -53,45 +39,3 @@ def import_employees():
                 )
             except Exception as e:
                 print(f'Id: {id}, Exception: {e}')
-
-def payroll_summary(year,month):
-    hr_settings = HrSettings()
-    for emp in EmployeeBasic.objects.filter(id=1794): #.all():
-        moahil = Settings.MOAHIL_PREFIX + emp.moahil
-        salafiat_total = Salafiat.objects.filter(year=year,month=month).aggregate(total=Sum("amount"))['total'] or 0
-        jazaat_total = Jazaat.objects.filter(year=year,month=month).aggregate(total=Sum("amount"))['total'] or 0
-        gasima = 0
-        if(emp.gasima):
-            gasima = hr_settings.get_by_code(Settings.SETTINGS_GASIMA)
-
-        try:
-            draj_obj = Drajat3lawat.objects.get(draja_wazifia=emp.draja_wazifia,alawa_sanawia=emp.alawa_sanawia)
-            badal = Badalat_3lawat(
-                draj_obj.abtdai,
-                draj_obj.galaa_m3isha,
-                shakhsia=draj_obj.shakhsia,
-                aadoa=draj_obj.aadoa,
-                gasima=gasima,
-                atfal=(emp.atfal *hr_settings.get_by_code(Settings.SETTINGS_ATFAL)),
-                moahil=hr_settings.get_by_code(moahil),
-                ma3adin=draj_obj.ma3adin
-            )
-            khosomat = Khosomat(
-                badal,hr_settings.get_by_code(Settings.SETTINGS_ZAKA_KAFAF),
-                hr_settings.get_by_code(Settings.SETTINGS_ZAKA_NISAB),
-                damga=hr_settings.get_by_code(Settings.SETTINGS_DAMGA),
-                m3ash=emp.m3ash,
-                salafiat=salafiat_total,
-                jazaat=jazaat_total,
-                sandog_kahraba=0,
-                sandog=hr_settings.get_by_code(Settings.SETTINGS_SANDOG),
-            )
-
-            print(f'Name: {emp.name}')
-            print(badal)
-            print(khosomat)
-            print("\n")
-        except Drajat3lawat.DoesNotExist as e:
-            pass
-            # print(e)
-            # print(f'draja_wazifia: {Drajat3lawat.DRAJAT_CHOICES.get(emp.draja_wazifia)}, alawa_sanawia: {Drajat3lawat.DRAJAT_CHOICES.get(emp.alawa_sanawia)}')

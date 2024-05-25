@@ -191,7 +191,7 @@ class Edara3ama(models.Model):
 
 class Edarafar3ia(models.Model):
     name = models.CharField(_("edara_far3ia"),max_length=150)
-    edara_3ama = models.ForeignKey(Edara3ama, on_delete=models.PROTECT,verbose_name=_("edara3ama"))
+    edara_3ama = models.ForeignKey(Edara3ama, on_delete=models.PROTECT,verbose_name=_("edara_3ama"))
 
     def __str__(self) -> str:
         return self.edara_3ama.name+'/'+self.name
@@ -245,14 +245,17 @@ class EmployeeBasic(LoggingModel):
                 )
 
 class Salafiat(LoggingModel):
-    employee = models.ForeignKey(EmployeeBasic, on_delete=models.PROTECT)
+    employee = models.ForeignKey(EmployeeBasic, on_delete=models.PROTECT,verbose_name=_("employee_name"))
     year = models.IntegerField(_("year"))
     month = models.IntegerField(_("month"), choices=MONTH_CHOICES)
     note = models.CharField(_("note"),max_length=150)
     amount = models.FloatField(_("amount"))
-    deducted = models.BooleanField(_("deducted"),default=False)
+    confirmed = models.BooleanField(_("confirmed"),default=False)
 
     class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['employee','year','month'],name="unique_salafiat_employee_year_month")
+        ]
         indexes = [
             models.Index(fields=["employee", "year","month"]),
         ]
@@ -260,14 +263,17 @@ class Salafiat(LoggingModel):
         verbose_name_plural = _("Salafiat")
 
 class Jazaat(LoggingModel):
-    employee = models.ForeignKey(EmployeeBasic, on_delete=models.PROTECT)
+    employee = models.ForeignKey(EmployeeBasic, on_delete=models.PROTECT,verbose_name=_("employee_name"))
     year = models.IntegerField(_("year"))
     month = models.IntegerField(_("month"), choices=MONTH_CHOICES)
     note = models.CharField(_("note"),max_length=150)
     amount = models.FloatField(_("amount"))
-    deducted = models.BooleanField(_("deducted"),default=False)
+    confirmed = models.BooleanField(_("confirmed"),default=False)
 
     class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['employee','year','month'],name="unique_jazaat_employee_year_month")
+        ]
         indexes = [
             models.Index(fields=["employee", "year","month"]),
         ]
@@ -279,10 +285,16 @@ class PayrollMaster(LoggingModel):
     month = models.IntegerField(_("month"), choices=MONTH_CHOICES)
     zaka_kafaf = models.FloatField(_("zaka_kafaf"),default=0)
     zaka_nisab = models.FloatField(_("zaka_nisab"),default=0)
+    confirmed = models.BooleanField(_("confirmed"),default=False)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['year','month'],name="unique_payroll_year_month")
+        ]
 
 class PayrollDetail(models.Model):
     payroll_master = models.ForeignKey(PayrollMaster, on_delete=models.PROTECT)
-    employee = models.ForeignKey(EmployeeBasic, on_delete=models.PROTECT)
+    employee = models.ForeignKey(EmployeeBasic, on_delete=models.PROTECT,verbose_name=_("employee_name"))
     abtdai = models.FloatField(_("abtdai"),default=0)
     galaa_m3isha = models.FloatField(_("galaa_m3isha"),default=0)
     shakhsia = models.FloatField(_("shakhsia"),default=0)
@@ -297,3 +309,8 @@ class PayrollDetail(models.Model):
     damga = models.FloatField(_("damga"),default=0)
     sandog = models.FloatField(_("sandog"),default=0)
     sandog_kahraba = models.FloatField(_("sandog_kahraba"),default=0)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['payroll_master','employee'],name="unique_employee_payroll")
+        ]
