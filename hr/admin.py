@@ -1,13 +1,13 @@
 from django.contrib import admin
 
-from .models import Drajat3lawat, MosamaWazifi,Edara3ama,Edarafar3ia,EmployeeBasic,Settings
+from .models import Drajat3lawat, Jazaat, MosamaWazifi,Edara3ama,Edarafar3ia,EmployeeBasic, Salafiat,Settings
 
 admin.site.register(MosamaWazifi)
 admin.site.register(Edara3ama)
 admin.site.register(Edarafar3ia)
 
 class EmployeeBasicAdmin(admin.ModelAdmin):
-    fields = ["name", "mosama_wazifi", "edara_3ama","edara_far3ia", "draja_wazifia","alawa_sanawia","tarikh_ta3in","gasima","atfal","moahil"]        
+    fields = ["name", "mosama_wazifi", "edara_3ama","edara_far3ia", "draja_wazifia","alawa_sanawia","tarikh_ta3in","gasima","atfal","moahil","m3ash"]        
     
     list_display = ["name", "mosama_wazifi", "edara_3ama","edara_far3ia", "draja_wazifia","alawa_sanawia","tarikh_ta3in"]        
     list_filter = ["edara_3ama","draja_wazifia","alawa_sanawia"]
@@ -46,3 +46,37 @@ class SettingsAdmin(admin.ModelAdmin):
         super().save_model(request, obj, form, change)                
 
 admin.site.register(Settings,SettingsAdmin)
+
+class SalafiatAdmin(admin.ModelAdmin):
+    fields = ["employee", "year","month","note","amount"]        
+    
+    list_display = ["employee", "year","month","note","amount"] 
+    list_filter = ["year","month"]
+    view_on_site = False
+
+    def save_model(self, request, obj, form, change):
+        if obj.pk:
+            obj.updated_by = request.user
+        else:
+            obj.created_by = obj.updated_by = request.user
+        super().save_model(request, obj, form, change)                
+
+admin.site.register(Salafiat,SalafiatAdmin)
+
+class JazaatAdmin(admin.ModelAdmin):
+    fields = ["employee", "year","month","note","amount"]        
+    
+    list_display = ["employee", "year","month","note","amount"] 
+    list_filter = ["year","month"]
+    view_on_site = False
+
+    def save_model(self, request, obj, form, change):
+        if obj.pk:
+            obj.updated_by = request.user
+        else:
+            obj.created_by = obj.updated_by = request.user
+        super().save_model(request, obj, form, change)                
+
+
+admin.site.register(Jazaat,JazaatAdmin)
+

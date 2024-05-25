@@ -3,8 +3,9 @@ import csv
 from django.contrib.auth import get_user_model
 
 from hr.calculations import Badalat_3lawat, Khosomat
+from django.db.models import Sum
 
-from ..models import MosamaWazifi,Edara3ama,Edarafar3ia,EmployeeBasic,Drajat3lawat,Settings
+from ..models import Jazaat, MosamaWazifi,Edara3ama,Edarafar3ia,EmployeeBasic,Drajat3lawat,Settings,Salafiat
 
 class HrSettings():
     def __init__(self) -> None:
@@ -53,10 +54,12 @@ def import_employees():
             except Exception as e:
                 print(f'Id: {id}, Exception: {e}')
 
-def payroll_summary():
+def payroll_summary(year,month):
     hr_settings = HrSettings()
-    for emp in EmployeeBasic.objects.all():
+    for emp in EmployeeBasic.objects.filter(id=1794): #.all():
         moahil = Settings.MOAHIL_PREFIX + emp.moahil
+        salafiat_total = Salafiat.objects.filter(year=year,month=month).aggregate(total=Sum("amount"))['total'] or 0
+        jazaat_total = Jazaat.objects.filter(year=year,month=month).aggregate(total=Sum("amount"))['total'] or 0
         gasima = 0
         if(emp.gasima):
             gasima = hr_settings.get_by_code(Settings.SETTINGS_GASIMA)
@@ -78,8 +81,8 @@ def payroll_summary():
                 hr_settings.get_by_code(Settings.SETTINGS_ZAKA_NISAB),
                 damga=hr_settings.get_by_code(Settings.SETTINGS_DAMGA),
                 m3ash=emp.m3ash,
-                salafiat=0,
-                jazaat=0,
+                salafiat=salafiat_total,
+                jazaat=jazaat_total,
                 sandog_kahraba=0,
                 sandog=hr_settings.get_by_code(Settings.SETTINGS_SANDOG),
             )
