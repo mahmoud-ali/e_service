@@ -31,7 +31,7 @@ class Payroll():
 
         try:
             self.payroll_master = PayrollMaster.objects.get(year=self.year,month=self.month)
-            self.payroll_details = PayrollDetail.objects.filter(payroll_master=self.payroll_master)
+            self.payroll_details = PayrollDetail.objects.filter(payroll_master=self.payroll_master).order_by('employee__name')
         except PayrollMaster.DoesNotExist:
             self.payroll_master = None
             self.payroll_details = []
@@ -117,22 +117,25 @@ class Payroll():
         
 
     def calculate(self):
-        if self.payroll_master:
+        if self.is_confirmed():
             return False
         
         emp = None
 
         try:
             with transaction.atomic():        
-                self.payroll_master = PayrollMaster.objects.create(
-                    year = self.year,
-                    month = self.month,
-                    zaka_kafaf = self.hr_settings.get_by_code(Settings.SETTINGS_ZAKA_KAFAF),
-                    zaka_nisab = self.hr_settings.get_by_code(Settings.SETTINGS_ZAKA_NISAB),
-                    created_by = self.admin_user,
-                    updated_by = self.admin_user,
-                )
-
+                if not self.payroll_master:
+                    self.payroll_master = PayrollMaster.objects.create(
+                        year = self.year,
+                        month = self.month,
+                        zaka_kafaf = self.hr_settings.get_by_code(Settings.SETTINGS_ZAKA_KAFAF),
+                        zaka_nisab = self.hr_settings.get_by_code(Settings.SETTINGS_ZAKA_NISAB),
+                        created_by = self.admin_user,
+                        updated_by = self.admin_user,
+                    )
+                else:
+                    PayrollDetail.objects.filter(payroll_master = self.payroll_master).delete()
+                    
                 for emp_payroll in self.all_employees_payroll_calculated():
                     emp,badalat,khosomat = emp_payroll
 
@@ -158,7 +161,7 @@ class Payroll():
             print(f'Payroll not calculated: {e}')
             return False
         
-        self.payroll_details = PayrollDetail.objects.filter(payroll_master=self.payroll_master)
+        self.payroll_details = PayrollDetail.objects.filter(payroll_master=self.payroll_master).order_by('employee__name')
 
     def confirm(self):
         if not self.payroll_master:

@@ -152,6 +152,9 @@ class Drajat3lawat(LoggingModel):
     ma3adin = models.FloatField(_("ma3adin"),default=0)
     aadoa = models.FloatField(_("aadoa"),default=0)
 
+    def __str__(self) -> str:
+        return self.DRAJAT_CHOICES[self.draja_wazifia]+'/'+self.ALAWAT_CHOICES[self.alawa_sanawia]
+
     class Meta:
         constraints = [
             models.UniqueConstraint(fields=['draja_wazifia','alawa_sanawia'],name="unique_draja_3lawa")
@@ -295,7 +298,7 @@ class PayrollMaster(LoggingModel):
         verbose_name_plural = _("Payroll")
 
 class PayrollDetail(models.Model):
-    payroll_master = models.ForeignKey(PayrollMaster, on_delete=models.PROTECT)
+    payroll_master = models.ForeignKey(PayrollMaster, on_delete=models.CASCADE)
     employee = models.ForeignKey(EmployeeBasic, on_delete=models.PROTECT,verbose_name=_("employee_name"))
     abtdai = models.FloatField(_("abtdai"),default=0)
     galaa_m3isha = models.FloatField(_("galaa_m3isha"),default=0)

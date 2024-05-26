@@ -1,4 +1,7 @@
 from django.contrib import admin
+from django.urls import reverse
+from django.utils.html import format_html
+from django.utils.translation import gettext_lazy as _
 
 from .models import Drajat3lawat, Jazaat, MosamaWazifi,Edara3ama,Edarafar3ia,EmployeeBasic, PayrollDetail, PayrollMaster, Salafiat,Settings
 
@@ -94,12 +97,24 @@ class PayrollMasterAdmin(admin.ModelAdmin):
     exclude = ["created_at","created_by","updated_at","updated_by"]
     inlines = [PayrollDetailInline]
 
-    list_display = ["year","month","confirmed"] 
+    list_display = ["year","month","confirmed","show_badalat_link","show_khosomat_link"] 
     list_filter = ["year","month","confirmed"]
     view_on_site = False
     list_select_related = True
 
     readonly_fields = ["year","month","zaka_kafaf","zaka_nisab","confirmed"]
+
+    @admin.display(description=_('Show badalat sheet'))
+    def show_badalat_link(self, obj):
+        url = reverse('hr:payroll_badalat')
+        return format_html('<a target="_blank" class="viewlink" href="{url}?year={year}&month={month}">'+_('Show badalat sheet')+'</a>',
+                           url=url,year=obj.year,month=obj.month)
+
+    @admin.display(description=_('Show khosomat sheet'))
+    def show_khosomat_link(self, obj):
+        url = reverse('hr:payroll_khosomat')
+        return format_html('<a target="_blank" class="viewlink" href="{url}?year={year}&month={month}">'+_('Show khosomat sheet')+'</a>',
+                           url=url,year=obj.year,month=obj.month)
 
     # def save_model(self, request, obj, form, change):
     #     if obj.pk:

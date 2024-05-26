@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-05-25 22:54+0200\n"
+"POT-Creation-Date: 2024-05-26 10:47+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1188,8 +1188,8 @@ msgstr "طلب اجراءات اجنبي"
 msgid "procedure_master"
 msgstr ""
 
-#: company_profile/models.py:737 hr/models.py:207 hr/models.py:248
-#: hr/models.py:266 hr/models.py:299
+#: company_profile/models.py:737 hr/models.py:210 hr/models.py:251
+#: hr/models.py:269 hr/models.py:302
 msgid "employee_name"
 msgstr "الاسم"
 
@@ -1752,6 +1752,7 @@ msgstr "حذف سجل"
 
 #: company_profile/templates/company_profile/base.html:9
 #: company_profile/templates/company_profile/base.html:80
+#: hr/templates/hr/badalat.html:9 hr/templates/hr/khosomat.html:9
 #: pa/templates/pa/base.html:9 pa/templates/pa/base.html:79
 #: templates/account/base.html:9 templates/account/base.html:78
 msgid "E-Services App"
@@ -2370,6 +2371,14 @@ msgstr "ارسال"
 msgid "help_link"
 msgstr "طلب مساعدة"
 
+#: hr/admin.py:109
+msgid "Show badalat sheet"
+msgstr "رابط كشف البدلات"
+
+#: hr/admin.py:114
+msgid "Show khosomat sheet"
+msgstr "رابط كشق الخصومات"
+
 #: hr/apps.py:7
 msgid "human resource"
 msgstr "الموارد البشرية"
@@ -2562,164 +2571,164 @@ msgstr "العلاوة الخامسة"
 msgid "ALAWAT_TA3AKOD"
 msgstr "تعاقد"
 
-#: hr/models.py:147 hr/models.py:211
+#: hr/models.py:147 hr/models.py:214
 msgid "draja_wazifia"
 msgstr "الدرجة الوظيفية"
 
-#: hr/models.py:148 hr/models.py:212
+#: hr/models.py:148 hr/models.py:215
 msgid "alawa_sanawia"
 msgstr "العلاوة السنوية"
 
-#: hr/models.py:149 hr/models.py:300
+#: hr/models.py:149 hr/models.py:303
 msgid "abtdai"
 msgstr "ابتدائية"
 
-#: hr/models.py:150 hr/models.py:301
+#: hr/models.py:150 hr/models.py:304
 msgid "galaa_m3isha"
 msgstr "غلاء معيشة"
 
-#: hr/models.py:151 hr/models.py:302
+#: hr/models.py:151 hr/models.py:305
 msgid "shakhsia"
 msgstr "علاوة شخصية"
 
-#: hr/models.py:152 hr/models.py:307
+#: hr/models.py:152 hr/models.py:310
 msgid "ma3adin"
 msgstr "معادن"
 
-#: hr/models.py:153 hr/models.py:303
+#: hr/models.py:153 hr/models.py:306
 msgid "aadoa"
 msgstr "عدوى"
 
-#: hr/models.py:163 hr/models.py:164
+#: hr/models.py:166 hr/models.py:167
 msgid "Drajat & 3lawat"
 msgstr "الدرجات والعلاوات"
 
-#: hr/models.py:167 hr/models.py:208
+#: hr/models.py:170 hr/models.py:211
 msgid "mosama_wazifi"
 msgstr "المسمى الوظيفي"
 
-#: hr/models.py:176 hr/models.py:177
+#: hr/models.py:179 hr/models.py:180
 msgid "Mosama Wazifi"
 msgstr "المسمى الوظيفي"
 
-#: hr/models.py:180 hr/models.py:194 hr/models.py:209
+#: hr/models.py:183 hr/models.py:197 hr/models.py:212
 msgid "edara_3ama"
 msgstr "الادارة العامة"
 
-#: hr/models.py:189 hr/models.py:190
+#: hr/models.py:192 hr/models.py:193
 msgid "Edara 3ama"
 msgstr "الادارة العامة"
 
-#: hr/models.py:193 hr/models.py:210
+#: hr/models.py:196 hr/models.py:213
 msgid "edara_far3ia"
 msgstr "الادارة الفرعية"
 
-#: hr/models.py:203 hr/models.py:204
+#: hr/models.py:206 hr/models.py:207
 msgid "Edara far3ia"
 msgstr "الادارة الفرعية"
 
-#: hr/models.py:213
+#: hr/models.py:216
 msgid "tarikh_ta3in"
 msgstr "تاريخ التعيين"
 
-#: hr/models.py:214 hr/models.py:304
+#: hr/models.py:217 hr/models.py:307
 msgid "gasima"
 msgstr "علاوة اجتماعية-قسيمة"
 
-#: hr/models.py:215
+#: hr/models.py:218
 msgid "3dad_atfal"
 msgstr "علاوة اجتماعية-اطفال"
 
-#: hr/models.py:216 hr/models.py:306
+#: hr/models.py:219 hr/models.py:309
 msgid "moahil"
 msgstr "مؤهل"
 
-#: hr/models.py:217 hr/models.py:308
+#: hr/models.py:220 hr/models.py:311
 msgid "m3ash"
 msgstr "معاش"
 
-#: hr/models.py:226 hr/models.py:227
+#: hr/models.py:229 hr/models.py:230
 msgid "Employee data"
 msgstr "بيانات الموظفين"
 
-#: hr/models.py:233
+#: hr/models.py:236
 msgid "al2dara alfr3ia la tatba3 lil al2dara al3ama"
 msgstr "الادارة الفرعية لاتتبع للادارة العامة"
 
-#: hr/models.py:239
+#: hr/models.py:242
 msgid "akhtar 3lawat t3akod"
 msgstr "اختر علاوة تعاقد"
 
-#: hr/models.py:244
+#: hr/models.py:247
 msgid "akhtar 3lawat gair t3akod"
 msgstr "اختر علاوة غير تعاقد"
 
-#: hr/models.py:249 hr/models.py:267 hr/models.py:284
+#: hr/models.py:252 hr/models.py:270 hr/models.py:287
 msgid "year"
 msgstr "السنة"
 
-#: hr/models.py:250 hr/models.py:268 hr/models.py:285
+#: hr/models.py:253 hr/models.py:271 hr/models.py:288
 msgid "month"
 msgstr "الشهر"
 
-#: hr/models.py:251 hr/models.py:269
+#: hr/models.py:254 hr/models.py:272
 msgid "note"
 msgstr "البيان"
 
-#: hr/models.py:252 hr/models.py:270 pa/models.py:114 pa/models.py:440
+#: hr/models.py:255 hr/models.py:273 pa/models.py:114 pa/models.py:440
 #: pa/models.py:543 pa/models.py:609
 msgid "amount"
 msgstr "المبلغ"
 
-#: hr/models.py:253 hr/models.py:271
+#: hr/models.py:256 hr/models.py:274
 msgid "deducted"
 msgstr "تم الخصم"
 
-#: hr/models.py:262 hr/models.py:263
+#: hr/models.py:265 hr/models.py:266
 msgid "Salafiat"
 msgstr "السلفيات"
 
-#: hr/models.py:280 hr/models.py:281
+#: hr/models.py:283 hr/models.py:284
 msgid "Jazaat"
 msgstr "الجزاءات"
 
-#: hr/models.py:286
+#: hr/models.py:289
 msgid "zaka_kafaf"
 msgstr "زكاة/حدالكفاف"
 
-#: hr/models.py:287
+#: hr/models.py:290
 msgid "zaka_nisab"
 msgstr "زكاة/النصاب"
 
-#: hr/models.py:288
+#: hr/models.py:291
 msgid "confirmed"
 msgstr "مؤكد"
 
-#: hr/models.py:294 hr/models.py:295
+#: hr/models.py:297 hr/models.py:298
 msgid "Payroll"
 msgstr "المرتبات"
 
-#: hr/models.py:305
+#: hr/models.py:308
 msgid "atfal"
 msgstr "علاوة اجتماعية-اطفال"
 
-#: hr/models.py:309
+#: hr/models.py:312
 msgid "salafiat"
 msgstr "السلفيات"
 
-#: hr/models.py:310
+#: hr/models.py:313
 msgid "jazaat"
 msgstr "الجزاءات"
 
-#: hr/models.py:311
+#: hr/models.py:314
 msgid "damga"
 msgstr "دمغة"
 
-#: hr/models.py:312
+#: hr/models.py:315
 msgid "sandog"
 msgstr "الصندوق"
 
-#: hr/models.py:313
+#: hr/models.py:316
 msgid "sandog_kahraba"
 msgstr "الصندوق كهرباء"
 
