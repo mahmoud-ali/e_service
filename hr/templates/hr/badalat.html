@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-<title>{% block title %}{% translate "E-Services App" %}{% endblock title %}</title>
+<title>{{title}}</title>
 <style>
 	{% if request.LANGUAGE_CODE == "ar" %}
 	.form-control{
@@ -26,6 +26,10 @@
 
 		}
 	  }
+	  table{
+		font-size: small;
+	}
+
 </style>
 {% load bootstrap3 %}
 
@@ -83,6 +87,18 @@
 				{% endfor %}
 				</tr>
 			{% endfor %}        	
+
+			<tr>
+				<th>-</th>
+				<th>-</th>
+				<th>-</th>
+				<th>-</th>
+				{% for col in summary %}
+					<th>
+					{{ col }}
+					</th>
+				{% endfor %}
+				</tr>
 			</table>
 	
 

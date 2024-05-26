@@ -33,12 +33,14 @@ MONTH_CHOICES = {
 
 MOAHIL_THANOI = 'thanoi'
 MOAHIL_BAKLARIOS = 'baklarios'
+MOAHIL_DAPLOM_3ALI = 'daplom_3ali'
 MOAHIL_MAJSTEAR = 'majstear'
 MOAHIL_DECTORA = 'dectora'
 
 MOAHIL_CHOICES = {
     MOAHIL_THANOI: _('MOAHIL_THANOI'),
     MOAHIL_BAKLARIOS: _('MOAHIL_BAKLARIOS'),
+    MOAHIL_DAPLOM_3ALI: _('MOAHIL_DAPLOM_3ALI'),
     MOAHIL_MAJSTEAR: _('MOAHIL_MAJSTEAR'),
     MOAHIL_DECTORA: _('MOAHIL_DECTORA'),
 }
@@ -220,7 +222,7 @@ class EmployeeBasic(LoggingModel):
     m3ash = models.FloatField(_("m3ash"),default=0)
 
     def __str__(self) -> str:
-        return f'{self.name} / {self.edara_3ama.name}'
+        return f'{self.name}'# / {self.edara_3ama.name}'
 
     class Meta:
         constraints = [
