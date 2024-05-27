@@ -2373,11 +2373,11 @@ msgstr "طلب مساعدة"
 
 #: hr/admin.py:107 hr/admin.py:110
 msgid "Show badalat sheet"
-msgstr "رابط كشف البدلات"
+msgstr "كشف البدلات"
 
 #: hr/admin.py:113 hr/admin.py:116
 msgid "Show khosomat sheet"
-msgstr "رابط كشق الخصومات"
+msgstr "كشق الخصومات"
 
 #: hr/apps.py:7
 msgid "human resource"

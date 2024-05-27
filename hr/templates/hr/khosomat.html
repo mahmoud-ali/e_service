@@ -29,6 +29,18 @@
 	table{
 		font-size: small;
 	}
+
+	.col_2{
+		{% comment %} width: 150px; {% endcomment %}
+	}
+
+	th{
+		background-color: #eeeeee
+	}
+
+	.row_even{
+		background-color: #fcfcfc
+	}
 </style>
 {% load bootstrap3 %}
 
@@ -72,15 +84,15 @@
 			<table id="khosomat_table"  class="table table-bordered">
 				<tr>
 				{% for col in header %}
-					<th>
+					<th class="col_{{ forloop.counter }}">
 					{{ col }}
 					</th>
 				{% endfor %}
 				</tr>
 			{% for row in data %}
-				<tr>
+				<tr class="row_{% cycle 'odd' 'even' %}">
 				{% for cell in row %}
-					<td>
+					<td class="col_{{ forloop.counter }}">
 						{{ cell }}
 					</td>
 				{% endfor %}
