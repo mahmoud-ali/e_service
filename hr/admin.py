@@ -17,6 +17,7 @@ class EmployeeBasicAdmin(admin.ModelAdmin):
     list_display = ["name", "mosama_wazifi", "edara_3ama","edara_far3ia", "draja_wazifia","alawa_sanawia","tarikh_ta3in"]        
     list_filter = ["edara_3ama","draja_wazifia","alawa_sanawia"]
     view_on_site = False
+    search_fields = ["name"]
 
 admin.site.register(EmployeeBasic,EmployeeBasicAdmin)
 
@@ -58,6 +59,7 @@ class SalafiatAdmin(admin.ModelAdmin):
     list_display = ["employee", "year","month","note","amount","deducted"] 
     list_filter = ["year","month"]
     view_on_site = False
+    search_fields = ["employee__name"]
 
     def save_model(self, request, obj, form, change):
         if obj.pk:
@@ -74,6 +76,7 @@ class JazaatAdmin(admin.ModelAdmin):
     list_display = ["employee", "year","month","note","amount","deducted"] 
     list_filter = ["year","month"]
     view_on_site = False
+    search_fields = ["employee__name"]
 
     def save_model(self, request, obj, form, change):
         if obj.pk:
