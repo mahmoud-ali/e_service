@@ -53,7 +53,7 @@ class SettingsAdmin(admin.ModelAdmin):
 admin.site.register(Settings,SettingsAdmin)
 
 class SalafiatAdmin(admin.ModelAdmin):
-    exclude = ["created_at","created_by","updated_at","updated_by"]
+    exclude = ["created_at","created_by","updated_at","updated_by","deducted"]
     
     list_display = ["employee", "year","month","note","amount","deducted"] 
     list_filter = ["year","month"]
@@ -69,7 +69,7 @@ class SalafiatAdmin(admin.ModelAdmin):
 admin.site.register(Salafiat,SalafiatAdmin)
 
 class JazaatAdmin(admin.ModelAdmin):
-    exclude = ["created_at","created_by","updated_at","updated_by"]
+    exclude = ["created_at","created_by","updated_at","updated_by","deducted"]
     
     list_display = ["employee", "year","month","note","amount","deducted"] 
     list_filter = ["year","month"]
@@ -111,13 +111,17 @@ class PayrollMasterAdmin(admin.ModelAdmin):
     @admin.display(description=_('Show badalat sheet'))
     def show_badalat_link(self, obj):
         url = reverse('hr:payroll_badalat')
-        return format_html('<a target="_blank" class="viewlink" href="{url}?year={year}&month={month}">'+_('Show badalat sheet')+'</a>',
+        return format_html('<a target="_blank" class="viewlink" href="{url}?year={year}&month={month}">'+_('Show badalat sheet')\
+                               +'</a> / '\
+                               +'<a target="_blank" href="{url}?year={year}&month={month}&format=csv">CSV</a>',
                            url=url,year=obj.year,month=obj.month)
 
     @admin.display(description=_('Show khosomat sheet'))
     def show_khosomat_link(self, obj):
         url = reverse('hr:payroll_khosomat')
-        return format_html('<a target="_blank" class="viewlink" href="{url}?year={year}&month={month}">'+_('Show khosomat sheet')+'</a>',
+        return format_html('<a target="_blank" class="viewlink" href="{url}?year={year}&month={month}">'+_('Show khosomat sheet')\
+                               +'</a> / '\
+                               +'<a target="_blank" href="{url}?year={year}&month={month}&format=csv">CSV</a>',
                            url=url,year=obj.year,month=obj.month)
 
     def save_model(self, request, obj, form, change):

@@ -182,10 +182,6 @@ USE_I18N = True
 
 USE_TZ = True
 
-# USE_THOUSAND_SEPARATOR = True
-# THOUSAND_SEPARATOR = ','
-# DECIMAL_SEPARATOR = '.'
-# NUMBER_GROUPING = 3
 
 LOCALE_PATHS = [os.path.join(BASE_DIR, 'locale')]
 
@@ -194,7 +190,12 @@ LANGUAGES = [
     # ("en","English"),
 ]
     
-    
+FORMAT_MODULE_PATH = [
+    'hr.formats'
+]
+
+# USE_THOUSAND_SEPARATOR = True
+
 # Media configurations
 MEDIA_URL = 'media/'
 MEDIA_ROOT = config('MEDIA_ROOT') #os.path.join(BASE_DIR, 'media')

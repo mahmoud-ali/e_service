@@ -1,5 +1,8 @@
+import csv
+from django.http import HttpResponse
 from django.shortcuts import render
 from django.views.generic import View
+from django.utils.translation import gettext_lazy as _
 
 from hr.models import Drajat3lawat
 from hr.payroll import Payroll
@@ -8,16 +11,16 @@ class Badalat(View):
     def get(self,*args,**kwargs):
         year = self.request.GET['year']
         month = self.request.GET['month']
+        format = self.request.GET.get('format',None)
         data = []
         
         payroll = Payroll(year,month)
-
-        seq = 0
+        header = ['الموظف','الدرجة الوظيفية','العلاوة','ابتدائي','غلاء معيشة','اساسي','طبيعة عمل','تمثيل','مهنة','معادن','مخاطر','عدوى','اجتماعية-قسيمة','اجتماعية اطفال','مؤهل','شخصية','اجمالي المرتب']
         summary_list = []
+
         for (emp,badalat,khosomat) in payroll.all_employees_payroll_from_db():
-            seq +=1
             badalat_list = [round(b[1],2) for b in badalat]
-            l = [seq,emp.name,Drajat3lawat.DRAJAT_CHOICES[emp.draja_wazifia],Drajat3lawat.ALAWAT_CHOICES[emp.alawa_sanawia]] + badalat_list
+            l = [emp.name,Drajat3lawat.DRAJAT_CHOICES[emp.draja_wazifia],Drajat3lawat.ALAWAT_CHOICES[emp.alawa_sanawia]] + badalat_list
             data.append(l)
 
             for idx,s in enumerate(badalat_list):
@@ -26,29 +29,48 @@ class Badalat(View):
                 except IndexError:
                     summary_list.insert(idx,badalat_list[idx])
 
-        template_name = 'hr/badalat.html'
-        context = {
-            'title':'كشف البدلات',
-            'header':['م','الموظف','الدرجة الوظيفية','العلاوة','ابتدائي','غلاء معيشة','اساسي','طبيعة عمل','تمثيل','مهنة','معادن','مخاطر','عدوى','اجتماعية-قسيمة','اجتماعية اطفال','مؤهل','شخصية','اجمالي المرتب'],
-            'data': data,
-            'summary':[round(s,2) for s in summary_list],
-        }
-        return render(self.request,template_name,context)
+        summary_list = [round(s,2) for s in summary_list]
+
+        if format == 'csv':
+            sheet_name = 'allowance'
+            response = HttpResponse(
+                content_type="text/csv",
+                headers={"Content-Disposition": f'attachment; filename="{sheet_name}_{month}_{year}.csv"'},
+            )
+
+            writer = csv.writer(response)
+            writer.writerow(header)
+
+            data.append(['-','-','-',]+summary_list)
+            for r in data:
+                writer.writerow(r)
+
+            return response
+
+        else:
+            template_name = 'hr/badalat.html'
+            context = {
+                'title':'كشف البدلات',
+                'header':header,
+                'data': data,
+                'summary':summary_list,
+            }
+            return render(self.request,template_name,context)
     
 class Khosomat(View):
     def get(self,*args,**kwargs):
         year = self.request.GET['year']
         month = self.request.GET['month']
+        format = self.request.GET.get('format',None)
         data = []
         
         payroll = Payroll(year,month)
-
-        seq = 0
+        header = ['الموظف','الدرجة الوظيفية','العلاوة','تأمين اجتماعي','معاش','الصندوق','الضريبة','دمغه','إجمالي الإستقطاعات الأساسية','صندوق كهربائيه','السلفيات','استقطاع يوم اجمالي لصالح دعم القوات المسلحه','الزكاة','إجمالي الإستقطاعات السنوية','خصومات - جزاءات','إجمالي الإستقطاع الكلي','صافي الإستحقاق']
         summary_list = []
+
         for (emp,badalat,khosomat) in payroll.all_employees_payroll_from_db():
-            seq +=1
             khosomat_list = [round(k[1],2) for k in khosomat]
-            l = [seq,emp.name,Drajat3lawat.DRAJAT_CHOICES[emp.draja_wazifia],Drajat3lawat.ALAWAT_CHOICES[emp.alawa_sanawia]] + khosomat_list
+            l = [emp.name,Drajat3lawat.DRAJAT_CHOICES[emp.draja_wazifia],Drajat3lawat.ALAWAT_CHOICES[emp.alawa_sanawia]] + khosomat_list
             data.append(l)
 
             for idx,s in enumerate(khosomat_list):
@@ -57,11 +79,31 @@ class Khosomat(View):
                 except IndexError:
                     summary_list.insert(idx,khosomat_list[idx])
 
-        template_name = 'hr/khosomat.html'
-        context = {
-            'title':'كشف الخصومات',
-            'header':['م','الموظف','الدرجة الوظيفية','العلاوة','تأمين اجتماعي','معاش','الصندوق','الضريبة','دمغه','إجمالي الإستقطاعات الأساسية','صندوق كهربائيه','السلفيات','استقطاع يوم اجمالي لصالح دعم القوات المسلحه','الزكاة','إجمالي الإستقطاعات السنوية','خصومات - جزاءات','إجمالي الإستقطاع الكلي','صافي الإستحقاق'],
-            'data': data,
-            'summary':[round(s,2) for s in summary_list],
-        }
-        return render(self.request,template_name,context)
+        summary_list = [round(s,2) for s in summary_list]
+
+        if format == 'csv':
+            sheet_name = 'deduction'
+            print(f'attachment; filename="{sheet_name}_{month}_{year}.csv"')
+            response = HttpResponse(
+                content_type="text/csv",
+                headers={"Content-Disposition": f'attachment; filename="{sheet_name}_{month}_{year}.csv"'},
+            )
+
+            writer = csv.writer(response)
+            writer.writerow(header)
+
+            data.append(['-','-','-',]+summary_list)
+            for r in data:
+                writer.writerow(r)
+
+            return response
+
+        else:
+            template_name = 'hr/khosomat.html'
+            context = {
+                'title':'كشف الخصومات',
+                'header':header,
+                'data': data,
+                'summary':summary_list,
+            }
+            return render(self.request,template_name,context)

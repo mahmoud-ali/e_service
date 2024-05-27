@@ -2,6 +2,7 @@ from django.db import models
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 from django.forms import ValidationError
+from django.core.validators import MaxValueValidator, MinValueValidator
 
 MONTH_JAN = 1
 MONTH_FEB = 2
@@ -251,7 +252,7 @@ class EmployeeBasic(LoggingModel):
 
 class Salafiat(LoggingModel):
     employee = models.ForeignKey(EmployeeBasic, on_delete=models.PROTECT,verbose_name=_("employee_name"))
-    year = models.IntegerField(_("year"))
+    year = models.IntegerField(_("year"), validators=[MinValueValidator(limit_value=2015),MaxValueValidator(limit_value=2100)])
     month = models.IntegerField(_("month"), choices=MONTH_CHOICES)
     note = models.CharField(_("note"),max_length=150)
     amount = models.FloatField(_("amount"))
@@ -269,7 +270,7 @@ class Salafiat(LoggingModel):
 
 class Jazaat(LoggingModel):
     employee = models.ForeignKey(EmployeeBasic, on_delete=models.PROTECT,verbose_name=_("employee_name"))
-    year = models.IntegerField(_("year"))
+    year = models.IntegerField(_("year"), validators=[MinValueValidator(limit_value=2015),MaxValueValidator(limit_value=2100)])
     month = models.IntegerField(_("month"), choices=MONTH_CHOICES)
     note = models.CharField(_("note"),max_length=150)
     amount = models.FloatField(_("amount"))
@@ -286,7 +287,7 @@ class Jazaat(LoggingModel):
         verbose_name_plural = _("Jazaat")
 
 class PayrollMaster(LoggingModel):
-    year = models.IntegerField(_("year"))
+    year = models.IntegerField(_("year"), validators=[MinValueValidator(limit_value=2015),MaxValueValidator(limit_value=2100)])
     month = models.IntegerField(_("month"), choices=MONTH_CHOICES)
     zaka_kafaf = models.FloatField(_("zaka_kafaf"),default=0)
     zaka_nisab = models.FloatField(_("zaka_nisab"),default=0)

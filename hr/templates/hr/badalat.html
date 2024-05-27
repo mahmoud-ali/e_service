@@ -82,34 +82,43 @@
 		<div id="main_content" class="col-12 main">
 		  
 			<table id="badalat_table"  class="table table-bordered">
-				<tr>
+				<thead>
+					<tr>
+						<th>م</th>
 					{% for col in header %}
-					<th class="col_{{ forloop.counter }}">
-					{{ col }}
-					</th>
-				{% endfor %}
-				</tr>
-			{% for row in data %}
-				<tr class="row_{% cycle 'odd' 'even' %}">
-				{% for cell in row %}
-					<td class="col_{{ forloop.counter }}">
-						{{ cell }}
-					</td>
-				{% endfor %}
-				</tr>
-			{% endfor %}        	
-
-			<tr>
-				<th>-</th>
-				<th>-</th>
-				<th>-</th>
-				<th>-</th>
-				{% for col in summary %}
-					<th>
-					{{ col }}
-					</th>
-				{% endfor %}
-				</tr>
+						<th class="col_{{ forloop.counter }}">
+						{{ col }}
+						</th>
+					{% endfor %}
+					</tr>
+				</thead>
+				<tbody>
+					{% for row in data %}
+					<tr class="row_{% cycle 'odd' 'even' %}">
+						<td>{{ forloop.counter }}</td>
+						{% for cell in row %}
+						<td class="col_{{ forloop.counter }}">
+							{% if forloop.counter <= 3 %}
+								{{ cell }}
+							{% else%}
+									{{ cell|floatformat:"2g" }}
+							{% endif%}
+						</td>
+						{% endfor %}
+					</tr>
+					{% endfor %}        	
+					<tr>
+						<th>-</th>
+						<th>-</th>
+						<th>-</th>
+						<th>-</th>
+						{% for col in summary %}
+							<th>
+							{{ col|floatformat:"2g" }}
+							</th>
+						{% endfor %}
+					</tr>
+				</tbody>
 			</table>
 	
 
