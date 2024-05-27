@@ -70,7 +70,7 @@ def export_drajat_3lawat():
                     (draja != Drajat3lawat.DRAJAT_TA3AKOD and alawa != Drajat3lawat.ALAWAT_TA3AKOD) 
                     or (draja == Drajat3lawat.DRAJAT_TA3AKOD and alawa == Drajat3lawat.ALAWAT_TA3AKOD)
                 ):
-                    writer.writerow([draja,alawa,1,1,1,1,1]) #0,0,0,0,0
+                    writer.writerow([draja,alawa,0,0,0,0,0]) 
 
 def export_badalat(year,month):    
     payroll = Payroll(year,month)
