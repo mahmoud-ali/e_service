@@ -256,6 +256,38 @@ class EmployeeBasic(LoggingModel):
                     {"alawa_sanawia":_("akhtar 3lawat gair t3akod")}
                 )
 
+class EmployeeBankAccount(LoggingModel):
+    BANK_KHARTOUM = 'bok'
+    BANK_OMDURMAN = 'onb'
+
+    BANK_CHOICES = {
+        BANK_KHARTOUM: _('BANK_KHARTOUM'),
+        BANK_OMDURMAN: _('BANK_OMDURMAN'),
+    }
+
+    employee = models.ForeignKey(EmployeeBasic, on_delete=models.PROTECT,verbose_name=_("employee_name"))
+    bank = models.CharField(_("bank"), choices=BANK_CHOICES,max_length=10)
+    account_no = models.CharField(_("account_no"),max_length=20)
+    active = models.BooleanField(_("active"),default=False)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['bank','account_no'],name="unique_bank_account")
+        ]
+        indexes = [
+            models.Index(fields=["bank"]),
+            models.Index(fields=["account_no"]),
+        ]
+        verbose_name = _("Bank Account")
+        verbose_name_plural = _("Bank Accounts")
+
+    def __str__(self) -> str:
+        return f'{self.employee.name} ({self.BANK_CHOICES[self.bank]})'# / {self.edara_3ama.name}'
+
+    def deactivate_other_accounts(self):
+        if self.active:
+            EmployeeBankAccount.objects.exclude(id=self.id).update(active=False)
+
 class Salafiat(LoggingModel):
     employee = models.ForeignKey(EmployeeBasic, on_delete=models.PROTECT,verbose_name=_("employee_name"))
     year = models.IntegerField(_("year"), validators=[MinValueValidator(limit_value=2015),MaxValueValidator(limit_value=2100)])

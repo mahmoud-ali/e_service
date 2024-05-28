@@ -5,7 +5,7 @@ from django.utils.translation import gettext_lazy as _
 
 from hr.payroll import Payroll
 
-from .models import Drajat3lawat, Jazaat, MosamaWazifi,Edara3ama,Edarafar3ia,EmployeeBasic, PayrollDetail, PayrollMaster, Salafiat,Settings
+from .models import Drajat3lawat, EmployeeBankAccount, Jazaat, MosamaWazifi,Edara3ama,Edarafar3ia,EmployeeBasic, PayrollDetail, PayrollMaster, Salafiat,Settings
 
 class MosamaWazifiAdmin(admin.ModelAdmin):
     exclude = ["created_at","created_by","updated_at","updated_by","deducted"]
@@ -109,6 +109,24 @@ class SalafiatAdmin(admin.ModelAdmin):
         super().save_model(request, obj, form, change)                
 
 admin.site.register(Salafiat,SalafiatAdmin)
+
+class EmployeeBankAccountAdmin(admin.ModelAdmin):
+    exclude = ["created_at","created_by","updated_at","updated_by"]
+    
+    list_display = ["employee", "bank","account_no","active"] 
+    list_filter = ["bank","employee__edara_3ama"]
+    view_on_site = False
+    search_fields = ["employee__name"]
+    autocomplete_fields = ["employee"]
+
+    def save_model(self, request, obj, form, change):
+        if obj.pk:
+            obj.updated_by = request.user
+        else:
+            obj.created_by = obj.updated_by = request.user
+        super().save_model(request, obj, form, change)                
+
+admin.site.register(EmployeeBankAccount,EmployeeBankAccountAdmin)
 
 class JazaatAdmin(admin.ModelAdmin):
     exclude = ["created_at","created_by","updated_at","updated_by","deducted"]
