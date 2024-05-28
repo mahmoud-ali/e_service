@@ -4,12 +4,19 @@ from django.shortcuts import render
 from django.views.generic import View
 from django.utils.translation import gettext_lazy as _
 
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 
 from hr.models import Drajat3lawat
 from hr.payroll import Payroll
 
-class Badalat(LoginRequiredMixin,View):
+class UserPermissionMixin(UserPassesTestMixin):
+    user_groups = []
+
+    def test_func(self):
+        return self.request.user.groups.filter(name__in=self.user_groups).exists()
+
+class Badalat(LoginRequiredMixin,UserPermissionMixin,View):
+    user_groups = ['hr_manager']
     def get(self,*args,**kwargs):
         year = self.request.GET['year']
         month = self.request.GET['month']
@@ -59,7 +66,8 @@ class Badalat(LoginRequiredMixin,View):
             }
             return render(self.request,template_name,context)
     
-class Khosomat(LoginRequiredMixin,View):
+class Khosomat(LoginRequiredMixin,UserPermissionMixin,View):
+    user_groups = ['hr_manager']
     def get(self,*args,**kwargs):
         year = self.request.GET['year']
         month = self.request.GET['month']
