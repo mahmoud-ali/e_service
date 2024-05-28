@@ -31,7 +31,7 @@ class Payroll():
 
         try:
             self.payroll_master = PayrollMaster.objects.get(year=self.year,month=self.month)
-            self.payroll_details = PayrollDetail.objects.filter(payroll_master=self.payroll_master).order_by('employee__name')
+            self.payroll_details = PayrollDetail.objects.filter(payroll_master=self.payroll_master).prefetch_related("employee")
         except PayrollMaster.DoesNotExist:
             self.payroll_master = None
             self.payroll_details = []
@@ -161,7 +161,7 @@ class Payroll():
             print(f'Payroll not calculated: {e}')
             return False
         
-        self.payroll_details = PayrollDetail.objects.filter(payroll_master=self.payroll_master).order_by('employee__name')
+        self.payroll_details = PayrollDetail.objects.filter(payroll_master=self.payroll_master).prefetch_related("employee")
 
     def confirm(self):
         if not self.payroll_master:

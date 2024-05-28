@@ -4,10 +4,12 @@ from django.shortcuts import render
 from django.views.generic import View
 from django.utils.translation import gettext_lazy as _
 
+from django.contrib.auth.mixins import LoginRequiredMixin
+
 from hr.models import Drajat3lawat
 from hr.payroll import Payroll
 
-class Badalat(View):
+class Badalat(LoginRequiredMixin,View):
     def get(self,*args,**kwargs):
         year = self.request.GET['year']
         month = self.request.GET['month']
@@ -15,12 +17,12 @@ class Badalat(View):
         data = []
         
         payroll = Payroll(year,month)
-        header = ['الموظف','الدرجة الوظيفية','العلاوة','ابتدائي','غلاء معيشة','اساسي','طبيعة عمل','تمثيل','مهنة','معادن','مخاطر','عدوى','اجتماعية-قسيمة','اجتماعية اطفال','مؤهل','شخصية','اجمالي المرتب']
+        header = ['الرمز','الموظف','الدرجة الوظيفية','العلاوة','ابتدائي','غلاء معيشة','اساسي','طبيعة عمل','تمثيل','مهنة','معادن','مخاطر','عدوى','اجتماعية قسيمة','اجتماعية اطفال','مؤهل','شخصية','اجمالي المرتب']
         summary_list = []
 
         for (emp,badalat,khosomat) in payroll.all_employees_payroll_from_db():
             badalat_list = [round(b[1],2) for b in badalat]
-            l = [emp.name,Drajat3lawat.DRAJAT_CHOICES[emp.draja_wazifia],Drajat3lawat.ALAWAT_CHOICES[emp.alawa_sanawia]] + badalat_list
+            l = [emp.code,emp.name,Drajat3lawat.DRAJAT_CHOICES[emp.draja_wazifia],Drajat3lawat.ALAWAT_CHOICES[emp.alawa_sanawia]] + badalat_list
             data.append(l)
 
             for idx,s in enumerate(badalat_list):
@@ -57,7 +59,7 @@ class Badalat(View):
             }
             return render(self.request,template_name,context)
     
-class Khosomat(View):
+class Khosomat(LoginRequiredMixin,View):
     def get(self,*args,**kwargs):
         year = self.request.GET['year']
         month = self.request.GET['month']
@@ -65,12 +67,12 @@ class Khosomat(View):
         data = []
         
         payroll = Payroll(year,month)
-        header = ['الموظف','الدرجة الوظيفية','العلاوة','تأمين اجتماعي','معاش','الصندوق','الضريبة','دمغه','إجمالي الإستقطاعات الأساسية','صندوق كهربائيه','السلفيات','استقطاع يوم اجمالي لصالح دعم القوات المسلحه','الزكاة','إجمالي الإستقطاعات السنوية','خصومات - جزاءات','إجمالي الإستقطاع الكلي','صافي الإستحقاق']
+        header = ['الرمز','الموظف','الدرجة الوظيفية','العلاوة','تأمين اجتماعي','معاش','الصندوق','الضريبة','دمغه','إجمالي الإستقطاعات الأساسية','صندوق كهربائيه','السلفيات','استقطاع القوات المسلحه','الزكاة','إجمالي الإستقطاعات السنوية','خصومات - جزاءات','إجمالي الإستقطاع الكلي','صافي الإستحقاق']
         summary_list = []
 
         for (emp,badalat,khosomat) in payroll.all_employees_payroll_from_db():
             khosomat_list = [round(k[1],2) for k in khosomat]
-            l = [emp.name,Drajat3lawat.DRAJAT_CHOICES[emp.draja_wazifia],Drajat3lawat.ALAWAT_CHOICES[emp.alawa_sanawia]] + khosomat_list
+            l = [emp.code,emp.name,Drajat3lawat.DRAJAT_CHOICES[emp.draja_wazifia],Drajat3lawat.ALAWAT_CHOICES[emp.alawa_sanawia]] + khosomat_list
             data.append(l)
 
             for idx,s in enumerate(khosomat_list):

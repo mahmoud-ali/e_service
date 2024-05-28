@@ -166,6 +166,7 @@ class Drajat3lawat(LoggingModel):
         indexes = [
             models.Index(fields=["draja_wazifia", "alawa_sanawia"]),
         ]
+        ordering = ["draja_wazifia","alawa_sanawia"]
         verbose_name = _("Drajat & 3lawat")
         verbose_name_plural = _("Drajat & 3lawat")
 
@@ -179,6 +180,7 @@ class MosamaWazifi(models.Model):
         constraints = [
             models.UniqueConstraint(fields=['name'],name="unique_mosama_wazifi")
         ]
+        ordering = ["name"]
         verbose_name = _("Mosama Wazifi")
         verbose_name_plural = _("Mosama Wazifi")
 
@@ -192,6 +194,7 @@ class Edara3ama(models.Model):
         constraints = [
             models.UniqueConstraint(fields=['name'],name="unique_edara_3ama")
         ]
+        ordering = ["name"]
         verbose_name = _("Edara 3ama")
         verbose_name_plural = _("Edara 3ama")
 
@@ -200,16 +203,18 @@ class Edarafar3ia(models.Model):
     edara_3ama = models.ForeignKey(Edara3ama, on_delete=models.PROTECT,verbose_name=_("edara_3ama"))
 
     def __str__(self) -> str:
-        return self.edara_3ama.name+'/'+self.name
+        return self.name
 
     class Meta:
         constraints = [
             models.UniqueConstraint(fields=['name','edara_3ama'],name="unique_edara_far3ia")
         ]
+        ordering = ["name"]
         verbose_name = _("Edara far3ia")
         verbose_name_plural = _("Edara far3ia")
 
 class EmployeeBasic(LoggingModel):
+    code = models.IntegerField(_("employee_code"))
     name = models.CharField(_("employee_name"),max_length=150)
     mosama_wazifi = models.ForeignKey(MosamaWazifi, on_delete=models.PROTECT,verbose_name=_("mosama_wazifi"))
     edara_3ama = models.ForeignKey(Edara3ama, on_delete=models.PROTECT,verbose_name=_("edara_3ama"))
@@ -229,6 +234,7 @@ class EmployeeBasic(LoggingModel):
         constraints = [
             models.UniqueConstraint(fields=['name','tarikh_ta3in'],name="unique_employee")
         ]
+        ordering = ["code"]
         verbose_name = _("Employee data")
         verbose_name_plural = _("Employee data")
 
@@ -265,6 +271,7 @@ class Salafiat(LoggingModel):
         indexes = [
             models.Index(fields=["employee", "year","month"]),
         ]
+        ordering = ["-id"]
         verbose_name = _("Salafiat")
         verbose_name_plural = _("Salafiat")
 
@@ -283,6 +290,7 @@ class Jazaat(LoggingModel):
         indexes = [
             models.Index(fields=["employee", "year","month"]),
         ]
+        ordering = ["-id"]
         verbose_name = _("Jazaat")
         verbose_name_plural = _("Jazaat")
 
@@ -322,3 +330,4 @@ class PayrollDetail(models.Model):
         constraints = [
             models.UniqueConstraint(fields=['payroll_master','employee'],name="unique_employee_payroll")
         ]
+        ordering = ["employee__code"]

@@ -8,38 +8,28 @@
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 <title>{{title}}</title>
 <style>
-	{% if request.LANGUAGE_CODE == "ar" %}
-	.form-control{
-		text-align:right !important;
+	body{
+		-webkit-print-color-adjust:exact !important;
+		print-color-adjust:exact !important;
 	}
-	{% endif %}
 
-	@media (min-width: 768px) {
-		.sidebar {
-	  {% if request.LANGUAGE_CODE == "ar" %}
-		  right: 0;
-		  border-left: 1px solid #eee;
-	  {% else %}	
-		  left: 0;
-		  border-right: 1px solid #eee;
-	  {% endif %}
-
-		}
-	  }
-	table{
+    table{
 		font-size: small;
 	}
 
+	td, th{
+		padding:2px !important;
+	}
 	.col_2{
-		{% comment %} width: 150px; {% endcomment %}
+		min-width:180px;
 	}
 
 	th{
-		background-color: #eeeeee
+		background-color: #dddddd;
 	}
 
 	.row_even{
-		background-color: #fcfcfc
+		background-color: #efefef
 	}
 </style>
 {% load bootstrap3 %}
@@ -84,7 +74,6 @@
 			<table id="khosomat_table"  class="table table-bordered">
 				<thead>
 					<tr>
-						<th>م</th>
 					{% for col in header %}
 						<th class="col_{{ forloop.counter }}">
 						{{ col }}
@@ -95,10 +84,9 @@
 				<tbody>
 					{% for row in data %}
 					<tr class="row_{% cycle 'odd' 'even' %}">
-						<td>{{ forloop.counter }}</td>
 						{% for cell in row %}
 						<td class="col_{{ forloop.counter }}">
-							{% if forloop.counter <= 3 %}
+							{% if forloop.counter <= 4 %}
 								{{ cell }}
 							{% else%}
 									{{ cell|floatformat:"2g" }}

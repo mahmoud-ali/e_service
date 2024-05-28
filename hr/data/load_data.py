@@ -2,7 +2,7 @@ import csv
 
 from django.contrib.auth import get_user_model
 
-from ..models import MosamaWazifi,Edara3ama,Edarafar3ia,EmployeeBasic,Drajat3lawat
+from ..models import MOAHIL_BAKLARIOS, MosamaWazifi,Edara3ama,Edarafar3ia,EmployeeBasic,Drajat3lawat, PayrollDetail, PayrollMaster, Jazaat, Salafiat
 
 from ..payroll import Payroll
 
@@ -13,9 +13,18 @@ def show_data():
         reader = csv.reader(csvfile, delimiter=',')
         for row in reader:
             print(', '.join(row[1:8]))
+def empty_database():
+    PayrollMaster.objects.all().delete()
+    Jazaat.objects.all().delete()
+    Salafiat.objects.all().delete()
+    EmployeeBasic.objects.all().delete()
+    Edarafar3ia.objects.all().delete()
+    Edara3ama.objects.all().delete()
+    MosamaWazifi.objects.all().delete()
+    Drajat3lawat.objects.all().delete()
 
 def import_employees():
-    # EmployeeBasic.objects.delete()
+    # EmployeeBasic.objects.all().delete()
 
     with open('./hr/data/employee.csv', newline='') as csvfile:
         reader = csv.reader(csvfile, delimiter=',')
@@ -29,6 +38,30 @@ def import_employees():
             draja_wazifia = int(row[5])
             alawa_sanawia = int(row[6])
             tarikh_ta3in = row[7].strip()
+            gasima = row[8]
+            atfal = row[9]
+
+            if not tarikh_ta3in:
+                tarikh_ta3in = '2010-12-31'
+
+            if not mosama_wazifi:
+                mosama_wazifi = 'لايوجد'
+
+            if not edara_3ama:
+                edara_3ama = 'لايوجد'
+
+            if not edara_far3ia:
+                edara_far3ia = 'لايوجد'
+
+            if gasima:
+                gasima = True
+            else:
+                gasima = False
+
+            if atfal:
+                atfal = int(atfal)
+            else:
+                atfal = 0
 
             mosama_wazifi_obj, created = MosamaWazifi.objects.get_or_create(name=mosama_wazifi)
             edara_3ama_obj, created = Edara3ama.objects.get_or_create(name=edara_3ama)
@@ -36,9 +69,9 @@ def import_employees():
 
             try:
                 EmployeeBasic.objects.create(
-                    name=name,mosama_wazifi=mosama_wazifi_obj,edara_3ama=edara_3ama_obj,edara_far3ia=edara_far3ia_obj,\
+                    code=id,name=name,mosama_wazifi=mosama_wazifi_obj,edara_3ama=edara_3ama_obj,edara_far3ia=edara_far3ia_obj,\
                     draja_wazifia=draja_wazifia,alawa_sanawia=alawa_sanawia,tarikh_ta3in=tarikh_ta3in,\
-                    created_by=admin_user,updated_by=admin_user
+                    gasima=gasima,atfal=atfal,moahil=MOAHIL_BAKLARIOS,m3ash=0,created_by=admin_user,updated_by=admin_user
                 )
             except Exception as e:
                 print(f'Id: {id}, Exception: {e}')
@@ -52,12 +85,12 @@ def import_drajat_3lawat():
         for row in reader:
             try:
                 Drajat3lawat.objects.create(
-                    draja_wazifia=row[0],alawa_sanawia=row[1],abtdai=row[2],galaa_m3isha=row[3],\
-                    shakhsia=row[4],ma3adin=row[5],aadoa=row[5],\
+                    draja_wazifia=int(row[0]),alawa_sanawia=int(row[1]),abtdai=float(row[2]),galaa_m3isha=float(row[3]),\
+                    ma3adin=float(row[4]),aadoa=float(row[5]),shakhsia=float(row[6]),\
                     created_by=admin_user,updated_by=admin_user
                 )
             except Exception as e:
-                print(f'Daraja: {row[0]}, 3lawa: {row[1]}')
+                print(f'Daraja: {row[0]}, 3lawa: {row[1]}, Error {e}')
 
 def export_drajat_3lawat():    
     with open('./hr/data/drajat_3lawat.csv', 'w', newline='') as csvfile:

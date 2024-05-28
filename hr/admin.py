@@ -7,17 +7,56 @@ from hr.payroll import Payroll
 
 from .models import Drajat3lawat, Jazaat, MosamaWazifi,Edara3ama,Edarafar3ia,EmployeeBasic, PayrollDetail, PayrollMaster, Salafiat,Settings
 
-admin.site.register(MosamaWazifi)
-admin.site.register(Edara3ama)
-admin.site.register(Edarafar3ia)
-
-class EmployeeBasicAdmin(admin.ModelAdmin):
-    fields = ["name", "mosama_wazifi", "edara_3ama","edara_far3ia", "draja_wazifia","alawa_sanawia","tarikh_ta3in","gasima","atfal","moahil","m3ash"]        
+class MosamaWazifiAdmin(admin.ModelAdmin):
+    exclude = ["created_at","created_by","updated_at","updated_by","deducted"]
     
-    list_display = ["name", "mosama_wazifi", "edara_3ama","edara_far3ia", "draja_wazifia","alawa_sanawia","tarikh_ta3in"]        
-    list_filter = ["edara_3ama","draja_wazifia","alawa_sanawia"]
+    list_display = ["name"]        
     view_on_site = False
     search_fields = ["name"]
+
+admin.site.register(MosamaWazifi,MosamaWazifiAdmin)
+
+class Edara3amaAdmin(admin.ModelAdmin):
+    exclude = ["created_at","created_by","updated_at","updated_by","deducted"]
+    
+    list_display = ["name"]        
+    view_on_site = False
+    search_fields = ["name"]
+
+admin.site.register(Edara3ama,Edara3amaAdmin)
+
+class Edarafar3iaAdmin(admin.ModelAdmin):
+    exclude = ["created_at","created_by","updated_at","updated_by","deducted"]
+    
+    list_display = ["name"]        
+    view_on_site = False
+    search_fields = ["name"]
+
+admin.site.register(Edarafar3ia,Edarafar3iaAdmin)
+
+class EmployeeTarikhTa3inFilter(admin.SimpleListFilter):
+    title = _("tarikh_ta3in")    
+    parameter_name = "year"
+    def lookups(self, request, model_admin):
+        qs = EmployeeBasic.objects.order_by('tarikh_ta3in__year').distinct("tarikh_ta3in__year").values_list("tarikh_ta3in__year")
+        return [(x[0],x[0]) for x in qs]
+    
+    def queryset(self, request, queryset):
+        year = self.value()
+        if year:
+            return queryset.filter(tarikh_ta3in__year=int(year))
+        
+        return queryset
+    
+class EmployeeBasicAdmin(admin.ModelAdmin):
+    fields = ["code","name", "mosama_wazifi", "edara_3ama","edara_far3ia", "draja_wazifia","alawa_sanawia","tarikh_ta3in","gasima","atfal","moahil","m3ash"]        
+    
+    list_display = ["code","name", "mosama_wazifi", "edara_3ama","edara_far3ia", "draja_wazifia","alawa_sanawia","tarikh_ta3in"]    
+    list_display_links = ["code","name"]
+    list_filter = ["edara_3ama","draja_wazifia","alawa_sanawia","gasima","atfal","moahil","m3ash",EmployeeTarikhTa3inFilter] #
+    view_on_site = False
+    autocomplete_fields = ["mosama_wazifi", "edara_3ama","edara_far3ia"]
+    search_fields = ["name","code"]
 
 admin.site.register(EmployeeBasic,EmployeeBasicAdmin)
 
@@ -60,6 +99,7 @@ class SalafiatAdmin(admin.ModelAdmin):
     list_filter = ["year","month"]
     view_on_site = False
     search_fields = ["employee__name"]
+    autocomplete_fields = ["employee"]
 
     def save_model(self, request, obj, form, change):
         if obj.pk:
@@ -77,6 +117,7 @@ class JazaatAdmin(admin.ModelAdmin):
     list_filter = ["year","month"]
     view_on_site = False
     search_fields = ["employee__name"]
+    autocomplete_fields = ["employee"]
 
     def save_model(self, request, obj, form, change):
         if obj.pk:
