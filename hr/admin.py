@@ -1,3 +1,6 @@
+import csv
+from django.http import HttpResponse
+
 from django.contrib import admin
 from django.urls import reverse
 from django.utils.html import format_html
@@ -47,16 +50,68 @@ class EmployeeTarikhTa3inFilter(admin.SimpleListFilter):
             return queryset.filter(tarikh_ta3in__year=int(year))
         
         return queryset
-    
+
+class EmployeeBankAccountInline(admin.TabularInline):
+    model = EmployeeBankAccount
+    exclude = ["created_at","created_by","updated_at","updated_by"]
+    extra = 1    
+
+class SalafiatInline(admin.TabularInline):
+    model = Salafiat
+    exclude = ["created_at","created_by","updated_at","updated_by"]
+    extra = 1    
+
+class JazaatInline(admin.TabularInline):
+    model = Jazaat
+    exclude = ["created_at","created_by","updated_at","updated_by"]
+    extra = 1    
+
 class EmployeeBasicAdmin(admin.ModelAdmin):
-    fields = ["code","name", "mosama_wazifi", "edara_3ama","edara_far3ia", "draja_wazifia","alawa_sanawia","tarikh_ta3in","gasima","atfal","aadoa","moahil","m3ash"]        
-    
-    list_display = ["code","name", "mosama_wazifi", "edara_3ama","edara_far3ia", "draja_wazifia","alawa_sanawia","tarikh_ta3in"]    
+    fields = ["code","name", "draja_wazifia","alawa_sanawia", "mosama_wazifi", "edara_3ama","edara_far3ia","tarikh_ta3in","moahil","gasima","atfal","aadoa","m3ash"]        
+    inlines = [EmployeeBankAccountInline,SalafiatInline,JazaatInline]
+    list_display = ["code","name", "draja_wazifia","alawa_sanawia", "mosama_wazifi", "edara_3ama","edara_far3ia","tarikh_ta3in","moahil","gasima","atfal","aadoa","m3ash"]    
     list_display_links = ["code","name"]
-    list_filter = ["edara_3ama","draja_wazifia","alawa_sanawia","gasima","atfal","moahil","m3ash",EmployeeTarikhTa3inFilter] #
+    list_filter = ["draja_wazifia","alawa_sanawia","edara_3ama","gasima","atfal","moahil",EmployeeTarikhTa3inFilter,"aadoa","m3ash"] #
     view_on_site = False
     autocomplete_fields = ["mosama_wazifi", "edara_3ama","edara_far3ia"]
     search_fields = ["name","code"]
+    actions = ['export_as_csv']
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+        
+    @admin.action(description=_('Export data'))
+    def export_as_csv(self, request, queryset):
+        response = HttpResponse(
+            content_type="text/csv",
+            headers={"Content-Disposition": f'attachment; filename="employees.csv"'},
+        )
+        header = [
+                    _("code"),_("name"),_("draja_wazifia"),_("alawa_sanawia"),_("mosama_wazifi"),\
+                    _( "edara_3ama"),_("edara_far3ia"),_("tarikh_ta3in"),_("gasima"),_("atfal"),\
+                    _("moahil"),_("m3ash"),_("aadoa")
+        ]
+
+        writer = csv.writer(response)
+        writer.writerow(header)
+
+        for emp in queryset.order_by("draja_wazifia","alawa_sanawia"):
+            gasima = _('no')
+            if emp.gasima:
+                gasima = _('yes')
+
+            aadoa = _('no')
+            if emp.aadoa:
+                aadoa = _('yes')
+
+            row = [
+                    emp.code,emp.name,emp.get_draja_wazifia_display(),emp.get_alawa_sanawia_display(),\
+                    emp.mosama_wazifi.name,emp.edara_3ama.name,emp.edara_far3ia.name,emp.tarikh_ta3in,\
+                    gasima,emp.atfal,emp.get_moahil_display(),emp.m3ash,aadoa
+            ]
+            writer.writerow(row)
+
+        return response
 
 admin.site.register(EmployeeBasic,EmployeeBasicAdmin)
 
@@ -66,6 +121,9 @@ class Drajat3lawatAdmin(admin.ModelAdmin):
     list_display = ["draja_wazifia", "alawa_sanawia", "abtdai","galaa_m3isha", "shakhsia","ma3adin"]
     list_filter = ["draja_wazifia"]
     view_on_site = False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
 
     def save_model(self, request, obj, form, change):
         if obj.pk:

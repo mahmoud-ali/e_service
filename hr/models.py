@@ -168,7 +168,7 @@ class Drajat3lawat(LoggingModel):
         indexes = [
             models.Index(fields=["draja_wazifia", "alawa_sanawia"]),
         ]
-        ordering = ["draja_wazifia","alawa_sanawia"]
+        ordering = ["draja_wazifia","-alawa_sanawia"]
         verbose_name = _("Drajat & 3lawat")
         verbose_name_plural = _("Drajat & 3lawat")
 
