@@ -7,33 +7,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 <title>{{title}}</title>
-<style>
-	*{
-		color-adjust: exact !important;
-		-webkit-print-color-adjust:exact !important;
-		print-color-adjust:exact !important;
-	}
-
-	table{
-		font-size: 12px;
-	}
-
-	td, th{
-		padding:2px !important;
-	}
-
-	.col_2{
-		min-width:180px;
-	}
-
-	th{
-		background-color: #dddddd
-	}
-
-	.row_even{
-		background-color: #efefef
-	}
-</style>
 {% load bootstrap3 %}
 
 {% bootstrap_css %}
@@ -65,7 +38,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Yantramanav:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
-	
+
+<link rel="stylesheet" type="text/css" href="{% static 'hr/css/print.css' %}" />
+
 </head>
 <body>
 

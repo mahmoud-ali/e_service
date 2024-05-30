@@ -1,0 +1,74 @@
+body{
+    -webkit-print-color-adjust:exact !important;
+    print-color-adjust:exact !important;
+}
+
+table{
+    font-size: 12px;
+}
+
+td, th{
+    padding:2px !important;
+}
+.col_2{
+    min-width:200px;
+}
+.col_3{
+    min-width:80px;
+}
+
+th{
+    background-color: #dddddd;
+}
+
+.row_even{
+    background-color: #efefef
+}
+
+@media print {
+    @page {
+        size: A3 landscape;
+        margin:0;
+        margin-bottom: 0.2in;
+        border: solid 1px black ;
+    }
+
+    html
+    {
+        background-color: #FFFFFF; 
+        margin: 0px;  /* this affects the margin on the html before sending to printer */
+    }
+
+    table thead::before {
+        content: "";
+        line-height:0.1in !important;
+    }
+    
+    a[href]:after { 
+        content: none !important; 
+    }
+
+    .page-header,div.filter{
+        text-align:center;
+        font-weight: normal;
+    }
+
+    div.filter label{
+        font-weight: bold;
+    }
+
+    div.main{
+        width: 100% !important;
+        padding: 5px;
+    }
+
+    .navbar,div.sidebar,.screen_only{
+        display: none !important;
+    }
+}
+
+@media screen {
+    .print_only{
+        display: none !important;
+    }
+}

@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from django.views.generic import View
 from django.utils.translation import gettext_lazy as _
-
+from django.utils import cache
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 
 from hr.models import Drajat3lawat
@@ -54,6 +54,7 @@ class Badalat(LoginRequiredMixin,UserPermissionMixin,View):
             for r in data:
                 writer.writerow(r)
 
+            cache.patch_cache_control(response, max_age=0)
             return response
 
         else:
@@ -64,7 +65,10 @@ class Badalat(LoginRequiredMixin,UserPermissionMixin,View):
                 'data': data,
                 'summary':summary_list,
             }
-            return render(self.request,template_name,context)
+
+            response = render(self.request,template_name,context)
+            cache.patch_cache_control(response, max_age=0)
+            return response
     
 class Khosomat(LoginRequiredMixin,UserPermissionMixin,View):
     user_groups = ['hr_manager']
@@ -106,6 +110,7 @@ class Khosomat(LoginRequiredMixin,UserPermissionMixin,View):
             for r in data:
                 writer.writerow(r)
 
+            cache.patch_cache_control(response, max_age=0)
             return response
 
         else:
@@ -116,4 +121,7 @@ class Khosomat(LoginRequiredMixin,UserPermissionMixin,View):
                 'data': data,
                 'summary':summary_list,
             }
-            return render(self.request,template_name,context)
+
+            response = render(self.request,template_name,context)
+            cache.patch_cache_control(response, max_age=0)
+            return response

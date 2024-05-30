@@ -44,13 +44,17 @@ class Payroll():
         if(employee.gasima):
             gasima = self.hr_settings.get_by_code(Settings.SETTINGS_GASIMA)
 
+        aadoa = 0
+        if(employee.aadoa):
+            aadoa = self.hr_settings.get_by_code(Settings.SETTINGS_AADOA)
+
         try:
             draj_obj = Drajat3lawat.objects.get(draja_wazifia=employee.draja_wazifia,alawa_sanawia=employee.alawa_sanawia)
             badal = Badalat_3lawat(
                 draj_obj.abtdai,
                 draj_obj.galaa_m3isha,
                 shakhsia=draj_obj.shakhsia,
-                aadoa=draj_obj.aadoa,
+                aadoa=aadoa,
                 gasima=gasima,
                 atfal=(employee.atfal *self.hr_settings.get_by_code(Settings.SETTINGS_ATFAL)),
                 moahil=self.hr_settings.get_by_code(moahil),
@@ -70,12 +74,6 @@ class Payroll():
             return (employee,badal,khosomat)
         except Drajat3lawat.DoesNotExist as e:
             pass
-            # print(e)
-            # print(f'draja_wazifia: {Drajat3lawat.DRAJAT_CHOICES.get(emp.draja_wazifia)}, alawa_sanawia: {Drajat3lawat.DRAJAT_CHOICES.get(emp.alawa_sanawia)}')
-
-    # def __iter__(self):
-    #     for emp in self.employees:
-    #         yield(self.calculate_employee_payroll(emp))
     
     def all_employees_payroll_calculated(self):
         for emp in self.employees:
@@ -110,11 +108,6 @@ class Payroll():
     def all_employees_payroll_from_db(self):
         for emp_payroll in self.payroll_details:
             yield(self.employee_payroll_from_db(emp_payroll))
-
-    def show_all(self):
-        for emp_payroll in self.employees:
-            print(*emp_payroll)
-        
 
     def calculate(self):
         if self.is_confirmed():

@@ -49,7 +49,7 @@ class EmployeeTarikhTa3inFilter(admin.SimpleListFilter):
         return queryset
     
 class EmployeeBasicAdmin(admin.ModelAdmin):
-    fields = ["code","name", "mosama_wazifi", "edara_3ama","edara_far3ia", "draja_wazifia","alawa_sanawia","tarikh_ta3in","gasima","atfal","moahil","m3ash"]        
+    fields = ["code","name", "mosama_wazifi", "edara_3ama","edara_far3ia", "draja_wazifia","alawa_sanawia","tarikh_ta3in","gasima","atfal","aadoa","moahil","m3ash"]        
     
     list_display = ["code","name", "mosama_wazifi", "edara_3ama","edara_far3ia", "draja_wazifia","alawa_sanawia","tarikh_ta3in"]    
     list_display_links = ["code","name"]
@@ -61,9 +61,9 @@ class EmployeeBasicAdmin(admin.ModelAdmin):
 admin.site.register(EmployeeBasic,EmployeeBasicAdmin)
 
 class Drajat3lawatAdmin(admin.ModelAdmin):
-    fields = ["draja_wazifia", "alawa_sanawia", "abtdai","galaa_m3isha", "shakhsia","ma3adin","aadoa"]        
+    fields = ["draja_wazifia", "alawa_sanawia", "abtdai","galaa_m3isha", "shakhsia","ma3adin"]        
     
-    list_display = ["draja_wazifia", "alawa_sanawia", "abtdai","galaa_m3isha", "shakhsia","ma3adin","aadoa"]
+    list_display = ["draja_wazifia", "alawa_sanawia", "abtdai","galaa_m3isha", "shakhsia","ma3adin"]
     list_filter = ["draja_wazifia"]
     view_on_site = False
 

@@ -2,7 +2,7 @@ import csv
 
 from django.contrib.auth import get_user_model
 
-from ..models import MOAHIL_BAKLARIOS, MosamaWazifi,Edara3ama,Edarafar3ia,EmployeeBasic,Drajat3lawat, PayrollDetail, PayrollMaster, Jazaat, Salafiat
+from ..models import MOAHIL_BAKLARIOS, MOAHIL_DAPLOM_3ALI, MOAHIL_DECTORA, MOAHIL_MAJSTEAR, MOAHIL_THANOI, MosamaWazifi,Edara3ama,Edarafar3ia,EmployeeBasic,Drajat3lawat, PayrollDetail, PayrollMaster, Jazaat, Salafiat
 
 from ..payroll import Payroll
 
@@ -76,19 +76,63 @@ def import_employees():
             except Exception as e:
                 print(f'Id: {id}, Exception: {e}')
 
+def update_moahil():
+    with open('./hr/data/moahil.csv', newline='') as csvfile:
+        reader = csv.reader(csvfile, delimiter=',')
+        next(reader, None)  # skip the headers
+        for row in reader:
+            code = int(row[0])
+            moahil = row[2]
+
+            if not moahil:
+                moahil = 0
+                
+            if int(moahil) == 10000:
+                moahil = MOAHIL_DAPLOM_3ALI
+            elif int(moahil) == 20000:
+                moahil = MOAHIL_MAJSTEAR
+            elif int(moahil) == 30000:
+                moahil = MOAHIL_DECTORA
+            else:
+                moahil = MOAHIL_BAKLARIOS
+
+            # print(code,moahil)
+            emp = EmployeeBasic.objects.get(code=code)
+            emp.moahil = moahil
+            emp.save(update_fields=['moahil'])
+
+def update_3doa():
+    with open('./hr/data/3doa.csv', newline='') as csvfile:
+        reader = csv.reader(csvfile, delimiter=',')
+        next(reader, None)  # skip the headers
+        for row in reader:
+            if row[0]:
+                code = int(row[0])
+                aadoa = row[2]
+
+                if not aadoa:
+                    aadoa = False
+                else:
+                    aadoa = True
+                    
+                # print(code,moahil)
+                emp = EmployeeBasic.objects.get(code=code)
+                emp.aadoa = aadoa
+                emp.save(update_fields=['aadoa'])
+
 def import_drajat_3lawat():
     Drajat3lawat.objects.all().delete()
 
-    with open('./hr/data/drajat_3lawat.csv', newline='') as csvfile:
+    with open('./hr/data/drajat_3lawat2.csv', newline='') as csvfile:
         reader = csv.reader(csvfile, delimiter=',')
         next(reader, None)  # skip the headers
         for row in reader:
             try:
                 Drajat3lawat.objects.create(
                     draja_wazifia=int(row[0]),alawa_sanawia=int(row[1]),abtdai=float(row[2]),galaa_m3isha=float(row[3]),\
-                    ma3adin=float(row[4]),aadoa=float(row[5]),shakhsia=float(row[6]),\
+                    ma3adin=float(row[4]),aadoa=0,shakhsia=float(row[6]),\
                     created_by=admin_user,updated_by=admin_user
-                )
+                ) #aadoa=float(row[5])
             except Exception as e:
                 print(f'Daraja: {row[0]}, 3lawa: {row[1]}, Error {e}')
 

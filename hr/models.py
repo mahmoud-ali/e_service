@@ -69,6 +69,7 @@ class Settings(LoggingModel):
     SETTINGS_ATFAL = 'atfal'
     SETTINGS_DAMGA = 'damga'
     SETTINGS_SANDOG = 'sandog'
+    SETTINGS_AADOA = 'aadoa'
 
     SETTINGS_CHOICES = {
         SETTINGS_ZAKA_KAFAF: _('SETTINGS_ZAKAT_KAFAF'),
@@ -77,6 +78,7 @@ class Settings(LoggingModel):
         SETTINGS_ATFAL: _('SETTINGS_ATFAL'),
         SETTINGS_DAMGA: _('SETTINGS_DAMGA'),
         SETTINGS_SANDOG: _('SETTINGS_SANDOG'),
+        SETTINGS_AADOA: _('SETTINGS_AADOA'),
     }
 
     for moahil in MOAHIL_CHOICES:
@@ -153,7 +155,7 @@ class Drajat3lawat(LoggingModel):
     galaa_m3isha = models.FloatField(_("galaa_m3isha"),default=0)
     shakhsia = models.FloatField(_("shakhsia"),default=0)
     ma3adin = models.FloatField(_("ma3adin"),default=0)
-    aadoa = models.FloatField(_("aadoa"),default=0)
+    # aadoa = models.FloatField(_("aadoa"),default=0)
 
     def __str__(self) -> str:
         return self.DRAJAT_CHOICES[self.draja_wazifia]+'/'+self.ALAWAT_CHOICES[self.alawa_sanawia]
@@ -226,6 +228,7 @@ class EmployeeBasic(LoggingModel):
     atfal = models.IntegerField(_("3dad_atfal"),default=0)
     moahil = models.CharField(_("moahil"),max_length=20, choices=MOAHIL_CHOICES,default=MOAHIL_BAKLARIOS)
     m3ash = models.FloatField(_("m3ash"),default=0)
+    aadoa = models.BooleanField(_("aadoa"),default=False)
 
     def __str__(self) -> str:
         return f'{self.name}'# / {self.edara_3ama.name}'
@@ -363,3 +366,6 @@ class PayrollDetail(models.Model):
             models.UniqueConstraint(fields=['payroll_master','employee'],name="unique_employee_payroll")
         ]
         ordering = ["employee__code"]
+
+    def __str__(self) -> str:
+        return f'{self.employee.name} ({self.employee.edara_3ama.name})'
