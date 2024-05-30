@@ -120,6 +120,21 @@ def update_3doa():
                 emp.aadoa = aadoa
                 emp.save(update_fields=['aadoa'])
 
+def update_sex():
+    EmployeeBasic.objects.all().update(sex=EmployeeBasic.SEX_MALE)
+
+    with open('./hr/data/sex.csv', newline='') as csvfile:
+        reader = csv.reader(csvfile, delimiter=',')
+        next(reader, None)  # skip the headers
+        for row in reader:
+            if row[0]:
+                code = int(row[0])
+
+                emp = EmployeeBasic.objects.get(code=code)
+                emp.sex = EmployeeBasic.SEX_FEMALE
+                emp.save(update_fields=['sex'])
+
+
 def import_drajat_3lawat():
     Drajat3lawat.objects.all().delete()
 

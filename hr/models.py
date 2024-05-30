@@ -216,6 +216,14 @@ class Edarafar3ia(models.Model):
         verbose_name_plural = _("Edara far3ia")
 
 class EmployeeBasic(LoggingModel):
+    SEX_MALE = 'male'
+    SEX_FEMALE = 'female'
+
+    SEX_CHOICES = {
+        SEX_MALE: _('SEX_MALE'),
+        SEX_FEMALE: _('SEX_FEMALE'),
+    }
+
     code = models.IntegerField(_("employee_code"))
     name = models.CharField(_("employee_name"),max_length=150)
     mosama_wazifi = models.ForeignKey(MosamaWazifi, on_delete=models.PROTECT,verbose_name=_("mosama_wazifi"))
@@ -224,6 +232,7 @@ class EmployeeBasic(LoggingModel):
     draja_wazifia = models.IntegerField(_("draja_wazifia"), choices=Drajat3lawat.DRAJAT_CHOICES)
     alawa_sanawia = models.IntegerField(_("alawa_sanawia"), choices=Drajat3lawat.ALAWAT_CHOICES)
     tarikh_ta3in = models.DateField(_("tarikh_ta3in"))
+    sex = models.CharField(_("sex"),max_length=7, choices=SEX_CHOICES)
     gasima = models.BooleanField(_("gasima"),default=False)
     atfal = models.IntegerField(_("3dad_atfal"),default=0)
     moahil = models.CharField(_("moahil"),max_length=20, choices=MOAHIL_CHOICES,default=MOAHIL_BAKLARIOS)

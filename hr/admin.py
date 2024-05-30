@@ -67,11 +67,11 @@ class JazaatInline(admin.TabularInline):
     extra = 1    
 
 class EmployeeBasicAdmin(admin.ModelAdmin):
-    fields = ["code","name", "draja_wazifia","alawa_sanawia", "mosama_wazifi", "edara_3ama","edara_far3ia","tarikh_ta3in","moahil","gasima","atfal","aadoa","m3ash"]        
+    fields = ["code","name", "draja_wazifia","alawa_sanawia", "edara_3ama","edara_far3ia", "mosama_wazifi","sex","tarikh_ta3in","moahil","gasima","atfal","aadoa","m3ash"]        
     inlines = [EmployeeBankAccountInline,SalafiatInline,JazaatInline]
-    list_display = ["code","name", "draja_wazifia","alawa_sanawia", "mosama_wazifi", "edara_3ama","edara_far3ia","tarikh_ta3in","moahil","gasima","atfal","aadoa","m3ash"]    
+    list_display = ["code","name", "draja_wazifia","alawa_sanawia", "edara_3ama","edara_far3ia", "mosama_wazifi","tarikh_ta3in","sex","moahil","gasima","atfal","aadoa","m3ash"]    
     list_display_links = ["code","name"]
-    list_filter = ["draja_wazifia","alawa_sanawia","edara_3ama","gasima","atfal","moahil",EmployeeTarikhTa3inFilter,"aadoa","m3ash"] #
+    list_filter = ["draja_wazifia","alawa_sanawia","edara_3ama","gasima","atfal",EmployeeTarikhTa3inFilter,"sex","moahil","aadoa","m3ash"] #
     view_on_site = False
     autocomplete_fields = ["mosama_wazifi", "edara_3ama","edara_far3ia"]
     search_fields = ["name","code"]
@@ -87,8 +87,8 @@ class EmployeeBasicAdmin(admin.ModelAdmin):
             headers={"Content-Disposition": f'attachment; filename="employees.csv"'},
         )
         header = [
-                    _("code"),_("name"),_("draja_wazifia"),_("alawa_sanawia"),_("mosama_wazifi"),\
-                    _( "edara_3ama"),_("edara_far3ia"),_("tarikh_ta3in"),_("gasima"),_("atfal"),\
+                    _("code"),_("name"),_("draja_wazifia"),_("alawa_sanawia"),_( "edara_3ama"),\
+                    _("edara_far3ia"),_("mosama_wazifi"),_("tarikh_ta3in"),_("sex"),_("gasima"),_("atfal"),\
                     _("moahil"),_("m3ash"),_("aadoa")
         ]
 
@@ -106,12 +106,29 @@ class EmployeeBasicAdmin(admin.ModelAdmin):
 
             row = [
                     emp.code,emp.name,emp.get_draja_wazifia_display(),emp.get_alawa_sanawia_display(),\
-                    emp.mosama_wazifi.name,emp.edara_3ama.name,emp.edara_far3ia.name,emp.tarikh_ta3in,\
-                    gasima,emp.atfal,emp.get_moahil_display(),emp.m3ash,aadoa
+                    emp.edara_3ama.name,emp.edara_far3ia.name,emp.mosama_wazifi.name,emp.tarikh_ta3in,\
+                    emp.get_sex_display(),gasima,emp.atfal,emp.get_moahil_display(),emp.m3ash,aadoa
             ]
             writer.writerow(row)
 
         return response
+
+    def save_model(self, request, obj, form, change):
+        if obj.pk:
+            obj.updated_by = request.user
+        else:
+            obj.created_by = obj.updated_by = request.user
+        super().save_model(request, obj, form, change)                
+
+    def save_formset(self, request, form, formset, change):
+        instances = formset.save(commit=False)
+        for obj in instances:
+            if obj.pk:
+                obj.updated_by = request.user
+            else:
+                obj.created_by = obj.updated_by = request.user
+
+        super().save_formset(request, form, formset, change)                      
 
 admin.site.register(EmployeeBasic,EmployeeBasicAdmin)
 
@@ -150,60 +167,60 @@ class SettingsAdmin(admin.ModelAdmin):
 
 admin.site.register(Settings,SettingsAdmin)
 
-class SalafiatAdmin(admin.ModelAdmin):
-    exclude = ["created_at","created_by","updated_at","updated_by","deducted"]
+# class SalafiatAdmin(admin.ModelAdmin):
+#     exclude = ["created_at","created_by","updated_at","updated_by","deducted"]
     
-    list_display = ["employee", "year","month","note","amount","deducted"] 
-    list_filter = ["year","month"]
-    view_on_site = False
-    search_fields = ["employee__name"]
-    autocomplete_fields = ["employee"]
+#     list_display = ["employee", "year","month","note","amount","deducted"] 
+#     list_filter = ["year","month"]
+#     view_on_site = False
+#     search_fields = ["employee__name"]
+#     autocomplete_fields = ["employee"]
 
-    def save_model(self, request, obj, form, change):
-        if obj.pk:
-            obj.updated_by = request.user
-        else:
-            obj.created_by = obj.updated_by = request.user
-        super().save_model(request, obj, form, change)                
+#     def save_model(self, request, obj, form, change):
+#         if obj.pk:
+#             obj.updated_by = request.user
+#         else:
+#             obj.created_by = obj.updated_by = request.user
+#         super().save_model(request, obj, form, change)                
 
-admin.site.register(Salafiat,SalafiatAdmin)
+# admin.site.register(Salafiat,SalafiatAdmin)
 
-class EmployeeBankAccountAdmin(admin.ModelAdmin):
-    exclude = ["created_at","created_by","updated_at","updated_by"]
+# class EmployeeBankAccountAdmin(admin.ModelAdmin):
+#     exclude = ["created_at","created_by","updated_at","updated_by"]
     
-    list_display = ["employee", "bank","account_no","active"] 
-    list_filter = ["bank","employee__edara_3ama"]
-    view_on_site = False
-    search_fields = ["employee__name"]
-    autocomplete_fields = ["employee"]
+#     list_display = ["employee", "bank","account_no","active"] 
+#     list_filter = ["bank","employee__edara_3ama"]
+#     view_on_site = False
+#     search_fields = ["employee__name"]
+#     autocomplete_fields = ["employee"]
 
-    def save_model(self, request, obj, form, change):
-        if obj.pk:
-            obj.updated_by = request.user
-        else:
-            obj.created_by = obj.updated_by = request.user
-        super().save_model(request, obj, form, change)                
+#     def save_model(self, request, obj, form, change):
+#         if obj.pk:
+#             obj.updated_by = request.user
+#         else:
+#             obj.created_by = obj.updated_by = request.user
+#         super().save_model(request, obj, form, change)                
 
-admin.site.register(EmployeeBankAccount,EmployeeBankAccountAdmin)
+# admin.site.register(EmployeeBankAccount,EmployeeBankAccountAdmin)
 
-class JazaatAdmin(admin.ModelAdmin):
-    exclude = ["created_at","created_by","updated_at","updated_by","deducted"]
+# class JazaatAdmin(admin.ModelAdmin):
+#     exclude = ["created_at","created_by","updated_at","updated_by","deducted"]
     
-    list_display = ["employee", "year","month","note","amount","deducted"] 
-    list_filter = ["year","month"]
-    view_on_site = False
-    search_fields = ["employee__name"]
-    autocomplete_fields = ["employee"]
+#     list_display = ["employee", "year","month","note","amount","deducted"] 
+#     list_filter = ["year","month"]
+#     view_on_site = False
+#     search_fields = ["employee__name"]
+#     autocomplete_fields = ["employee"]
 
-    def save_model(self, request, obj, form, change):
-        if obj.pk:
-            obj.updated_by = request.user
-        else:
-            obj.created_by = obj.updated_by = request.user
-        super().save_model(request, obj, form, change)                
+#     def save_model(self, request, obj, form, change):
+#         if obj.pk:
+#             obj.updated_by = request.user
+#         else:
+#             obj.created_by = obj.updated_by = request.user
+#         super().save_model(request, obj, form, change)                
 
 
-admin.site.register(Jazaat,JazaatAdmin)
+# admin.site.register(Jazaat,JazaatAdmin)
 
 class PayrollDetailInline(admin.TabularInline):
     model = PayrollDetail
