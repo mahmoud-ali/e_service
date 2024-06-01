@@ -8,7 +8,7 @@ from django.utils.translation import gettext_lazy as _
 
 from hr.payroll import Payroll
 
-from .models import Drajat3lawat, EmployeeBankAccount, Jazaat, MosamaWazifi,Edara3ama,Edarafar3ia,EmployeeBasic, PayrollDetail, PayrollMaster, Salafiat,Settings
+from .models import Drajat3lawat, EmployeeBankAccount, EmployeeFamily, EmployeeMoahil, Jazaat, MosamaWazifi,Edara3ama,Edarafar3ia,EmployeeBasic, PayrollDetail, PayrollMaster, Salafiat,Settings
 
 class MosamaWazifiAdmin(admin.ModelAdmin):
     exclude = ["created_at","created_by","updated_at","updated_by","deducted"]
@@ -56,25 +56,36 @@ class EmployeeBankAccountInline(admin.TabularInline):
     exclude = ["created_at","created_by","updated_at","updated_by"]
     extra = 1    
 
+class EmployeeFamilyInline(admin.TabularInline):
+    model = EmployeeFamily
+    exclude = ["created_at","created_by","updated_at","updated_by"]
+    extra = 1    
+
+class EmployeeMoahilInline(admin.TabularInline):
+    model = EmployeeMoahil
+    exclude = ["created_at","created_by","updated_at","updated_by"]
+    extra = 1    
+
 class SalafiatInline(admin.TabularInline):
     model = Salafiat
-    exclude = ["created_at","created_by","updated_at","updated_by"]
+    exclude = ["created_at","created_by","updated_at","updated_by","deducted"]
     extra = 1    
 
 class JazaatInline(admin.TabularInline):
     model = Jazaat
-    exclude = ["created_at","created_by","updated_at","updated_by"]
+    exclude = ["created_at","created_by","updated_at","updated_by","deducted"]
     extra = 1    
 
 class EmployeeBasicAdmin(admin.ModelAdmin):
     fields = ["code","name", "draja_wazifia","alawa_sanawia", "edara_3ama","edara_far3ia", "mosama_wazifi","sex","tarikh_ta3in","moahil","gasima","atfal","aadoa","m3ash"]        
-    inlines = [EmployeeBankAccountInline,SalafiatInline,JazaatInline]
+    inlines = [EmployeeFamilyInline,EmployeeMoahilInline,EmployeeBankAccountInline,SalafiatInline,JazaatInline]
     list_display = ["code","name", "draja_wazifia","alawa_sanawia", "edara_3ama","edara_far3ia", "mosama_wazifi","tarikh_ta3in","sex","moahil","gasima","atfal","aadoa","m3ash"]    
     list_display_links = ["code","name"]
     list_filter = ["draja_wazifia","alawa_sanawia","edara_3ama","gasima","atfal",EmployeeTarikhTa3inFilter,"sex","moahil","aadoa","m3ash"] #
     view_on_site = False
     autocomplete_fields = ["mosama_wazifi", "edara_3ama","edara_far3ia"]
     search_fields = ["name","code"]
+    readonly_fields = ["moahil","gasima","atfal"]
     actions = ['export_as_csv']
 
     def has_delete_permission(self, request, obj=None):
@@ -233,7 +244,7 @@ class PayrollDetailInline(admin.TabularInline):
         return False
     
 class PayrollMasterAdmin(admin.ModelAdmin):
-    exclude = ["created_at","created_by","updated_at","updated_by","zaka_kafaf","zaka_nisab"]
+    exclude = ["created_at","created_by","updated_at","updated_by","zaka_kafaf","zaka_nisab","confirmed","enable_sandog_kahraba","enable_youm_algoat_almosalaha"]
     inlines = [PayrollDetailInline]
 
     list_display = ["year","month","confirmed","show_badalat_link","show_khosomat_link"] 

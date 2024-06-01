@@ -93,7 +93,7 @@ class Badalat_3lawat():
         return 'Badalat => '+', '.join([f'{b[0]}: {round(b[1],2)}' for b in self.__iter__()])
 
 class Khosomat():
-    def __init__(self,Badalat:Badalat_3lawat,zaka_kafaf,zaka_nisab,m3ash=0,salafiat=0,jazaat=0,damga=1,sandog=0,sandog_kahraba=0):
+    def __init__(self,Badalat:Badalat_3lawat,zaka_kafaf,zaka_nisab,m3ash=0,salafiat=0,jazaat=0,damga=1,sandog=0,sandog_kahraba=0,enable_sandog_kahraba=True,enable_youm_algoat_almosalaha=True):
         self.Badalat = Badalat
         self._zaka_kafaf = zaka_kafaf
         self._zaka_nisab = zaka_nisab
@@ -103,6 +103,8 @@ class Khosomat():
         self._damga = damga
         self._sandog = sandog
         self._sandog_kahraba = sandog_kahraba
+        self._enable_sandog_kahraba = enable_sandog_kahraba
+        self._enable_youm_algoat_almosalaha = enable_youm_algoat_almosalaha
 
     @property
     def tameen_ajtima3i(self):
@@ -132,7 +134,10 @@ class Khosomat():
 
     @property
     def sandog_kahraba(self):
-        return self._sandog_kahraba
+        if self._enable_sandog_kahraba:
+            return self._sandog_kahraba
+        
+        return 0
 
     @property
     def salafiat(self):
@@ -140,7 +145,10 @@ class Khosomat():
 
     @property
     def youm_algoat_almosalaha(self):
-        return self.Badalat.ajmali_almoratab /30
+        if self._enable_youm_algoat_almosalaha: 
+            return self.Badalat.ajmali_almoratab /30
+        
+        return 0
 
     @property
     def zakat(self):
@@ -173,9 +181,22 @@ class Khosomat():
             ('dariba',self.dariba),
             ('damga',self.damga),
             ('ajmali_astgta3at_asasia',self.ajmali_astgta3at_asasia),
-            ('sandog_kahraba',self.sandog_kahraba),
+        ]
+
+        if self._enable_sandog_kahraba:
+            props += [   
+                ('sandog_kahraba',self.sandog_kahraba),
+            ]
+        props += [   
             ('salafiat',self.salafiat),
-            ('youm_algoat_almosalaha',self.youm_algoat_almosalaha),
+         ]
+        
+        if self._enable_youm_algoat_almosalaha:
+            props += [   
+                ('youm_algoat_almosalaha',self.youm_algoat_almosalaha),
+            ]
+            
+        props += [   
             ('zakat',self.zakat),
             ('ajmali_astgta3at_sanawia',self.ajmali_astgta3at_sanawia),
             ('jazaat',self.jazaat),

@@ -46,6 +46,14 @@ MOAHIL_CHOICES = {
     MOAHIL_DECTORA: _('MOAHIL_DECTORA'),
 }
 
+MOAHIL_WEIGHT = {
+    MOAHIL_THANOI: 1,
+    MOAHIL_BAKLARIOS: 2,
+    MOAHIL_DAPLOM_3ALI: 3,
+    MOAHIL_MAJSTEAR: 4,
+    MOAHIL_DECTORA: 5,
+}
+
 class LoggingModel(models.Model):
     """
     An abstract base class model that provides self-
@@ -70,6 +78,8 @@ class Settings(LoggingModel):
     SETTINGS_DAMGA = 'damga'
     SETTINGS_SANDOG = 'sandog'
     SETTINGS_AADOA = 'aadoa'
+    SETTINGS_ENABLE_SANDOG_KAHRABA = 'enable_kahraba' #enable_sandog_kahraba
+    SETTINGS_ENABLE_YOUM_ALGOAT_ALMOSALAHA = 'enable_algoat' #enable_youm_algoat_almosalaha
 
     SETTINGS_CHOICES = {
         SETTINGS_ZAKA_KAFAF: _('SETTINGS_ZAKAT_KAFAF'),
@@ -79,6 +89,8 @@ class Settings(LoggingModel):
         SETTINGS_DAMGA: _('SETTINGS_DAMGA'),
         SETTINGS_SANDOG: _('SETTINGS_SANDOG'),
         SETTINGS_AADOA: _('SETTINGS_AADOA'),
+        SETTINGS_ENABLE_SANDOG_KAHRABA: _('SETTINGS_ENABLE_SANDOG_KAHRABA'),
+        SETTINGS_ENABLE_YOUM_ALGOAT_ALMOSALAHA: _('SETTINGS_ENABLE_YOUM_ALGOAT_ALMOSALAHA'),
     }
 
     for moahil in MOAHIL_CHOICES:
@@ -86,10 +98,23 @@ class Settings(LoggingModel):
         SETTINGS_CHOICES[key] = MOAHIL_CHOICES[moahil]
 
     code = models.CharField(_("code"), choices=SETTINGS_CHOICES,max_length=20)
-    value = models.FloatField(_("value"))
+    value = models.CharField(_("value"),max_length=255)
 
     def __str__(self) -> str:
         return f'{self.code}: {self.value}'
+    
+    def clean(self) -> None:
+        if self.code in [self.SETTINGS_ENABLE_SANDOG_KAHRABA,self.SETTINGS_ENABLE_YOUM_ALGOAT_ALMOSALAHA]:
+            if not self.value.isdigit() or not int(self.value) in [0,1]:
+                raise ValidationError(
+                    {"value":_("value should be 0 or 1")}
+                )
+        else:
+            if not self.value.isdigit() or float(self.value) < 0:
+                raise ValidationError(
+                    {"value":_("value should be positive number")}
+                )
+        return super().clean()
 
     class Meta:
         constraints = [
@@ -298,7 +323,65 @@ class EmployeeBankAccount(LoggingModel):
 
     def deactivate_other_accounts(self):
         if self.active:
-            EmployeeBankAccount.objects.exclude(id=self.id).update(active=False)
+            self.employee.employeebankaccount_set.exclude(id=self.id).update(active=False)
+
+class EmployeeFamily(LoggingModel):
+    FAMILY_RELATION_PARENT = 'parent'
+    FAMILY_RELATION_CHILD = 'child'
+    FAMILY_RELATION_CONSORT = 'consort'
+
+    FAMILY_RELATION_CHOICES = {
+        FAMILY_RELATION_PARENT: _('FAMILY_RELATION_PARENT'),
+        FAMILY_RELATION_CHILD: _('FAMILY_RELATION_CHILD'),
+        FAMILY_RELATION_CONSORT: _('FAMILY_RELATION_CONSORT'),
+    }
+
+    employee = models.ForeignKey(EmployeeBasic, on_delete=models.PROTECT,verbose_name=_("employee_name"))
+    relation = models.CharField(_("relation"), choices=FAMILY_RELATION_CHOICES,max_length=10)
+    name = models.CharField(_("name"),max_length=100)
+
+    class Meta:
+        verbose_name = _("Employee Family")
+        verbose_name_plural = _("Employee Family")
+
+    def __str__(self) -> str:
+        return f'{self.employee.name} ({self.get_relation_display()})'
+
+    def update_number_of_children(self):
+        count = self.employee.employeefamily_set.filter(relation=self.FAMILY_RELATION_CHILD).count()
+        if count > self.employee.atfal:
+            self.employee.atfal = count
+            self.employee.save()
+
+    def update_gasima_status(self):
+        count = self.employee.employeefamily_set.filter(relation=self.FAMILY_RELATION_CONSORT).count()
+        if count > 0:
+            self.employee.gasima = True
+            self.employee.save()
+
+class EmployeeMoahil(LoggingModel):
+    employee = models.ForeignKey(EmployeeBasic, on_delete=models.PROTECT,verbose_name=_("employee_name"))
+    moahil = models.CharField(_("moahil"), choices=MOAHIL_CHOICES,max_length=20)
+    graduate_dt = models.DateField(_("graduate_dt"))
+
+    class Meta:
+        verbose_name = _("Employee Moahil")
+        verbose_name_plural = _("Employee Moahil")
+
+    def __str__(self) -> str:
+        return f'{self.employee.name} ({self.get_moahil_display()})'
+
+    def update_moahil(self):
+        qs = EmployeeMoahil.objects.filter(employee=self.employee)
+
+        tmp_moahil = MOAHIL_THANOI
+        for emp in qs:
+            if MOAHIL_WEIGHT[emp.moahil] > MOAHIL_WEIGHT[tmp_moahil]:
+                tmp_moahil = emp.moahil
+
+        if MOAHIL_WEIGHT[tmp_moahil] > MOAHIL_WEIGHT[self.employee.moahil]:
+            self.employee.moahil = tmp_moahil
+            self.employee.save()
 
 class Salafiat(LoggingModel):
     employee = models.ForeignKey(EmployeeBasic, on_delete=models.PROTECT,verbose_name=_("employee_name"))
@@ -343,6 +426,8 @@ class PayrollMaster(LoggingModel):
     month = models.IntegerField(_("month"), choices=MONTH_CHOICES)
     zaka_kafaf = models.FloatField(_("zaka_kafaf"),default=0)
     zaka_nisab = models.FloatField(_("zaka_nisab"),default=0)
+    enable_sandog_kahraba = models.BooleanField(_("enable_sandog_kahraba"),default=False)
+    enable_youm_algoat_almosalaha = models.BooleanField(_("enable_youm_algoat_almosalaha"),default=False)
     confirmed = models.BooleanField(_("confirmed"),default=False)
 
     class Meta:
@@ -351,6 +436,9 @@ class PayrollMaster(LoggingModel):
         ]
         verbose_name = _("Payroll")
         verbose_name_plural = _("Payroll")
+
+    def __str__(self) -> str:
+        return f'{_("Payroll")} {self.get_month_display()} {self.year}'
 
 class PayrollDetail(models.Model):
     payroll_master = models.ForeignKey(PayrollMaster, on_delete=models.CASCADE)

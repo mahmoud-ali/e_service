@@ -1,24 +1,16 @@
-body{
-    -webkit-print-color-adjust:exact !important;
-    print-color-adjust:exact !important;
-}
-
 table{
     font-size: 12px;
 }
 
-td, th{
-    padding:2px !important;
+th{
+    background-color: #dddddd;
 }
+
 .col_2{
     min-width:200px;
 }
 .col_3{
     min-width:80px;
-}
-
-th{
-    background-color: #dddddd;
 }
 
 .row_even{
@@ -42,6 +34,15 @@ th{
     table thead::before {
         content: "";
         line-height:0.1in !important;
+    }
+    
+    body{
+        -webkit-print-color-adjust:exact !important;
+        print-color-adjust:exact !important;
+    }
+        
+    td, th{
+        padding:2px !important;
     }
     
     a[href]:after { 

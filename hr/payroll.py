@@ -12,7 +12,7 @@ class HrSettings():
         
         for val in Settings.objects.values('code','value'):
             code = val.get('code')
-            self.values[code] = val.get('value')
+            self.values[code] = float(val.get('value'))
 
     def get_by_code(self,code):
         return self.values.get(code,0)
@@ -48,6 +48,18 @@ class Payroll():
         if(employee.aadoa):
             aadoa = self.hr_settings.get_by_code(Settings.SETTINGS_AADOA)
 
+        enable_sandog = self.hr_settings.get_by_code(Settings.SETTINGS_ENABLE_SANDOG_KAHRABA)
+        if enable_sandog > 0:
+            enable_sandog = True
+        else:
+            enable_sandog = False
+
+        enable_youm_algoat = self.hr_settings.get_by_code(Settings.SETTINGS_ENABLE_YOUM_ALGOAT_ALMOSALAHA)
+        if enable_youm_algoat > 0:
+            enable_youm_algoat = True
+        else:
+            enable_youm_algoat = False
+
         try:
             draj_obj = Drajat3lawat.objects.get(draja_wazifia=employee.draja_wazifia,alawa_sanawia=employee.alawa_sanawia)
             badal = Badalat_3lawat(
@@ -67,8 +79,9 @@ class Payroll():
                 m3ash=employee.m3ash,
                 salafiat=salafiat_total,
                 jazaat=jazaat_total,
-                sandog_kahraba=0,
                 sandog=self.hr_settings.get_by_code(Settings.SETTINGS_SANDOG),
+                enable_sandog_kahraba=enable_sandog,
+                enable_youm_algoat_almosalaha=enable_youm_algoat,
             )
 
             return (employee,badal,khosomat)
@@ -101,6 +114,8 @@ class Payroll():
             jazaat=emp_payroll.jazaat,
             sandog_kahraba=emp_payroll.sandog_kahraba,
             sandog=emp_payroll.sandog,
+            enable_sandog_kahraba=self.payroll_master.enable_sandog_kahraba,
+            enable_youm_algoat_almosalaha=self.payroll_master.enable_youm_algoat_almosalaha,
         )
 
         return (emp_payroll.employee,badal,khosomat)
@@ -118,11 +133,25 @@ class Payroll():
         try:
             with transaction.atomic():        
                 if not self.payroll_master:
+                    enable_sandog = self.hr_settings.get_by_code(Settings.SETTINGS_ENABLE_SANDOG_KAHRABA)
+                    if enable_sandog > 0:
+                        enable_sandog = True
+                    else:
+                        enable_sandog = False
+
+                    enable_youm_algoat = self.hr_settings.get_by_code(Settings.SETTINGS_ENABLE_YOUM_ALGOAT_ALMOSALAHA)
+                    if enable_youm_algoat > 0:
+                        enable_youm_algoat = True
+                    else:
+                        enable_youm_algoat = False
+
                     self.payroll_master = PayrollMaster.objects.create(
                         year = self.year,
                         month = self.month,
                         zaka_kafaf = self.hr_settings.get_by_code(Settings.SETTINGS_ZAKA_KAFAF),
                         zaka_nisab = self.hr_settings.get_by_code(Settings.SETTINGS_ZAKA_NISAB),
+                        enable_sandog_kahraba=enable_sandog,
+                        enable_youm_algoat_almosalaha=enable_youm_algoat,
                         created_by = self.admin_user,
                         updated_by = self.admin_user,
                     )

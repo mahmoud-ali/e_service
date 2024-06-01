@@ -4,9 +4,10 @@ from django.shortcuts import render
 from django.views.generic import View
 from django.utils.translation import gettext_lazy as _
 from django.utils import cache
+from django.views.defaults import bad_request
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 
-from hr.models import Drajat3lawat
+from hr.models import Drajat3lawat, PayrollMaster
 from hr.payroll import Payroll
 
 class UserPermissionMixin(UserPassesTestMixin):
@@ -77,9 +78,27 @@ class Khosomat(LoginRequiredMixin,UserPermissionMixin,View):
         month = self.request.GET['month']
         format = self.request.GET.get('format',None)
         data = []
+        payroll_master = None
+
+        try:
+            payroll_master = PayrollMaster.objects.get(year=year,month=month)
+        except PayrollMaster.DoesNotExist as e:
+            bad_request(self.request,e)
         
         payroll = Payroll(year,month)
-        header = ['الرمز','الموظف','الدرجة الوظيفية','العلاوة','تأمين اجتماعي','معاش','الصندوق','الضريبة','دمغه','إجمالي الإستقطاعات الأساسية','صندوق كهربائيه','السلفيات','استقطاع القوات المسلحه','الزكاة','إجمالي الإستقطاعات السنوية','خصومات - جزاءات','إجمالي الإستقطاع الكلي','صافي الإستحقاق']
+
+        header = ['الرمز','الموظف','الدرجة الوظيفية','العلاوة','تأمين اجتماعي','معاش','الصندوق','الضريبة','دمغه','إجمالي الإستقطاعات الأساسية',]
+
+        if payroll_master.enable_sandog_kahraba:
+            header += ['صندوق كهربائيه',]
+
+        header += ['السلفيات',]
+
+        if payroll_master.enable_youm_algoat_almosalaha:
+            header += ['استقطاع القوات المسلحه',]
+
+        header += ['الزكاة','إجمالي الإستقطاعات السنوية','خصومات - جزاءات','إجمالي الإستقطاع الكلي','صافي الإستحقاق']
+
         summary_list = []
 
         for (emp,badalat,khosomat) in payroll.all_employees_payroll_from_db():
