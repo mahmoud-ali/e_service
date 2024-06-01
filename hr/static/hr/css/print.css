@@ -7,10 +7,10 @@ th{
 }
 
 .col_2{
-    min-width:200px;
+    min-width:180px;
 }
-.col_3{
-    min-width:80px;
+.col_3,.col_4{
+    min-width:50px;
 }
 
 .row_even{
@@ -40,7 +40,10 @@ th{
         -webkit-print-color-adjust:exact !important;
         print-color-adjust:exact !important;
     }
-        
+    table{
+        font-size: 10px;
+    }
+    
     td, th{
         padding:2px !important;
     }

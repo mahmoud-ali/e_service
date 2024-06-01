@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-06-01 10:44+0200\n"
+"POT-Creation-Date: 2024-06-01 11:52+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2703,6 +2703,10 @@ msgstr "انثى"
 #: hr/models.py:252
 msgid "employee_code"
 msgstr "الرمز"
+
+#: hr/models.py:253 hr/models.py:341
+msgid "2dkhil al2sm roba3i"
+msgstr "ادخل الاسم رباعي"
 
 #: hr/models.py:262
 msgid "3dad_atfal"

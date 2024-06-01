@@ -2,7 +2,7 @@ from django.db import models
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 from django.forms import ValidationError
-from django.core.validators import MaxValueValidator, MinValueValidator
+from django.core.validators import MaxValueValidator, MinValueValidator,MinLengthValidator
 
 MONTH_JAN = 1
 MONTH_FEB = 2
@@ -250,7 +250,7 @@ class EmployeeBasic(LoggingModel):
     }
 
     code = models.IntegerField(_("employee_code"))
-    name = models.CharField(_("employee_name"),max_length=150)
+    name = models.CharField(_("employee_name"),max_length=150,validators=[MinLengthValidator(12,_("2dkhil al2sm roba3i"))])
     mosama_wazifi = models.ForeignKey(MosamaWazifi, on_delete=models.PROTECT,verbose_name=_("mosama_wazifi"))
     edara_3ama = models.ForeignKey(Edara3ama, on_delete=models.PROTECT,verbose_name=_("edara_3ama"))
     edara_far3ia = models.ForeignKey(Edarafar3ia, on_delete=models.PROTECT,verbose_name=_("edara_far3ia"))
@@ -338,7 +338,7 @@ class EmployeeFamily(LoggingModel):
 
     employee = models.ForeignKey(EmployeeBasic, on_delete=models.PROTECT,verbose_name=_("employee_name"))
     relation = models.CharField(_("relation"), choices=FAMILY_RELATION_CHOICES,max_length=10)
-    name = models.CharField(_("name"),max_length=100)
+    name = models.CharField(_("name"),max_length=100,validators=[MinLengthValidator(12,_("2dkhil al2sm roba3i"))])
 
     class Meta:
         verbose_name = _("Employee Family")
