@@ -33,14 +33,20 @@ MONTH_CHOICES = {
 }
 
 MOAHIL_THANOI = 'thanoi'
+MOAHIL_DEPLOM_TEGANI = 'deplom_tegani'
+MOAHIL_DEPLOM_WASEET = 'deplom_waseet'
 MOAHIL_BAKLARIOS = 'baklarios'
+MOAHIL_BAKLARIOS_SHARAF = 'baklarios_sharaf'
 MOAHIL_DAPLOM_3ALI = 'daplom_3ali'
 MOAHIL_MAJSTEAR = 'majstear'
 MOAHIL_DECTORA = 'dectora'
 
 MOAHIL_CHOICES = {
     MOAHIL_THANOI: _('MOAHIL_THANOI'),
+    MOAHIL_DEPLOM_TEGANI: _('MOAHIL_DEPLOM_TEGANI'),
+    MOAHIL_DEPLOM_WASEET: _('MOAHIL_DEPLOM_WASEET'),
     MOAHIL_BAKLARIOS: _('MOAHIL_BAKLARIOS'),
+    MOAHIL_BAKLARIOS_SHARAF: _('MOAHIL_BAKLARIOS_SHARAF'),
     MOAHIL_DAPLOM_3ALI: _('MOAHIL_DAPLOM_3ALI'),
     MOAHIL_MAJSTEAR: _('MOAHIL_MAJSTEAR'),
     MOAHIL_DECTORA: _('MOAHIL_DECTORA'),
@@ -48,11 +54,33 @@ MOAHIL_CHOICES = {
 
 MOAHIL_WEIGHT = {
     MOAHIL_THANOI: 1,
-    MOAHIL_BAKLARIOS: 2,
-    MOAHIL_DAPLOM_3ALI: 3,
-    MOAHIL_MAJSTEAR: 4,
-    MOAHIL_DECTORA: 5,
+    MOAHIL_DEPLOM_WASEET: 2,
+    MOAHIL_DEPLOM_TEGANI: 3,
+    MOAHIL_BAKLARIOS: 4,
+    MOAHIL_BAKLARIOS_SHARAF: 5,
+    MOAHIL_DAPLOM_3ALI: 6,
+    MOAHIL_MAJSTEAR: 7,
+    MOAHIL_DECTORA: 8,
 }
+
+MOSAMA_CATEGORY_2LMODIR_2L3AM = 'modir_2l3am'
+MOSAMA_CATEGORY_2LMOSA3DEEN = 'mosa3deen'
+MOSAMA_CATEGORY_MODRA2_2L2DARAT_2L3AMA = 'modra2_3ameen'
+MOSAMA_CATEGORY_MODRA2_2L2DARAT_2LFAR3IA = 'modra2_far3ia'
+MOSAMA_CATEGORY_RO2SA2_2L2GSAM = 'ro2sa2_2gsam'
+MOSAMA_CATEGORY_2LMOZAFEEN = 'mozafeen'
+MOSAMA_CATEGORY_2L3MAL_SAGEEN = '3mal_sageen'
+
+MOSAMA_CATEGORY_CHOICES = {
+    MOSAMA_CATEGORY_2LMODIR_2L3AM:_('CATEGORY_2LMODIR_2L3AM'),
+    MOSAMA_CATEGORY_2LMOSA3DEEN:_('CATEGORY_2LMOSA3DEEN'),
+    MOSAMA_CATEGORY_MODRA2_2L2DARAT_2L3AMA:_('CATEGORY_MODRA2_2L2DARAT_2L3AMA'),
+    MOSAMA_CATEGORY_MODRA2_2L2DARAT_2LFAR3IA:_('CATEGORY_MODRA2_2L2DARAT_2LFAR3IA'),
+    MOSAMA_CATEGORY_RO2SA2_2L2GSAM:_('CATEGORY_RO2SA2_2L2GSAM'),
+    MOSAMA_CATEGORY_2LMOZAFEEN:_('CATEGORY_2LMOZAFEEN'),
+    MOSAMA_CATEGORY_2L3MAL_SAGEEN:_('CATEGORY_2L3MAL_SAGEEN'),
+}
+
 
 class LoggingModel(models.Model):
     """
@@ -70,6 +98,7 @@ class LoggingModel(models.Model):
 
 class Settings(LoggingModel):
     MOAHIL_PREFIX = 'moahil_'
+    MOSAMA_PREFIX = 'mosama_'
 
     SETTINGS_ZAKA_KAFAF = 'zaka_kafaf'
     SETTINGS_ZAKA_NISAB = 'zaka_nisab'
@@ -95,9 +124,13 @@ class Settings(LoggingModel):
 
     for moahil in MOAHIL_CHOICES:
         key = MOAHIL_PREFIX + moahil
-        SETTINGS_CHOICES[key] = MOAHIL_CHOICES[moahil]
+        SETTINGS_CHOICES[key] = _('moahil')+' '+MOAHIL_CHOICES[moahil]
 
-    code = models.CharField(_("code"), choices=SETTINGS_CHOICES,max_length=20)
+    for mosama in MOSAMA_CATEGORY_CHOICES:
+        key = MOSAMA_PREFIX + mosama
+        SETTINGS_CHOICES[key] = _('2sti7gag 2lmobashara')+' '+MOSAMA_CATEGORY_CHOICES[mosama]
+
+    code = models.CharField(_("code"), choices=SETTINGS_CHOICES,max_length=30)
     value = models.CharField(_("value"),max_length=255)
 
     def __str__(self) -> str:
@@ -119,6 +152,9 @@ class Settings(LoggingModel):
     class Meta:
         constraints = [
             models.UniqueConstraint(fields=['code'],name="unique_setting_code")
+        ]
+        indexes = [
+            models.Index(fields=["code"]),
         ]
         verbose_name = _("HR Setting")
         verbose_name_plural = _("HR Settings")
@@ -199,6 +235,7 @@ class Drajat3lawat(LoggingModel):
 
 class MosamaWazifi(models.Model):
     name = models.CharField(_("mosama_wazifi"),max_length=100)
+    category = models.CharField(_("mosama_category"),choices=MOSAMA_CATEGORY_CHOICES,max_length=20)
 
     def __str__(self) -> str:
         return self.name
@@ -206,6 +243,9 @@ class MosamaWazifi(models.Model):
     class Meta:
         constraints = [
             models.UniqueConstraint(fields=['name'],name="unique_mosama_wazifi")
+        ]
+        indexes = [
+            models.Index(fields=["category"]),
         ]
         ordering = ["name"]
         verbose_name = _("Mosama Wazifi")
@@ -220,6 +260,9 @@ class Edara3ama(models.Model):
     class Meta:
         constraints = [
             models.UniqueConstraint(fields=['name'],name="unique_edara_3ama")
+        ]
+        indexes = [
+            models.Index(fields=["name"]),
         ]
         ordering = ["name"]
         verbose_name = _("Edara 3ama")
@@ -249,6 +292,24 @@ class EmployeeBasic(LoggingModel):
         SEX_FEMALE: _('SEX_FEMALE'),
     }
 
+    NO3_2LERTIBAT_TA3EEN = 'ta3een'
+    NO3_2LERTIBAT_NAGL = 'nagl'
+    NO3_2LERTIBAT_2L7ag = '2l7ag'
+    NO3_2LERTIBAT_2NTEDAB = '2ntedab'
+    NO3_2LERTIBAT_TAKLEEF = 'takleef'
+    NO3_2LERTIBAT_TA3AGOD = 'ta3agod'
+    NO3_2LERTIBAT_MASHRO3 = 'mashro3'
+
+    NO3_2LERTIBAT_CHOICES = {
+        NO3_2LERTIBAT_TA3EEN: _("NO3_2LERTIBAT_TA3EEN"),
+        NO3_2LERTIBAT_NAGL: _("NO3_2LERTIBAT_NAGL"),
+        NO3_2LERTIBAT_2L7ag: _("NO3_2LERTIBAT_2L7ag"),
+        NO3_2LERTIBAT_2NTEDAB: _("NO3_2LERTIBAT_2NTEDAB"),
+        NO3_2LERTIBAT_TAKLEEF: _("NO3_2LERTIBAT_TAKLEEF"),
+        NO3_2LERTIBAT_TA3AGOD: _("NO3_2LERTIBAT_TA3AGOD"),
+        NO3_2LERTIBAT_MASHRO3: _("NO3_2LERTIBAT_MASHRO3"),
+    }
+
     code = models.IntegerField(_("employee_code"))
     name = models.CharField(_("employee_name"),max_length=150,validators=[MinLengthValidator(12,_("2dkhil al2sm roba3i"))])
     mosama_wazifi = models.ForeignKey(MosamaWazifi, on_delete=models.PROTECT,verbose_name=_("mosama_wazifi"))
@@ -256,11 +317,15 @@ class EmployeeBasic(LoggingModel):
     edara_far3ia = models.ForeignKey(Edarafar3ia, on_delete=models.PROTECT,verbose_name=_("edara_far3ia"))
     draja_wazifia = models.IntegerField(_("draja_wazifia"), choices=Drajat3lawat.DRAJAT_CHOICES)
     alawa_sanawia = models.IntegerField(_("alawa_sanawia"), choices=Drajat3lawat.ALAWAT_CHOICES)
+    tarikh_milad = models.DateField(_("tarikh_milad"))
     tarikh_ta3in = models.DateField(_("tarikh_ta3in"))
     sex = models.CharField(_("sex"),max_length=7, choices=SEX_CHOICES)
+    phone = models.CharField(_("phone"),max_length=30)
+    no3_2lertibat = models.CharField(_("no3_2lertibat"),max_length=10, choices=NO3_2LERTIBAT_CHOICES)
+    sanoat_2lkhibra = models.FloatField(_("sanoat_2lkhibra"),default=0)
     gasima = models.BooleanField(_("gasima"),default=False)
     atfal = models.IntegerField(_("3dad_atfal"),default=0)
-    moahil = models.CharField(_("moahil"),max_length=20, choices=MOAHIL_CHOICES,default=MOAHIL_BAKLARIOS)
+    moahil = models.CharField(_("moahil"),max_length=30, choices=MOAHIL_CHOICES,default=MOAHIL_BAKLARIOS)
     m3ash = models.FloatField(_("m3ash"),default=0)
     aadoa = models.BooleanField(_("aadoa"),default=False)
 
@@ -271,6 +336,19 @@ class EmployeeBasic(LoggingModel):
         constraints = [
             models.UniqueConstraint(fields=['name','tarikh_ta3in'],name="unique_employee")
         ]
+        indexes = [
+            models.Index(fields=["code"]),
+            models.Index(fields=["edara_3ama"]),
+            models.Index(fields=["draja_wazifia"]),
+            models.Index(fields=["alawa_sanawia"]),
+            models.Index(fields=["tarikh_milad"]),
+            models.Index(fields=["tarikh_ta3in"]),
+            models.Index(fields=["sex"]),
+            models.Index(fields=["no3_2lertibat"]),
+            models.Index(fields=["moahil"]),
+            models.Index(fields=["aadoa"]),
+        ]
+
         ordering = ["code"]
         verbose_name = _("Employee data")
         verbose_name_plural = _("Employee data")
@@ -362,6 +440,8 @@ class EmployeeFamily(LoggingModel):
 class EmployeeMoahil(LoggingModel):
     employee = models.ForeignKey(EmployeeBasic, on_delete=models.PROTECT,verbose_name=_("employee_name"))
     moahil = models.CharField(_("moahil"), choices=MOAHIL_CHOICES,max_length=20)
+    university = models.CharField(_("university"),max_length=150)
+    takhasos = models.CharField(_("takhasos"),max_length=100)
     graduate_dt = models.DateField(_("graduate_dt"))
 
     class Meta:
@@ -420,6 +500,44 @@ class Jazaat(LoggingModel):
         ordering = ["-id"]
         verbose_name = _("Jazaat")
         verbose_name_plural = _("Jazaat")
+
+class EmployeeMobashra(LoggingModel):
+    STATE_ACTIVE = 'active'
+    STATE_VACATION = 'vaction'
+    STATE_INACTIVE = 'in_active'
+
+    STATE_CHOICES = {
+        STATE_ACTIVE: _('STATE_ACTIVE'),
+        STATE_VACATION: _('STATE_VACATION'),
+        STATE_INACTIVE: _('STATE_INACTIVE'),
+    }
+
+    employee = models.ForeignKey(EmployeeBasic, on_delete=models.PROTECT,verbose_name=_("employee_name"))
+    start_dt = models.DateField(_('start_dt'))
+    end_dt = models.DateField(_('end_dt'),blank=True)
+    state = models.CharField(_("state"), choices=STATE_CHOICES,max_length=10)
+
+    class Meta:
+        indexes = [
+            models.Index(fields=["employee","state"]),
+            models.Index(fields=["state"]),
+        ]
+        ordering = ["-id"]
+        verbose_name = _("Mobashra")
+        verbose_name_plural = _("Mobashra")
+
+class EmployeeMobashraMonthly(LoggingModel):
+    employee = models.ForeignKey(EmployeeBasic, on_delete=models.PROTECT,verbose_name=_("employee_name"))
+    year = models.IntegerField(_("year"), validators=[MinValueValidator(limit_value=2015),MaxValueValidator(limit_value=2100)])
+    month = models.IntegerField(_("month"), choices=MONTH_CHOICES)
+    no_days = models.IntegerField(_("no_days"))
+    note = models.CharField(_("note"),max_length=150,blank=True)
+    confirmed = models.BooleanField(_("confirmed"),default=False)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['employee','year','month'],name="unique_mobashraemployee_year_month")
+        ]
 
 class PayrollMaster(LoggingModel):
     year = models.IntegerField(_("year"), validators=[MinValueValidator(limit_value=2015),MaxValueValidator(limit_value=2100)])

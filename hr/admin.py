@@ -11,16 +11,17 @@ from hr.payroll import Payroll
 from .models import Drajat3lawat, EmployeeBankAccount, EmployeeFamily, EmployeeMoahil, Jazaat, MosamaWazifi,Edara3ama,Edarafar3ia,EmployeeBasic, PayrollDetail, PayrollMaster, Salafiat,Settings
 
 class MosamaWazifiAdmin(admin.ModelAdmin):
-    exclude = ["created_at","created_by","updated_at","updated_by","deducted"]
+    exclude = ["created_at","created_by","updated_at","updated_by"]
     
-    list_display = ["name"]        
+    list_display = ["name","category"]        
+    list_filter = ["category"]
     view_on_site = False
     search_fields = ["name"]
 
 admin.site.register(MosamaWazifi,MosamaWazifiAdmin)
 
 class Edara3amaAdmin(admin.ModelAdmin):
-    exclude = ["created_at","created_by","updated_at","updated_by","deducted"]
+    exclude = ["created_at","created_by","updated_at","updated_by"]
     
     list_display = ["name"]        
     view_on_site = False
@@ -29,7 +30,7 @@ class Edara3amaAdmin(admin.ModelAdmin):
 admin.site.register(Edara3ama,Edara3amaAdmin)
 
 class Edarafar3iaAdmin(admin.ModelAdmin):
-    exclude = ["created_at","created_by","updated_at","updated_by","deducted"]
+    exclude = ["created_at","created_by","updated_at","updated_by"]
     
     list_display = ["name"]        
     view_on_site = False
@@ -48,6 +49,63 @@ class EmployeeTarikhTa3inFilter(admin.SimpleListFilter):
         year = self.value()
         if year:
             return queryset.filter(tarikh_ta3in__year=int(year))
+        
+        return queryset
+
+class EmployeeWifg2lwazaifFilter(admin.SimpleListFilter):
+    title = _("wifg 2lwazif")    
+    parameter_name = "wifg_2lwazif"
+    def lookups(self, request, model_admin):
+        return [
+            ('1',_('wifg_2lwazif_giadia')),
+            ('2',_('wifg_2lwazif_3lia')),
+            ('3',_('wifg_2lwazif_okhra')),
+        ]
+    
+    def queryset(self, request, queryset):
+        val = self.value()
+        if val == '1':
+            return queryset.filter(draja_wazifia__lte=1)
+        if val == '2':
+            return queryset.filter(draja_wazifia__in=[2,3,4])
+        if val == '3':
+            return queryset.filter(draja_wazifia__gte=5)
+        
+        return queryset
+
+class EmployeeWifg2lmostawiatFilter(admin.SimpleListFilter):
+    title = _("wifg 2lmostawiat")    
+    parameter_name = "wifg_2lmostawiat"
+    def lookups(self, request, model_admin):
+        return [
+            ('1',_('wifg_2lmostawiat_mosa3di_2lmodir')),
+            ('2',_('wifg_2lmostawiat_2l2darat_2l3ama')),
+            ('3',_('wifg_2lmostawiat_2l2darat_2lmotakhasisa')),
+            ('4',_('wifg_2lmostawiat_ro2sa2_2l2gsam')),
+            ('5',_('wifg_2lmostawiat_moshrfi_2lwi7dat')),
+            ('6',_('wifg_2lmostawiat_mdkhal_khidma')),
+            ('7',_('wifg_2lmostawiat_sa2geen_faneen')),
+            ('8',_('wifg_2lmostawiat_2mal')),
+        ]
+    
+    def queryset(self, request, queryset):
+        val = self.value()
+        if val == '1':
+            return queryset.filter(draja_wazifia__lte=-2)
+        if val == '2':
+            return queryset.filter(draja_wazifia__in=[1,-1,-2,-3])
+        if val == '3':
+            return queryset.filter(draja_wazifia__in=[4,3,2])
+        if val == '4':
+            return queryset.filter(draja_wazifia__in=[7,5])
+        if val == '5':
+            return queryset.filter(draja_wazifia=8)
+        if val == '6':
+            return queryset.filter(draja_wazifia__in=[9,10])
+        if val == '7':
+            return queryset.filter(draja_wazifia=12)
+        if val == '8':
+            return queryset.filter(draja_wazifia=15)
         
         return queryset
 
@@ -77,11 +135,11 @@ class JazaatInline(admin.TabularInline):
     extra = 1    
 
 class EmployeeBasicAdmin(admin.ModelAdmin):
-    fields = ["code","name", "draja_wazifia","alawa_sanawia", "edara_3ama","edara_far3ia", "mosama_wazifi","sex","tarikh_ta3in","moahil","gasima","atfal","aadoa","m3ash"]        
+    fields = ["code","name", "draja_wazifia","alawa_sanawia", "edara_3ama","edara_far3ia", "mosama_wazifi","sex","tarikh_milad","tarikh_ta3in","phone","no3_2lertibat","sanoat_2lkhibra","moahil","gasima","atfal","aadoa","m3ash"]        
     inlines = [EmployeeFamilyInline,EmployeeMoahilInline,EmployeeBankAccountInline,SalafiatInline,JazaatInline]
     list_display = ["code","name", "draja_wazifia","alawa_sanawia", "edara_3ama","edara_far3ia", "mosama_wazifi","tarikh_ta3in","sex","moahil","gasima","atfal","aadoa","m3ash"]    
     list_display_links = ["code","name"]
-    list_filter = ["draja_wazifia","alawa_sanawia","edara_3ama","gasima","atfal",EmployeeTarikhTa3inFilter,"sex","moahil","aadoa","m3ash"] #
+    list_filter = ["draja_wazifia","alawa_sanawia","edara_3ama","mosama_wazifi__category","gasima","atfal",EmployeeTarikhTa3inFilter,EmployeeWifg2lwazaifFilter,EmployeeWifg2lmostawiatFilter,"sex","moahil","aadoa","m3ash"] #
     view_on_site = False
     autocomplete_fields = ["mosama_wazifi", "edara_3ama","edara_far3ia"]
     search_fields = ["name","code"]
@@ -99,8 +157,8 @@ class EmployeeBasicAdmin(admin.ModelAdmin):
         )
         header = [
                     _("code"),_("name"),_("draja_wazifia"),_("alawa_sanawia"),_( "edara_3ama"),\
-                    _("edara_far3ia"),_("mosama_wazifi"),_("tarikh_ta3in"),_("sex"),_("gasima"),_("atfal"),\
-                    _("moahil"),_("m3ash"),_("aadoa")
+                    _("edara_far3ia"),_("mosama_wazifi"),_("tarikh_milad"),_("tarikh_ta3in"),_("sex"),_("gasima"),_("atfal"),\
+                    _("moahil"),_("m3ash"),_("aadoa"),_("no3_2lertibat"),_("phone"),_("sanoat_2lkhibra")
         ]
 
         writer = csv.writer(response)
@@ -117,8 +175,9 @@ class EmployeeBasicAdmin(admin.ModelAdmin):
 
             row = [
                     emp.code,emp.name,emp.get_draja_wazifia_display(),emp.get_alawa_sanawia_display(),\
-                    emp.edara_3ama.name,emp.edara_far3ia.name,emp.mosama_wazifi.name,emp.tarikh_ta3in,\
-                    emp.get_sex_display(),gasima,emp.atfal,emp.get_moahil_display(),emp.m3ash,aadoa
+                    emp.edara_3ama.name,emp.edara_far3ia.name,emp.mosama_wazifi.name,emp.tarikh_milad,emp.tarikh_ta3in,\
+                    emp.get_sex_display(),gasima,emp.atfal,emp.get_moahil_display(),emp.m3ash,aadoa,emp.get_no3_2lertibat_display(),\
+                    emp.phone,emp.sanoat_2lkhibra
             ]
             writer.writerow(row)
 
