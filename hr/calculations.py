@@ -1,3 +1,7 @@
+import datetime
+from calendar import monthrange
+from collections import namedtuple
+
 class Badalat_3lawat():
     def __init__(self,abtdai,galaa_m3isha,gasima=0,atfal=0,moahil=0,shakhsia=0,ma3adin=0,aadoa=0):
         self._abtdai = abtdai
@@ -209,11 +213,238 @@ class Khosomat():
     
     def __str__(self) -> str:
         return 'Khosomat => '+', '.join([f'{b[0]}: {round(b[1],2)}' for b in self.__iter__()])
-    
-def example():
-    badal = Badalat_3lawat(15022.0281121467,10708.1720490482,gasima=25000,atfal=60000,moahil=20000,ma3adin=52736.6266882452)
-    khosomat = Khosomat(badal,215617,156159,sandog=20000)
 
-    print(badal)
-    print("\n")
-    print(khosomat)
+class Mobashara():
+    def __init__(self,year,month,mobashara,vactions=[],takleef=[]):
+        self._year = year
+        self._month = month
+        self._mobashara = mobashara
+        self._vactions = vactions
+        self._takleef = takleef
+
+        if not self._mobashara.end_dt:
+            self._mobashara.end_dt = self.akhar_youm_fi_2lshahar
+
+        self.ayam_2l2jazaa = 0
+        if hasattr(self,'_mobashara'):
+            for ftra in self._vactions:
+                if ftra.start_dt < self._mobashara.start_dt and self._mobashara.start_dt > self.awal_youm_fi_2lshahar:
+                    ftra.start_dt = self._mobashara.start_dt
+
+                if ftra.start_dt < self.awal_youm_fi_2lshahar:
+                    ftra.start_dt = self.awal_youm_fi_2lshahar
+
+                if not ftra.end_dt_actual or ftra.end_dt_actual > self.akhar_youm_fi_2lshahar:
+                    ftra.end_dt_actual = self.akhar_youm_fi_2lshahar
+
+                if hasattr(self._mobashara,'end_dt_actual') and self._mobashara.end_dt < self.akhar_youm_fi_2lshahar:
+                    ftra.end_dt_actual = self._mobashara.end_dt
+                self.ayam_2l2jazaa += (self.get_days_between_dates(ftra.start_dt,ftra.end_dt_actual) +1)
+
+        self.ftrat_2ltaklif = []
+        for ftra in self._takleef:
+            if ftra.start_dt < self.awal_youm_fi_2lshahar:
+                ftra.start_dt = self.awal_youm_fi_2lshahar
+
+            if not hasattr(ftra,'end_dt_actual') or not ftra.end_dt_actual or ftra.end_dt_actual > self.akhar_youm_fi_2lshahar:
+                ftra.end_dt_actual = self.akhar_youm_fi_2lshahar
+
+            c =  (self.get_days_between_dates(ftra.start_dt,ftra.end_dt_actual) +1)
+            self.ftrat_2ltaklif.append((c,ftra.mokalaf_rate))
+
+        self.ayam_2ltaklif = sum(map(lambda obj: obj[0] , self.ftrat_2ltaklif))
+
+        self.gemat_2ltaklif = sum(map(lambda obj: obj[0]*obj[1] , self.ftrat_2ltaklif))
+
+    @property
+    def ayam_2lshahar(self):
+        return monthrange(self._year, self._month)[1]
+
+    @property
+    def awal_youm_fi_2lshahar(self):
+        return datetime.date(self._year,self._month,1)
+
+    @property
+    def akhar_youm_fi_2lshahar(self):
+        return datetime.date(self._year,self._month,self.ayam_2lshahar)
+
+    def get_days_between_dates(self,start,end):
+        if start > end:
+            return -1
+
+        return (end - start).days
+    
+    @property
+    def ayam_2lmobashara_2lkoliah(self):
+        if not self._mobashara: #sha'9 '3ir mobasher
+            return 0
+                
+        start_dt = self._mobashara.start_dt
+        end_dt = self._mobashara.end_dt
+
+        ayam_2lmobashra = self.ayam_2lshahar
+
+        if start_dt > self.akhar_youm_fi_2lshahar: #mobashara fi almostagbal
+            return 0
+        
+        if start_dt > self.awal_youm_fi_2lshahar:
+            ayam_2lmobashra -= (self.get_days_between_dates(self.awal_youm_fi_2lshahar,start_dt))
+
+        if end_dt:
+            if end_dt < self.awal_youm_fi_2lshahar:
+                return 0
+            
+            if end_dt < self.akhar_youm_fi_2lshahar:
+                ayam_2lmobashra -= (self.get_days_between_dates(end_dt,self.akhar_youm_fi_2lshahar))
+
+        return ayam_2lmobashra
+
+    def get_overlapping(self,start_dt1,end_dt1,start_dt2,end_dt2):
+        Range = namedtuple('Range', ['start', 'end'])
+
+        r1 = Range(start=start_dt1, end=end_dt1)
+        r2 = Range(start=start_dt2, end=end_dt2)
+        latest_start = max(r1.start, r2.start)
+        earliest_end = min(r1.end, r2.end)
+        delta = (earliest_end - latest_start).days + 1
+        overlap = max(0, delta)
+        return overlap    
+
+    @property
+    def ayam_2ltaklif_2lmotgati3(self):
+        if not self._mobashara or not self._takleef:
+            return 0
+
+        count = 0
+        for ftra in self._takleef:
+            count += self.get_overlapping(self._mobashara.start_dt,self._mobashara.end_dt,ftra.start_dt,ftra.end_dt_actual)
+
+        return count
+
+    @property
+    def ayam_2lmobashara_2lsafi(self):        
+        return (self.ayam_2lmobashara_2lkoliah - self.ayam_2l2jazaa - self.ayam_2ltaklif_2lmotgati3)
+
+    @property
+    def safi_2l2sti7gag(self):
+        mobashra_safi_2lgima = self.ayam_2lmobashara_2lsafi *self._mobashara.employee_rate
+
+        return (mobashra_safi_2lgima+self.gemat_2ltaklif)
+
+    def __iter__(self):
+        props = [
+            ('ayam_2lmobashara_2lsafi',self.ayam_2lmobashara_2lsafi),
+            ('ayam_2l2jazaa',self.ayam_2l2jazaa),
+            ('ayam_2ltaklif',self.ayam_2ltaklif),
+            ('safi_2l2sti7gag',self.safi_2l2sti7gag),
+        ]
+
+        for p in props:
+            yield(p[0],p[1])
+    
+    def __str__(self) -> str:
+        return 'Mobashara ('+', '.join([f'{b[0]}: {round(b[1],2)}' for b in self.__iter__()])+')'
+    
+    def __repr__(self) -> str:
+        return self.__str__()
+
+def example():
+    # badal = Badalat_3lawat(15022.0281121467,10708.1720490482,gasima=25000,atfal=60000,moahil=20000,ma3adin=52736.6266882452)
+    # khosomat = Khosomat(badal,215617,156159,sandog=20000)
+
+    # print(badal)
+    # print("\n")
+    # print(khosomat)
+
+    year = 2024
+    month = 5
+
+    class Empty:
+        def __str__(self) -> str:
+            end = None
+            if hasattr(self,'end_dt'):
+                end = self.end_dt
+            elif hasattr(self,'end_dt_actual'):
+                end = self.end_dt_actual
+
+            return f'start: {self.start_dt}, end: {end}'
+        def __repr__(self) -> str:
+            return self.__str__()
+
+    obj = Empty()
+
+    #mobashara tbd2 o tantahi khlal 2lshahr
+    obj.start_dt = datetime.date(year,month,2)
+    obj.end_dt = datetime.date(year,month,15)
+
+    mobashara = Mobashara(year,month,obj)
+
+    #mobashara tbd2 khlal 2lshahr o bdon nehaia
+    obj.start_dt = datetime.date(year,month,2)
+    obj.end_dt = None
+
+    mobashara = Mobashara(year,month,obj)
+    print("mobashara tbd2 khlal 2lshahr o bdon nehaia",obj.start_dt,obj.end_dt,mobashara.ayam_2lmobashara_2lkoliah)
+
+    #mobashara fi awal youm fi 2lshahr o bdon nehaia
+    obj.start_dt = datetime.date(year,month,1)
+    obj.end_dt = None
+
+    mobashara = Mobashara(year,month,obj)
+    print("mobashara fi awal youm fi 2lshahr o bdon nehaia",obj.start_dt,obj.end_dt,mobashara.ayam_2lmobashara_2lkoliah)
+
+    #mobashara gabl 2lshahr o bdon nehaia
+    obj.start_dt = datetime.date(year,month-1,2)
+    obj.end_dt = None
+
+    mobashara = Mobashara(year,month,obj)
+    print("mobashara gabl 2lshahr o bdon nehaia",obj.start_dt,obj.end_dt,mobashara.ayam_2lmobashara_2lkoliah)
+
+    #mobashara entahat gabl awal 2lshahr
+    obj.start_dt = datetime.date(year,month-2,2)
+    obj.end_dt = datetime.date(year,month-1,2)
+
+    mobashara = Mobashara(year,month,obj)
+    print("mobashara entahat gabl awal 2lshahr",obj.start_dt,obj.end_dt,mobashara.ayam_2lmobashara_2lkoliah)
+
+    #mobashara entahat fi awal 2lshahr
+    obj.start_dt = datetime.date(year,month-2,2)
+    obj.end_dt = datetime.date(year,month,1)
+
+    mobashara = Mobashara(year,month,obj)
+    print("mobashara entahat fi awal 2lshahr",obj.start_dt,obj.end_dt,mobashara.ayam_2lmobashara_2lkoliah)
+
+    #mobashara entahat fi n9 2lshahr
+    obj.start_dt = datetime.date(year,month-2,2)
+    obj.end_dt = datetime.date(year,month,15)
+
+    mobashara = Mobashara(year,month,obj)
+    print("mobashara entahat fi n9 2lshahr",obj.start_dt,obj.end_dt,mobashara.ayam_2lmobashara_2lkoliah)
+
+    #mobashara entahat fi akher 2lshahr
+    obj.start_dt = datetime.date(year,month-2,2)
+    obj.end_dt = datetime.date(year,month,31)
+
+    mobashara = Mobashara(year,month,obj)
+    print("mobashara entahat fi akher 2lshahr",obj.start_dt,obj.end_dt,mobashara.ayam_2lmobashara_2lkoliah)
+
+    #ayam 2l2jazaa
+    obj.start_dt = datetime.date(year,month,15)
+    obj.end_dt = datetime.date(year,month,31)
+    obj.employee_rate = 50000.0
+    obj1 = Empty()
+    obj1.start_dt = datetime.date(year,month-1,2)
+    obj1.end_dt_actual = datetime.date(year,month,6)
+    obj2 = Empty()
+    obj2.start_dt = datetime.date(year,month,20)
+    obj2.end_dt_actual = datetime.date(year,month+1,5)
+
+    obj3 = Empty()
+    obj3.start_dt = datetime.date(year,month,13)
+    obj3.end_dt_actual = datetime.date(year,month,14)
+    obj3.mokalaf_rate = 60000.0
+
+    mobashara = Mobashara(year,month,obj,[obj1,obj2],[obj3])
+    print(mobashara)
+
+    return mobashara

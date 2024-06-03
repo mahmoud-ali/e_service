@@ -2,7 +2,7 @@ import csv
 
 from django.contrib.auth import get_user_model
 
-from ..models import MOAHIL_BAKLARIOS, MOAHIL_DAPLOM_3ALI, MOAHIL_DECTORA, MOAHIL_MAJSTEAR, MOAHIL_THANOI, MosamaWazifi,Edara3ama,Edarafar3ia,EmployeeBasic,Drajat3lawat, PayrollDetail, PayrollMaster, Jazaat, Salafiat
+from ..models import MOAHIL_BAKLARIOS, MOAHIL_DAPLOM_3ALI, MOAHIL_DECTORA, MOAHIL_MAJSTEAR, MOAHIL_THANOI, MosamaWazifi,Edara3ama,Edarafar3ia,EmployeeBasic,Drajat3lawat, PayrollDetail, PayrollMaster, EmployeeJazaat, EmployeeSalafiat
 
 from ..payroll import Payroll
 
@@ -15,8 +15,8 @@ def show_data():
             print(', '.join(row[1:8]))
 def empty_database():
     PayrollMaster.objects.all().delete()
-    Jazaat.objects.all().delete()
-    Salafiat.objects.all().delete()
+    EmployeeJazaat.objects.all().delete()
+    EmployeeSalafiat.objects.all().delete()
     EmployeeBasic.objects.all().delete()
     Edarafar3ia.objects.all().delete()
     Edara3ama.objects.all().delete()

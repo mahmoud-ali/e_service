@@ -1,10 +1,12 @@
-from django.contrib.auth import get_user_model
-
-from hr.calculations import Badalat_3lawat, Khosomat
+from django.utils.translation import gettext_lazy as _
 from django.db import transaction
 from django.db.models import Sum
 
-from .models import Jazaat,EmployeeBasic,Drajat3lawat, PayrollDetail, PayrollMaster,Settings,Salafiat
+from django.contrib.auth import get_user_model
+
+from hr.calculations import Badalat_3lawat, Khosomat, Mobashara
+
+from .models import EmployeeMobashra, EmployeeJazaat,EmployeeBasic,Drajat3lawat, EmployeeMobashraMonthly, PayrollDetail, PayrollMaster,Settings,EmployeeSalafiat
 
 class HrSettings():
     def __init__(self) -> None:
@@ -26,8 +28,8 @@ class Payroll():
         self.month = month
 
         self.hr_settings = HrSettings()
-        self.salafiat_qs = Salafiat.objects.filter(year=self.year,month=self.month)
-        self.jazaat_qs = Jazaat.objects.filter(year=self.year,month=self.month)
+        self.salafiat_qs = EmployeeSalafiat.objects.filter(year=self.year,month=self.month)
+        self.jazaat_qs = EmployeeJazaat.objects.filter(year=self.year,month=self.month)
         self.employees = EmployeeBasic.objects.all() #filter(id=1794)
 
         self.admin_user = get_user_model().objects.get(id=1)
@@ -206,3 +208,55 @@ class Payroll():
             return False
         
         return self.payroll_master.confirmed
+    
+class MobasharaSheet():
+    def __init__(self,year,month) -> None:
+        self.year = year
+        self.month = month
+
+        self.hr_settings = HrSettings()
+        self.employees = EmployeeMobashra.objects.filter(state=EmployeeMobashra.STATE_ACTIVE)
+
+        self.admin_user = get_user_model().objects.get(id=1)
+
+    def employee_mobashara_calculated(self,emp_mobashara):
+        mobashara = Mobashara(self.year,self.month,emp_mobashara,emp_mobashara.employee.employeevacation_set.all(),emp_mobashara.employee.mokalafvacation_set.all())
+        return (emp_mobashara.employee, mobashara)
+    
+    def all_employees_mobashara_calculated(self):
+        for emp in self.employees:
+            x = self.employee_mobashara_calculated(emp)
+            if x:
+                yield(x)
+
+    def calculate(self):
+        if EmployeeMobashraMonthly.objects.filter(year = self.year,month = self.month,confirmed=True).exists():
+            return False
+
+        try:
+            with transaction.atomic():        
+                EmployeeMobashraMonthly.objects.filter(year = self.year,month = self.month).delete()
+
+                for emp_mobashara in self.all_employees_mobashara_calculated():
+                    emp,mobashara = emp_mobashara
+
+                    x1 = _("ayam_2lmobashara_2lsafi")
+                    x2 = _("ayam_2l2jazaa")
+                    x3 = _("ayam_2ltaklif")
+
+                    EmployeeMobashraMonthly.objects.create(
+                        employee = emp,
+                        year = self.year,
+                        month = self.month,
+                        amount = mobashara.safi_2l2sti7gag,
+                        rate = emp.mobashara_rate,
+                        no_days = mobashara.ayam_2lshahar,
+                        note = f'{x1}: {mobashara.ayam_2lmobashara_2lsafi}, {x2}: {mobashara.ayam_2l2jazaa}, {x3}: {mobashara.ayam_2ltaklif}',
+                        created_by = self.admin_user,
+                        updated_by = self.admin_user,
+                    )
+
+        except Exception as e:
+            print(f'Mobashara not calculated: {e}')
+            return False
+        

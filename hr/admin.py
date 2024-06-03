@@ -8,7 +8,7 @@ from django.utils.translation import gettext_lazy as _
 
 from hr.payroll import Payroll
 
-from .models import Drajat3lawat, EmployeeBankAccount, EmployeeFamily, EmployeeMoahil, Jazaat, MosamaWazifi,Edara3ama,Edarafar3ia,EmployeeBasic, PayrollDetail, PayrollMaster, Salafiat,Settings
+from .models import Drajat3lawat, EmployeeBankAccount, EmployeeFamily, EmployeeMoahil, EmployeeJazaat, EmployeeMobashra, EmployeeVacation, MosamaWazifi,Edara3ama,Edarafar3ia,EmployeeBasic, PayrollDetail, PayrollMaster, EmployeeSalafiat,Settings
 
 class MosamaWazifiAdmin(admin.ModelAdmin):
     exclude = ["created_at","created_by","updated_at","updated_by"]
@@ -125,18 +125,30 @@ class EmployeeMoahilInline(admin.TabularInline):
     extra = 1    
 
 class SalafiatInline(admin.TabularInline):
-    model = Salafiat
+    model = EmployeeSalafiat
     exclude = ["created_at","created_by","updated_at","updated_by","deducted"]
     extra = 1    
 
 class JazaatInline(admin.TabularInline):
-    model = Jazaat
+    model = EmployeeJazaat
     exclude = ["created_at","created_by","updated_at","updated_by","deducted"]
+    extra = 1    
+
+class EmployeeMobashraInline(admin.TabularInline):
+    model = EmployeeMobashra
+    exclude = ["created_at","created_by","updated_at","updated_by"]
+    extra = 1    
+
+class EmployeeVacationInline(admin.TabularInline):
+    model = EmployeeVacation
+    fk_name = "employee"
+    exclude = ["created_at","created_by","updated_at","updated_by"]
+    autocomplete_fields = ["mokalaf",]
     extra = 1    
 
 class EmployeeBasicAdmin(admin.ModelAdmin):
     fields = ["code","name", "draja_wazifia","alawa_sanawia", "edara_3ama","edara_far3ia", "mosama_wazifi","sex","tarikh_milad","tarikh_ta3in","phone","no3_2lertibat","sanoat_2lkhibra","moahil","gasima","atfal","aadoa","m3ash"]        
-    inlines = [EmployeeFamilyInline,EmployeeMoahilInline,EmployeeBankAccountInline,SalafiatInline,JazaatInline]
+    inlines = [EmployeeFamilyInline,EmployeeMoahilInline,EmployeeBankAccountInline,SalafiatInline,JazaatInline,EmployeeMobashraInline,EmployeeVacationInline]
     list_display = ["code","name", "draja_wazifia","alawa_sanawia", "edara_3ama","edara_far3ia", "mosama_wazifi","tarikh_ta3in","sex","moahil","gasima","atfal","aadoa","m3ash"]    
     list_display_links = ["code","name"]
     list_filter = ["draja_wazifia","alawa_sanawia","edara_3ama","mosama_wazifi__category","gasima","atfal",EmployeeTarikhTa3inFilter,EmployeeWifg2lwazaifFilter,EmployeeWifg2lmostawiatFilter,"sex","moahil","aadoa","m3ash"] #

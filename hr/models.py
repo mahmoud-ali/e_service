@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
+from django.utils import timezone
 from django.forms import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator,MinLengthValidator
 
@@ -134,7 +135,7 @@ class Settings(LoggingModel):
     value = models.CharField(_("value"),max_length=255)
 
     def __str__(self) -> str:
-        return f'{self.code}: {self.value}'
+        return f'{self.get_code_display()}: {self.value}'
     
     def clean(self) -> None:
         if self.code in [self.SETTINGS_ENABLE_SANDOG_KAHRABA,self.SETTINGS_ENABLE_YOUM_ALGOAT_ALMOSALAHA]:
@@ -353,6 +354,15 @@ class EmployeeBasic(LoggingModel):
         verbose_name = _("Employee data")
         verbose_name_plural = _("Employee data")
 
+    @property
+    def mobashara_rate(self):
+        key = Settings.MOSAMA_PREFIX + self.mosama_wazifi.category
+        try:
+            val = float(Settings.objects.get(code=key).value)
+            return val
+        except Exception as e:
+            return 0
+
     def clean(self):
         if hasattr(self.edara_far3ia,'edara_3ama'):
             if self.edara_far3ia.edara_3ama != self.edara_3ama:
@@ -463,7 +473,7 @@ class EmployeeMoahil(LoggingModel):
             self.employee.moahil = tmp_moahil
             self.employee.save()
 
-class Salafiat(LoggingModel):
+class EmployeeSalafiat(LoggingModel):
     employee = models.ForeignKey(EmployeeBasic, on_delete=models.PROTECT,verbose_name=_("employee_name"))
     year = models.IntegerField(_("year"), validators=[MinValueValidator(limit_value=2015),MaxValueValidator(limit_value=2100)])
     month = models.IntegerField(_("month"), choices=MONTH_CHOICES)
@@ -482,7 +492,7 @@ class Salafiat(LoggingModel):
         verbose_name = _("Salafiat")
         verbose_name_plural = _("Salafiat")
 
-class Jazaat(LoggingModel):
+class EmployeeJazaat(LoggingModel):
     employee = models.ForeignKey(EmployeeBasic, on_delete=models.PROTECT,verbose_name=_("employee_name"))
     year = models.IntegerField(_("year"), validators=[MinValueValidator(limit_value=2015),MaxValueValidator(limit_value=2100)])
     month = models.IntegerField(_("month"), choices=MONTH_CHOICES)
@@ -503,19 +513,21 @@ class Jazaat(LoggingModel):
 
 class EmployeeMobashra(LoggingModel):
     STATE_ACTIVE = 'active'
-    STATE_VACATION = 'vaction'
     STATE_INACTIVE = 'in_active'
 
     STATE_CHOICES = {
         STATE_ACTIVE: _('STATE_ACTIVE'),
-        STATE_VACATION: _('STATE_VACATION'),
         STATE_INACTIVE: _('STATE_INACTIVE'),
     }
 
     employee = models.ForeignKey(EmployeeBasic, on_delete=models.PROTECT,verbose_name=_("employee_name"))
     start_dt = models.DateField(_('start_dt'))
-    end_dt = models.DateField(_('end_dt'),blank=True)
-    state = models.CharField(_("state"), choices=STATE_CHOICES,max_length=10)
+    end_dt = models.DateField(_('end_dt'),null=True,blank=True)
+    state = models.CharField(_("mobashara state"), choices=STATE_CHOICES,max_length=10)
+
+    @property
+    def employee_rate(self):
+        return self.employee.mobashara_rate
 
     class Meta:
         indexes = [
@@ -530,6 +542,8 @@ class EmployeeMobashraMonthly(LoggingModel):
     employee = models.ForeignKey(EmployeeBasic, on_delete=models.PROTECT,verbose_name=_("employee_name"))
     year = models.IntegerField(_("year"), validators=[MinValueValidator(limit_value=2015),MaxValueValidator(limit_value=2100)])
     month = models.IntegerField(_("month"), choices=MONTH_CHOICES)
+    amount = models.FloatField(_("amount"))
+    rate = models.FloatField(_("rate"))
     no_days = models.IntegerField(_("no_days"))
     note = models.CharField(_("note"),max_length=150,blank=True)
     confirmed = models.BooleanField(_("confirmed"),default=False)
@@ -538,6 +552,47 @@ class EmployeeMobashraMonthly(LoggingModel):
         constraints = [
             models.UniqueConstraint(fields=['employee','year','month'],name="unique_mobashraemployee_year_month")
         ]
+
+def validate_not_in_future_dt(value):
+    now = timezone.now().date()
+    if value > now:
+        raise ValidationError(_("value should be in the past!"))
+
+
+class EmployeeVacation(LoggingModel):
+    VACATION_SANAWIA = 'sanawia'
+    VACATION_3ARDAH = '3ardah'
+    VACATION_MARADIAH = 'maradiah'
+
+    VACATION_CHOICES = {
+        VACATION_SANAWIA: _('VACATION_SANAWIA'),
+        VACATION_3ARDAH: _('VACATION_3ARDAH'),
+        VACATION_MARADIAH: _('VACATION_MARADIAH'),
+    }
+
+    vacation_type = models.CharField(_("vacation_type"), choices=VACATION_CHOICES,max_length=30)
+    employee = models.ForeignKey(EmployeeBasic, on_delete=models.PROTECT,verbose_name=_("employee_name"))
+    start_dt = models.DateField(_('start_dt'))
+    end_dt_excpected = models.DateField(_('end_dt_excpected'))
+    end_dt_actual = models.DateField(_('end_dt_actual'),validators=[validate_not_in_future_dt],null=True,blank=True)
+    mokalaf = models.ForeignKey(EmployeeBasic, on_delete=models.PROTECT,related_name="mokalafvacation_set",verbose_name=_("mokalaf_name"),null=True,blank=True)
+
+    @property
+    def employee_rate(self):
+        return self.employee.mobashara_rate
+
+    @property
+    def mokalaf_rate(self):
+        return self.mokalaf.mobashara_rate
+    
+    class Meta:
+        indexes = [
+            models.Index(fields=["employee","vacation_type"]),
+            models.Index(fields=["vacation_type"]),
+        ]
+        ordering = ["-id"]
+        verbose_name = _("Vacation")
+        verbose_name_plural = _("Vacation")
 
 class PayrollMaster(LoggingModel):
     year = models.IntegerField(_("year"), validators=[MinValueValidator(limit_value=2015),MaxValueValidator(limit_value=2100)])
