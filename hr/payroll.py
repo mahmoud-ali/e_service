@@ -221,7 +221,7 @@ class MobasharaSheet():
 
     def employee_mobashara_calculated(self,emp_mobashara):
         mobashara = Mobashara(self.year,self.month,emp_mobashara,emp_mobashara.employee.employeevacation_set.all(),emp_mobashara.employee.mokalafvacation_set.all())
-        return (emp_mobashara.employee, mobashara)
+        return mobashara
     
     def all_employees_mobashara_calculated(self):
         for emp in self.employees:
@@ -238,20 +238,19 @@ class MobasharaSheet():
                 EmployeeMobashraMonthly.objects.filter(year = self.year,month = self.month).delete()
 
                 for emp_mobashara in self.all_employees_mobashara_calculated():
-                    emp,mobashara = emp_mobashara
 
                     x1 = _("ayam_2lmobashara_2lsafi")
                     x2 = _("ayam_2l2jazaa")
                     x3 = _("ayam_2ltaklif")
 
                     EmployeeMobashraMonthly.objects.create(
-                        employee = emp,
+                        employee = emp_mobashara.employee,
                         year = self.year,
                         month = self.month,
-                        amount = mobashara.safi_2l2sti7gag,
-                        rate = emp.mobashara_rate,
-                        no_days = mobashara.ayam_2lshahar,
-                        note = f'{x1}: {mobashara.ayam_2lmobashara_2lsafi}, {x2}: {mobashara.ayam_2l2jazaa}, {x3}: {mobashara.ayam_2ltaklif}',
+                        amount = emp_mobashara.safi_2l2sti7gag,
+                        rate = emp_mobashara.employee.mobashara_rate,
+                        no_days = emp_mobashara.ayam_2lshahar,
+                        note = f'{x1}: {emp_mobashara.ayam_2lmobashara_2lsafi}، {x2}: {emp_mobashara.ayam_2l2jazaa}، {x3}: {emp_mobashara.ayam_2ltaklif}',
                         created_by = self.admin_user,
                         updated_by = self.admin_user,
                     )
@@ -260,3 +259,13 @@ class MobasharaSheet():
             print(f'Mobashara not calculated: {e}')
             return False
         
+    def all_employees_mobashara_from_db(self):
+        return EmployeeMobashraMonthly.objects.filter(year = self.year,month = self.month)
+    
+    def confirm(self):
+        with transaction.atomic():
+            for p in EmployeeMobashraMonthly.objects.filter(year = self.year,month = self.month):
+                p.confirmed = True
+                p.save(update_fields=['confirmed'])
+
+            return True

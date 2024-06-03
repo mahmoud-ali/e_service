@@ -222,6 +222,8 @@ class Mobashara():
         self._vactions = vactions
         self._takleef = takleef
 
+        self.employee = mobashara.employee
+
         if not self._mobashara.end_dt:
             self._mobashara.end_dt = self.akhar_youm_fi_2lshahar
 

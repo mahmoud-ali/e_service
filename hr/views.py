@@ -8,7 +8,7 @@ from django.views.defaults import bad_request
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 
 from hr.models import Drajat3lawat, PayrollMaster
-from hr.payroll import Payroll
+from hr.payroll import MobasharaSheet, Payroll
 
 class UserPermissionMixin(UserPassesTestMixin):
     user_groups = []
@@ -139,6 +139,54 @@ class Khosomat(LoginRequiredMixin,UserPermissionMixin,View):
                 'header':header,
                 'data': data,
                 'summary':summary_list,
+            }
+
+            response = render(self.request,template_name,context)
+            cache.patch_cache_control(response, max_age=0)
+            return response
+
+class Mobashara(LoginRequiredMixin,UserPermissionMixin,View):
+    user_groups = ['hr_manager']
+    def get(self,*args,**kwargs):
+        year = self.request.GET['year']
+        month = self.request.GET['month']
+        format = self.request.GET.get('format',None)
+        data = []
+        
+        mobashara = MobasharaSheet(year,month)
+
+        header = ['الرمز','الموظف','الدرجة الوظيفية','العلاوة','الاستحقاق اليومي','ايام العمل','صافي الاستحقاق','ملاحظات']
+
+        summary_list = []
+
+        for emp_mobashara in mobashara.all_employees_mobashara_from_db():
+            emp = emp_mobashara.employee
+            l = [emp.code,emp.name,emp.get_draja_wazifia_display(),emp.get_alawa_sanawia_display(),emp_mobashara.rate,emp_mobashara.no_days,emp_mobashara.amount,emp_mobashara.note]
+            data.append(l)
+
+        if format == 'csv':
+            sheet_name = 'mobashara'
+            print(f'attachment; filename="{sheet_name}_{month}_{year}.csv"')
+            response = HttpResponse(
+                content_type="text/csv",
+                headers={"Content-Disposition": f'attachment; filename="{sheet_name}_{month}_{year}.csv"'},
+            )
+
+            writer = csv.writer(response)
+            writer.writerow(header)
+
+            for r in data:
+                writer.writerow(r)
+
+            cache.patch_cache_control(response, max_age=0)
+            return response
+
+        else:
+            template_name = 'hr/mobashara.html'
+            context = {
+                'title':'كشف المباشرة',
+                'header':header,
+                'data': data,
             }
 
             response = render(self.request,template_name,context)

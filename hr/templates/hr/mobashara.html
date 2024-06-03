@@ -1,0 +1,94 @@
+{% load i18n %}
+<!doctype html>
+<html lang="en" {% if request.LANGUAGE_CODE == "ar" %} dir="rtl" {% endif %}>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+<title>{{title}}</title>
+{% load bootstrap3 %}
+
+{% bootstrap_css %}
+
+{% if request.LANGUAGE_CODE == "ar" %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-rtl/3.4.0/css/bootstrap-rtl.min.css" integrity="sha512-3Lr2MkT5iW+jVhwKFUBa+zQk8Uklef98/3mebU6wNxTzj65enYrFXaeuqPAYWxcQd1GAt9aUBvYHOIcl2SUsKA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+{% endif %}
+
+{% load static  %}
+
+{% load help_request %}
+<link rel="stylesheet" type="text/css" href="{% static 'admin/css/widgets.css' %}" />
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+    <![endif]-->
+
+<link rel="stylesheet" type="text/css" href="{% static 'company_profile/css/base.css' %}" />
+
+	
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha384-nvAa0+6Qg9clwYCGGPpDQLVpLNn0fRaROjHqs13t4Ggj3Ez50XnGQqc/r8MhnRDZ" crossorigin="anonymous"></script>
+    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>	
+{% bootstrap_javascript %}
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Yantramanav:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" type="text/css" href="{% static 'hr/css/print.css' %}" />
+
+<style>
+	@media print {
+		@page {
+			size: A4 landscape;
+		}
+	}
+		
+</style>
+</head>
+<body>
+
+	<div class="container-fluid">
+	  <div class="row">
+		<div id="main_content" class="col-12 main">
+		  
+			<table id="mobashara_table"  class="table table-bordered">
+				<thead>
+					<tr>
+					{% for col in header %}
+						<th class="col_{{ forloop.counter }}">
+						{{ col }}
+						</th>
+					{% endfor %}
+					</tr>
+				</thead>
+				<tbody>
+					{% for row in data %}
+					<tr class="row_{% cycle 'odd' 'even' %}">
+						{% for cell in row %}
+						<td class="col_{{ forloop.counter }}">
+							{% if forloop.counter <= 4 or forloop.counter > 7 %}
+								{{ cell }}
+							{% else%}
+									{{ cell|floatformat:"2g" }}
+							{% endif%}
+						</td>
+						{% endfor %}
+					</tr>
+					{% endfor %}        	
+				</tbody>
+			</table>
+	
+
+
+	    </div>	  
+
+	  </div>
+	</div>
+</body>
+	
+</html>

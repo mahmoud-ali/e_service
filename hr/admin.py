@@ -6,7 +6,7 @@ from django.urls import reverse
 from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
 
-from hr.payroll import Payroll
+from hr.payroll import MobasharaSheet, Payroll
 
 from .models import Drajat3lawat, EmployeeBankAccount, EmployeeFamily, EmployeeMoahil, EmployeeJazaat, EmployeeMobashra, EmployeeVacation, MosamaWazifi,Edara3ama,Edarafar3ia,EmployeeBasic, PayrollDetail, PayrollMaster, EmployeeSalafiat,Settings
 
@@ -318,7 +318,7 @@ class PayrollMasterAdmin(admin.ModelAdmin):
     exclude = ["created_at","created_by","updated_at","updated_by","zaka_kafaf","zaka_nisab","confirmed","enable_sandog_kahraba","enable_youm_algoat_almosalaha"]
     inlines = [PayrollDetailInline]
 
-    list_display = ["year","month","confirmed","show_badalat_link","show_khosomat_link"] 
+    list_display = ["year","month","confirmed","show_badalat_link","show_khosomat_link","show_mobashara_link"] 
     list_filter = ["year","month","confirmed"]
     view_on_site = False
     list_select_related = True
@@ -343,9 +343,20 @@ class PayrollMasterAdmin(admin.ModelAdmin):
                                +'<a target="_blank" href="{url}?year={year}&month={month}&format=csv">CSV</a>',
                            url=url,year=obj.year,month=obj.month)
 
+    @admin.display(description=_('Show mobashara sheet'))
+    def show_mobashara_link(self, obj):
+        url = reverse('hr:payroll_mobashara')
+        return format_html('<a target="_blank" class="viewlink" href="{url}?year={year}&month={month}">'+_('Show mobashara sheet')\
+                               +'</a> / '\
+                               +'<a target="_blank" href="{url}?year={year}&month={month}&format=csv">CSV</a>',
+                           url=url,year=obj.year,month=obj.month)
+
     def save_model(self, request, obj, form, change):
         payroll = Payroll(obj.year,obj.month)
         payroll.calculate()
+
+        mobashara = MobasharaSheet(obj.year,obj.month)
+        mobashara.calculate()
 
     def has_change_permission(self, request, obj=None):
         return False
@@ -359,6 +370,10 @@ class PayrollMasterAdmin(admin.ModelAdmin):
     @admin.action(description=_('Confirm payroll'))
     def confirm_payroll(self, request, queryset):
         queryset.update(confirmed=True)
+
+        for q in queryset:
+            mobashara = MobasharaSheet(q.year,q.month)
+            mobashara.confirm()
 
 admin.site.register(PayrollMaster,PayrollMasterAdmin)
 
