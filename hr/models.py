@@ -523,7 +523,7 @@ class EmployeeMobashra(LoggingModel):
     employee = models.ForeignKey(EmployeeBasic, on_delete=models.PROTECT,verbose_name=_("employee_name"))
     start_dt = models.DateField(_('start_dt'))
     end_dt = models.DateField(_('end_dt'),null=True,blank=True)
-    state = models.CharField(_("mobashara state"), choices=STATE_CHOICES,max_length=10)
+    state = models.CharField(_("mobashara state"), choices=STATE_CHOICES,default=STATE_ACTIVE,max_length=10)
 
     @property
     def employee_rate(self):
@@ -563,11 +563,37 @@ class EmployeeVacation(LoggingModel):
     VACATION_SANAWIA = 'sanawia'
     VACATION_3ARDAH = '3ardah'
     VACATION_MARADIAH = 'maradiah'
+    VACATION_29ABAT_3MAL = '29abat_3mal'
+    VACATION_WDO3 = 'wdo3'
+    VACATION_OMOMA = 'omoma'
+    VACATION_3DA = '3da'
+    VACATION_MORAFAGAT_MARID = 'morafagat_marid'
+    VACATION_MIN7_DRASIA = 'min7_drasia'
+    VACATION_ZOAJ = 'zoaj'
+    VACATION_7AJ = '7aj'
+    VACATION_OMRA = 'omra'
+    VACATION_YOUM_97I = 'youm_97i'
+    VACATION_ZARF_KAHIR = 'zarf_kahir'
+    VACATION_BDON_MORATAB = 'bdon_moratab'
+    VACATION_WAFAH = 'wafah'
 
     VACATION_CHOICES = {
         VACATION_SANAWIA: _('VACATION_SANAWIA'),
         VACATION_3ARDAH: _('VACATION_3ARDAH'),
         VACATION_MARADIAH: _('VACATION_MARADIAH'),
+        VACATION_29ABAT_3MAL: _('VACATION_29ABAT_3MAL'),
+        VACATION_WDO3: _('VACATION_WDO3'),
+        VACATION_OMOMA: _('VACATION_OMOMA'),
+        VACATION_3DA: _('VACATION_3DA'),
+        VACATION_MORAFAGAT_MARID: _('VACATION_MORAFAGAT_MARID'),
+        VACATION_MIN7_DRASIA: _('VACATION_MIN7_DRASIA'),
+        VACATION_ZOAJ: _('VACATION_ZOAJ'),
+        VACATION_7AJ: _('VACATION_7AJ'),
+        VACATION_OMRA: _('VACATION_OMRA'),
+        VACATION_YOUM_97I: _('VACATION_YOUM_97I'),
+        VACATION_ZARF_KAHIR: _('VACATION_ZARF_KAHIR'),
+        VACATION_BDON_MORATAB: _('VACATION_BDON_MORATAB'),
+        VACATION_WAFAH: _('VACATION_WAFAH'),
     }
 
     vacation_type = models.CharField(_("vacation_type"), choices=VACATION_CHOICES,max_length=30)

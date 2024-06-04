@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-06-04 01:24+0200\n"
+"POT-Creation-Date: 2024-06-04 02:04+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1191,7 +1191,7 @@ msgstr ""
 
 #: company_profile/models.py:737 hr/models.py:315 hr/models.py:393
 #: hr/models.py:427 hr/models.py:451 hr/models.py:477 hr/models.py:496
-#: hr/models.py:523 hr/models.py:542 hr/models.py:574 hr/models.py:618
+#: hr/models.py:523 hr/models.py:542 hr/models.py:600 hr/models.py:644
 msgid "employee_name"
 msgstr "الاسم"
 
@@ -2464,24 +2464,24 @@ msgstr "تاريخ الميلاد"
 msgid "sex"
 msgstr "الجنس"
 
-#: hr/admin.py:172 hr/models.py:327 hr/models.py:623
+#: hr/admin.py:172 hr/models.py:327 hr/models.py:649
 msgid "gasima"
 msgstr "العلاوة الاجتماعية-قسيمة"
 
-#: hr/admin.py:172 hr/models.py:624
+#: hr/admin.py:172 hr/models.py:650
 msgid "atfal"
 msgstr "العلاوة الاجتماعية-اطفال"
 
 #: hr/admin.py:173 hr/models.py:128 hr/models.py:329 hr/models.py:452
-#: hr/models.py:625
+#: hr/models.py:651
 msgid "moahil"
 msgstr "المؤهل"
 
-#: hr/admin.py:173 hr/models.py:330 hr/models.py:627
+#: hr/admin.py:173 hr/models.py:330 hr/models.py:653
 msgid "m3ash"
 msgstr "المعاش"
 
-#: hr/admin.py:173 hr/models.py:331 hr/models.py:622
+#: hr/admin.py:173 hr/models.py:331 hr/models.py:648
 msgid "aadoa"
 msgstr "عدوى"
 
@@ -2777,19 +2777,19 @@ msgstr "الخامسة"
 msgid "ALAWAT_TA3AKOD"
 msgstr "تعاقد"
 
-#: hr/models.py:216 hr/models.py:619
+#: hr/models.py:216 hr/models.py:645
 msgid "abtdai"
 msgstr "ابتدائية"
 
-#: hr/models.py:217 hr/models.py:620
+#: hr/models.py:217 hr/models.py:646
 msgid "galaa_m3isha"
 msgstr "غلاء معيشة"
 
-#: hr/models.py:218 hr/models.py:621
+#: hr/models.py:218 hr/models.py:647
 msgid "shakhsia"
 msgstr "علاوة شخصية"
 
-#: hr/models.py:219 hr/models.py:626
+#: hr/models.py:219 hr/models.py:652
 msgid "ma3adin"
 msgstr "معادن"
 
@@ -2941,11 +2941,11 @@ msgstr "تاريخ التخرج"
 msgid "Employee Moahil"
 msgstr "بيانات المؤهل"
 
-#: hr/models.py:478 hr/models.py:497 hr/models.py:543 hr/models.py:598
+#: hr/models.py:478 hr/models.py:497 hr/models.py:543 hr/models.py:624
 msgid "year"
 msgstr "السنة"
 
-#: hr/models.py:479 hr/models.py:498 hr/models.py:544 hr/models.py:599
+#: hr/models.py:479 hr/models.py:498 hr/models.py:544 hr/models.py:625
 msgid "month"
 msgstr "الشهر"
 
@@ -2978,7 +2978,7 @@ msgstr "نشط"
 msgid "STATE_INACTIVE"
 msgstr "غير نشط"
 
-#: hr/models.py:524 hr/models.py:575
+#: hr/models.py:524 hr/models.py:601
 msgid "start_dt"
 msgstr "تاريح البداية"
 
@@ -3004,7 +3004,7 @@ msgstr "متوسط"
 msgid "no_days"
 msgstr "عدد الايام"
 
-#: hr/models.py:549 hr/models.py:604
+#: hr/models.py:549 hr/models.py:630
 msgid "confirmed"
 msgstr "مؤكد"
 
@@ -3012,75 +3012,127 @@ msgstr "مؤكد"
 msgid "value should be in the past!"
 msgstr "قيمة الحقل يجب ان تكون في الماضي"
 
-#: hr/models.py:568
+#: hr/models.py:581
 msgid "VACATION_SANAWIA"
 msgstr "اجازة سنوية"
 
-#: hr/models.py:569
+#: hr/models.py:582
 msgid "VACATION_3ARDAH"
 msgstr "اجازة عارضة"
 
-#: hr/models.py:570
+#: hr/models.py:583
 msgid "VACATION_MARADIAH"
 msgstr "اجازة مرضية"
 
-#: hr/models.py:573
+#: hr/models.py:584
+msgid "VACATION_29ABAT_3MAL"
+msgstr "اجازة اصابة عمل"
+
+#: hr/models.py:585
+msgid "VACATION_WDO3"
+msgstr "اجازة وضوع"
+
+#: hr/models.py:586
+msgid "VACATION_OMOMA"
+msgstr "اجازة امومة"
+
+#: hr/models.py:587
+msgid "VACATION_3DA"
+msgstr "اجازة عدة"
+
+#: hr/models.py:588
+msgid "VACATION_MORAFAGAT_MARID"
+msgstr "اجازة مرافقة مريض"
+
+#: hr/models.py:589
+msgid "VACATION_MIN7_DRASIA"
+msgstr "اجازة منحة دراسية"
+
+#: hr/models.py:590
+msgid "VACATION_ZOAJ"
+msgstr "اجازة زواج"
+
+#: hr/models.py:591
+msgid "VACATION_7AJ"
+msgstr "اجازة حج"
+
+#: hr/models.py:592
+msgid "VACATION_OMRA"
+msgstr "اجازة عمرة"
+
+#: hr/models.py:593
+msgid "VACATION_YOUM_97I"
+msgstr "اجازة يوم صحي"
+
+#: hr/models.py:594
+msgid "VACATION_ZARF_KAHIR"
+msgstr "اجازة ظرف قاهر"
+
+#: hr/models.py:595
+msgid "VACATION_BDON_MORATAB"
+msgstr "اجازة بدون مرتب"
+
+#: hr/models.py:596
+msgid "VACATION_WAFAH"
+msgstr "اجازة وفاة"
+
+#: hr/models.py:599
 msgid "vacation_type"
 msgstr "نوع الاجازة"
 
-#: hr/models.py:576
+#: hr/models.py:602
 msgid "end_dt_excpected"
 msgstr "تاريخ النهاية المتوقع"
 
-#: hr/models.py:577
+#: hr/models.py:603
 msgid "end_dt_actual"
 msgstr "تاريخ النهاية الفعلي"
 
-#: hr/models.py:578
+#: hr/models.py:604
 msgid "mokalaf_name"
 msgstr "الموظف المكلف"
 
-#: hr/models.py:594 hr/models.py:595
+#: hr/models.py:620 hr/models.py:621
 msgid "Vacation"
 msgstr "الاجازة"
 
-#: hr/models.py:600
+#: hr/models.py:626
 msgid "zaka_kafaf"
 msgstr "زكاة/حدالكفاف"
 
-#: hr/models.py:601
+#: hr/models.py:627
 msgid "zaka_nisab"
 msgstr "زكاة/النصاب"
 
-#: hr/models.py:602
+#: hr/models.py:628
 msgid "enable_sandog_kahraba"
 msgstr "حساب خصم صندوق كهرباء"
 
-#: hr/models.py:603
+#: hr/models.py:629
 msgid "enable_youm_algoat_almosalaha"
 msgstr "حساب خصم يوم القوات المسلحة"
 
-#: hr/models.py:610 hr/models.py:611
+#: hr/models.py:636 hr/models.py:637
 msgid "Payroll"
 msgstr "بيانات المرتبات"
 
-#: hr/models.py:628
+#: hr/models.py:654
 msgid "salafiat"
 msgstr "السلفيات"
 
-#: hr/models.py:629
+#: hr/models.py:655
 msgid "jazaat"
 msgstr "الجزاءات"
 
-#: hr/models.py:630
+#: hr/models.py:656
 msgid "damga"
 msgstr "دمغة"
 
-#: hr/models.py:631
+#: hr/models.py:657
 msgid "sandog"
 msgstr "الصندوق"
 
-#: hr/models.py:632
+#: hr/models.py:658
 msgid "sandog_kahraba"
 msgstr "الصندوق كهرباء"
 
