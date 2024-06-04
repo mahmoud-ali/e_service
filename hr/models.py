@@ -82,6 +82,12 @@ MOSAMA_CATEGORY_CHOICES = {
     MOSAMA_CATEGORY_2L3MAL_SAGEEN:_('CATEGORY_2L3MAL_SAGEEN'),
 }
 
+def is_float(element: any) -> bool:
+    try:
+        float(element)
+        return True
+    except ValueError:
+        return False
 
 class LoggingModel(models.Model):
     """
@@ -108,6 +114,7 @@ class Settings(LoggingModel):
     SETTINGS_DAMGA = 'damga'
     SETTINGS_SANDOG = 'sandog'
     SETTINGS_AADOA = 'aadoa'
+    SETTINGS_DARIBAT_2LMOKAFA = 'daribat_2lmokafa'
     SETTINGS_ENABLE_SANDOG_KAHRABA = 'enable_kahraba' #enable_sandog_kahraba
     SETTINGS_ENABLE_YOUM_ALGOAT_ALMOSALAHA = 'enable_algoat' #enable_youm_algoat_almosalaha
 
@@ -119,6 +126,7 @@ class Settings(LoggingModel):
         SETTINGS_DAMGA: _('SETTINGS_DAMGA'),
         SETTINGS_SANDOG: _('SETTINGS_SANDOG'),
         SETTINGS_AADOA: _('SETTINGS_AADOA'),
+        SETTINGS_DARIBAT_2LMOKAFA: _('SETTINGS_DARIBAT_2LMOKAFA'),
         SETTINGS_ENABLE_SANDOG_KAHRABA: _('SETTINGS_ENABLE_SANDOG_KAHRABA'),
         SETTINGS_ENABLE_YOUM_ALGOAT_ALMOSALAHA: _('SETTINGS_ENABLE_YOUM_ALGOAT_ALMOSALAHA'),
     }
@@ -139,12 +147,12 @@ class Settings(LoggingModel):
     
     def clean(self) -> None:
         if self.code in [self.SETTINGS_ENABLE_SANDOG_KAHRABA,self.SETTINGS_ENABLE_YOUM_ALGOAT_ALMOSALAHA]:
-            if not self.value.isdigit() or not int(self.value) in [0,1]:
+            if not self.value or not is_float(self.value) or not int(self.value) in [0,1]:
                 raise ValidationError(
                     {"value":_("value should be 0 or 1")}
                 )
         else:
-            if not self.value.isdigit() or float(self.value) < 0:
+            if not self.value or not is_float(self.value) or float(self.value) < 0:
                 raise ValidationError(
                     {"value":_("value should be positive number")}
                 )
@@ -505,6 +513,7 @@ class EmployeeJazaat(LoggingModel):
             models.UniqueConstraint(fields=['employee','year','month'],name="unique_jazaat_employee_year_month")
         ]
         indexes = [
+            models.Index(fields=["year","month"]),
             models.Index(fields=["employee", "year","month"]),
         ]
         ordering = ["-id"]
@@ -544,13 +553,19 @@ class EmployeeMobashraMonthly(LoggingModel):
     month = models.IntegerField(_("month"), choices=MONTH_CHOICES)
     amount = models.FloatField(_("amount"))
     rate = models.FloatField(_("rate"))
-    no_days = models.IntegerField(_("no_days"))
-    note = models.CharField(_("note"),max_length=150,blank=True)
+    no_days_month = models.IntegerField(_("no_days_month"))
+    no_days_mobashara = models.IntegerField(_("no_days_mobashara"))
+    no_days_2jazaa = models.IntegerField(_("no_days_2jazaa"))
+    no_days_taklif = models.IntegerField(_("no_days_taklif"))
     confirmed = models.BooleanField(_("confirmed"),default=False)
 
     class Meta:
         constraints = [
             models.UniqueConstraint(fields=['employee','year','month'],name="unique_mobashraemployee_year_month")
+        ]
+        indexes = [
+            models.Index(fields=["year","month"]),
+            models.Index(fields=["employee", "year","month"]),
         ]
 
 def validate_not_in_future_dt(value):
@@ -620,6 +635,36 @@ class EmployeeVacation(LoggingModel):
         verbose_name = _("Vacation")
         verbose_name_plural = _("Vacation")
 
+class EmployeeM2moria(LoggingModel):
+    employee = models.ForeignKey(EmployeeBasic, on_delete=models.PROTECT,verbose_name=_("employee_name"))
+    start_dt = models.DateField(_('start_dt'))
+    end_dt_excpected = models.DateField(_('end_dt_excpected'))
+    end_dt_actual = models.DateField(_('end_dt_actual'),null=True,blank=True)
+
+    class Meta:
+        ordering = ["-id"]
+        verbose_name = _("M2moria")
+        verbose_name_plural = _("M2moria")
+
+class EmployeeM2moriaMonthly(LoggingModel):
+    employee = models.ForeignKey(EmployeeBasic, on_delete=models.PROTECT,verbose_name=_("employee_name"))
+    year = models.IntegerField(_("year"), validators=[MinValueValidator(limit_value=2015),MaxValueValidator(limit_value=2100)])
+    month = models.IntegerField(_("month"), choices=MONTH_CHOICES)
+    ajmali_2lmoratab = models.FloatField(_("amount"))
+    no_days = models.IntegerField(_("no_days"))
+    damga = models.FloatField(_("damga"))
+    safi_2l2sti7gag = models.FloatField(_("safi_2l2sti7gag"))
+    confirmed = models.BooleanField(_("confirmed"),default=False)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['employee','year','month'],name="unique_m2moriaemployee_year_month")
+        ]
+        indexes = [
+            models.Index(fields=["year","month"]),
+            models.Index(fields=["employee", "year","month"]),
+        ]
+
 class PayrollMaster(LoggingModel):
     year = models.IntegerField(_("year"), validators=[MinValueValidator(limit_value=2015),MaxValueValidator(limit_value=2100)])
     month = models.IntegerField(_("month"), choices=MONTH_CHOICES)
@@ -627,6 +672,7 @@ class PayrollMaster(LoggingModel):
     zaka_nisab = models.FloatField(_("zaka_nisab"),default=0)
     enable_sandog_kahraba = models.BooleanField(_("enable_sandog_kahraba"),default=False)
     enable_youm_algoat_almosalaha = models.BooleanField(_("enable_youm_algoat_almosalaha"),default=False)
+    daribat_2lmokafa = models.FloatField(_("daribat_2lmokafa"),default=0)
     confirmed = models.BooleanField(_("confirmed"),default=False)
 
     class Meta:

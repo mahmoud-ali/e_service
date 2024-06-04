@@ -71,7 +71,7 @@
 					<tr class="row_{% cycle 'odd' 'even' %}">
 						{% for cell in row %}
 						<td class="col_{{ forloop.counter }}">
-							{% if forloop.counter <= 5 %}
+							{% if forloop.counter <= 4 %}
 								{{ cell }}
 							{% else%}
 									{{ cell|floatformat:"2g" }}

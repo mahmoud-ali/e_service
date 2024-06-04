@@ -4,9 +4,9 @@ from django.db.models import Sum
 
 from django.contrib.auth import get_user_model
 
-from hr.calculations import Badalat_3lawat, Khosomat, Mobashara
+from hr.calculations import Badalat_3lawat, Khosomat, M2moria, Mobashara, Mokaf2
 
-from .models import EmployeeMobashra, EmployeeJazaat,EmployeeBasic,Drajat3lawat, EmployeeMobashraMonthly, PayrollDetail, PayrollMaster,Settings,EmployeeSalafiat
+from .models import EmployeeM2moria, EmployeeM2moriaMonthly, EmployeeMobashra, EmployeeJazaat,EmployeeBasic,Drajat3lawat, EmployeeMobashraMonthly, PayrollDetail, PayrollMaster,Settings,EmployeeSalafiat
 
 class HrSettings():
     def __init__(self) -> None:
@@ -41,7 +41,7 @@ class Payroll():
             self.payroll_master = None
             self.payroll_details = []
 
-    def employee_payroll_calculated(self,employee):
+    def employee_payroll_calculated(self,employee:EmployeeBasic):
         moahil = Settings.MOAHIL_PREFIX + employee.moahil
         salafiat_total = self.salafiat_qs.filter(employee=employee).aggregate(total=Sum("amount"))['total'] or 0
         jazaat_total = self.jazaat_qs.filter(employee=employee).aggregate(total=Sum("amount"))['total'] or 0
@@ -99,7 +99,7 @@ class Payroll():
             if x:
                 yield(x)
 
-    def employee_payroll_from_db(self,emp_payroll):
+    def employee_payroll_from_db(self,emp_payroll:PayrollDetail):
         badal = Badalat_3lawat(
             emp_payroll.abtdai,
             emp_payroll.galaa_m3isha,
@@ -155,6 +155,7 @@ class Payroll():
                         month = self.month,
                         zaka_kafaf = self.hr_settings.get_code_as_float(Settings.SETTINGS_ZAKA_KAFAF),
                         zaka_nisab = self.hr_settings.get_code_as_float(Settings.SETTINGS_ZAKA_NISAB),
+                        daribat_2lmokafa = self.hr_settings.get_code_as_float(Settings.SETTINGS_DARIBAT_2LMOKAFA),
                         enable_sandog_kahraba=enable_sandog,
                         enable_youm_algoat_almosalaha=enable_youm_algoat,
                         created_by = self.admin_user,
@@ -215,11 +216,11 @@ class MobasharaSheet():
         self.month = month
 
         self.hr_settings = HrSettings()
-        self.employees = EmployeeMobashra.objects.filter(state=EmployeeMobashra.STATE_ACTIVE)
+        self.employees = EmployeeMobashra.objects.filter(state=EmployeeMobashra.STATE_ACTIVE).prefetch_related("employee")
 
         self.admin_user = get_user_model().objects.get(id=1)
 
-    def employee_mobashara_calculated(self,emp_mobashara):
+    def employee_mobashara_calculated(self,emp_mobashara:EmployeeMobashra):
         mobashara = Mobashara(self.year,self.month,emp_mobashara,emp_mobashara.employee.employeevacation_set.all(),emp_mobashara.employee.mokalafvacation_set.all())
         return mobashara
     
@@ -249,8 +250,10 @@ class MobasharaSheet():
                         month = self.month,
                         amount = emp_mobashara.safi_2l2sti7gag,
                         rate = emp_mobashara.employee.mobashara_rate,
-                        no_days = emp_mobashara.ayam_2lshahar,
-                        note = f'{x1}: {emp_mobashara.ayam_2lmobashara_2lsafi}، {x2}: {emp_mobashara.ayam_2l2jazaa}، {x3}: {emp_mobashara.ayam_2ltaklif}',
+                        no_days_month = emp_mobashara.ayam_2lshahar,
+                        no_days_mobashara = emp_mobashara.ayam_2lmobashara_2lsafi,
+                        no_days_2jazaa = emp_mobashara.ayam_2l2jazaa,
+                        no_days_taklif = emp_mobashara.ayam_2ltaklif,
                         created_by = self.admin_user,
                         updated_by = self.admin_user,
                     )
@@ -260,11 +263,121 @@ class MobasharaSheet():
             return False
         
     def all_employees_mobashara_from_db(self):
-        return EmployeeMobashraMonthly.objects.filter(year = self.year,month = self.month)
+        return EmployeeMobashraMonthly.objects.filter(year = self.year,month = self.month).prefetch_related("employee")
     
     def confirm(self):
         with transaction.atomic():
-            for p in EmployeeMobashraMonthly.objects.filter(year = self.year,month = self.month):
+            for p in self.all_employees_mobashara_from_db():
+                p.confirmed = True
+                p.save(update_fields=['confirmed'])
+
+            return True
+
+class Mokaf2Sheet():
+    def __init__(self,year,month) -> None:
+        self.year = year
+        self.month = month
+
+        self.hr_settings = HrSettings()
+        self.employees = PayrollDetail.objects.filter(payroll_master__year = self.year,payroll_master__month = self.month).prefetch_related("payroll_master","employee")
+
+    def employee_mokaf2_from_db(self,emp_payroll:PayrollDetail):
+        badal = Badalat_3lawat(
+            emp_payroll.abtdai,
+            emp_payroll.galaa_m3isha,
+            shakhsia=emp_payroll.shakhsia,
+            aadoa=emp_payroll.aadoa,
+            gasima=emp_payroll.gasima,
+            atfal=emp_payroll.atfal,
+            moahil=emp_payroll.moahil,
+            ma3adin=emp_payroll.ma3adin
+        )
+
+        return Mokaf2(badal,self.year,self.month,emp_payroll.payroll_master.daribat_2lmokafa,emp_payroll.damga,emp_payroll.employee)
+
+    def all_employees_mokaf2_from_db(self):
+        for emp in self.employees:
+            x = self.employee_mokaf2_from_db(emp)
+            if x:
+                yield(x)
+    
+
+class M2moriaSheet():
+    def __init__(self,year,month) -> None:
+        self.year = year
+        self.month = month
+
+        self.hr_settings = HrSettings()
+        self.employees = EmployeeM2moria.objects.all().prefetch_related("employee")
+
+        self.admin_user = get_user_model().objects.get(id=1)
+
+    def employee_m2moria_calculated(self,emp_m2moria:EmployeeM2moria):
+        employee = emp_m2moria.employee
+        moahil = Settings.MOAHIL_PREFIX + employee.moahil
+        gasima = 0
+        if(employee.gasima):
+            gasima = self.hr_settings.get_code_as_float(Settings.SETTINGS_GASIMA)
+
+        aadoa = 0
+        if(employee.aadoa):
+            aadoa = self.hr_settings.get_code_as_float(Settings.SETTINGS_AADOA)
+
+        try:
+            draj_obj = Drajat3lawat.objects.get(draja_wazifia=employee.draja_wazifia,alawa_sanawia=employee.alawa_sanawia)
+            badal = Badalat_3lawat(
+                draj_obj.abtdai,
+                draj_obj.galaa_m3isha,
+                shakhsia=draj_obj.shakhsia,
+                aadoa=aadoa,
+                gasima=gasima,
+                atfal=(employee.atfal *self.hr_settings.get_code_as_float(Settings.SETTINGS_ATFAL)),
+                moahil=self.hr_settings.get_code_as_float(moahil),
+                ma3adin=draj_obj.ma3adin
+            )
+
+            return M2moria(badal,self.year,self.month,emp_m2moria,self.hr_settings.get_code_as_float(Settings.SETTINGS_DAMGA))
+        except Drajat3lawat.DoesNotExist as e:
+            return None
+
+    
+    def all_employees_m2moria_calculated(self):
+        for emp in self.employees:
+            x = self.employee_m2moria_calculated(emp)
+            if x:
+                yield(x)
+
+    def calculate(self):
+        if EmployeeM2moriaMonthly.objects.filter(year = self.year,month = self.month,confirmed=True).exists():
+            return False
+
+        try:
+            with transaction.atomic():        
+                EmployeeM2moriaMonthly.objects.filter(year = self.year,month = self.month).delete()
+
+                for emp_m2moria in self.all_employees_m2moria_calculated():
+                    EmployeeM2moriaMonthly.objects.create(
+                        employee = emp_m2moria.employee,
+                        year = self.year,
+                        month = self.month,
+                        ajmali_2lmoratab = emp_m2moria.ajmali_2lmoratab,
+                        no_days = emp_m2moria.ayam_2l3mal,
+                        damga = emp_m2moria.damga,
+                        safi_2l2sti7gag = emp_m2moria.safi_2l2sti7gag,
+                        created_by = self.admin_user,
+                        updated_by = self.admin_user,
+                    )
+
+        except Exception as e:
+            print(f'M2moria not calculated: {e}')
+            return False
+        
+    def all_employees_m2moria_from_db(self):
+        return EmployeeM2moriaMonthly.objects.filter(year = self.year,month = self.month).prefetch_related("employee")
+    
+    def confirm(self):
+        with transaction.atomic():
+            for p in self.all_employees_m2moria_from_db():
                 p.confirmed = True
                 p.save(update_fields=['confirmed'])
 

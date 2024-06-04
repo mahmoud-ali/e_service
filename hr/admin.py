@@ -6,9 +6,9 @@ from django.urls import reverse
 from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
 
-from hr.payroll import MobasharaSheet, Payroll
+from hr.payroll import M2moriaSheet, MobasharaSheet, Payroll
 
-from .models import Drajat3lawat, EmployeeBankAccount, EmployeeFamily, EmployeeMoahil, EmployeeJazaat, EmployeeMobashra, EmployeeVacation, MosamaWazifi,Edara3ama,Edarafar3ia,EmployeeBasic, PayrollDetail, PayrollMaster, EmployeeSalafiat,Settings
+from .models import Drajat3lawat, EmployeeBankAccount, EmployeeFamily, EmployeeM2moria, EmployeeMoahil, EmployeeJazaat, EmployeeMobashra, EmployeeVacation, MosamaWazifi,Edara3ama,Edarafar3ia,EmployeeBasic, PayrollDetail, PayrollMaster, EmployeeSalafiat,Settings
 
 class MosamaWazifiAdmin(admin.ModelAdmin):
     exclude = ["created_at","created_by","updated_at","updated_by"]
@@ -146,9 +146,14 @@ class EmployeeVacationInline(admin.TabularInline):
     autocomplete_fields = ["mokalaf",]
     extra = 1    
 
+class EmployeeM2moriaInline(admin.TabularInline):
+    model = EmployeeM2moria
+    exclude = ["created_at","created_by","updated_at","updated_by"]
+    extra = 1    
+
 class EmployeeBasicAdmin(admin.ModelAdmin):
     fields = ["code","name", "draja_wazifia","alawa_sanawia", "edara_3ama","edara_far3ia", "mosama_wazifi","sex","tarikh_milad","tarikh_ta3in","phone","no3_2lertibat","sanoat_2lkhibra","moahil","gasima","atfal","aadoa","m3ash"]        
-    inlines = [EmployeeFamilyInline,EmployeeMoahilInline,EmployeeBankAccountInline,SalafiatInline,JazaatInline,EmployeeMobashraInline,EmployeeVacationInline]
+    inlines = [EmployeeFamilyInline,EmployeeMoahilInline,EmployeeBankAccountInline,SalafiatInline,JazaatInline,EmployeeMobashraInline,EmployeeVacationInline,EmployeeM2moriaInline]
     list_display = ["code","name", "draja_wazifia","alawa_sanawia", "edara_3ama","edara_far3ia", "mosama_wazifi","tarikh_ta3in","sex","moahil","gasima","atfal","aadoa","m3ash"]    
     list_display_links = ["code","name"]
     list_filter = ["draja_wazifia","alawa_sanawia","edara_3ama","mosama_wazifi__category","gasima","atfal",EmployeeTarikhTa3inFilter,EmployeeWifg2lwazaifFilter,EmployeeWifg2lmostawiatFilter,"sex","moahil","aadoa","m3ash"] #
@@ -315,10 +320,10 @@ class PayrollDetailInline(admin.TabularInline):
         return False
     
 class PayrollMasterAdmin(admin.ModelAdmin):
-    exclude = ["created_at","created_by","updated_at","updated_by","zaka_kafaf","zaka_nisab","confirmed","enable_sandog_kahraba","enable_youm_algoat_almosalaha"]
+    exclude = ["created_at","created_by","updated_at","updated_by","zaka_kafaf","zaka_nisab","confirmed","enable_sandog_kahraba","enable_youm_algoat_almosalaha","daribat_2lmokafa"]
     inlines = [PayrollDetailInline]
 
-    list_display = ["year","month","confirmed","show_badalat_link","show_khosomat_link","show_mobashara_link"] 
+    list_display = ["year","month","confirmed","show_badalat_link","show_khosomat_link","show_mokaf2_link","show_mobashara_link","show_m2moria_link"] 
     list_filter = ["year","month","confirmed"]
     view_on_site = False
     list_select_related = True
@@ -351,12 +356,31 @@ class PayrollMasterAdmin(admin.ModelAdmin):
                                +'<a target="_blank" href="{url}?year={year}&month={month}&format=csv">CSV</a>',
                            url=url,year=obj.year,month=obj.month)
 
+    @admin.display(description=_('Show mokaf2 sheet'))
+    def show_mokaf2_link(self, obj):
+        url = reverse('hr:payroll_mokaf2')
+        return format_html('<a target="_blank" class="viewlink" href="{url}?year={year}&month={month}">'+_('Show mokaf2 sheet')\
+                               +'</a> / '\
+                               +'<a target="_blank" href="{url}?year={year}&month={month}&format=csv">CSV</a>',
+                           url=url,year=obj.year,month=obj.month)
+
+    @admin.display(description=_('Show m2moria sheet'))
+    def show_m2moria_link(self, obj):
+        url = reverse('hr:payroll_m2moria')
+        return format_html('<a target="_blank" class="viewlink" href="{url}?year={year}&month={month}">'+_('Show m2moria sheet')\
+                               +'</a> / '\
+                               +'<a target="_blank" href="{url}?year={year}&month={month}&format=csv">CSV</a>',
+                           url=url,year=obj.year,month=obj.month)
+
     def save_model(self, request, obj, form, change):
         payroll = Payroll(obj.year,obj.month)
         payroll.calculate()
 
         mobashara = MobasharaSheet(obj.year,obj.month)
         mobashara.calculate()
+
+        m2moria = M2moriaSheet(obj.year,obj.month)
+        m2moria.calculate()
 
     def has_change_permission(self, request, obj=None):
         return False
@@ -374,6 +398,9 @@ class PayrollMasterAdmin(admin.ModelAdmin):
         for q in queryset:
             mobashara = MobasharaSheet(q.year,q.month)
             mobashara.confirm()
+
+            m2moria = M2moriaSheet(q.year,q.month)
+            m2moria.calculate()
 
 admin.site.register(PayrollMaster,PayrollMasterAdmin)
 

@@ -350,6 +350,135 @@ class Mobashara():
     def __repr__(self) -> str:
         return self.__str__()
 
+class Mokaf2():
+    def __init__(self,Badalat:Badalat_3lawat,year,month,dariba=0.05,damga=1,employee=None):
+        self.Badalat = Badalat
+        self._year = year
+        self._month = month
+        self._dariba = dariba
+        self._damga = damga
+
+        self.employee = employee
+
+    @property
+    def ajmali_2lmoratab(self):
+        return self.Badalat.ajmali_almoratab
+
+    @property
+    def dariba(self):
+        return (self.ajmali_2lmoratab *self._dariba)
+
+    @property
+    def damga(self):
+        return self._damga
+
+    @property
+    def safi_2l2sti7gag(self):
+        return (self.ajmali_2lmoratab - self.dariba -self.damga)
+
+    def __iter__(self):
+        props = [
+            ('ajmali_2lmoratab',self.ajmali_2lmoratab),
+            ('dariba',self.dariba),
+            ('damga',self.damga),
+            ('safi_2l2sti7gag',self.safi_2l2sti7gag),
+        ]
+
+        for p in props:
+            yield(p[0],p[1])
+    
+    def __str__(self) -> str:
+        return 'Mokaf2 ('+', '.join([f'{b[0]}: {round(b[1],2)}' for b in self.__iter__()])+')'
+    
+    def __repr__(self) -> str:
+        return self.__str__()
+
+class M2moria():
+    def __init__(self,Badalat:Badalat_3lawat,year,month,m2moria_model,damga=1,m2moria_rate=1.5):
+        self.Badalat = Badalat
+        self._year = year
+        self._month = month
+        self._m2moria_model = m2moria_model
+        self._damga = damga
+        self._m2moria_rate = m2moria_rate
+
+        self.employee = m2moria_model.employee
+
+    @property
+    def ayam_2lshahar(self):
+        return monthrange(self._year, self._month)[1]
+
+    @property
+    def awal_youm_fi_2lshahar(self):
+        return datetime.date(self._year,self._month,1)
+
+    @property
+    def akhar_youm_fi_2lshahar(self):
+        return datetime.date(self._year,self._month,self.ayam_2lshahar)
+
+    def get_days_between_dates(self,start,end):
+        if start > end:
+            return -1
+
+        return (end - start).days
+
+    @property
+    def ajmali_2lmoratab(self):
+        return self.Badalat.ajmali_almoratab
+
+    @property
+    def ajr_2lyoum(self):
+        return (self.ajmali_2lmoratab /30)
+
+    @property
+    def ayam_2l3mal(self):
+        start_dt = self._m2moria_model.start_dt
+        end_dt = self._m2moria_model.end_dt_actual
+
+        ayam_2lmobashra = self.ayam_2lshahar
+
+        if start_dt > self.akhar_youm_fi_2lshahar: #fi almostagbal
+            return 0
+        
+        if start_dt > self.awal_youm_fi_2lshahar:
+            ayam_2lmobashra -= (self.get_days_between_dates(self.awal_youm_fi_2lshahar,start_dt))
+
+        if end_dt:
+            if end_dt < self.awal_youm_fi_2lshahar:
+                return 0
+            
+            if end_dt < self.akhar_youm_fi_2lshahar:
+                ayam_2lmobashra -= (self.get_days_between_dates(end_dt,self.akhar_youm_fi_2lshahar))
+
+        return ayam_2lmobashra
+
+    @property
+    def damga(self):
+        return self._damga
+
+    @property
+    def safi_2l2sti7gag(self):
+        return (self.ajr_2lyoum *self._m2moria_rate *self.ayam_2l3mal) -self.damga
+
+    def __iter__(self):
+        props = [
+            ('ajmali_2lmoratab',self.ajmali_2lmoratab),
+            ('ajr_2lyoum',self.ajr_2lyoum),
+            ('ayam_2l3mal',self.ayam_2l3mal),
+            ('damga',self.damga),
+            ('safi_2l2sti7gag',self.safi_2l2sti7gag),
+        ]
+
+        for p in props:
+            yield(p[0],p[1])
+    
+    def __str__(self) -> str:
+        return 'M2moria ('+', '.join([f'{b[0]}: {round(b[1],2)}' for b in self.__iter__()])+')'
+    
+    def __repr__(self) -> str:
+        return self.__str__()
+
+
 def example():
     # badal = Badalat_3lawat(15022.0281121467,10708.1720490482,gasima=25000,atfal=60000,moahil=20000,ma3adin=52736.6266882452)
     # khosomat = Khosomat(badal,215617,156159,sandog=20000)
