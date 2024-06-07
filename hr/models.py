@@ -679,6 +679,9 @@ class PayrollMaster(LoggingModel):
         constraints = [
             models.UniqueConstraint(fields=['year','month'],name="unique_payroll_year_month")
         ]
+        indexes = [
+            models.Index(fields=["year","month"]),
+        ]
         verbose_name = _("Payroll")
         verbose_name_plural = _("Payroll")
 
