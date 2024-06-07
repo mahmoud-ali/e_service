@@ -1,7 +1,7 @@
+import datetime
 from django.utils.translation import gettext_lazy as _
 from django.db import transaction
-from django.db.models import Sum
-
+from django.db.models import Q, Sum
 from django.contrib.auth import get_user_model
 
 from hr.calculations import Badalat_3lawat, Khosomat, M2moria, Mobashara, Mokaf2
@@ -221,7 +221,21 @@ class MobasharaSheet():
         self.admin_user = get_user_model().objects.get(id=1)
 
     def employee_mobashara_calculated(self,emp_mobashara:EmployeeMobashra):
-        mobashara = Mobashara(self.year,self.month,emp_mobashara,emp_mobashara.employee.employeevacation_set.all(),emp_mobashara.employee.mokalafvacation_set.all())
+        first_day_in_month = datetime.date(self.year,self.month,1)
+
+        mobashara = Mobashara(
+            self.year,
+            self.month,
+            emp_mobashara,
+            emp_mobashara.employee.employeevacation_set.filter(
+                Q(end_dt_actual__gte=first_day_in_month) |
+                Q(end_dt_actual__isnull=True)
+            ),
+            emp_mobashara.employee.mokalafvacation_set.filter(
+                Q(end_dt_actual__gte=first_day_in_month) |
+                Q(end_dt_actual__isnull=True)
+            )
+        )
         return mobashara
     
     def all_employees_mobashara_calculated(self):
@@ -304,11 +318,16 @@ class Mokaf2Sheet():
 
 class M2moriaSheet():
     def __init__(self,year,month) -> None:
-        self.year = year
-        self.month = month
+        self.year = int(year)
+        self.month = int(month)
+
+        first_day_in_month = datetime.date(self.year,self.month,1)
 
         self.hr_settings = HrSettings()
-        self.employees = EmployeeM2moria.objects.all().prefetch_related("employee")
+        self.employees = EmployeeM2moria.objects.filter(
+            Q(end_dt_actual__gte=first_day_in_month) |
+            Q(end_dt_actual__isnull=True)
+        ).prefetch_related("employee")
 
         self.admin_user = get_user_model().objects.get(id=1)
 

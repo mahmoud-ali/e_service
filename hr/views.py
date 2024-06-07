@@ -7,8 +7,17 @@ from django.utils import cache
 from django.views.defaults import bad_request
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 
-from hr.models import Drajat3lawat, PayrollMaster
+from hr.models import Drajat3lawat, EmployeeBankAccount, PayrollMaster
 from hr.payroll import M2moriaSheet, MobasharaSheet, Payroll,Mokaf2Sheet
+
+def get_employee_accounts():
+    data = {}
+    for emp in EmployeeBankAccount.objects.filter(active=True).prefetch_related("employee"):
+        id = emp.employee.id
+        data[id] = emp.account_no
+        print(f'id: {id}, account_no: {data[id]}')
+
+    return data
 
 class UserPermissionMixin(UserPassesTestMixin):
     user_groups = []
@@ -77,6 +86,7 @@ class Khosomat(LoginRequiredMixin,UserPermissionMixin,View):
         year = self.request.GET['year']
         month = self.request.GET['month']
         format = self.request.GET.get('format',None)
+        bank_sheet = self.request.GET.get('bank_sheet',False)
         data = []
         payroll_master = None
 
@@ -101,18 +111,34 @@ class Khosomat(LoginRequiredMixin,UserPermissionMixin,View):
 
         summary_list = []
 
-        for (emp,badalat,khosomat) in payroll.all_employees_payroll_from_db():
-            khosomat_list = [round(k[1],2) for k in khosomat]
-            l = [emp.code,emp.name,Drajat3lawat.DRAJAT_CHOICES[emp.draja_wazifia],Drajat3lawat.ALAWAT_CHOICES[emp.alawa_sanawia]] + khosomat_list
-            data.append(l)
+        if bank_sheet:
+            template_name = 'hr/bank.html'
+            header = ['الرمز','الموظف','رقم الحساب','صافي الاستحقاق']
+            emp_accounts = get_employee_accounts()
 
-            for idx,s in enumerate(khosomat_list):
+            for (emp,badalat,khosomat) in payroll.all_employees_payroll_from_db():
                 try:
-                    summary_list[idx] += khosomat_list[idx]
-                except IndexError:
-                    summary_list.insert(idx,khosomat_list[idx])
+                    bnk_no = emp_accounts[emp.id] #employeeemp.employeebankaccount_set.get(active=True).account_no
+                except KeyError:
+                    bnk_no = '-'
 
-        summary_list = [round(s,2) for s in summary_list]
+                l = [emp.code,emp.name,bnk_no,round(khosomat.safi_alisti7gag,2)]
+                data.append(l)
+        else:
+            template_name = 'hr/khosomat.html'
+
+            for (emp,badalat,khosomat) in payroll.all_employees_payroll_from_db():
+                khosomat_list = [round(k[1],2) for k in khosomat]
+                l = [emp.code,emp.name,Drajat3lawat.DRAJAT_CHOICES[emp.draja_wazifia],Drajat3lawat.ALAWAT_CHOICES[emp.alawa_sanawia]] + khosomat_list
+                data.append(l)
+
+                for idx,s in enumerate(khosomat_list):
+                    try:
+                        summary_list[idx] += khosomat_list[idx]
+                    except IndexError:
+                        summary_list.insert(idx,khosomat_list[idx])
+
+            summary_list = [round(s,2) for s in summary_list]
 
         if format == 'csv':
             sheet_name = 'deduction'
@@ -133,7 +159,6 @@ class Khosomat(LoginRequiredMixin,UserPermissionMixin,View):
             return response
 
         else:
-            template_name = 'hr/khosomat.html'
             context = {
                 'title':'كشف الخصومات',
                 'header':header,
@@ -151,18 +176,35 @@ class Mobashara(LoginRequiredMixin,UserPermissionMixin,View):
         year = self.request.GET['year']
         month = self.request.GET['month']
         format = self.request.GET.get('format',None)
+        bank_sheet = self.request.GET.get('bank_sheet',False)
         data = []
         
         mobashara = MobasharaSheet(year,month)
 
-        header = ['الرمز','الموظف','الدرجة الوظيفية','العلاوة','المسمى الوظيفي','الاستحقاق اليومي','ايام الشهر','ايام المباشرة','ايام الاجازة','ايام التكليف','صافي الاستحقاق']
+        if bank_sheet:
+            template_name = 'hr/bank.html'
+            header = ['الرمز','الموظف','رقم الحساب','صافي الاستحقاق']
+            emp_accounts = get_employee_accounts()
 
-        summary_list = []
+            for emp_mobashara in mobashara.all_employees_mobashara_from_db().prefetch_related("employee__mosama_wazifi"):
+                emp = emp_mobashara.employee
+                try:
+                    bnk_no = emp_accounts[emp.id] #employeeemp.employeebankaccount_set.get(active=True).account_no
+                except KeyError:
+                    bnk_no = '-'
 
-        for emp_mobashara in mobashara.all_employees_mobashara_from_db().prefetch_related("employee__mosama_wazifi"):
-            emp = emp_mobashara.employee
-            l = [emp.code,emp.name,emp.get_draja_wazifia_display(),emp.get_alawa_sanawia_display(),emp.mosama_wazifi.name,emp_mobashara.rate,emp_mobashara.no_days_month,emp_mobashara.no_days_mobashara,emp_mobashara.no_days_2jazaa,emp_mobashara.no_days_taklif,emp_mobashara.amount]
-            data.append(l)
+                l = [emp.code,emp.name,bnk_no,round(emp_mobashara.amount,2)]
+                data.append(l)
+        else:
+            template_name = 'hr/mobashara.html'
+            header = ['الرمز','الموظف','الدرجة الوظيفية','العلاوة','المسمى الوظيفي','الاستحقاق اليومي','ايام الشهر','ايام المباشرة','ايام الاجازة','ايام التكليف','صافي الاستحقاق']
+
+            summary_list = []
+
+            for emp_mobashara in mobashara.all_employees_mobashara_from_db().prefetch_related("employee__mosama_wazifi"):
+                emp = emp_mobashara.employee
+                l = [emp.code,emp.name,emp.get_draja_wazifia_display(),emp.get_alawa_sanawia_display(),emp.mosama_wazifi.name,emp_mobashara.rate,emp_mobashara.no_days_month,emp_mobashara.no_days_mobashara,emp_mobashara.no_days_2jazaa,emp_mobashara.no_days_taklif,emp_mobashara.amount]
+                data.append(l)
 
         if format == 'csv':
             sheet_name = 'mobashara'
@@ -182,7 +224,6 @@ class Mobashara(LoginRequiredMixin,UserPermissionMixin,View):
             return response
 
         else:
-            template_name = 'hr/mobashara.html'
             context = {
                 'title':'كشف المباشرة',
                 'header':header,
@@ -199,18 +240,35 @@ class Mokaf2(LoginRequiredMixin,UserPermissionMixin,View):
         year = self.request.GET['year']
         month = self.request.GET['month']
         format = self.request.GET.get('format',None)
+        bank_sheet = self.request.GET.get('bank_sheet',False)
         data = []
         
         mokaf2 = Mokaf2Sheet(year,month)
 
-        header = ['الرمز','الموظف','الدرجة الوظيفية','العلاوة','اجمالي المرتب','الضريبة','الدمغة','صافي الاستحقاق']
+        if bank_sheet:
+            template_name = 'hr/bank.html'
+            header = ['الرمز','الموظف','رقم الحساب','صافي الاستحقاق']
+            emp_accounts = get_employee_accounts()
 
-        summary_list = []
+            for emp_mokaf2 in mokaf2.all_employees_mokaf2_from_db():
+                emp = emp_mokaf2.employee
+                try:
+                    bnk_no = emp_accounts[emp.id] #employeeemp.employeebankaccount_set.get(active=True).account_no
+                except KeyError:
+                    bnk_no = '-'
 
-        for emp_mokaf2 in mokaf2.all_employees_mokaf2_from_db():
-            emp = emp_mokaf2.employee
-            l = [emp.code,emp.name,emp.get_draja_wazifia_display(),emp.get_alawa_sanawia_display(),emp_mokaf2.ajmali_2lmoratab,emp_mokaf2.dariba,emp_mokaf2.damga,emp_mokaf2.safi_2l2sti7gag]
-            data.append(l)
+                l = [emp.code,emp.name,bnk_no,round(emp_mokaf2.safi_2l2sti7gag,2)]
+                data.append(l)
+        else:
+            template_name = 'hr/mokaf2.html'
+            header = ['الرمز','الموظف','الدرجة الوظيفية','العلاوة','اجمالي المرتب','الضريبة','الدمغة','صافي الاستحقاق']
+
+            summary_list = []
+
+            for emp_mokaf2 in mokaf2.all_employees_mokaf2_from_db():
+                emp = emp_mokaf2.employee
+                l = [emp.code,emp.name,emp.get_draja_wazifia_display(),emp.get_alawa_sanawia_display(),emp_mokaf2.ajmali_2lmoratab,emp_mokaf2.dariba,emp_mokaf2.damga,emp_mokaf2.safi_2l2sti7gag]
+                data.append(l)
 
         if format == 'csv':
             sheet_name = 'mokaf2'
@@ -230,7 +288,6 @@ class Mokaf2(LoginRequiredMixin,UserPermissionMixin,View):
             return response
 
         else:
-            template_name = 'hr/mokaf2.html'
             context = {
                 'title':'كشف المكافأة',
                 'header':header,
@@ -247,18 +304,36 @@ class M2moria(LoginRequiredMixin,UserPermissionMixin,View):
         year = self.request.GET['year']
         month = self.request.GET['month']
         format = self.request.GET.get('format',None)
+        bank_sheet = self.request.GET.get('bank_sheet',False)
         data = []
         
         m2moria = M2moriaSheet(year,month)
 
-        header = ['الرمز','الموظف','الدرجة الوظيفية','العلاوة','اجمالي المرتب','اجر اليوم','عدد الايام','الدمغة','صافي الاستحقاق']
+        if bank_sheet:
+            template_name = 'hr/bank.html'
+            header = ['الرمز','الموظف','رقم الحساب','صافي الاستحقاق']
+            emp_accounts = get_employee_accounts()
 
-        summary_list = []
+            for emp_m2moria in m2moria.all_employees_m2moria_from_db():
+                emp = emp_m2moria.employee
+                try:
+                    bnk_no = emp_accounts[emp.id] #employeeemp.employeebankaccount_set.get(active=True).account_no
+                except KeyError:
+                    bnk_no = '-'
 
-        for emp_m2moria in m2moria.all_employees_m2moria_from_db():
-            emp = emp_m2moria.employee
-            l = [emp.code,emp.name,emp.get_draja_wazifia_display(),emp.get_alawa_sanawia_display(),emp_m2moria.ajmali_2lmoratab,emp_m2moria.ajmali_2lmoratab/30*1.5,emp_m2moria.no_days,emp_m2moria.damga,emp_m2moria.safi_2l2sti7gag]
-            data.append(l)
+                l = [emp.code,emp.name,bnk_no,round(emp_m2moria.safi_2l2sti7gag,2)]
+                data.append(l)
+        else:
+            template_name = 'hr/mokaf2.html'
+
+            header = ['الرمز','الموظف','الدرجة الوظيفية','العلاوة','اجمالي المرتب','اجر اليوم','عدد الايام','الدمغة','صافي الاستحقاق']
+
+            summary_list = []
+
+            for emp_m2moria in m2moria.all_employees_m2moria_from_db():
+                emp = emp_m2moria.employee
+                l = [emp.code,emp.name,emp.get_draja_wazifia_display(),emp.get_alawa_sanawia_display(),emp_m2moria.ajmali_2lmoratab,emp_m2moria.ajmali_2lmoratab/30*1.5,emp_m2moria.no_days,emp_m2moria.damga,emp_m2moria.safi_2l2sti7gag]
+                data.append(l)
 
         if format == 'csv':
             sheet_name = 'm2moria'
@@ -278,7 +353,6 @@ class M2moria(LoginRequiredMixin,UserPermissionMixin,View):
             return response
 
         else:
-            template_name = 'hr/mokaf2.html'
             context = {
                 'title':'كشف المأمورية',
                 'header':header,

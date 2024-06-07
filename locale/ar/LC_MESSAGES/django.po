@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-06-04 15:43+0200\n"
+"POT-Creation-Date: 2024-06-05 11:49+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2510,23 +2510,27 @@ msgstr "نعم"
 msgid "Show badalat sheet"
 msgstr "كشف البدلات"
 
-#: hr/admin.py:343 hr/admin.py:346
+#: hr/admin.py:343 hr/admin.py:347
 msgid "Show khosomat sheet"
 msgstr "كشق الخصومات"
 
-#: hr/admin.py:351 hr/admin.py:354
+#: hr/admin.py:350
+msgid "bank sheet"
+msgstr "كشف البنك"
+
+#: hr/admin.py:353 hr/admin.py:356
 msgid "Show mobashara sheet"
 msgstr "كشف المباشرة"
 
-#: hr/admin.py:359 hr/admin.py:362
+#: hr/admin.py:361 hr/admin.py:364
 msgid "Show mokaf2 sheet"
 msgstr "كشف المكافأة"
 
-#: hr/admin.py:367 hr/admin.py:370
+#: hr/admin.py:369 hr/admin.py:372
 msgid "Show m2moria sheet"
 msgstr "كشف المأمورية"
 
-#: hr/admin.py:394
+#: hr/admin.py:396
 msgid "Confirm payroll"
 msgstr "تأكيد المرتب"
 
