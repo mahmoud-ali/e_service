@@ -15,7 +15,7 @@ def get_employee_accounts():
     for emp in EmployeeBankAccount.objects.filter(active=True).prefetch_related("employee"):
         id = emp.employee.id
         data[id] = emp.account_no
-        print(f'id: {id}, account_no: {data[id]}')
+        # print(f'id: {id}, account_no: {data[id]}')
 
     return data
 
@@ -142,7 +142,7 @@ class Khosomat(LoginRequiredMixin,UserPermissionMixin,View):
 
         if format == 'csv':
             sheet_name = 'deduction'
-            print(f'attachment; filename="{sheet_name}_{month}_{year}.csv"')
+            # print(f'attachment; filename="{sheet_name}_{month}_{year}.csv"')
             response = HttpResponse(
                 content_type="text/csv",
                 headers={"Content-Disposition": f'attachment; filename="{sheet_name}_{month}_{year}.csv"'},
@@ -208,7 +208,7 @@ class Mobashara(LoginRequiredMixin,UserPermissionMixin,View):
 
         if format == 'csv':
             sheet_name = 'mobashara'
-            print(f'attachment; filename="{sheet_name}_{month}_{year}.csv"')
+            # print(f'attachment; filename="{sheet_name}_{month}_{year}.csv"')
             response = HttpResponse(
                 content_type="text/csv",
                 headers={"Content-Disposition": f'attachment; filename="{sheet_name}_{month}_{year}.csv"'},
@@ -272,7 +272,7 @@ class Mokaf2(LoginRequiredMixin,UserPermissionMixin,View):
 
         if format == 'csv':
             sheet_name = 'mokaf2'
-            print(f'attachment; filename="{sheet_name}_{month}_{year}.csv"')
+            # print(f'attachment; filename="{sheet_name}_{month}_{year}.csv"')
             response = HttpResponse(
                 content_type="text/csv",
                 headers={"Content-Disposition": f'attachment; filename="{sheet_name}_{month}_{year}.csv"'},
@@ -337,7 +337,7 @@ class M2moria(LoginRequiredMixin,UserPermissionMixin,View):
 
         if format == 'csv':
             sheet_name = 'm2moria'
-            print(f'attachment; filename="{sheet_name}_{month}_{year}.csv"')
+            # print(f'attachment; filename="{sheet_name}_{month}_{year}.csv"')
             response = HttpResponse(
                 content_type="text/csv",
                 headers={"Content-Disposition": f'attachment; filename="{sheet_name}_{month}_{year}.csv"'},
