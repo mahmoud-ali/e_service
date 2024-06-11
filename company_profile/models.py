@@ -114,7 +114,7 @@ class TblCompany(LoggingModel):
     company_type = models.CharField(_("company_type"),max_length=15, choices=COMPANY_TYPE_CHOICES)
     name_ar = models.CharField(_("name_ar"),max_length=200)
     name_en = models.CharField(_("name_en"),max_length=200)
-    nationality = models.ForeignKey(LkpNationality, on_delete=models.PROTECT,verbose_name=_("nationality"))
+    nationality = models.ManyToManyField(LkpNationality,verbose_name=_("nationality")) #, on_delete=models.PROTECT
 #    cordinates = models.TextField(_("cordinates"),max_length=256)
     address = models.TextField(_("address"),max_length=256)
     website = models.URLField(_("website"),max_length=200)
@@ -209,7 +209,7 @@ class TblCompanyProductionLicense(LoggingModel):
     location = models.CharField(_("location"),max_length=100)
     sheet_no = models.CharField(_("sheet_no"),max_length=10)
     cordinates = models.TextField(_("cordinates"),max_length=256)
-    mineral = models.ForeignKey(LkpMineral, on_delete=models.PROTECT,verbose_name=_("mineral"))
+    mineral = models.ManyToManyField(LkpMineral,verbose_name=_("mineral"))
     area = models.FloatField(_("Area in Kilometers"))
     reserve = models.FloatField(_("Reserve in Tones"))
     gov_rep = models.CharField(_("Goverment representative"),max_length=200,blank=True,default=0,null=True)
