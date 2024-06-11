@@ -14,3 +14,4 @@ django-import-export
 django-crontab
 Pillow
 django-bootstrap-datepicker-plus
+django-pwa
