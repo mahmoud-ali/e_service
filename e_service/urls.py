@@ -31,11 +31,12 @@ urlpatterns = [
     path("about/", flatpages_views.flatpage, {"url": "/about/"}, name="about"),
     path('pa/', include('pa.urls')), 
     path('help/', include('help_request.urls')), 
+    path('', include('pwa.urls')),  # You MUST use an empty string as the URL prefix    
     path('', include('company_profile.urls')),
 ]
 
 if settings.DEBUG:
-    urlpatterns = [path('app/', include(urlpatterns))]
+    # urlpatterns = [path('app/', include(urlpatterns))]
 
     from django.urls import reverse
     from django.shortcuts import redirect
