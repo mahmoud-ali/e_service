@@ -341,4 +341,4 @@ PWA_APP_LANG = 'ar'
 #       "type": "image/png"
 #     }
 # ]
-PWA_APP_DEBUG_MODE = config('DEBUG', default=False, cast=bool)
+# PWA_APP_DEBUG_MODE = config('DEBUG', default=False, cast=bool)
