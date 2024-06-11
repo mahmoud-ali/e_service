@@ -27,4 +27,4 @@ class HelpView(LoginRequiredMixin,View):
 
             return JsonResponse({"message":"record added."})
         
-        return JsonResponse({})
+        return JsonResponse({"errors":form.errors.as_json(escape_html=True)})

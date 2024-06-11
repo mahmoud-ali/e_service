@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-05-15 14:44+0200\n"
+"POT-Creation-Date: 2024-06-11 16:02+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -76,25 +76,26 @@ msgstr "بيانات التواصل"
 msgid "Company Status"
 msgstr "موقف الشركة"
 
-#: company_profile/admin.py:194
+#: company_profile/admin.py:195
 msgid "General information"
 msgstr "بيانات عامة"
 
-#: company_profile/admin.py:195
+#: company_profile/admin.py:196
 msgid "Location information"
 msgstr "الموقع الجغرافي"
 
-#: company_profile/admin.py:196
+#: company_profile/admin.py:197
 msgid "Contract information"
 msgstr "بيانات العقد"
+
+#: company_profile/admin.py:209 company_profile/forms.py:29
+#: company_profile/models.py:114 pa/models.py:67
+msgid "company_type"
+msgstr "نوع الشركة"
 
 #: company_profile/apps.py:7
 msgid "Company profile"
 msgstr "ملف الشركة"
-
-#: company_profile/forms.py:29 company_profile/models.py:114 pa/models.py:67
-msgid "company_type"
-msgstr "نوع الشركة"
 
 #: company_profile/forms.py:48 company_profile/forms.py:65
 #: company_profile/forms.py:94 company_profile/forms.py:111
@@ -2338,13 +2339,17 @@ msgstr ""
 msgid "Wrong transition path."
 msgstr ""
 
+#: help_request/apps.py:8 help_request/models.py:20 help_request/models.py:24
+msgid "help request"
+msgstr "طلب مساعدة"
+
 #: help_request/models.py:13
 msgid "app name"
 msgstr "اسم التطبيق"
 
 #: help_request/models.py:14
 msgid "page url"
-msgstr ""
+msgstr "رابط الصفحة"
 
 #: help_request/models.py:15
 msgid "describe issue"
@@ -2353,6 +2358,14 @@ msgstr "وصف المشكلة"
 #: help_request/models.py:16
 msgid "capture"
 msgstr "صورة"
+
+#: help_request/models.py:17
+msgid "issue_solved"
+msgstr "تمت المعالجة؟"
+
+#: help_request/models.py:25
+msgid "help requests"
+msgstr "طلبات المساعدة"
 
 #: help_request/templates/help_request/model.html:10
 msgid "help_form_title"
@@ -2924,6 +2937,11 @@ msgstr "خروج"
 #: templates/allauth/layouts/base.html:33
 msgid "Sign In"
 msgstr "دخول"
+
+#, fuzzy
+#~| msgid "Delete request"
+#~ msgid "help request: "
+#~ msgstr "حذف سجل مطالبة"
 
 #~ msgid "type"
 #~ msgstr "النوع"
