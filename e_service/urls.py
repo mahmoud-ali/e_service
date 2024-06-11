@@ -32,11 +32,11 @@ urlpatterns = [
     path('pa/', include('pa.urls')), 
     path('help/', include('help_request.urls')), 
     path('', include('company_profile.urls')),
-    path('', include('pwa.urls')),  # You MUST use an empty string as the URL prefix    
+    # path('', include('pwa.urls')),  # You MUST use an empty string as the URL prefix    
 ]
 
 if settings.DEBUG:
-    # urlpatterns = [path('app/', include(urlpatterns))]
+    urlpatterns = [path('app/', include(urlpatterns))]
 
     from django.urls import reverse
     from django.shortcuts import redirect

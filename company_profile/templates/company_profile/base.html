@@ -64,9 +64,9 @@ $(document).ready(function(){
 });
 
 </script>
-{% load pwa %}
+{% comment %} {% load pwa %}
 
-{% progressive_web_app_meta %}
+{% progressive_web_app_meta %} {% endcomment %}
 </head>
 <body>
 	{% help_model 'company_profile' %}
