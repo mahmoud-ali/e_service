@@ -412,7 +412,7 @@ class AppSendSamplesForAnalysisAdmin(WorkflowAdminMixin,admin.ModelAdmin):
     form = AppSendSamplesForAnalysisAdminForm
     inlines = [AppSendSamplesForAnalysisDetailInline]
     
-    list_display = ["lab_country","lab_city","lab_analysis_cost", "created_at", "created_by","updated_at", "updated_by"]        
+    list_display = ["company","lab_country","lab_city","lab_analysis_cost", "created_at", "created_by","updated_at", "updated_by"]        
     list_filter = ["company"]
     view_on_site = False
     
@@ -427,7 +427,7 @@ class AppForeignerProcedureAdmin(WorkflowAdminMixin,admin.ModelAdmin):
     form = AppForeignerProcedureAdminForm
     inlines = [AppForeignerProcedureDetailInline]
     
-    list_display = ["procedure_type","procedure_from","procedure_to", "created_at", "created_by","updated_at", "updated_by"]        
+    list_display = ["company","procedure_type","procedure_from","procedure_to", "created_at", "created_by","updated_at", "updated_by"]        
     list_filter = ["company"]
     view_on_site = False
     
@@ -442,7 +442,7 @@ class AppAifaaJomrkiAdmin(WorkflowAdminMixin,admin.ModelAdmin):
     form = AppAifaaJomrkiAdminForm
     inlines = [AppAifaaJomrkiDetailInline]
     
-    list_display = ["license_type", "created_at", "created_by","updated_at", "updated_by"]        
+    list_display = ["company","license_type", "created_at", "created_by","updated_at", "updated_by"]        
     list_filter = ["company"]
     view_on_site = False
     
@@ -457,7 +457,7 @@ class AppReexportEquipmentsAdmin(WorkflowAdminMixin,admin.ModelAdmin):
     form = AppReexportEquipmentsAdminForm
     inlines = [AppReexportEquipmentsDetailInline]
     
-    list_display = ["cause_for_equipments", "created_at", "created_by","updated_at", "updated_by"]        
+    list_display = ["company","cause_for_equipments", "created_at", "created_by","updated_at", "updated_by"]        
     list_filter = ["company"]
     view_on_site = False
     
@@ -502,7 +502,7 @@ class AppRequirementsListAdmin(WorkflowAdminMixin,admin.ModelAdmin):
     form = AppRequirementsListAdminForm
     inlines = [AppRequirementsListMangamEquipmentsInline,AppRequirementsListFactoryEquipmentsInline, AppRequirementsListElectricityEquipmentsInline,  AppRequirementsListChemicalLabEquipmentsInline,AppRequirementsListChemicalEquipmentsInline, AppRequirementsListMotafjeratEquipmentsInline,AppRequirementsListVehiclesEquipmentsInline]
     
-    list_display = ["created_at", "created_by","updated_at", "updated_by"]        
+    list_display = ["company","created_at", "created_by","updated_at", "updated_by"]        
     list_filter = ["company"]
     view_on_site = False
     
@@ -517,7 +517,7 @@ class AppVisibityStudyAdmin(WorkflowAdminMixin,admin.ModelAdmin):
     form = AppVisibityStudyAdminForm
     inlines = [AppVisibityStudyDetailInline]
     
-    list_display = ["license_type", "created_at", "created_by","updated_at", "updated_by"]        
+    list_display = ["company","license_type", "created_at", "created_by","updated_at", "updated_by"]        
     list_filter = ["company"]
     view_on_site = False
 
