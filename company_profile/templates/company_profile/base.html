@@ -131,7 +131,7 @@ $(document).ready(function(){
 		 {% comment %} <li class="{% if menu_name == 'profile:app_foreigner_list' %}active{% endif %} ">  
 					<a href="{% url 'profile:app_foreigner_list' %}">{% translate "Application: Forigner movement" %}</a>
 			 </li> {% endcomment %}
-			 {% if user.pro_company.company.company_type == 'entaj' %}
+			 {% if user.pro_company.company.company_type == 'entaj' or user.pro_company.company.company_type == 'mokhalfat' %}
 			 <li class="{% if menu_name == 'profile:app_gold_production_list' %}active{% endif %} ">  
 					<a href="{% url 'profile:app_gold_production_list' %}">{% translate "Application: Gold Production" %}</a>
 			 </li>
