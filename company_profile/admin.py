@@ -225,12 +225,12 @@ admin.site.register(TblCompanyProductionFactory,TblCompanyProductionFactoryAdmin
 #admin.site.register(LkpCompanyProductionLicenseStatus)
 admin.site.register(TblCompanyProductionLicense,TblCompanyProductionLicenseAdmin)
 
-# class TblCompanyProductionUserRoleAdmin( admin.ModelAdmin):
+class TblCompanyProductionUserRoleAdmin( admin.ModelAdmin):
     
-#     list_display = ["company","user"]        
-#     list_filter = ["company","user"]
+    list_display = ["company","user"]        
+    list_filter = ["company","user"]
     
-# admin.site.register(TblCompanyProductionUserRole, TblCompanyProductionUserRoleAdmin)
+admin.site.register(TblCompanyProductionUserRole, TblCompanyProductionUserRoleAdmin)
 
 class AppForignerMovementAdmin(WorkflowAdminMixin,admin.ModelAdmin):
     form = AppForignerMovementAdminForm
