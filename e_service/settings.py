@@ -143,7 +143,7 @@ DATABASES = {
         "NAME": config('DB_NAME'),
         "USER": config('DB_USER'),
         "PASSWORD": config('DB_PASSWD'),
-        "HOST": "127.0.0.1",
+        "HOST": config('DB_HOST'),
         "PORT": "5432",
         "CONN_MAX_AGE": 300,
         "CONN_HEALTH_CHECKS": True,
