@@ -89,6 +89,10 @@ def is_float(element: any) -> bool:
     except ValueError:
         return False
 
+def attachement_path(instance, filename):
+    # file will be uploaded to MEDIA_ROOT/company_<id>/contract_<id>/<filename>
+    return "employee_{0}/{1}".format(instance.employee.code, filename)    
+
 class LoggingModel(models.Model):
     """
     An abstract base class model that provides self-
@@ -261,7 +265,18 @@ class MosamaWazifi(models.Model):
         verbose_name_plural = _("Mosama Wazifi")
 
 class Edara3ama(models.Model):
+    TAB3IA_EDARIA_MODIR3AM = 1
+    TAB3IA_EDARIA_FANI = 2
+    TAB3IA_EDARIA_MALI = 3
+    
+    TAB3IA_EDARIA = {
+        TAB3IA_EDARIA_MODIR3AM: _('TAB3IA_EDARIA_MODIR3AM'),
+        TAB3IA_EDARIA_FANI: _('TAB3IA_EDARIA_FANI'),
+        TAB3IA_EDARIA_MALI: _('TAB3IA_EDARIA_MALI'),
+    }
+
     name = models.CharField(_("edara_3ama"),max_length=150)
+    tab3ia_edaria = models.IntegerField(_("tab3ia_edaria"), choices=TAB3IA_EDARIA,default=1)
 
     def __str__(self) -> str:
         return self.name
@@ -291,6 +306,30 @@ class Edarafar3ia(models.Model):
         ordering = ["name"]
         verbose_name = _("Edara far3ia")
         verbose_name_plural = _("Edara far3ia")
+
+class Gisim(models.Model):
+    name = models.CharField(_("gisim"),max_length=150)
+    edara_far3ia = models.ForeignKey(Edarafar3ia, on_delete=models.PROTECT,verbose_name=_("edara_far3ia"))
+
+    def __str__(self) -> str:
+        return self.name
+
+    class Meta:
+        ordering = ["name"]
+        verbose_name = _("Gisim")
+        verbose_name_plural = _("Gisim")
+
+class Wi7da(models.Model):
+    name = models.CharField(_("Wi7da"),max_length=150)
+    gisim = models.ForeignKey(Gisim, on_delete=models.PROTECT,verbose_name=_("gisim"))
+
+    def __str__(self) -> str:
+        return self.name
+
+    class Meta:
+        ordering = ["name"]
+        verbose_name = _("Wi7da")
+        verbose_name_plural = _("Wi7da")
 
 class EmployeeBasic(LoggingModel):
     SEX_MALE = 'male'
@@ -324,10 +363,13 @@ class EmployeeBasic(LoggingModel):
     mosama_wazifi = models.ForeignKey(MosamaWazifi, on_delete=models.PROTECT,verbose_name=_("mosama_wazifi"))
     edara_3ama = models.ForeignKey(Edara3ama, on_delete=models.PROTECT,verbose_name=_("edara_3ama"))
     edara_far3ia = models.ForeignKey(Edarafar3ia, on_delete=models.PROTECT,verbose_name=_("edara_far3ia"))
+    gisim = models.ForeignKey(Gisim, on_delete=models.PROTECT,verbose_name=_("gisim"),blank=True,null=True)
+    wi7da = models.ForeignKey(Wi7da, on_delete=models.PROTECT,verbose_name=_("wi7da"),blank=True,null=True)
     draja_wazifia = models.IntegerField(_("draja_wazifia"), choices=Drajat3lawat.DRAJAT_CHOICES)
     alawa_sanawia = models.IntegerField(_("alawa_sanawia"), choices=Drajat3lawat.ALAWAT_CHOICES)
     tarikh_milad = models.DateField(_("tarikh_milad"))
     tarikh_ta3in = models.DateField(_("tarikh_ta3in"))
+    tarikh_akhir_targia = models.DateField(_("tarikh_akhir_targia"),blank=True,null=True)
     sex = models.CharField(_("sex"),max_length=7, choices=SEX_CHOICES)
     phone = models.CharField(_("phone"),max_length=30)
     no3_2lertibat = models.CharField(_("no3_2lertibat"),max_length=10, choices=NO3_2LERTIBAT_CHOICES)
@@ -435,6 +477,7 @@ class EmployeeFamily(LoggingModel):
     employee = models.ForeignKey(EmployeeBasic, on_delete=models.PROTECT,verbose_name=_("employee_name"))
     relation = models.CharField(_("relation"), choices=FAMILY_RELATION_CHOICES,max_length=10)
     name = models.CharField(_("name"),max_length=100,validators=[MinLengthValidator(12,_("2dkhil al2sm roba3i"))])
+    attachement_file = models.FileField(_("attachement"),upload_to=attachement_path,blank=True,null=True)
 
     class Meta:
         verbose_name = _("Employee Family")
@@ -461,6 +504,7 @@ class EmployeeMoahil(LoggingModel):
     university = models.CharField(_("university"),max_length=150)
     takhasos = models.CharField(_("takhasos"),max_length=100)
     graduate_dt = models.DateField(_("graduate_dt"))
+    attachement_file = models.FileField(_("attachement"),upload_to=attachement_path,blank=True,null=True)
 
     class Meta:
         verbose_name = _("Employee Moahil")
@@ -507,6 +551,7 @@ class EmployeeJazaat(LoggingModel):
     note = models.CharField(_("note"),max_length=150)
     amount = models.FloatField(_("amount"))
     deducted = models.BooleanField(_("deducted"),default=False)
+    attachement_file = models.FileField(_("attachement"),upload_to=attachement_path,blank=True,null=True)
 
     class Meta:
         constraints = [
@@ -617,6 +662,7 @@ class EmployeeVacation(LoggingModel):
     end_dt_excpected = models.DateField(_('end_dt_excpected'))
     end_dt_actual = models.DateField(_('end_dt_actual'),validators=[validate_not_in_future_dt],null=True,blank=True)
     mokalaf = models.ForeignKey(EmployeeBasic, on_delete=models.PROTECT,related_name="mokalafvacation_set",verbose_name=_("mokalaf_name"),null=True,blank=True)
+    attachement_file = models.FileField(_("attachement"),upload_to=attachement_path,blank=True,null=True)
 
     @property
     def employee_rate(self):
@@ -640,6 +686,7 @@ class EmployeeM2moria(LoggingModel):
     start_dt = models.DateField(_('start_dt'))
     end_dt_excpected = models.DateField(_('end_dt_excpected'))
     end_dt_actual = models.DateField(_('end_dt_actual'),null=True,blank=True)
+    attachement_file = models.FileField(_("attachement"),upload_to=attachement_path,blank=True,null=True)
 
     class Meta:
         ordering = ["-id"]
