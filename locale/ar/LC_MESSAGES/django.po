@@ -2848,7 +2848,7 @@ msgstr "القسم"
 
 #: hr/models.py:323 hr/models.py:331 hr/models.py:332
 msgid "Wi7da"
-msgstr "الوحدة الادارية"
+msgstr "الوحدة"
 
 #: hr/models.py:339
 msgid "SEX_MALE"
@@ -2896,7 +2896,7 @@ msgstr "ادخل الاسم رباعي"
 
 #: hr/models.py:367
 msgid "wi7da"
-msgstr "الوحدة الادارية"
+msgstr "الوحدة"
 
 #: hr/models.py:372
 msgid "tarikh_akhir_targia"
