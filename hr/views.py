@@ -193,17 +193,19 @@ class Mobashara(LoginRequiredMixin,UserPermissionMixin,View):
                 except KeyError:
                     bnk_no = '-'
 
-                l = [emp.code,emp.name,bnk_no,round(emp_mobashara.amount,2)]
+                total = (emp_mobashara.amount+emp_mobashara.amount_m2moria+emp_mobashara.amount_e3asha)
+                l = [emp.code,emp.name,bnk_no,round(total,2)]
                 data.append(l)
         else:
             template_name = 'hr/mobashara.html'
-            header = ['الرمز','الموظف','الدرجة الوظيفية','العلاوة','المسمى الوظيفي','الاستحقاق اليومي','ايام الشهر','ايام المباشرة','ايام الاجازة','ايام التكليف','صافي الاستحقاق']
+            header = ['الرمز','الموظف','الدرجة الوظيفية','العلاوة','المسمى الوظيفي','الاستحقاق اليومي','ايام الشهر','ايام المباشرة','ايام الاجازة','ايام التكليف','طوارئ','مأمورية','إعاشة','صافي الاستحقاق']
 
             summary_list = []
 
             for emp_mobashara in mobashara.all_employees_mobashara_from_db().prefetch_related("employee__mosama_wazifi"):
                 emp = emp_mobashara.employee
-                l = [emp.code,emp.name,emp.get_draja_wazifia_display(),emp.get_alawa_sanawia_display(),emp.mosama_wazifi.name,emp_mobashara.rate,emp_mobashara.no_days_month,emp_mobashara.no_days_mobashara,emp_mobashara.no_days_2jazaa,emp_mobashara.no_days_taklif,emp_mobashara.amount]
+                total = (emp_mobashara.amount+emp_mobashara.amount_m2moria+emp_mobashara.amount_e3asha)
+                l = [emp.code,emp.name,emp.get_draja_wazifia_display(),emp.get_alawa_sanawia_display(),emp.mosama_wazifi.name,emp_mobashara.rate,emp_mobashara.no_days_month,emp_mobashara.no_days_mobashara,emp_mobashara.no_days_2jazaa,emp_mobashara.no_days_taklif,emp_mobashara.amount,emp_mobashara.amount_m2moria,emp_mobashara.amount_e3asha,total]
                 data.append(l)
 
         if format == 'csv':

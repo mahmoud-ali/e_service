@@ -122,6 +122,9 @@ class Settings(LoggingModel):
     SETTINGS_ENABLE_SANDOG_KAHRABA = 'enable_kahraba' #enable_sandog_kahraba
     SETTINGS_ENABLE_YOUM_ALGOAT_ALMOSALAHA = 'enable_algoat' #enable_youm_algoat_almosalaha
 
+    SETTINGS_M2MORIA_RATE = 'm2moria_rate'
+    SETTINGS_E3ASHA_RATE = 'e3asha_rate'
+
     SETTINGS_CHOICES = {
         SETTINGS_ZAKA_KAFAF: _('SETTINGS_ZAKAT_KAFAF'),
         SETTINGS_ZAKA_NISAB: _('SETTINGS_ZAKAT_NISAB'),
@@ -133,6 +136,8 @@ class Settings(LoggingModel):
         SETTINGS_DARIBAT_2LMOKAFA: _('SETTINGS_DARIBAT_2LMOKAFA'),
         SETTINGS_ENABLE_SANDOG_KAHRABA: _('SETTINGS_ENABLE_SANDOG_KAHRABA'),
         SETTINGS_ENABLE_YOUM_ALGOAT_ALMOSALAHA: _('SETTINGS_ENABLE_YOUM_ALGOAT_ALMOSALAHA'),
+        SETTINGS_M2MORIA_RATE: _('SETTINGS_M2MORIA_RATE'),
+        SETTINGS_E3ASHA_RATE: _('SETTINGS_E3ASHA_RATE'),
     }
 
     for moahil in MOAHIL_CHOICES:
@@ -577,6 +582,10 @@ class EmployeeMobashra(LoggingModel):
     employee = models.ForeignKey(EmployeeBasic, on_delete=models.PROTECT,verbose_name=_("employee_name"))
     start_dt = models.DateField(_('start_dt'))
     end_dt = models.DateField(_('end_dt'),null=True,blank=True)
+    toari2_enabled = models.BooleanField(_("toari2_enabled"),default=False)
+    m2moria_enabled = models.BooleanField(_("m2moria_enabled"),default=False)
+    e3ash_enabled = models.BooleanField(_("e3ash_enabled"),default=False)
+
     state = models.CharField(_("mobashara state"), choices=STATE_CHOICES,default=STATE_ACTIVE,max_length=10)
 
     @property
@@ -597,6 +606,8 @@ class EmployeeMobashraMonthly(LoggingModel):
     year = models.IntegerField(_("year"), validators=[MinValueValidator(limit_value=2015),MaxValueValidator(limit_value=2100)])
     month = models.IntegerField(_("month"), choices=MONTH_CHOICES)
     amount = models.FloatField(_("amount"))
+    amount_m2moria = models.FloatField(_("amount_m2moria"),default=0)
+    amount_e3asha = models.FloatField(_("amount_e3asha"),default=0)
     rate = models.FloatField(_("rate"))
     no_days_month = models.IntegerField(_("no_days_month"))
     no_days_mobashara = models.IntegerField(_("no_days_mobashara"))

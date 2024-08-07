@@ -257,12 +257,37 @@ class MobasharaSheet():
                     x1 = _("ayam_2lmobashara_2lsafi")
                     x2 = _("ayam_2l2jazaa")
                     x3 = _("ayam_2ltaklif")
+                    mobashara_amount = 0
+                    if emp_mobashara._mobashara.toari2_enabled:
+                        mobashara_amount = emp_mobashara.safi_2l2sti7gag
+
+                    mamoria_amount = 0
+                    if emp_mobashara._mobashara.m2moria_enabled:
+                        emp_payroll = emp_mobashara.employee.payrolldetail_set.get(payroll_master__year=self.year,payroll_master__month=self.month)
+                        badal = Badalat_3lawat(
+                            emp_payroll.abtdai,
+                            emp_payroll.galaa_m3isha,
+                            shakhsia=emp_payroll.shakhsia,
+                            aadoa=emp_payroll.aadoa,
+                            gasima=emp_payroll.gasima,
+                            atfal=emp_payroll.atfal,
+                            moahil=emp_payroll.moahil,
+                            ma3adin=emp_payroll.ma3adin
+                        )
+                        m2moria_rate = self.hr_settings.get_code_as_float(Settings.SETTINGS_M2MORIA_RATE)
+                        mamoria_amount = (badal.ajmali_almoratab/emp_mobashara.ayam_2lshahar)*m2moria_rate*emp_mobashara.ayam_2lmobashara_2lsafi
+
+                    e3asha_amount = 0
+                    if emp_mobashara._mobashara.e3ash_enabled:    
+                        e3asha_amount = self.hr_settings.get_code_as_float(Settings.SETTINGS_E3ASHA_RATE) * emp_mobashara.ayam_2lmobashara_2lsafi
 
                     EmployeeMobashraMonthly.objects.create(
                         employee = emp_mobashara.employee,
                         year = self.year,
                         month = self.month,
-                        amount = emp_mobashara.safi_2l2sti7gag,
+                        amount = mobashara_amount,
+                        amount_m2moria = mamoria_amount,
+                        amount_e3asha = e3asha_amount,
                         rate = emp_mobashara.employee.mobashara_rate,
                         no_days_month = emp_mobashara.ayam_2lshahar,
                         no_days_mobashara = emp_mobashara.ayam_2lmobashara_2lsafi,
