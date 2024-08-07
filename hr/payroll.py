@@ -30,7 +30,7 @@ class Payroll():
         self.hr_settings = HrSettings()
         self.salafiat_qs = EmployeeSalafiat.objects.filter(year=self.year,month=self.month)
         self.jazaat_qs = EmployeeJazaat.objects.filter(year=self.year,month=self.month)
-        self.employees = EmployeeBasic.objects.all() #filter(id=1794)
+        self.employees = EmployeeBasic.objects.all() #exclude(edara_3ama=self.hr_settings.get_code_as_float(Settings.SETTINGS_KHARJ_ELSHARIKA)) #all() #filter(id=1794)
 
         self.admin_user = get_user_model().objects.get(id=1)
 
