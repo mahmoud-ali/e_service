@@ -214,7 +214,7 @@ class EmployeeBasicAdmin(admin.ModelAdmin):
 
             row = [
                     emp.code,emp.name,emp.get_draja_wazifia_display(),emp.get_alawa_sanawia_display(),\
-                    emp.edara_3ama.name,emp.edara_far3ia.name,emp.gisim.name,emp.wi7da.name,emp.mosama_wazifi.name,emp.tarikh_milad,emp.tarikh_ta3in,emp.tarikh_akhir_targia,\
+                    emp.edara_3ama.name,emp.edara_far3ia.name,emp.gisim,emp.wi7da,emp.mosama_wazifi.name,emp.tarikh_milad,emp.tarikh_ta3in,emp.tarikh_akhir_targia,\
                     emp.get_sex_display(),gasima,emp.atfal,emp.get_moahil_display(),emp.m3ash,aadoa,emp.get_no3_2lertibat_display(),\
                     emp.phone,emp.sanoat_2lkhibra
             ]
