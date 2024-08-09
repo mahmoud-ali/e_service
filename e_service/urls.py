@@ -14,26 +14,33 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.urls import path,include
+from django.urls import path,include,reverse
 from django.views.generic import TemplateView
 
 from django.contrib import admin
 from django.contrib.flatpages import views as flatpages_views
 from django.conf import settings
+from django.conf.urls.static import static
+
+from django.shortcuts import redirect
+def redirect_to_home(request):
+    return redirect(reverse('admin:index'))
 
 
 urlpatterns = [
     path("__debug__/", include("debug_toolbar.urls")),
 
     path('managers/', admin.site.urls),
-    path('accounts/', include('accounts.urls')), 
-    path('check/', include('check_cordinates.urls')), 
-    path("about/", flatpages_views.flatpage, {"url": "/about/"}, name="about"),
-    path('pa/', include('pa.urls')), 
+    # path('accounts/', include('accounts.urls')), 
+    # path('check/', include('check_cordinates.urls')), 
+    # path("about/", flatpages_views.flatpage, {"url": "/about/"}, name="about"),
+    # path('pa/', include('pa.urls')), 
     path('hr/', include('hr.urls')), 
-    path('help/', include('help_request.urls')), 
-    path('', include('company_profile.urls')),
-]
+    # path('help/', include('help_request.urls')), 
+    path('', redirect_to_home),
+
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
 
 # if settings.DEBUG:
 #     urlpatterns = [path('app/', include(urlpatterns))]

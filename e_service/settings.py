@@ -119,7 +119,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',   
-                'company_profile.context_processors.in_progress_apps',
+                # 'company_profile.context_processors.in_progress_apps',
                 'django.template.context_processors.media'
             ],
         },
@@ -290,9 +290,9 @@ if not DEBUG:
 
 SHOW_REQUESTS_URL = "profile:pa_request_show"
 
-CRONJOBS = [
-    ('*/5 * * * *', 'pa.cron.generate_requests')
-]
+# CRONJOBS = [
+#     ('*/5 * * * *', 'pa.cron.generate_requests')
+# ]
 
 BOOTSTRAP3 = {
     "form_renderers": {"default": "e_service.renderers.FormRenderer"},
