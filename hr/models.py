@@ -379,7 +379,7 @@ class EmployeeBasic(LoggingModel):
     tarikh_ta3in = models.DateField(_("tarikh_ta3in"))
     tarikh_akhir_targia = models.DateField(_("tarikh_akhir_targia"),blank=True,null=True)
     sex = models.CharField(_("sex"),max_length=7, choices=SEX_CHOICES)
-    phone = models.CharField(_("phone"),max_length=30)
+    phone = models.CharField(_("phone"),max_length=30,blank=True,null=True)
     no3_2lertibat = models.CharField(_("no3_2lertibat"),max_length=10, choices=NO3_2LERTIBAT_CHOICES)
     sanoat_2lkhibra = models.FloatField(_("sanoat_2lkhibra"),default=0)
     gasima = models.BooleanField(_("gasima"),default=False)
@@ -485,6 +485,7 @@ class EmployeeFamily(LoggingModel):
     employee = models.ForeignKey(EmployeeBasic, on_delete=models.PROTECT,verbose_name=_("employee_name"))
     relation = models.CharField(_("relation"), choices=FAMILY_RELATION_CHOICES,max_length=10)
     name = models.CharField(_("name"),max_length=100,validators=[MinLengthValidator(12,_("2dkhil al2sm roba3i"))])
+    tarikh_el2dafa = models.DateField(_("tarikh_el2dafa"),blank=True,null=True)
     attachement_file = models.FileField(_("attachement"),upload_to=attachement_path,blank=True,null=True)
 
     class Meta:
@@ -496,15 +497,15 @@ class EmployeeFamily(LoggingModel):
 
     def update_number_of_children(self):
         count = self.employee.employeefamily_set.filter(relation=self.FAMILY_RELATION_CHILD).count()
-        if count > self.employee.atfal:
-            self.employee.atfal = count
-            self.employee.save()
+        #if count > self.employee.atfal:
+        self.employee.atfal = count
+        self.employee.save()
 
     def update_gasima_status(self):
         count = self.employee.employeefamily_set.filter(relation=self.FAMILY_RELATION_CONSORT).count()
-        if count > 0:
-            self.employee.gasima = True
-            self.employee.save()
+        # if count > 0:
+        self.employee.gasima = True
+        self.employee.save()
 
 class EmployeeMoahil(LoggingModel):
     employee = models.ForeignKey(EmployeeBasic, on_delete=models.PROTECT,verbose_name=_("employee_name"))
@@ -512,6 +513,7 @@ class EmployeeMoahil(LoggingModel):
     university = models.CharField(_("university"),max_length=150)
     takhasos = models.CharField(_("takhasos"),max_length=100)
     graduate_dt = models.DateField(_("graduate_dt"))
+    tarikh_el2dafa = models.DateField(_("tarikh_el2dafa"),blank=True,null=True)
     attachement_file = models.FileField(_("attachement"),upload_to=attachement_path,blank=True,null=True)
 
     class Meta:
