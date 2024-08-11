@@ -1,4 +1,5 @@
 import csv
+import codecs
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.views.generic import View
@@ -56,6 +57,9 @@ class Badalat(LoginRequiredMixin,UserPermissionMixin,View):
                 content_type="text/csv",
                 headers={"Content-Disposition": f'attachment; filename="{sheet_name}_{month}_{year}.csv"'},
             )
+
+            # BOM
+            response.write(codecs.BOM_UTF8)
 
             writer = csv.writer(response)
             writer.writerow(header)
@@ -148,6 +152,9 @@ class Khosomat(LoginRequiredMixin,UserPermissionMixin,View):
                 headers={"Content-Disposition": f'attachment; filename="{sheet_name}_{month}_{year}.csv"'},
             )
 
+            # BOM
+            response.write(codecs.BOM_UTF8)
+
             writer = csv.writer(response)
             writer.writerow(header)
 
@@ -216,6 +223,9 @@ class Mobashara(LoginRequiredMixin,UserPermissionMixin,View):
                 headers={"Content-Disposition": f'attachment; filename="{sheet_name}_{month}_{year}.csv"'},
             )
 
+            # BOM
+            response.write(codecs.BOM_UTF8)
+
             writer = csv.writer(response)
             writer.writerow(header)
 
@@ -279,6 +289,9 @@ class Mokaf2(LoginRequiredMixin,UserPermissionMixin,View):
                 content_type="text/csv",
                 headers={"Content-Disposition": f'attachment; filename="{sheet_name}_{month}_{year}.csv"'},
             )
+
+            # BOM
+            response.write(codecs.BOM_UTF8)
 
             writer = csv.writer(response)
             writer.writerow(header)
@@ -344,6 +357,9 @@ class M2moria(LoginRequiredMixin,UserPermissionMixin,View):
                 content_type="text/csv",
                 headers={"Content-Disposition": f'attachment; filename="{sheet_name}_{month}_{year}.csv"'},
             )
+
+            # BOM
+            response.write(codecs.BOM_UTF8)
 
             writer = csv.writer(response)
             writer.writerow(header)
