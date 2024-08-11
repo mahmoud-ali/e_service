@@ -484,7 +484,7 @@ class EmployeeFamily(LoggingModel):
 
     employee = models.ForeignKey(EmployeeBasic, on_delete=models.PROTECT,verbose_name=_("employee_name"))
     relation = models.CharField(_("relation"), choices=FAMILY_RELATION_CHOICES,max_length=10)
-    name = models.CharField(_("name"),max_length=100,validators=[MinLengthValidator(12,_("2dkhil al2sm roba3i"))])
+    name = models.CharField(_("name"),max_length=100,validators=[MinLengthValidator(4,_("2dkhil al2sm roba3i"))])
     tarikh_el2dafa = models.DateField(_("tarikh_el2dafa"),blank=True,null=True)
     attachement_file = models.FileField(_("attachement"),upload_to=attachement_path,blank=True,null=True)
 
