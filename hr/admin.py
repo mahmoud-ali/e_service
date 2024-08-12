@@ -8,7 +8,8 @@ from django.utils.translation import gettext_lazy as _
 
 from hr.payroll import M2moriaSheet, MobasharaSheet, Payroll
 
-from .models import Drajat3lawat, EmployeeBankAccount, EmployeeFamily, EmployeeM2moria, EmployeeMoahil, EmployeeJazaat, EmployeeMobashra, EmployeeVacation, Gisim, MosamaWazifi,Edara3ama,Edarafar3ia,EmployeeBasic, PayrollDetail, PayrollMaster, EmployeeSalafiat,Settings, Wi7da
+from .models import Drajat3lawat, EmployeeBankAccount, EmployeeFamily, EmployeeM2moria, EmployeeMoahil, EmployeeJazaat, EmployeeMobashra, EmployeeVacation, Gisim, HikalWazifi, MosamaWazifi,Edara3ama,Edarafar3ia,EmployeeBasic, PayrollDetail, PayrollMaster, EmployeeSalafiat,Settings, Wi7da
+from mptt.admin import MPTTModelAdmin,TreeRelatedFieldListFilter
 
 class MosamaWazifiAdmin(admin.ModelAdmin):
     exclude = ["created_at","created_by","updated_at","updated_by"]
@@ -20,45 +21,84 @@ class MosamaWazifiAdmin(admin.ModelAdmin):
 
 admin.site.register(MosamaWazifi,MosamaWazifiAdmin)
 
-class Edara3amaAdmin(admin.ModelAdmin):
-    exclude = ["created_at","created_by","updated_at","updated_by"]
-    list_display = ["name","tab3ia_edaria"]        
-    list_filter = ["tab3ia_edaria"] 
-    view_on_site = False
-    search_fields = ["name"]
+# class Edara3amaAdmin(admin.ModelAdmin):
+#     exclude = ["created_at","created_by","updated_at","updated_by"]
+#     list_display = ["name","tab3ia_edaria"]        
+#     list_filter = ["tab3ia_edaria"] 
+#     view_on_site = False
+#     search_fields = ["name"]
 
-admin.site.register(Edara3ama,Edara3amaAdmin)
+# admin.site.register(Edara3ama,Edara3amaAdmin)
 
-class Edarafar3iaAdmin(admin.ModelAdmin):
+# class Edarafar3iaAdmin(admin.ModelAdmin):
+#     exclude = ["created_at","created_by","updated_at","updated_by"]
+    
+#     list_display = ["name"]        
+#     view_on_site = False
+#     search_fields = ["name"]
+
+# admin.site.register(Edarafar3ia,Edarafar3iaAdmin)
+
+# class GisimAdmin(admin.ModelAdmin):
+#     exclude = ["created_at","created_by","updated_at","updated_by"]
+    
+#     list_display = ["name","edara_far3ia"]        
+#     view_on_site = False
+#     search_fields = ["name"]
+#     list_filter = ["edara_far3ia"]
+#     autocomplete_fields = ["edara_far3ia"]
+
+# admin.site.register(Gisim,GisimAdmin)
+
+# class Wi7daAdmin(admin.ModelAdmin):
+#     exclude = ["created_at","created_by","updated_at","updated_by"]
+    
+#     list_display = ["name","gisim"]        
+#     view_on_site = False
+#     search_fields = ["name"]
+#     list_filter = ["gisim"]
+#     autocomplete_fields = ["gisim"]
+
+# admin.site.register(Wi7da,Wi7daAdmin)
+
+class HikalWazifiAdmin(MPTTModelAdmin):
     exclude = ["created_at","created_by","updated_at","updated_by"]
     
-    list_display = ["name"]        
+    list_display = ["name","elmostoa_eltanzimi"]        
     view_on_site = False
     search_fields = ["name"]
+    mptt_level_indent = 20
 
-admin.site.register(Edarafar3ia,Edarafar3iaAdmin)
+admin.site.register(HikalWazifi,HikalWazifiAdmin)
 
-class GisimAdmin(admin.ModelAdmin):
-    exclude = ["created_at","created_by","updated_at","updated_by"]
+class Edara3amaFilter(admin.SimpleListFilter):
+    title = _("Edara 3ama")    
+    parameter_name = "edara3ama"
+    def lookups(self, request, model_admin):
+        qs = HikalWazifi.objects.filter(elmostoa_eltanzimi=HikalWazifi.ELMOSTOA_ELTANZIMI_2DARA_3AMA).order_by('name').distinct("name").values_list("id","name")
+        return [(x[0],x[1]) for x in qs]
     
-    list_display = ["name","edara_far3ia"]        
-    view_on_site = False
-    search_fields = ["name"]
-    list_filter = ["edara_far3ia"]
-    autocomplete_fields = ["edara_far3ia"]
+    def queryset(self, request, queryset):
+        val = self.value()
+        if val:
+            return queryset.filter(hikal_wazifi__id=int(val))
+        
+        return queryset
 
-admin.site.register(Gisim,GisimAdmin)
-
-class Wi7daAdmin(admin.ModelAdmin):
-    exclude = ["created_at","created_by","updated_at","updated_by"]
+class Edarafar3iaFilter(admin.SimpleListFilter):
+    title = _("Edara far3ia")    
+    parameter_name = "edarafar3ia"
+    def lookups(self, request, model_admin):
+        qs = HikalWazifi.objects.filter(elmostoa_eltanzimi=HikalWazifi.ELMOSTOA_ELTANZIMI_2DARA_FAR3IA).order_by('name').distinct("name").values_list("id","name")
+        return [(x[0],x[1]) for x in qs]
     
-    list_display = ["name","gisim"]        
-    view_on_site = False
-    search_fields = ["name"]
-    list_filter = ["gisim"]
-    autocomplete_fields = ["gisim"]
-
-admin.site.register(Wi7da,Wi7daAdmin)
+    def queryset(self, request, queryset):
+        val = self.value()
+        print("val",val)
+        if val:
+            return queryset.filter(hikal_wazifi__id=int(val))
+        
+        return queryset
 
 class EmployeeTarikhTa3inFilter(admin.SimpleListFilter):
     title = _("tarikh_ta3in")    
@@ -174,15 +214,15 @@ class EmployeeM2moriaInline(admin.TabularInline):
     extra = 1    
 
 class EmployeeBasicAdmin(admin.ModelAdmin):
-    fields = ["code","name", "draja_wazifia","alawa_sanawia", "edara_3ama","edara_far3ia","gisim","wi7da", "mosama_wazifi","sex","tarikh_milad","tarikh_ta3in","tarikh_akhir_targia","phone","no3_2lertibat","sanoat_2lkhibra","moahil","gasima","atfal","aadoa","m3ash","status"]        
+    fields = ["code","name", "draja_wazifia","alawa_sanawia","hikal_wazifi", "edara_3ama_tmp","edara_far3ia_tmp", "mosama_wazifi","sex","tarikh_milad","tarikh_ta3in","tarikh_akhir_targia","phone","no3_2lertibat","sanoat_2lkhibra","moahil","gasima","atfal","aadoa","m3ash","status"]        
     inlines = [EmployeeFamilyInline,EmployeeMoahilInline,EmployeeBankAccountInline,SalafiatInline,JazaatInline,EmployeeMobashraInline,EmployeeVacationInline,EmployeeM2moriaInline]
-    list_display = ["code","name", "draja_wazifia","alawa_sanawia", "edara_3ama","edara_far3ia","gisim", "mosama_wazifi","tarikh_ta3in","tarikh_akhir_targia","sex","moahil","gasima","atfal","aadoa","m3ash","status"]    
+    list_display = ["code","name", "draja_wazifia","alawa_sanawia", "edara_3ama","edara_far3ia", "mosama_wazifi","tarikh_ta3in","tarikh_akhir_targia","sex","moahil","gasima","atfal","aadoa","m3ash","status"]    
     list_display_links = ["code","name"]
-    list_filter = ["draja_wazifia","alawa_sanawia","edara_3ama","edara_far3ia","mosama_wazifi__category","gasima","atfal",EmployeeTarikhTa3inFilter,EmployeeWifg2lwazaifFilter,EmployeeWifg2lmostawiatFilter,"sex","moahil","aadoa","m3ash","status"] #
+    list_filter = ["draja_wazifia","alawa_sanawia",Edara3amaFilter,Edarafar3iaFilter,"mosama_wazifi__category","gasima","atfal",EmployeeTarikhTa3inFilter,EmployeeWifg2lwazaifFilter,EmployeeWifg2lmostawiatFilter,"sex","moahil","aadoa","m3ash","status"] #
     view_on_site = False
-    autocomplete_fields = ["mosama_wazifi", "edara_3ama","edara_far3ia"]
+    autocomplete_fields = ["mosama_wazifi","hikal_wazifi"]
     search_fields = ["name","code"]
-    readonly_fields = ["moahil","gasima","atfal"]
+    readonly_fields = ["moahil","gasima","atfal","edara_3ama_tmp","edara_far3ia_tmp"]
     actions = ['export_as_csv']
 
     def has_delete_permission(self, request, obj=None):
@@ -214,7 +254,7 @@ class EmployeeBasicAdmin(admin.ModelAdmin):
 
             row = [
                     emp.code,emp.name,emp.get_draja_wazifia_display(),emp.get_alawa_sanawia_display(),\
-                    emp.edara_3ama.name,emp.edara_far3ia.name,emp.gisim,emp.wi7da,emp.mosama_wazifi.name,emp.tarikh_milad,emp.tarikh_ta3in,emp.tarikh_akhir_targia,\
+                    emp.edara_3ama,emp.edara_far3ia,emp.gisim,emp.wi7da,emp.mosama_wazifi.name,emp.tarikh_milad,emp.tarikh_ta3in,emp.tarikh_akhir_targia,\
                     emp.get_sex_display(),gasima,emp.atfal,emp.get_moahil_display(),emp.m3ash,aadoa,emp.get_no3_2lertibat_display(),\
                     emp.phone,emp.sanoat_2lkhibra,emp.get_status_display()
             ]

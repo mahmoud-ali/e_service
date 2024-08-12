@@ -4,6 +4,7 @@ from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
 from django.forms import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator,MinLengthValidator
+from mptt.models import MPTTModel, TreeForeignKey
 
 MONTH_JAN = 1
 MONTH_FEB = 2
@@ -284,7 +285,7 @@ class Edara3ama(models.Model):
     }
 
     name = models.CharField(_("edara_3ama"),max_length=150)
-    tab3ia_edaria = models.IntegerField(_("tab3ia_edaria"), choices=TAB3IA_EDARIA,default=1)
+    tab3ia_edaria = models.IntegerField(_("tab3ia_edaria"), choices=TAB3IA_EDARIA,default=TAB3IA_EDARIA_MODIR3AM)
 
     def __str__(self) -> str:
         return self.name
@@ -338,6 +339,37 @@ class Wi7da(models.Model):
         ordering = ["name"]
         verbose_name = _("Wi7da")
         verbose_name_plural = _("Wi7da")
+
+class HikalWazifi(MPTTModel):
+    ELMOSTOA_ELTANZIMI_MODIR_3AM = 1
+    ELMOSTOA_ELTANZIMI_MOSA3ID_MODIR_3AM = 2
+    ELMOSTOA_ELTANZIMI_2DARA_3AMA = 3
+    ELMOSTOA_ELTANZIMI_2DARA_FAR3IA = 4
+    ELMOSTOA_ELTANZIMI_GISIM = 5
+    ELMOSTOA_ELTANZIMI_WI7DA = 6
+    
+    ELMOSTOA_ELTANZIMI_CHOICES = {
+        ELMOSTOA_ELTANZIMI_MODIR_3AM: _('ELMOSTOA_ELTANZIMI_MODIR_3AM'),
+        ELMOSTOA_ELTANZIMI_MOSA3ID_MODIR_3AM: _('ELMOSTOA_ELTANZIMI_MOSA3ID_MODIR_3AM'),
+        ELMOSTOA_ELTANZIMI_2DARA_3AMA: _('ELMOSTOA_ELTANZIMI_2DARA_3AMA'),
+        ELMOSTOA_ELTANZIMI_2DARA_FAR3IA: _('ELMOSTOA_ELTANZIMI_2DARA_FAR3IA'),
+        ELMOSTOA_ELTANZIMI_GISIM: _('ELMOSTOA_ELTANZIMI_GISIM'),
+        ELMOSTOA_ELTANZIMI_WI7DA: _('ELMOSTOA_ELTANZIMI_WI7DA'),
+    }
+
+    name = models.CharField(max_length=50, unique=True)
+    parent = TreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children')
+    elmostoa_eltanzimi = models.IntegerField(_("elmostoa_eltanzimi"), choices=ELMOSTOA_ELTANZIMI_CHOICES,default=ELMOSTOA_ELTANZIMI_WI7DA)
+
+    class MPTTMeta:
+        order_insertion_by = ['name']
+
+    class Meta:
+        verbose_name = _("HikalWazifi")
+        verbose_name_plural = _("HikalWazifi")
+
+    def __str__(self) -> str:
+        return self.name
 
 class EmployeeBasic(LoggingModel):
     SEX_MALE = 'male'
@@ -393,10 +425,10 @@ class EmployeeBasic(LoggingModel):
     code = models.IntegerField(_("employee_code"))
     name = models.CharField(_("employee_name"),max_length=150,validators=[MinLengthValidator(12,_("2dkhil al2sm roba3i"))])
     mosama_wazifi = models.ForeignKey(MosamaWazifi, on_delete=models.PROTECT,verbose_name=_("mosama_wazifi"))
-    edara_3ama = models.ForeignKey(Edara3ama, on_delete=models.PROTECT,verbose_name=_("edara_3ama"))
-    edara_far3ia = models.ForeignKey(Edarafar3ia, on_delete=models.PROTECT,verbose_name=_("edara_far3ia"))
-    gisim = models.ForeignKey(Gisim, on_delete=models.PROTECT,verbose_name=_("gisim"),blank=True,null=True)
-    wi7da = models.ForeignKey(Wi7da, on_delete=models.PROTECT,verbose_name=_("wi7da"),blank=True,null=True)
+    edara_3ama_tmp = models.ForeignKey(Edara3ama, on_delete=models.PROTECT,verbose_name=_("edara_3ama"))
+    edara_far3ia_tmp = models.ForeignKey(Edarafar3ia, on_delete=models.PROTECT,verbose_name=_("edara_far3ia"))
+    #gisim_tmp = models.ForeignKey(Gisim, on_delete=models.PROTECT,verbose_name=_("gisim"),blank=True,null=True)
+    #wi7da_tmp = models.ForeignKey(Wi7da, on_delete=models.PROTECT,verbose_name=_("wi7da"),blank=True,null=True)
     draja_wazifia = models.IntegerField(_("draja_wazifia"), choices=Drajat3lawat.DRAJAT_CHOICES)
     alawa_sanawia = models.IntegerField(_("alawa_sanawia"), choices=Drajat3lawat.ALAWAT_CHOICES)
     tarikh_milad = models.DateField(_("tarikh_milad"))
@@ -412,6 +444,7 @@ class EmployeeBasic(LoggingModel):
     m3ash = models.FloatField(_("m3ash"),default=0)
     aadoa = models.BooleanField(_("aadoa"),default=False)
     status = models.IntegerField(_("status"), choices=STATUS_CHOICES,default=STATUS_ACTIVE)
+    hikal_wazifi = models.ForeignKey(HikalWazifi, on_delete=models.PROTECT,verbose_name=_("hikal_wazifi"),blank=True,null=True)
 
     def __str__(self) -> str:
         return f'{self.name}'# / {self.edara_3ama.name}'
@@ -422,7 +455,7 @@ class EmployeeBasic(LoggingModel):
         ]
         indexes = [
             models.Index(fields=["code"]),
-            models.Index(fields=["edara_3ama"]),
+            # models.Index(fields=["edara_3ama"]),
             models.Index(fields=["draja_wazifia"]),
             models.Index(fields=["alawa_sanawia"]),
             models.Index(fields=["tarikh_milad"]),
@@ -437,6 +470,30 @@ class EmployeeBasic(LoggingModel):
         verbose_name = _("Employee data")
         verbose_name_plural = _("Employee data")
 
+    def traverse_hikal_wazifi(self,level):
+        job = None
+        try:
+            job = self.hikal_wazifi.get_ancestors(include_self=True).get(elmostoa_eltanzimi=level)
+        except:
+            pass
+        return job
+
+    @property
+    def edara_3ama(self):
+        return self.traverse_hikal_wazifi(HikalWazifi.ELMOSTOA_ELTANZIMI_2DARA_3AMA)
+
+    @property
+    def edara_far3ia(self):
+        return self.traverse_hikal_wazifi(HikalWazifi.ELMOSTOA_ELTANZIMI_2DARA_FAR3IA)
+
+    @property
+    def gisim(self):
+        return self.traverse_hikal_wazifi(HikalWazifi.ELMOSTOA_ELTANZIMI_GISIM)
+
+    @property
+    def wi7da(self):
+        return self.traverse_hikal_wazifi(HikalWazifi.ELMOSTOA_ELTANZIMI_WI7DA)
+
     @property
     def mobashara_rate(self):
         key = Settings.MOSAMA_PREFIX + self.mosama_wazifi.category
@@ -446,13 +503,7 @@ class EmployeeBasic(LoggingModel):
         except Exception as e:
             return 0
 
-    def clean(self):
-        if hasattr(self.edara_far3ia,'edara_3ama'):
-            if self.edara_far3ia.edara_3ama != self.edara_3ama:
-                raise ValidationError(
-                    {"edara_far3ia":_("al2dara alfr3ia la tatba3 lil al2dara al3ama")}
-                )
-            
+    def clean(self):            
         if self.draja_wazifia == Drajat3lawat.DRAJAT_TA3AKOD:
             if self.alawa_sanawia != Drajat3lawat.ALAWAT_TA3AKOD:
                 raise ValidationError(
