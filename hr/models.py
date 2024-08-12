@@ -358,7 +358,7 @@ class HikalWazifi(MPTTModel):
         ELMOSTOA_ELTANZIMI_WI7DA: _('ELMOSTOA_ELTANZIMI_WI7DA'),
     }
 
-    name = models.CharField(max_length=50, unique=True)
+    name = models.CharField(max_length=150, unique=True)
     parent = TreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children')
     elmostoa_eltanzimi = models.IntegerField(_("elmostoa_eltanzimi"), choices=ELMOSTOA_ELTANZIMI_CHOICES,default=ELMOSTOA_ELTANZIMI_WI7DA)
 
