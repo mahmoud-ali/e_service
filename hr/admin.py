@@ -174,11 +174,11 @@ class EmployeeM2moriaInline(admin.TabularInline):
     extra = 1    
 
 class EmployeeBasicAdmin(admin.ModelAdmin):
-    fields = ["code","name", "draja_wazifia","alawa_sanawia", "edara_3ama","edara_far3ia","gisim","wi7da", "mosama_wazifi","sex","tarikh_milad","tarikh_ta3in","tarikh_akhir_targia","phone","no3_2lertibat","sanoat_2lkhibra","moahil","gasima","atfal","aadoa","m3ash"]        
+    fields = ["code","name", "draja_wazifia","alawa_sanawia", "edara_3ama","edara_far3ia","gisim","wi7da", "mosama_wazifi","sex","tarikh_milad","tarikh_ta3in","tarikh_akhir_targia","phone","no3_2lertibat","sanoat_2lkhibra","moahil","gasima","atfal","aadoa","m3ash","status"]        
     inlines = [EmployeeFamilyInline,EmployeeMoahilInline,EmployeeBankAccountInline,SalafiatInline,JazaatInline,EmployeeMobashraInline,EmployeeVacationInline,EmployeeM2moriaInline]
-    list_display = ["code","name", "draja_wazifia","alawa_sanawia", "edara_3ama","edara_far3ia","gisim", "mosama_wazifi","tarikh_ta3in","tarikh_akhir_targia","sex","moahil","gasima","atfal","aadoa","m3ash"]    
+    list_display = ["code","name", "draja_wazifia","alawa_sanawia", "edara_3ama","edara_far3ia","gisim", "mosama_wazifi","tarikh_ta3in","tarikh_akhir_targia","sex","moahil","gasima","atfal","aadoa","m3ash","status"]    
     list_display_links = ["code","name"]
-    list_filter = ["draja_wazifia","alawa_sanawia","edara_3ama","edara_far3ia","mosama_wazifi__category","gasima","atfal",EmployeeTarikhTa3inFilter,EmployeeWifg2lwazaifFilter,EmployeeWifg2lmostawiatFilter,"sex","moahil","aadoa","m3ash"] #
+    list_filter = ["draja_wazifia","alawa_sanawia","edara_3ama","edara_far3ia","mosama_wazifi__category","gasima","atfal",EmployeeTarikhTa3inFilter,EmployeeWifg2lwazaifFilter,EmployeeWifg2lmostawiatFilter,"sex","moahil","aadoa","m3ash","status"] #
     view_on_site = False
     autocomplete_fields = ["mosama_wazifi", "edara_3ama","edara_far3ia"]
     search_fields = ["name","code"]
@@ -197,7 +197,7 @@ class EmployeeBasicAdmin(admin.ModelAdmin):
         header = [
                     _("code"),_("name"),_("draja_wazifia"),_("alawa_sanawia"),_( "edara_3ama"),\
                     _("edara_far3ia"),_("gisim"),_("wi7da"),_("mosama_wazifi"),_("tarikh_milad"),_("tarikh_ta3in"),_("tarikh_akhir_targia"),_("sex"),_("gasima"),_("atfal"),\
-                    _("moahil"),_("m3ash"),_("aadoa"),_("no3_2lertibat"),_("phone"),_("sanoat_2lkhibra")
+                    _("moahil"),_("m3ash"),_("aadoa"),_("no3_2lertibat"),_("phone"),_("sanoat_2lkhibra"),_("status")
         ]
 
         writer = csv.writer(response)
@@ -216,7 +216,7 @@ class EmployeeBasicAdmin(admin.ModelAdmin):
                     emp.code,emp.name,emp.get_draja_wazifia_display(),emp.get_alawa_sanawia_display(),\
                     emp.edara_3ama.name,emp.edara_far3ia.name,emp.gisim,emp.wi7da,emp.mosama_wazifi.name,emp.tarikh_milad,emp.tarikh_ta3in,emp.tarikh_akhir_targia,\
                     emp.get_sex_display(),gasima,emp.atfal,emp.get_moahil_display(),emp.m3ash,aadoa,emp.get_no3_2lertibat_display(),\
-                    emp.phone,emp.sanoat_2lkhibra
+                    emp.phone,emp.sanoat_2lkhibra,emp.get_status_display()
             ]
             writer.writerow(row)
 

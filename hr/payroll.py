@@ -30,7 +30,7 @@ class Payroll():
         self.hr_settings = HrSettings()
         self.salafiat_qs = EmployeeSalafiat.objects.filter(year=self.year,month=self.month)
         self.jazaat_qs = EmployeeJazaat.objects.filter(year=self.year,month=self.month)
-        self.employees = EmployeeBasic.objects.all() #exclude(edara_3ama=self.hr_settings.get_code_as_float(Settings.SETTINGS_KHARJ_ELSHARIKA)) #all() #filter(id=1794)
+        self.employees = EmployeeBasic.objects.filter(status=EmployeeBasic.STATUS_ACTIVE) #exclude(edara_3ama=self.hr_settings.get_code_as_float(Settings.SETTINGS_KHARJ_ELSHARIKA)) #all() #filter(id=1794)
 
         self.admin_user = get_user_model().objects.get(id=1)
 
@@ -220,7 +220,7 @@ class MobasharaSheet():
         self.month = month
 
         self.hr_settings = HrSettings()
-        self.employees = EmployeeMobashra.objects.filter(state=EmployeeMobashra.STATE_ACTIVE).prefetch_related("employee")
+        self.employees = EmployeeMobashra.objects.filter(state=EmployeeMobashra.STATE_ACTIVE).prefetch_related("employee").filter(employee__status=EmployeeBasic.STATUS_ACTIVE)
 
         self.admin_user = get_user_model().objects.get(id=1)
 
@@ -322,7 +322,7 @@ class Mokaf2Sheet():
         self.month = month
 
         self.hr_settings = HrSettings()
-        self.employees = PayrollDetail.objects.filter(payroll_master__year = self.year,payroll_master__month = self.month).prefetch_related("payroll_master","employee")
+        self.employees = PayrollDetail.objects.filter(payroll_master__year = self.year,payroll_master__month = self.month).prefetch_related("payroll_master","employee").filter(employee__status=EmployeeBasic.STATUS_ACTIVE)
 
     def employee_mokaf2_from_db(self,emp_payroll:PayrollDetail):
         badal = Badalat_3lawat(
@@ -356,7 +356,7 @@ class M2moriaSheet():
         self.employees = EmployeeM2moria.objects.filter(
             Q(end_dt_actual__gte=first_day_in_month) |
             Q(end_dt_actual__isnull=True)
-        ).prefetch_related("employee")
+        ).prefetch_related("employee").filter(employee__status=EmployeeBasic.STATUS_ACTIVE)
 
         self.admin_user = get_user_model().objects.get(id=1)
 

@@ -366,6 +366,30 @@ class EmployeeBasic(LoggingModel):
         NO3_2LERTIBAT_MASHRO3: _("NO3_2LERTIBAT_MASHRO3"),
     }
 
+    STATUS_ACTIVE = 1
+    STATUS_MA3ASH = 2
+    STATUS_TAGA3D_EKHTIARI = 3
+    STATUS_ESTIKALA = 4
+    STATUS_3DAM_ELIAGA_ELTIBIA = 5
+    STATUS_ELFASL = 6
+    STATUS_ENTIHA2_2L3AGD = 7
+    STATUS_SHAGL_MANSAB_DASTORY = 8
+    STATUS_ELWAFAH = 9
+    STATUS_FOGDAN_ELJENSIA_ELSODANIA = 10
+
+    STATUS_CHOICES = {
+        STATUS_ACTIVE: _("STATUS_ACTIVE"),
+        STATUS_MA3ASH: _("STATUS_MA3ASH"),
+        STATUS_TAGA3D_EKHTIARI: _("STATUS_TAGA3D_EKHTIARI"),
+        STATUS_ESTIKALA: _("STATUS_ESTIKALA"),
+        STATUS_3DAM_ELIAGA_ELTIBIA: _("STATUS_3DAM_ELIAGA_ELTIBIA"),
+        STATUS_ELFASL: _("STATUS_ELFASL"),
+        STATUS_ENTIHA2_2L3AGD: _("STATUS_ENTIHA2_2L3AGD"),
+        STATUS_SHAGL_MANSAB_DASTORY: _("STATUS_SHAGL_MANSAB_DASTORY"),
+        STATUS_ELWAFAH: _("STATUS_ELWAFAH"),
+        STATUS_FOGDAN_ELJENSIA_ELSODANIA: _("STATUS_FOGDAN_ELJENSIA_ELSODANIA"),
+    }
+
     code = models.IntegerField(_("employee_code"))
     name = models.CharField(_("employee_name"),max_length=150,validators=[MinLengthValidator(12,_("2dkhil al2sm roba3i"))])
     mosama_wazifi = models.ForeignKey(MosamaWazifi, on_delete=models.PROTECT,verbose_name=_("mosama_wazifi"))
@@ -387,6 +411,7 @@ class EmployeeBasic(LoggingModel):
     moahil = models.CharField(_("moahil"),max_length=30, choices=MOAHIL_CHOICES,default=MOAHIL_BAKLARIOS)
     m3ash = models.FloatField(_("m3ash"),default=0)
     aadoa = models.BooleanField(_("aadoa"),default=False)
+    status = models.IntegerField(_("status"), choices=STATUS_CHOICES,default=STATUS_ACTIVE)
 
     def __str__(self) -> str:
         return f'{self.name}'# / {self.edara_3ama.name}'
