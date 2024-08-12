@@ -4,6 +4,7 @@ from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
 from django.forms import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator,MinLengthValidator
+from django.contrib import admin
 from mptt.models import MPTTModel, TreeForeignKey
 
 MONTH_JAN = 1
@@ -477,20 +478,24 @@ class EmployeeBasic(LoggingModel):
         except:
             pass
         return job
-
+    
     @property
+    @admin.display(description=_("edara_3ama"))
     def edara_3ama(self):
         return self.traverse_hikal_wazifi(HikalWazifi.ELMOSTOA_ELTANZIMI_2DARA_3AMA)
 
     @property
+    @admin.display(description=_("edara_far3ia"))
     def edara_far3ia(self):
         return self.traverse_hikal_wazifi(HikalWazifi.ELMOSTOA_ELTANZIMI_2DARA_FAR3IA)
 
     @property
+    @admin.display(description=_("gisim"))
     def gisim(self):
         return self.traverse_hikal_wazifi(HikalWazifi.ELMOSTOA_ELTANZIMI_GISIM)
 
     @property
+    @admin.display(description=_("wi7da"))
     def wi7da(self):
         return self.traverse_hikal_wazifi(HikalWazifi.ELMOSTOA_ELTANZIMI_WI7DA)
 

@@ -80,8 +80,12 @@ class Edara3amaFilter(admin.SimpleListFilter):
     
     def queryset(self, request, queryset):
         val = self.value()
-        if val:
-            return queryset.filter(hikal_wazifi__id=int(val))
+        try:
+            hikal = HikalWazifi.objects.get(id=int(val))
+            if val:
+                return queryset.filter(hikal_wazifi__in=hikal.get_descendants(include_self=True))            
+        except:
+            pass
         
         return queryset
 
@@ -94,9 +98,12 @@ class Edarafar3iaFilter(admin.SimpleListFilter):
     
     def queryset(self, request, queryset):
         val = self.value()
-        print("val",val)
-        if val:
-            return queryset.filter(hikal_wazifi__id=int(val))
+        try:
+            hikal = HikalWazifi.objects.get(id=int(val))
+            if val:
+                return queryset.filter(hikal_wazifi__in=hikal.get_descendants(include_self=True))            
+        except:
+            pass
         
         return queryset
 
