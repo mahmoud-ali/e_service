@@ -486,7 +486,11 @@ class EmployeeBasic(LoggingModel):
     @property
     @admin.display(description=_("edara_3ama"))
     def edara_3ama(self):
-        return self.traverse_hikal_wazifi(HikalWazifi.ELMOSTOA_ELTANZIMI_2DARA_3AMA)
+        job = self.traverse_hikal_wazifi(HikalWazifi.ELMOSTOA_ELTANZIMI_2DARA_3AMA)
+        if self.hikal_wazifi and not job:
+            job = self.hikal_wazifi.get_root()
+
+        return job
 
     @property
     @admin.display(description=_("edara_far3ia"))
