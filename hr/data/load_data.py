@@ -196,7 +196,7 @@ def create_hikal_state_child(parent,postfix):
     node = HikalWazifi.objects.create(parent=parent,name=name,elmostoa_eltanzimi=HikalWazifi.ELMOSTOA_ELTANZIMI_2DARA_FAR3IA)
     for c in arr:
         name = c+postfix
-        node = HikalWazifi.objects.create(parent=node,name=name,elmostoa_eltanzimi=HikalWazifi.ELMOSTOA_ELTANZIMI_GISIM)
+        HikalWazifi.objects.create(parent=node,name=name,elmostoa_eltanzimi=HikalWazifi.ELMOSTOA_ELTANZIMI_GISIM)
 
 def create_hikal_for_states(parent_id):
     parent = HikalWazifi.objects.get(id=parent_id)
