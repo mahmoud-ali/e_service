@@ -1,6 +1,7 @@
 import datetime
 from calendar import monthrange
 from collections import namedtuple
+from django.utils import timezone
 
 class Badalat_3lawat():
     def __init__(self,abtdai,galaa_m3isha,gasima=0,atfal=0,moahil=0,shakhsia=0,ma3adin=0,aadoa=0):
@@ -97,7 +98,7 @@ class Badalat_3lawat():
         return 'Badalat => '+', '.join([f'{b[0]}: {round(b[1],2)}' for b in self.__iter__()])
 
 class Khosomat():
-    def __init__(self,Badalat:Badalat_3lawat,zaka_kafaf,zaka_nisab,m3ash=0,salafiat=0,jazaat=0,damga=1,sandog=0,sandog_kahraba=0,enable_sandog_kahraba=True,enable_youm_algoat_almosalaha=True):
+    def __init__(self,Badalat:Badalat_3lawat,zaka_kafaf,zaka_nisab,m3ash=0,salafiat=0,jazaat=0,damga=1,sandog=0,sandog_kahraba=0,enable_sandog_kahraba=True,enable_youm_algoat_almosalaha=True,tarikh_2lmilad=None,m3ash_age=100):
         self.Badalat = Badalat
         self._zaka_kafaf = zaka_kafaf
         self._zaka_nisab = zaka_nisab
@@ -109,6 +110,8 @@ class Khosomat():
         self._sandog_kahraba = sandog_kahraba
         self._enable_sandog_kahraba = enable_sandog_kahraba
         self._enable_youm_algoat_almosalaha = enable_youm_algoat_almosalaha
+        self._tarikh_2lmilad = tarikh_2lmilad
+        self._m3ash_age = m3ash_age
 
     @property
     def m3ash(self):
@@ -126,7 +129,22 @@ class Khosomat():
         return self._sandog
     
     @property
+    def employee_age(self):
+        if not  self._tarikh_2lmilad:
+            return 0
+        
+        now = timezone.now().date()
+        delta = now - self._tarikh_2lmilad
+
+        return delta.days // 365
+    
+    @property
     def dariba(self):
+        if self.employee_age >= self._m3ash_age:
+            return 0 
+        
+        print(self.employee_age,self._m3ash_age)
+        
         return (self.Badalat.ajmali_almoratab -self.Badalat.shakhsia -self.Badalat.moahil \
                  -self.Badalat.ajtima3ia_atfal -self.Badalat.ajtima3ia_gasima -self.Badalat.makhatir \
                  -1200 -116 -self.tameen_ajtima3i) *0.15 +2.5

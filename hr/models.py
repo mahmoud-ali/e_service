@@ -129,6 +129,8 @@ class Settings(LoggingModel):
 
     SETTINGS_KHARJ_ELSHARIKA = 'kharj_elsharika'
 
+    SETTINGS_OMER_2LMA3ASH = 'omer_2lma3ash'
+
     SETTINGS_CHOICES = {
         SETTINGS_ZAKA_KAFAF: _('SETTINGS_ZAKAT_KAFAF'),
         SETTINGS_ZAKA_NISAB: _('SETTINGS_ZAKAT_NISAB'),
@@ -143,6 +145,7 @@ class Settings(LoggingModel):
         SETTINGS_M2MORIA_RATE: _('SETTINGS_M2MORIA_RATE'),
         SETTINGS_E3ASHA_RATE: _('SETTINGS_E3ASHA_RATE'),
         SETTINGS_KHARJ_ELSHARIKA: _('SETTINGS_KHARJ_ELSHARIKA'),
+        SETTINGS_OMER_2LMA3ASH: _('SETTINGS_OMER_2LMA3ASH'),
     }
 
     for moahil in MOAHIL_CHOICES:
@@ -489,8 +492,8 @@ class EmployeeBasic(LoggingModel):
         job = self.traverse_hikal_wazifi(HikalWazifi.ELMOSTOA_ELTANZIMI_2DARA_3AMA)
         if self.hikal_wazifi and not job:
             job = self.traverse_hikal_wazifi(HikalWazifi.ELMOSTOA_ELTANZIMI_MOSA3ID_MODIR_3AM)
-        elif self.hikal_wazifi:
-            job = self.hikal_wazifi.get_root()
+            if not job:
+                job = self.hikal_wazifi.get_root()
 
         return job
 
@@ -827,6 +830,7 @@ class PayrollMaster(LoggingModel):
     enable_sandog_kahraba = models.BooleanField(_("enable_sandog_kahraba"),default=False)
     enable_youm_algoat_almosalaha = models.BooleanField(_("enable_youm_algoat_almosalaha"),default=False)
     daribat_2lmokafa = models.FloatField(_("daribat_2lmokafa"),default=0)
+    m3ash_age = models.FloatField(_("m3ash_age"),default=0)
     confirmed = models.BooleanField(_("confirmed"),default=False)
 
     class Meta:
@@ -859,6 +863,7 @@ class PayrollDetail(models.Model):
     damga = models.FloatField(_("damga"),default=0)
     sandog = models.FloatField(_("sandog"),default=0)
     sandog_kahraba = models.FloatField(_("sandog_kahraba"),default=0)
+    tarikh_milad = models.DateField(_("tarikh_milad"),blank=True,null=True)
 
     class Meta:
         constraints = [

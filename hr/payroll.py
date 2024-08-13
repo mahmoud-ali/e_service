@@ -89,6 +89,8 @@ class Payroll():
                 sandog=self.hr_settings.get_code_as_float(Settings.SETTINGS_SANDOG),
                 enable_sandog_kahraba=enable_sandog,
                 enable_youm_algoat_almosalaha=enable_youm_algoat,
+                tarikh_2lmilad=employee.tarikh_milad,
+                m3ash_age=self.hr_settings.get_code_as_float(Settings.SETTINGS_OMER_2LMA3ASH),
             )
 
             return (employee,badal,khosomat)
@@ -123,6 +125,8 @@ class Payroll():
             sandog=emp_payroll.sandog,
             enable_sandog_kahraba=self.payroll_master.enable_sandog_kahraba,
             enable_youm_algoat_almosalaha=self.payroll_master.enable_youm_algoat_almosalaha,
+            tarikh_2lmilad=emp_payroll.tarikh_milad,
+            m3ash_age=self.payroll_master.m3ash_age,
         )
 
         return (emp_payroll.employee,badal,khosomat)
@@ -160,6 +164,7 @@ class Payroll():
                         daribat_2lmokafa = self.hr_settings.get_code_as_float(Settings.SETTINGS_DARIBAT_2LMOKAFA),
                         enable_sandog_kahraba=enable_sandog,
                         enable_youm_algoat_almosalaha=enable_youm_algoat,
+                        m3ash_age=self.hr_settings.get_code_as_float(Settings.SETTINGS_OMER_2LMA3ASH),
                         created_by = self.admin_user,
                         updated_by = self.admin_user,
                     )
@@ -186,6 +191,7 @@ class Payroll():
                         damga = khosomat.damga,
                         sandog = khosomat.sandog,
                         sandog_kahraba = khosomat.sandog_kahraba,
+                        tarikh_milad = emp.tarikh_milad,
                     )
         except Exception as e:
             print(f'Payroll not calculated: {e}')
