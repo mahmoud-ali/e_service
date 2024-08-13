@@ -34,7 +34,9 @@ admin.site.register(MosamaWazifi,MosamaWazifiAdmin)
 class Edarafar3iaAdmin(admin.ModelAdmin):
     exclude = ["created_at","created_by","updated_at","updated_by"]
     
-    list_display = ["name"]        
+    list_display = ["edara_3ama","name","hikal_wazifi"]        
+    list_editable = ( 'hikal_wazifi', )
+    ordering = ["edara_3ama","name"]
     view_on_site = False
     search_fields = ["name"]
 
