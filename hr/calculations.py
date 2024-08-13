@@ -111,12 +111,15 @@ class Khosomat():
         self._enable_youm_algoat_almosalaha = enable_youm_algoat_almosalaha
 
     @property
-    def tameen_ajtima3i(self):
-        return self.Badalat.ajmali_almoratab *0.08
-    
-    @property
     def m3ash(self):
         return self._m3ash
+    
+    @property
+    def tameen_ajtima3i(self):
+        if self._m3ash > 0:
+            return 0
+        
+        return self.Badalat.ajmali_almoratab *0.08
     
     @property
     def sandog(self):
