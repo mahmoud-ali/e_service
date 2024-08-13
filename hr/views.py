@@ -27,7 +27,7 @@ class UserPermissionMixin(UserPassesTestMixin):
         return self.request.user.groups.filter(name__in=self.user_groups).exists()
 
 class Badalat(LoginRequiredMixin,UserPermissionMixin,View):
-    user_groups = ['hr_manager']
+    user_groups = ['hr_manager','hr_payroll']
     def get(self,*args,**kwargs):
         year = self.request.GET['year']
         month = self.request.GET['month']
@@ -64,7 +64,7 @@ class Badalat(LoginRequiredMixin,UserPermissionMixin,View):
             writer = csv.writer(response)
             writer.writerow(header)
 
-            data.append(['-','-','-',]+summary_list)
+            data.append(['-','-','-','-',]+summary_list)
             for r in data:
                 writer.writerow(r)
 
@@ -85,7 +85,7 @@ class Badalat(LoginRequiredMixin,UserPermissionMixin,View):
             return response
     
 class Khosomat(LoginRequiredMixin,UserPermissionMixin,View):
-    user_groups = ['hr_manager']
+    user_groups = ['hr_manager','hr_payroll']
     def get(self,*args,**kwargs):
         year = self.request.GET['year']
         month = self.request.GET['month']
@@ -158,7 +158,7 @@ class Khosomat(LoginRequiredMixin,UserPermissionMixin,View):
             writer = csv.writer(response)
             writer.writerow(header)
 
-            data.append(['-','-','-',]+summary_list)
+            data.append(['-','-','-','-',]+summary_list)
             for r in data:
                 writer.writerow(r)
 
@@ -178,7 +178,7 @@ class Khosomat(LoginRequiredMixin,UserPermissionMixin,View):
             return response
 
 class Mobashara(LoginRequiredMixin,UserPermissionMixin,View):
-    user_groups = ['hr_manager']
+    user_groups = ['hr_manager','hr_payroll']
     def get(self,*args,**kwargs):
         year = self.request.GET['year']
         month = self.request.GET['month']
@@ -247,7 +247,7 @@ class Mobashara(LoginRequiredMixin,UserPermissionMixin,View):
             return response
 
 class Mokaf2(LoginRequiredMixin,UserPermissionMixin,View):
-    user_groups = ['hr_manager']
+    user_groups = ['hr_manager','hr_payroll']
     def get(self,*args,**kwargs):
         year = self.request.GET['year']
         month = self.request.GET['month']
@@ -314,7 +314,7 @@ class Mokaf2(LoginRequiredMixin,UserPermissionMixin,View):
             return response
 
 class M2moria(LoginRequiredMixin,UserPermissionMixin,View):
-    user_groups = ['hr_manager']
+    user_groups = ['hr_manager','hr_payroll']
     def get(self,*args,**kwargs):
         year = self.request.GET['year']
         month = self.request.GET['month']
