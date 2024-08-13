@@ -430,8 +430,8 @@ class EmployeeBasic(LoggingModel):
     code = models.IntegerField(_("employee_code"))
     name = models.CharField(_("employee_name"),max_length=150,validators=[MinLengthValidator(12,_("2dkhil al2sm roba3i"))])
     mosama_wazifi = models.ForeignKey(MosamaWazifi, on_delete=models.PROTECT,verbose_name=_("mosama_wazifi"))
-    edara_3ama_tmp = models.ForeignKey(Edara3ama, on_delete=models.PROTECT,verbose_name=_("edara_3ama"))
-    edara_far3ia_tmp = models.ForeignKey(Edarafar3ia, on_delete=models.PROTECT,verbose_name=_("edara_far3ia"))
+    edara_3ama_tmp = models.ForeignKey(Edara3ama, on_delete=models.PROTECT,verbose_name=_("edara_3ama"),blank=True,null=True)
+    edara_far3ia_tmp = models.ForeignKey(Edarafar3ia, on_delete=models.PROTECT,verbose_name=_("edara_far3ia"),blank=True,null=True)
     #gisim_tmp = models.ForeignKey(Gisim, on_delete=models.PROTECT,verbose_name=_("gisim"),blank=True,null=True)
     #wi7da_tmp = models.ForeignKey(Wi7da, on_delete=models.PROTECT,verbose_name=_("wi7da"),blank=True,null=True)
     draja_wazifia = models.IntegerField(_("draja_wazifia"), choices=Drajat3lawat.DRAJAT_CHOICES)
@@ -488,6 +488,8 @@ class EmployeeBasic(LoggingModel):
     def edara_3ama(self):
         job = self.traverse_hikal_wazifi(HikalWazifi.ELMOSTOA_ELTANZIMI_2DARA_3AMA)
         if self.hikal_wazifi and not job:
+            job = self.traverse_hikal_wazifi(HikalWazifi.ELMOSTOA_ELTANZIMI_MOSA3ID_MODIR_3AM)
+        elif self.hikal_wazifi:
             job = self.hikal_wazifi.get_root()
 
         return job

@@ -2,7 +2,7 @@ import csv
 
 from django.contrib.auth import get_user_model
 
-from ..models import MOAHIL_BAKLARIOS, MOAHIL_DAPLOM_3ALI, MOAHIL_DECTORA, MOAHIL_MAJSTEAR, MOAHIL_THANOI, MosamaWazifi,Edara3ama,Edarafar3ia,EmployeeBasic,Drajat3lawat, PayrollDetail, PayrollMaster, EmployeeJazaat, EmployeeSalafiat
+from ..models import MOAHIL_BAKLARIOS, MOAHIL_DAPLOM_3ALI, MOAHIL_DECTORA, MOAHIL_MAJSTEAR, MOAHIL_THANOI, HikalWazifi, MosamaWazifi,Edara3ama,Edarafar3ia,EmployeeBasic,Drajat3lawat, PayrollDetail, PayrollMaster, EmployeeJazaat, EmployeeSalafiat
 
 from ..payroll import Payroll
 
@@ -185,3 +185,36 @@ def export_khosomat(year,month):
             l = [emp.name,Drajat3lawat.DRAJAT_CHOICES[emp.draja_wazifia],Drajat3lawat.ALAWAT_CHOICES[emp.alawa_sanawia]] + [k[1] for k in khosomat]
             writer.writerow(l) 
     
+def create_hikal_state_child(parent,postfix):
+    arr = [
+        'مشرف الاسواق بولاية ',
+        'مشرف مواقع الانتاج بولاية ',
+        'مشرف البيئة والسلامة بولاية ',
+        'كبير المتحصلين بولاية ',
+    ]
+    name = 'مدير الشركة بولاية '+postfix
+    node = HikalWazifi.objects.create(parent=parent,name=name,elmostoa_eltanzimi=HikalWazifi.ELMOSTOA_ELTANZIMI_2DARA_FAR3IA)
+    for c in arr:
+        name = c+postfix
+        node = HikalWazifi.objects.create(parent=node,name=name,elmostoa_eltanzimi=HikalWazifi.ELMOSTOA_ELTANZIMI_GISIM)
+
+def create_hikal_for_states(parent_id):
+    parent = HikalWazifi.objects.get(id=parent_id)
+    arr = [
+        'البحر الاحمر',
+        'نهر النيل',
+        'كسلا',
+        'الشمالية',
+        'القضارف',
+        'النيل الازرق',
+        'شمال كردفان',
+        'جنوب كردفان',
+        'غرب كردفان',
+        'شمال دارفور',
+        'غرب دارفور',
+        'وسط دارفور',
+        'جنوب دارفور',
+    ]
+
+    for name in arr:
+        create_hikal_state_child(parent,name)

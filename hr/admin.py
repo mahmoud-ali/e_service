@@ -228,7 +228,7 @@ class EmployeeBasicAdmin(admin.ModelAdmin):
     inlines = [EmployeeFamilyInline,EmployeeMoahilInline,EmployeeBankAccountInline,SalafiatInline,JazaatInline,EmployeeMobashraInline,EmployeeVacationInline,EmployeeM2moriaInline]
     list_display = ["code","name", "draja_wazifia","alawa_sanawia", "edara_3ama","edara_far3ia","gisim", "mosama_wazifi","tarikh_ta3in","tarikh_akhir_targia","sex","moahil","gasima","atfal","aadoa","m3ash","status"]    
     list_display_links = ["code","name"]
-    list_filter = ["draja_wazifia","alawa_sanawia","edara_3ama_tmp","edara_far3ia_tmp",Edara3amaFilter,Edarafar3iaFilter,"mosama_wazifi__category","gasima","atfal",EmployeeTarikhTa3inFilter,EmployeeWifg2lwazaifFilter,EmployeeWifg2lmostawiatFilter,"sex","moahil","aadoa","m3ash","status"] #
+    list_filter = ["draja_wazifia","alawa_sanawia",Edara3amaFilter,Edarafar3iaFilter,"mosama_wazifi__category","gasima","atfal",EmployeeTarikhTa3inFilter,EmployeeWifg2lwazaifFilter,EmployeeWifg2lmostawiatFilter,"sex","moahil","aadoa","m3ash","status"] #
     view_on_site = False
     autocomplete_fields = ["mosama_wazifi"] #,"hikal_wazifi"
     search_fields = ["name","code"]
