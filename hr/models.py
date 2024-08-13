@@ -336,7 +336,7 @@ class Edara3ama(models.Model):
 class Edarafar3ia(models.Model):
     name = models.CharField(_("edara_far3ia"),max_length=150)
     edara_3ama = models.ForeignKey(Edara3ama, on_delete=models.PROTECT,verbose_name=_("edara_3ama"))
-    hikal_wazifi = models.ForeignKey(HikalWazifi, on_delete=models.PROTECT,verbose_name=_("hikal_wazifi"),blank=True,null=True)
+    hikal_wazifi = TreeForeignKey(HikalWazifi, on_delete=models.PROTECT,verbose_name=_("hikal_wazifi"),blank=True,null=True)
     
     def __str__(self) -> str:
         return self.name
@@ -449,7 +449,7 @@ class EmployeeBasic(LoggingModel):
     m3ash = models.FloatField(_("m3ash"),default=0)
     aadoa = models.BooleanField(_("aadoa"),default=False)
     status = models.IntegerField(_("status"), choices=STATUS_CHOICES,default=STATUS_ACTIVE)
-    hikal_wazifi = models.ForeignKey(HikalWazifi, on_delete=models.PROTECT,verbose_name=_("hikal_wazifi"),blank=True,null=True)
+    hikal_wazifi = TreeForeignKey(HikalWazifi, on_delete=models.PROTECT,verbose_name=_("hikal_wazifi"),blank=True,null=True)
 
     def __str__(self) -> str:
         return f'{self.name}'# / {self.edara_3ama.name}'

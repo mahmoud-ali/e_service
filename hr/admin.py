@@ -1,3 +1,4 @@
+import codecs
 import csv
 from django.http import HttpResponse
 
@@ -223,11 +224,11 @@ class EmployeeM2moriaInline(admin.TabularInline):
 class EmployeeBasicAdmin(admin.ModelAdmin):
     fields = ["code","name", "draja_wazifia","alawa_sanawia","hikal_wazifi", "edara_3ama_tmp","edara_far3ia_tmp", "mosama_wazifi","sex","tarikh_milad","tarikh_ta3in","tarikh_akhir_targia","phone","no3_2lertibat","sanoat_2lkhibra","moahil","gasima","atfal","aadoa","m3ash","status"]        
     inlines = [EmployeeFamilyInline,EmployeeMoahilInline,EmployeeBankAccountInline,SalafiatInline,JazaatInline,EmployeeMobashraInline,EmployeeVacationInline,EmployeeM2moriaInline]
-    list_display = ["code","name", "draja_wazifia","alawa_sanawia", "edara_3ama","edara_far3ia", "mosama_wazifi","tarikh_ta3in","tarikh_akhir_targia","sex","moahil","gasima","atfal","aadoa","m3ash","status"]    
+    list_display = ["code","name", "draja_wazifia","alawa_sanawia", "edara_3ama","edara_far3ia","gisim", "mosama_wazifi","tarikh_ta3in","tarikh_akhir_targia","sex","moahil","gasima","atfal","aadoa","m3ash","status"]    
     list_display_links = ["code","name"]
     list_filter = ["draja_wazifia","alawa_sanawia","edara_3ama_tmp","edara_far3ia_tmp",Edara3amaFilter,Edarafar3iaFilter,"mosama_wazifi__category","gasima","atfal",EmployeeTarikhTa3inFilter,EmployeeWifg2lwazaifFilter,EmployeeWifg2lmostawiatFilter,"sex","moahil","aadoa","m3ash","status"] #
     view_on_site = False
-    autocomplete_fields = ["mosama_wazifi","hikal_wazifi"]
+    autocomplete_fields = ["mosama_wazifi"] #,"hikal_wazifi"
     search_fields = ["name","code"]
     readonly_fields = ["moahil","gasima","atfal","edara_3ama_tmp","edara_far3ia_tmp"]
     actions = ['export_as_csv']
@@ -246,6 +247,9 @@ class EmployeeBasicAdmin(admin.ModelAdmin):
                     _("edara_far3ia"),_("gisim"),_("wi7da"),_("mosama_wazifi"),_("tarikh_milad"),_("tarikh_ta3in"),_("tarikh_akhir_targia"),_("sex"),_("gasima"),_("atfal"),\
                     _("moahil"),_("m3ash"),_("aadoa"),_("no3_2lertibat"),_("phone"),_("sanoat_2lkhibra"),_("status")
         ]
+
+        # BOM
+        response.write(codecs.BOM_UTF8)
 
         writer = csv.writer(response)
         writer.writerow(header)
