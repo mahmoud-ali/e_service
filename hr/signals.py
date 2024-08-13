@@ -20,3 +20,7 @@ def delete_update_employee_social_data(sender, **kwargs):
 
 def delete_update_employee_moahil(sender, **kwargs):
     kwargs['instance'].update_moahil()
+
+def update_edara_far3ia(sender, **kwargs):
+    if not kwargs['raw']:
+        kwargs['instance'].update_emp_hikal()

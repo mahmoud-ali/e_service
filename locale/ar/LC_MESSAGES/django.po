@@ -2908,7 +2908,7 @@ msgstr "المستوى التنظيمي"
 
 #: hr/models.py:368 hr/models.py:369
 msgid "HikalWazifi"
-msgstr "الهيكل الوظيفي"
+msgstr "الهيكل التنظيمي"
 
 #: hr/models.py:379
 msgid "SEX_MALE"
@@ -3000,7 +3000,7 @@ msgstr "العلاوة الاجتماعية-اطفال"
 
 #: hr/models.py:447
 msgid "hikal_wazifi"
-msgstr "الهيكل الوظيفي"
+msgstr "الهيكل التنظيمي"
 
 #: hr/models.py:470 hr/models.py:471
 msgid "Employee data"

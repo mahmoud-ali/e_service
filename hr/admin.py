@@ -30,14 +30,14 @@ admin.site.register(MosamaWazifi,MosamaWazifiAdmin)
 
 # admin.site.register(Edara3ama,Edara3amaAdmin)
 
-# class Edarafar3iaAdmin(admin.ModelAdmin):
-#     exclude = ["created_at","created_by","updated_at","updated_by"]
+class Edarafar3iaAdmin(admin.ModelAdmin):
+    exclude = ["created_at","created_by","updated_at","updated_by"]
     
-#     list_display = ["name"]        
-#     view_on_site = False
-#     search_fields = ["name"]
+    list_display = ["name"]        
+    view_on_site = False
+    search_fields = ["name"]
 
-# admin.site.register(Edarafar3ia,Edarafar3iaAdmin)
+admin.site.register(Edarafar3ia,Edarafar3iaAdmin)
 
 # class GisimAdmin(admin.ModelAdmin):
 #     exclude = ["created_at","created_by","updated_at","updated_by"]
@@ -225,7 +225,7 @@ class EmployeeBasicAdmin(admin.ModelAdmin):
     inlines = [EmployeeFamilyInline,EmployeeMoahilInline,EmployeeBankAccountInline,SalafiatInline,JazaatInline,EmployeeMobashraInline,EmployeeVacationInline,EmployeeM2moriaInline]
     list_display = ["code","name", "draja_wazifia","alawa_sanawia", "edara_3ama","edara_far3ia", "mosama_wazifi","tarikh_ta3in","tarikh_akhir_targia","sex","moahil","gasima","atfal","aadoa","m3ash","status"]    
     list_display_links = ["code","name"]
-    list_filter = ["draja_wazifia","alawa_sanawia",Edara3amaFilter,Edarafar3iaFilter,"mosama_wazifi__category","gasima","atfal",EmployeeTarikhTa3inFilter,EmployeeWifg2lwazaifFilter,EmployeeWifg2lmostawiatFilter,"sex","moahil","aadoa","m3ash","status"] #
+    list_filter = ["draja_wazifia","alawa_sanawia","edara_3ama_tmp","edara_far3ia_tmp",Edara3amaFilter,Edarafar3iaFilter,"mosama_wazifi__category","gasima","atfal",EmployeeTarikhTa3inFilter,EmployeeWifg2lwazaifFilter,EmployeeWifg2lmostawiatFilter,"sex","moahil","aadoa","m3ash","status"] #
     view_on_site = False
     autocomplete_fields = ["mosama_wazifi","hikal_wazifi"]
     search_fields = ["name","code"]

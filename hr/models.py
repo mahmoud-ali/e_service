@@ -274,6 +274,37 @@ class MosamaWazifi(models.Model):
         verbose_name = _("Mosama Wazifi")
         verbose_name_plural = _("Mosama Wazifi")
 
+class HikalWazifi(MPTTModel):
+    ELMOSTOA_ELTANZIMI_MODIR_3AM = 1
+    ELMOSTOA_ELTANZIMI_MOSA3ID_MODIR_3AM = 2
+    ELMOSTOA_ELTANZIMI_2DARA_3AMA = 3
+    ELMOSTOA_ELTANZIMI_2DARA_FAR3IA = 4
+    ELMOSTOA_ELTANZIMI_GISIM = 5
+    ELMOSTOA_ELTANZIMI_WI7DA = 6
+    
+    ELMOSTOA_ELTANZIMI_CHOICES = {
+        ELMOSTOA_ELTANZIMI_MODIR_3AM: _('ELMOSTOA_ELTANZIMI_MODIR_3AM'),
+        ELMOSTOA_ELTANZIMI_MOSA3ID_MODIR_3AM: _('ELMOSTOA_ELTANZIMI_MOSA3ID_MODIR_3AM'),
+        ELMOSTOA_ELTANZIMI_2DARA_3AMA: _('ELMOSTOA_ELTANZIMI_2DARA_3AMA'),
+        ELMOSTOA_ELTANZIMI_2DARA_FAR3IA: _('ELMOSTOA_ELTANZIMI_2DARA_FAR3IA'),
+        ELMOSTOA_ELTANZIMI_GISIM: _('ELMOSTOA_ELTANZIMI_GISIM'),
+        ELMOSTOA_ELTANZIMI_WI7DA: _('ELMOSTOA_ELTANZIMI_WI7DA'),
+    }
+
+    name = models.CharField(max_length=150, unique=True)
+    parent = TreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children')
+    elmostoa_eltanzimi = models.IntegerField(_("elmostoa_eltanzimi"), choices=ELMOSTOA_ELTANZIMI_CHOICES,default=ELMOSTOA_ELTANZIMI_WI7DA)
+
+    class MPTTMeta:
+        order_insertion_by = ['name']
+
+    class Meta:
+        verbose_name = _("HikalWazifi")
+        verbose_name_plural = _("HikalWazifi")
+
+    def __str__(self) -> str:
+        return self.name
+
 class Edara3ama(models.Model):
     TAB3IA_EDARIA_MODIR3AM = 1
     TAB3IA_EDARIA_FANI = 2
@@ -305,9 +336,13 @@ class Edara3ama(models.Model):
 class Edarafar3ia(models.Model):
     name = models.CharField(_("edara_far3ia"),max_length=150)
     edara_3ama = models.ForeignKey(Edara3ama, on_delete=models.PROTECT,verbose_name=_("edara_3ama"))
-
+    hikal_wazifi = models.ForeignKey(HikalWazifi, on_delete=models.PROTECT,verbose_name=_("hikal_wazifi"),blank=True,null=True)
+    
     def __str__(self) -> str:
         return self.name
+
+    def update_emp_hikal(self):
+        EmployeeBasic.objects.filter(edara_far3ia_tmp__id=self.id).update(hikal_wazifi=self.hikal_wazifi)
 
     class Meta:
         constraints = [
@@ -340,37 +375,6 @@ class Wi7da(models.Model):
         ordering = ["name"]
         verbose_name = _("Wi7da")
         verbose_name_plural = _("Wi7da")
-
-class HikalWazifi(MPTTModel):
-    ELMOSTOA_ELTANZIMI_MODIR_3AM = 1
-    ELMOSTOA_ELTANZIMI_MOSA3ID_MODIR_3AM = 2
-    ELMOSTOA_ELTANZIMI_2DARA_3AMA = 3
-    ELMOSTOA_ELTANZIMI_2DARA_FAR3IA = 4
-    ELMOSTOA_ELTANZIMI_GISIM = 5
-    ELMOSTOA_ELTANZIMI_WI7DA = 6
-    
-    ELMOSTOA_ELTANZIMI_CHOICES = {
-        ELMOSTOA_ELTANZIMI_MODIR_3AM: _('ELMOSTOA_ELTANZIMI_MODIR_3AM'),
-        ELMOSTOA_ELTANZIMI_MOSA3ID_MODIR_3AM: _('ELMOSTOA_ELTANZIMI_MOSA3ID_MODIR_3AM'),
-        ELMOSTOA_ELTANZIMI_2DARA_3AMA: _('ELMOSTOA_ELTANZIMI_2DARA_3AMA'),
-        ELMOSTOA_ELTANZIMI_2DARA_FAR3IA: _('ELMOSTOA_ELTANZIMI_2DARA_FAR3IA'),
-        ELMOSTOA_ELTANZIMI_GISIM: _('ELMOSTOA_ELTANZIMI_GISIM'),
-        ELMOSTOA_ELTANZIMI_WI7DA: _('ELMOSTOA_ELTANZIMI_WI7DA'),
-    }
-
-    name = models.CharField(max_length=150, unique=True)
-    parent = TreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children')
-    elmostoa_eltanzimi = models.IntegerField(_("elmostoa_eltanzimi"), choices=ELMOSTOA_ELTANZIMI_CHOICES,default=ELMOSTOA_ELTANZIMI_WI7DA)
-
-    class MPTTMeta:
-        order_insertion_by = ['name']
-
-    class Meta:
-        verbose_name = _("HikalWazifi")
-        verbose_name_plural = _("HikalWazifi")
-
-    def __str__(self) -> str:
-        return self.name
 
 class EmployeeBasic(LoggingModel):
     SEX_MALE = 'male'
