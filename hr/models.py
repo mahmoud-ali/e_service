@@ -867,4 +867,4 @@ class PayrollDetail(models.Model):
         ordering = ["employee__code"]
 
     def __str__(self) -> str:
-        return f'{self.employee.name} ({self.employee.edara_3ama.name})'
+        return f'{self.employee.name} ({self.employee.edara_3ama})'
