@@ -142,12 +142,10 @@ class Khosomat():
     def dariba(self):
         if self.employee_age >= self._m3ash_age:
             return 0 
-        
-        print(self.employee_age,self._m3ash_age)
-        
-        return (self.Badalat.ajmali_almoratab -self.Badalat.shakhsia -self.Badalat.moahil \
+                
+        return ((self.Badalat.ajmali_almoratab -self.Badalat.shakhsia -self.Badalat.moahil \
                  -self.Badalat.ajtima3ia_atfal -self.Badalat.ajtima3ia_gasima -self.Badalat.makhatir \
-                 -1200 -116 -self.tameen_ajtima3i) *0.15 +2.5
+                 -1200 -115 -self.tameen_ajtima3i) *0.15) +2.5
     
     @property
     def damga(self):
