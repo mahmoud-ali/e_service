@@ -146,7 +146,7 @@ class Khosomat():
                 
         return ((self.Badalat.ajmali_almoratab -self.Badalat.shakhsia -self.Badalat.moahil \
                  -self.Badalat.ajtima3ia_atfal -self.Badalat.ajtima3ia_gasima -self.Badalat.makhatir \
-                 -1200 -115 -self.tameen_ajtima3i) *0.15) +2.5
+                 -1200 -115 -self.tameen_ajtima3i -self.m3ash -self.Badalat.aadoa) *0.15) +2.5
     
     @property
     def damga(self):
