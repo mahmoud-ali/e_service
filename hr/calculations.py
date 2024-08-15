@@ -98,7 +98,7 @@ class Badalat_3lawat():
         return 'Badalat => '+', '.join([f'{b[0]}: {round(b[1],2)}' for b in self.__iter__()])
 
 class Khosomat():
-    def __init__(self,Badalat:Badalat_3lawat,zaka_kafaf,zaka_nisab,m3ash=0,salafiat=0,jazaat=0,damga=1,sandog=0,sandog_kahraba=0,enable_sandog_kahraba=True,enable_youm_algoat_almosalaha=True,tarikh_2lmilad=None,m3ash_age=100):
+    def __init__(self,Badalat:Badalat_3lawat,zaka_kafaf,zaka_nisab,m3ash=0,salafiat=0,jazaat=0,damga=1,sandog=0,sandog_kahraba=0,enable_sandog_kahraba=True,enable_youm_algoat_almosalaha=True,tarikh_2lmilad=None,m3ash_age=100,salafiat_sandog=0):
         self.Badalat = Badalat
         self._zaka_kafaf = zaka_kafaf
         self._zaka_nisab = zaka_nisab
@@ -112,6 +112,7 @@ class Khosomat():
         self._enable_youm_algoat_almosalaha = enable_youm_algoat_almosalaha
         self._tarikh_2lmilad = tarikh_2lmilad
         self._m3ash_age = m3ash_age
+        self._salafiat_sandog = salafiat_sandog
 
     @property
     def m3ash(self):
@@ -167,6 +168,10 @@ class Khosomat():
         return self._salafiat
 
     @property
+    def salafiat_sandog(self):
+        return self._salafiat_sandog
+
+    @property
     def youm_algoat_almosalaha(self):
         if self._enable_youm_algoat_almosalaha: 
             return self.Badalat.ajmali_almoratab /30
@@ -182,7 +187,7 @@ class Khosomat():
 
     @property
     def ajmali_astgta3at_sanawia(self):
-        return (self.sandog_kahraba +self.salafiat +self.youm_algoat_almosalaha +self.zakat)
+        return (self.sandog_kahraba +self.salafiat +self.salafiat_sandog +self.youm_algoat_almosalaha +self.zakat)
     
     @property
     def jazaat(self):
@@ -212,6 +217,7 @@ class Khosomat():
             ]
         props += [   
             ('salafiat',self.salafiat),
+            ('salafiat_sandog',self.salafiat_sandog),
          ]
         
         if self._enable_youm_algoat_almosalaha:

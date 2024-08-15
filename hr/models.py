@@ -656,7 +656,7 @@ class EmployeeSalafiat(LoggingModel):
 
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=['employee','year','month'],name="unique_salafiat_employee_year_month")
+            models.UniqueConstraint(fields=['employee','year','month','no3_2lsalafia'],name="unique_salafiat_employee_year_month")
         ]
         indexes = [
             models.Index(fields=["employee", "year","month"]),
@@ -881,6 +881,7 @@ class PayrollDetail(models.Model):
     sandog = models.FloatField(_("sandog"),default=0)
     sandog_kahraba = models.FloatField(_("sandog_kahraba"),default=0)
     tarikh_milad = models.DateField(_("tarikh_milad"),blank=True,null=True)
+    salafiat_sandog = models.FloatField(_("salafiat_sandog"),default=0)
 
     class Meta:
         constraints = [

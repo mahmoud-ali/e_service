@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-14 11:04+0200\n"
+"POT-Creation-Date: 2024-08-15 09:24+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -3368,15 +3368,19 @@ msgstr "الصندوق"
 msgid "sandog_kahraba"
 msgstr "الصندوق كهرباء"
 
-#: hr/payroll.py:267
+#: hr/models.py:884
+msgid "salafiat_sandog"
+msgstr "سلفيات الصندوق"
+
+#: hr/payroll.py:271
 msgid "ayam_2lmobashara_2lsafi"
 msgstr "ايام المباشرة"
 
-#: hr/payroll.py:268
+#: hr/payroll.py:272
 msgid "ayam_2l2jazaa"
 msgstr "ايام الاجازة"
 
-#: hr/payroll.py:269
+#: hr/payroll.py:273
 msgid "ayam_2ltaklif"
 msgstr "ايام التكليف"
 

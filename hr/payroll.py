@@ -45,7 +45,8 @@ class Payroll():
 
     def employee_payroll_calculated(self,employee:EmployeeBasic):
         moahil = Settings.MOAHIL_PREFIX + employee.moahil
-        salafiat_total = self.salafiat_qs.filter(employee=employee).aggregate(total=Sum("amount"))['total'] or 0
+        salafiat_total = self.salafiat_qs.filter(employee=employee,no3_2lsalafia=EmployeeSalafiat.NO3_2LSALAFIA_SHARIKA).aggregate(total=Sum("amount"))['total'] or 0
+        salafiat_sandog_total = self.salafiat_qs.filter(employee=employee,no3_2lsalafia=EmployeeSalafiat.NO3_2LSALAFIA_SANDOG).aggregate(total=Sum("amount"))['total'] or 0
         jazaat_total = self.jazaat_qs.filter(employee=employee).aggregate(total=Sum("amount"))['total'] or 0
         gasima = 0
         if(employee.gasima):
@@ -91,6 +92,7 @@ class Payroll():
                 enable_youm_algoat_almosalaha=enable_youm_algoat,
                 tarikh_2lmilad=employee.tarikh_milad,
                 m3ash_age=self.hr_settings.get_code_as_float(Settings.SETTINGS_OMER_2LMA3ASH),
+                salafiat_sandog=salafiat_sandog_total,
             )
 
             return (employee,badal,khosomat)
@@ -127,6 +129,7 @@ class Payroll():
             enable_youm_algoat_almosalaha=self.payroll_master.enable_youm_algoat_almosalaha,
             tarikh_2lmilad=emp_payroll.tarikh_milad,
             m3ash_age=self.payroll_master.m3ash_age,
+            salafiat_sandog=emp_payroll.salafiat_sandog,
         )
 
         return (emp_payroll.employee,badal,khosomat)
@@ -192,6 +195,7 @@ class Payroll():
                         sandog = khosomat.sandog,
                         sandog_kahraba = khosomat.sandog_kahraba,
                         tarikh_milad = emp.tarikh_milad,
+                        salafiat_sandog = khosomat.salafiat_sandog
                     )
         except Exception as e:
             print(f'Payroll not calculated: {e}')
