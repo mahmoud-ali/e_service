@@ -138,7 +138,7 @@ class Khosomat(LoginRequiredMixin,UserPermissionMixin,View):
         else:
             template_name = 'hr/khosomat.html'
 
-            for (emp,badalat,khosomat,draja_wazifia,alawa_sanawia,draja_wazifia,alawa_sanawia) in payroll.all_employees_payroll_from_db():
+            for (emp,badalat,khosomat,draja_wazifia,alawa_sanawia) in payroll.all_employees_payroll_from_db():
                 khosomat_list = [round(k[1],2) for k in khosomat]
                 l = [emp.code,emp.name,Drajat3lawat.DRAJAT_CHOICES[draja_wazifia],Drajat3lawat.ALAWAT_CHOICES[alawa_sanawia]] + khosomat_list
                 data.append(l)
