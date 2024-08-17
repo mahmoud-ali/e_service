@@ -181,7 +181,7 @@ class Khosomat():
     @property
     def zakat(self):
         x = self.Badalat.ajmali_almoratab -self._zaka_kafaf
-        if x > self._zaka_nisab:
+        if x >= self._zaka_nisab:
             return x *0.025
         return 0
 

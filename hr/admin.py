@@ -31,16 +31,16 @@ admin.site.register(MosamaWazifi,MosamaWazifiAdmin)
 
 # admin.site.register(Edara3ama,Edara3amaAdmin)
 
-class Edarafar3iaAdmin(admin.ModelAdmin):
-    exclude = ["created_at","created_by","updated_at","updated_by"]
+# class Edarafar3iaAdmin(admin.ModelAdmin):
+#     exclude = ["created_at","created_by","updated_at","updated_by"]
     
-    list_display = ["edara_3ama","name","hikal_wazifi"]        
-    list_editable = ( 'hikal_wazifi', )
-    ordering = ["edara_3ama","name"]
-    view_on_site = False
-    search_fields = ["name"]
+#     list_display = ["edara_3ama","name","hikal_wazifi"]        
+#     list_editable = ( 'hikal_wazifi', )
+#     ordering = ["edara_3ama","name"]
+#     view_on_site = False
+#     search_fields = ["name"]
 
-admin.site.register(Edarafar3ia,Edarafar3iaAdmin)
+# admin.site.register(Edarafar3ia,Edarafar3iaAdmin)
 
 # class GisimAdmin(admin.ModelAdmin):
 #     exclude = ["created_at","created_by","updated_at","updated_by"]
