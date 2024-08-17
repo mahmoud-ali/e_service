@@ -40,9 +40,9 @@ class Badalat(LoginRequiredMixin,UserPermissionMixin,View):
         header = ['الرمز','الموظف','الدرجة الوظيفية','العلاوة','ابتدائي','غلاء معيشة','اساسي','طبيعة عمل','تمثيل','مهنة','معادن','مخاطر','عدوى','اجتماعية قسيمة','اجتماعية اطفال','مؤهل','شخصية','اجمالي المرتب']
         summary_list = []
 
-        for (emp,badalat,khosomat) in payroll.all_employees_payroll_from_db():
+        for (emp,badalat,khosomat,draja_wazifia,alawa_sanawia) in payroll.all_employees_payroll_from_db():
             badalat_list = [round(b[1],2) for b in badalat]
-            l = [emp.code,emp.name,Drajat3lawat.DRAJAT_CHOICES[emp.draja_wazifia],Drajat3lawat.ALAWAT_CHOICES[emp.alawa_sanawia]] + badalat_list
+            l = [emp.code,emp.name,Drajat3lawat.DRAJAT_CHOICES[draja_wazifia],Drajat3lawat.ALAWAT_CHOICES[alawa_sanawia]] + badalat_list
             data.append(l)
 
             for idx,s in enumerate(badalat_list):
@@ -127,7 +127,7 @@ class Khosomat(LoginRequiredMixin,UserPermissionMixin,View):
             header = ['الرمز','الموظف','البنك','رقم الحساب','صافي الاستحقاق']
             emp_accounts = get_employee_accounts()
 
-            for (emp,badalat,khosomat) in payroll.all_employees_payroll_from_db():
+            for (emp,badalat,khosomat,draja_wazifia,alawa_sanawia) in payroll.all_employees_payroll_from_db():
                 try:
                     bnk_no,bank = emp_accounts[emp.id] #employeeemp.employeebankaccount_set.get(active=True).account_no
                 except KeyError:
@@ -138,9 +138,9 @@ class Khosomat(LoginRequiredMixin,UserPermissionMixin,View):
         else:
             template_name = 'hr/khosomat.html'
 
-            for (emp,badalat,khosomat) in payroll.all_employees_payroll_from_db():
+            for (emp,badalat,khosomat,draja_wazifia,alawa_sanawia,draja_wazifia,alawa_sanawia) in payroll.all_employees_payroll_from_db():
                 khosomat_list = [round(k[1],2) for k in khosomat]
-                l = [emp.code,emp.name,Drajat3lawat.DRAJAT_CHOICES[emp.draja_wazifia],Drajat3lawat.ALAWAT_CHOICES[emp.alawa_sanawia]] + khosomat_list
+                l = [emp.code,emp.name,Drajat3lawat.DRAJAT_CHOICES[draja_wazifia],Drajat3lawat.ALAWAT_CHOICES[alawa_sanawia]] + khosomat_list
                 data.append(l)
 
                 for idx,s in enumerate(khosomat_list):

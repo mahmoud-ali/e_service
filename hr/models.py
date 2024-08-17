@@ -886,6 +886,8 @@ class PayrollDetail(models.Model):
     sandog_kahraba = models.FloatField(_("sandog_kahraba"),default=0)
     tarikh_milad = models.DateField(_("tarikh_milad"),blank=True,null=True)
     salafiat_sandog = models.FloatField(_("salafiat_sandog"),default=0)
+    draja_wazifia = models.IntegerField(_("draja_wazifia"), choices=Drajat3lawat.DRAJAT_CHOICES,blank=True,null=True)
+    alawa_sanawia = models.IntegerField(_("alawa_sanawia"), choices=Drajat3lawat.ALAWAT_CHOICES,blank=True,null=True)
 
     class Meta:
         constraints = [

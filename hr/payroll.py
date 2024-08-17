@@ -135,7 +135,7 @@ class Payroll():
             khasm_salafiat_elsandog_min_elomoratab=self.payroll_master.khasm_salafiat_elsandog_min_elomoratab,
         )
 
-        return (emp_payroll.employee,badal,khosomat)
+        return (emp_payroll.employee,badal,khosomat,emp_payroll.draja_wazifia,emp_payroll.alawa_sanawia)
 
     def all_employees_payroll_from_db(self):
         for emp_payroll in self.payroll_details:
@@ -195,6 +195,8 @@ class Payroll():
                         sandog_kahraba = khosomat.sandog_kahraba,
                         tarikh_milad = emp.tarikh_milad,
                         salafiat_sandog = khosomat.salafiat_sandog,
+                        draja_wazifia = emp.draja_wazifia,
+                        alawa_sanawia = emp.alawa_sanawia,
                     )
         except Exception as e:
             print(f'Payroll not calculated: {e}')
