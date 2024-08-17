@@ -80,6 +80,17 @@
 						{% endfor %}
 					</tr>
 					{% endfor %}        	
+					<tr>
+						<th>-</th>
+						<th>-</th>
+						<th>-</th>
+						<th>-</th>
+						{% for col in summary %}
+							<th>
+							{{ col|floatformat:"2g" }}
+							</th>
+						{% endfor %}
+					</tr>
 				</tbody>
 			</table>
 	

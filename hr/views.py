@@ -11,6 +11,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from hr.models import Drajat3lawat, EmployeeBankAccount, PayrollMaster
 from hr.payroll import M2moriaSheet, MobasharaSheet, Payroll,Mokaf2Sheet
 
+SHOW_CSV_TOTAL = False
+
 def get_employee_accounts():
     data = {}
     for emp in EmployeeBankAccount.objects.filter(active=True).prefetch_related("employee"):
@@ -52,7 +54,7 @@ class Badalat(LoginRequiredMixin,UserPermissionMixin,View):
         summary_list = [round(s,2) for s in summary_list]
 
         if format == 'csv':
-            sheet_name = 'allowance'
+            sheet_name = 'allowances'
             response = HttpResponse(
                 content_type="text/csv",
                 headers={"Content-Disposition": f'attachment; filename="{sheet_name}_{month}_{year}.csv"'},
@@ -64,7 +66,9 @@ class Badalat(LoginRequiredMixin,UserPermissionMixin,View):
             writer = csv.writer(response)
             writer.writerow(header)
 
-            data.append(['-','-','-','-',]+summary_list)
+            if SHOW_CSV_TOTAL:
+                data.append(['-','-','-','-',]+summary_list)
+
             for r in data:
                 writer.writerow(r)
 
@@ -148,7 +152,7 @@ class Khosomat(LoginRequiredMixin,UserPermissionMixin,View):
             summary_list = [round(s,2) for s in summary_list]
 
         if format == 'csv':
-            sheet_name = 'deduction'
+            sheet_name = 'net'
             # print(f'attachment; filename="{sheet_name}_{month}_{year}.csv"')
             response = HttpResponse(
                 content_type="text/csv",
@@ -161,7 +165,9 @@ class Khosomat(LoginRequiredMixin,UserPermissionMixin,View):
             writer = csv.writer(response)
             writer.writerow(header)
 
-            data.append(['-','-','-','-',]+summary_list)
+            if SHOW_CSV_TOTAL:
+                data.append(['-','-','-','-',]+summary_list)
+
             for r in data:
                 writer.writerow(r)
 
@@ -257,7 +263,12 @@ class Mokaf2(LoginRequiredMixin,UserPermissionMixin,View):
         format = self.request.GET.get('format',None)
         bank_sheet = self.request.GET.get('bank_sheet',False)
         data = []
-        
+
+        try:
+            payroll_master = PayrollMaster.objects.get(year=year,month=month)
+        except PayrollMaster.DoesNotExist as e:
+            bad_request(self.request,e)
+
         mokaf2 = Mokaf2Sheet(year,month)
 
         if bank_sheet:
@@ -276,17 +287,36 @@ class Mokaf2(LoginRequiredMixin,UserPermissionMixin,View):
                 data.append(l)
         else:
             template_name = 'hr/mokaf2.html'
-            header = ['الرمز','الموظف','الدرجة الوظيفية','العلاوة','اجمالي المرتب','الضريبة','الدمغة','صافي الاستحقاق']
+            header = ['الرمز','الموظف','الدرجة الوظيفية','العلاوة','اجمالي المرتب','الضريبة','الدمغة',]
+
+            if not payroll_master.khasm_salafiat_elsandog_min_elomoratab:
+                header += ['سلفيات الصندوق',]
+
+            header += ['صافي الاستحقاق',]
 
             summary_list = []
 
             for emp_mokaf2 in mokaf2.all_employees_mokaf2_from_db():
+                mokaf2_list = [round(k[1],2) for k in emp_mokaf2]
                 emp = emp_mokaf2.employee
-                l = [emp.code,emp.name,emp.get_draja_wazifia_display(),emp.get_alawa_sanawia_display(),emp_mokaf2.ajmali_2lmoratab,emp_mokaf2.dariba,emp_mokaf2.damga,emp_mokaf2.safi_2l2sti7gag]
+                l = [emp.code,emp.name,emp.get_draja_wazifia_display(),emp.get_alawa_sanawia_display(),]+mokaf2_list #round(emp_mokaf2.ajmali_2lmoratab,2),round(emp_mokaf2.dariba,2),emp_mokaf2.damga,]
+                #if not payroll_master.khasm_salafiat_elsandog_min_elomoratab:
+                #    l += [round(emp_mokaf2.salafiat_sandog,2),]
+                #l +=[round(emp_mokaf2.safi_2l2sti7gag,2),]
+
                 data.append(l)
 
+                for idx,s in enumerate(mokaf2_list):
+                    try:
+                        summary_list[idx] += mokaf2_list[idx]
+                    except IndexError:
+                        summary_list.insert(idx,mokaf2_list[idx])
+
+            summary_list = [round(s,2) for s in summary_list]
+
+
         if format == 'csv':
-            sheet_name = 'mokaf2'
+            sheet_name = 'bonace'
             # print(f'attachment; filename="{sheet_name}_{month}_{year}.csv"')
             response = HttpResponse(
                 content_type="text/csv",
@@ -299,6 +329,9 @@ class Mokaf2(LoginRequiredMixin,UserPermissionMixin,View):
             writer = csv.writer(response)
             writer.writerow(header)
 
+            if SHOW_CSV_TOTAL:
+                data.append(['-','-','-','-',]+summary_list)
+
             for r in data:
                 writer.writerow(r)
 
@@ -310,6 +343,7 @@ class Mokaf2(LoginRequiredMixin,UserPermissionMixin,View):
                 'title':'كشف المكافأة',
                 'header':header,
                 'data': data,
+                'summary':summary_list,
             }
 
             response = render(self.request,template_name,context)

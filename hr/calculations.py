@@ -398,7 +398,7 @@ class Mobashara():
         return self.__str__()
 
 class Mokaf2():
-    def __init__(self,Badalat:Badalat_3lawat,year,month,dariba=0.05,damga=1,employee=None):
+    def __init__(self,Badalat:Badalat_3lawat,year,month,dariba=0.05,damga=1,employee=None,khasm_salafiat_elsandog_min_elmokaf2=False,salafiat_sandog=0):
         self.Badalat = Badalat
         self._year = year
         self._month = month
@@ -406,6 +406,9 @@ class Mokaf2():
         self._damga = damga
 
         self.employee = employee
+
+        self._khasm_salafiat_elsandog_min_elmokaf2 = khasm_salafiat_elsandog_min_elmokaf2
+        self._salafiat_sandog = salafiat_sandog
 
     @property
     def ajmali_2lmoratab(self):
@@ -418,16 +421,35 @@ class Mokaf2():
     @property
     def damga(self):
         return self._damga
+    
+    @property
+    def salafiat_sandog(self):
+        return self._salafiat_sandog
+    
+    @property
+    def khasm_salafiat_elsandog_min_elmokaf2(self):
+        return self._khasm_salafiat_elsandog_min_elmokaf2
 
     @property
     def safi_2l2sti7gag(self):
-        return (self.ajmali_2lmoratab - self.dariba -self.damga)
+        safi = (self.ajmali_2lmoratab - self.dariba -self.damga)
+        if self.khasm_salafiat_elsandog_min_elmokaf2:
+            safi -= self.salafiat_sandog
+        return safi
 
     def __iter__(self):
         props = [
             ('ajmali_2lmoratab',self.ajmali_2lmoratab),
             ('dariba',self.dariba),
             ('damga',self.damga),
+        ]
+
+        if self.khasm_salafiat_elsandog_min_elmokaf2:
+            props += [
+                ('salafiat_sandog',self.salafiat_sandog),
+            ]
+
+        props += [
             ('safi_2l2sti7gag',self.safi_2l2sti7gag),
         ]
 

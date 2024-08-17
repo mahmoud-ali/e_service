@@ -345,7 +345,7 @@ class Mokaf2Sheet():
             ma3adin=emp_payroll.ma3adin
         )
 
-        return Mokaf2(badal,self.year,self.month,emp_payroll.payroll_master.daribat_2lmokafa,emp_payroll.damga,emp_payroll.employee)
+        return Mokaf2(badal,self.year,self.month,emp_payroll.payroll_master.daribat_2lmokafa,emp_payroll.damga,emp_payroll.employee,khasm_salafiat_elsandog_min_elmokaf2=(not emp_payroll.payroll_master.khasm_salafiat_elsandog_min_elomoratab),salafiat_sandog=emp_payroll.salafiat_sandog)
 
     def all_employees_mokaf2_from_db(self):
         for emp in self.employees:
