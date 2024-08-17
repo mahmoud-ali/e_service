@@ -106,7 +106,10 @@ class Khosomat(LoginRequiredMixin,UserPermissionMixin,View):
         if payroll_master.enable_sandog_kahraba:
             header += ['صندوق كهربائيه',]
 
-        header += ['السلفيات','سلفيات الصندوق']
+        header += ['السلفيات',]
+
+        if payroll_master.khasm_salafiat_elsandog_min_elomoratab:
+            header += ['سلفيات الصندوق',]
 
         if payroll_master.enable_youm_algoat_almosalaha:
             header += ['استقطاع القوات المسلحه',]

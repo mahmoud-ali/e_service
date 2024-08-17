@@ -4,7 +4,7 @@ from collections import namedtuple
 from django.utils import timezone
 
 class Badalat_3lawat():
-    def __init__(self,abtdai,galaa_m3isha,gasima=0,atfal=0,moahil=0,shakhsia=0,ma3adin=0,aadoa=0):
+    def __init__(self,abtdai,galaa_m3isha,gasima=0,atfal=0,moahil=0,shakhsia=0,ma3adin=0,aadoa=0,month=1,year=1970):
         self._abtdai = abtdai
         self._galaa_m3isha = galaa_m3isha
         self._asasi = (self._abtdai +self._galaa_m3isha)
@@ -14,6 +14,8 @@ class Badalat_3lawat():
         self._shakhsia = shakhsia
         self._ma3adin = ma3adin
         self._aadoa = aadoa
+        self._month = month
+        self._year = year
 
     @property
     def abtdai(self):
@@ -68,6 +70,14 @@ class Badalat_3lawat():
         return self._shakhsia
     
     @property
+    def month(self):
+        return self._month
+    
+    @property
+    def year(self):
+        return self._year
+    
+    @property
     def ajmali_almoratab(self):
         return (self._asasi +self.tabi3at_3mal +self.tamtheel +self.mihna +self.ma3adin \
                  +self.makhatir +self.aadoa +self.ajtima3ia_gasima +self.ajtima3ia_atfal \
@@ -98,7 +108,7 @@ class Badalat_3lawat():
         return 'Badalat => '+', '.join([f'{b[0]}: {round(b[1],2)}' for b in self.__iter__()])
 
 class Khosomat():
-    def __init__(self,Badalat:Badalat_3lawat,zaka_kafaf,zaka_nisab,m3ash=0,salafiat=0,jazaat=0,damga=1,sandog=0,sandog_kahraba=0,enable_sandog_kahraba=True,enable_youm_algoat_almosalaha=True,tarikh_2lmilad=None,m3ash_age=100,salafiat_sandog=0):
+    def __init__(self,Badalat:Badalat_3lawat,zaka_kafaf,zaka_nisab,m3ash=0,salafiat=0,jazaat=0,damga=1,sandog=0,sandog_kahraba=0,enable_sandog_kahraba=True,enable_youm_algoat_almosalaha=True,tarikh_2lmilad=None,m3ash_age=100,salafiat_sandog=0,khasm_salafiat_elsandog_min_elomoratab=False):
         self.Badalat = Badalat
         self._zaka_kafaf = zaka_kafaf
         self._zaka_nisab = zaka_nisab
@@ -113,6 +123,7 @@ class Khosomat():
         self._tarikh_2lmilad = tarikh_2lmilad
         self._m3ash_age = m3ash_age
         self._salafiat_sandog = salafiat_sandog
+        self._khasm_salafiat_elsandog_min_elomoratab = khasm_salafiat_elsandog_min_elomoratab
 
     @property
     def m3ash(self):
@@ -134,7 +145,7 @@ class Khosomat():
         if not  self._tarikh_2lmilad:
             return 0
         
-        now = timezone.now().date()
+        now = datetime.date(year=self.Badalat.year,month=self.Badalat.month,day=1)
         delta = now - self._tarikh_2lmilad
 
         return delta.days // 365
@@ -170,6 +181,10 @@ class Khosomat():
     @property
     def salafiat_sandog(self):
         return self._salafiat_sandog
+    
+    @property
+    def khasm_salafiat_elsandog_min_elomoratab(self):
+        return self._khasm_salafiat_elsandog_min_elomoratab
 
     @property
     def youm_algoat_almosalaha(self):
@@ -187,7 +202,10 @@ class Khosomat():
 
     @property
     def ajmali_astgta3at_sanawia(self):
-        return (self.sandog_kahraba +self.salafiat +self.salafiat_sandog +self.youm_algoat_almosalaha +self.zakat)
+        ajmali = (self.sandog_kahraba +self.salafiat +self.youm_algoat_almosalaha +self.zakat)
+        if self.khasm_salafiat_elsandog_min_elomoratab:
+            ajmali += self.salafiat_sandog
+        return ajmali
     
     @property
     def jazaat(self):
@@ -217,8 +235,12 @@ class Khosomat():
             ]
         props += [   
             ('salafiat',self.salafiat),
-            ('salafiat_sandog',self.salafiat_sandog),
          ]
+        
+        if self.khasm_salafiat_elsandog_min_elomoratab:
+            props += [   
+                ('salafiat_sandog',self.salafiat_sandog),
+            ]
         
         if self._enable_youm_algoat_almosalaha:
             props += [   

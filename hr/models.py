@@ -131,6 +131,8 @@ class Settings(LoggingModel):
 
     SETTINGS_OMER_2LMA3ASH = 'omer_2lma3ash'
 
+    SETTINGS_KHASM_ELSANDOG_MIN_ELOMORATAB = 'khasm_elsandog_min_elomoratab'
+
     SETTINGS_CHOICES = {
         SETTINGS_ZAKA_KAFAF: _('SETTINGS_ZAKAT_KAFAF'),
         SETTINGS_ZAKA_NISAB: _('SETTINGS_ZAKAT_NISAB'),
@@ -146,6 +148,7 @@ class Settings(LoggingModel):
         SETTINGS_E3ASHA_RATE: _('SETTINGS_E3ASHA_RATE'),
         SETTINGS_KHARJ_ELSHARIKA: _('SETTINGS_KHARJ_ELSHARIKA'),
         SETTINGS_OMER_2LMA3ASH: _('SETTINGS_OMER_2LMA3ASH'),
+        SETTINGS_KHASM_ELSANDOG_MIN_ELOMORATAB: _('SETTINGS_KHASM_ELSANDOG_MIN_ELOMORATAB'),
     }
 
     for moahil in MOAHIL_CHOICES:
@@ -848,6 +851,7 @@ class PayrollMaster(LoggingModel):
     enable_youm_algoat_almosalaha = models.BooleanField(_("enable_youm_algoat_almosalaha"),default=False)
     daribat_2lmokafa = models.FloatField(_("daribat_2lmokafa"),default=0)
     m3ash_age = models.FloatField(_("m3ash_age"),default=0)
+    khasm_salafiat_elsandog_min_elomoratab = models.BooleanField(_("khasm_elsandog_min_elomoratab"),default=False)
     confirmed = models.BooleanField(_("confirmed"),default=False)
 
     class Meta:
@@ -888,6 +892,9 @@ class PayrollDetail(models.Model):
             models.UniqueConstraint(fields=['payroll_master','employee'],name="unique_employee_payroll")
         ]
         ordering = ["employee__code"]
+
+        verbose_name = _("Payroll detail")
+        verbose_name_plural = _("Payroll details")
 
     def __str__(self) -> str:
         return f'{self.employee.name} ({self.employee.edara_3ama})'
