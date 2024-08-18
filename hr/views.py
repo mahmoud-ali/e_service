@@ -185,6 +185,7 @@ class Khosomat(LoginRequiredMixin,UserPermissionMixin,View):
             response = render(self.request,template_name,context)
             cache.patch_cache_control(response, max_age=0)
             return response
+        
 def cmp_drjat(draja,old_draja):
     if draja == old_draja:
         return Drajat3lawat.DRAJAT_CHOICES[draja]
@@ -228,7 +229,6 @@ class FargBadalat(LoginRequiredMixin,UserPermissionMixin,View):
         cmp_year = self.request.GET['cmp_year']
         cmp_month = self.request.GET['cmp_month']
         cmp_payroll = Payroll(cmp_year,cmp_month)
-
         emp_lst = []
 
         for (emp,badalat,khosomat,draja_wazifia,alawa_sanawia) in payroll.all_employees_payroll_from_db():
@@ -257,7 +257,7 @@ class FargBadalat(LoginRequiredMixin,UserPermissionMixin,View):
         #employees not exists in first sheet
         for payroll_detail in PayrollDetail.objects.filter(payroll_master=cmp_payroll.payroll_master).exclude(employee__in=emp_lst):
             cmp_emp,cmp_badalat,cmp_khosomat,cmp_draja_wazifia,cmp_alawa_sanawia = cmp_payroll.employee_payroll_from_employee(payroll_detail.employee)
-            badalat_list = [round(-zp[1],2) for zp in badalat]
+            badalat_list = [round(-zp[1],2) for zp in cmp_badalat]
             
             if abs(sum(badalat_list)) > 0:
                 l = [
@@ -302,6 +302,129 @@ class FargBadalat(LoginRequiredMixin,UserPermissionMixin,View):
             template_name = 'hr/badalat.html'
             context = {
                 'title':'كشف فروقات البدلات',
+                'header':header,
+                'data': data,
+                'summary':summary_list,
+            }
+
+            response = render(self.request,template_name,context)
+            cache.patch_cache_control(response, max_age=0)
+            return response
+
+class FargKhosomat(LoginRequiredMixin,UserPermissionMixin,View):
+    user_groups = ['hr_manager','hr_payroll']
+    def get(self,*args,**kwargs):
+        year = self.request.GET['year']
+        month = self.request.GET['month']
+        format = self.request.GET.get('format',None)
+        bank_sheet = self.request.GET.get('bank_sheet',False)
+        data = []
+        payroll_master = None
+
+        cmp_year = self.request.GET['cmp_year']
+        cmp_month = self.request.GET['cmp_month']
+        cmp_payroll = Payroll(cmp_year,cmp_month)
+        emp_lst = []
+
+        try:
+            payroll_master = PayrollMaster.objects.get(year=year,month=month)
+        except PayrollMaster.DoesNotExist as e:
+            bad_request(self.request,e)
+        
+        payroll = Payroll(year,month)
+
+        header = ['الرمز','الموظف','الدرجة الوظيفية','العلاوة','تأمين اجتماعي','معاش','الصندوق','الضريبة','دمغه','إجمالي الإستقطاعات الأساسية',]
+
+        if payroll_master.enable_sandog_kahraba:
+            header += ['صندوق كهربائيه',]
+
+        header += ['السلفيات',]
+
+        if payroll_master.khasm_salafiat_elsandog_min_elomoratab:
+            header += ['سلفيات الصندوق',]
+
+        if payroll_master.enable_youm_algoat_almosalaha:
+            header += ['استقطاع القوات المسلحه',]
+
+        header += ['الزكاة','إجمالي الإستقطاعات السنوية','خصومات - جزاءات','إجمالي الإستقطاع الكلي','صافي الإستحقاق']
+
+        summary_list = []
+
+        if True:
+            template_name = 'hr/khosomat.html'
+
+            for (emp,badalat,khosomat,draja_wazifia,alawa_sanawia) in payroll.all_employees_payroll_from_db():
+                emp_lst.append(emp.id)
+                cmp_emp,cmp_badalat,cmp_khosomat,cmp_draja_wazifia,cmp_alawa_sanawia = cmp_payroll.employee_payroll_from_employee(emp)
+                if cmp_khosomat:
+                    khosomat_list = [round((zp[0][1]-zp[1][1]),2) for zp in zip(khosomat,cmp_khosomat)]
+                else:
+                    khosomat_list = [round(zp[1],2) for zp in khosomat]
+                
+                if abs(sum(khosomat_list)) > 0:
+                    l = [
+                        emp.code,
+                        emp.name,
+                        cmp_drjat(draja_wazifia,cmp_draja_wazifia),
+                        cmp_alawa(alawa_sanawia,cmp_alawa_sanawia),
+                    ] + khosomat_list
+
+                    data.append(l)
+
+                    for idx,s in enumerate(khosomat_list):
+                        try:
+                            summary_list[idx] += khosomat_list[idx]
+                        except IndexError:
+                            summary_list.insert(idx,khosomat_list[idx])
+
+            #employees not exists in first sheet
+            for payroll_detail in PayrollDetail.objects.filter(payroll_master=cmp_payroll.payroll_master).exclude(employee__in=emp_lst):
+                cmp_emp,cmp_badalat,cmp_khosomat,cmp_draja_wazifia,cmp_alawa_sanawia = cmp_payroll.employee_payroll_from_employee(payroll_detail.employee)
+                khosomat_list = [round(-zp[1],2) for zp in cmp_khosomat]
+                
+                if abs(sum(khosomat_list)) > 0:
+                    l = [
+                        cmp_emp.code,
+                        cmp_emp.name,
+                        cmp_drjat(None,cmp_draja_wazifia),
+                        cmp_alawa(None,cmp_alawa_sanawia),
+                    ] + khosomat_list
+                    data.append(l)
+
+                    for idx,s in enumerate(khosomat_list):
+                        try:
+                            summary_list[idx] += khosomat_list[idx]
+                        except IndexError:
+                            summary_list.insert(idx,khosomat_list[idx])
+
+            summary_list = [round(s,2) for s in summary_list]
+
+        if format == 'csv':
+            sheet_name = 'net'
+            # print(f'attachment; filename="{sheet_name}_{month}_{year}.csv"')
+            response = HttpResponse(
+                content_type="text/csv",
+                headers={"Content-Disposition": f'attachment; filename="{sheet_name}_{month}_{year}.csv"'},
+            )
+
+            # BOM
+            response.write(codecs.BOM_UTF8)
+
+            writer = csv.writer(response)
+            writer.writerow(header)
+
+            if SHOW_CSV_TOTAL:
+                data.append(['-','-','-','-',]+summary_list)
+
+            for r in data:
+                writer.writerow(r)
+
+            cache.patch_cache_control(response, max_age=0)
+            return response
+
+        else:
+            context = {
+                'title':'كشف فرق الخصومات',
                 'header':header,
                 'data': data,
                 'summary':summary_list,
