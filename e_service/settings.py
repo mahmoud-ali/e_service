@@ -82,7 +82,7 @@ INSTALLED_APPS = [
     # 'company_profile',    
     # 'check_cordinates',
     # 'pa',
-    # 'help_request',
+    'help_request',
     'hr',
 
     # Debug
@@ -139,8 +139,8 @@ DATABASES = {
     #     'NAME': BASE_DIR / 'db.sqlite3',
     # }
     "default": {
-        # "ENGINE": "django.db.backends.postgresql",
-        "ENGINE": "django.contrib.gis.db.backends.postgis",
+        "ENGINE": "django.db.backends.postgresql",
+        # "ENGINE": "django.contrib.gis.db.backends.postgis",
         "NAME": config('DB_NAME'),
         "USER": config('DB_USER'),
         "PASSWORD": config('DB_PASSWD'),
