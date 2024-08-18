@@ -74,15 +74,15 @@ INSTALLED_APPS = [
 
     'bootstrap_datepicker_plus',
 
-    'django_crontab',
+    # 'django_crontab',
     'mptt',
     
     # Local                
     'accounts',
-    'company_profile',    
-    'check_cordinates',
-    'pa',
-    'help_request',
+    # 'company_profile',    
+    # 'check_cordinates',
+    # 'pa',
+    # 'help_request',
     'hr',
 
     # Debug
