@@ -410,9 +410,9 @@ class PayrollMasterAdmin(admin.ModelAdmin):
 
     def get_list_display(self,request):
         if request.user.groups.filter(name="hr_manager").exists():
-            return ["year","month","confirmed","show_badalat_link","show_khosomat_link","show_mokaf2_link","show_mobashara_link","show_m2moria_link"]
+            return ["year","month","confirmed","show_badalat_link","cmp_badalat_prev_month_link","show_khosomat_link","cmp_khosomat_prev_month_link","show_mokaf2_link","show_mobashara_link","show_m2moria_link"]
         else:
-            return ["year","month","confirmed","show_badalat_link","show_khosomat_link"]
+            return ["year","month","confirmed","show_badalat_link","cmp_badalat_prev_month_link","show_khosomat_link","cmp_khosomat_prev_month_link"]
 
     @admin.display(description=_('Show badalat sheet'))
     def show_badalat_link(self, obj):
@@ -430,6 +430,32 @@ class PayrollMasterAdmin(admin.ModelAdmin):
                                +'<a target="_blank" href="{url}?year={year}&month={month}&format=csv&bank_sheet=1">'+_('bank sheet')+'</a> / '\
                                +'<a target="_blank" href="{url}?year={year}&month={month}&format=csv">CSV</a>',
                            url=url,year=obj.year,month=obj.month)
+
+    @admin.display(description=_('Diff badalat sheet'))
+    def cmp_badalat_prev_month_link(self, obj):
+        url = reverse('hr:payroll_diff_badalat')
+        prev_year = obj.year
+        prev_month = int(obj.month) -1
+        if prev_month == 0:
+            prev_month = 12
+            prev_year -= 1
+        return format_html('<a target="_blank" class="viewlink" href="{url}?year={year}&month={month}&cmp_year={cmp_year}&cmp_month={cmp_month}">'+_('Diff badalat sheet')\
+                               +'</a> / '\
+                               +'<a target="_blank" href="{url}?year={year}&month={month}&cmp_year={cmp_year}&cmp_month={cmp_month}&format=csv">CSV</a>',
+                           url=url,year=obj.year,month=obj.month,cmp_year=prev_year,cmp_month=prev_month)
+
+    @admin.display(description=_('Diff khosomat sheet'))
+    def cmp_khosomat_prev_month_link(self, obj):
+        url = reverse('hr:payroll_diff_khosomat')
+        prev_year = obj.year
+        prev_month = int(obj.month) -1
+        if prev_month == 0:
+            prev_month = 12
+            prev_year -= 1
+        return format_html('<a target="_blank" class="viewlink" href="{url}?year={year}&month={month}&cmp_year={cmp_year}&cmp_month={cmp_month}">'+_('Diff khosomat sheet')\
+                               +'</a> / '\
+                               +'<a target="_blank" href="{url}?year={year}&month={month}&cmp_year={cmp_year}&cmp_month={cmp_month}&format=csv">CSV</a>',
+                           url=url,year=obj.year,month=obj.month,cmp_year=prev_year,cmp_month=prev_month)
 
     @admin.display(description=_('Show mobashara sheet'))
     def show_mobashara_link(self, obj):
