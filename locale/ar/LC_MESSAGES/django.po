@@ -2534,7 +2534,7 @@ msgstr "كشف البدلات"
 
 #: hr/admin.py:425 hr/admin.py:428
 msgid "Show khosomat sheet"
-msgstr "كشق الخصومات"
+msgstr "كشف الخصومات"
 
 #: hr/admin.py:430 hr/admin.py:465 hr/admin.py:474 hr/admin.py:483
 msgid "bank sheet"
@@ -2546,7 +2546,7 @@ msgstr "كشف فرق البدلات"
 
 #: hr/admin.py:447 hr/admin.py:455
 msgid "Diff khosomat sheet"
-msgstr "كشق فرق الخصومات"
+msgstr "كشف فرق الخصومات"
 
 #: hr/admin.py:460 hr/admin.py:463
 msgid "Show mobashara sheet"

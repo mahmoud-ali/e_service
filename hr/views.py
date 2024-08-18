@@ -229,14 +229,19 @@ class FargBadalat(LoginRequiredMixin,UserPermissionMixin,View):
         cmp_year = self.request.GET['cmp_year']
         cmp_month = self.request.GET['cmp_month']
         cmp_payroll = Payroll(cmp_year,cmp_month)
+        cmp_index = {}
         emp_lst = []
+
+        for d in cmp_payroll.all_employees_payroll_from_db():
+            cmp_index.update({d[0].id:d})
 
         for (emp,badalat,khosomat,draja_wazifia,alawa_sanawia) in payroll.all_employees_payroll_from_db():
             emp_lst.append(emp.id)
-            cmp_emp,cmp_badalat,cmp_khosomat,cmp_draja_wazifia,cmp_alawa_sanawia = cmp_payroll.employee_payroll_from_employee(emp)
-            if cmp_badalat:
+            cmp_draja_wazifia = cmp_alawa_sanawia = None
+            try:
+                cmp_emp,cmp_badalat,cmp_khosomat,cmp_draja_wazifia,cmp_alawa_sanawia = cmp_index[emp.id] #cmp_payroll.employee_payroll_from_employee(emp)
                 badalat_list = [round((zp[0][1]-zp[1][1]),2) for zp in zip(badalat,cmp_badalat)]
-            else:
+            except KeyError:
                 badalat_list = [round(zp[1],2) for zp in badalat]
             
             if abs(sum(badalat_list)) > 0:
@@ -324,6 +329,7 @@ class FargKhosomat(LoginRequiredMixin,UserPermissionMixin,View):
         cmp_year = self.request.GET['cmp_year']
         cmp_month = self.request.GET['cmp_month']
         cmp_payroll = Payroll(cmp_year,cmp_month)
+        cmp_index = {}
         emp_lst = []
 
         try:
@@ -353,12 +359,16 @@ class FargKhosomat(LoginRequiredMixin,UserPermissionMixin,View):
         if True:
             template_name = 'hr/khosomat.html'
 
+            for d in cmp_payroll.all_employees_payroll_from_db():
+                cmp_index.update({d[0].id:d})
+
             for (emp,badalat,khosomat,draja_wazifia,alawa_sanawia) in payroll.all_employees_payroll_from_db():
                 emp_lst.append(emp.id)
-                cmp_emp,cmp_badalat,cmp_khosomat,cmp_draja_wazifia,cmp_alawa_sanawia = cmp_payroll.employee_payroll_from_employee(emp)
-                if cmp_khosomat:
+                cmp_draja_wazifia = cmp_alawa_sanawia = None
+                try:
+                    cmp_emp,cmp_badalat,cmp_khosomat,cmp_draja_wazifia,cmp_alawa_sanawia = cmp_index[emp.id] #cmp_payroll.employee_payroll_from_employee(emp)
                     khosomat_list = [round((zp[0][1]-zp[1][1]),2) for zp in zip(khosomat,cmp_khosomat)]
-                else:
+                except KeyError:
                     khosomat_list = [round(zp[1],2) for zp in khosomat]
                 
                 if abs(sum(khosomat_list)) > 0:
@@ -378,8 +388,8 @@ class FargKhosomat(LoginRequiredMixin,UserPermissionMixin,View):
                             summary_list.insert(idx,khosomat_list[idx])
 
             #employees not exists in first sheet
-            for payroll_detail in PayrollDetail.objects.filter(payroll_master=cmp_payroll.payroll_master).exclude(employee__in=emp_lst):
-                cmp_emp,cmp_badalat,cmp_khosomat,cmp_draja_wazifia,cmp_alawa_sanawia = cmp_payroll.employee_payroll_from_employee(payroll_detail.employee)
+            for payroll_detail in PayrollDetail.objects.filter(payroll_master=cmp_payroll.payroll_master).exclude(employee__in=emp_lst).prefetch_related("employee"):
+                cmp_emp,cmp_badalat,cmp_khosomat,cmp_draja_wazifia,cmp_alawa_sanawia = cmp_index[payroll_detail.employee.id] #cmp_payroll.employee_payroll_from_employee(payroll_detail.employee)
                 khosomat_list = [round(-zp[1],2) for zp in cmp_khosomat]
                 
                 if abs(sum(khosomat_list)) > 0:

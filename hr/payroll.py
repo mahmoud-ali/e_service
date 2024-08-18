@@ -40,7 +40,7 @@ class Payroll():
         try:
             self.payroll_master = PayrollMaster.objects.get(year=self.year,month=self.month)
             self.payroll_details = PayrollDetail.objects \
-                .filter(payroll_master=self.payroll_master).prefetch_related("employee") \
+                .filter(payroll_master=self.payroll_master).prefetch_related("payroll_master","employee") \
                 .exclude(employee__hikal_wazifi=self.hr_settings.get_code_as_float(Settings.SETTINGS_KHARJ_ELSHARIKA))
         except PayrollMaster.DoesNotExist:
             self.payroll_master = None
@@ -142,9 +142,9 @@ class Payroll():
             yield(self.employee_payroll_from_db(emp_payroll))
 
     def employee_payroll_from_employee(self,emp:EmployeeBasic):
-        emp_payrolls = PayrollDetail.objects.filter(payroll_master=self.payroll_master,employee=emp).prefetch_related("employee") 
-        if emp_payrolls.count() > 0:
-            return self.employee_payroll_from_db(emp_payrolls.first())
+        emp_payroll = PayrollDetail.objects.filter(payroll_master=self.payroll_master,employee=emp).prefetch_related("employee").first()
+        if emp_payroll:
+            return self.employee_payroll_from_db(emp_payroll)
         
         return (None,None,None,None,None,)
 
