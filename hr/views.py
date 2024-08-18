@@ -8,7 +8,7 @@ from django.utils import cache
 from django.views.defaults import bad_request
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 
-from hr.models import Drajat3lawat, EmployeeBankAccount, PayrollMaster
+from hr.models import Drajat3lawat, EmployeeBankAccount, EmployeeBasic, PayrollDetail, PayrollMaster
 from hr.payroll import M2moriaSheet, MobasharaSheet, Payroll,Mokaf2Sheet
 
 SHOW_CSV_TOTAL = False
@@ -177,6 +177,131 @@ class Khosomat(LoginRequiredMixin,UserPermissionMixin,View):
         else:
             context = {
                 'title':'كشف الخصومات',
+                'header':header,
+                'data': data,
+                'summary':summary_list,
+            }
+
+            response = render(self.request,template_name,context)
+            cache.patch_cache_control(response, max_age=0)
+            return response
+def cmp_drjat(draja,old_draja):
+    if draja == old_draja:
+        return Drajat3lawat.DRAJAT_CHOICES[draja]
+    
+    draja_str = 'لايوجد'
+    if draja:
+        draja_str = Drajat3lawat.DRAJAT_CHOICES[draja]
+
+    old_draja_str = 'لايوجد'
+    if old_draja:
+        old_draja_str = Drajat3lawat.DRAJAT_CHOICES[old_draja]
+
+    return old_draja_str + ' / ' + draja_str
+
+def cmp_alawa(alawa,old_alawa):
+    if alawa == old_alawa:
+        return Drajat3lawat.ALAWAT_CHOICES[alawa]
+
+    alawa_str = 'لايوجد'
+    if alawa:
+        alawa_str = Drajat3lawat.ALAWAT_CHOICES[alawa]
+
+    old_alawa_str = 'لايوجد'
+    if old_alawa:
+        old_alawa_str = Drajat3lawat.ALAWAT_CHOICES[old_alawa]
+
+    return old_alawa_str + ' / ' + alawa_str
+
+class FargBadalat(LoginRequiredMixin,UserPermissionMixin,View):
+    user_groups = ['hr_manager','hr_payroll']
+    def get(self,*args,**kwargs):
+        year = self.request.GET['year']
+        month = self.request.GET['month']
+        format = self.request.GET.get('format',None)
+        data = []
+        
+        payroll = Payroll(year,month)
+        header = ['الرمز','الموظف','الدرجة الوظيفية','العلاوة','ابتدائي','غلاء معيشة','اساسي','طبيعة عمل','تمثيل','مهنة','معادن','مخاطر','عدوى','اجتماعية قسيمة','اجتماعية اطفال','مؤهل','شخصية','اجمالي المرتب']
+        summary_list = []
+
+        cmp_year = self.request.GET['cmp_year']
+        cmp_month = self.request.GET['cmp_month']
+        cmp_payroll = Payroll(cmp_year,cmp_month)
+
+        emp_lst = []
+
+        for (emp,badalat,khosomat,draja_wazifia,alawa_sanawia) in payroll.all_employees_payroll_from_db():
+            emp_lst.append(emp.id)
+            cmp_emp,cmp_badalat,cmp_khosomat,cmp_draja_wazifia,cmp_alawa_sanawia = cmp_payroll.employee_payroll_from_employee(emp)
+            if cmp_badalat:
+                badalat_list = [round((zp[0][1]-zp[1][1]),2) for zp in zip(badalat,cmp_badalat)]
+            else:
+                badalat_list = [round(zp[1],2) for zp in badalat]
+            
+            if abs(sum(badalat_list)) > 0:
+                l = [
+                    emp.code,
+                    emp.name,
+                    cmp_drjat(draja_wazifia,cmp_draja_wazifia),
+                    cmp_alawa(alawa_sanawia,cmp_alawa_sanawia),
+                ] + badalat_list
+                data.append(l)
+
+                for idx,s in enumerate(badalat_list):
+                    try:
+                        summary_list[idx] += badalat_list[idx]
+                    except IndexError:
+                        summary_list.insert(idx,badalat_list[idx])
+
+        #employees not exists in first sheet
+        for payroll_detail in PayrollDetail.objects.filter(payroll_master=cmp_payroll.payroll_master).exclude(employee__in=emp_lst):
+            cmp_emp,cmp_badalat,cmp_khosomat,cmp_draja_wazifia,cmp_alawa_sanawia = cmp_payroll.employee_payroll_from_employee(payroll_detail.employee)
+            badalat_list = [round(-zp[1],2) for zp in badalat]
+            
+            if abs(sum(badalat_list)) > 0:
+                l = [
+                    cmp_emp.code,
+                    cmp_emp.name,
+                    cmp_drjat(None,cmp_draja_wazifia),
+                    cmp_alawa(None,cmp_alawa_sanawia),
+                ] + badalat_list
+                data.append(l)
+
+                for idx,s in enumerate(badalat_list):
+                    try:
+                        summary_list[idx] += badalat_list[idx]
+                    except IndexError:
+                        summary_list.insert(idx,badalat_list[idx])
+
+        summary_list = [round(s,2) for s in summary_list]
+
+        if format == 'csv':
+            sheet_name = 'diff_allowances'
+            response = HttpResponse(
+                content_type="text/csv",
+                headers={"Content-Disposition": f'attachment; filename="{sheet_name}_{month}_{year}.csv"'},
+            )
+
+            # BOM
+            response.write(codecs.BOM_UTF8)
+
+            writer = csv.writer(response)
+            writer.writerow(header)
+
+            if SHOW_CSV_TOTAL:
+                data.append(['-','-','-','-',]+summary_list)
+
+            for r in data:
+                writer.writerow(r)
+
+            cache.patch_cache_control(response, max_age=0)
+            return response
+
+        else:
+            template_name = 'hr/badalat.html'
+            context = {
+                'title':'كشف فروقات البدلات',
                 'header':header,
                 'data': data,
                 'summary':summary_list,

@@ -141,6 +141,13 @@ class Payroll():
         for emp_payroll in self.payroll_details:
             yield(self.employee_payroll_from_db(emp_payroll))
 
+    def employee_payroll_from_employee(self,emp:EmployeeBasic):
+        emp_payrolls = PayrollDetail.objects.filter(payroll_master=self.payroll_master,employee=emp).prefetch_related("employee") 
+        if emp_payrolls.count() > 0:
+            return self.employee_payroll_from_db(emp_payrolls.first())
+        
+        return (None,None,None,None,None,)
+
     def calculate(self):
         if self.is_confirmed():
             return False
