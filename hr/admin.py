@@ -228,7 +228,7 @@ class EmployeeBasicAdmin(admin.ModelAdmin):
     inlines = [EmployeeFamilyInline,EmployeeMoahilInline,EmployeeBankAccountInline,SalafiatInline,JazaatInline,EmployeeMobashraInline,EmployeeVacationInline,EmployeeM2moriaInline]
     list_display = ["code","name", "draja_wazifia","alawa_sanawia", "edara_3ama","edara_far3ia","gisim", "mosama_wazifi","tarikh_ta3in","tarikh_akhir_targia","sex","moahil","gasima","atfal","aadoa","m3ash","status"]    
     list_display_links = ["code","name"]
-    list_filter = ["draja_wazifia","alawa_sanawia",Edara3amaFilter,Edarafar3iaFilter,"mosama_wazifi__category","gasima","atfal",EmployeeTarikhTa3inFilter,EmployeeWifg2lwazaifFilter,EmployeeWifg2lmostawiatFilter,"sex","moahil","aadoa","m3ash","status"] #
+    list_filter = ["draja_wazifia","alawa_sanawia",Edara3amaFilter,Edarafar3iaFilter,"mosama_wazifi__category","gasima","atfal",EmployeeTarikhTa3inFilter,EmployeeWifg2lwazaifFilter,EmployeeWifg2lmostawiatFilter,"sex","moahil","aadoa","status"] #
     view_on_site = False
     autocomplete_fields = ["mosama_wazifi"] #,"hikal_wazifi"
     search_fields = ["name","code"]
@@ -386,9 +386,10 @@ admin.site.register(Settings,SettingsAdmin)
 
 class PayrollDetailInline(admin.TabularInline):
     model = PayrollDetail
-    exclude = ["created_at","created_by","updated_at","updated_by"]
+    #exclude = ["created_at","created_by","updated_at","updated_by"]
+    fields = ['employee','abtdai','galaa_m3isha','shakhsia','aadoa','gasima','atfal','moahil','ma3adin','m3ash','salafiat','jazaat','damga','sandog','sandog_kahraba','salafiat_sandog','tarikh_milad','draja_wazifia','alawa_sanawia']
     extra = 0
-    readonly_fields = ['employee','abtdai','galaa_m3isha','shakhsia','aadoa','gasima','atfal','moahil','ma3adin','m3ash','salafiat','jazaat','damga','sandog','sandog_kahraba','salafiat_sandog','tarikh_milad']
+    readonly_fields = fields #['employee','abtdai','galaa_m3isha','shakhsia','aadoa','gasima','atfal','moahil','ma3adin','m3ash','salafiat','jazaat','damga','sandog','sandog_kahraba','salafiat_sandog','tarikh_milad','draja_wazifia','alawa_sanawia']
     can_delete = False
     list_select_related = True
     def has_add_permission(self,request, obj):
