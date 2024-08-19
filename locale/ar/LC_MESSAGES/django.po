@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-18 13:52+0200\n"
+"POT-Creation-Date: 2024-08-19 13:46+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -63,7 +63,8 @@ msgid "No intersection!"
 msgstr "لايوجد تداخل!"
 
 #: company_profile/admin.py:33 company_profile/admin.py:34
-#: company_profile/admin.py:35 templates/admin/__base_site.html:6
+#: company_profile/admin.py:35 hr/admin.py:15 hr/admin.py:16 hr/admin.py:17
+#: templates/admin/__base_site.html:6
 msgid "Site header"
 msgstr "نظام ادارة الموارد البشرية"
 
@@ -191,7 +192,7 @@ msgstr ""
 #: company_profile/models.py:82 company_profile/models.py:92
 #: company_profile/models.py:134 company_profile/models.py:166
 #: company_profile/models.py:188 company_profile/models.py:701
-#: company_profile/models.py:799 company_profile/models.py:1055 hr/admin.py:248
+#: company_profile/models.py:799 company_profile/models.py:1055 hr/admin.py:253
 #: hr/models.py:592
 msgid "name"
 msgstr "الاسم"
@@ -289,7 +290,7 @@ msgstr "تلفون ممثل الشركة"
 msgid "Official email"
 msgstr "البريد الالكتروني الرسمي"
 
-#: company_profile/models.py:145 hr/admin.py:250 hr/models.py:465
+#: company_profile/models.py:145 hr/admin.py:255 hr/models.py:465
 msgid "status"
 msgstr "الحالة"
 
@@ -2373,194 +2374,194 @@ msgstr "ارسال"
 msgid "help_link"
 msgstr "طلب مساعدة"
 
-#: hr/admin.py:78 hr/models.py:339 hr/models.py:340
+#: hr/admin.py:83 hr/models.py:339 hr/models.py:340
 msgid "Edara 3ama"
 msgstr "الادارة العامة"
 
-#: hr/admin.py:96 hr/models.py:358 hr/models.py:359
+#: hr/admin.py:101 hr/models.py:358 hr/models.py:359
 msgid "Edara far3ia"
 msgstr "الادارة الفرعية"
 
-#: hr/admin.py:114 hr/admin.py:249 hr/models.py:454
+#: hr/admin.py:119 hr/admin.py:254 hr/models.py:454
 msgid "tarikh_ta3in"
 msgstr "تاريخ التعيين"
 
-#: hr/admin.py:128
+#: hr/admin.py:133
 msgid "wifg 2lwazif"
 msgstr "الوظائف"
 
-#: hr/admin.py:132
+#: hr/admin.py:137
 msgid "wifg_2lwazif_giadia"
 msgstr "وظائف قيادية"
 
-#: hr/admin.py:133
+#: hr/admin.py:138
 msgid "wifg_2lwazif_3lia"
 msgstr "وظائف عليا"
 
-#: hr/admin.py:134
+#: hr/admin.py:139
 msgid "wifg_2lwazif_okhra"
 msgstr "وظائف اخرى"
 
-#: hr/admin.py:149
+#: hr/admin.py:154
 msgid "wifg 2lmostawiat"
 msgstr "المستويات"
 
-#: hr/admin.py:153
+#: hr/admin.py:158
 msgid "wifg_2lmostawiat_mosa3di_2lmodir"
 msgstr "مساعدي المدير العام"
 
-#: hr/admin.py:154
+#: hr/admin.py:159
 msgid "wifg_2lmostawiat_2l2darat_2l3ama"
 msgstr "الادارات العامة"
 
-#: hr/admin.py:155
+#: hr/admin.py:160
 msgid "wifg_2lmostawiat_2l2darat_2lmotakhasisa"
 msgstr "الادارات المتخصصة"
 
-#: hr/admin.py:156
+#: hr/admin.py:161
 msgid "wifg_2lmostawiat_ro2sa2_2l2gsam"
 msgstr "رؤساء الاقسام"
 
-#: hr/admin.py:157
+#: hr/admin.py:162
 msgid "wifg_2lmostawiat_moshrfi_2lwi7dat"
 msgstr "مشرفي الوحدات"
 
-#: hr/admin.py:158
+#: hr/admin.py:163
 msgid "wifg_2lmostawiat_mdkhal_khidma"
 msgstr "مدخل خدمة"
 
-#: hr/admin.py:159
+#: hr/admin.py:164
 msgid "wifg_2lmostawiat_sa2geen_faneen"
 msgstr "السائقين والفنيين"
 
-#: hr/admin.py:160
+#: hr/admin.py:165
 msgid "wifg_2lmostawiat_2mal"
 msgstr "العمال"
 
-#: hr/admin.py:241
+#: hr/admin.py:246
 msgid "Export data"
 msgstr "تصدير البيانات"
 
-#: hr/admin.py:248 hr/models.py:162
+#: hr/admin.py:253 hr/models.py:162
 msgid "code"
 msgstr "الرمز"
 
-#: hr/admin.py:248 hr/models.py:242 hr/models.py:451 hr/models.py:889
+#: hr/admin.py:253 hr/models.py:242 hr/models.py:451 hr/models.py:889
 msgid "draja_wazifia"
 msgstr "الدرجة الوظيفية"
 
-#: hr/admin.py:248 hr/models.py:243 hr/models.py:452 hr/models.py:890
+#: hr/admin.py:253 hr/models.py:243 hr/models.py:452 hr/models.py:890
 msgid "alawa_sanawia"
 msgstr "العلاوة السنوية"
 
-#: hr/admin.py:248 hr/models.py:325 hr/models.py:344 hr/models.py:447
+#: hr/admin.py:253 hr/models.py:325 hr/models.py:344 hr/models.py:447
 #: hr/models.py:501
 msgid "edara_3ama"
 msgstr "الادارة العامة"
 
-#: hr/admin.py:249 hr/models.py:343 hr/models.py:363 hr/models.py:448
+#: hr/admin.py:254 hr/models.py:343 hr/models.py:363 hr/models.py:448
 #: hr/models.py:512
 msgid "edara_far3ia"
 msgstr "الادارة الفرعية"
 
-#: hr/admin.py:249 hr/models.py:362 hr/models.py:375 hr/models.py:517
+#: hr/admin.py:254 hr/models.py:362 hr/models.py:375 hr/models.py:517
 msgid "gisim"
 msgstr "القسم"
 
-#: hr/admin.py:249 hr/models.py:522
+#: hr/admin.py:254 hr/models.py:522
 msgid "wi7da"
 msgstr "الوحدة"
 
-#: hr/admin.py:249 hr/models.py:266 hr/models.py:446
+#: hr/admin.py:254 hr/models.py:266 hr/models.py:446
 msgid "mosama_wazifi"
 msgstr "المسمى الوظيفي"
 
-#: hr/admin.py:249 hr/models.py:453 hr/models.py:887
+#: hr/admin.py:254 hr/models.py:453 hr/models.py:887
 msgid "tarikh_milad"
 msgstr "تاريخ الميلاد"
 
-#: hr/admin.py:249 hr/models.py:455
+#: hr/admin.py:254 hr/models.py:455
 msgid "tarikh_akhir_targia"
 msgstr "تاريخ اخر ترقية"
 
-#: hr/admin.py:249 hr/models.py:456
+#: hr/admin.py:254 hr/models.py:456
 msgid "sex"
 msgstr "الجنس"
 
-#: hr/admin.py:249 hr/models.py:460 hr/models.py:877
+#: hr/admin.py:254 hr/models.py:460 hr/models.py:877
 msgid "gasima"
 msgstr "العلاوة الاجتماعية-قسيمة"
 
-#: hr/admin.py:249 hr/models.py:878
+#: hr/admin.py:254 hr/models.py:878
 msgid "atfal"
 msgstr "العلاوة الاجتماعية-اطفال"
 
-#: hr/admin.py:250 hr/models.py:156 hr/models.py:462 hr/models.py:617
+#: hr/admin.py:255 hr/models.py:156 hr/models.py:462 hr/models.py:617
 #: hr/models.py:879
 msgid "moahil"
 msgstr "المؤهل"
 
-#: hr/admin.py:250 hr/models.py:463 hr/models.py:881
+#: hr/admin.py:255 hr/models.py:463 hr/models.py:881
 msgid "m3ash"
 msgstr "المعاش"
 
-#: hr/admin.py:250 hr/models.py:464 hr/models.py:876
+#: hr/admin.py:255 hr/models.py:464 hr/models.py:876
 msgid "aadoa"
 msgstr "عدوى"
 
-#: hr/admin.py:250 hr/models.py:458
+#: hr/admin.py:255 hr/models.py:458
 msgid "no3_2lertibat"
 msgstr "نوع الارتباط"
 
-#: hr/admin.py:250 hr/models.py:457
+#: hr/admin.py:255 hr/models.py:457
 msgid "phone"
 msgstr "التلفون"
 
-#: hr/admin.py:250 hr/models.py:459
+#: hr/admin.py:255 hr/models.py:459
 msgid "sanoat_2lkhibra"
 msgstr "سنوات الخبرة السابقة"
 
-#: hr/admin.py:260 hr/admin.py:264
+#: hr/admin.py:265 hr/admin.py:269
 msgid "no"
 msgstr "لا"
 
-#: hr/admin.py:262 hr/admin.py:266
+#: hr/admin.py:267 hr/admin.py:271
 msgid "yes"
 msgstr "نعم"
 
-#: hr/admin.py:417 hr/admin.py:420
+#: hr/admin.py:422 hr/admin.py:425
 msgid "Show badalat sheet"
 msgstr "كشف البدلات"
 
-#: hr/admin.py:425 hr/admin.py:428
+#: hr/admin.py:430 hr/admin.py:433
 msgid "Show khosomat sheet"
 msgstr "كشف الخصومات"
 
-#: hr/admin.py:430 hr/admin.py:465 hr/admin.py:474 hr/admin.py:483
+#: hr/admin.py:435 hr/admin.py:470 hr/admin.py:479 hr/admin.py:488
 msgid "bank sheet"
 msgstr "كشف البنك"
 
-#: hr/admin.py:434 hr/admin.py:442
+#: hr/admin.py:439 hr/admin.py:447
 msgid "Diff badalat sheet"
 msgstr "كشف فرق البدلات"
 
-#: hr/admin.py:447 hr/admin.py:455
+#: hr/admin.py:452 hr/admin.py:460
 msgid "Diff khosomat sheet"
 msgstr "كشف فرق الخصومات"
 
-#: hr/admin.py:460 hr/admin.py:463
+#: hr/admin.py:465 hr/admin.py:468
 msgid "Show mobashara sheet"
 msgstr "كشف المباشرة"
 
-#: hr/admin.py:469 hr/admin.py:472
+#: hr/admin.py:474 hr/admin.py:477
 msgid "Show mokaf2 sheet"
 msgstr "كشف المكافأة"
 
-#: hr/admin.py:478 hr/admin.py:481
+#: hr/admin.py:483 hr/admin.py:486
 msgid "Show m2moria sheet"
 msgstr "كشف المأمورية"
 
-#: hr/admin.py:506
+#: hr/admin.py:511
 msgid "Confirm payroll"
 msgstr "تأكيد المرتب"
 
