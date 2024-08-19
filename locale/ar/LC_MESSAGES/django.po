@@ -65,7 +65,7 @@ msgstr "لايوجد تداخل!"
 #: company_profile/admin.py:33 company_profile/admin.py:34
 #: company_profile/admin.py:35 templates/admin/__base_site.html:6
 msgid "Site header"
-msgstr "بوابة الخدمات الإلكترونية"
+msgstr "نظام ادارة الموارد البشرية"
 
 #: company_profile/admin.py:129
 msgid "Contact information"

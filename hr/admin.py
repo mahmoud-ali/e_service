@@ -12,6 +12,11 @@ from hr.payroll import M2moriaSheet, MobasharaSheet, Payroll
 from .models import Drajat3lawat, EmployeeBankAccount, EmployeeFamily, EmployeeM2moria, EmployeeMoahil, EmployeeJazaat, EmployeeMobashra, EmployeeVacation, Gisim, HikalWazifi, MosamaWazifi,Edara3ama,Edarafar3ia,EmployeeBasic, PayrollDetail, PayrollMaster, EmployeeSalafiat,Settings, Wi7da
 from mptt.admin import MPTTModelAdmin,TreeRelatedFieldListFilter
 
+admin.site.title = _("Site header")
+admin.site.site_title = _("Site header")
+admin.site.site_header = _("Site header")
+admin.site.site_url = None
+
 class MosamaWazifiAdmin(admin.ModelAdmin):
     exclude = ["created_at","created_by","updated_at","updated_by"]
     
