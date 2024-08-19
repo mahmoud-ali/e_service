@@ -8,7 +8,7 @@ from django.utils import cache
 from django.views.defaults import bad_request
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 
-from hr.models import Drajat3lawat, EmployeeBankAccount, EmployeeBasic, PayrollDetail, PayrollMaster
+from hr.models import Drajat3lawat, EmployeeBankAccount, EmployeeBasic, PayrollDetail, PayrollMaster,MONTH_CHOICES
 from hr.payroll import M2moriaSheet, MobasharaSheet, Payroll,Mokaf2Sheet
 
 SHOW_CSV_TOTAL = False
@@ -32,7 +32,7 @@ class Badalat(LoginRequiredMixin,UserPermissionMixin,View):
     user_groups = ['hr_manager','hr_payroll']
     def get(self,*args,**kwargs):
         year = self.request.GET['year']
-        month = self.request.GET['month']
+        month = int(self.request.GET['month'])
         format = self.request.GET.get('format',None)
         data = []
         
@@ -78,10 +78,12 @@ class Badalat(LoginRequiredMixin,UserPermissionMixin,View):
         else:
             template_name = 'hr/badalat.html'
             context = {
-                'title':'كشف البدلات',
+                'title':'كشف بدلات',
                 'header':header,
                 'data': data,
                 'summary':summary_list,
+                'month':MONTH_CHOICES[month],
+                'year':year,
             }
 
             response = render(self.request,template_name,context)
@@ -92,7 +94,7 @@ class Khosomat(LoginRequiredMixin,UserPermissionMixin,View):
     user_groups = ['hr_manager','hr_payroll']
     def get(self,*args,**kwargs):
         year = self.request.GET['year']
-        month = self.request.GET['month']
+        month = int(self.request.GET['month'])
         format = self.request.GET.get('format',None)
         bank_sheet = self.request.GET.get('bank_sheet',False)
         data = []
@@ -176,10 +178,12 @@ class Khosomat(LoginRequiredMixin,UserPermissionMixin,View):
 
         else:
             context = {
-                'title':'كشف الخصومات',
+                'title':'كشف استقطاعات',
                 'header':header,
                 'data': data,
                 'summary':summary_list,
+                'month':MONTH_CHOICES[month],
+                'year':year,
             }
 
             response = render(self.request,template_name,context)
@@ -218,7 +222,7 @@ class FargBadalat(LoginRequiredMixin,UserPermissionMixin,View):
     user_groups = ['hr_manager','hr_payroll']
     def get(self,*args,**kwargs):
         year = self.request.GET['year']
-        month = self.request.GET['month']
+        month = int(self.request.GET['month'])
         format = self.request.GET.get('format',None)
         data = []
         
@@ -306,10 +310,12 @@ class FargBadalat(LoginRequiredMixin,UserPermissionMixin,View):
         else:
             template_name = 'hr/badalat.html'
             context = {
-                'title':'كشف فروقات البدلات',
+                'title':'كشف فروقات بدلات',
                 'header':header,
                 'data': data,
                 'summary':summary_list,
+                'month':MONTH_CHOICES[month],
+                'year':year,
             }
 
             response = render(self.request,template_name,context)
@@ -320,7 +326,7 @@ class FargKhosomat(LoginRequiredMixin,UserPermissionMixin,View):
     user_groups = ['hr_manager','hr_payroll']
     def get(self,*args,**kwargs):
         year = self.request.GET['year']
-        month = self.request.GET['month']
+        month = int(self.request.GET['month'])
         format = self.request.GET.get('format',None)
         bank_sheet = self.request.GET.get('bank_sheet',False)
         data = []
@@ -434,10 +440,12 @@ class FargKhosomat(LoginRequiredMixin,UserPermissionMixin,View):
 
         else:
             context = {
-                'title':'كشف فرق الخصومات',
+                'title':'كشف فرق استقطاعات',
                 'header':header,
                 'data': data,
                 'summary':summary_list,
+                'month':MONTH_CHOICES[month],
+                'year':year,
             }
 
             response = render(self.request,template_name,context)
