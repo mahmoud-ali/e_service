@@ -185,7 +185,7 @@ def export_khosomat(year,month):
             l = [emp.name,Drajat3lawat.DRAJAT_CHOICES[emp.draja_wazifia],Drajat3lawat.ALAWAT_CHOICES[emp.alawa_sanawia]] + [k[1] for k in khosomat]
             writer.writerow(l) 
     
-def import_salafiat(year):    
+def import_salafiat_sharika(year,month_arr=[9,10,11,12]):    
     with open(f'./hr/data/salafiat_sharika.csv', newline='') as csvfile:
         reader = csv.reader(csvfile, delimiter=',')
         next(reader, None)  # skip the headers
@@ -194,22 +194,24 @@ def import_salafiat(year):
                 code = int(row[0])
                 if code:
                     emp = EmployeeBasic.objects.get(code=code)
-                    for id,mon in enumerate([9,10,11,12]):
+                    for id,mon in enumerate(month_arr):
                         index = id+2
                         amount = float(row[index])
-                        EmployeeSalafiat.objects.create(
-                            employee = emp,
-                            year = year,
-                            month = mon,
-                            no3_2lsalafia = EmployeeSalafiat.NO3_2LSALAFIA_SHARIKA,
-                            note = 'imported',
-                            amount = amount,
-                            created_by=admin_user,
-                            updated_by=admin_user
-                        )
+                        if amount > 0:
+                            EmployeeSalafiat.objects.create(
+                                employee = emp,
+                                year = year,
+                                month = mon,
+                                no3_2lsalafia = EmployeeSalafiat.NO3_2LSALAFIA_SHARIKA,
+                                note = 'imported',
+                                amount = amount,
+                                created_by=admin_user,
+                                updated_by=admin_user
+                            )
             except Exception as e:
                 print('not imported',e)
 
+def import_salafiat_sandog(year,month_arr=[8,9,10,11,12]):    
     with open(f'./hr/data/salafiat_sandog.csv', newline='') as csvfile:
         reader = csv.reader(csvfile, delimiter=',')
         next(reader, None)  # skip the headers
@@ -218,19 +220,20 @@ def import_salafiat(year):
                 code = int(row[0])
                 if code:
                     emp = EmployeeBasic.objects.get(code=code)
-                    for id,mon in enumerate([8,9,10,11,12]):
+                    for id,mon in enumerate(month_arr):
                         index = id+2
                         amount = float(row[index])
-                        EmployeeSalafiat.objects.create(
-                            employee = emp,
-                            year = year,
-                            month = mon,
-                            no3_2lsalafia = EmployeeSalafiat.NO3_2LSALAFIA_SANDOG,
-                            note = 'imported',
-                            amount = amount,
-                            created_by=admin_user,
-                            updated_by=admin_user
-                        )
+                        if amount > 0:
+                            EmployeeSalafiat.objects.create(
+                                employee = emp,
+                                year = year,
+                                month = mon,
+                                no3_2lsalafia = EmployeeSalafiat.NO3_2LSALAFIA_SANDOG,
+                                note = 'imported',
+                                amount = amount,
+                                created_by=admin_user,
+                                updated_by=admin_user
+                            )
             except Exception as e:
                 print('not imported',e)
 
