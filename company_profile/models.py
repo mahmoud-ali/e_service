@@ -122,7 +122,7 @@ class TblCompany(LoggingModel):
     manager_phone = models.CharField(_("manager_phone"),max_length=50)
     rep_name = models.CharField(_("Representative name"),max_length=200)
     rep_phone = models.CharField(_("Representative phone"),max_length=50)
-    email = models.EmailField(_("Official email"),max_length=100,blank=True,null=True)
+    email = models.EmailField(_("Official email"),max_length=100,blank=True,null=True,default='')
     
     class Meta:
         abstract = True    
