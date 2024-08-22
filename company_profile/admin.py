@@ -173,7 +173,7 @@ class TblCompanyProductionAdmin(ExportActionMixin,LoggingAdminMixin,admin.ModelA
     def save_model(self, request, obj, form, change):
         super().save_model(request, obj, form, change)                
 
-        if not change:
+        if obj.email and not TblCompanyProductionUserRole.objects.filter(company=obj,user__email=obj.email).exists():
             User = get_user_model()            
             com_user = User.objects.create_user(obj.name_en,obj.email,settings.ACCOUNT_DEFAULT_PASSWORD)
             com_user.lang = 'ar'
