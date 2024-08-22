@@ -114,15 +114,15 @@ class TblCompany(LoggingModel):
     company_type = models.CharField(_("company_type"),max_length=15, choices=COMPANY_TYPE_CHOICES)
     name_ar = models.CharField(_("name_ar"),max_length=200)
     name_en = models.CharField(_("name_en"),max_length=200)
-    nationality = models.ManyToManyField(LkpNationality,verbose_name=_("nationality")) #, on_delete=models.PROTECT
+    nationality = models.ManyToManyField(LkpNationality,verbose_name=_("nationality"),default=[1]) #, on_delete=models.PROTECT
 #    cordinates = models.TextField(_("cordinates"),max_length=256)
-    address = models.TextField(_("address"),max_length=256)
-    website = models.URLField(_("website"),max_length=200)
+    address = models.TextField(_("address"),max_length=256,blank=True,null=True)
+    website = models.URLField(_("website"),max_length=200,blank=True,null=True)
     manager_name = models.CharField(_("manager_name"),max_length=200)
     manager_phone = models.CharField(_("manager_phone"),max_length=50)
     rep_name = models.CharField(_("Representative name"),max_length=200)
     rep_phone = models.CharField(_("Representative phone"),max_length=50)
-    email = models.EmailField(_("Official email"),max_length=100,unique=True)
+    email = models.EmailField(_("Official email"),max_length=100,blank=True,null=True)
     
     class Meta:
         abstract = True    
@@ -207,19 +207,22 @@ class TblCompanyProductionLicense(LoggingModel):
     state = models.ForeignKey(LkpState, on_delete=models.PROTECT,verbose_name=_("state"))
     locality = models.ForeignKey(LkpLocality, on_delete=models.PROTECT,verbose_name=_("locality"))
     location = models.CharField(_("location"),max_length=100)
-    sheet_no = models.CharField(_("sheet_no"),max_length=10)
+    sheet_no = models.CharField(_("sheet_no"),max_length=10,blank=True,null=True)
     cordinates = models.TextField(_("cordinates"),max_length=256)
-    mineral = models.ManyToManyField(LkpMineral,verbose_name=_("mineral"))
-    area = models.FloatField(_("Area in Kilometers"))
-    reserve = models.FloatField(_("Reserve in Tones"))
-    gov_rep = models.CharField(_("Goverment representative"),max_length=200,blank=True,default=0,null=True)
+    mineral = models.ManyToManyField(LkpMineral,verbose_name=_("mineral"),default=[1])
+    area = models.FloatField(_("Area in Kilometers"),blank=True,null=True)
+    reserve = models.FloatField(_("Reserve in Tones"),blank=True,null=True)
+    gov_rep = models.CharField(_("Goverment representative"),max_length=200,blank=True,default='',null=True)
     rep_percent = models.FloatField(_("Representative percentage(%)"),blank=True,default=0,null=True)
     com_percent = models.FloatField(_("Company percentage(%)"),blank=True,default=0,null=True)
-    royalty = models.FloatField(_("royalty"))
-    zakat = models.FloatField(_("zakat"))
-    annual_rent = models.FloatField(_("annual_rent"))
+    royalty = models.FloatField(_("royalty"),default=0)
+    zakat = models.FloatField(_("zakat"),default=0)
+    annual_rent = models.FloatField(_("annual_rent"),default=0)
+    business_profit = models.FloatField(_("Business profit"),blank=True,default=0,null=True)
+    social_responsibility = models.FloatField(_("Social responsibility"),blank=True,default=0,null=True)
+
     contract_status  = models.ForeignKey(LkpCompanyProductionLicenseStatus, on_delete=models.PROTECT,verbose_name=_("contract_status"))
-    contract_file = models.FileField(_("contract_file"),upload_to=company_contract_path)
+    contract_file = models.FileField(_("contract_file"),upload_to=company_contract_path,blank=True,null=True)
 
     def __str__(self):
         return self.company.name_ar+"( "+str(self.date)+" )"
