@@ -76,6 +76,9 @@ INSTALLED_APPS = [
 
     'django_crontab',
 
+    'rest_framework',
+    'rest_framework.authtoken',
+
     # 'pwa',
     
     # Local                
@@ -342,3 +345,9 @@ BOOTSTRAP3 = {
 #     }
 # ]
 # PWA_APP_DEBUG_MODE = config('DEBUG', default=False, cast=bool)
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ]
+}

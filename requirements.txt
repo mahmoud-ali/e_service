@@ -15,3 +15,5 @@ django-crontab
 Pillow
 django-bootstrap-datepicker-plus
 # django-pwa
+djangorestframework
+#djoser
