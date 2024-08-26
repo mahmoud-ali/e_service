@@ -2,7 +2,7 @@ import csv
 
 from django.contrib.auth import get_user_model
 
-from ..models import MOAHIL_BAKLARIOS, MOAHIL_DAPLOM_3ALI, MOAHIL_DECTORA, MOAHIL_MAJSTEAR, MOAHIL_THANOI, HikalWazifi, MosamaWazifi,Edara3ama,Edarafar3ia,EmployeeBasic,Drajat3lawat, PayrollDetail, PayrollMaster, EmployeeJazaat, EmployeeSalafiat
+from ..models import MOAHIL_BAKLARIOS, MOAHIL_DAPLOM_3ALI, MOAHIL_DECTORA, MOAHIL_MAJSTEAR, MOAHIL_THANOI, EmployeeBankAccount, HikalWazifi, MosamaWazifi,Edara3ama,Edarafar3ia,EmployeeBasic,Drajat3lawat, PayrollDetail, PayrollMaster, EmployeeJazaat, EmployeeSalafiat
 
 from ..payroll import Payroll
 
@@ -270,3 +270,25 @@ def create_hikal_for_states(parent_id):
 
     for name in arr:
         create_hikal_state_child(parent,name)
+
+def import_bank_accounts():    
+    with open(f'./hr/data/accounts.csv', newline='') as csvfile:
+        reader = csv.reader(csvfile, delimiter=',')
+        next(reader, None)  # skip the headers
+        for row in reader:
+            try:
+                code = int(row[0])
+                bank = row[2]
+                account_no = row[3]
+                if code:
+                    emp = EmployeeBasic.objects.get(code=code)
+                    EmployeeBankAccount.objects.create(
+                        employee=emp,
+                        bank=bank,
+                        account_no=account_no,
+                        active=True,
+                        created_by=admin_user,
+                        updated_by=admin_user
+                    )
+            except Exception as e:
+                print('not imported',e)
