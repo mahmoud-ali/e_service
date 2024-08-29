@@ -73,7 +73,6 @@ class PaymentView(APIView):
 
         payment_res = PaymentResponseSerializer(data={
             'transactionId':transaction_id,
-            'amount':amount,
         })
         
 
