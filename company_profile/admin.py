@@ -208,6 +208,23 @@ class TblCompanyProductionLicenseAdmin(ExportActionMixin,LoggingAdminMixin,admin
     search_fields = ["company__name_ar","company__name_en","sheet_no","license_no"]
     view_on_site = False
 
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        company_types = []
+
+        if request.user.groups.filter(name="company_type_entaj").exists():
+            company_types += [TblCompany.COMPANY_TYPE_ENTAJ]
+        if request.user.groups.filter(name="company_type_mokhalfat").exists():
+            company_types += [TblCompany.COMPANY_TYPE_MOKHALFAT]
+        if request.user.groups.filter(name="company_type_emtiaz").exists():
+            company_types += [TblCompany.COMPANY_TYPE_EMTIAZ]
+        if request.user.groups.filter(name="company_type_sageer").exists():
+            company_types += [TblCompany.COMPANY_TYPE_SAGEER]
+
+        qs = qs.filter(company__company_type__in=company_types)
+
+        return qs
+
     class Media:
         js = ('admin/js/jquery.init.js','company_profile/js/lkp_state_change.js')
 
