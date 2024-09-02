@@ -2892,7 +2892,7 @@ msgstr "توزيع الايرادات"
 
 #: revenu_dist/models.py:41 revenu_dist/models.py:60
 msgid "Partner"
-msgstr "شريك"
+msgstr "الشريك"
 
 #: revenu_dist/models.py:42
 msgid "Partners"
