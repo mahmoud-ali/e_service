@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-02 15:19+0200\n"
+"POT-Creation-Date: 2024-09-02 17:16+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2878,7 +2878,11 @@ msgstr "تعديل مطالبة "
 msgid "Delete request"
 msgstr "حذف سجل مطالبة"
 
-#: revenu_dist/admin.py:61
+#: revenu_dist/admin.py:50
+msgid "Distributed correctly"
+msgstr "توزيع متوازن"
+
+#: revenu_dist/admin.py:75
 msgid "Double check distribution balance!"
 msgstr "مجموع الايرادات الموزعة لايساوي اجمالي الايراد!"
 

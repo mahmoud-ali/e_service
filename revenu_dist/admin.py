@@ -43,9 +43,13 @@ class TblRevenuAdmin(LoggingAdminMixin,admin.ModelAdmin):
     ]
     # inlines = [TblRevenuDetailInline]     
     
-    list_display = ['name','date','name','revenu_type','amount','currency','source']       
+    list_display = ['name','distributed_correctly','date','name','revenu_type','amount','currency','source']       
     list_filter =  ['name','date','name','revenu_type','amount','currency','source']       
     view_on_site = False
+
+    @admin.display(description=_("Distributed correctly"),boolean=True)
+    def distributed_correctly(self, obj):
+        return obj.checkDetailsTotalEqualAmount()
 
     def get_inlines(self,request, obj):
         if obj:
