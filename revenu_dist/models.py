@@ -5,6 +5,34 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 
 from django.conf import settings
 
+MONTH_JAN = 1
+MONTH_FEB = 2
+MONTH_MAR = 3
+MONTH_APR = 4
+MONTH_MAY = 5
+MONTH_JUN = 6
+MONTH_JLY = 7
+MONTH_AUG = 8
+MONTH_SEP = 9
+MONTH_OCT = 10
+MONTH_NOV = 11
+MONTH_DEC = 12
+
+MONTH_CHOICES = {
+    MONTH_JAN: _('MONTH_JAN'),
+    MONTH_FEB: _('MONTH_FEB'),
+    MONTH_MAR: _('MONTH_MAR'),
+    MONTH_APR: _('MONTH_APR'),
+    MONTH_MAY: _('MONTH_MAY'),
+    MONTH_JUN: _('MONTH_JUN'),
+    MONTH_JLY: _('MONTH_JLY'),
+    MONTH_AUG: _('MONTH_AUG'),
+    MONTH_SEP: _('MONTH_SEP'),
+    MONTH_OCT: _('MONTH_OCT'),
+    MONTH_NOV: _('MONTH_NOV'),
+    MONTH_DEC: _('MONTH_DEC'),
+}
+
 ALLOWED_ERROR = 1
 
 CURRENCY_TYPE_SDG = 1
@@ -73,7 +101,7 @@ class TblRevenu(LoggingModel):
     source = models.CharField(_("source"),max_length=100)
 
     def __str__(self):
-        return f'{self.name} ({self.amount} {self.get_currency_display()})'
+        return f'{self.name} - {MONTH_CHOICES[self.date.month]} {self.date.year} ({self.get_currency_display()})'
 
     class Meta:
         verbose_name = _("Revenu")
