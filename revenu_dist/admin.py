@@ -51,7 +51,17 @@ class TblRevenuAdmin(LoggingAdminMixin,admin.ModelAdmin):
         if obj:
             return [TblRevenuDetailInline]    
         return []
-    
+
+    def save_model(self,request, obj, form, change):
+        if obj.pk:
+            obj.updated_by = request.user
+        else:
+            obj.created_by = obj.updated_by = request.user
+
+        super().save_formset(request, obj, form, change)
+        if not change:       
+            obj.distributeAmount()
+
     def save_formset(self, request, form, formset, change):
         super().save_formset(request, form, formset, change)
         obj = form.save(commit=False)
