@@ -113,3 +113,11 @@ class TblRevenuDist(models.Model):
         verbose_name = _("Revenu distribution")
         verbose_name_plural = _("Revenu distribution")
 
+    def calculateShare(self,partner):
+        master_amount = self.master.amount
+        revenu_type = self.master.revenu_type
+        try:
+            share_percent = LkpRevenuTypeDetail.objects.get(master=revenu_type,partner=self.partner).percent
+            return (master_amount*share_percent)/100
+        except LkpRevenuTypeDetail.DoesNotExist:
+            return 0

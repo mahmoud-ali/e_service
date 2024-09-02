@@ -33,15 +33,7 @@ class TblRevenuDetailInline(admin.TabularInline):
     extra = 0
 
 class TblRevenuAdmin(LoggingAdminMixin,admin.ModelAdmin):
-    fieldsets = [
-        (
-            None,
-            {
-                "fields":[('date','revenu_type'),'name',('amount','currency'),'source']
-            }
-        )
-    ]
-    # inlines = [TblRevenuDetailInline]     
+    fields = [('date','revenu_type'),'name',('amount','currency'),'source']
     
     list_display = ['name','distributed_correctly','date','revenu_type','amount','currency','source']       
     list_filter =  ['name','date','revenu_type','currency','source']       
