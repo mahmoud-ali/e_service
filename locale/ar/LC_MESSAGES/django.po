@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-22 16:50+0200\n"
+"POT-Creation-Date: 2024-09-02 14:51+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -76,19 +76,19 @@ msgstr "بيانات التواصل"
 msgid "Company Status"
 msgstr "موقف الشركة"
 
-#: company_profile/admin.py:195
+#: company_profile/admin.py:200
 msgid "General information"
 msgstr "بيانات عامة"
 
-#: company_profile/admin.py:196
+#: company_profile/admin.py:201
 msgid "Location information"
 msgstr "الموقع الجغرافي"
 
-#: company_profile/admin.py:197
+#: company_profile/admin.py:202
 msgid "Contract information"
 msgstr "بيانات العقد"
 
-#: company_profile/admin.py:209 company_profile/forms.py:29
+#: company_profile/admin.py:231 company_profile/forms.py:29
 #: company_profile/models.py:114 pa/models.py:67
 msgid "company_type"
 msgstr "نوع الشركة"
@@ -154,11 +154,12 @@ msgstr "نوع الرخصة"
 #: company_profile/templates/company_profile/home.html:16
 #: company_profile/templates/company_profile/home.html:38
 #: company_profile/templates/company_profile/home.html:59
-#: help_request/models.py:11 pa/models.py:46
+#: help_request/models.py:11 pa/models.py:46 revenu_dist/models.py:25
 msgid "created_at"
 msgstr "تاريخ الانشاء"
 
 #: company_profile/models.py:18 help_request/models.py:13 pa/models.py:47
+#: revenu_dist/models.py:26
 msgid "created_by"
 msgstr "المستخدم المسئول عن الانشاء"
 
@@ -166,11 +167,12 @@ msgstr "المستخدم المسئول عن الانشاء"
 #: company_profile/templates/company_profile/home.html:17
 #: company_profile/templates/company_profile/home.html:39
 #: company_profile/templates/company_profile/home.html:60
-#: help_request/models.py:12 pa/models.py:49
+#: help_request/models.py:12 pa/models.py:49 revenu_dist/models.py:28
 msgid "updated_at"
 msgstr "تاريخ اخر تعديل"
 
 #: company_profile/models.py:21 help_request/models.py:14 pa/models.py:50
+#: revenu_dist/models.py:29
 msgid "updated_by"
 msgstr "المستخدم المسئول عن التعديل"
 
@@ -191,6 +193,7 @@ msgstr ""
 #: company_profile/models.py:134 company_profile/models.py:166
 #: company_profile/models.py:188 company_profile/models.py:704
 #: company_profile/models.py:802 company_profile/models.py:1058
+#: revenu_dist/models.py:35 revenu_dist/models.py:45 revenu_dist/models.py:69
 msgid "name"
 msgstr "الاسم"
 
@@ -2403,7 +2406,7 @@ msgstr "الكل"
 
 #: pa/forms/daily.py:10 pa/models.py:94 pa/models.py:131 pa/models.py:296
 #: pa/models.py:492 pa/templates/pa/pa_daily.html:47
-#: pa/templates/pa/pa_daily.html:77
+#: pa/templates/pa/pa_daily.html:77 revenu_dist/models.py:72
 msgid "currency"
 msgstr "العملة"
 
@@ -2424,15 +2427,15 @@ msgstr "المطالبة"
 msgid "payments total"
 msgstr "مجموع السداد"
 
-#: pa/models.py:24
+#: pa/models.py:24 revenu_dist/models.py:15
 msgid "sdg"
 msgstr "جنيه"
 
-#: pa/models.py:25
+#: pa/models.py:25 revenu_dist/models.py:16
 msgid "euro"
 msgstr "يورو"
 
-#: pa/models.py:26
+#: pa/models.py:26 revenu_dist/models.py:17
 msgid "dollar"
 msgstr "دولار"
 
@@ -2495,6 +2498,7 @@ msgid "financial item"
 msgstr "البند"
 
 #: pa/models.py:114 pa/models.py:440 pa/models.py:543 pa/models.py:609
+#: revenu_dist/models.py:71 revenu_dist/models.py:110
 msgid "amount"
 msgstr "المبلغ"
 
@@ -2746,7 +2750,7 @@ msgstr "عدد العقود"
 msgid "Print"
 msgstr "طباعة"
 
-#: pa/templates/pa/pa_daily.html:75
+#: pa/templates/pa/pa_daily.html:75 revenu_dist/models.py:68
 msgid "date"
 msgstr "التاريخ"
 
@@ -2873,6 +2877,54 @@ msgstr "تعديل مطالبة "
 #: pa/views/request.py:127
 msgid "Delete request"
 msgstr "حذف سجل مطالبة"
+
+#: revenu_dist/admin.py:61
+msgid "Double check distribution balance!"
+msgstr "مجموع الايرادات الموزعة لايساوي اجمالي الايراد!"
+
+#: revenu_dist/apps.py:7
+msgid "Revenu distiribution"
+msgstr "توزيع الايرادات"
+
+#: revenu_dist/models.py:41 revenu_dist/models.py:60
+msgid "Partner"
+msgstr "شريك"
+
+#: revenu_dist/models.py:42
+msgid "Partners"
+msgstr "الشركاء"
+
+#: revenu_dist/models.py:51
+msgid "Revenu type"
+msgstr "نوع الايراد"
+
+#: revenu_dist/models.py:52
+msgid "Revenu types"
+msgstr "انواع الايرادات"
+
+#: revenu_dist/models.py:61
+msgid "percent"
+msgstr "النسبة المئوية"
+
+#: revenu_dist/models.py:64
+msgid "Revenu type detail"
+msgstr "تفصيل نوع الايراد"
+
+#: revenu_dist/models.py:65
+msgid "Revenu type details"
+msgstr "تفاصيل انواع الايرادات"
+
+#: revenu_dist/models.py:73
+msgid "source"
+msgstr "المصدر"
+
+#: revenu_dist/models.py:79 revenu_dist/models.py:80
+msgid "Revenu"
+msgstr "الايرادات"
+
+#: revenu_dist/models.py:113 revenu_dist/models.py:114
+msgid "Revenu distribution"
+msgstr "توزيع الايرادات"
 
 #: templates/account/login.html:6
 msgid "Log In page"
