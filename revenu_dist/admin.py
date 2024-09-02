@@ -43,8 +43,8 @@ class TblRevenuAdmin(LoggingAdminMixin,admin.ModelAdmin):
     ]
     # inlines = [TblRevenuDetailInline]     
     
-    list_display = ['name','distributed_correctly','date','name','revenu_type','amount','currency','source']       
-    list_filter =  ['name','date','name','revenu_type','amount','currency','source']       
+    list_display = ['name','distributed_correctly','date','revenu_type','amount','currency','source']       
+    list_filter =  ['name','date','revenu_type','currency','source']       
     view_on_site = False
 
     @admin.display(description=_("Distributed correctly"),boolean=True)
