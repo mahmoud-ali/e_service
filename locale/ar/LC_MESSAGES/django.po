@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-02 14:51+0200\n"
+"POT-Creation-Date: 2024-09-02 15:19+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2894,7 +2894,7 @@ msgstr "شريك"
 msgid "Partners"
 msgstr "الشركاء"
 
-#: revenu_dist/models.py:51
+#: revenu_dist/models.py:51 revenu_dist/models.py:70
 msgid "Revenu type"
 msgstr "نوع الايراد"
 

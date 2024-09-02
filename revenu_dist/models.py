@@ -67,7 +67,7 @@ class LkpRevenuTypeDetail(models.Model):
 class TblRevenu(LoggingModel):
     date = models.DateField(_("date"))
     name = models.CharField(_("name"),max_length=100)
-    revenu_type  = models.ForeignKey(LkpRevenuType, on_delete=models.PROTECT)    
+    revenu_type  = models.ForeignKey(LkpRevenuType, on_delete=models.PROTECT,verbose_name=_('Revenu type'))    
     amount = models.FloatField(_("amount"))
     currency = models.IntegerField(_("currency"), choices=CURRENCY_TYPE_CHOICES, default=CURRENCY_TYPE_SDG)
     source = models.CharField(_("source"),max_length=100)
