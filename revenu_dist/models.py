@@ -145,7 +145,7 @@ class TblRevenu(LoggingModel):
         
 class TblRevenuDist(models.Model):
     master  = models.ForeignKey(TblRevenu, on_delete=models.CASCADE)    
-    partner  = models.ForeignKey(LkpPartner, on_delete=models.PROTECT)    
+    partner  = models.ForeignKey(LkpPartner, on_delete=models.PROTECT,verbose_name=_('Partner'))    
     amount = models.FloatField(_("amount"),validators=[MinValueValidator(limit_value=0),])
 
     def __str__(self):
