@@ -1,5 +1,7 @@
+from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.contrib import admin,messages
+from django.forms.widgets import TextInput
 
 from revenu_dist.models import LkpPartner, LkpRevenu, LkpRevenuType, LkpRevenuTypeDetail, TblRevenu, TblRevenuDist
 
@@ -40,6 +42,9 @@ class TblRevenuDetailInline(admin.TabularInline):
     model = TblRevenuDist
     fields = ['partner','amount']
     extra = 0
+    formfield_overrides = {
+        models.FloatField: {"widget": TextInput},
+    }    
 
 class TblRevenuAdmin(LoggingAdminMixin,admin.ModelAdmin):
     fields = [('date','revenu'),('amount','currency'),'name','source']
@@ -47,6 +52,10 @@ class TblRevenuAdmin(LoggingAdminMixin,admin.ModelAdmin):
     list_display = ['revenu','distributed_correctly','date','amount','currency','name','source']       
     list_filter =  ['revenu','date','currency','source']       
     view_on_site = False
+
+    formfield_overrides = {
+        models.FloatField: {"widget": TextInput},
+    }    
 
     @admin.display(description=_("Distributed correctly"),boolean=True)
     def distributed_correctly(self, obj):
