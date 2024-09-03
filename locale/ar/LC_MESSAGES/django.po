@@ -2984,16 +2984,12 @@ msgid "Revenu distribution"
 msgstr "توزيع الايرادات"
 
 #: revenu_dist/models.py:152
-#, fuzzy
-#| msgid "Revenu distribution"
 msgid "Revenu distribution detail"
-msgstr "توزيع الايرادات"
+msgstr "تفاصيل توزيع الايرادات"
 
 #: revenu_dist/models.py:153
-#, fuzzy
-#| msgid "Revenu distribution"
 msgid "Revenu distribution details"
-msgstr "توزيع الايرادات"
+msgstr "تفاصيل توزيع الايرادات"
 
 #: templates/account/login.html:6
 msgid "Log In page"
