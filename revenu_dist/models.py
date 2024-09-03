@@ -92,31 +92,42 @@ class LkpRevenuTypeDetail(models.Model):
         verbose_name = _("Revenu type detail")
         verbose_name_plural = _("Revenu type details")
 
-class TblRevenu(LoggingModel):
-    date = models.DateField(_("date"))
+class LkpRevenu(models.Model):
     name = models.CharField(_("name"),max_length=100)
     revenu_type  = models.ForeignKey(LkpRevenuType, on_delete=models.PROTECT,verbose_name=_('Revenu type'))    
-    amount = models.FloatField(_("amount"))
-    currency = models.IntegerField(_("currency"), choices=CURRENCY_TYPE_CHOICES, default=CURRENCY_TYPE_SDG)
-    source = models.CharField(_("source"),max_length=100)
 
     def __str__(self):
-        return f'{self.name} - {MONTH_CHOICES[self.date.month]} {self.date.year} ({self.get_currency_display()})'
+        return self.name
 
     class Meta:
         verbose_name = _("Revenu")
         verbose_name_plural = _("Revenu")
 
+
+class TblRevenu(LoggingModel):
+    date = models.DateField(_("date"))
+    name = models.CharField(_("note"),max_length=100)
+    revenu  = models.ForeignKey(LkpRevenu, on_delete=models.PROTECT,verbose_name=_('Revenu'))    
+    amount = models.FloatField(_("amount"))
+    currency = models.IntegerField(_("currency"), choices=CURRENCY_TYPE_CHOICES, default=CURRENCY_TYPE_SDG)
+    source = models.CharField(_("source"),max_length=100)
+
+    def __str__(self):
+        return f'{self.revenu.name} - {MONTH_CHOICES[self.date.month]} {self.date.year} ({self.get_currency_display()})'
+
+    class Meta:
+        verbose_name = _("Revenu distribution")
+        verbose_name_plural = _("Revenu distribution")
+
     def checkDetailsTotalEqualAmount(self):
         qs = self.tblrevenudist_set.all()
         result = qs.aggregate(total=Sum("amount",default=0))
         diff = (result['total']-self.amount)
-        print('----',diff)
         return (abs(diff) <=  ALLOWED_ERROR)
 
     def calculatePartnerShare(self,partner):
         master_amount = self.amount
-        revenu_type = self.revenu_type
+        revenu_type = self.revenu.revenu_type
         try:
             share_percent = LkpRevenuTypeDetail.objects.get(master=revenu_type,partner=partner).percent
             return (master_amount*share_percent)/100
@@ -124,7 +135,7 @@ class TblRevenu(LoggingModel):
             return 0
         
     def distributeAmount(self):
-        for d in LkpRevenuTypeDetail.objects.filter(master=self.revenu_type):
+        for d in LkpRevenuTypeDetail.objects.filter(master=self.revenu.revenu_type):
             TblRevenuDist.objects.create(
                 master=self,
                 partner=d.partner,
@@ -138,12 +149,12 @@ class TblRevenuDist(models.Model):
     amount = models.FloatField(_("amount"),validators=[MinValueValidator(limit_value=0),])
 
     class Meta:
-        verbose_name = _("Revenu distribution")
-        verbose_name_plural = _("Revenu distribution")
+        verbose_name = _("Revenu distribution detail")
+        verbose_name_plural = _("Revenu distribution details")
 
     def calculateShare(self,partner):
         master_amount = self.master.amount
-        revenu_type = self.master.revenu_type
+        revenu_type = self.master.revenu.revenu_type
         try:
             share_percent = LkpRevenuTypeDetail.objects.get(master=revenu_type,partner=self.partner).percent
             return (master_amount*share_percent)/100

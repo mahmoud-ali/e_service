@@ -1,7 +1,7 @@
 from django.utils.translation import gettext_lazy as _
 from django.contrib import admin,messages
 
-from revenu_dist.models import LkpPartner, LkpRevenuType, LkpRevenuTypeDetail, TblRevenu, TblRevenuDist
+from revenu_dist.models import LkpPartner, LkpRevenu, LkpRevenuType, LkpRevenuTypeDetail, TblRevenu, TblRevenuDist
 
 class LoggingAdminMixin:
     def save_model(self, request, obj, form, change):
@@ -27,16 +27,25 @@ class LkpRevenuTypeAdmin(LoggingAdminMixin,admin.ModelAdmin):
             
 admin.site.register(LkpRevenuType, LkpRevenuTypeAdmin)
 
+class LkpRevenuAdmin(LoggingAdminMixin,admin.ModelAdmin):
+    field = ['name','revenu_type']
+    
+    list_display = ["name"]        
+    list_filter = ['revenu_type']
+    view_on_site = False
+            
+admin.site.register(LkpRevenu, LkpRevenuAdmin)
+
 class TblRevenuDetailInline(admin.TabularInline):
     model = TblRevenuDist
     fields = ['partner','amount']
     extra = 0
 
 class TblRevenuAdmin(LoggingAdminMixin,admin.ModelAdmin):
-    fields = [('date','revenu_type'),'name',('amount','currency'),'source']
+    fields = [('date','revenu'),('amount','currency'),'name','source']
     
-    list_display = ['name','distributed_correctly','date','revenu_type','amount','currency','source']       
-    list_filter =  ['name','date','revenu_type','currency','source']       
+    list_display = ['revenu','distributed_correctly','date','amount','currency','name','source']       
+    list_filter =  ['revenu','date','currency','source']       
     view_on_site = False
 
     @admin.display(description=_("Distributed correctly"),boolean=True)
