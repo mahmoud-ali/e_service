@@ -148,6 +148,9 @@ class TblRevenuDist(models.Model):
     partner  = models.ForeignKey(LkpPartner, on_delete=models.PROTECT)    
     amount = models.FloatField(_("amount"),validators=[MinValueValidator(limit_value=0),])
 
+    def __str__(self):
+        return f'{self.partner.name}'
+
     class Meta:
         verbose_name = _("Revenu distribution detail")
         verbose_name_plural = _("Revenu distribution details")
