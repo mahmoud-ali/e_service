@@ -57,16 +57,17 @@ class AuthView(APIView):
         
         if auth_req.is_valid():
             try:
-                user = authenticate(username=username, password=password)
-                token = Token.objects.get(user=user).key
-                collector = TblCollector.objects.get(user=user)
+                user = authenticate(email=username, password=password)
+                if user is not None:
+                    token = Token.objects.get(user=user).key
+                    collector = TblCollector.objects.get(user=user)
 
-                auth_res.initial_data['token'] = token
-                auth_res.initial_data['name'] = collector.name
-                auth_res.initial_data['state'] = collector.state.name
-                auth_res.initial_data['soag'] = collector.soag.name
-                auth_res.initial_data['status'] = 0
-                auth_res.initial_data['statusDescription'] = _('Authenticated sucessfully.')
+                    auth_res.initial_data['token'] = token
+                    auth_res.initial_data['name'] = collector.name
+                    auth_res.initial_data['state'] = collector.state.name
+                    auth_res.initial_data['soag'] = collector.soag.name
+                    auth_res.initial_data['status'] = 0
+                    auth_res.initial_data['statusDescription'] = _('Authenticated sucessfully.')
             except:
                 pass
 
