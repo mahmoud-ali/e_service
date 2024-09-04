@@ -27,7 +27,7 @@ class GroupViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
 class InqueryView(APIView):
-    permission_classes = [permissions.IsAdminUser]
+    permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, format=None):
         client_id = request.POST.get('uniqueId',None)
@@ -59,7 +59,7 @@ class InqueryView(APIView):
         return Response(inquery_res.data)
     
 class PaymentView(APIView):
-    permission_classes = [permissions.IsAdminUser]
+    permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, format=None):
         rrn = request.POST.get('rrn',None)
