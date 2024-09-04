@@ -42,8 +42,8 @@ class AuthView(APIView):
     permission_classes = []
 
     def post(self, request, format=None):
-        username = request.POST.get('username','')
-        password = request.POST.get('password','')
+        username = request.data.get('username','')
+        password = request.data.get('password','')
 
         auth_req = UserRequestSerializer(data={
             'username':username,
@@ -78,9 +78,9 @@ class InvoiceView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, format=None):
-        name = request.POST.get('name','')
-        quantity_in_shoal = int(request.POST.get('quantity_in_shoal',0))
-        amount = float(request.POST.get('amount',0))
+        name = request.data.get('name','')
+        quantity_in_shoal = int(request.data.get('quantity_in_shoal',0))
+        amount = float(request.data.get('amount',0))
 
         invoice_req = InvoiceRequestSerializer(data={
             'name':name,
