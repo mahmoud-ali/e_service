@@ -108,7 +108,7 @@ class Badalat_3lawat():
         return 'Badalat => '+', '.join([f'{b[0]}: {round(b[1],2)}' for b in self.__iter__()])
 
 class Khosomat():
-    def __init__(self,Badalat:Badalat_3lawat,zaka_kafaf,zaka_nisab,m3ash=0,salafiat=0,jazaat=0,damga=1,sandog=0,sandog_kahraba=0,enable_sandog_kahraba=True,enable_youm_algoat_almosalaha=True,tarikh_2lmilad=None,m3ash_age=100,salafiat_sandog=0,khasm_salafiat_elsandog_min_elomoratab=False):
+    def __init__(self,Badalat:Badalat_3lawat,zaka_kafaf,zaka_nisab,m3ash=0,salafiat=0,jazaat=0,damga=1,sandog=0,sandog_kahraba=0,enable_sandog_kahraba=True,enable_youm_algoat_almosalaha=True,tarikh_2lmilad=None,m3ash_age=100,salafiat_sandog=0,khasm_salafiat_elsandog_min_elomoratab=False,dariba_mokaf2=0):
         self.Badalat = Badalat
         self._zaka_kafaf = zaka_kafaf
         self._zaka_nisab = zaka_nisab
@@ -123,7 +123,10 @@ class Khosomat():
         self._tarikh_2lmilad = tarikh_2lmilad
         self._m3ash_age = m3ash_age
         self._salafiat_sandog = salafiat_sandog
+        self._salafiat_sandog_remain = 0
         self._khasm_salafiat_elsandog_min_elomoratab = khasm_salafiat_elsandog_min_elomoratab
+
+        self.mokaf2 = Mokaf2(self.Badalat,dariba_mokaf2,self.damga,False,0)
 
     @property
     def m3ash(self):
@@ -181,6 +184,17 @@ class Khosomat():
     @property
     def salafiat_sandog(self):
         return self._salafiat_sandog
+
+    @property
+    def salafiat_sandog_remain(self):
+        if self.khasm_salafiat_elsandog_min_elomoratab:
+            return self.salafiat_sandog
+
+        remain = (self.mokaf2.safi_2l2sti7gag - self.salafiat_sandog)
+        if (remain < 0):
+            return abs(remain) 
+        else:
+            return 0
     
     @property
     def khasm_salafiat_elsandog_min_elomoratab(self):
@@ -202,9 +216,7 @@ class Khosomat():
 
     @property
     def ajmali_astgta3at_sanawia(self):
-        ajmali = (self.sandog_kahraba +self.salafiat +self.youm_algoat_almosalaha +self.zakat)
-        if self.khasm_salafiat_elsandog_min_elomoratab:
-            ajmali += self.salafiat_sandog
+        ajmali = (self.sandog_kahraba +self.salafiat +self.youm_algoat_almosalaha +self.zakat +self.salafiat_sandog_remain)
         return ajmali
     
     @property
@@ -236,12 +248,7 @@ class Khosomat():
         props += [   
             ('salafiat',self.salafiat),
          ]
-        
-        if self.khasm_salafiat_elsandog_min_elomoratab:
-            props += [   
-                ('salafiat_sandog',self.salafiat_sandog),
-            ]
-        
+                
         if self._enable_youm_algoat_almosalaha:
             props += [   
                 ('youm_algoat_almosalaha',self.youm_algoat_almosalaha),
@@ -249,6 +256,10 @@ class Khosomat():
             
         props += [   
             ('zakat',self.zakat),
+            ('salafiat_sandog',self.salafiat_sandog_remain),
+        ]
+
+        props += [   
             ('ajmali_astgta3at_sanawia',self.ajmali_astgta3at_sanawia),
             ('jazaat',self.jazaat),
             ('ajmali_astgta3at_koli',self.ajmali_astgta3at_koli),
@@ -398,14 +409,10 @@ class Mobashara():
         return self.__str__()
 
 class Mokaf2():
-    def __init__(self,Badalat:Badalat_3lawat,year,month,dariba=0.05,damga=1,employee=None,khasm_salafiat_elsandog_min_elmokaf2=False,salafiat_sandog=0):
+    def __init__(self,Badalat:Badalat_3lawat,dariba=0.05,damga=1,khasm_salafiat_elsandog_min_elmokaf2=False,salafiat_sandog=0):
         self.Badalat = Badalat
-        self._year = year
-        self._month = month
         self._dariba = dariba
         self._damga = damga
-
-        self.employee = employee
 
         self._khasm_salafiat_elsandog_min_elmokaf2 = khasm_salafiat_elsandog_min_elmokaf2
         self._salafiat_sandog = salafiat_sandog
@@ -435,6 +442,8 @@ class Mokaf2():
         safi = (self.ajmali_2lmoratab - self.dariba -self.damga)
         if self.khasm_salafiat_elsandog_min_elmokaf2:
             safi -= self.salafiat_sandog
+            if (safi < 0):
+                safi = 0
         return safi
 
     def __iter__(self):

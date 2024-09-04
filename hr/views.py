@@ -114,13 +114,10 @@ class Khosomat(LoginRequiredMixin,UserPermissionMixin,View):
 
         header += ['السلفيات',]
 
-        if payroll_master.khasm_salafiat_elsandog_min_elomoratab:
-            header += ['سلفيات الصندوق',]
-
         if payroll_master.enable_youm_algoat_almosalaha:
             header += ['استقطاع القوات المسلحه',]
 
-        header += ['الزكاة','إجمالي الإستقطاعات السنوية','خصومات - جزاءات','إجمالي الإستقطاع الكلي','صافي الإستحقاق']
+        header += ['الزكاة','سلفيات الصندوق','إجمالي الإستقطاعات السنوية','خصومات - جزاءات','إجمالي الإستقطاع الكلي','صافي الإستحقاق']
 
         summary_list = []
 
@@ -562,9 +559,8 @@ class Mokaf2(LoginRequiredMixin,UserPermissionMixin,View):
 
             summary_list = []
 
-            for emp_mokaf2 in mokaf2.all_employees_mokaf2_from_db():
+            for (emp,emp_mokaf2) in mokaf2.all_employees_mokaf2_from_db():
                 mokaf2_list = [round(k[1],2) for k in emp_mokaf2]
-                emp = emp_mokaf2.employee
                 l = [emp.code,emp.name,emp.get_draja_wazifia_display(),emp.get_alawa_sanawia_display(),]+mokaf2_list #round(emp_mokaf2.ajmali_2lmoratab,2),round(emp_mokaf2.dariba,2),emp_mokaf2.damga,]
                 #if not payroll_master.khasm_salafiat_elsandog_min_elomoratab:
                 #    l += [round(emp_mokaf2.salafiat_sandog,2),]

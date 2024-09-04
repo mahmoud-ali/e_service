@@ -93,6 +93,7 @@ class Payroll():
                 m3ash_age=self.hr_settings.get_code_as_float(Settings.SETTINGS_OMER_2LMA3ASH),
                 salafiat_sandog=salafiat_sandog_total,
                 khasm_salafiat_elsandog_min_elomoratab=khasm_salafiat_elsandog_min_elomoratab,
+                dariba_mokaf2=self.hr_settings.get_code_as_float(Settings.SETTINGS_DARIBAT_2LMOKAFA),
             )
 
             return (employee,badal,khosomat)
@@ -133,6 +134,7 @@ class Payroll():
             m3ash_age=self.payroll_master.m3ash_age,
             salafiat_sandog=emp_payroll.salafiat_sandog,
             khasm_salafiat_elsandog_min_elomoratab=self.payroll_master.khasm_salafiat_elsandog_min_elomoratab,
+            dariba_mokaf2=self.hr_settings.get_code_as_float(Settings.SETTINGS_DARIBAT_2LMOKAFA),
         )
 
         return (emp_payroll.employee,badal,khosomat,emp_payroll.draja_wazifia,emp_payroll.alawa_sanawia)
@@ -354,13 +356,13 @@ class Mokaf2Sheet():
             ma3adin=emp_payroll.ma3adin
         )
 
-        return Mokaf2(badal,self.year,self.month,emp_payroll.payroll_master.daribat_2lmokafa,emp_payroll.damga,emp_payroll.employee,khasm_salafiat_elsandog_min_elmokaf2=(not emp_payroll.payroll_master.khasm_salafiat_elsandog_min_elomoratab),salafiat_sandog=emp_payroll.salafiat_sandog)
+        return Mokaf2(badal,emp_payroll.payroll_master.daribat_2lmokafa,emp_payroll.damga,khasm_salafiat_elsandog_min_elmokaf2=(not emp_payroll.payroll_master.khasm_salafiat_elsandog_min_elomoratab),salafiat_sandog=emp_payroll.salafiat_sandog)
 
     def all_employees_mokaf2_from_db(self):
         for emp in self.employees:
             x = self.employee_mokaf2_from_db(emp)
             if x:
-                yield(x)
+                yield(emp.employee,x)
     
 
 class M2moriaSheet():
