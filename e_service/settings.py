@@ -88,6 +88,7 @@ INSTALLED_APPS = [
     'pa',
     'help_request',
     'revenu_dist',
+    'traditional_api',
 
     # Debug
     'debug_toolbar',

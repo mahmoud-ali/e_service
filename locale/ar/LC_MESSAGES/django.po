@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-03 11:59+0200\n"
+"POT-Creation-Date: 2024-09-04 20:58+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -155,11 +155,12 @@ msgstr "نوع الرخصة"
 #: company_profile/templates/company_profile/home.html:38
 #: company_profile/templates/company_profile/home.html:59
 #: help_request/models.py:11 pa/models.py:46 revenu_dist/models.py:53
+#: traditional_api/models.py:10
 msgid "created_at"
 msgstr "تاريخ الانشاء"
 
 #: company_profile/models.py:18 help_request/models.py:13 pa/models.py:47
-#: revenu_dist/models.py:54
+#: revenu_dist/models.py:54 traditional_api/models.py:11
 msgid "created_by"
 msgstr "المستخدم المسئول عن الانشاء"
 
@@ -168,11 +169,12 @@ msgstr "المستخدم المسئول عن الانشاء"
 #: company_profile/templates/company_profile/home.html:39
 #: company_profile/templates/company_profile/home.html:60
 #: help_request/models.py:12 pa/models.py:49 revenu_dist/models.py:56
+#: traditional_api/models.py:13
 msgid "updated_at"
 msgstr "تاريخ اخر تعديل"
 
 #: company_profile/models.py:21 help_request/models.py:14 pa/models.py:50
-#: revenu_dist/models.py:57
+#: revenu_dist/models.py:57 traditional_api/models.py:14
 msgid "updated_by"
 msgstr "المستخدم المسئول عن التعديل"
 
@@ -194,6 +196,8 @@ msgstr ""
 #: company_profile/models.py:188 company_profile/models.py:704
 #: company_profile/models.py:802 company_profile/models.py:1058
 #: revenu_dist/models.py:63 revenu_dist/models.py:73 revenu_dist/models.py:96
+#: traditional_api/models.py:20 traditional_api/models.py:31
+#: traditional_api/models.py:42
 msgid "name"
 msgstr "الاسم"
 
@@ -205,16 +209,17 @@ msgstr "الجنسية"
 msgid "Nationalities"
 msgstr "الجنسية"
 
-#: company_profile/models.py:77
+#: company_profile/models.py:77 traditional_api/models.py:26
 msgid "State"
 msgstr "الولاية"
 
-#: company_profile/models.py:78
+#: company_profile/models.py:78 traditional_api/models.py:27
 msgid "States"
 msgstr "الولايات"
 
 #: company_profile/models.py:81 company_profile/models.py:207
-#: pa/templates/pa/company_panel.html:21
+#: pa/templates/pa/company_panel.html:21 traditional_api/models.py:30
+#: traditional_api/models.py:43
 msgid "state"
 msgstr "الولاية"
 
@@ -2499,6 +2504,7 @@ msgstr "البند"
 
 #: pa/models.py:114 pa/models.py:440 pa/models.py:543 pa/models.py:609
 #: revenu_dist/models.py:111 revenu_dist/models.py:149
+#: traditional_api/models.py:57
 msgid "amount"
 msgstr "المبلغ"
 
@@ -2878,11 +2884,11 @@ msgstr "تعديل مطالبة "
 msgid "Delete request"
 msgstr "حذف سجل مطالبة"
 
-#: revenu_dist/admin.py:51
+#: revenu_dist/admin.py:60
 msgid "Distributed correctly"
 msgstr "توزيع متوازن"
 
-#: revenu_dist/admin.py:76
+#: revenu_dist/admin.py:85
 msgid "Double check distribution balance!"
 msgstr "مجموع الايرادات الموزعة لايساوي اجمالي الايراد!"
 
@@ -2938,7 +2944,7 @@ msgstr "نوفمبر"
 msgid "MONTH_DEC"
 msgstr "ديسمبر"
 
-#: revenu_dist/models.py:69 revenu_dist/models.py:88
+#: revenu_dist/models.py:69 revenu_dist/models.py:88 revenu_dist/models.py:148
 msgid "Partner"
 msgstr "الشريك"
 
@@ -2983,11 +2989,11 @@ msgstr "المصدر"
 msgid "Revenu distribution"
 msgstr "توزيع الايرادات"
 
-#: revenu_dist/models.py:152
+#: revenu_dist/models.py:155
 msgid "Revenu distribution detail"
 msgstr "تفاصيل توزيع الايرادات"
 
-#: revenu_dist/models.py:153
+#: revenu_dist/models.py:156
 msgid "Revenu distribution details"
 msgstr "تفاصيل توزيع الايرادات"
 
@@ -3063,6 +3069,47 @@ msgstr "خروج"
 #: templates/allauth/layouts/base.html:33
 msgid "Sign In"
 msgstr "دخول"
+
+#: traditional_api/apps.py:7
+msgid "traditional_api"
+msgstr "تحصيل التعدين التقليدي"
+
+#: traditional_api/models.py:37 traditional_api/models.py:38
+#: traditional_api/models.py:44
+msgid "Soag"
+msgstr "السوق"
+
+#: traditional_api/models.py:50 traditional_api/models.py:54
+msgid "Collector"
+msgstr "المتحصل"
+
+#: traditional_api/models.py:51
+msgid "Collectors"
+msgstr "المتحصلين"
+
+#: traditional_api/models.py:55
+msgid "mo3adin_name"
+msgstr "اسم المعدن"
+
+#: traditional_api/models.py:56
+msgid "quantity_per_shoal"
+msgstr "عدد الشوالات"
+
+#: traditional_api/models.py:63
+msgid "Invoice"
+msgstr "الفاتورة"
+
+#: traditional_api/models.py:64
+msgid "Invoices"
+msgstr "الفواتير"
+
+#: traditional_api/views.py:64
+msgid "Authenticated sucessfully."
+msgstr "تم تسجيل الدخول بنجاح."
+
+#: traditional_api/views.py:101
+msgid "Record added sucessfully."
+msgstr "تم حفظ السجل بنجاح."
 
 #, fuzzy
 #~| msgid "Delete request"
