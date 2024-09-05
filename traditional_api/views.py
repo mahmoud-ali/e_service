@@ -60,9 +60,9 @@ class AuthView(APIView):
                 user = authenticate(email=username, password=password)
                 if user is not None:
                     collector = TblCollector.objects.get(user=user)
-                    token = Token.objects.get_or_create(user=user).key
+                    token,created = Token.objects.get_or_create(user=user)
 
-                    auth_res.initial_data['token'] = token
+                    auth_res.initial_data['token'] = token.key
                     auth_res.initial_data['name'] = collector.name
                     auth_res.initial_data['state'] = collector.state.name
                     auth_res.initial_data['soag'] = collector.soag.name
