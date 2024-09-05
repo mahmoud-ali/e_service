@@ -28,7 +28,7 @@ admin.site.register(TblCollector, TblCollectorAdmin)
 class TblInvoiceAdmin(LoggingAdminMixin,admin.ModelAdmin):
     field = ['collector','mo3adin_name','quantity_in_shoal','amount']
     
-    list_display = ['collector','mo3adin_name','quantity_in_shoal','amount']
+    list_display = ['id','collector','mo3adin_name','quantity_in_shoal','amount']
     list_filter = ['collector__state','collector__soag','collector']
     view_on_site = False
             
