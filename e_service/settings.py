@@ -193,6 +193,10 @@ USE_TZ = True
 # DECIMAL_SEPARATOR = '.'
 # NUMBER_GROUPING = 3
 
+FORMAT_MODULE_PATH = [
+    'e_service.formats'
+]
+
 LOCALE_PATHS = [os.path.join(BASE_DIR, 'locale')]
 
 LANGUAGES = [
