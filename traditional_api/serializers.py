@@ -24,3 +24,10 @@ class InvoiceResponseSerializer(serializers.Serializer):
     invoiceId = serializers.IntegerField(required=False)
     status = serializers.IntegerField() #0=ok, 1=invalid data
     statusDescription = serializers.CharField(max_length=100)
+
+class InvoiceListResponseSerializer(serializers.Serializer):
+    invoiceId = serializers.IntegerField(required=False)
+    name = serializers.CharField(max_length=100)
+    quantity_in_shoal = serializers.IntegerField()
+    amount = serializers.FloatField()
+

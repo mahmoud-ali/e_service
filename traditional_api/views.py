@@ -13,7 +13,7 @@ from django.contrib.auth import authenticate
 
 from traditional_api.models import LkpSoag, TblCollector, TblInvoice
 
-from  .serializers import InvoiceRequestSerializer, InvoiceResponseSerializer, UserRequestSerializer, UserResponseSerializer
+from  .serializers import InvoiceListResponseSerializer, InvoiceRequestSerializer, InvoiceResponseSerializer, UserRequestSerializer, UserResponseSerializer
 
 class LkpSelectView(LoginRequiredMixin,TemplateView):
     template_name = 'select.html'
@@ -76,6 +76,20 @@ class AuthView(APIView):
 
 class InvoiceView(APIView):
     permission_classes = [permissions.IsAuthenticated]
+
+    def get(self,request):
+        collector = TblCollector.objects.get(user=request.user)
+        data = TblInvoice.objects.filter(collector=collector).order_by("-id")[0:10]
+        print(data)
+        res = InvoiceListResponseSerializer(
+            data=map(
+                lambda d: {'invoiceId':d.id,'name':d.mo3adin_name,'quantity_in_shoal':d.quantity_in_shoal,'amount':d.amount},
+                data
+            ), 
+            many=True
+        )
+        res.is_valid()
+        return Response(res.data)
 
     def post(self, request, format=None):
         name = request.data.get('name','')
