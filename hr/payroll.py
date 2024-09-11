@@ -138,10 +138,21 @@ class Payroll():
         )
 
         return (emp_payroll.employee,badal,khosomat,emp_payroll.draja_wazifia,emp_payroll.alawa_sanawia)
-
+    
     def all_employees_payroll_from_db(self):
         for emp_payroll in self.payroll_details:
             yield(self.employee_payroll_from_db(emp_payroll))
+
+    def employee_payroll_from_db_with_bank_account(self,emp_payroll:PayrollDetail):
+        tmp_lst = list(self.employee_payroll_from_db(emp_payroll))
+        tmp_lst.append(emp_payroll.bank)
+        tmp_lst.append(emp_payroll.account_no)
+        return tuple(tmp_lst)
+    
+    def all_employees_payroll_from_db_with_bank_account(self):
+        for emp_payroll in self.payroll_details:
+            yield(self.employee_payroll_from_db_with_bank_account(emp_payroll))
+
 
     def employee_payroll_from_employee(self,emp:EmployeeBasic):
         emp_payroll = PayrollDetail.objects.filter(payroll_master=self.payroll_master,employee=emp).prefetch_related("employee").first()
@@ -184,6 +195,14 @@ class Payroll():
                     
                 for emp_payroll in self.all_employees_payroll_calculated():
                     emp,badalat,khosomat = emp_payroll
+                    bank = ''
+                    account_no = ''
+                    try:
+                        bank_account = emp.employeebankaccount_set.get(active=True)
+                        bank = bank_account.bank
+                        account_no = bank_account.account_no
+                    except:
+                        pass
 
                     PayrollDetail.objects.create(
                         payroll_master = self.payroll_master,
@@ -206,6 +225,8 @@ class Payroll():
                         salafiat_sandog = khosomat.salafiat_sandog,
                         draja_wazifia = emp.draja_wazifia,
                         alawa_sanawia = emp.alawa_sanawia,
+                        bank = bank,
+                        account_no = account_no,
                     )
         except Exception as e:
             print(f'Payroll not calculated: {e}')

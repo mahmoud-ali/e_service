@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-19 13:46+0200\n"
+"POT-Creation-Date: 2024-09-11 21:16+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2529,39 +2529,43 @@ msgstr "لا"
 msgid "yes"
 msgstr "نعم"
 
-#: hr/admin.py:422 hr/admin.py:425
+#: hr/admin.py:428 hr/admin.py:431
 msgid "Show badalat sheet"
 msgstr "كشف البدلات"
 
-#: hr/admin.py:430 hr/admin.py:433
+#: hr/admin.py:436 hr/admin.py:439
 msgid "Show khosomat sheet"
 msgstr "كشف الخصومات"
 
-#: hr/admin.py:435 hr/admin.py:470 hr/admin.py:479 hr/admin.py:488
+#: hr/admin.py:441 hr/admin.py:477 hr/admin.py:486 hr/admin.py:495
 msgid "bank sheet"
 msgstr "كشف البنك"
 
-#: hr/admin.py:439 hr/admin.py:447
+#: hr/admin.py:445 hr/admin.py:453
 msgid "Diff badalat sheet"
 msgstr "كشف فرق البدلات"
 
-#: hr/admin.py:452 hr/admin.py:460
+#: hr/admin.py:458 hr/admin.py:466
 msgid "Diff khosomat sheet"
 msgstr "كشف فرق الخصومات"
 
-#: hr/admin.py:465 hr/admin.py:468
+#: hr/admin.py:468
+msgid "diff bank sheet"
+msgstr "تحديث ارقام الحسابات البنكية"
+
+#: hr/admin.py:472 hr/admin.py:475
 msgid "Show mobashara sheet"
 msgstr "كشف المباشرة"
 
-#: hr/admin.py:474 hr/admin.py:477
+#: hr/admin.py:481 hr/admin.py:484
 msgid "Show mokaf2 sheet"
 msgstr "كشف المكافأة"
 
-#: hr/admin.py:483 hr/admin.py:486
+#: hr/admin.py:490 hr/admin.py:493
 msgid "Show m2moria sheet"
 msgstr "كشف المأمورية"
 
-#: hr/admin.py:511
+#: hr/admin.py:518
 msgid "Confirm payroll"
 msgstr "تأكيد المرتب"
 
@@ -3057,11 +3061,11 @@ msgstr "بنك الخرطوم"
 msgid "BANK_OMDURMAN"
 msgstr "بنك امدرمان الوطني"
 
-#: hr/models.py:557
+#: hr/models.py:557 hr/models.py:891
 msgid "bank"
 msgstr "البنك"
 
-#: hr/models.py:558
+#: hr/models.py:558 hr/models.py:892
 msgid "account_no"
 msgstr "رقم الحساب"
 
@@ -3389,23 +3393,23 @@ msgstr "الصندوق كهرباء"
 msgid "salafiat_sandog"
 msgstr "سلفيات الصندوق"
 
-#: hr/models.py:898
+#: hr/models.py:900
 msgid "Payroll detail"
 msgstr "تفاصيل مرتب"
 
-#: hr/models.py:899
+#: hr/models.py:901
 msgid "Payroll details"
 msgstr "تفاصيل المرتبات"
 
-#: hr/payroll.py:279
+#: hr/payroll.py:302
 msgid "ayam_2lmobashara_2lsafi"
 msgstr "ايام المباشرة"
 
-#: hr/payroll.py:280
+#: hr/payroll.py:303
 msgid "ayam_2l2jazaa"
 msgstr "ايام الاجازة"
 
-#: hr/payroll.py:281
+#: hr/payroll.py:304
 msgid "ayam_2ltaklif"
 msgstr "ايام التكليف"
 

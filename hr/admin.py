@@ -398,7 +398,7 @@ admin.site.register(EmployeeSalafiat,SalafiatAdmin)
 class PayrollDetailInline(admin.TabularInline):
     model = PayrollDetail
     #exclude = ["created_at","created_by","updated_at","updated_by"]
-    fields = ['employee','abtdai','galaa_m3isha','shakhsia','aadoa','gasima','atfal','moahil','ma3adin','m3ash','salafiat','jazaat','damga','sandog','sandog_kahraba','salafiat_sandog','tarikh_milad','draja_wazifia','alawa_sanawia']
+    fields = ['employee','abtdai','galaa_m3isha','shakhsia','aadoa','gasima','atfal','moahil','ma3adin','m3ash','salafiat','jazaat','damga','sandog','sandog_kahraba','salafiat_sandog','tarikh_milad','draja_wazifia','alawa_sanawia','bank','account_no']
     extra = 0
     readonly_fields = fields #['employee','abtdai','galaa_m3isha','shakhsia','aadoa','gasima','atfal','moahil','ma3adin','m3ash','salafiat','jazaat','damga','sandog','sandog_kahraba','salafiat_sandog','tarikh_milad','draja_wazifia','alawa_sanawia']
     can_delete = False
@@ -465,6 +465,7 @@ class PayrollMasterAdmin(admin.ModelAdmin):
             prev_year -= 1
         return format_html('<a target="_blank" class="viewlink" href="{url}?year={year}&month={month}&cmp_year={cmp_year}&cmp_month={cmp_month}">'+_('Diff khosomat sheet')\
                                +'</a> / '\
+                               +'<a target="_blank" href="{url}?year={year}&month={month}&cmp_year={cmp_year}&cmp_month={cmp_month}&bank_sheet=1">'+_('diff bank sheet')+'</a> / '\
                                +'<a target="_blank" href="{url}?year={year}&month={month}&cmp_year={cmp_year}&cmp_month={cmp_month}&format=csv">CSV</a>',
                            url=url,year=obj.year,month=obj.month,cmp_year=prev_year,cmp_month=prev_month)
 

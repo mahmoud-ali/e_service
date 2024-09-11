@@ -888,6 +888,8 @@ class PayrollDetail(models.Model):
     salafiat_sandog = models.FloatField(_("salafiat_sandog"),default=0)
     draja_wazifia = models.IntegerField(_("draja_wazifia"), choices=Drajat3lawat.DRAJAT_CHOICES,blank=True,null=True)
     alawa_sanawia = models.IntegerField(_("alawa_sanawia"), choices=Drajat3lawat.ALAWAT_CHOICES,blank=True,null=True)
+    bank = models.CharField(_("bank"), choices=EmployeeBankAccount.BANK_CHOICES,max_length=10,blank=True,null=True)
+    account_no = models.CharField(_("account_no"),max_length=20,blank=True,null=True)
 
     class Meta:
         constraints = [

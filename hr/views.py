@@ -319,6 +319,11 @@ class FargBadalat(LoginRequiredMixin,UserPermissionMixin,View):
             cache.patch_cache_control(response, max_age=0)
             return response
 
+def get_bank_display(key):
+    if not key:
+        return ''
+    return EmployeeBankAccount.BANK_CHOICES[key]
+
 class FargKhosomat(LoginRequiredMixin,UserPermissionMixin,View):
     user_groups = ['hr_manager','hr_payroll']
     def get(self,*args,**kwargs):
@@ -359,17 +364,40 @@ class FargKhosomat(LoginRequiredMixin,UserPermissionMixin,View):
 
         summary_list = []
 
-        if True:
-            template_name = 'hr/khosomat.html'
+        for d in cmp_payroll.all_employees_payroll_from_db_with_bank_account():
+            cmp_index.update({d[0].id:d})
 
-            for d in cmp_payroll.all_employees_payroll_from_db():
-                cmp_index.update({d[0].id:d})
+        if bank_sheet:
+            template_name = 'hr/bank.html'
+            header = ['الرمز','الموظف','البنك','رقم الحساب']
+
+            for (emp,badalat,khosomat,draja_wazifia,alawa_sanawia,bank,account_no) in payroll.all_employees_payroll_from_db_with_bank_account():
+                if not account_no:
+                    account_no = ''
+                try:
+                    (*rest,cmp_bank,cmp_account_no) = cmp_index[emp.id]
+                    if not cmp_account_no:
+                        cmp_account_no = ''
+
+                except KeyError:
+                    (cmp_bank,cmp_account_no) = ('','')
+
+                if(cmp_account_no != account_no):
+                    l = [
+                        emp.code,
+                        emp.name,
+                        get_bank_display(cmp_bank) + '/' +get_bank_display(bank),
+                        cmp_account_no + '/' +account_no,
+                    ]
+                    data.append(l)
+        else:
+            template_name = 'hr/khosomat.html'
 
             for (emp,badalat,khosomat,draja_wazifia,alawa_sanawia) in payroll.all_employees_payroll_from_db():
                 emp_lst.append(emp.id)
                 cmp_draja_wazifia = cmp_alawa_sanawia = None
                 try:
-                    cmp_emp,cmp_badalat,cmp_khosomat,cmp_draja_wazifia,cmp_alawa_sanawia = cmp_index[emp.id] #cmp_payroll.employee_payroll_from_employee(emp)
+                    cmp_emp,cmp_badalat,cmp_khosomat,cmp_draja_wazifia,cmp_alawa_sanawia,*rest = cmp_index[emp.id] #cmp_payroll.employee_payroll_from_employee(emp)
                     khosomat_list = [round((zp[0][1]-zp[1][1]),2) for zp in zip(khosomat,cmp_khosomat)]
                 except KeyError:
                     khosomat_list = [round(zp[1],2) for zp in khosomat]
@@ -392,7 +420,7 @@ class FargKhosomat(LoginRequiredMixin,UserPermissionMixin,View):
 
             #employees not exists in first sheet
             for payroll_detail in PayrollDetail.objects.filter(payroll_master=cmp_payroll.payroll_master).exclude(employee__in=emp_lst).prefetch_related("employee"):
-                cmp_emp,cmp_badalat,cmp_khosomat,cmp_draja_wazifia,cmp_alawa_sanawia = cmp_index[payroll_detail.employee.id] #cmp_payroll.employee_payroll_from_employee(payroll_detail.employee)
+                cmp_emp,cmp_badalat,cmp_khosomat,cmp_draja_wazifia,cmp_alawa_sanawia,*rest = cmp_index[payroll_detail.employee.id] #cmp_payroll.employee_payroll_from_employee(payroll_detail.employee)
                 khosomat_list = [round(-zp[1],2) for zp in cmp_khosomat]
                 
                 if abs(sum(khosomat_list)) > 0:
