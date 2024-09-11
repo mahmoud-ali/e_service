@@ -652,7 +652,7 @@ class EmployeeSalafiat(LoggingModel):
     employee = models.ForeignKey(EmployeeBasic, on_delete=models.PROTECT,verbose_name=_("employee_name"))
     year = models.IntegerField(_("year"), validators=[MinValueValidator(limit_value=2015),MaxValueValidator(limit_value=2100)])
     month = models.IntegerField(_("month"), choices=MONTH_CHOICES)
-    no3_2lsalafia = models.IntegerField(_("no3_2lsalafia"), choices=NO3_2LSALAFIA_CHOICES,default=NO3_2LSALAFIA_SHARIKA)
+    no3_2lsalafia = models.IntegerField(_("no3_2lsalafia"), choices=NO3_2LSALAFIA_CHOICES,default=NO3_2LSALAFIA_SANDOG)
     note = models.CharField(_("note"),max_length=150)
     amount = models.FloatField(_("amount"))
     deducted = models.BooleanField(_("deducted"),default=False)

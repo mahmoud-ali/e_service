@@ -334,23 +334,29 @@ class SettingsAdmin(admin.ModelAdmin):
 
 admin.site.register(Settings,SettingsAdmin)
 
-# class SalafiatAdmin(admin.ModelAdmin):
-#     exclude = ["created_at","created_by","updated_at","updated_by","deducted"]
+class SalafiatAdmin(admin.ModelAdmin):
+    exclude = ["created_at","created_by","updated_at","updated_by","no3_2lsalafia","deducted"]
     
-#     list_display = ["employee", "year","month","note","amount","deducted"] 
-#     list_filter = ["year","month"]
-#     view_on_site = False
-#     search_fields = ["employee__name"]
-#     autocomplete_fields = ["employee"]
+    list_display = ["employee", "year","month","note","amount","deducted"] 
+    list_filter = ["year","month"]
+    view_on_site = False
+    search_fields = ["employee__name"]
+    autocomplete_fields = ["employee"]
 
-#     def save_model(self, request, obj, form, change):
-#         if obj.pk:
-#             obj.updated_by = request.user
-#         else:
-#             obj.created_by = obj.updated_by = request.user
-#         super().save_model(request, obj, form, change)                
+    def save_model(self, request, obj, form, change):
+        if obj.pk:
+            obj.updated_by = request.user
+        else:
+            obj.created_by = obj.updated_by = request.user
+        super().save_model(request, obj, form, change)                
 
-# admin.site.register(Salafiat,SalafiatAdmin)
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        if request.user.is_superuser:
+            return qs
+        return qs.filter(no3_2lsalafia=EmployeeSalafiat.NO3_2LSALAFIA_SANDOG)
+    
+admin.site.register(EmployeeSalafiat,SalafiatAdmin)
 
 # class EmployeeBankAccountAdmin(admin.ModelAdmin):
 #     exclude = ["created_at","created_by","updated_at","updated_by"]
