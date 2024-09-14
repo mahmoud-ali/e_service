@@ -112,6 +112,7 @@ class TblCompany(LoggingModel):
     }
 
     company_type = models.CharField(_("company_type"),max_length=15, choices=COMPANY_TYPE_CHOICES)
+    code = models.CharField(_("code"),max_length=20,blank=True,null=True,default='')
     name_ar = models.CharField(_("name_ar"),max_length=200)
     name_en = models.CharField(_("name_en"),max_length=200)
     nationality = models.ManyToManyField(LkpNationality,verbose_name=_("nationality"),default=[1]) #, on_delete=models.PROTECT
@@ -201,6 +202,7 @@ def company_contract_path(instance, filename):
 class TblCompanyProductionLicense(LoggingModel): 
     company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
     license_no = models.CharField(_("License no"),max_length=20)
+    license_count = models.IntegerField(_("License count"),default=1)
     date = models.DateField(_("Sign date"))
     start_date = models.DateField(_("start_date"))
     end_date = models.DateField(_("end_date"))

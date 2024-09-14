@@ -1,3 +1,4 @@
+from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth import get_user_model
 from django.conf import settings
@@ -125,14 +126,14 @@ class WorkflowAdminMixin:
 class TblCompanyProductionAdmin(ExportActionMixin,LoggingAdminMixin,admin.ModelAdmin):
     form = TblCompanyProductionForm
     fieldsets = [
-        (None, {"fields": [("company_type"),("name_ar","name_en"),"nationality"]}),
+        (None, {"fields": [("company_type","code"),("name_ar","name_en"),"nationality"]}),
         (_("Contact information"), {"fields": [("website","email"),("manager_name","manager_phone"),("rep_name","rep_phone"),"address"]}),
         (_("Company Status"), {"fields": ["status"]}),
      ]
      
-    list_display = ["company_type","name_ar", "name_en", "status"]
+    list_display = ["company_type","code","name_ar", "name_en", "status"]
     list_filter = ["company_type","name_ar","name_en"]
-    search_fields = ["name_ar","name_en"]
+    search_fields = ["code","name_ar","name_en"]
 
     exclude = ["created_at","created_by","updated_at","updated_by"]
     view_on_site = False
@@ -196,17 +197,22 @@ class TblCompanyProductionFactoryAdmin(LoggingAdminMixin,admin.ModelAdmin):
     
 class TblCompanyProductionLicenseAdmin(ExportActionMixin,LoggingAdminMixin,admin.ModelAdmin):
     fieldsets = [
-        (None, {"fields": ["company","license_no"]}),
+        (None, {"fields": ["company",("license_no","license_count")]}),
         (_("General information"), {"fields": ["date",("start_date","end_date")]}),
         (_("Location information"), {"fields": [("state","locality","location","sheet_no")]}),
         (_("Contract information"), {"fields": ["mineral","area","reserve","royalty","zakat","annual_rent","gov_rep","rep_percent","com_percent","business_profit","social_responsibility","contract_status","contract_file"]}),
      ]        
     exclude = ["created_at","created_by","updated_at","updated_by"]
     
-    list_display = ["company","company_type","license_no","sheet_no","date", "start_date", "end_date"]        
+    list_display = ["company","company_type","license_no","license_count","sheet_no","date", "start_date", "end_date"]        
     list_filter = ["date","company__company_type","sheet_no","company","license_no"]
     search_fields = ["company__name_ar","company__name_en","sheet_no","license_no"]
     view_on_site = False
+
+    formfield_overrides = {
+        models.FloatField: {"widget": forms.TextInput},
+        models.IntegerField: {"widget": forms.TextInput},
+    }    
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)

@@ -23,7 +23,15 @@
           <label>{% translate "start_date" %}:</label> {{company.license.start_date}}<br/> 
           <label>{% translate "end_date" %}:</label> {{company.license.end_date}}<br/> 
           <label>{% translate "Area in Kilometers" %}:</label> {{company.license.area}}<br/> 
-          <label>{% translate "mineral" %}:</label> {{company.license.mineral}}<br/> 
+          <label>{% translate "mineral" %}:</label>
+          {% for m in company.license.mineral.all %}
+            {% if not forloop.first %}
+            ، &nbsp;
+            {% endif %}
+
+            {{m}}
+          {% endfor %}  
+          <br/> 
           <label>{% translate "contract_status" %}:</label> {{company.license.contract_status}}<br/> 
         {%endif%}
 
