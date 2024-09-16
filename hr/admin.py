@@ -342,6 +342,33 @@ class SalafiatAdmin(admin.ModelAdmin):
     view_on_site = False
     search_fields = ["employee__name"]
     autocomplete_fields = ["employee"]
+    actions = ['export_as_csv']
+
+    @admin.action(description=_('Export data'))
+    def export_as_csv(self, request, queryset):
+        response = HttpResponse(
+            content_type="text/csv",
+            headers={"Content-Disposition": f'attachment; filename="employees.csv"'},
+        )
+        header = [
+                    _("code"),_("name"),_("year"),_("month"),_( "note"),_( "amount")
+        ]
+
+        # BOM
+        response.write(codecs.BOM_UTF8)
+
+        writer = csv.writer(response)
+        writer.writerow(header)
+
+        for salafia in queryset.order_by("employee__code"):
+            row = [
+                    salafia.employee.code,salafia.employee.name,salafia.year,salafia.get_month_display(),\
+                    salafia.note,salafia.amount
+            ]
+            writer.writerow(row)
+
+        return response
+
 
     def save_model(self, request, obj, form, change):
         if obj.pk:
