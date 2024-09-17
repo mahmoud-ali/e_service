@@ -360,7 +360,7 @@ class FargKhosomat(LoginRequiredMixin,UserPermissionMixin,View):
         if payroll_master.enable_youm_algoat_almosalaha:
             header += ['استقطاع القوات المسلحه',]
 
-        header += ['الزكاة','إجمالي الإستقطاعات السنوية','خصومات - جزاءات','إجمالي الإستقطاع الكلي','صافي الإستحقاق']
+        header += ['الزكاة','سلفيات الصندوق','إجمالي الإستقطاعات السنوية','خصومات - جزاءات','إجمالي الإستقطاع الكلي','صافي الإستحقاق']
 
         summary_list = []
 
@@ -394,7 +394,7 @@ class FargKhosomat(LoginRequiredMixin,UserPermissionMixin,View):
             template_name = 'hr/khosomat.html'
 
             for (emp,badalat,khosomat,draja_wazifia,alawa_sanawia) in payroll.all_employees_payroll_from_db():
-                emp_lst.append(emp.id)
+                emp_lst.append(emp)
                 cmp_draja_wazifia = cmp_alawa_sanawia = None
                 try:
                     cmp_emp,cmp_badalat,cmp_khosomat,cmp_draja_wazifia,cmp_alawa_sanawia,*rest = cmp_index[emp.id] #cmp_payroll.employee_payroll_from_employee(emp)
