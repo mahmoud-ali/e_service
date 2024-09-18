@@ -420,23 +420,26 @@ class FargKhosomat(LoginRequiredMixin,UserPermissionMixin,View):
 
             #employees not exists in first sheet
             for payroll_detail in PayrollDetail.objects.filter(payroll_master=cmp_payroll.payroll_master).exclude(employee__in=emp_lst).prefetch_related("employee"):
-                cmp_emp,cmp_badalat,cmp_khosomat,cmp_draja_wazifia,cmp_alawa_sanawia,*rest = cmp_index[payroll_detail.employee.id] #cmp_payroll.employee_payroll_from_employee(payroll_detail.employee)
-                khosomat_list = [round(-zp[1],2) for zp in cmp_khosomat]
-                
-                if abs(sum(khosomat_list)) > 0:
-                    l = [
-                        cmp_emp.code,
-                        cmp_emp.name,
-                        cmp_drjat(None,cmp_draja_wazifia),
-                        cmp_alawa(None,cmp_alawa_sanawia),
-                    ] + khosomat_list
-                    data.append(l)
+                try:
+                    cmp_emp,cmp_badalat,cmp_khosomat,cmp_draja_wazifia,cmp_alawa_sanawia,*rest = cmp_index[payroll_detail.employee.id] #cmp_payroll.employee_payroll_from_employee(payroll_detail.employee)
+                    khosomat_list = [round(-zp[1],2) for zp in cmp_khosomat]
+                    
+                    if abs(sum(khosomat_list)) > 0:
+                        l = [
+                            cmp_emp.code,
+                            cmp_emp.name,
+                            cmp_drjat(None,cmp_draja_wazifia),
+                            cmp_alawa(None,cmp_alawa_sanawia),
+                        ] + khosomat_list
+                        data.append(l)
 
-                    for idx,s in enumerate(khosomat_list):
-                        try:
-                            summary_list[idx] += khosomat_list[idx]
-                        except IndexError:
-                            summary_list.insert(idx,khosomat_list[idx])
+                        for idx,s in enumerate(khosomat_list):
+                            try:
+                                summary_list[idx] += khosomat_list[idx]
+                            except IndexError:
+                                summary_list.insert(idx,khosomat_list[idx])
+                except: #should review why code may get here.
+                    pass
 
             summary_list = [round(s,2) for s in summary_list]
 
