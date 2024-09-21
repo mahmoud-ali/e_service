@@ -3,7 +3,7 @@ from django.contrib import admin
 from pa.forms.commitment import TblCompanyCommitmentAdminForm
 from pa.forms.payment import TblCompanyPaymentAdminForm
 from pa.forms.request import TblCompanyRequestAdminForm
-from .models import LkpItem, LkpPaymentMethod,TblCompanyCommitmentMaster,TblCompanyCommitmentDetail, TblCompanyCommitmentSchedular, TblCompanyPaymentDetail, TblCompanyPaymentMaster, TblCompanyPaymentMethod, TblCompanyRequestDetail, TblCompanyRequestMaster, TblCompanyRequestReceive
+from .models import LkpItem, LkpPaymentMethod,TblCompanyCommitmentMaster,TblCompanyCommitmentDetail, TblCompanyCommitmentSchedular, TblCompanyOpenningBalanceDetail, TblCompanyOpenningBalanceMaster, TblCompanyPaymentDetail, TblCompanyPaymentMaster, TblCompanyPaymentMethod, TblCompanyRequestDetail, TblCompanyRequestMaster, TblCompanyRequestReceive
 
 class LogAdminMixin:
     def save_model(self, request, obj, form, change):
@@ -18,13 +18,28 @@ class LogAdminMixin:
 admin.site.register(LkpItem)
 admin.site.register(LkpPaymentMethod)
 
+class TblCompanyOpenningBalanceMasterDetailInline(admin.TabularInline):
+    model = TblCompanyOpenningBalanceDetail
+    exclude = ["created_at","created_by","updated_at","updated_by"]
+    extra = 1    
+
+class TblCompanyOpenningBalanceMasterAdmin(LogAdminMixin,admin.ModelAdmin):
+    model = TblCompanyOpenningBalanceMaster
+    inlines = [TblCompanyOpenningBalanceMasterDetailInline]     
+    
+    list_display = ["company","currency","state", "created_at", "created_by","updated_at", "updated_by"]        
+    list_filter = ["company","currency","state"]
+    view_on_site = False
+            
+admin.site.register(TblCompanyOpenningBalanceMaster, TblCompanyOpenningBalanceMasterAdmin)
+
 class TblCompanyCommitmentMasterDetailInline(admin.TabularInline):
     model = TblCompanyCommitmentDetail
     exclude = ["created_at","created_by","updated_at","updated_by"]
     extra = 1    
 
 class TblCompanyCommitmentMasterAdmin(LogAdminMixin,admin.ModelAdmin):
-    form = TblCompanyCommitmentAdminForm
+    model = TblCompanyCommitmentAdminForm
     inlines = [TblCompanyCommitmentMasterDetailInline]     
     
     list_display = ["company", "created_at", "created_by","updated_at", "updated_by"]        
