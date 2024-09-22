@@ -471,7 +471,7 @@ class EmployeeBasic(LoggingModel):
     class Meta:
         constraints = [
             models.UniqueConstraint(fields=['name','tarikh_ta3in'],name="unique_employee")
-        ]"employee"
+        ]
         indexes = [
             models.Index(fields=["code"]),
             # models.Index(fields=["edara_3ama"]),
