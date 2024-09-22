@@ -553,5 +553,9 @@ class PayrollMasterAdmin(admin.ModelAdmin):
             m2moria = M2moriaSheet(q.year,q.month)
             m2moria.calculate()
 
+            EmployeeSalafiat.objects.filter(year=q.year,month=q.month).update(deducted=True)
+
+            EmployeeJazaat.objects.filter(year=q.year,month=q.month).update(deducted=True)
+
 admin.site.register(PayrollMaster,PayrollMasterAdmin)
 
