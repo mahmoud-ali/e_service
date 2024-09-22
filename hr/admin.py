@@ -383,8 +383,8 @@ class SalafiatAdmin(admin.ModelAdmin):
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
-        if request.user.is_superuser:
-            return qs
+        # if request.user.is_superuser:
+        #     return qs
         return qs.filter(no3_2lsalafia=EmployeeSalafiat.NO3_2LSALAFIA_SANDOG)
     
 admin.site.register(EmployeeSalafiat,SalafiatAdmin)
