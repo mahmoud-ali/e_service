@@ -337,13 +337,17 @@ admin.site.register(Settings,SettingsAdmin)
 class SalafiatAdmin(admin.ModelAdmin):
     exclude = ["created_at","created_by","updated_at","updated_by","no3_2lsalafia","deducted"]
     
-    list_display = ["employee", "year","month","note","amount","deducted"] 
+    list_display = ["code","employee", "year","month","note","amount","deducted"] 
     list_filter = ["year","month"]
     view_on_site = False
-    search_fields = ["employee__name"]
+    search_fields = ["employee__code","employee__name"]
+    ordering =  ["employee__code"]
     autocomplete_fields = ["employee"]
     actions = ['export_as_csv']
 
+    @admin.display(description=_("code"))
+    def code(self, obj):
+        return obj.employee.code
     @admin.action(description=_('Export data'))
     def export_as_csv(self, request, queryset):
         response = HttpResponse(
