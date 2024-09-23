@@ -643,10 +643,14 @@ class EmployeeMoahil(LoggingModel):
 class EmployeeSalafiat(LoggingModel):
     NO3_2LSALAFIA_SHARIKA = 1
     NO3_2LSALAFIA_SANDOG = 2
+    NO3_2LSALAFIA_3LA_2LMORATAB = 3
+    NO3_2LSALAFIA_3LA_2LMOKAF2 = 4
 
     NO3_2LSALAFIA_CHOICES = {
         NO3_2LSALAFIA_SHARIKA: _('NO3_2LSALAFIA_SHARIKA'),
         NO3_2LSALAFIA_SANDOG: _('NO3_2LSALAFIA_SANDOG'),
+        NO3_2LSALAFIA_3LA_2LMORATAB: _('NO3_2LSALAFIA_3LA_2LMORATAB'),
+        NO3_2LSALAFIA_3LA_2LMOKAF2: _('NO3_2LSALAFIA_3LA_2LMOKAF2'),
     }
 
     employee = models.ForeignKey(EmployeeBasic, on_delete=models.PROTECT,verbose_name=_("employee_name"))
@@ -664,7 +668,7 @@ class EmployeeSalafiat(LoggingModel):
         indexes = [
             models.Index(fields=["employee", "year","month"]),
         ]
-        ordering = ["-id"]
+        ordering = ["year","month","no3_2lsalafia"]
         verbose_name = _("Salafiat")
         verbose_name_plural = _("Salafiat")
 
@@ -886,6 +890,8 @@ class PayrollDetail(models.Model):
     sandog_kahraba = models.FloatField(_("sandog_kahraba"),default=0)
     tarikh_milad = models.DateField(_("tarikh_milad"),blank=True,null=True)
     salafiat_sandog = models.FloatField(_("salafiat_sandog"),default=0)
+    salafiat_3la_2lmoratab = models.FloatField(_("salafiat_3la_2lmoratab"),default=0)
+    salafiat_3la_2lmokaf2 = models.FloatField(_("salafiat_3la_2lmokaf2"),default=0)
     draja_wazifia = models.IntegerField(_("draja_wazifia"), choices=Drajat3lawat.DRAJAT_CHOICES,blank=True,null=True)
     alawa_sanawia = models.IntegerField(_("alawa_sanawia"), choices=Drajat3lawat.ALAWAT_CHOICES,blank=True,null=True)
     bank = models.CharField(_("bank"), choices=EmployeeBankAccount.BANK_CHOICES,max_length=10,blank=True,null=True)

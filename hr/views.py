@@ -117,7 +117,7 @@ class Khosomat(LoginRequiredMixin,UserPermissionMixin,View):
         if payroll_master.enable_youm_algoat_almosalaha:
             header += ['استقطاع القوات المسلحه',]
 
-        header += ['الزكاة','سلفيات الصندوق','إجمالي الإستقطاعات السنوية','خصومات - جزاءات','إجمالي الإستقطاع الكلي','صافي الإستحقاق']
+        header += ['الزكاة','سلفيات الصندوق','سلفية على المرتب','إجمالي الإستقطاعات السنوية','خصومات - جزاءات','إجمالي الإستقطاع الكلي','صافي الإستحقاق']
 
         summary_list = []
 
@@ -360,7 +360,7 @@ class FargKhosomat(LoginRequiredMixin,UserPermissionMixin,View):
         if payroll_master.enable_youm_algoat_almosalaha:
             header += ['استقطاع القوات المسلحه',]
 
-        header += ['الزكاة','سلفيات الصندوق','إجمالي الإستقطاعات السنوية','خصومات - جزاءات','إجمالي الإستقطاع الكلي','صافي الإستحقاق']
+        header += ['الزكاة','سلفيات الصندوق','سلفية على المرتب','إجمالي الإستقطاعات السنوية','خصومات - جزاءات','إجمالي الإستقطاع الكلي','صافي الإستحقاق']
 
         summary_list = []
 
@@ -586,7 +586,7 @@ class Mokaf2(LoginRequiredMixin,UserPermissionMixin,View):
             if not payroll_master.khasm_salafiat_elsandog_min_elomoratab:
                 header += ['سلفيات الصندوق',]
 
-            header += ['صافي الاستحقاق',]
+            header += ['سلفية على المكافئة','صافي الاستحقاق',]
 
             summary_list = []
 

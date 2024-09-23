@@ -50,6 +50,8 @@ class Payroll():
         moahil = Settings.MOAHIL_PREFIX + employee.moahil
         salafiat_total = self.salafiat_qs.filter(employee=employee,no3_2lsalafia=EmployeeSalafiat.NO3_2LSALAFIA_SHARIKA).aggregate(total=Sum("amount"))['total'] or 0
         salafiat_sandog_total = self.salafiat_qs.filter(employee=employee,no3_2lsalafia=EmployeeSalafiat.NO3_2LSALAFIA_SANDOG).aggregate(total=Sum("amount"))['total'] or 0
+        salafiat_moratab_total = self.salafiat_qs.filter(employee=employee,no3_2lsalafia=EmployeeSalafiat.NO3_2LSALAFIA_3LA_2LMORATAB).aggregate(total=Sum("amount"))['total'] or 0
+        salafiat_mokaf2_total = self.salafiat_qs.filter(employee=employee,no3_2lsalafia=EmployeeSalafiat.NO3_2LSALAFIA_3LA_2LMOKAF2).aggregate(total=Sum("amount"))['total'] or 0
         jazaat_total = self.jazaat_qs.filter(employee=employee).aggregate(total=Sum("amount"))['total'] or 0
         gasima = 0
         if(employee.gasima):
@@ -93,6 +95,8 @@ class Payroll():
                 m3ash_age=self.hr_settings.get_code_as_float(Settings.SETTINGS_OMER_2LMA3ASH),
                 salafiat_sandog=salafiat_sandog_total,
                 khasm_salafiat_elsandog_min_elomoratab=khasm_salafiat_elsandog_min_elomoratab,
+                salafiat_3la_2lmoratab=salafiat_moratab_total,
+                salafiat_3la_2lmokaf2=salafiat_mokaf2_total,
                 dariba_mokaf2=self.hr_settings.get_code_as_float(Settings.SETTINGS_DARIBAT_2LMOKAFA),
             )
 
@@ -133,6 +137,8 @@ class Payroll():
             tarikh_2lmilad=emp_payroll.tarikh_milad,
             m3ash_age=self.payroll_master.m3ash_age,
             salafiat_sandog=emp_payroll.salafiat_sandog,
+            salafiat_3la_2lmoratab=emp_payroll.salafiat_3la_2lmoratab,
+            salafiat_3la_2lmokaf2=emp_payroll.salafiat_3la_2lmokaf2,
             khasm_salafiat_elsandog_min_elomoratab=self.payroll_master.khasm_salafiat_elsandog_min_elomoratab,
             dariba_mokaf2=self.hr_settings.get_code_as_float(Settings.SETTINGS_DARIBAT_2LMOKAFA),
         )
@@ -223,6 +229,8 @@ class Payroll():
                         sandog_kahraba = khosomat.sandog_kahraba,
                         tarikh_milad = emp.tarikh_milad,
                         salafiat_sandog = khosomat.salafiat_sandog,
+                        salafiat_3la_2lmoratab = khosomat.salafiat_3la_2lmoratab,
+                        salafiat_3la_2lmokaf2 = khosomat._salafiat_3la_2lmokaf2,
                         draja_wazifia = emp.draja_wazifia,
                         alawa_sanawia = emp.alawa_sanawia,
                         bank = bank,
@@ -377,7 +385,7 @@ class Mokaf2Sheet():
             ma3adin=emp_payroll.ma3adin
         )
 
-        return Mokaf2(badal,emp_payroll.payroll_master.daribat_2lmokafa,emp_payroll.damga,khasm_salafiat_elsandog_min_elmokaf2=(not emp_payroll.payroll_master.khasm_salafiat_elsandog_min_elomoratab),salafiat_sandog=emp_payroll.salafiat_sandog)
+        return Mokaf2(badal,emp_payroll.payroll_master.daribat_2lmokafa,emp_payroll.damga,khasm_salafiat_elsandog_min_elmokaf2=(not emp_payroll.payroll_master.khasm_salafiat_elsandog_min_elomoratab),salafiat_sandog=emp_payroll.salafiat_sandog,salafiat_3la_2lmokaf2=emp_payroll.salafiat_3la_2lmokaf2)
 
     def all_employees_mokaf2_from_db(self):
         for emp in self.employees:
