@@ -454,7 +454,7 @@ class PayrollMasterAdmin(admin.ModelAdmin):
         if request.user.groups.filter(name="hr_manager").exists():
             return ["year","month","confirmed","show_badalat_link","cmp_badalat_prev_month_link","show_khosomat_link","cmp_khosomat_prev_month_link","show_mokaf2_link","show_mobashara_link","show_m2moria_link"]
         else:
-            return ["year","month","confirmed","show_badalat_link","cmp_badalat_prev_month_link","show_khosomat_link","cmp_khosomat_prev_month_link"]
+            return ["year","month","confirmed","show_badalat_link","cmp_badalat_prev_month_link","show_khosomat_link","cmp_khosomat_prev_month_link","show_mokaf2_link"]
 
     @admin.display(description=_('Show badalat sheet'))
     def show_badalat_link(self, obj):
