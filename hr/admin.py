@@ -429,7 +429,7 @@ admin.site.register(EmployeeSalafiat,SalafiatAdmin)
 class PayrollDetailInline(admin.TabularInline):
     model = PayrollDetail
     #exclude = ["created_at","created_by","updated_at","updated_by"]
-    fields = ['employee','abtdai','galaa_m3isha','shakhsia','aadoa','gasima','atfal','moahil','ma3adin','m3ash','salafiat','jazaat','damga','sandog','sandog_kahraba','salafiat_sandog','tarikh_milad','draja_wazifia','alawa_sanawia','bank','account_no']
+    fields = ['employee','draja_wazifia','alawa_sanawia','bank','account_no','abtdai','galaa_m3isha','shakhsia','aadoa','gasima','atfal','moahil','ma3adin','m3ash','salafiat','jazaat','damga','sandog','sandog_kahraba','salafiat_sandog','salafiat_3la_2lmoratab','salafiat_3la_2lmokaf2','tarikh_milad']
     extra = 0
     readonly_fields = fields #['employee','abtdai','galaa_m3isha','shakhsia','aadoa','gasima','atfal','moahil','ma3adin','m3ash','salafiat','jazaat','damga','sandog','sandog_kahraba','salafiat_sandog','tarikh_milad','draja_wazifia','alawa_sanawia']
     can_delete = False
