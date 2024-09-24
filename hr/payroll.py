@@ -371,7 +371,9 @@ class Mokaf2Sheet():
         self.month = month
 
         self.hr_settings = HrSettings()
-        self.employees = PayrollDetail.objects.filter(payroll_master__year = self.year,payroll_master__month = self.month).prefetch_related("payroll_master","employee").filter(employee__status=EmployeeBasic.STATUS_ACTIVE)
+        self.employees = PayrollDetail.objects \
+            .exclude(employee__hikal_wazifi=self.hr_settings.get_code_as_float(Settings.SETTINGS_KHARJ_ELSHARIKA))\
+            .filter(payroll_master__year = self.year,payroll_master__month = self.month).prefetch_related("payroll_master","employee").filter(employee__status=EmployeeBasic.STATUS_ACTIVE)
 
     def employee_mokaf2_from_db(self,emp_payroll:PayrollDetail):
         badal = Badalat_3lawat(
