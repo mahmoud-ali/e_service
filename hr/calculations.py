@@ -439,7 +439,13 @@ class Mokaf2():
     
     @property
     def salafiat_sandog(self):
-        return self._salafiat_sandog
+        safi = self.safi_2l2sti7gag_gabl_salafiat_sandog
+        if self.khasm_salafiat_elsandog_min_elmokaf2:
+            safi -= self._salafiat_sandog
+            if (safi > 0):
+                return self._salafiat_sandog
+
+        return self.safi_2l2sti7gag_gabl_salafiat_sandog
 
     @property
     def salafiat_3la_2lmokaf2(self):
@@ -448,10 +454,14 @@ class Mokaf2():
     @property
     def khasm_salafiat_elsandog_min_elmokaf2(self):
         return self._khasm_salafiat_elsandog_min_elmokaf2
+    
+    @property
+    def safi_2l2sti7gag_gabl_salafiat_sandog(self):
+        return (self.ajmali_2lmoratab - self.dariba -self.damga -self.salafiat_3la_2lmokaf2)
 
     @property
     def safi_2l2sti7gag(self):
-        safi = (self.ajmali_2lmoratab - self.dariba -self.damga -self.salafiat_3la_2lmokaf2)
+        safi = self.safi_2l2sti7gag_gabl_salafiat_sandog
         if self.khasm_salafiat_elsandog_min_elmokaf2:
             safi -= self.salafiat_sandog
             if (safi < 0):
