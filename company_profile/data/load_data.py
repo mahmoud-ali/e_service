@@ -113,3 +113,62 @@ def import_licenses(file_name='licenses_mokhalafat.csv'):
             except Exception as e:
                 print(f'id: {id}, company: {company} Exception: {e}')
 
+def import_licenses_entaj(file_name='licenses_entaj.csv'):
+    with open('./company_profile/data/'+file_name, newline='') as csvfile:
+        reader = csv.reader(csvfile, delimiter=',')
+        next(reader, None)  # skip the headers
+        for row in reader:
+            try:
+
+                id = int(row[1].strip())
+                license_no = row[2].strip()
+                date = row[3].strip()
+                start_date = row[4].strip()
+                end_date = row[5].strip()
+                state_str = row[6].strip()
+                locality_str = row[7].strip()
+                location = row[8].strip()
+                sheet_no = row[9].strip()
+                mineral_str = row[10].strip()
+                area = float(row[11].strip())
+                reserve = float(row[12].strip())
+                gov_rep = float(row[13].strip())
+                rep_percent = float(row[14].strip())
+                com_percent = float(row[15].strip())
+                royalty = float(row[16].strip())
+                zakat = float(row[17].strip())
+                annual_rent = float(row[18].strip())
+                contract_status_str = row[19].strip()
+
+                company = TblCompanyProduction.objects.get(id=id)
+                state, created = LkpState.objects.get_or_create(name=state_str)
+                locality, created = LkpLocality.objects.get_or_create(name=locality_str,state=state)
+                mineral, created = LkpMineral.objects.get_or_create(name=mineral_str)
+                contract_status, created = LkpCompanyProductionLicenseStatus.objects.get_or_create(name=contract_status_str)
+
+                license = TblCompanyProductionLicense.objects.create(
+                    company = company,
+                    license_no = license_no,
+                    date = date,
+                    start_date = start_date,
+                    end_date = end_date,
+                    state = state,
+                    locality = locality,
+                    location = location,
+                    sheet_no = sheet_no,
+                    area = area,
+                    reserve = reserve,
+                    gov_rep = gov_rep,
+                    rep_percent = rep_percent,
+                    com_percent = com_percent,
+                    royalty = royalty,
+                    zakat = zakat,
+                    annual_rent = annual_rent,
+                    contract_status = contract_status,
+                    created_by=admin_user,
+                    updated_by=admin_user
+                )
+                license.mineral.set([mineral])
+            except Exception as e:
+                print(f'id: {id}, company: {company} Exception: {e}')
+
