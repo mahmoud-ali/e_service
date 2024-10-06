@@ -170,5 +170,5 @@ def import_licenses_entaj(file_name='licenses_entaj.csv'):
                 )
                 license.mineral.set([mineral])
             except Exception as e:
-                print(f'id: {id}, company: {company} Exception: {e}')
+                print(f'id: {id} Exception: {e}')
 
