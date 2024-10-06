@@ -22,10 +22,10 @@ commitment_confirmed_manual_qs = commitment_confirmed_qs \
 class TblCompanyRequestAdminForm(ModelForm):
     class Meta:
         model = TblCompanyRequestMaster
-        fields = ["commitment","from_dt","to_dt","currency","state"] 
+        fields = ["commitment","from_dt","to_dt","currency","state","note","attachement_file"] 
         
 class TblCompanyRequestShowEditForm(TblCompanyRequestAdminForm):
-    layout = ["commitment",["from_dt","to_dt"],["currency","total_payment"]]
+    layout = ["commitment",["from_dt","to_dt"],["currency","total_payment"],"note","attachement_file"]
     commitment = forms.ModelChoiceField(queryset=commitment_none,disabled=True, label=_("commitment"))
     total_payment = forms.FloatField(label=_('payments total'),disabled=True)
     def __init__(self, *args, **kwargs):        
@@ -43,18 +43,18 @@ class TblCompanyRequestShowEditForm(TblCompanyRequestAdminForm):
 
     class Meta:
         model = TblCompanyRequestMaster
-        fields = ["commitment","from_dt","to_dt","currency"] 
+        fields = ["commitment","from_dt","to_dt","currency","note","attachement_file"] 
         widgets = {
             "from_dt":DatePickerInput(),
             "to_dt":DatePickerInput(),
         }
 
 class TblCompanyRequestAddForm(TblCompanyRequestAdminForm):
-    layout = ["commitment",["from_dt","to_dt"],["currency"]]
+    layout = ["commitment",["from_dt","to_dt"],["currency"],"note","attachement_file"]
     commitment = forms.ModelChoiceField(queryset=commitment_none, label=_("commitment")) #.filter(commitment_schedular__request_interval=TblCompanyCommitmentSchedular.INTERVAL_TYPE_MANUAL)
     class Meta:
         model = TblCompanyRequestMaster      
-        fields = ["commitment","from_dt","to_dt","currency"] 
+        fields = ["commitment","from_dt","to_dt","currency","note","attachement_file"] 
         widgets = {
             "from_dt":DatePickerInput(),
             "to_dt":DatePickerInput(),

@@ -26,7 +26,7 @@ details = [
                 TblCompanyPaymentDetail
             ],
             "kwargs":{
-               "fields":['item','amount','attachement_file'],
+               "fields":['item','amount'],
                 "extra":0,
                 "can_delete":True,
                 "min_num":1, 

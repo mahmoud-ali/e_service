@@ -281,8 +281,8 @@ class TblCompanyCommitmentSchedular(LoggingModel):
 
 class TblCompanyRequestMaster(LoggingModel):
     def attachement_path(self, filename):
-        company = self.request_master.commitment.company
-        date = self.request_master.created_at.date()
+        company = self.commitment.company
+        date = self.created_at.date()
         return "company_{0}/requests/{1}/{2}".format(company.id,date, filename)    
 
     REQUEST_PAYMENT_NO_PAYMENT = "no"
@@ -494,8 +494,8 @@ class TblCompanyPaymentMaster(LoggingModel):
         return "company_{0}/exchange_rate/{1}/{2}".format(company.id,date, filename)    
 
     def attachement_path2(self, filename):
-        company = self.payment_master.request.commitment.company
-        date = self.payment_master.payment_dt
+        company = self.request.commitment.company
+        date = self.payment_dt
         return "company_{0}/payments/{1}/{2}".format(company.id,date, filename)    
 
     request  = models.ForeignKey(TblCompanyRequestMaster, on_delete=models.PROTECT,verbose_name=_("request"))    

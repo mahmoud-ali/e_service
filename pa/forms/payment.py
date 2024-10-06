@@ -11,7 +11,7 @@ request_all_qs = TblCompanyRequestMaster.objects.prefetch_related("commitment","
 class TblCompanyPaymentAdminForm(ModelForm):
     class Meta:
         model = TblCompanyPaymentMaster
-        fields = ["request","payment_dt","currency","exchange_rate","exchange_attachement_file","state"] 
+        fields = ["request","payment_dt","currency","exchange_rate","exchange_attachement_file","state",'attachement_file'] 
 
     def __init__(self, *args,request_id=None, **kwargs):
         super().__init__(*args, **kwargs)
@@ -19,7 +19,7 @@ class TblCompanyPaymentAdminForm(ModelForm):
             self.fields["request"].queryset = request_all_qs.filter(id=request_id)
 
 class TblCompanyPaymentShowEditForm(TblCompanyPaymentAdminForm):
-    layout = [["request","",""],["payment_dt","",""],["currency","exchange_rate","exchange_attachement_file"]]
+    layout = [["request","",""],["payment_dt","",""],["currency","exchange_rate","exchange_attachement_file"],'attachement_file']
     request = forms.ModelChoiceField(queryset=request_all_qs,disabled=True, label=_("request"))
 
     def __init__(self, *args, **kwargs):        
@@ -34,13 +34,13 @@ class TblCompanyPaymentShowEditForm(TblCompanyPaymentAdminForm):
 
     class Meta:
         model = TblCompanyPaymentMaster
-        fields = ["request","payment_dt","currency","exchange_rate","exchange_attachement_file"] 
+        fields = ["request","payment_dt","currency","exchange_rate","exchange_attachement_file",'attachement_file'] 
         widgets = {
             "payment_dt":DatePickerInput(),
         }
 
 class TblCompanyPaymentAddForm(TblCompanyPaymentAdminForm):
-    layout = [["request","",""],["payment_dt","",""],["currency","exchange_rate","exchange_attachement_file"]]
+    layout = [["request","",""],["payment_dt","",""],["currency","exchange_rate","exchange_attachement_file"],'attachement_file']
     request = forms.ModelChoiceField(queryset=request_all_qs.filter(state=STATE_TYPE_CONFIRM,payment_state__in=(TblCompanyRequestMaster.REQUEST_PAYMENT_NO_PAYMENT,TblCompanyRequestMaster.REQUEST_PAYMENT_PARTIAL_PAYMENT)), label=_("request"))
     class Meta:
         model = TblCompanyPaymentMaster
