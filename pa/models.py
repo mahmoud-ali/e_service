@@ -280,6 +280,11 @@ class TblCompanyCommitmentSchedular(LoggingModel):
             self.save()
 
 class TblCompanyRequestMaster(LoggingModel):
+    def attachement_path(self, filename):
+        company = self.request_master.commitment.company
+        date = self.request_master.created_at.date()
+        return "company_{0}/requests/{1}/{2}".format(company.id,date, filename)    
+
     REQUEST_PAYMENT_NO_PAYMENT = "no"
     REQUEST_PAYMENT_PARTIAL_PAYMENT = "partial"
     REQUEST_PAYMENT_FULL_PAYMENT = "full"
@@ -296,6 +301,8 @@ class TblCompanyRequestMaster(LoggingModel):
     currency = models.CharField(_("currency"),max_length=10, choices=CURRENCY_TYPE_CHOICES, default=CURRENCY_TYPE_EURO)
     payment_state = models.CharField(_("payment_state"),max_length=10, choices=REQUEST_PAYMENT_CHOICES, default=REQUEST_PAYMENT_NO_PAYMENT)
     state = models.CharField(_("record_state"),max_length=10, choices=STATE_TYPE_CHOICES, default=STATE_TYPE_DRAFT)
+    note = models.CharField(_("note"),max_length=100, blank=True, null=True)
+    attachement_file = models.FileField(_("attachement_file"),upload_to=attachement_path,blank=True)
     
     @property
     def total(self):   
@@ -434,11 +441,10 @@ class TblCompanyRequestDetail(models.Model):
         company = self.request_master.commitment.company
         date = self.request_master.created_at.date()
         return "company_{0}/requests/{1}/{2}".format(company.id,date, filename)    
-
+    
     request_master  = models.ForeignKey(TblCompanyRequestMaster, on_delete=models.PROTECT)
     item  = models.ForeignKey(LkpItem, on_delete=models.PROTECT,verbose_name=_("financial item"))    
     amount = models.FloatField(_("amount"))
-    attachement_file = models.FileField(_("attachement_file"),upload_to=attachement_path,blank=True)
 
     def get_commitment_item_amount(self):
         qs =  self.request_master.commitment.tblcompanycommitmentdetail_set \
@@ -487,12 +493,18 @@ class TblCompanyPaymentMaster(LoggingModel):
         date = self.payment_dt
         return "company_{0}/exchange_rate/{1}/{2}".format(company.id,date, filename)    
 
+    def attachement_path2(self, filename):
+        company = self.payment_master.request.commitment.company
+        date = self.payment_master.payment_dt
+        return "company_{0}/payments/{1}/{2}".format(company.id,date, filename)    
+
     request  = models.ForeignKey(TblCompanyRequestMaster, on_delete=models.PROTECT,verbose_name=_("request"))    
     payment_dt = models.DateField(_("payment_dt"))
     currency = models.CharField(_("currency"),max_length=10, choices=CURRENCY_TYPE_CHOICES, default=CURRENCY_TYPE_EURO)
     exchange_rate = models.FloatField(_("exchange_rate"),validators=[validate_positive],default=1)
     exchange_attachement_file = models.FileField(_("exchange_attachement_file"),upload_to=attachement_path,blank=True)
     state = models.CharField(_("record_state"),max_length=10, choices=STATE_TYPE_CHOICES, default=STATE_TYPE_DRAFT)
+    attachement_file = models.FileField(_("attachement_file"),upload_to=attachement_path2,blank=True)
     
     @property
     def total(self):   
@@ -537,11 +549,10 @@ class TblCompanyPaymentDetail(models.Model):
         company = self.payment_master.request.commitment.company
         date = self.payment_master.payment_dt
         return "company_{0}/payments/{1}/{2}".format(company.id,date, filename)    
-
+    
     payment_master  = models.ForeignKey(TblCompanyPaymentMaster, on_delete=models.PROTECT)
     item  = models.ForeignKey(LkpItem, on_delete=models.PROTECT,verbose_name=_("financial item"))    
     amount = models.FloatField(_("amount"))
-    attachement_file = models.FileField(_("attachement_file"),upload_to=attachement_path,blank=True)
 
     def get_request_item_amount(self):
         if not hasattr(self.payment_master,"request"):
