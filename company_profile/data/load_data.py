@@ -182,7 +182,7 @@ def import_licenses_mokhalafat_hajr(file_name='licenses_hajar.csv'):
                 id = int(row[1].strip())
                 license_no = id
 
-                license = TblCompanyProductionLicense.objects.get(id=id)
+                license = TblCompanyProductionLicense.objects.get(license_no=id)
                 license.license_no = license_no+' / حجر'
                 license.pk = None
             except Exception as e:
