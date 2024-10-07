@@ -15,8 +15,17 @@ class LogAdminMixin:
 
 
 
-admin.site.register(LkpItem)
+# admin.site.register(LkpItem)
 admin.site.register(LkpPaymentMethod)
+
+class LkpItemAdmin(admin.ModelAdmin):
+    model = LkpItem
+    
+    list_display = ["name","company_type","calculation_method"]        
+    list_filter = ["company_type","calculation_method"]
+    view_on_site = False
+            
+admin.site.register(LkpItem, LkpItemAdmin)
 
 class TblCompanyOpenningBalanceMasterDetailInline(admin.TabularInline):
     model = TblCompanyOpenningBalanceDetail

@@ -9,7 +9,7 @@ from django.contrib import messages
 from pa.forms.payment import TblCompanyPaymentChooseRequestForm
 
 from ..models import TblCompanyCommitmentMaster, TblCompanyPaymentDetail, TblCompanyPaymentMaster, TblCompanyPaymentMethod,TblCompanyRequestMaster,STATE_TYPE_CONFIRM
-from ..forms import TblCompanyPaymentShowEditForm,TblCompanyPaymentAddForm
+from ..forms import TblCompanyPaymentShowEditForm,TblCompanyPaymentAddForm,TblCompanyPaymentDetailForm
 
 from ..tables import TblCompanyPaymentTable,PaymentFilter
 
@@ -87,6 +87,10 @@ class TblCompanyPaymentCreateView(ApplicationMasterDetailCreateView):
                 detail['formset'].extra=len(d_obj)-1
                 formset = detail['formset'](initial=d_obj)
                 detail['formset'] = formset
+                
+                TblCompanyPaymentDetailFormWithCompanyType=TblCompanyPaymentDetailForm
+                TblCompanyPaymentDetailFormWithCompanyType.company_type = obj.commitment.company.company_type
+                detail['formset'].form = TblCompanyPaymentDetailFormWithCompanyType
 
         self.extra_context['company'] = get_company_details(obj.commitment)
         self.extra_context['form'] = form

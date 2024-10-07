@@ -5,7 +5,7 @@ from django.db.models import Q
 
 from bootstrap_datepicker_plus.widgets import DatePickerInput
 
-from ..models import TblCompanyCommitmentMaster, TblCompanyCommitmentSchedular,TblCompanyRequestMaster,STATE_TYPE_CONFIRM,STATE_TYPE_DRAFT
+from ..models import LkpItem, TblCompanyCommitmentMaster, TblCompanyCommitmentSchedular, TblCompanyRequestDetail,TblCompanyRequestMaster,STATE_TYPE_CONFIRM,STATE_TYPE_DRAFT
 
 commitment_none = TblCompanyCommitmentMaster.objects.none()
 commitment_all_qs = TblCompanyCommitmentMaster.objects.prefetch_related("company")
@@ -19,6 +19,9 @@ commitment_confirmed_manual_qs = commitment_confirmed_qs \
             commitment_schedular__state=STATE_TYPE_CONFIRM
         )
     )
+item_none = LkpItem.objects.none()
+item_all_qs = LkpItem.objects.all()
+
 class TblCompanyRequestAdminForm(ModelForm):
     class Meta:
         model = TblCompanyRequestMaster
@@ -64,6 +67,19 @@ class TblCompanyRequestAddForm(TblCompanyRequestAdminForm):
         super().__init__(*args, **kwargs)
         if commitment_id:
             self.fields["commitment"].queryset = commitment_all_qs.filter(id=commitment_id)
+
+class TblCompanyRequestDetailsForm(ModelForm):
+    item = forms.ModelChoiceField(queryset=item_none,disabled=True, label=_("item"))
+    company_type = None
+    def __init__(self, *args, **kwargs):        
+        super().__init__(*args, **kwargs)
+
+        self.fields["item"].queryset = item_all_qs.filter(company_type=self.company_type)
+        self.fields["item"].disabled = False
+
+    class Meta:
+        model = TblCompanyRequestDetail
+        fields = ['item','amount'] 
 
 class TblCompanyRequestChooseCommitmentForm(forms.Form):
     layout = [["commitment",""]]

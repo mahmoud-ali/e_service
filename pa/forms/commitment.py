@@ -6,10 +6,13 @@ from bootstrap_datepicker_plus.widgets import DatePickerInput
 
 from company_profile.models import TblCompanyProduction, TblCompanyProductionLicense
 
-from ..models import STATE_TYPE_CONFIRM, TblCompanyCommitmentDetail, TblCompanyCommitmentMaster, TblCompanyCommitmentSchedular
+from ..models import STATE_TYPE_CONFIRM, LkpItem, TblCompanyCommitmentDetail, TblCompanyCommitmentMaster, TblCompanyCommitmentSchedular
 
 commitment_all_qs = TblCompanyCommitmentMaster.objects.prefetch_related("company")
 commitment_confirmed_qs = commitment_all_qs.filter(state=STATE_TYPE_CONFIRM)
+
+item_none = LkpItem.objects.none()
+item_all_qs = LkpItem.objects.all()
 
 class TblCompanyCommitmentAdminForm(ModelForm):
     # company = forms.ModelChoiceField(queryset=TblCompanyProduction.objects.all(), label=_("company"))
@@ -55,6 +58,13 @@ class TblCompanyShowEditCommitmentForm(TblCompanyCommitmentAdminForm):
             self.fields["license"].queryset = TblCompanyProductionLicense.objects.none()
 
 class TblCompanyCommitmentDetailForm(ModelForm):
+    item = forms.ModelChoiceField(queryset=item_none,disabled=True, label=_("item"))
+    company_type = None
+    def __init__(self, *args, **kwargs):        
+        super().__init__(*args, **kwargs)
+
+        self.fields["item"].queryset = item_all_qs.filter(company_type=self.company_type)
+        self.fields["item"].disabled = False
     class Meta:
         model = TblCompanyCommitmentDetail     
         fields = ["item","amount_factor"] 

@@ -25,7 +25,8 @@ details = [
                 TblCompanyCommitmentDetail
             ],
             "kwargs":{
-               "fields":['item','amount_factor'],
+            #    "fields":['item','amount_factor'],
+               "form": TblCompanyCommitmentDetailForm,
                 "extra":0,
                 "min_num":1, 
                 "validate_min":True,
@@ -62,6 +63,12 @@ class TblCompanyCommitmentCreateView(ApplicationMasterDetailCreateView):
         })
 
         self.extra_context['form'] = form
+
+        for detail in self.details_formset:
+            if detail.get('id') == 1:
+                TblCompanyCommitmentDetailFormWithCompanyType=TblCompanyCommitmentDetailForm
+                TblCompanyCommitmentDetailFormWithCompanyType.company_type = obj.company_type
+                detail['formset'].form = TblCompanyCommitmentDetailFormWithCompanyType
         return render(request, self.template_name, self.extra_context)
     
     def post(self,request,*args, **kwargs):        

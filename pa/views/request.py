@@ -10,7 +10,7 @@ from company_profile.models import TblCompanyProductionLicense
 from pa.forms.request import TblCompanyRequestChooseCommitmentForm
 
 from ..models import STATE_TYPE_CONFIRM, TblCompanyCommitmentMaster, TblCompanyRequestDetail, TblCompanyRequestMaster, TblCompanyRequestReceive
-from ..forms import TblCompanyRequestAddForm, TblCompanyRequestShowEditForm
+from ..forms import TblCompanyRequestAddForm, TblCompanyRequestShowEditForm, TblCompanyRequestDetailsForm
 from django_filters.views import FilterView
 
 from ..tables import TblCompanyRequestTable,RequestFilter
@@ -29,6 +29,7 @@ details = [
             ],
             "kwargs":{
                "fields":['item','amount'],
+                "form": TblCompanyRequestDetailsForm,
                 "extra":0,
                 "can_delete":True,
                 "min_num":1, 
@@ -69,11 +70,14 @@ class TblCompanyRequestCreateView(ApplicationMasterDetailCreateView):
 
         for detail in self.details_formset:
             if detail.get('id') == 1:
+                TblCompanyRequestDetailsFormWithCompanyType=TblCompanyRequestDetailsForm
+                TblCompanyRequestDetailsFormWithCompanyType.company_type = license.company.company_type
                 d_obj = [
                         {'item':c.item,'amount':c.item.calculate_value(c.amount_factor,obj.company)} \
                         for c in obj.tblcompanycommitmentdetail_set.all()
                 ]
                 detail['formset'].extra=len(d_obj)-1
+                detail['formset'].form = TblCompanyRequestDetailsFormWithCompanyType
                 formset = detail['formset'](initial=d_obj)
                 detail['formset'] = formset
 
