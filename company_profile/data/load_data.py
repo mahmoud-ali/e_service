@@ -172,3 +172,19 @@ def import_licenses_entaj(file_name='licenses_entaj.csv'):
             except Exception as e:
                 print(f'id: {id} Exception: {e}')
 
+def import_licenses_mokhalafat_hajr(file_name='licenses_hajar.csv'):
+    with open('./company_profile/data/'+file_name, newline='') as csvfile:
+        reader = csv.reader(csvfile, delimiter=',')
+        next(reader, None)  # skip the headers
+        for row in reader:
+            try:
+
+                id = int(row[1].strip())
+                license_no = row[2].strip()
+
+                license = TblCompanyProductionLicense.objects.get(id=id)
+                license.license_no = license_no+' / حجر'
+                license.pk = None
+            except Exception as e:
+                print(f'id: {id} Exception: {e}')
+
