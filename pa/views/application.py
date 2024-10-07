@@ -108,7 +108,7 @@ class ApplicationMasterDetailCreateView(LoginRequiredMixin,UserPermissionMixin,V
     menu_name = ""  
     template_name = "pa/application_add_master_details.html"
     
-    def dispatch(self, *args, **kwargs):         
+    def dispatch(self,request, *args, **kwargs):         
         self.details_formset = []
         i = 0
         for d in self.details:
@@ -119,6 +119,7 @@ class ApplicationMasterDetailCreateView(LoginRequiredMixin,UserPermissionMixin,V
                 "formset":inlineformset_factory(*d['args'], **d['kwargs']),
             })
             
+        self.form_class.user = request.user
         self.success_url = reverse_lazy(self.menu_name)    
         self.extra_context = {
                             "menu_name":self.menu_name,
@@ -126,7 +127,7 @@ class ApplicationMasterDetailCreateView(LoginRequiredMixin,UserPermissionMixin,V
                             "form": self.form_class,
                             "details": self.details_formset,
          }
-        return super().dispatch(*args, **kwargs)                    
+        return super().dispatch(request,*args, **kwargs)                    
 
     def get(self,request, *args, **kwargs):        
         return render(request, self.template_name, self.extra_context)
@@ -229,7 +230,7 @@ class ApplicationMasterDetailUpdateView(LoginRequiredMixin,UserPermissionMixin,S
     menu_name = ""  
     template_name = "pa/application_add_master_details.html"
     
-    def dispatch(self, *args, **kwargs):         
+    def dispatch(self, request,*args, **kwargs):         
         self.details_formset = []
         i = 0
         for d in self.details:
@@ -240,6 +241,7 @@ class ApplicationMasterDetailUpdateView(LoginRequiredMixin,UserPermissionMixin,S
                 "formset":inlineformset_factory(*d['args'], **d['kwargs']),
             })
             
+        self.form_class.user = request.user
         self.success_url = reverse_lazy(self.menu_name)    
         self.extra_context = {
                             "menu_name":self.menu_name,
@@ -248,7 +250,7 @@ class ApplicationMasterDetailUpdateView(LoginRequiredMixin,UserPermissionMixin,S
                             "form": self.form_class,
                             "details": self.details_formset,
          }
-        return super().dispatch(*args, **kwargs)                    
+        return super().dispatch(request,*args, **kwargs)                    
     def get_queryset(self):
         query = super().get_queryset()        
         return query.filter(state=STATE_TYPE_DRAFT)
@@ -323,7 +325,7 @@ class ApplicationReadonlyView(LoginRequiredMixin,UserPermissionMixin,SingleObjec
     menu_name = ""  
     template_name = "pa/application_readonly_master_details.html"
     
-    def dispatch(self, *args, **kwargs):         
+    def dispatch(self, request,*args, **kwargs):         
         self.details_formset = []
         for d in self.details:
             if d['kwargs'].get('can_delete'):
@@ -333,6 +335,7 @@ class ApplicationReadonlyView(LoginRequiredMixin,UserPermissionMixin,SingleObjec
                 "formset":inlineformset_factory(*d['args'], **d['kwargs']),
             })
             
+        self.form_class.user = request.user
         self.success_url = reverse_lazy(self.menu_name)    
         self.extra_context = {
                             "menu_name":self.menu_name,
@@ -342,7 +345,7 @@ class ApplicationReadonlyView(LoginRequiredMixin,UserPermissionMixin,SingleObjec
                             "form": self.form_class,
                             "details": self.details_formset,
          }
-        return super().dispatch(*args, **kwargs)                    
+        return super().dispatch(request,*args, **kwargs)                    
 
     def get(self,request,*args, **kwargs):        
         obj = self.get_object()
@@ -401,7 +404,7 @@ class ApplicationDeleteMasterDetailView(LoginRequiredMixin,UserPermissionMixin,S
     menu_name = ""  
     template_name = "pa/application_delete_master_detail.html"
     
-    def dispatch(self, *args, **kwargs):         
+    def dispatch(self, request,*args, **kwargs):         
         self.details_formset = []
         for d in self.details:
             self.details_formset.append({
@@ -409,6 +412,7 @@ class ApplicationDeleteMasterDetailView(LoginRequiredMixin,UserPermissionMixin,S
                 "formset":inlineformset_factory(*d['args'], **d['kwargs']),
             })
             
+        self.form_class.user = request.user
         self.success_url = reverse_lazy(self.menu_name)    
         self.extra_context = {
                             "menu_name":self.menu_name,
@@ -416,7 +420,7 @@ class ApplicationDeleteMasterDetailView(LoginRequiredMixin,UserPermissionMixin,S
                             "form": self.form_class,
                             "details": self.details_formset,
          }
-        return super().dispatch(*args, **kwargs)                    
+        return super().dispatch(request,*args, **kwargs)                    
 
     def get_queryset(self):
         query = super().get_queryset()        
