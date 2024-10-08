@@ -19,14 +19,14 @@ class TblCompanyCommitmentAdminForm(ModelForm):
     # company = forms.ModelChoiceField(queryset=TblCompanyProduction.objects.all(), label=_("company"))
     class Meta:
         model = TblCompanyCommitmentMaster
-        fields = ["company","license","currency","state"] 
+        fields = ["company","license","currency","note","state"] 
         
 class TblCompanyAddCommitmentForm(TblCompanyCommitmentAdminForm):
     user = None
-    layout = [["company","license","currency"]]
+    layout = [["company","license","currency"],["note"]]
     class Meta:
         model = TblCompanyCommitmentMaster     
-        fields = ["company","license","currency"] 
+        fields = ["company","license","currency","note"] 
         widgets = {}
 
     def __init__(self, *args,company_id=None, **kwargs):
@@ -42,10 +42,10 @@ class TblCompanyAddCommitmentForm(TblCompanyCommitmentAdminForm):
 
 class TblCompanyShowEditCommitmentForm(TblCompanyCommitmentAdminForm):
     user = None
-    layout = [["company","license","currency"]]
+    layout = [["company","license","currency"],["note"]]
     class Meta:
         model = TblCompanyCommitmentMaster     
-        fields = ["company","license","currency"] 
+        fields = ["company","license","currency","note"] 
         widgets = {}
 
     def __init__(self, *args, **kwargs):
