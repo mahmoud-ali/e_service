@@ -251,5 +251,5 @@ def import_licenses_emtiaz(file_name='licenses_emtiaz.csv'):
                 )
                 license.mineral.set([mineral])
             except Exception as e:
-                print(f'id: {id}, company: {company} Exception: {e}')
+                print(f'id: {id} Exception: {e}')
 
