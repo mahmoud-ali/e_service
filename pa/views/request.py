@@ -8,6 +8,7 @@ from django.contrib import messages
 
 from company_profile.models import TblCompanyProductionLicense
 from pa.forms.request import TblCompanyRequestChooseCommitmentForm
+from pa.utils import get_company_types_from_groups
 
 from ..models import STATE_TYPE_CONFIRM, TblCompanyCommitmentMaster, TblCompanyRequestDetail, TblCompanyRequestMaster, TblCompanyRequestReceive
 from ..forms import TblCompanyRequestAddForm, TblCompanyRequestShowEditForm, TblCompanyRequestDetailsForm
@@ -45,6 +46,11 @@ class TblCompanyRequestListView(ApplicationListView,FilterView):
     menu_name = "pa:request_list"
     title = _("List of requests")
     
+    def get_queryset(self):                
+        query = super().get_queryset()
+        query = query.filter(commitment__company__company_type__in=get_company_types_from_groups(self.request.user))
+        return query
+
 class TblCompanyRequestCreateView(ApplicationMasterDetailCreateView):
     model = model_master
     form_class = TblCompanyRequestAddForm
@@ -106,7 +112,15 @@ class TblCompanyRequestUpdateView(ApplicationMasterDetailUpdateView):
 
     def get(self,request,*args, **kwargs):        
         obj = self.get_object()
+        license = TblCompanyProductionLicense.objects.filter(company=obj.commitment.company).first()
         self.extra_context['company'] = get_company_details(obj.commitment)
+
+        for detail in self.details_formset:
+            if detail.get('id') == 1:
+                TblCompanyRequestDetailsFormWithCompanyType=TblCompanyRequestDetailsForm
+                TblCompanyRequestDetailsFormWithCompanyType.company_type = license.company.company_type
+                detail['formset'].form = TblCompanyRequestDetailsFormWithCompanyType
+
         return super().get(request,*args, **kwargs)
 
 class TblCompanyRequestReadonlyView(ApplicationReadonlyView):

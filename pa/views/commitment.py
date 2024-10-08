@@ -7,6 +7,7 @@ from django.contrib import messages
 
 from company_profile.models import TblCompanyProduction
 from pa.forms.commitment import TblCompanyAddCommitmentForm, TblCompanyCommitmentDetailForm, TblCompanyRequestChooseCompanyForm, TblCompanyShowEditCommitmentForm
+from pa.utils import get_company_types_from_groups
 
 from ..models import STATE_TYPE_CONFIRM, TblCompanyCommitmentDetail, TblCompanyCommitmentMaster
 
@@ -43,6 +44,11 @@ class TblCompanyCommitmentListView(ApplicationListView):
     menu_name = "pa:commitment_list"
     title = _("List of commitments")
     
+    def get_queryset(self):                
+        query = super().get_queryset()
+        query = query.filter(company__company_type__in=get_company_types_from_groups(self.request.user))
+        return query
+
 class TblCompanyCommitmentCreateView(ApplicationMasterDetailCreateView):
     model = model_master
     form_class = TblCompanyAddCommitmentForm
@@ -54,6 +60,7 @@ class TblCompanyCommitmentCreateView(ApplicationMasterDetailCreateView):
         company_id = request.GET.get('company')
         if not company_id:
             self.extra_context['form'] = TblCompanyRequestChooseCompanyForm
+            self.extra_context['form'].user = request.user
             self.extra_context['details'] = []
             return render(request, 'pa/application_choose.html', self.extra_context)
         
@@ -90,6 +97,13 @@ class TblCompanyCommitmentUpdateView(ApplicationMasterDetailUpdateView):
     def get(self,request,*args, **kwargs):        
         obj = self.get_object()
         self.extra_context['company'] = get_company_details(obj)
+
+        for detail in self.details_formset:
+            if detail.get('id') == 1:
+                TblCompanyCommitmentDetailFormWithCompanyType=TblCompanyCommitmentDetailForm
+                TblCompanyCommitmentDetailFormWithCompanyType.company_type = obj.company.company_type
+                detail['formset'].form = TblCompanyCommitmentDetailFormWithCompanyType
+
         return super().get(request,*args, **kwargs)
 
 class TblCompanyCommitmentReadonlyView(ApplicationReadonlyView):

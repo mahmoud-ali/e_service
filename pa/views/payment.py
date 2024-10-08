@@ -7,6 +7,7 @@ from django.utils import timezone
 from django.contrib import messages
 
 from pa.forms.payment import TblCompanyPaymentChooseRequestForm
+from pa.utils import get_company_types_from_groups
 
 from ..models import TblCompanyCommitmentMaster, TblCompanyPaymentDetail, TblCompanyPaymentMaster, TblCompanyPaymentMethod,TblCompanyRequestMaster,STATE_TYPE_CONFIRM
 from ..forms import TblCompanyPaymentShowEditForm,TblCompanyPaymentAddForm,TblCompanyPaymentDetailForm
@@ -56,6 +57,11 @@ class TblCompanyPaymentListView(ApplicationListView):
     filterset_class = PaymentFilter
     menu_name = "pa:payment_list"
     title = _("List of payments")
+
+    def get_queryset(self):                
+        query = super().get_queryset()
+        query = query.filter(request__commitment__company__company_type__in=get_company_types_from_groups(self.request.user))
+        return query
     
 class TblCompanyPaymentCreateView(ApplicationMasterDetailCreateView):
     model = model_master
@@ -125,6 +131,12 @@ class TblCompanyPaymentUpdateView(ApplicationMasterDetailUpdateView):
                     # print(f.fields)
                     f.fields['item'].queryset = f.fields['item'].queryset.filter(company_type=obj.request.commitment.company.company_type)
             detail['formset'] = formset
+
+            if detail.get('id') == 1:
+                TblCompanyPaymentDetailFormWithCompanyType=TblCompanyPaymentDetailForm
+                TblCompanyPaymentDetailFormWithCompanyType.company_type = obj.request.commitment.company.company_type
+                detail['formset'].form = TblCompanyPaymentDetailFormWithCompanyType
+
 
         self.extra_context['company'] = get_company_details(obj.request.commitment)
         self.extra_context['details'] = self.details_formset
