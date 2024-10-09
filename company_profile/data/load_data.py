@@ -172,6 +172,61 @@ def import_licenses_entaj(file_name='licenses_entaj.csv'):
             except Exception as e:
                 print(f'id: {id} Exception: {e}')
 
+def import_licenses_mokhalafat(file_name='licenses_mokhalafat_remain.csv'):
+    with open('./company_profile/data/'+file_name, newline='') as csvfile:
+        reader = csv.reader(csvfile, delimiter=',')
+        next(reader, None)  # skip the headers
+        for row in reader:
+            try:
+
+                id = int(row[0].strip())
+                license_no = row[2].strip()
+                date = row[3].strip()
+                start_date = row[4].strip()
+                end_date = row[5].strip()
+                state_str = row[6].strip()
+                locality_str = row[7].strip()
+                location = row[8].strip()
+                sheet_no = row[9].strip()
+                mineral_str = row[10].strip()
+                area = float(row[11].strip())
+                area_initial = float(row[11].strip())
+                royalty = float(row[16].strip())
+                business_profit = float(row[17].strip())
+                social_responsibility = float(row[18].strip())
+                zakat = 2.5
+                contract_status_str = row[21].strip()
+
+                company = TblCompanyProduction.objects.get(id=id)
+                state, created = LkpState.objects.get_or_create(name=state_str)
+                locality, created = LkpLocality.objects.get_or_create(name=locality_str,state=state)
+                mineral, created = LkpMineral.objects.get_or_create(name=mineral_str)
+                contract_status, created = LkpCompanyProductionLicenseStatus.objects.get_or_create(name=contract_status_str)
+
+                license = TblCompanyProductionLicense.objects.create(
+                    company = company,
+                    license_no = license_no,
+                    date = date,
+                    start_date = start_date,
+                    end_date = end_date,
+                    state = state,
+                    locality = locality,
+                    location = location,
+                    sheet_no = sheet_no,
+                    area = area,
+                    area_initial = area_initial,
+                    royalty = royalty,
+                    zakat = zakat,
+                    business_profit = business_profit,
+                    social_responsibility = social_responsibility,
+                    contract_status = contract_status,
+                    created_by=admin_user,
+                    updated_by=admin_user
+                )
+                license.mineral.set([mineral])
+            except Exception as e:
+                print(f'id: {id} Exception: {e}')
+
 def import_licenses_mokhalafat_hajr(file_name='licenses_hajar.csv'):
     with open('./company_profile/data/'+file_name, newline='') as csvfile:
         reader = csv.reader(csvfile, delimiter=',')
@@ -252,7 +307,6 @@ def import_licenses_emtiaz(file_name='licenses_emtiaz.csv'):
                 license.mineral.set([mineral])
             except Exception as e:
                 print(f'id: {id} Exception: {e}')
-
 
 def update_intial_area():
     for obj in TblCompanyProductionLicense.objects.all():
