@@ -337,7 +337,7 @@ def import_licenses_sageer(file_name='licenses_sageer.csv'):
         for row in reader:
             try:
 
-                id = int(row[1].strip())
+                id = int(row[0].strip())
                 license_no = row[2].strip()
                 date = row[3].strip()
                 start_date = row[4].strip()
