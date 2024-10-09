@@ -213,6 +213,7 @@ class TblCompanyProductionLicense(LoggingModel):
     cordinates = models.TextField(_("cordinates"),max_length=256)
     mineral = models.ManyToManyField(LkpMineral,verbose_name=_("mineral"),default=[1])
     area = models.FloatField(_("Area in Kilometers"),blank=True,null=True)
+    area_initial = models.FloatField(_("Initial area in Kilometers"),blank=True,null=True,default=0)
     reserve = models.FloatField(_("Reserve in Tones"),blank=True,null=True)
     gov_rep = models.CharField(_("Goverment representative"),max_length=200,blank=True,default='',null=True)
     rep_percent = models.FloatField(_("Representative percentage(%)"),blank=True,default=0,null=True)

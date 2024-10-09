@@ -200,7 +200,7 @@ class TblCompanyProductionLicenseAdmin(ExportActionMixin,LoggingAdminMixin,admin
         (None, {"fields": ["company",("license_no","license_count")]}),
         (_("General information"), {"fields": ["date",("start_date","end_date")]}),
         (_("Location information"), {"fields": [("state","locality","location","sheet_no")]}),
-        (_("Contract information"), {"fields": ["mineral","area","reserve","royalty","zakat","annual_rent","gov_rep","rep_percent","com_percent","business_profit","social_responsibility","contract_status","contract_file"]}),
+        (_("Contract information"), {"fields": ["mineral","area_initial","area","reserve","royalty","zakat","annual_rent","gov_rep","rep_percent","com_percent","business_profit","social_responsibility","contract_status","contract_file"]}),
      ]        
     exclude = ["created_at","created_by","updated_at","updated_by"]
     

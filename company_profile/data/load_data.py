@@ -253,3 +253,24 @@ def import_licenses_emtiaz(file_name='licenses_emtiaz.csv'):
             except Exception as e:
                 print(f'id: {id} Exception: {e}')
 
+
+def update_intial_area():
+    for obj in TblCompanyProductionLicense.objects.all():
+        obj.area_initial = obj.area
+        obj.save()
+
+def import_licenses_emtiaz_update_initial_area(file_name='licenses_emtiaz.csv'):
+    with open('./company_profile/data/'+file_name, newline='') as csvfile:
+        reader = csv.reader(csvfile, delimiter=',')
+        next(reader, None)  # skip the headers
+        for row in reader:
+            try:
+
+                id = int(row[0].strip())
+                initial_area = float(row[17].strip())
+
+                license = TblCompanyProductionLicense.objects.get(pk=id)
+                license.initial_area = initial_area
+                license.save()
+            except Exception as e:
+                print(f'id: {id} Exception: {e}')
