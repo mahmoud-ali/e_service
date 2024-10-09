@@ -267,10 +267,11 @@ def import_licenses_emtiaz_update_initial_area(file_name='licenses_emtiaz.csv'):
             try:
 
                 id = int(row[0].strip())
+                license_no = row[2].strip()
                 initial_area = float(row[17].strip())
 
-                license = TblCompanyProductionLicense.objects.get(pk=id)
-                license.initial_area = initial_area
+                license = TblCompanyProductionLicense.objects.get(company__id0=id,license_no=license_no)
+                license.area_initial = initial_area
                 license.save()
             except Exception as e:
                 print(f'id: {id} Exception: {e}')
