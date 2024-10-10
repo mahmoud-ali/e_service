@@ -132,7 +132,7 @@ class TblCompanyProductionAdmin(ExportActionMixin,LoggingAdminMixin,admin.ModelA
      ]
      
     list_display = ["company_type","code","name_ar", "name_en", "status"]
-    list_filter = ["company_type","nationality","status"]
+    list_filter = ["company_type","nationality","status","created_at"]
     search_fields = ["code","name_ar","name_en"]
 
     exclude = ["created_at","created_by","updated_at","updated_by"]
