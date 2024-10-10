@@ -240,7 +240,7 @@ class TblCompanyProductionLicenseAdmin(ExportActionMixin,LoggingAdminMixin,admin
      
 admin.site.register(LkpNationality)
 admin.site.register(LkpState)
-admin.site.register(LkpLocality)
+# admin.site.register(LkpLocality)
 admin.site.register(LkpMineral)
 admin.site.register(LkpForeignerProcedureType)
 admin.site.register(LkpCompanyProductionStatus) 
@@ -250,7 +250,7 @@ admin.site.register(LkpAccidentType)
 #admin.site.register(LkpCompanyProductionFactoryType)
 admin.site.register(TblCompanyProductionFactory,TblCompanyProductionFactoryAdmin)
 
-admin.site.register(LkpCompanyProductionLicenseStatus)
+# admin.site.register(LkpCompanyProductionLicenseStatus)
 admin.site.register(TblCompanyProductionLicense,TblCompanyProductionLicenseAdmin)
 
 class TblCompanyProductionUserRoleAdmin( admin.ModelAdmin):
@@ -259,6 +259,14 @@ class TblCompanyProductionUserRoleAdmin( admin.ModelAdmin):
     list_filter = ["company","user"]
     
 admin.site.register(TblCompanyProductionUserRole, TblCompanyProductionUserRoleAdmin)
+
+class LkpLocalityAdmin( admin.ModelAdmin):
+    model = LkpLocality
+    exclude = ["id"]
+    list_display = ["name","state"]        
+    list_filter = ["state"]
+    
+admin.site.register(LkpLocality, LkpLocalityAdmin)
 
 class AppForignerMovementAdmin(WorkflowAdminMixin,admin.ModelAdmin):
     form = AppForignerMovementAdminForm

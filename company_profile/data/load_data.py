@@ -426,3 +426,11 @@ def update_emtiaz_nasib():
                 obj.save()
             except Exception as e:
                 print(f'id: {company_id} Exception: {e}')
+
+def update_contract_status(r,a):
+    nat_r = LkpCompanyProductionLicenseStatus.objects.get(id=r)
+    nat_a = LkpCompanyProductionLicenseStatus.objects.get(id=a)
+    lst = TblCompanyProductionLicense.objects.filter(contract_status=nat_r)
+    for obj in lst:
+        obj.contract_status = nat_a
+        obj.save()
