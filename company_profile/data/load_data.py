@@ -434,3 +434,12 @@ def update_contract_status(r,a):
     for obj in lst:
         obj.contract_status = nat_a
         obj.save()
+
+def update_locality(r,a):
+    nat_r = LkpLocality.objects.get(id=r)
+    nat_a = LkpLocality.objects.get(id=a)
+    lst = TblCompanyProductionLicense.objects.filter(locality=nat_r)
+    for obj in lst:
+        obj.state = nat_a.state
+        obj.locality = nat_a
+        obj.save()
