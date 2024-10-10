@@ -3,6 +3,7 @@ import csv
 from django.contrib.auth import get_user_model
 
 from ..models import LkpCompanyProductionLicenseStatus, LkpCompanyProductionStatus, LkpLocality, LkpMineral, LkpNationality, LkpState, TblCompany, TblCompanyProduction, TblCompanyProductionLicense
+# from company_profile.models import LkpNationality,TblCompanyProduction
 
 admin_user = get_user_model().objects.get(id=1)
 
@@ -389,3 +390,39 @@ def import_licenses_sageer(file_name='licenses_sageer.csv'):
                 license.mineral.set([mineral])
             except Exception as e:
                 print(f'id: {id} Exception: {e}')
+
+# from company_profile.models import LkpNationality,TblCompanyProduction
+
+def update_nationality(r,a):
+    nat_r = LkpNationality.objects.get(id=r)
+    nat_a = LkpNationality.objects.get(id=a)
+    lst = TblCompanyProduction.objects.filter(nationality=nat_r)
+    for obj in lst:
+        obj.nationality.remove(nat_r)
+        obj.nationality.add(nat_a)
+        obj.save()
+
+def update_emtiaz_nasib():
+    data = (
+        (15,[437,441,450,454,460,461,463,468]),
+        (18,[479,509,510]),
+        (20,[428,429,431,433,447,474,499,565]),
+        (22,[434,436,472,477]),
+        (23,[443]),
+        (25,[412,414,416,417,418,419,421,427,432,438,439,440,442,448,457,475,489,494,508,563]),
+        (27,[425,476]),
+        (30,[420,423,424,426,430,444,445,446,449,451,452,453,458,464,466,467,469,470,471,473,481,482,483,484,485,486,487,488,490,491,492,493,495,496,497,498,500,501,502,503,504,505,506,507,511,512,513,514,515,516,517,518,519,520,521,522,523,524,525,526,527,528,529,530,531,532,533,534,535,536,537,538,539,540,541,542,543,544,545,546,547,548,549,550,551,552,553,554,555,556,557,558,559,560,561,562,564,566,567,568,569,570,571]),
+        (35,[413,415,435,455,456,459,465]),
+        (45,[478]),
+    )    
+    for row in data:
+        for company_id in row[1]:
+            nasib_gov = row[0]
+            nasib_com = 100 - nasib_gov
+            try:
+                obj = TblCompanyProductionLicense.objects.get(company__id=company_id,company__company_type='emtiaz')
+                obj.rep_percent = nasib_gov
+                obj.com_percent = nasib_com
+                obj.save()
+            except Exception as e:
+                print(f'id: {company_id} Exception: {e}')

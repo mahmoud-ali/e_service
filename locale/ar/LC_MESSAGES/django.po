@@ -406,11 +406,11 @@ msgstr "ممثل الحكومة"
 
 #: company_profile/models.py:219
 msgid "Representative percentage(%)"
-msgstr "نسبة الممثل (%)"
+msgstr "نسبة نصيب الحكومة (%)"
 
 #: company_profile/models.py:220
 msgid "Company percentage(%)"
-msgstr "نسبة الشركة (%)"
+msgstr "نسبة نصيب الشركة (%)"
 
 #: company_profile/models.py:221
 msgid "royalty"
