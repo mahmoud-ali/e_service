@@ -250,7 +250,7 @@ admin.site.register(LkpAccidentType)
 #admin.site.register(LkpCompanyProductionFactoryType)
 admin.site.register(TblCompanyProductionFactory,TblCompanyProductionFactoryAdmin)
 
-#admin.site.register(LkpCompanyProductionLicenseStatus)
+admin.site.register(LkpCompanyProductionLicenseStatus)
 admin.site.register(TblCompanyProductionLicense,TblCompanyProductionLicenseAdmin)
 
 class TblCompanyProductionUserRoleAdmin( admin.ModelAdmin):
