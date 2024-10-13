@@ -133,7 +133,7 @@ class TblCompanyCommitmentMaster(LoggingModel):
     state = models.CharField(_("record_state"),max_length=10, choices=STATE_TYPE_CHOICES, default=STATE_TYPE_DRAFT)
     
     def __str__(self):
-        return self.company.__str__()+"/"+self.currency
+        return self.company.__str__()+"/"+self.get_currency_display()
         
     def get_absolute_url(self): 
         return reverse('pa:commitment_show',args=[str(self.id)])                
