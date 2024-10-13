@@ -134,7 +134,15 @@ class TblCompanyRequestReadonlyView(ApplicationReadonlyView):
 
     def get(self,request,*args, **kwargs):        
         obj = self.get_object()
+        license = TblCompanyProductionLicense.objects.filter(company=obj.commitment.company).first()
         self.extra_context['company'] = get_company_details(obj.commitment)
+
+        for detail in self.details_formset:
+            if detail.get('id') == 1:
+                TblCompanyRequestDetailsFormWithCompanyType=TblCompanyRequestDetailsForm
+                TblCompanyRequestDetailsFormWithCompanyType.company_type = license.company.company_type
+                detail['formset'].form = TblCompanyRequestDetailsFormWithCompanyType
+
         return super().get(request,*args, **kwargs)
 
 class TblCompanyRequestDeleteView(ApplicationDeleteMasterDetailView):

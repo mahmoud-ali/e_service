@@ -118,6 +118,13 @@ class TblCompanyCommitmentReadonlyView(ApplicationReadonlyView):
     def get(self,request,*args, **kwargs):        
         obj = self.get_object()
         self.extra_context['company'] = get_company_details(obj)
+
+        for detail in self.details_formset:
+            if detail.get('id') == 1:
+                TblCompanyCommitmentDetailFormWithCompanyType=TblCompanyCommitmentDetailForm
+                TblCompanyCommitmentDetailFormWithCompanyType.company_type = obj.company.company_type
+                detail['formset'].form = TblCompanyCommitmentDetailFormWithCompanyType
+
         return super().get(request,*args, **kwargs)
 
 class TblCompanyCommitmentDeleteView(ApplicationDeleteMasterDetailView):
