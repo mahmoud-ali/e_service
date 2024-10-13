@@ -99,7 +99,7 @@ def import_commitment_emtiaz(file_name='commitment_emtiaz.csv',items=['عقود 
 
                 for (i,v) in enumerate(items):
                     item,created = LkpItem.objects.get_or_create(name=v+' (قيمة محددة)',company_type=TblCompany.COMPANY_TYPE_EMTIAZ,calculation_method=LkpItem.CALCULATION_METHOD_FIXED_VALUE)
-                    amount = float(row[6+i].strip())
+                    amount = float(row[7+i].strip())
 
                     commitmentDetail = TblCompanyCommitmentDetail.objects.create(
                         commitment_master=commitmentMaster,
