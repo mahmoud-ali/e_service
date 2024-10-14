@@ -52,7 +52,7 @@ class TblCompanyCommitmentMasterAdmin(LogAdminMixin,admin.ModelAdmin):
     inlines = [TblCompanyCommitmentMasterDetailInline]     
     
     list_display = ["company", "created_at", "created_by","updated_at", "updated_by"]        
-    list_filter = ["company"]
+    list_filter = ["company__company_type","currency","state"]
     view_on_site = False
             
 admin.site.register(TblCompanyCommitmentMaster, TblCompanyCommitmentMasterAdmin)
@@ -61,7 +61,7 @@ class TblCompanyCommitmentSchedularAdmin(LogAdminMixin,admin.ModelAdmin):
     model = TblCompanyCommitmentSchedular
     
     list_display = ["commitment", "created_at", "created_by","updated_at", "updated_by"]        
-    list_filter = ["commitment"]
+    list_filter = ["commitment__company__company_type"]
     view_on_site = False
             
 admin.site.register(TblCompanyCommitmentSchedular, TblCompanyCommitmentSchedularAdmin)
@@ -81,7 +81,7 @@ class TblCompanyRequestMasterAdmin(LogAdminMixin,admin.ModelAdmin):
     inlines = [TblCompanyRequestMasterDetailInline,TblCompanyRequestReceiveInline]     
     
     list_display = ["commitment","payment_state", "created_at", "created_by","updated_at", "updated_by"]        
-    list_filter = ["commitment"]
+    list_filter = ["commitment__company__company_type","currency","state"]
     view_on_site = False
             
 admin.site.register(TblCompanyRequestMaster, TblCompanyRequestMasterAdmin)
@@ -101,7 +101,7 @@ class TblCompanyPaymentMasterAdmin(LogAdminMixin,admin.ModelAdmin):
     inlines = [TblCompanyPaymentMasterDetailInline,TblCompanyPaymentMethodInline]     
     
     list_display = ["request", "created_at", "created_by","updated_at", "updated_by"]        
-    list_filter = ["request"]
+    list_filter = ["request__commitment__company__company_type","currency","state"]
     view_on_site = False
             
 admin.site.register(TblCompanyPaymentMaster, TblCompanyPaymentMasterAdmin)
