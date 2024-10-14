@@ -73,7 +73,7 @@ class LkpItem(models.Model):
         verbose_name_plural = _("Financial items")
 
     def __str__(self):
-        return _("Financial item") +" "+str(self.name)
+        return str(self.name)
     
     def calculate_value(self,factor,company):
         if self.calculation_method == self.CALCULATION_METHOD_FIXED_VALUE:
@@ -133,6 +133,9 @@ class TblCompanyCommitmentMaster(LoggingModel):
     state = models.CharField(_("record_state"),max_length=10, choices=STATE_TYPE_CHOICES, default=STATE_TYPE_DRAFT)
     
     def __str__(self):
+        if self.license:
+            return self.license.__str__()+"/"+self.get_currency_display()
+        
         return self.company.__str__()+"/"+self.get_currency_display()
         
     def get_absolute_url(self): 
