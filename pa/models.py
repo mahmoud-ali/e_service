@@ -508,6 +508,7 @@ class TblCompanyPaymentMaster(LoggingModel):
     exchange_rate = models.FloatField(_("exchange_rate"),validators=[validate_positive],default=1)
     exchange_attachement_file = models.FileField(_("exchange_attachement_file"),upload_to=attachement_path,blank=True)
     state = models.CharField(_("record_state"),max_length=10, choices=STATE_TYPE_CHOICES, default=STATE_TYPE_DRAFT)
+    note = models.CharField(_("note"),max_length=100, blank=True, null=True)
     attachement_file = models.FileField(_("attachement_file"),upload_to=attachement_path2,blank=True)
     
     @property
