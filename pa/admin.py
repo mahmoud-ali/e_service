@@ -51,7 +51,7 @@ class TblCompanyCommitmentMasterAdmin(LogAdminMixin,admin.ModelAdmin):
     model = TblCompanyCommitmentAdminForm
     inlines = [TblCompanyCommitmentMasterDetailInline]     
     
-    list_display = ["company", "created_at", "created_by","updated_at", "updated_by"]        
+    list_display = ["company", "license", "currency","state"]        
     list_filter = ["company__company_type","currency","state"]
     view_on_site = False
             
@@ -80,8 +80,8 @@ class TblCompanyRequestMasterAdmin(LogAdminMixin,admin.ModelAdmin):
     form = TblCompanyRequestAdminForm
     inlines = [TblCompanyRequestMasterDetailInline,TblCompanyRequestReceiveInline]     
     
-    list_display = ["commitment","payment_state", "created_at", "created_by","updated_at", "updated_by"]        
-    list_filter = ["commitment__company__company_type","currency","state"]
+    list_display = ["commitment","payment_state", "from_dt", "to_dt","state"]        
+    list_filter = ["commitment__company__company_type","currency",'payment_state',"state"]
     view_on_site = False
             
 admin.site.register(TblCompanyRequestMaster, TblCompanyRequestMasterAdmin)
@@ -100,7 +100,7 @@ class TblCompanyPaymentMasterAdmin(LogAdminMixin,admin.ModelAdmin):
     form = TblCompanyPaymentAdminForm
     inlines = [TblCompanyPaymentMasterDetailInline,TblCompanyPaymentMethodInline]     
     
-    list_display = ["request", "created_at", "created_by","updated_at", "updated_by"]        
+    list_display = ["request", "payment_dt", "currency","exchange_rate", "state"]        
     list_filter = ["request__commitment__company__company_type","currency","state"]
     view_on_site = False
             
