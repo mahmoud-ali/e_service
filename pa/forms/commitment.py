@@ -67,7 +67,6 @@ class TblCompanyCommitmentDetailForm(ModelForm):
     def __init__(self, *args, **kwargs):        
         super().__init__(*args, **kwargs)
 
-        print("type",self.company_type)
         self.fields["item"].queryset = item_all_qs.filter(company_type=self.company_type)
         self.fields["item"].disabled = False
     class Meta:
