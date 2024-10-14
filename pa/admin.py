@@ -53,6 +53,8 @@ class TblCompanyCommitmentMasterAdmin(LogAdminMixin,admin.ModelAdmin):
     
     list_display = ["company", "license", "currency","state"]        
     list_filter = ["company__company_type","currency","state"]
+    search_fields = ["company__name_ar","company__name_en"]
+
     view_on_site = False
             
 admin.site.register(TblCompanyCommitmentMaster, TblCompanyCommitmentMasterAdmin)
@@ -82,6 +84,8 @@ class TblCompanyRequestMasterAdmin(LogAdminMixin,admin.ModelAdmin):
     
     list_display = ["commitment","payment_state", "from_dt", "to_dt","state"]        
     list_filter = ["commitment__company__company_type","currency",'payment_state',"state"]
+    search_fields = ["commitment__company__name_ar","commitment__company__name_en"]
+
     view_on_site = False
             
 admin.site.register(TblCompanyRequestMaster, TblCompanyRequestMasterAdmin)
@@ -102,6 +106,7 @@ class TblCompanyPaymentMasterAdmin(LogAdminMixin,admin.ModelAdmin):
     
     list_display = ["request", "payment_dt", "currency","exchange_rate", "state"]        
     list_filter = ["request__commitment__company__company_type","currency","state"]
+    search_fields = ["request__commitment__company__name_ar","request__commitment__company__name_en"]
     view_on_site = False
             
 admin.site.register(TblCompanyPaymentMaster, TblCompanyPaymentMasterAdmin)
