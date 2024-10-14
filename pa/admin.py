@@ -51,7 +51,7 @@ class TblCompanyCommitmentMasterAdmin(LogAdminMixin,admin.ModelAdmin):
     model = TblCompanyCommitmentAdminForm
     inlines = [TblCompanyCommitmentMasterDetailInline]     
     
-    list_display = ["company", "license", "currency","state"]        
+    list_display = ["license", "company", "currency","state"]        
     list_filter = ["company__company_type","currency","state"]
     search_fields = ["company__name_ar","company__name_en","license__license_no","license__sheet_no"]
 
