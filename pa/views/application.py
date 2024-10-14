@@ -57,7 +57,7 @@ class ApplicationListView(LoginRequiredMixin,UserPermissionMixin,TranslationMixi
         self.extra_context = {
                             "menu_name":self.menu_name,
                             "title":self.title,
-                            "filter":self.filterset_class(self.request.GET) if self.filterset_class else None
+                            "filter":self.filterset_class(self.request.GET,request=self.request) if self.filterset_class else None
          }
         return super().dispatch(*args, **kwargs)       
         
