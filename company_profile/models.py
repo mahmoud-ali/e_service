@@ -228,7 +228,7 @@ class TblCompanyProductionLicense(LoggingModel):
     contract_file = models.FileField(_("contract_file"),upload_to=company_contract_path,blank=True,null=True)
 
     def __str__(self):
-        return self.company.name_ar+"( "+str(self.date)+" )"
+        return self.company.name_ar+"("+str(self.license_no)+")"
 
     class Meta:
         verbose_name = _("Production Company License")
