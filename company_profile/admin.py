@@ -195,6 +195,24 @@ class TblCompanyProductionFactoryAdmin(LoggingAdminMixin,admin.ModelAdmin):
     list_filter = ["factory_type"]
     view_on_site = False
     
+class EmployeeWifg2lmostawiatFilter(admin.SimpleListFilter):
+    title = _("include attachments")    
+    parameter_name = "include_attachments"
+    def lookups(self, request, model_admin):
+        return [
+            ('1',_('include attachments')),
+            ('2',_('not include attachments')),
+        ]
+    
+    def queryset(self, request, queryset):
+        val = self.value()
+        if val == '1':
+            return queryset.exclude(contract_file='')
+        if val == '2':
+            return queryset.filter(contract_file='')
+        
+        return queryset
+
 class TblCompanyProductionLicenseAdmin(ExportActionMixin,LoggingAdminMixin,admin.ModelAdmin):
     fieldsets = [
         (None, {"fields": ["company",("license_no","license_count")]}),
@@ -205,7 +223,7 @@ class TblCompanyProductionLicenseAdmin(ExportActionMixin,LoggingAdminMixin,admin
     exclude = ["created_at","created_by","updated_at","updated_by"]
     
     list_display = ["company","license_no", "start_date", "end_date","license_count","state","sheet_no","area_initial","area","contract_status","date","company_type"]        
-    list_filter = ["company__company_type","state","mineral","contract_status","created_at"]
+    list_filter = ["company__company_type","state","mineral","contract_status",EmployeeWifg2lmostawiatFilter,"created_at"]
     search_fields = ["company__name_ar","company__name_en","sheet_no","license_no"]
     view_on_site = False
 

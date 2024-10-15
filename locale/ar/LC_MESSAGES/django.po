@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-14 11:33+0200\n"
+"POT-Creation-Date: 2024-10-15 14:30+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -76,19 +76,27 @@ msgstr "بيانات التواصل"
 msgid "Company Status"
 msgstr "موقف الشركة"
 
-#: company_profile/admin.py:201
+#: company_profile/admin.py:199 company_profile/admin.py:203
+msgid "include attachments"
+msgstr "يحتوي على مرفقات"
+
+#: company_profile/admin.py:204
+msgid "not include attachments"
+msgstr "لايحتوي على مرفقات"
+
+#: company_profile/admin.py:219
 msgid "General information"
 msgstr "بيانات عامة"
 
-#: company_profile/admin.py:202
+#: company_profile/admin.py:220
 msgid "Location information"
 msgstr "الموقع الجغرافي"
 
-#: company_profile/admin.py:203
+#: company_profile/admin.py:221
 msgid "Contract information"
 msgstr "بيانات العقد"
 
-#: company_profile/admin.py:237 company_profile/forms.py:29
+#: company_profile/admin.py:255 company_profile/forms.py:29
 #: company_profile/models.py:114 pa/models.py:67
 msgid "company_type"
 msgstr "نوع الشركة"
@@ -134,7 +142,7 @@ msgstr "ملف الشركة"
 #: company_profile/models.py:995 company_profile/models.py:1011
 #: company_profile/models.py:1036 company_profile/models.py:1082
 #: company_profile/models.py:1102 company_profile/models.py:1118
-#: company_profile/models.py:1142 pa/forms/commitment.py:81 pa/forms/daily.py:9
+#: company_profile/models.py:1142 pa/forms/commitment.py:80 pa/forms/daily.py:9
 #: pa/models.py:93 pa/models.py:129 pa/tables/payment.py:33
 #: pa/tables/request.py:51 pa/templates/pa/pa_daily.html:46
 msgid "company"
@@ -1406,8 +1414,8 @@ msgstr "تعليق مختصر عن الدراسة"
 
 #: company_profile/models.py:888 company_profile/models.py:914
 #: company_profile/models.py:997 company_profile/models.py:1088
-#: company_profile/models.py:1104 pa/models.py:309 pa/models.py:511
-#: pa/models.py:627
+#: company_profile/models.py:1104 pa/models.py:309 pa/models.py:512
+#: pa/models.py:628
 msgid "attachement_file"
 msgstr "المرفقات"
 
@@ -2413,7 +2421,7 @@ msgstr "طلب مساعدة"
 msgid "Production Accounting"
 msgstr "حسابات الانتاج"
 
-#: pa/forms/commitment.py:92 pa/forms/request.py:32 pa/forms/request.py:57
+#: pa/forms/commitment.py:91 pa/forms/request.py:32 pa/forms/request.py:57
 #: pa/forms/request.py:86 pa/models.py:193 pa/models.py:302
 msgid "commitment"
 msgstr "التزام"
@@ -2510,12 +2518,12 @@ msgstr "الرصيد الافتتاحي"
 msgid "Openning balances"
 msgstr "الارصدة الافتتاحية"
 
-#: pa/models.py:113 pa/models.py:169 pa/models.py:450 pa/models.py:558
+#: pa/models.py:113 pa/models.py:169 pa/models.py:450 pa/models.py:559
 #: pa/templates/pa/pa_daily.html:76
 msgid "financial item"
 msgstr "البند"
 
-#: pa/models.py:114 pa/models.py:451 pa/models.py:559 pa/models.py:624
+#: pa/models.py:114 pa/models.py:451 pa/models.py:560 pa/models.py:625
 #: revenu_dist/models.py:111 revenu_dist/models.py:149
 #: traditional_api/models.py:57
 msgid "amount"
@@ -2537,7 +2545,7 @@ msgstr "اختر بند مناسب لنوع الشركة"
 msgid "license"
 msgstr "الاتفاقية/العقد"
 
-#: pa/models.py:132 pa/models.py:308 revenu_dist/models.py:109
+#: pa/models.py:132 pa/models.py:308 pa/models.py:511 revenu_dist/models.py:109
 msgid "note"
 msgstr "البيان"
 
@@ -2666,43 +2674,43 @@ msgstr "سعر الصرف"
 msgid "exchange_attachement_file"
 msgstr "مرفق سعر الصرف"
 
-#: pa/models.py:518 pa/models.py:545
+#: pa/models.py:519 pa/models.py:546
 msgid "Financial payment"
 msgstr "السداد"
 
-#: pa/models.py:526
+#: pa/models.py:527
 msgid "payment currency equal to request currency"
 msgstr "عملة السداد مساوية لعملة الدفع"
 
-#: pa/models.py:530
+#: pa/models.py:531
 msgid "attach document"
 msgstr "ملف المرفقات"
 
-#: pa/models.py:546
+#: pa/models.py:547
 msgid "Financial payments"
 msgstr "السداد"
 
-#: pa/models.py:589
+#: pa/models.py:590
 msgid "payment already confirmed!"
 msgstr "لايمكن تعديل مطالبة مؤكدة"
 
-#: pa/models.py:599
+#: pa/models.py:600
 msgid "item not exists in request"
 msgstr "البند غير موجود في المطالبة"
 
-#: pa/models.py:603
+#: pa/models.py:604
 msgid "sum of payments more than request amount: "
 msgstr "مجموع قيم السداد اكبر من قيمة المطالبة"
 
-#: pa/models.py:607
+#: pa/models.py:608
 msgid "payment_method_name"
 msgstr "طريقة السداد"
 
-#: pa/models.py:611 pa/models.py:612 pa/models.py:625
+#: pa/models.py:612 pa/models.py:613 pa/models.py:626
 msgid "Payment method"
 msgstr "طريقة السداد"
 
-#: pa/models.py:626
+#: pa/models.py:627
 msgid "reference_key"
 msgstr "الرقم المرجعي"
 
