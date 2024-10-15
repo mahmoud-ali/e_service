@@ -64,7 +64,7 @@ class WorkflowAdminMixin:
     def get_exclude(self,request, obj=None):
         fields = list(super().get_exclude(request, obj) or [])
 
-        if  obj.state == SUBMITTED:
+        if not obj or obj.state == SUBMITTED:
             fields += ['reject_comments']
         
         return fields
