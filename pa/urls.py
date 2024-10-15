@@ -9,7 +9,7 @@ from pa.views.daily import PaDailyView
 from pa.views.payment import TblCompanyPaymentDeleteView, TblCompanyPaymentUpdateView
 from pa.views.request import TblCompanyRequestDeleteView, TblCompanyRequestUpdateView
 
-from .views import TblCompanyOpenningBalanceListView,TblCompanyOpenningBalanceCreateView,TblCompanyOpenningBalanceReadonlyView,TblCompanyOpenningBalanceUpdateView,TblCompanyOpenningBalanceDeleteView, \
+from .views import LkpLicenseSelectView, TblCompanyOpenningBalanceListView,TblCompanyOpenningBalanceCreateView,TblCompanyOpenningBalanceReadonlyView,TblCompanyOpenningBalanceUpdateView,TblCompanyOpenningBalanceDeleteView, \
                    TblCompanyCommitmentListView,TblCompanyCommitmentCreateView,TblCompanyCommitmentReadonlyView, \
                    TblCompanyRequestListView,TblCompanyRequestCreateView,TblCompanyRequestReadonlyView, \
                    TblCompanyPaymentListView,TblCompanyPaymentCreateView,TblCompanyPaymentReadonlyView
@@ -18,6 +18,8 @@ from .views import TblCompanyOpenningBalanceListView,TblCompanyOpenningBalanceCr
 app_name = "pa"
 urlpatterns = [                                                        
     path('', PaDailyView.as_view(), name='home'),
+
+    path('lkp_license/<int:master_id>/<int:dependent_id>/', LkpLicenseSelectView.as_view(), name='lkp_license_select'),
 
     path('openning_balance/', TblCompanyOpenningBalanceListView.as_view(), name='openning_balance_list'),
     path('openning_balance/<int:type>/', TblCompanyOpenningBalanceListView.as_view(), name='openning_balance_list'),

@@ -1,7 +1,7 @@
 
   <option value="">---------</option>
 {% for option in options %}   
-  <option value="{{option.id}}"{% if option.id == old_value %} selected=""{% endif %}>{{option.name}}</option>
+  <option value="{{option.id}}"{% if option.id == old_value %} selected=""{% endif %}>{{option}}</option>
 {% endfor %}
 
 
