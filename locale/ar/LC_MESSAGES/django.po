@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-16 09:33+0200\n"
+"POT-Creation-Date: 2024-10-16 12:30+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -83,95 +83,131 @@ msgstr "يوجد تداخل مع بيانات اخرى: "
 msgid "No intersection!"
 msgstr "لايوجد تداخل!"
 
-#: company_profile/admin.py:34 company_profile/admin.py:35
-#: company_profile/admin.py:36 templates/admin/__base_site.html:6
+#: company_profile/admin.py:39 company_profile/admin.py:40
+#: company_profile/admin.py:41 templates/admin/__base_site.html:6
 msgid "Site header"
 msgstr "بوابة الخدمات الإلكترونية"
 
-#: company_profile/admin.py:129
+#: company_profile/admin.py:131 company_profile/admin.py:171
+#: company_profile/admin.py:302
+msgid "license_count"
+msgstr "عدد الرخص"
+
+#: company_profile/admin.py:137
+msgid "more"
+msgstr "المزيد"
+
+#: company_profile/admin.py:161
 msgid "Contact information"
 msgstr "بيانات التواصل"
 
-#: company_profile/admin.py:130 company_profile/models.py:141
+#: company_profile/admin.py:162 company_profile/models.py:141
 #: company_profile/models.py:142
 msgid "Company Status"
 msgstr "موقف الشركة"
 
-#: company_profile/admin.py:139
-msgid "license_count"
-msgstr "عدد الرخص"
-
-#: company_profile/admin.py:201 company_profile/admin.py:205
-msgid "include attachments"
-msgstr "يحتوي على مرفقات"
-
-#: company_profile/admin.py:206
-msgid "not include attachments"
-msgstr "لايحتوي على مرفقات"
-
-#: company_profile/admin.py:221
+#: company_profile/admin.py:253
 msgid "General information"
 msgstr "بيانات عامة"
 
-#: company_profile/admin.py:222
+#: company_profile/admin.py:254
 msgid "Location information"
 msgstr "الموقع الجغرافي"
 
-#: company_profile/admin.py:223
+#: company_profile/admin.py:255
 msgid "Contract information"
 msgstr "بيانات العقد"
 
-#: company_profile/admin.py:257 company_profile/forms.py:29
+#: company_profile/admin.py:291 company_profile/forms.py:29
 #: company_profile/models.py:114 pa/models.py:67
 msgid "company_type"
 msgstr "نوع الشركة"
 
+#: company_profile/admin.py:295
+msgid "Export data"
+msgstr "تصدير البيانات"
+
+#: company_profile/admin.py:302 company_profile/forms.py:48
+#: company_profile/forms.py:65 company_profile/forms.py:94
+#: company_profile/forms.py:111 company_profile/forms.py:128
+#: company_profile/forms.py:142 company_profile/forms.py:159
+#: company_profile/forms.py:172 company_profile/forms.py:186
+#: company_profile/forms.py:199 company_profile/forms.py:212
+#: company_profile/forms.py:229 company_profile/forms.py:244
+#: company_profile/forms.py:261 company_profile/forms.py:278
+#: company_profile/forms.py:295 company_profile/forms.py:308
+#: company_profile/forms.py:321 company_profile/forms.py:334
+#: company_profile/forms.py:347 company_profile/forms.py:364
+#: company_profile/forms.py:390 company_profile/forms.py:404
+#: company_profile/forms.py:418 company_profile/forms.py:443
+#: company_profile/forms.py:457 company_profile/forms.py:471
+#: company_profile/forms.py:485 company_profile/forms.py:499
+#: company_profile/forms.py:513 company_profile/forms.py:527
+#: company_profile/forms.py:541 company_profile/forms.py:555
+#: company_profile/forms.py:571 company_profile/forms.py:585
+#: company_profile/forms.py:599 company_profile/models.py:157
+#: company_profile/models.py:177 company_profile/models.py:203
+#: company_profile/models.py:242 company_profile/models.py:268
+#: company_profile/models.py:296 company_profile/models.py:323
+#: company_profile/models.py:344 company_profile/models.py:366
+#: company_profile/models.py:385 company_profile/models.py:413
+#: company_profile/models.py:445 company_profile/models.py:478
+#: company_profile/models.py:496 company_profile/models.py:516
+#: company_profile/models.py:534 company_profile/models.py:554
+#: company_profile/models.py:571 company_profile/models.py:590
+#: company_profile/models.py:610 company_profile/models.py:642
+#: company_profile/models.py:673 company_profile/models.py:717
+#: company_profile/models.py:751 company_profile/models.py:784
+#: company_profile/models.py:817 company_profile/models.py:880
+#: company_profile/models.py:912 company_profile/models.py:928
+#: company_profile/models.py:945 company_profile/models.py:961
+#: company_profile/models.py:979 company_profile/models.py:995
+#: company_profile/models.py:1011 company_profile/models.py:1036
+#: company_profile/models.py:1082 company_profile/models.py:1102
+#: company_profile/models.py:1118 company_profile/models.py:1142
+#: pa/forms/commitment.py:80 pa/forms/daily.py:9 pa/models.py:93
+#: pa/models.py:129 pa/tables/payment.py:33 pa/tables/request.py:51
+#: pa/templates/pa/pa_daily.html:46
+msgid "company"
+msgstr "شركة"
+
+#: company_profile/admin.py:302
+#, fuzzy
+#| msgid "license"
+msgid "license_no"
+msgstr "الاتفاقية/العقد"
+
+#: company_profile/admin.py:302
+#, fuzzy
+#| msgid "start_date"
+msgid "start_dt"
+msgstr "تاريح البداية"
+
+#: company_profile/admin.py:302
+#, fuzzy
+#| msgid "end_date"
+msgid "end_dt"
+msgstr "تاريخ النهاية"
+
+#: company_profile/admin.py:303 company_profile/models.py:81
+#: company_profile/models.py:209 pa/templates/pa/company_panel.html:21
+#: traditional_api/models.py:30 traditional_api/models.py:43
+msgid "state"
+msgstr "الولاية"
+
+#: company_profile/admin.py:303 company_profile/models.py:212
+#: pa/templates/pa/company_panel.html:22
+msgid "sheet_no"
+msgstr "رقم المربع"
+
+#: company_profile/admin.py:303 company_profile/models.py:227
+#: pa/templates/pa/company_panel.html:35
+msgid "contract_status"
+msgstr "حالة الاتفاقية/العقد"
+
 #: company_profile/apps.py:7
 msgid "Company profile"
 msgstr "ملف الشركة"
-
-#: company_profile/forms.py:48 company_profile/forms.py:65
-#: company_profile/forms.py:94 company_profile/forms.py:111
-#: company_profile/forms.py:128 company_profile/forms.py:142
-#: company_profile/forms.py:159 company_profile/forms.py:172
-#: company_profile/forms.py:186 company_profile/forms.py:199
-#: company_profile/forms.py:212 company_profile/forms.py:229
-#: company_profile/forms.py:244 company_profile/forms.py:261
-#: company_profile/forms.py:278 company_profile/forms.py:295
-#: company_profile/forms.py:308 company_profile/forms.py:321
-#: company_profile/forms.py:334 company_profile/forms.py:347
-#: company_profile/forms.py:364 company_profile/forms.py:390
-#: company_profile/forms.py:404 company_profile/forms.py:418
-#: company_profile/forms.py:443 company_profile/forms.py:457
-#: company_profile/forms.py:471 company_profile/forms.py:485
-#: company_profile/forms.py:499 company_profile/forms.py:513
-#: company_profile/forms.py:527 company_profile/forms.py:541
-#: company_profile/forms.py:555 company_profile/forms.py:571
-#: company_profile/forms.py:585 company_profile/forms.py:599
-#: company_profile/models.py:157 company_profile/models.py:177
-#: company_profile/models.py:203 company_profile/models.py:242
-#: company_profile/models.py:268 company_profile/models.py:296
-#: company_profile/models.py:323 company_profile/models.py:344
-#: company_profile/models.py:366 company_profile/models.py:385
-#: company_profile/models.py:413 company_profile/models.py:445
-#: company_profile/models.py:478 company_profile/models.py:496
-#: company_profile/models.py:516 company_profile/models.py:534
-#: company_profile/models.py:554 company_profile/models.py:571
-#: company_profile/models.py:590 company_profile/models.py:610
-#: company_profile/models.py:642 company_profile/models.py:673
-#: company_profile/models.py:717 company_profile/models.py:751
-#: company_profile/models.py:784 company_profile/models.py:817
-#: company_profile/models.py:880 company_profile/models.py:912
-#: company_profile/models.py:928 company_profile/models.py:945
-#: company_profile/models.py:961 company_profile/models.py:979
-#: company_profile/models.py:995 company_profile/models.py:1011
-#: company_profile/models.py:1036 company_profile/models.py:1082
-#: company_profile/models.py:1102 company_profile/models.py:1118
-#: company_profile/models.py:1142 pa/forms/commitment.py:80 pa/forms/daily.py:9
-#: pa/models.py:93 pa/models.py:129 pa/tables/payment.py:33
-#: pa/tables/request.py:51 pa/templates/pa/pa_daily.html:46
-msgid "company"
-msgstr "شركة"
 
 #: company_profile/forms.py:66 company_profile/models.py:269
 msgid "company_borrow_from"
@@ -249,12 +285,6 @@ msgstr "الولاية"
 #: company_profile/models.py:78 traditional_api/models.py:27
 msgid "States"
 msgstr "الولايات"
-
-#: company_profile/models.py:81 company_profile/models.py:209
-#: pa/templates/pa/company_panel.html:21 traditional_api/models.py:30
-#: traditional_api/models.py:43
-msgid "state"
-msgstr "الولاية"
 
 #: company_profile/models.py:88
 msgid "Locality"
@@ -408,10 +438,6 @@ msgstr "المحلية"
 msgid "location"
 msgstr "المنطقة"
 
-#: company_profile/models.py:212 pa/templates/pa/company_panel.html:22
-msgid "sheet_no"
-msgstr "رقم المربع"
-
 #: company_profile/models.py:213
 msgid "cordinates"
 msgstr "الاحداثيات"
@@ -464,10 +490,6 @@ msgstr "ارباح اعمال (مخلفات)"
 #: company_profile/models.py:225
 msgid "Social responsibility"
 msgstr "مسئولية مجتمعية (مخلفات)"
-
-#: company_profile/models.py:227 pa/templates/pa/company_panel.html:35
-msgid "contract_status"
-msgstr "حالة الاتفاقية/العقد"
 
 #: company_profile/models.py:228
 msgid "contract_file"
@@ -3139,6 +3161,12 @@ msgstr "تم تسجيل الدخول بنجاح."
 #: traditional_api/views.py:125
 msgid "Record added sucessfully."
 msgstr "تم حفظ السجل بنجاح."
+
+#~ msgid "include attachments"
+#~ msgstr "يحتوي على مرفقات"
+
+#~ msgid "not include attachments"
+#~ msgstr "لايحتوي على مرفقات"
 
 #, fuzzy
 #~| msgid "Delete request"

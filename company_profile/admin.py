@@ -1,3 +1,7 @@
+import codecs
+import csv
+from django.http import HttpResponse
+
 from django.db import models
 from django.db.models import Count
 from django.utils.translation import gettext_lazy as _
@@ -243,7 +247,7 @@ class TblCompanyProductionFactoryAdmin(LoggingAdminMixin,admin.ModelAdmin):
         
 #         return queryset
 
-class TblCompanyProductionLicenseAdmin(ExportActionMixin,LoggingAdminMixin,admin.ModelAdmin):
+class TblCompanyProductionLicenseAdmin(LoggingAdminMixin,admin.ModelAdmin):
     fieldsets = [
         (None, {"fields": ["company",("license_no","license_count")]}),
         (_("General information"), {"fields": ["date",("start_date","end_date")]}),
@@ -256,6 +260,7 @@ class TblCompanyProductionLicenseAdmin(ExportActionMixin,LoggingAdminMixin,admin
     list_filter = ["company__company_type","state","mineral","contract_status",("contract_file",admin.EmptyFieldListFilter),"created_at"]
     search_fields = ["company__name_ar","company__name_en","sheet_no","license_no"]
     autocomplete_fields = ["company"]
+    actions = ['export_as_csv']
     view_on_site = False
 
     formfield_overrides = {
@@ -286,7 +291,34 @@ class TblCompanyProductionLicenseAdmin(ExportActionMixin,LoggingAdminMixin,admin
     @admin.display(description=_("company_type"))
     def company_type(self,obj):
         return _(obj.company.company_type)
-     
+
+    @admin.action(description=_('Export data'))
+    def export_as_csv(self, request, queryset):
+        response = HttpResponse(
+            content_type="text/csv",
+            headers={"Content-Disposition": f'attachment; filename="licenses.csv"'},
+        )
+        header = [
+                    _("company"),_("license_no"),_("start_dt"),_("end_dt"),_( "license_count"),\
+                    _("state"),_("sheet_no"),_("contract_status")
+        ]
+
+        # BOM
+        response.write(codecs.BOM_UTF8)
+
+        writer = csv.writer(response)
+        writer.writerow(header)
+
+        for license in queryset.order_by("company"):
+
+            row = [
+                    license.company,license.license_no,license.start_date,license.end_date,license.license_count,license.state,\
+                    license.sheet_no,license.sheet_no
+            ]
+            writer.writerow(row)
+
+        return response
+
 admin.site.register(LkpNationality)
 admin.site.register(LkpState)
 # admin.site.register(LkpLocality)
