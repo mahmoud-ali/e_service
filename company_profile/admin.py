@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Count
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth import get_user_model
 from django.conf import settings
@@ -122,6 +123,33 @@ class WorkflowAdminMixin:
             obj.notify = False
             obj.save()
         
+class LicenseCountFilter(admin.SimpleListFilter):
+    title = _("license_count")    
+    parameter_name = "license_count"
+    def lookups(self, request, model_admin):
+        return [
+            ('0','0'),
+            ('1','1'),
+            ('2',_('more')),
+        ]
+    
+    def queryset(self, request, queryset):
+        facets = request.GET.get('_facets',False)
+
+        if facets:
+            return queryset
+    
+        qs = queryset.annotate(license_count=Count("tblcompanyproductionlicense"))
+        val = self.value()
+        if val == '0':
+            return qs.filter(license_count=0)
+        if val == '1':
+            return qs.filter(license_count=1)
+        if val == '2':
+            return qs.filter(license_count__gt=1)
+        
+        return queryset
+
 class TblCompanyProductionAdmin(ExportActionMixin,LoggingAdminMixin,admin.ModelAdmin):
     form = TblCompanyProductionForm
     fieldsets = [
@@ -131,7 +159,7 @@ class TblCompanyProductionAdmin(ExportActionMixin,LoggingAdminMixin,admin.ModelA
      ]
      
     list_display = ["company_type","code","name_ar", "name_en", "status",'license_count']
-    list_filter = ["company_type","nationality","status","created_at"]
+    list_filter = ["company_type","nationality","status","created_at",LicenseCountFilter]
     search_fields = ["code","name_ar","name_en"]
     exclude = ["created_at","created_by","updated_at","updated_by"]
     view_on_site = False
@@ -197,23 +225,23 @@ class TblCompanyProductionFactoryAdmin(LoggingAdminMixin,admin.ModelAdmin):
     list_filter = ["factory_type"]
     view_on_site = False
     
-class EmployeeWifg2lmostawiatFilter(admin.SimpleListFilter):
-    title = _("include attachments")    
-    parameter_name = "include_attachments"
-    def lookups(self, request, model_admin):
-        return [
-            ('1',_('include attachments')),
-            ('2',_('not include attachments')),
-        ]
+# class ContractFileFilter(admin.SimpleListFilter):
+#     title = _("include attachments")    
+#     parameter_name = "include_attachments"
+#     def lookups(self, request, model_admin):
+#         return [
+#             ('1',_('include attachments')),
+#             ('2',_('not include attachments')),
+#         ]
     
-    def queryset(self, request, queryset):
-        val = self.value()
-        if val == '1':
-            return queryset.exclude(contract_file='')
-        if val == '2':
-            return queryset.filter(contract_file='')
+#     def queryset(self, request, queryset):
+#         val = self.value()
+#         if val == '1':
+#             return queryset.exclude(contract_file='')
+#         if val == '2':
+#             return queryset.filter(contract_file='')
         
-        return queryset
+#         return queryset
 
 class TblCompanyProductionLicenseAdmin(ExportActionMixin,LoggingAdminMixin,admin.ModelAdmin):
     fieldsets = [
@@ -225,7 +253,7 @@ class TblCompanyProductionLicenseAdmin(ExportActionMixin,LoggingAdminMixin,admin
     exclude = ["created_at","created_by","updated_at","updated_by"]
     
     list_display = ["company","license_no", "start_date", "end_date","license_count","state","sheet_no","area_initial","area","contract_status","date","company_type"]        
-    list_filter = ["company__company_type","state","mineral","contract_status",EmployeeWifg2lmostawiatFilter,"created_at"]
+    list_filter = ["company__company_type","state","mineral","contract_status",("contract_file",admin.EmptyFieldListFilter),"created_at"]
     search_fields = ["company__name_ar","company__name_en","sheet_no","license_no"]
     autocomplete_fields = ["company"]
     view_on_site = False
