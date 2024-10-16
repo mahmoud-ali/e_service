@@ -122,7 +122,6 @@ class WorkflowAdminMixin:
             obj.notify = False
             obj.save()
         
-
 class TblCompanyProductionAdmin(ExportActionMixin,LoggingAdminMixin,admin.ModelAdmin):
     form = TblCompanyProductionForm
     fieldsets = [
@@ -131,12 +130,15 @@ class TblCompanyProductionAdmin(ExportActionMixin,LoggingAdminMixin,admin.ModelA
         (_("Company Status"), {"fields": ["status"]}),
      ]
      
-    list_display = ["company_type","code","name_ar", "name_en", "status"]
+    list_display = ["company_type","code","name_ar", "name_en", "status",'license_count']
     list_filter = ["company_type","nationality","status","created_at"]
     search_fields = ["code","name_ar","name_en"]
-
     exclude = ["created_at","created_by","updated_at","updated_by"]
     view_on_site = False
+
+    @admin.display(description=_("license_count"))
+    def license_count(self, obj):
+        return obj.tblcompanyproductionlicense_set.count()
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)

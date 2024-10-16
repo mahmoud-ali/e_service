@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-15 14:30+0200\n"
+"POT-Creation-Date: 2024-10-16 09:33+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -50,6 +50,27 @@ msgstr "اضافة المزيد"
 msgid "Submit"
 msgstr "ارسال"
 
+#: check_cordinates/templates/check_cordinates/base.html:9
+#: check_cordinates/templates/check_cordinates/base.html:83
+#: company_profile/templates/company_profile/base.html:9
+#: company_profile/templates/company_profile/base.html:83
+#: pa/templates/pa/base.html:9 pa/templates/pa/base.html:79
+#: templates/account/base.html:9 templates/account/base.html:78
+msgid "E-Services App"
+msgstr "بوابة الخدمات الإلكترونية"
+
+#: check_cordinates/templates/check_cordinates/base.html:89
+#: company_profile/templates/company_profile/base.html:89
+#: pa/templates/pa/base.html:85 templates/account/base.html:84
+msgid "Change password"
+msgstr "تغيير كلمة المرور"
+
+#: check_cordinates/templates/check_cordinates/base.html:90
+#: company_profile/templates/company_profile/base.html:90
+#: pa/templates/pa/base.html:86 templates/account/base.html:85
+msgid "Log Out"
+msgstr "خروج"
+
 #: check_cordinates/views.py:19
 msgid "Check cordinates"
 msgstr "فحص الاحداثيات"
@@ -67,36 +88,40 @@ msgstr "لايوجد تداخل!"
 msgid "Site header"
 msgstr "بوابة الخدمات الإلكترونية"
 
-#: company_profile/admin.py:130
+#: company_profile/admin.py:129
 msgid "Contact information"
 msgstr "بيانات التواصل"
 
-#: company_profile/admin.py:131 company_profile/models.py:141
+#: company_profile/admin.py:130 company_profile/models.py:141
 #: company_profile/models.py:142
 msgid "Company Status"
 msgstr "موقف الشركة"
 
-#: company_profile/admin.py:199 company_profile/admin.py:203
+#: company_profile/admin.py:139
+msgid "license_count"
+msgstr "عدد الرخص"
+
+#: company_profile/admin.py:201 company_profile/admin.py:205
 msgid "include attachments"
 msgstr "يحتوي على مرفقات"
 
-#: company_profile/admin.py:204
+#: company_profile/admin.py:206
 msgid "not include attachments"
 msgstr "لايحتوي على مرفقات"
 
-#: company_profile/admin.py:219
+#: company_profile/admin.py:221
 msgid "General information"
 msgstr "بيانات عامة"
 
-#: company_profile/admin.py:220
+#: company_profile/admin.py:222
 msgid "Location information"
 msgstr "الموقع الجغرافي"
 
-#: company_profile/admin.py:221
+#: company_profile/admin.py:223
 msgid "Contract information"
 msgstr "بيانات العقد"
 
-#: company_profile/admin.py:255 company_profile/forms.py:29
+#: company_profile/admin.py:257 company_profile/forms.py:29
 #: company_profile/models.py:114 pa/models.py:67
 msgid "company_type"
 msgstr "نوع الشركة"
@@ -1784,23 +1809,6 @@ msgstr "تعديل سجل"
 #: pa/templates/pa/application_readonly_master_details.html:55
 msgid "delete_btn"
 msgstr "حذف سجل"
-
-#: company_profile/templates/company_profile/base.html:9
-#: company_profile/templates/company_profile/base.html:83
-#: pa/templates/pa/base.html:9 pa/templates/pa/base.html:79
-#: templates/account/base.html:9 templates/account/base.html:78
-msgid "E-Services App"
-msgstr "بوابة الخدمات الإلكترونية"
-
-#: company_profile/templates/company_profile/base.html:89
-#: pa/templates/pa/base.html:85 templates/account/base.html:84
-msgid "Change password"
-msgstr "تغيير كلمة المرور"
-
-#: company_profile/templates/company_profile/base.html:90
-#: pa/templates/pa/base.html:86 templates/account/base.html:85
-msgid "Log Out"
-msgstr "خروج"
 
 #: company_profile/templates/company_profile/base.html:125
 #: pa/templates/pa/base.html:106
