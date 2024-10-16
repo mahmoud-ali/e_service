@@ -227,6 +227,7 @@ class TblCompanyProductionLicenseAdmin(ExportActionMixin,LoggingAdminMixin,admin
     list_display = ["company","license_no", "start_date", "end_date","license_count","state","sheet_no","area_initial","area","contract_status","date","company_type"]        
     list_filter = ["company__company_type","state","mineral","contract_status",EmployeeWifg2lmostawiatFilter,"created_at"]
     search_fields = ["company__name_ar","company__name_en","sheet_no","license_no"]
+    autocomplete_fields = ["company"]
     view_on_site = False
 
     formfield_overrides = {
