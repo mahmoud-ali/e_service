@@ -322,7 +322,7 @@ class TblCompanyProductionLicenseAdmin(LoggingAdminMixin,admin.ModelAdmin):
 
             row = [
                     license.company,license.license_no,license.start_date,license.end_date,license.license_count,license.state,\
-                    license.sheet_no,license.sheet_no
+                    license.sheet_no,license.contract_status
             ]
             writer.writerow(row)
 
