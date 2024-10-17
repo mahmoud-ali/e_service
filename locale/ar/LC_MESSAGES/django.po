@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-16 12:30+0200\n"
+"POT-Creation-Date: 2024-10-17 14:20+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -83,51 +83,56 @@ msgstr "يوجد تداخل مع بيانات اخرى: "
 msgid "No intersection!"
 msgstr "لايوجد تداخل!"
 
-#: company_profile/admin.py:39 company_profile/admin.py:40
-#: company_profile/admin.py:41 templates/admin/__base_site.html:6
+#: company_profile/admin.py:41 company_profile/admin.py:42
+#: company_profile/admin.py:43 templates/admin/__base_site.html:6
 msgid "Site header"
 msgstr "بوابة الخدمات الإلكترونية"
 
-#: company_profile/admin.py:131 company_profile/admin.py:171
-#: company_profile/admin.py:302
+#: company_profile/admin.py:133 company_profile/admin.py:173
 msgid "license_count"
 msgstr "عدد الرخص"
 
-#: company_profile/admin.py:137
+#: company_profile/admin.py:139
 msgid "more"
 msgstr "المزيد"
 
-#: company_profile/admin.py:161
+#: company_profile/admin.py:163
 msgid "Contact information"
 msgstr "بيانات التواصل"
 
-#: company_profile/admin.py:162 company_profile/models.py:141
+#: company_profile/admin.py:164 company_profile/models.py:141
 #: company_profile/models.py:142
 msgid "Company Status"
 msgstr "موقف الشركة"
 
-#: company_profile/admin.py:253
+#: company_profile/admin.py:226 company_profile/admin.py:229
+#, fuzzy
+#| msgid "Show mda"
+msgid "Show summary"
+msgstr "عرض طلب MDA"
+
+#: company_profile/admin.py:262
 msgid "General information"
 msgstr "بيانات عامة"
 
-#: company_profile/admin.py:254
+#: company_profile/admin.py:263
 msgid "Location information"
 msgstr "الموقع الجغرافي"
 
-#: company_profile/admin.py:255
+#: company_profile/admin.py:264
 msgid "Contract information"
 msgstr "بيانات العقد"
 
-#: company_profile/admin.py:291 company_profile/forms.py:29
+#: company_profile/admin.py:300 company_profile/forms.py:29
 #: company_profile/models.py:114 pa/models.py:67
 msgid "company_type"
 msgstr "نوع الشركة"
 
-#: company_profile/admin.py:295
+#: company_profile/admin.py:304
 msgid "Export data"
 msgstr "تصدير البيانات"
 
-#: company_profile/admin.py:302 company_profile/forms.py:48
+#: company_profile/admin.py:311 company_profile/forms.py:48
 #: company_profile/forms.py:65 company_profile/forms.py:94
 #: company_profile/forms.py:111 company_profile/forms.py:128
 #: company_profile/forms.py:142 company_profile/forms.py:159
@@ -171,36 +176,36 @@ msgstr "تصدير البيانات"
 msgid "company"
 msgstr "شركة"
 
-#: company_profile/admin.py:302
-#, fuzzy
-#| msgid "license"
-msgid "license_no"
-msgstr "الاتفاقية/العقد"
+#: company_profile/admin.py:311 company_profile/models.py:204
+msgid "License no"
+msgstr "رقم الاتفاقية/العقد"
 
-#: company_profile/admin.py:302
-#, fuzzy
-#| msgid "start_date"
-msgid "start_dt"
+#: company_profile/admin.py:311 company_profile/models.py:207
+#: pa/templates/pa/company_panel.html:23
+msgid "start_date"
 msgstr "تاريح البداية"
 
-#: company_profile/admin.py:302
-#, fuzzy
-#| msgid "end_date"
-msgid "end_dt"
+#: company_profile/admin.py:311 company_profile/models.py:208
+#: pa/templates/pa/company_panel.html:24
+msgid "end_date"
 msgstr "تاريخ النهاية"
 
-#: company_profile/admin.py:303 company_profile/models.py:81
+#: company_profile/admin.py:311 company_profile/models.py:205
+msgid "License count"
+msgstr "عدد الرخص"
+
+#: company_profile/admin.py:312 company_profile/models.py:81
 #: company_profile/models.py:209 pa/templates/pa/company_panel.html:21
 #: traditional_api/models.py:30 traditional_api/models.py:43
 msgid "state"
 msgstr "الولاية"
 
-#: company_profile/admin.py:303 company_profile/models.py:212
+#: company_profile/admin.py:312 company_profile/models.py:212
 #: pa/templates/pa/company_panel.html:22
 msgid "sheet_no"
 msgstr "رقم المربع"
 
-#: company_profile/admin.py:303 company_profile/models.py:227
+#: company_profile/admin.py:312 company_profile/models.py:227
 #: pa/templates/pa/company_panel.html:35
 msgid "contract_status"
 msgstr "حالة الاتفاقية/العقد"
@@ -223,13 +228,14 @@ msgstr "نوع الرخصة"
 #: company_profile/templates/company_profile/home.html:16
 #: company_profile/templates/company_profile/home.html:38
 #: company_profile/templates/company_profile/home.html:59
-#: help_request/models.py:11 pa/models.py:46 revenu_dist/models.py:53
-#: traditional_api/models.py:10
+#: gold_travel/models.py:10 help_request/models.py:11 pa/models.py:46
+#: revenu_dist/models.py:53 traditional_api/models.py:10
 msgid "created_at"
 msgstr "تاريخ الانشاء"
 
-#: company_profile/models.py:18 help_request/models.py:13 pa/models.py:47
-#: revenu_dist/models.py:54 traditional_api/models.py:11
+#: company_profile/models.py:18 gold_travel/models.py:11
+#: help_request/models.py:13 pa/models.py:47 revenu_dist/models.py:54
+#: traditional_api/models.py:11
 msgid "created_by"
 msgstr "المستخدم المسئول عن الانشاء"
 
@@ -237,13 +243,14 @@ msgstr "المستخدم المسئول عن الانشاء"
 #: company_profile/templates/company_profile/home.html:17
 #: company_profile/templates/company_profile/home.html:39
 #: company_profile/templates/company_profile/home.html:60
-#: help_request/models.py:12 pa/models.py:49 revenu_dist/models.py:56
-#: traditional_api/models.py:13
+#: gold_travel/models.py:13 help_request/models.py:12 pa/models.py:49
+#: revenu_dist/models.py:56 traditional_api/models.py:13
 msgid "updated_at"
 msgstr "تاريخ اخر تعديل"
 
-#: company_profile/models.py:21 help_request/models.py:14 pa/models.py:50
-#: revenu_dist/models.py:57 traditional_api/models.py:14
+#: company_profile/models.py:21 gold_travel/models.py:14
+#: help_request/models.py:14 pa/models.py:50 revenu_dist/models.py:57
+#: traditional_api/models.py:14
 msgid "updated_by"
 msgstr "المستخدم المسئول عن التعديل"
 
@@ -410,25 +417,9 @@ msgstr "مصانع الشركات"
 msgid "License Status"
 msgstr "حالة الاتفاقية/العقد"
 
-#: company_profile/models.py:204
-msgid "License no"
-msgstr "رقم الاتفاقية/العقد"
-
-#: company_profile/models.py:205
-msgid "License count"
-msgstr "عدد الرخص"
-
 #: company_profile/models.py:206
 msgid "Sign date"
 msgstr "تاريخ التوقيع"
-
-#: company_profile/models.py:207 pa/templates/pa/company_panel.html:23
-msgid "start_date"
-msgstr "تاريح البداية"
-
-#: company_profile/models.py:208 pa/templates/pa/company_panel.html:24
-msgid "end_date"
-msgstr "تاريخ النهاية"
 
 #: company_profile/models.py:210
 msgid "locality"
@@ -1461,8 +1452,8 @@ msgstr "تعليق مختصر عن الدراسة"
 
 #: company_profile/models.py:888 company_profile/models.py:914
 #: company_profile/models.py:997 company_profile/models.py:1088
-#: company_profile/models.py:1104 pa/models.py:309 pa/models.py:512
-#: pa/models.py:628
+#: company_profile/models.py:1104 gold_travel/models.py:57 pa/models.py:309
+#: pa/models.py:512 pa/models.py:628
 msgid "attachement_file"
 msgstr "المرفقات"
 
@@ -1872,15 +1863,15 @@ msgstr "اخر الطلبات التي تم رفضها"
 msgid "latest application in progress"
 msgstr "اخر الطلبات قيد الاجراء"
 
-#: company_profile/views/__init__.py:143
+#: company_profile/views/__init__.py:157
 msgid "List of foreigner movements"
 msgstr "قائمة طلبات حركة الاجانب"
 
-#: company_profile/views/__init__.py:161
+#: company_profile/views/__init__.py:175
 msgid "Add new movement"
 msgstr "اضافة طلب حركة اجنبي"
 
-#: company_profile/views/__init__.py:181 company_profile/views/__init__.py:261
+#: company_profile/views/__init__.py:195 company_profile/views/__init__.py:275
 #: company_profile/views/add_area.py:64
 #: company_profile/views/aifaa_jomrki.py:76
 #: company_profile/views/change_company_name.py:68
@@ -1917,19 +1908,19 @@ msgstr "اضافة طلب حركة اجنبي"
 msgid "Application sent successfully."
 msgstr "تم ارسال الطلب بنجاح."
 
-#: company_profile/views/__init__.py:194
+#: company_profile/views/__init__.py:208
 msgid "Show movement"
 msgstr "عرض طلب حركة اجنبي"
 
-#: company_profile/views/__init__.py:209
+#: company_profile/views/__init__.py:223
 msgid "List of borrow materials"
 msgstr "قائمة طلبات الاستلاف"
 
-#: company_profile/views/__init__.py:228
+#: company_profile/views/__init__.py:242
 msgid "Add new borrow materials"
 msgstr "اضافة طلب اسلاف مواد"
 
-#: company_profile/views/__init__.py:279
+#: company_profile/views/__init__.py:293
 msgid "Show borrow materials"
 msgstr "عرض طلب استلاف مواد"
 
@@ -2407,6 +2398,141 @@ msgstr ""
 msgid "Wrong transition path."
 msgstr ""
 
+#: gold_travel/admin.py:31
+msgid "owner data"
+msgstr "بيانات المالك"
+
+#: gold_travel/admin.py:37
+msgid "representative data"
+msgstr "بيانات الناقل"
+
+#: gold_travel/admin.py:43
+msgid "gold data"
+msgstr "بيانات الذهب المنقول"
+
+#: gold_travel/admin.py:49
+msgid "attachments"
+msgstr "المرفقات"
+
+#: gold_travel/apps.py:7
+msgid "Gold travel"
+msgstr "نقل وترحيل الذهب"
+
+#: gold_travel/models.py:22
+msgid "ssmo_name"
+msgstr "الهيئة السودانية للمواصفات والمقاييس"
+
+#: gold_travel/models.py:32
+msgid "state_draft"
+msgstr "مسودة"
+
+#: gold_travel/models.py:33
+msgid "state_smrc"
+msgstr "اعتماد ممثل الشركة السودانية"
+
+#: gold_travel/models.py:34
+msgid "state_2mn_2lm3adin"
+msgstr "اعتماد ممثل أمن إقتصاديات المعادن"
+
+#: gold_travel/models.py:35
+msgid "state_shortat_2lm3adin"
+msgstr "اعتماد ممثل شرطة تأمين التعدين "
+
+#: gold_travel/models.py:36
+msgid "state_2lestikhbarat_2l3askria"
+msgstr "اعتماد ممثل هيئة الإستخبارات العسكرية"
+
+#: gold_travel/models.py:44 pa/templates/pa/pa_daily.html:75
+#: revenu_dist/models.py:108
+msgid "date"
+msgstr "التاريخ"
+
+#: gold_travel/models.py:45
+msgid "destination"
+msgstr "الوجهة"
+
+#: gold_travel/models.py:46
+msgid "owner_name"
+msgstr "اسم المالك"
+
+#: gold_travel/models.py:47
+msgid "owner_address"
+msgstr "عنوان المالك"
+
+#: gold_travel/models.py:48
+msgid "repr_name"
+msgstr "اسم الناقل"
+
+#: gold_travel/models.py:49
+msgid "repr_address"
+msgstr "عنوان الناقل"
+
+#: gold_travel/models.py:50
+msgid "repr_phone"
+msgstr "تلفون الناقل"
+
+#: gold_travel/models.py:51
+msgid "repr_identity"
+msgstr "اثبات هوية الناقل"
+
+#: gold_travel/models.py:52
+msgid "repr_identity_issue_date"
+msgstr "تاريخ اصدار هوية الناقل"
+
+#: gold_travel/models.py:53
+msgid "gold_weight_in_gram"
+msgstr "اجمالي وزن الذهب بالجرام"
+
+#: gold_travel/models.py:54
+msgid "gold_alloy_count"
+msgstr "عدد السبائك"
+
+#: gold_travel/models.py:55
+msgid "gold_description"
+msgstr "وصف المنقول"
+
+#: gold_travel/models.py:56 pa/models.py:95 pa/models.py:133 pa/models.py:197
+#: pa/models.py:307 pa/models.py:510 pa/tables/payment.py:34
+#: pa/tables/request.py:53
+msgid "record_state"
+msgstr "الحالة"
+
+#: gold_travel/models.py:64 gold_travel/models.py:65
+msgid "Move Gold"
+msgstr "ترحيل ذهب"
+
+#: gold_travel/models.py:74
+msgid "alloy_shape_rectangular"
+msgstr "سبيكة مستطيلة"
+
+#: gold_travel/models.py:75
+msgid "alloy_shape_circular"
+msgstr "سبيكة دائرية"
+
+#: gold_travel/models.py:79
+msgid "alloy_id"
+msgstr "رقم السبيكة"
+
+#: gold_travel/models.py:80
+msgid "alloy_weight_in_gram"
+msgstr "وزن السبيكة بالجرام"
+
+#: gold_travel/models.py:81
+msgid "alloy_shape"
+msgstr "شكل السبيكة"
+
+#: gold_travel/models.py:82
+msgid "alloy_note"
+msgstr "ملاحظات عن السبيكة"
+
+#: gold_travel/models.py:85
+msgid "alloy detail"
+msgstr "تفاصيل وزن السبيكة"
+
+#: gold_travel/models.py:86
+msgid "alloy details"
+msgstr "تفاصيل وزن السبائك"
+
 #: help_request/apps.py:8 help_request/models.py:22 help_request/models.py:26
 msgid "help request"
 msgstr "طلب مساعدة"
@@ -2534,11 +2660,6 @@ msgstr "البند"
 #: pa/models.py:73
 msgid "Financial items"
 msgstr "البنود"
-
-#: pa/models.py:95 pa/models.py:133 pa/models.py:197 pa/models.py:307
-#: pa/models.py:510 pa/tables/payment.py:34 pa/tables/request.py:53
-msgid "record_state"
-msgstr "الحالة"
 
 #: pa/models.py:105
 msgid "Openning balance"
@@ -2810,10 +2931,6 @@ msgstr "عدد العقود"
 #: pa/templates/pa/pa_daily.html:65
 msgid "Print"
 msgstr "طباعة"
-
-#: pa/templates/pa/pa_daily.html:75 revenu_dist/models.py:108
-msgid "date"
-msgstr "التاريخ"
 
 #: pa/templates/pa/pa_daily.html:79
 msgid "credit"
@@ -3161,6 +3278,21 @@ msgstr "تم تسجيل الدخول بنجاح."
 #: traditional_api/views.py:125
 msgid "Record added sucessfully."
 msgstr "تم حفظ السجل بنجاح."
+
+#, fuzzy
+#~| msgid "license"
+#~ msgid "license_no"
+#~ msgstr "الاتفاقية/العقد"
+
+#, fuzzy
+#~| msgid "start_date"
+#~ msgid "start_dt"
+#~ msgstr "تاريح البداية"
+
+#, fuzzy
+#~| msgid "end_date"
+#~ msgid "end_dt"
+#~ msgstr "تاريخ النهاية"
 
 #~ msgid "include attachments"
 #~ msgstr "يحتوي على مرفقات"

@@ -89,6 +89,7 @@ INSTALLED_APPS = [
     'help_request',
     'revenu_dist',
     'traditional_api',
+    'gold_travel',
 
     # Debug
     'debug_toolbar',
