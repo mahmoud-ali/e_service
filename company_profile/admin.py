@@ -1,6 +1,8 @@
 import codecs
 import csv
 from django.http import HttpResponse
+from django.urls import reverse
+from django.utils.html import format_html
 
 from django.db import models
 from django.db.models import Count
@@ -162,7 +164,7 @@ class TblCompanyProductionAdmin(ExportActionMixin,LoggingAdminMixin,admin.ModelA
         (_("Company Status"), {"fields": ["status"]}),
      ]
      
-    list_display = ["company_type","code","name_ar", "name_en", "status",'license_count']
+    list_display = ["company_type","code","name_ar", "name_en", "status",'license_count','show_summary_link']
     list_filter = ["company_type","nationality","status","created_at",LicenseCountFilter]
     search_fields = ["code","name_ar","name_en"]
     exclude = ["created_at","created_by","updated_at","updated_by"]
@@ -221,6 +223,13 @@ class TblCompanyProductionAdmin(ExportActionMixin,LoggingAdminMixin,admin.ModelA
             u = TblCompanyProductionUserRole(company=obj,user=com_user)
             u.save()
         
+    @admin.display(description=_('Show summary'))
+    def show_summary_link(self, obj):
+        url = reverse('profile:summary')
+        return format_html('<a target="_blank" class="viewlink" href="{url}?id={id}">'+_('Show summary')+'</a>',
+                    url=url,id=obj.id
+                )
+
 class TblCompanyProductionFactoryAdmin(LoggingAdminMixin,admin.ModelAdmin):
     fields = ["company", ("factory_type","capacity")]
     exclude = ["created_at","created_by","updated_at","updated_by"]

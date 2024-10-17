@@ -1,0 +1,10 @@
+
+Name ar: {{company.name_ar}} <br/>
+Name en: {{company.name_en}} <br/>
+
+Licenses:
+<ul>
+    {% for license in licenses%}
+    <li>License no: {{license.license_no}}, Start date: {{license.start_date}}, End date: {{license.end_date}}</li>
+    {% endfor%}
+</ul>

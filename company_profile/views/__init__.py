@@ -2,7 +2,7 @@ from django.urls import reverse_lazy
 from django.views.generic import View,TemplateView,ListView,DetailView,CreateView,UpdateView,DeleteView
 from django.views.generic.detail import SingleObjectMixin
 from django.http import HttpResponseRedirect, HttpResponseBadRequest, HttpResponse
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404,render
 from django.utils.translation import gettext_lazy as _
 from django.utils import translation
 
@@ -95,6 +95,20 @@ class LkpSelectView(LoginRequiredMixin,TemplateView):
         return super().dispatch(*args, **kwargs)                    
 
     def get(self, request, *args, **kwargs):                   
+        return render(request, self.template_name, self.extra_context)    
+
+class CompanySummaryView(LoginRequiredMixin,TemplateView):
+    template_name = 'company_profile/summary.html'
+    kwargs = None
+
+
+    def get(self, request, *args, **kwargs):    
+        id = request.GET.get("id",None)
+        company = get_object_or_404(TblCompanyProduction,pk=id)
+        self.extra_context = {
+            "company": company,
+            "licenses": company.tblcompanyproductionlicense_set.all()
+        }
         return render(request, self.template_name, self.extra_context)    
 
 class HomePageView(LoginRequiredMixin,TranslationMixin,TemplateView):

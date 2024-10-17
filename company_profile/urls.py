@@ -5,7 +5,7 @@ from django.conf import settings
 
 from company_profile.views.pa_request import AppRequestListView, AppRequestReadonlyView
 
-from .views import SetLanguageView, HomePageView, \
+from .views import CompanySummaryView,SetLanguageView, HomePageView, \
                    AppForignerMovementListView,AppForignerMovementCreateView,AppForignerMovementReadonlyView, \
                    AppBorrowMaterialListView,AppBorrowMaterialCreateView,AppBorrowMaterialReadonlyView, \
                    LkpLocalitySelectView,AppWorkPlanListView,AppWorkPlanCreateView,AppWorkPlanReadonlyView, \
@@ -47,6 +47,7 @@ app_name = "profile"
 urlpatterns = [                                                        
     path('', HomePageView.as_view(), name='home'),
     path('set_lang', SetLanguageView.as_view(), name='set_lang'),
+    path('summary',CompanySummaryView.as_view(),name='summary'),
 
     path('lkp_locality/<int:master_id>/<int:dependent_id>/', LkpLocalitySelectView.as_view(), name='lkp_locality_select'),
     
