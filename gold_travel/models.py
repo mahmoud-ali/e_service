@@ -2,6 +2,8 @@ from django.db import models
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 
+from company_profile.models import LkpState
+
 class LoggingModel(models.Model):
     """
     An abstract base class model that provides self-
@@ -15,6 +17,31 @@ class LoggingModel(models.Model):
     
     class Meta:
         abstract = True
+
+class TblStateRepresentative(models.Model):
+    AUTHORITY_SMRC = 2
+    AUTHORITY_2MN_2LM3ADIN = 3
+    AUTHORITY_SHORTAT_2LM3ADIN = 4
+    AUTHORITY_2LESTIKHBARAT_2L3ASKRIA = 5
+
+    AUTHORITY_CHOICES = {
+        AUTHORITY_SMRC: _('authority_smrc'),
+        AUTHORITY_2MN_2LM3ADIN: _('authority_2mn_2lm3adin'),
+        AUTHORITY_SHORTAT_2LM3ADIN: _('authority_shortat_2lm3adin'),
+        AUTHORITY_2LESTIKHBARAT_2L3ASKRIA: _('authority_2lestikhbarat_2l3askria'),
+    }
+
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.PROTECT,related_name="state_representative",verbose_name=_("user"))
+    name = models.CharField(_("name"),max_length=100)
+    state = models.ForeignKey(LkpState, on_delete=models.PROTECT,verbose_name=_("state"))
+    authority = models.IntegerField(_("authority"), choices=AUTHORITY_CHOICES, default=AUTHORITY_SMRC)
+
+    def __str__(self):
+        return f'{self.user} ({self.state.name})'
+
+    class Meta:
+        verbose_name = _("state representative")
+        verbose_name_plural = _("state representatives")
 
 class AppMoveGold(LoggingModel):
     DESTINATION_SSMO = 1
@@ -87,3 +114,24 @@ class AppMoveGoldDetails(models.Model):
     class Meta:
         verbose_name = _("alloy detail")
         verbose_name_plural = _("alloy details")
+
+class AppPrepareGold(LoggingModel):
+    STATE_DRAFT = 1
+    STATE_CONFIRMED = 2
+    STATE_CHOICES = {
+        STATE_DRAFT: _('state_draft'),
+        STATE_CONFIRMED: _('state_confirmed'),
+    }
+
+    date = models.DateField(_("date"))
+    owner_name = models.CharField(_("owner_name"),max_length=100)
+    gold_weight_in_gram = models.FloatField(_("gold_weight_in_gram"))
+    issuer = models.ForeignKey(TblStateRepresentative, on_delete=models.PROTECT,verbose_name=_("issuer"))
+    state = models.IntegerField(_("record_state"), choices=STATE_CHOICES, default=STATE_DRAFT)
+
+    def __str__(self):
+        return f'{self.owner_name} ({self.gold_weight_in_gram})'
+
+    class Meta:
+        verbose_name = _("prepare gold")
+        verbose_name_plural = _("prepare gold")

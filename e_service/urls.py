@@ -33,6 +33,8 @@ urlpatterns = [
     path("about/", flatpages_views.flatpage, {"url": "/about/"}, name="about"),
     path('pa/', include('pa.urls')), 
     path('help/', include('help_request.urls')), 
+    path('gold_travel/', include('gold_travel.urls')), 
+
     path('', include('company_profile.urls')),
     # path('', include('pwa.urls')),  # You MUST use an empty string as the URL prefix    
 ]
