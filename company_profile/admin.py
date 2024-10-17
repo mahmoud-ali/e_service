@@ -308,7 +308,7 @@ class TblCompanyProductionLicenseAdmin(LoggingAdminMixin,admin.ModelAdmin):
             headers={"Content-Disposition": f'attachment; filename="licenses.csv"'},
         )
         header = [
-                    _("company"),_("license_no"),_("start_dt"),_("end_dt"),_( "license_count"),\
+                    _("company"),_("License no"),_("start_date"),_("end_date"),_( "License count"),\
                     _("state"),_("sheet_no"),_("contract_status")
         ]
 
