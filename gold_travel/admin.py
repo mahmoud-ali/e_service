@@ -102,7 +102,7 @@ class AppMoveGoldAdmin(LogAdminMixin,admin.ModelAdmin):
             authority = request.user.state_representative.authority
             qs = qs.filter(state=(authority-1))
         except:
-            pass
+            qs = qs.none()
 
         return qs
 
