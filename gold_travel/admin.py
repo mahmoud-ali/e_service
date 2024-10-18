@@ -86,7 +86,7 @@ class AppMoveGoldAdmin(LogAdminMixin,admin.ModelAdmin):
         ),
     ]
     list_display = ["date","owner_name","repr_name","gold_weight_in_gram","gold_alloy_count","state"]        
-    list_filter = ["owner_name"]
+    list_filter = ["date","owner_name"]
     search_fields = ["owner_name","owner_address","repr_name","repr_phone","repr_identity"]
     actions = ['confirm_app']
 
