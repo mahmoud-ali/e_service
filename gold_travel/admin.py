@@ -140,7 +140,7 @@ admin.site.register(AppMoveGold, AppMoveGoldAdmin)
 class AppPrepareGoldAdmin(LogAdminMixin,admin.ModelAdmin):
     model = AppPrepareGold
     fields = ["date","owner_name","gold_weight_in_gram","state"] 
-    list_filter = ["date","state"]
+    list_filter = ["date","state","source_state"]
     view_on_site = False
 
     def get_list_display(self,request):
