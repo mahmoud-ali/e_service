@@ -3,6 +3,7 @@ from django.utils.translation import gettext_lazy as _
 from django.urls import reverse
 from django.utils.html import format_html
 
+from gold_travel.forms import TblStateRepresentativeForm
 from gold_travel.models import AppPrepareGold, TblStateRepresentative,AppMoveGold, AppMoveGoldDetails
 
 class LogAdminMixin:
@@ -36,6 +37,7 @@ class LogAdminMixin:
 
 class TblStateRepresentativeAdmin(admin.ModelAdmin):
     model = TblStateRepresentative
+    form = TblStateRepresentativeForm
     list_display = ["authority","user","state"]        
     list_filter = ["authority","state"]
     view_on_site = False
@@ -125,17 +127,26 @@ admin.site.register(AppMoveGold, AppMoveGoldAdmin)
 class AppPrepareGoldAdmin(LogAdminMixin,admin.ModelAdmin):
     model = AppPrepareGold
     fields = ["date","owner_name","gold_weight_in_gram","state"] 
-    list_display = ["owner_name","gold_weight_in_gram","state"]        
-    list_filter = ["state"]
+    list_filter = ["date","state"]
     view_on_site = False
-            
+
+    def get_list_display(self,request):
+        list_display = ["date","owner_name","gold_weight_in_gram","state"]  
+        try:
+            authority = request.user.state_representative.authority
+            if authority == TblStateRepresentative.AUTHORITY_SMRC:
+                return  list_display + ["show_certificate_link"]   
+        except:
+            pass
+
+        return list_display
+
     def save_model(self, request, obj, form, change):
         try:
             usr = request.user.state_representative
             obj.issuer = usr
 
         except Exception as e:
-            print("showwwwwwwwww",e)
             pass
 
         if obj.pk:
@@ -143,15 +154,6 @@ class AppPrepareGoldAdmin(LogAdminMixin,admin.ModelAdmin):
         else:
             obj.created_by = obj.updated_by = request.user
         super().save_model(request, obj, form, change)                
-
-    def get_list_display(self,request):
-        try:
-            authority = request.user.state_representative.authority
-            return ["owner_name","gold_weight_in_gram","state","show_certificate_link"]   
-        except:
-            pass
-
-        return ["owner_name","gold_weight_in_gram","state"]  
 
     @admin.display(description=_('Show certificate'))
     def show_certificate_link(self, obj):
