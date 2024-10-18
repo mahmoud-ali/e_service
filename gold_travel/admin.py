@@ -86,7 +86,7 @@ class AppMoveGoldAdmin(LogAdminMixin,admin.ModelAdmin):
         ),
     ]
     list_display = ["date","owner_name","repr_name","gold_weight_in_gram","gold_alloy_count","state","source_state"]        
-    list_filter = ["date","owner_name","source_state"]
+    list_filter = ["date","owner_name",("source_state",admin.RelatedOnlyFieldListFilter)]
     search_fields = ["owner_name","owner_address","repr_name","repr_phone","repr_identity"]
     actions = ['confirm_app']
 
@@ -140,7 +140,8 @@ admin.site.register(AppMoveGold, AppMoveGoldAdmin)
 class AppPrepareGoldAdmin(LogAdminMixin,admin.ModelAdmin):
     model = AppPrepareGold
     fields = ["date","owner_name","gold_weight_in_gram","state"] 
-    list_filter = ["date","state","source_state"]
+    list_filter = ["date","state",("source_state",admin.RelatedOnlyFieldListFilter)]
+    search_fields = ["owner_name"]
     view_on_site = False
 
     def get_list_display(self,request):
