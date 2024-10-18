@@ -85,8 +85,8 @@ class AppMoveGoldAdmin(LogAdminMixin,admin.ModelAdmin):
             },
         ),
     ]
-    list_display = ["date","owner_name","repr_name","gold_weight_in_gram","gold_alloy_count","state"]        
-    list_filter = ["date","owner_name"]
+    list_display = ["date","owner_name","repr_name","gold_weight_in_gram","gold_alloy_count","state","source_state"]        
+    list_filter = ["date","owner_name","source_state"]
     search_fields = ["owner_name","owner_address","repr_name","repr_phone","repr_identity"]
     actions = ['confirm_app']
 
@@ -99,12 +99,25 @@ class AppMoveGoldAdmin(LogAdminMixin,admin.ModelAdmin):
             return qs
 
         try:
-            authority = request.user.state_representative.authority
-            qs = qs.filter(state=(authority-1))
+            state_representative = request.user.state_representative.authority
+            qs = qs.filter(state=(state_representative.authority-1),source_state=state_representative.state)
         except:
             qs = qs.none()
 
         return qs
+
+    def save_model(self, request, obj, form, change):
+        try:
+            state_representative = request.user.state_representative
+            obj.source_state = state_representative.state
+        except Exception as e:
+            pass
+
+        if obj.pk:
+            obj.updated_by = request.user
+        else:
+            obj.created_by = obj.updated_by = request.user
+        super().save_model(request, obj, form, change)                
 
     @admin.action(description=_('Confirm application'))
     def confirm_app(self, request, queryset):
@@ -131,7 +144,7 @@ class AppPrepareGoldAdmin(LogAdminMixin,admin.ModelAdmin):
     view_on_site = False
 
     def get_list_display(self,request):
-        list_display = ["date","owner_name","gold_weight_in_gram","state"]  
+        list_display = ["date","owner_name","gold_weight_in_gram","state","source_state"]  
         try:
             authority = request.user.state_representative.authority
             if authority == TblStateRepresentative.AUTHORITY_SMRC:
@@ -141,11 +154,25 @@ class AppPrepareGoldAdmin(LogAdminMixin,admin.ModelAdmin):
 
         return list_display
 
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+
+        if request.user.is_superuser or request.user.groups.filter(name="gold_travel_manager").exists():
+            return qs
+
+        try:
+            state_representative = request.user.state_representative.authority
+            qs = qs.filter(source_state=state_representative.state)
+        except:
+            qs = qs.none()
+
+        return qs
+
     def save_model(self, request, obj, form, change):
         try:
-            usr = request.user.state_representative
-            obj.issuer = usr
-
+            state_representative = request.user.state_representative
+            obj.issuer = state_representative
+            obj.source_state = state_representative.state
         except Exception as e:
             pass
 

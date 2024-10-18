@@ -82,6 +82,7 @@ class AppMoveGold(LoggingModel):
     gold_description = models.CharField(_("gold_description"),max_length=100)
     state = models.IntegerField(_("record_state"), choices=STATE_CHOICES, default=STATE_DRAFT)
     attachement_file = models.FileField(_("attachement_file"),upload_to=attachement_path)
+    source_state = models.ForeignKey(LkpState, on_delete=models.PROTECT,verbose_name=_("state"))
 
     def __str__(self):
         return f'{self.owner_name} ({self.gold_weight_in_gram} {_("gram")})'
@@ -128,6 +129,7 @@ class AppPrepareGold(LoggingModel):
     gold_weight_in_gram = models.FloatField(_("gold_weight_in_gram"))
     issuer = models.ForeignKey(TblStateRepresentative, on_delete=models.PROTECT,verbose_name=_("issuer"))
     state = models.IntegerField(_("record_state"), choices=STATE_CHOICES, default=STATE_DRAFT)
+    source_state = models.ForeignKey(LkpState, on_delete=models.PROTECT,verbose_name=_("state"))
 
     def __str__(self):
         return f'{self.owner_name} ({self.gold_weight_in_gram})'
