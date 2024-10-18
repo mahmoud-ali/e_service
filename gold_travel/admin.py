@@ -99,7 +99,7 @@ class AppMoveGoldAdmin(LogAdminMixin,admin.ModelAdmin):
             return qs
 
         try:
-            state_representative = request.user.state_representative.authority
+            state_representative = request.user.state_representative
             qs = qs.filter(state=(state_representative.authority-1),source_state=state_representative.state)
         except:
             qs = qs.none()
@@ -162,7 +162,7 @@ class AppPrepareGoldAdmin(LogAdminMixin,admin.ModelAdmin):
             return qs
 
         try:
-            state_representative = request.user.state_representative.authority
+            state_representative = request.user.state_representative
             qs = qs.filter(source_state=state_representative.state)
         except:
             qs = qs.none()
