@@ -1,0 +1,50 @@
+@media print {
+    @page {
+        size: A4;
+        margin:0;
+        margin-bottom: 0.2in;
+        border: solid 1px black ;
+    }
+
+    html
+    {
+        background-color: #FFFFFF; 
+        margin: 0px;  /* this affects the margin on the html before sending to printer */
+    }
+
+    table thead::before {
+        content: "";
+        line-height:0.1in !important;
+    }
+
+    table th, table td, li {
+        font-size: small !important;
+    }
+    
+    a[href]:after { 
+        content: none !important; 
+    }
+
+    .page-header,div.filter{
+        text-align:center;
+        font-weight: normal;
+    }
+
+    div.filter label{
+        font-weight: bold;
+    }
+
+    div.main{
+        width: 100% !important;
+    }
+
+    .navbar,div.sidebar,.screen_only{
+        display: none !important;
+    }
+}
+
+@media screen {
+    .print_only{
+        display: none !important;
+    }
+}

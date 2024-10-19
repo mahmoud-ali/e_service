@@ -1,96 +1,42 @@
+{% extends 'gold_travel/report_base.html' %}
 {% load i18n %}
-<!doctype html>
-<html lang="en" {% if request.LANGUAGE_CODE == "ar" %} dir="rtl" {% endif %}>
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-<title>{{title}}</title>
 {% load bootstrap3 %}
+{% load auth_extras %}
 
-{% bootstrap_css %}
+{% block content %}
+  التاريخ: {{object.date|date:"Y/m/d"}}م
+  <br/>
+  <br/>
+  <center>
+    <p style="font-weight: bold !important;text-decoration: underline !important;">
+    شهادة لمن يهمه الأمر
+    {%if object.state == 1 %}
+  &nbsp;(مسودة)
+    {%endif%}
+    </p>
+  </center>
+  <br/>
+  <br/>
 
-{% if request.LANGUAGE_CODE == "ar" %}
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-rtl/3.4.0/css/bootstrap-rtl.min.css" integrity="sha512-3Lr2MkT5iW+jVhwKFUBa+zQk8Uklef98/3mebU6wNxTzj65enYrFXaeuqPAYWxcQd1GAt9aUBvYHOIcl2SUsKA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-{% endif %}
+  تشهد الشركة السودانية للموارد المعدنية بأن أعمال/ شركة <b>{{object.owner_name}}</b> بصدد شراء وسبك وتجهيز  كمية ذهب في حدود <b>{{object.gold_weight_in_gram}} جرام</b> وفق مواصفات الهيئة السودانية للمواصفات والمقاييس، بعيارات مختلفة وستتابع الشركة السودانية للموارد المعدنية المحدودة الاجراءات اللازمة لحين اصدار استمارة ترحيل بغرض الصادر وأن هذه الشهادة مبرئة للذمة في مراحل الشراء والسبك والتجهيز.
 
-{% load static  %}
+  <br/><br/>
+  {% comment %} <center> {% endcomment %}
+  وهذا منا للعلم ...........................
+  {% comment %} </center> {% endcomment %}
 
-{% load help_request %}
-<link rel="stylesheet" type="text/css" href="{% static 'admin/css/widgets.css' %}" />
+  <br/><br/>
 
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-      <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
-      <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
-    <![endif]-->
+  <b>تنبيه مهم:</b> هذه الشهادة تسري <b>لمدة اسبوعين فقط</b> ولغرض الشراء والسبك والتجهيز.
 
-<link rel="stylesheet" type="text/css" href="{% static 'company_profile/css/base.css' %}" />
+  <br/><br/>
+  <br/><br/>
+  <br/><br/>
 
-	
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha384-nvAa0+6Qg9clwYCGGPpDQLVpLNn0fRaROjHqs13t4Ggj3Ez50XnGQqc/r8MhnRDZ" crossorigin="anonymous"></script>
-    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>	
-{% bootstrap_javascript %}
+  <div style="text-align:left">
+  ج.{{object.issuer.name}}
+  <br/>
+  مدير اسواق الذهب بولاية {{object.issuer.state}}
+  </div>
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Yantramanav:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
-
-<link rel="stylesheet" type="text/css" href="{% static 'hr/css/print.css' %}" />
-
-</head>
-<body>
-
-	<div class="container-fluid">
-	  <div class="row">
-		<div id="main_content" class="col-12 main">
-<br/>
-<br/>
-<br/>
-التاريخ: {{object.date|date:"Y/m/d"}}
-<br/>
-<br/>
-<center>
-  <b>
-  شهادة لمن يهمه الأمر
-  {%if object.state == 1 %}
-&nbsp;(مسودة)
-  {%endif%}
-  </b>
-</center>
-<br/>
-<br/>
-
-تشهد الشركة السودانية للموارد المعدنية بأن أعمال/ شركة <b>{{object.owner_name}}</b> بصدد شراء وسبك وتجهيز  كمية ذهب في حدود <b>{{object.gold_weight_in_gram}} جرام</b> وفق مواصفات الهيئة السودانية للمواصفات والمقاييس، بعيارات مختلفة وستتابع الشركة السودانية للموارد المعدنية المحدودة الاجراءات اللازمة لحين اصدار استمارة ترحيل بغرض الصادر وأن هذه الشهادة مبرئة للذمة في مراحل الشراء والسبك والتجهيز.
-
-<br/><br/>
-{% comment %} <center> {% endcomment %}
-وهذا منا للعلم ...........................
-{% comment %} </center> {% endcomment %}
-
-<br/><br/>
-
-<b>تنبيه مهم:</b> هذه الشهادة تسري <b>لمدة اسبوعين فقط</b> ولغرض الشراء والسبك والتجهيز.
-
-<br/><br/>
-<br/><br/>
-<br/><br/>
-
-<div style="text-align:left">
- ج.{{object.issuer.name}}
-<br/>
-مدير اسواق الذهب بولاية {{object.issuer.state}}
-</div>
-
-</div>
-</div>
-<script>
-
-  window.print()
-</script>
-</body>
-
-</html>
+{% endblock content %}

@@ -85,12 +85,22 @@ class AppMoveGoldAdmin(LogAdminMixin,admin.ModelAdmin):
             },
         ),
     ]
-    list_display = ["date","owner_name","repr_name","gold_weight_in_gram","gold_alloy_count","state","source_state"]        
     list_filter = ["date","owner_name",("source_state",admin.RelatedOnlyFieldListFilter)]
     search_fields = ["owner_name","owner_address","repr_name","repr_phone","repr_identity"]
     actions = ['confirm_app']
 
     view_on_site = False
+
+    def get_list_display(self,request):
+        list_display = ["date","owner_name","repr_name","gold_weight_in_gram","gold_alloy_count","state","source_state"]
+        try:
+            authority = request.user.state_representative.authority
+            if authority == TblStateRepresentative.AUTHORITY_SMRC:
+                return  list_display + ["show_certificate_link"]   
+        except:
+            pass
+
+        return list_display
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
@@ -134,6 +144,13 @@ class AppMoveGoldAdmin(LogAdminMixin,admin.ModelAdmin):
                 self.message_user(request,_('application confirmed successfully!'))
         except:
             pass
+
+    @admin.display(description=_('Show certificate'))
+    def show_certificate_link(self, obj):
+        url = reverse('gold_travel:gold_travel_cert')
+        return format_html('<a target="_blank" class="viewlink" href="{url}?id={id}">'+_('Show certificate')+'</a>',
+                    url=url,id=obj.id
+                )
 
 admin.site.register(AppMoveGold, AppMoveGoldAdmin)
 

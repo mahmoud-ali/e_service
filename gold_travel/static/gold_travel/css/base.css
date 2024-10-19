@@ -1,0 +1,172 @@
+/*
+ * Base structure
+ */
+
+/* Move down content because we have a fixed navbar that is 50px tall */
+body {
+  padding-top: 50px;
+  margin: 0;
+  padding: 0;
+  font-family: Yantramanav,sans-serif !important;
+  font-size: 24px;
+  font-family: var(--font-family-primary);
+  color: var(--body-fg);
+  background: var(--body-bg);
+}
+
+body,h1,h2,h3,h4,h5,h6,p,input,button,select,.btn,.select2-container--bootstrap .select2-selection{
+  font-family: Yantramanav,sans-serif !important;
+  font-style: normal;
+}
+
+body,p,input,select,button,.btn,.select2-container--bootstrap .select2-selection{
+  font-weight: 400 !important;
+  font-size: 20px !important;
+
+}
+
+h1,h2,h3{
+  font-weight: 600 !important;
+}
+
+h4,h5,h6{
+  font-weight: 500 !important;
+}
+
+
+/*
+ * Global add-ons
+ */
+
+.sub-header {
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+/*
+ * Top navigation
+ * Hide default border to remove 1px line.
+ */
+.navbar-fixed-top {
+  border: 0;
+}
+
+/*
+ * Sidebar
+ */
+ @media (min-width: 768px) {
+  .sidebar {
+    /* position: fixed; */
+    top: 30px;
+    bottom: 0;
+    z-index: 1000;
+    display: block;
+    padding: 20px;
+    overflow-x: hidden;
+    overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+    background-color: #f5f5f5;
+  }
+
+  .sidebar h4{
+    font-size: 28px;
+  }  
+}
+
+/* Sidebar navigation */
+.nav-sidebar {
+  margin-right: -21px; /* 20px padding + 1px border */
+  margin-bottom: 20px;
+  margin-left: -20px;
+}
+.nav-sidebar > li > a {
+  padding-right: 20px;
+  padding-left: 20px;
+}
+.nav-sidebar > .active > a,
+.nav-sidebar > .active > a:hover,
+.nav-sidebar > .active > a:focus {
+  color: #fff;
+  background-color: #428bca;
+}
+
+
+.navbar-brand {
+  font-size: 32px;
+}
+
+
+/*
+ * Main content
+ */
+
+.main {
+  padding: 20px;
+  padding-top: 60px;
+
+}
+@media (min-width: 768px) {
+  .main {
+    padding-right: 40px;
+    padding-left: 40px;
+  }
+}
+.main .page-header {
+  margin-top: 0;
+}
+
+
+/*
+ * Placeholder dashboard ideas
+ */
+
+.placeholders {
+  margin-bottom: 30px;
+  text-align: center;
+}
+.placeholders h4 {
+  margin-bottom: 0;
+}
+.placeholder {
+  margin-bottom: 20px;
+}
+.placeholder img {
+  display: inline-block;
+  border-radius: 50%;
+}
+
+/*#calendarbox1{
+    width:200px;
+}*/
+
+.calendarbox, .clockbox{  
+  width: 40em;
+}
+
+.calendarbox caption{
+  font-size: 18px ;
+}
+
+.calendar td,.calendar th{
+  font-family: Yantramanav,sans-serif !important;
+}
+.calendar th{
+  font-size: 12px ;
+}
+.calendar td{
+  font-size: 18px ;
+}
+
+.calendar-shortcuts{
+  font-size: 18px;
+}
+
+.form-control{
+  height: 40px;
+  font-size: 18px;
+}
+
+
+input[type="checkbox"] {
+    width: 15px !important;
+    top: -10px;
+}

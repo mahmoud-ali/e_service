@@ -1,0 +1,97 @@
+{% extends 'gold_travel/report_base.html' %}
+{% load i18n %}
+{% load bootstrap3 %}
+{% load auth_extras %}
+
+{% block content %}
+  <center>
+    <h3 style="font-weight: bold !important;text-decoration: underline !important;">
+إستمارة ترحيل ونقل لأغراض الصادر
+    </h3>
+  </center>
+  <br/>
+
+  <div class="table-responsive">
+    <table class="table table-bordered">
+        <tr>
+            <th width="15%" class="active">التاريخ</th>
+            <td>{{object.date|date:"Y/m/d"}}م</td>
+            <th width="15%" class="active">الوجهة</th>
+            <td>{{object.get_destination_display}}</td>
+        </tr>
+        <tr>
+            <th width="15%" class="active">اسم المالك</th>
+            <td>{{object.owner_name}}</td>
+            <th width="15%" class="active">العنوان</th>
+            <td>{{object.owner_address}}</td>
+        </tr>
+        <tr>
+            <th width="15%" class="active">اسم الناقل</th>
+            <td>{{object.repr_name}}</td>
+            <th width="15%" class="active">العنوان ورقم الهاتف</th>
+            <td>{{object.repr_address}} - {{object.repr_phone}}</td>
+        </tr>
+        <tr>
+            <th width="15%" class="active">إثبات الهوية</th>
+            <td>{{object.repr_identity}}</td>
+            <th width="15%" class="active">الإصدار</th>
+            <td>{{object.repr_identity_issue_date|date:"Y/m/d"}}م</td>
+        </tr>
+        <tr>
+            <th width="15%" class="active">وزن الخام المنقول</th>
+            <td>{{object.gold_weight_in_gram}}</td>
+            <th width="15%" class="active">عدد السبائك</th>
+            <td>{{object.gold_alloy_count}}</td>
+        </tr>
+        <tr>
+            <th width="15%" class="active">وصف المنقول</th>
+            <td colspan="3">{{object.gold_description}}</td>
+        </tr>
+    </table>
+</div>
+
+  <h3>الإعتماد:</h3>
+
+  <div class="table-responsive">
+    <table class="table table-bordered">
+        <tr class="active">
+            <th>البيان</th>
+            <th width="23%">ممثل الشركة السودانية للموارد المعدنية المحدودة</th>
+            <th width="23%">ممثل أمن إقتصاديات المعادن</th>
+            <th width="23%">ممثل شرطة تأمين التعدين</th>
+            <th width="23%">ممثل هيئة الإستخبارات العسكرية</th>
+        </tr>
+        <tr>
+            <th height="30px" class="active">الإسم</th>
+            <td height="30px">&nbsp;</td>
+            <td height="30px">&nbsp;</td>
+            <td height="30px">&nbsp;</td>
+            <td height="30px">&nbsp;</td>
+        </tr>
+        <tr>
+            <th height="30px" class="active">التوقيع</th>
+            <td height="30px">&nbsp;</td>
+            <td height="30px">&nbsp;</td>
+            <td height="30px">&nbsp;</td>
+            <td height="30px">&nbsp;</td>
+        </tr>
+        <tr>
+            <th height="60px" class="active">الختم</th>
+            <td height="60px">&nbsp;</td>
+            <td height="60px">&nbsp;</td>
+            <td height="60px">&nbsp;</td>
+            <td height="60px">&nbsp;</td>
+        </tr>
+
+    </table>
+
+    <p>تنبيهات هامة:</p>
+    <ol>
+        <li>مدة سريان الاستمارة ثلاثة أيام عمل رسمية.</li>
+        <li>أي تعديل أو كشط يلغي الإستمارة.</li>
+        <li>تسلم إيصال الإيداع الصادر من المواصفات والمقاييس إلى الشركة السودانية للموارد المعدنية المحدودة خلال المدة اعلاه.</li>
+        <li>هذه الإستمارة صادرة لأغراض ترحيل الذهب لأغراض الصادر فقط.</li>
+        <li>هذه الإستمارة مجانية.</li>
+    </ol>
+</div>
+{% endblock content %}
