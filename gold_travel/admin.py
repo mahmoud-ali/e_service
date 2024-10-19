@@ -85,7 +85,7 @@ class AppMoveGoldAdmin(LogAdminMixin,admin.ModelAdmin):
             },
         ),
     ]
-    list_filter = ["date","owner_name",("source_state",admin.RelatedOnlyFieldListFilter)]
+    list_filter = ["date","state",("source_state",admin.RelatedOnlyFieldListFilter)]
     search_fields = ["owner_name","owner_address","repr_name","repr_phone","repr_identity"]
     actions = ['confirm_app']
 
