@@ -211,23 +211,26 @@ class TblCompanyProductionAdmin(ExportActionMixin,LoggingAdminMixin,admin.ModelA
         super().save_model(request, obj, form, change)                
 
         email = obj.email
+        if email:
+            if TblCompanyProductionUserRole.objects.filter(company=obj).filter(user__email=email).exists():
+                pass #nothing to do
+            elif TblCompanyProductionUserRole.objects.exclude(company=obj).filter(user__email=email).exists():
+                self.message_user(request,_('Email already exists!'),level=message_constants.ERROR)
+                obj.email = ''
+                obj.save()
+            elif not TblCompanyProductionUserRole.objects.filter(user__email=email).exists() and not TblCompanyProductionUserRole.objects.filter(company=obj).exists():
+                #print("*****",obj,email)
+                email = email.lower()
+                User = get_user_model()     
+                try:  
+                    com_user = User.objects.get(username=email)
+                except:
+                    com_user = User.objects.create_user(email,email,settings.ACCOUNT_DEFAULT_PASSWORD)
 
-        if email and not TblCompanyProductionUserRole.objects.filter(company=obj,user__email=email).exists():
-            #print("*****",obj,email)
-            email = email.lower()
-            User = get_user_model()     
-            try:  
-                com_user = User.objects.get(username=email)
-            except:
-                com_user = User.objects.create_user(email,email,settings.ACCOUNT_DEFAULT_PASSWORD)
-
-            com_user.lang = 'ar'
-            com_user.save()
-            try: 
+                com_user.lang = 'ar'
+                com_user.save()
                 u = TblCompanyProductionUserRole(company=obj,user=com_user)
                 u.save()
-            except IntegrityError:
-                self.message_user(request,_('Email already exists!'),level=message_constants.ERROR)
         
     @admin.display(description=_('Show summary'))
     def show_summary_link(self, obj):
