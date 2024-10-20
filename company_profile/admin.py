@@ -220,11 +220,14 @@ class TblCompanyProductionAdmin(ExportActionMixin,LoggingAdminMixin,admin.ModelA
                 com_user = User.objects.get(username=email)
             except:
                 com_user = User.objects.create_user(email,email,settings.ACCOUNT_DEFAULT_PASSWORD)
-                
+
             com_user.lang = 'ar'
             com_user.save()
-            u = TblCompanyProductionUserRole(company=obj,user=com_user)
-            u.save()
+            try: 
+                u = TblCompanyProductionUserRole(company=obj,user=com_user)
+                u.save()
+            except:
+                self.message_user(request,_('Email already exists!'))
         
     @admin.display(description=_('Show summary'))
     def show_summary_link(self, obj):
