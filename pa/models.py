@@ -365,36 +365,39 @@ class TblCompanyRequestMaster(LoggingModel):
         if self.state == STATE_TYPE_DRAFT:
             return
         
-        lang = TblCompanyProductionUserRole.objects.filter(company=self.commitment.company)[0].user.lang
-        email = self.commitment.company.email
-        url = 'https://'+Site.objects.get_current().domain+"/app"+reverse(settings.SHOW_REQUESTS_URL,args=[str(self.id)]) 
-        logo_url = "https://"+Site.objects.get_current().domain+"/app/static/company_profile/img/smrc_logo.png"
+        try:
+            lang = TblCompanyProductionUserRole.objects.filter(company=self.commitment.company)[0].user.lang
+            email = self.commitment.company.email
+            url = 'https://'+Site.objects.get_current().domain+"/app"+reverse(settings.SHOW_REQUESTS_URL,args=[str(self.id)]) 
+            logo_url = "https://"+Site.objects.get_current().domain+"/app/static/company_profile/img/smrc_logo.png"
 
-        subject = None
-        message = None
-        
-        if self.payment_state == self.REQUEST_PAYMENT_NO_PAYMENT:
-            subject = _("Request wait for payment")+" ("+self.commitment.__str__()+")"
-            message = render_to_string('pa/email/request_created_email_{0}.html'.format(lang),{
-                'url':url,
-                'logo':logo_url
-            }) 
-        elif self.payment_state == self.REQUEST_PAYMENT_FULL_PAYMENT:
-            subject = _("Request paied")+" ("+self.commitment.__str__()+")"
-            message = render_to_string('pa/email/request_paied_email_{0}.html'.format(lang),{
-                'url':url,
-                'logo':logo_url
-            }) 
-        
-        if subject and message:
-            send_mail(
-                subject,
-                strip_tags(message),
-                None,
-                [email],
-                html_message=message,
-                fail_silently=False,
-            )        
+            subject = None
+            message = None
+            
+            if self.payment_state == self.REQUEST_PAYMENT_NO_PAYMENT:
+                subject = _("Request wait for payment")+" ("+self.commitment.__str__()+")"
+                message = render_to_string('pa/email/request_created_email_{0}.html'.format(lang),{
+                    'url':url,
+                    'logo':logo_url
+                }) 
+            elif self.payment_state == self.REQUEST_PAYMENT_FULL_PAYMENT:
+                subject = _("Request paied")+" ("+self.commitment.__str__()+")"
+                message = render_to_string('pa/email/request_paied_email_{0}.html'.format(lang),{
+                    'url':url,
+                    'logo':logo_url
+                }) 
+            
+            if subject and message:
+                send_mail(
+                    subject,
+                    strip_tags(message),
+                    None,
+                    [email],
+                    html_message=message,
+                    fail_silently=False,
+                )        
+        except:
+            pass #if no email sent logic should get here
 
     def clean(self):        
         if not hasattr(self,'commitment'):
