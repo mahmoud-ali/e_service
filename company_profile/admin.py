@@ -215,9 +215,12 @@ class TblCompanyProductionAdmin(ExportActionMixin,LoggingAdminMixin,admin.ModelA
         if email and not TblCompanyProductionUserRole.objects.filter(company=obj,user__email=email).exists():
             #print("*****",obj,email)
             email = email.lower()
-            User = get_user_model()       
-            User.objects.filter(username=email).delete()     
-            com_user = User.objects.create_user(email,email,settings.ACCOUNT_DEFAULT_PASSWORD)
+            User = get_user_model()     
+            try:  
+                com_user = User.objects.get(username=email)
+            except:
+                com_user = User.objects.create_user(email,email,settings.ACCOUNT_DEFAULT_PASSWORD)
+                
             com_user.lang = 'ar'
             com_user.save()
             u = TblCompanyProductionUserRole(company=obj,user=com_user)
