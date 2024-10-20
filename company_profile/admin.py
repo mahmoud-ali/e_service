@@ -14,7 +14,7 @@ from django.contrib import admin
 from django.contrib.sites.models import Site
 from django.contrib.messages import constants as message_constants
 from import_export.admin import ExportActionMixin
-
+from django.db.utils import IntegrityError
 from .models import AppCyanideCertificate, AppExplosivePermission, AppFuelPermission, AppFuelPermissionDetail, AppGoldProduction, AppGoldProductionDetail, AppHSEAccidentReport, AppHSEPerformanceReport, AppImportPermission, AppImportPermissionDetail, AppLocalPurchase, AppRenewalContract, AppRestartActivity, AppTemporaryExemption, AppWhomConcern, LkpAccidentType, LkpNationality,LkpState,LkpLocality,LkpMineral,LkpCompanyProductionStatus,LkpForeignerProcedureType,TblCompanyProduction, \
                                       LkpCompanyProductionFactoryType,TblCompanyProductionFactory,LkpCompanyProductionLicenseStatus, \
                                       TblCompanyProductionLicense,AppForignerMovement,TblCompanyProductionUserRole, \
@@ -226,7 +226,7 @@ class TblCompanyProductionAdmin(ExportActionMixin,LoggingAdminMixin,admin.ModelA
             try: 
                 u = TblCompanyProductionUserRole(company=obj,user=com_user)
                 u.save()
-            except:
+            except IntegrityError:
                 self.message_user(request,_('Email already exists!'),level=message_constants.ERROR)
         
     @admin.display(description=_('Show summary'))
