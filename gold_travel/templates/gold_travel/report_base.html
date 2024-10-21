@@ -48,6 +48,13 @@
     body, h1,h2,h3,h4,h5,h6,th,td,li,p{
         font-family: "Noto Sans Arabic", sans-serif !important;
     }
+
+    .center {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        width: 100%;
+      }
 </style>
 
 </head>
@@ -56,10 +63,11 @@
 	<div class="container-fluid">
 	  <div class="row">
             <div id="main_content" class="col-12 main">
+                <image src="{% static 'gold_travel/img/logo.png'%}" class="center"/>
+                {% comment %} <br/>
                 <br/>
                 <br/>
-                <br/>
-                <br/>
+                <br/> {% endcomment %}
               
                 {% block content%}
                 {% endblock content%}

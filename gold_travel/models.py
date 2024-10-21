@@ -18,6 +18,14 @@ class LoggingModel(models.Model):
     class Meta:
         abstract = True
 
+class LkpStateDetails(models.Model):
+    state = models.OneToOneField(LkpState, on_delete=models.PROTECT,related_name="state_gold_travel",verbose_name=_("state"))
+    code = models.CharField(_("code"),max_length=4)
+    next_serial_no = models.IntegerField(_("next_serial_no"))
+    class Meta:
+        verbose_name = _("gold travel state detail")
+        verbose_name_plural = _("gold travel state details")
+
 class TblStateRepresentative(models.Model):
     AUTHORITY_SMRC = 2
     AUTHORITY_2MN_2LM3ADIN = 3
@@ -63,11 +71,22 @@ class AppMoveGold(LoggingModel):
         STATE_2LESTIKHBARAT_2L3ASKRIA: _('state_2lestikhbarat_2l3askria'),
     }
 
+    IDENTITY_PASSPORT = 1
+    IDENTITY_PERSONAL = 2
+    IDENTITY_NATIONAL_ID = 3
+
+    IDENTITY_CHOICES = {
+        IDENTITY_PASSPORT: _('identity_passport'),
+        IDENTITY_PERSONAL: _('identity_personal'),
+        IDENTITY_NATIONAL_ID: _('identity_national_id'),
+    }
+
     def attachement_path(self, filename):
         company = self.owner_name
         date = self.created_at.date()
         return "company_{0}/travel/{1}/{2}".format(company,date, filename)    
-
+    
+    code = models.CharField(_("code"),max_length=20, default='')
     date = models.DateField(_("date"))
     destination = models.IntegerField(_("destination"), choices=DESTINATION_CHOICES, default=DESTINATION_SSMO)
     owner_name = models.CharField(_("owner_name"),max_length=100)
@@ -75,6 +94,7 @@ class AppMoveGold(LoggingModel):
     repr_name = models.CharField(_("repr_name"),max_length=100)
     repr_address = models.CharField(_("repr_address"),max_length=150)
     repr_phone = models.CharField(_("repr_phone"),max_length=30)
+    repr_identity_type = models.IntegerField(_("repr_identity_type"), choices=IDENTITY_CHOICES, default=IDENTITY_PASSPORT)
     repr_identity = models.CharField(_("repr_identity"),max_length=50)
     repr_identity_issue_date = models.DateField(_("repr_identity_issue_date"))
     gold_weight_in_gram = models.FloatField(_("gold_weight_in_gram"))
@@ -92,6 +112,7 @@ class AppMoveGold(LoggingModel):
         verbose_name = _("Move Gold")
         verbose_name_plural = _("Move Gold")
         indexes = [
+            models.Index(fields=["code"]),
             models.Index(fields=["owner_name"]),
         ]
 
@@ -104,13 +125,13 @@ class AppMoveGoldDetails(models.Model):
     }
 
     master  = models.ForeignKey(AppMoveGold, on_delete=models.PROTECT)
-    alloy_id = models.CharField(_("alloy_id"),max_length=100)
+    alloy_count = models.IntegerField(_("alloy_count"), default=1)
     alloy_weight_in_gram = models.FloatField(_("alloy_weight_in_gram"))
     alloy_shape = models.IntegerField(_("alloy_shape"), choices=ALLOY_SHAPE_CHOICES)
     alloy_note = models.CharField(_("alloy_note"),max_length=150)
 
-    def __str__(self):
-        return f'{self.alloy_id}'
+    # def __str__(self):
+    #     return f'{self.alloy_id}'
 
     class Meta:
         verbose_name = _("alloy detail")

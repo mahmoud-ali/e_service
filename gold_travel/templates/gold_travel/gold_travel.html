@@ -4,6 +4,7 @@
 {% load auth_extras %}
 
 {% block content %}
+  <div style="text-align:left">{{object.code}}</div>
   <center>
     <h3 style="font-weight: bold !important;text-decoration: underline !important;">
 إستمارة ترحيل ونقل لأغراض الصادر
@@ -36,7 +37,7 @@
         </tr>
         <tr>
             <th width="15%" class="active">إثبات الهوية</th>
-            <td>{{object.repr_identity}}</td>
+            <td>{{object.get_repr_identity_type_display}} {{object.repr_identity}}</td>
             <th width="15%" class="active">الإصدار</th>
             <td>{{object.repr_identity_issue_date|date:"Y/m/d"}}م</td>
         </tr>

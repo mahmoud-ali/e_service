@@ -4,7 +4,7 @@ from django.urls import reverse
 from django.utils.html import format_html
 
 from gold_travel.forms import TblStateRepresentativeForm
-from gold_travel.models import AppPrepareGold, TblStateRepresentative,AppMoveGold, AppMoveGoldDetails
+from gold_travel.models import AppPrepareGold, LkpStateDetails, TblStateRepresentative,AppMoveGold, AppMoveGoldDetails
 
 class LogAdminMixin:
     def has_add_permission(self, request, obj=None):
@@ -34,6 +34,13 @@ class LogAdminMixin:
         else:
             obj.created_by = obj.updated_by = request.user
         super().save_model(request, obj, form, change)                
+
+class LkpStateDetailsAdmin(admin.ModelAdmin):
+    model = LkpStateDetails
+    list_display = ["state","code","next_serial_no"]
+    list_filter = ["state"]
+
+admin.site.register(LkpStateDetails, LkpStateDetailsAdmin)
 
 class TblStateRepresentativeAdmin(admin.ModelAdmin):
     model = TblStateRepresentative
@@ -69,7 +76,7 @@ class AppMoveGoldAdmin(LogAdminMixin,admin.ModelAdmin):
         (
             _("representative data"),
             {
-                'fields': [("repr_name","repr_phone"),"repr_address",("repr_identity","repr_identity_issue_date")]
+                'fields': [("repr_name","repr_phone"),"repr_address",("repr_identity_type","repr_identity","repr_identity_issue_date")]
             },
         ),
         (
@@ -86,13 +93,13 @@ class AppMoveGoldAdmin(LogAdminMixin,admin.ModelAdmin):
         ),
     ]
     list_filter = ["date","state",("source_state",admin.RelatedOnlyFieldListFilter)]
-    search_fields = ["owner_name","owner_address","repr_name","repr_phone","repr_identity"]
+    search_fields = ["code","owner_name","owner_address","repr_name","repr_phone","repr_identity"]
     actions = ['confirm_app']
 
     view_on_site = False
 
     def get_list_display(self,request):
-        list_display = ["date","owner_name","repr_name","gold_weight_in_gram","gold_alloy_count","state","source_state"]
+        list_display = ["code","date","owner_name","repr_name","gold_weight_in_gram","gold_alloy_count","state","source_state"]
         try:
             authority = request.user.state_representative.authority
             if authority == TblStateRepresentative.AUTHORITY_SMRC:
@@ -121,6 +128,12 @@ class AppMoveGoldAdmin(LogAdminMixin,admin.ModelAdmin):
         try:
             state_representative = request.user.state_representative
             obj.source_state = state_representative.state
+            if not obj.code:
+                serial_no = state_representative.state.state_gold_travel.next_serial_no
+                state_code = state_representative.state.state_gold_travel.code
+                obj.code = f"{state_code}/{serial_no:03d}"
+                state_representative.state.state_gold_travel.next_serial_no = serial_no+1
+                state_representative.state.state_gold_travel.save()
         except Exception as e:
             pass
 
