@@ -2579,7 +2579,7 @@ msgstr "الحالة"
 
 #: gold_travel/models.py:112 gold_travel/models.py:113
 msgid "Move Gold"
-msgstr "ترحيل ذهب"
+msgstr "طلب ترحيل ذهب"
 
 #: gold_travel/models.py:123
 msgid "alloy_shape_rectangular"
@@ -2623,7 +2623,7 @@ msgstr "مصدر الطلب"
 
 #: gold_travel/models.py:159 gold_travel/models.py:160
 msgid "prepare gold"
-msgstr "شراء وسبك وتجهيز الذهب"
+msgstr "طلب شراء وسبك وتجهيز الذهب"
 
 #: help_request/apps.py:8 help_request/models.py:22 help_request/models.py:26
 msgid "help request"
