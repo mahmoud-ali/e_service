@@ -45,8 +45,8 @@ admin.site.register(LkpStateDetails, LkpStateDetailsAdmin)
 class TblStateRepresentativeAdmin(admin.ModelAdmin):
     model = TblStateRepresentative
     form = TblStateRepresentativeForm
-    list_display = ["authority","user","state"]        
-    list_filter = ["authority","state"]
+    list_display = ["name","state","authority","user"]        
+    list_filter = ["authority",("state",admin.RelatedOnlyFieldListFilter)]
     view_on_site = False
             
 admin.site.register(TblStateRepresentative, TblStateRepresentativeAdmin)
