@@ -121,7 +121,7 @@
             <tbody>
                 {% for obj in object.appmovegolddetails_set.all%}
                 <tr>
-                    <th>{{obj.alloy_id}}</th>
+                    <td>{{obj.alloy_id}}</td>
                     <td>{{obj.alloy_weight_in_gram|intcomma}}</td>
                     <td>{{obj.get_alloy_shape_display}} {%if obj.alloy_note%} - {{obj.alloy_note}} {% endif%}</td>
                 </tr>
