@@ -18,13 +18,13 @@ class LogAdminMixin:
 
     def has_change_permission(self, request, obj=None):
         if not obj or obj.state==1:
-            return True
+            return super().has_change_permission(request,obj)
         
         return False
 
     def has_delete_permission(self, request, obj=None):
         if not obj or obj.state==1:
-            return True
+            return super().has_delete_permission(request,obj)
         
         return False
 
