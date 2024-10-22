@@ -148,6 +148,17 @@ class AppMoveGoldAdmin(LogAdminMixin,admin.ModelAdmin):
             obj.created_by = obj.updated_by = request.user
         super().save_model(request, obj, form, change)                
 
+    def get_actions(self, request):
+        actions = super().get_actions(request)
+        try:
+            authority = request.user.state_representative.authority
+            if authority!=TblStateRepresentative.AUTHORITY_SMRC:
+                if "confirm_app" in actions:
+                    del actions['confirm_app']
+        except:
+            pass
+
+        return actions
     @admin.action(description=_('Confirm application'))
     def confirm_app(self, request, queryset):
         try:
