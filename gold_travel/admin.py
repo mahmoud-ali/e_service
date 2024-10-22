@@ -79,12 +79,12 @@ class AppMoveGoldAdmin(LogAdminMixin,admin.ModelAdmin):
                 'fields': [("repr_name","repr_phone"),"repr_address",("repr_identity_type","repr_identity","repr_identity_issue_date")]
             },
         ),
-        (
-            _("gold data"),
-            {
-                'fields': [("gold_weight_in_gram","gold_alloy_count"),"gold_description"]
-            },
-        ),
+        # (
+        #     _("gold data"),
+        #     {
+        #         'fields': [("gold_weight_in_gram","gold_alloy_count"),"gold_description"]
+        #     },
+        # ),
         (
             _("attachments"),
             {
@@ -158,6 +158,14 @@ class AppMoveGoldAdmin(LogAdminMixin,admin.ModelAdmin):
                 self.message_user(request,_('application confirmed successfully!'))
         except:
             pass
+
+    @admin.display(description=_('gold_weight_in_gram'))
+    def gold_weight_in_gram(self, obj):
+        return obj.gold_weight_in_gram
+
+    @admin.display(description=_('gold_alloy_count'))
+    def gold_alloy_count(self, obj):
+        return obj.gold_alloy_count
 
     @admin.display(description=_('Show certificate'))
     def show_certificate_link(self, obj):

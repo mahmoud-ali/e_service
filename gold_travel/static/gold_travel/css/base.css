@@ -101,7 +101,7 @@ h4,h5,h6{
 
 .main {
   padding: 20px;
-  padding-top: 60px;
+  padding-top: 0;
 
 }
 @media (min-width: 768px) {
@@ -169,4 +169,8 @@ h4,h5,h6{
 input[type="checkbox"] {
     width: 15px !important;
     top: -10px;
+}
+
+.table-bordered tbody td, .table-bordered tbody th{
+  border-color: #333 !important;
 }

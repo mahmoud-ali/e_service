@@ -63,6 +63,7 @@
 	<div class="container-fluid">
 	  <div class="row">
             <div id="main_content" class="col-12 main">
+                <br/>
                 <image src="{% static 'gold_travel/img/logo.png'%}" class="center"/>
                 {% comment %} <br/>
                 <br/>
@@ -76,8 +77,10 @@
     </div>
 <script>
     $(document).ready(function(){
+        window.onafterprint = window.close;
+        window.onfocus = window.close;
         window.print();
-        window.close();
+        {% comment %} window.close(); {% endcomment %}
     });
 </script>
 </body>

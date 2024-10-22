@@ -97,12 +97,35 @@ class AppMoveGold(LoggingModel):
     repr_identity_type = models.IntegerField(_("repr_identity_type"), choices=IDENTITY_CHOICES, default=IDENTITY_PASSPORT)
     repr_identity = models.CharField(_("repr_identity"),max_length=50)
     repr_identity_issue_date = models.DateField(_("repr_identity_issue_date"))
-    gold_weight_in_gram = models.FloatField(_("gold_weight_in_gram"))
-    gold_alloy_count = models.IntegerField(_("gold_alloy_count"))
-    gold_description = models.CharField(_("gold_description"),max_length=100)
+    # gold_weight_in_gram = models.FloatField(_("gold_weight_in_gram"))
+    # gold_alloy_count = models.IntegerField(_("gold_alloy_count"))
+    # gold_description = models.CharField(_("gold_description"),max_length=100)
     state = models.IntegerField(_("record_state"), choices=STATE_CHOICES, default=STATE_DRAFT)
-    attachement_file = models.FileField(_("attachement_file"),upload_to=attachement_path)
+    attachement_file = models.FileField(_("attachement_file"),upload_to=attachement_path,null=True,blank=True)
     source_state = models.ForeignKey(LkpState, on_delete=models.PROTECT,verbose_name=_("state"))
+
+    @property
+    def gold_weight_in_gram(self):
+        return self.appmovegolddetails_set.aggregate(sum=models.Sum("alloy_weight_in_gram"))['sum'] or 0
+
+    def gold_alloy_count_per_shape(self,shape=None):
+        if(not shape):
+            return self.appmovegolddetails_set.count()
+        else:
+            return self.appmovegolddetails_set.filter(alloy_shape=shape).count()
+    @property        
+    def gold_alloy_count(self):
+        return self.gold_alloy_count_per_shape()
+    
+    @property
+    def gold_description(self):
+        arr = []
+        for shape,shape_desc in AppMoveGoldDetails.ALLOY_SHAPE_CHOICES.items():
+            count = self.gold_alloy_count_per_shape(shape=shape)
+            if count > 0:
+                arr.append(f"عدد ({count}) سبيكة {shape_desc} الشكل")
+
+        return '، '.join(arr)+'.'
 
     def __str__(self):
         return f'{self.owner_name} ({self.gold_weight_in_gram} {_("gram")})'
@@ -125,10 +148,10 @@ class AppMoveGoldDetails(models.Model):
     }
 
     master  = models.ForeignKey(AppMoveGold, on_delete=models.PROTECT)
-    alloy_count = models.IntegerField(_("alloy_count"), default=1)
+    alloy_id = models.CharField(_("alloy_id"),max_length=20, default='')
     alloy_weight_in_gram = models.FloatField(_("alloy_weight_in_gram"))
     alloy_shape = models.IntegerField(_("alloy_shape"), choices=ALLOY_SHAPE_CHOICES)
-    alloy_note = models.CharField(_("alloy_note"),max_length=150)
+    alloy_note = models.CharField(_("alloy_note"),max_length=150,null=True,blank=True)
 
     # def __str__(self):
     #     return f'{self.alloy_id}'

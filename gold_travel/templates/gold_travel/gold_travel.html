@@ -2,7 +2,8 @@
 {% load i18n %}
 {% load bootstrap3 %}
 {% load auth_extras %}
-
+{% load static  %}
+{% load humanize %}
 {% block content %}
   <div style="text-align:left">{{object.code}}</div>
   <center>
@@ -43,7 +44,7 @@
         </tr>
         <tr>
             <th width="15%" class="active">وزن الخام المنقول</th>
-            <td>{{object.gold_weight_in_gram}}</td>
+            <td>{{object.gold_weight_in_gram|intcomma}} جرام</td>
             <th width="15%" class="active">عدد السبائك</th>
             <td>{{object.gold_alloy_count}}</td>
         </tr>
@@ -88,14 +89,48 @@
         </tr>
 
     </table>
+  </div>
 
     <p>تنبيهات هامة:</p>
     <ol>
-        <li>مدة سريان الاستمارة ثلاثة أيام عمل رسمية.</li>
+        <li>مدة سريان الإستمارة ثلاثة أيام عمل رسمية.</li>
         <li>أي تعديل أو كشط يلغي الإستمارة.</li>
-        <li>تسلم إيصال الإيداع الصادر من المواصفات والمقاييس إلى الشركة السودانية للموارد المعدنية المحدودة خلال المدة اعلاه.</li>
-        <li>هذه الإستمارة صادرة لأغراض ترحيل الذهب لأغراض الصادر فقط.</li>
+        <li>يسلم إيصال الإيداع الصادر من المواصفات والمقاييس إلى الشركة السودانية للموارد المعدنية المحدودة خلال المدة اعلاه.</li>
+        <li>هذه الإستمارة صادرة لأغراض ترحيل الذهب ولأغراض الصادر فقط.</li>
         <li>هذه الإستمارة مجانية.</li>
     </ol>
-</div>
+    <div style="page-break-after: always;"></div>
+    <br/>
+    <image src="{% static 'gold_travel/img/logo.png'%}" class="center"/>
+    <br />
+    <h4 style="text-align:center">الإدارة العامة للرقابة والإشراف على شركات الصادر وأسواق الذهب</h4>
+    <h4 style="text-align:center">إدارة أسواق الذهب ولاية {{request.user.state_representative.state}}</h4>
+    <h4 style="text-align:center">مرفق إستمارة رقم ({{object.code}})</h4>
+    <h4 style="text-align:center">وزن السبائك بالتفاصيل</h4>
+    <br />
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <tr>
+                <th class="active">رقم السبيكة</th>
+                <th class="active">الوزن بالجرام</th>
+                <th class="active">ملاحظات</th>
+            </tr>
+            {% for obj in object.appmovegolddetails_set.all%}
+            <tr>
+                <th>{{obj.alloy_id}}</th>
+                <td>{{obj.alloy_weight_in_gram|intcomma}}</td>
+                <td>{{obj.get_alloy_shape_display}} {%if obj.alloy_note%} - {{obj.alloy_note}} {% endif%}</td>
+            </tr>
+            {% endfor %}
+            <tr>
+                <th class="active">المجموع الكلي</th>
+                <th class="active">{{object.gold_weight_in_gram|intcomma}}</th>
+                <th class="active">&nbsp;</th>
+            </tr>
+        </table>
+    </div>
+    <br/>
+    <h4>الإعتماد: ..........................</h4>
+
+  
 {% endblock content %}
