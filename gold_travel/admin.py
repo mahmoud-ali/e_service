@@ -2,6 +2,8 @@ from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
 from django.urls import reverse
 from django.utils.html import format_html
+from django.db import models
+from django.forms.widgets import TextInput
 
 from gold_travel.forms import TblStateRepresentativeForm
 from gold_travel.models import AppPrepareGold, LkpStateDetails, TblStateRepresentative,AppMoveGold, AppMoveGoldDetails
@@ -55,6 +57,9 @@ class AppMoveGoldDetailInline(admin.TabularInline):
     model = AppMoveGoldDetails
     exclude = ["created_at","created_by","updated_at","updated_by"]
     extra = 1    
+    formfield_overrides = {
+        models.FloatField: {"widget": TextInput},
+    }    
 
 class AppMoveGoldAdmin(LogAdminMixin,admin.ModelAdmin):
     model = AppMoveGold
@@ -182,6 +187,9 @@ class AppPrepareGoldAdmin(LogAdminMixin,admin.ModelAdmin):
     list_filter = ["date","state",("source_state",admin.RelatedOnlyFieldListFilter)]
     search_fields = ["owner_name"]
     view_on_site = False
+    formfield_overrides = {
+        models.FloatField: {"widget": TextInput},
+    }    
 
     def get_list_display(self,request):
         list_display = ["date","owner_name","gold_weight_in_gram","state","source_state"]  
