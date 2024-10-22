@@ -126,14 +126,12 @@
                     <td>{{obj.get_alloy_shape_display}} {%if obj.alloy_note%} - {{obj.alloy_note}} {% endif%}</td>
                 </tr>
                 {% endfor %}
-            </tbody>
-            <tfoot>
                 <tr>
                     <th class="active">المجموع الكلي</th>
                     <th class="active">{{object.gold_weight_in_gram|intcomma}}</th>
                     <th class="active">&nbsp;</th>
                 </tr>
-            </tfoot>
+            </tbody>
         </table>
     </div>
     <br/>
