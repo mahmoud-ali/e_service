@@ -156,7 +156,8 @@ class AppMoveGoldAdmin(LogAdminMixin,admin.ModelAdmin):
                 if "confirm_app" in actions:
                     del actions['confirm_app']
         except:
-            pass
+            if "confirm_app" in actions:
+                del actions['confirm_app']
 
         return actions
     @admin.action(description=_('Confirm application'))
