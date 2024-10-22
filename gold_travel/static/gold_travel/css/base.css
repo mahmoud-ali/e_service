@@ -171,6 +171,6 @@ input[type="checkbox"] {
     top: -10px;
 }
 
-.table-bordered tbody td, .table-bordered tbody th{
+.table-bordered, .table-bordered thead td, .table-bordered thead th,.table-bordered tbody td, .table-bordered tbody th{
   border-color: #333 !important;
 }
