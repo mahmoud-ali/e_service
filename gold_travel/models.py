@@ -106,7 +106,8 @@ class AppMoveGold(LoggingModel):
 
     @property
     def gold_weight_in_gram(self):
-        return self.appmovegolddetails_set.aggregate(sum=models.Sum("alloy_weight_in_gram"))['sum'] or 0
+        sum = self.appmovegolddetails_set.aggregate(sum=models.Sum("alloy_weight_in_gram"))['sum'] or 0
+        return f'{sum:.2f}'
 
     def gold_alloy_count_per_shape(self,shape=None):
         if(not shape):

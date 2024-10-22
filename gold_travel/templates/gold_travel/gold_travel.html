@@ -14,6 +14,7 @@
   {%endif%}
     </h3>
   </center>
+  
   <br/>
 
   <div class="table-responsive">
@@ -100,6 +101,7 @@
         <li>هذه الإستمارة مجانية.</li>
     </ol>
     <div style="page-break-after: always;"></div>
+
     <br/>
     <image src="{% static 'gold_travel/img/logo.png'%}" class="center"/>
     <br />
@@ -107,26 +109,31 @@
     <h4 style="text-align:center">إدارة أسواق الذهب ولاية {{request.user.state_representative.state}}</h4>
     <h4 style="text-align:center">مرفق إستمارة رقم ({{object.code}})</h4>
     <h4 style="text-align:center">وزن السبائك بالتفاصيل</h4>
-    <br />
     <div class="table-responsive">
         <table class="table table-bordered">
-            <tr>
-                <th class="active">رقم السبيكة</th>
-                <th class="active">الوزن بالجرام</th>
-                <th class="active">ملاحظات</th>
-            </tr>
-            {% for obj in object.appmovegolddetails_set.all%}
-            <tr>
-                <th>{{obj.alloy_id}}</th>
-                <td>{{obj.alloy_weight_in_gram|intcomma}}</td>
-                <td>{{obj.get_alloy_shape_display}} {%if obj.alloy_note%} - {{obj.alloy_note}} {% endif%}</td>
-            </tr>
-            {% endfor %}
-            <tr>
-                <th class="active">المجموع الكلي</th>
-                <th class="active">{{object.gold_weight_in_gram|intcomma}}</th>
-                <th class="active">&nbsp;</th>
-            </tr>
+            <thead>
+                <tr>
+                    <th class="active">رقم السبيكة</th>
+                    <th class="active">الوزن بالجرام</th>
+                    <th class="active">ملاحظات</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for obj in object.appmovegolddetails_set.all%}
+                <tr>
+                    <th>{{obj.alloy_id}}</th>
+                    <td>{{obj.alloy_weight_in_gram|intcomma}}</td>
+                    <td>{{obj.get_alloy_shape_display}} {%if obj.alloy_note%} - {{obj.alloy_note}} {% endif%}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th class="active">المجموع الكلي</th>
+                    <th class="active">{{object.gold_weight_in_gram|intcomma}}</th>
+                    <th class="active">&nbsp;</th>
+                </tr>
+            </tfoot>
         </table>
     </div>
     <br/>
