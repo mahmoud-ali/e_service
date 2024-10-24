@@ -57,41 +57,49 @@
 </div>
 
   <h4>الإعتماد:</h4>
-
+  {% with has_astikhbarat=request.user.state_representative.state.state_gold_travel.has_2lestikhbarat_2l3askria %}
   <div class="table-responsive">
     <table class="table table-bordered">
         <tr class="active">
             <th>البيان</th>
-            <th width="23%">ممثل الشركة السودانية للموارد المعدنية المحدودة</th>
-            <th width="23%">ممثل أمن إقتصاديات المعادن</th>
-            <th width="23%">ممثل شرطة تأمين التعدين</th>
+            <th {% if has_astikhbarat %} width="23%" {% else %} width="30%" {% endif %}>ممثل الشركة السودانية للموارد المعدنية المحدودة</th>
+            <th {% if has_astikhbarat %} width="23%" {% else %} width="30%" {% endif %}>ممثل أمن إقتصاديات المعادن</th>
+            <th {% if has_astikhbarat %} width="23%" {% else %} width="30%" {% endif %}>ممثل شرطة تأمين التعدين</th>
+            {% if has_astikhbarat %}
             <th width="23%">ممثل هيئة الإستخبارات العسكرية</th>
+            {% endif %}
         </tr>
         <tr>
             <th height="30px" class="active">الإسم</th>
+            <td height="30px">{{request.user.state_representative.name}}</td>
             <td height="30px">&nbsp;</td>
             <td height="30px">&nbsp;</td>
+            {% if has_astikhbarat %}
             <td height="30px">&nbsp;</td>
-            <td height="30px">&nbsp;</td>
+            {% endif %}
         </tr>
         <tr>
             <th height="30px" class="active">التوقيع</th>
             <td height="30px">&nbsp;</td>
             <td height="30px">&nbsp;</td>
             <td height="30px">&nbsp;</td>
+            {% if has_astikhbarat %}
             <td height="30px">&nbsp;</td>
+            {% endif %}
         </tr>
         <tr>
             <th height="60px" class="active">الختم</th>
             <td height="60px">&nbsp;</td>
             <td height="60px">&nbsp;</td>
             <td height="60px">&nbsp;</td>
+            {% if has_astikhbarat %}
             <td height="60px">&nbsp;</td>
+            {% endif %}
         </tr>
 
     </table>
   </div>
-
+    {% endwith %}
     <p>تنبيهات هامة:</p>
     <ol>
         <li>مدة سريان الإستمارة ثلاثة أيام عمل رسمية.</li>
@@ -100,15 +108,26 @@
         <li>هذه الإستمارة صادرة لأغراض ترحيل الذهب ولأغراض الصادر فقط.</li>
         <li>هذه الإستمارة مجانية.</li>
     </ol>
-    <div style="page-break-after: always;"></div>
 
+    <div style="page-break-after: always;"></div>
     <br/>
     <image src="{% static 'gold_travel/img/logo.png'%}" class="center"/>
     <br />
+
     <h4 style="text-align:center">الإدارة العامة للرقابة والإشراف على شركات الصادر وأسواق الذهب</h4>
     <h4 style="text-align:center">إدارة أسواق الذهب ولاية {{request.user.state_representative.state}}</h4>
     <h4 style="text-align:center">مرفق إستمارة رقم ({{object.code}})</h4>
     <h4 style="text-align:center">وزن السبائك بالتفاصيل</h4>
+
+    {% for chunk in alloy_chunks%}
+
+    {% if forloop.counter > 1 %}
+        <div style="page-break-after: always;"></div>
+        <br/>
+        <image src="{% static 'gold_travel/img/logo.png'%}" class="center"/>
+        <br />
+    {%endif%}
+
     <div class="table-responsive">
         <table class="table table-bordered">
             <thead>
@@ -119,21 +138,25 @@
                 </tr>
             </thead>
             <tbody>
-                {% for obj in object.appmovegolddetails_set.all%}
+                {% for obj in chunk%}
                 <tr>
                     <td>{{obj.alloy_id}}</td>
                     <td>{{obj.alloy_weight_in_gram|intcomma}}</td>
                     <td>{{obj.get_alloy_shape_display}} {%if obj.alloy_note%} - {{obj.alloy_note}} {% endif%}</td>
                 </tr>
                 {% endfor %}
+
+                {% if forloop.last %}
                 <tr>
                     <th class="active">المجموع الكلي</th>
                     <th class="active">{{object.gold_weight_in_gram|intcomma}}</th>
                     <th class="active">&nbsp;</th>
                 </tr>
+                {% endif %}
             </tbody>
         </table>
     </div>
+    {% endfor %}
     <h4>الإعتماد: ..........................</h4>
 
   

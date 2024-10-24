@@ -22,6 +22,8 @@ class LkpStateDetails(models.Model):
     state = models.OneToOneField(LkpState, on_delete=models.PROTECT,related_name="state_gold_travel",verbose_name=_("state"))
     code = models.CharField(_("code"),max_length=4)
     next_serial_no = models.IntegerField(_("next_serial_no"))
+    has_2lestikhbarat_2l3askria = models.BooleanField(_("has_2lestikhbarat_2l3askria"))
+    
     class Meta:
         verbose_name = _("gold travel state detail")
         verbose_name_plural = _("gold travel state details")

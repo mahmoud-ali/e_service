@@ -39,8 +39,8 @@ class LogAdminMixin:
 
 class LkpStateDetailsAdmin(admin.ModelAdmin):
     model = LkpStateDetails
-    list_display = ["state","code","next_serial_no"]
-    list_filter = ["state"]
+    list_display = ["state","code","next_serial_no","has_2lestikhbarat_2l3askria"]
+    list_filter = ["state","has_2lestikhbarat_2l3askria"]
 
 admin.site.register(LkpStateDetails, LkpStateDetailsAdmin)
 

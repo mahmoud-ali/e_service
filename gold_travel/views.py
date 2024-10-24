@@ -19,11 +19,18 @@ class UserPermissionMixin(UserPassesTestMixin):
 class GoldTravelCert(LoginRequiredMixin,UserPermissionMixin,TemplateView):
     template_name = 'gold_travel/gold_travel.html'
 
+    def _partition(self,lst, size):
+        for i in range(0, len(lst), size):
+            yield lst[i : i+size]
+
     def get(self,*args,**kwargs):
         id = int(self.request.GET['id'])
         obj = get_object_or_404(AppMoveGold,pk=id)
+
+        alloy_chunks = self._partition(obj.appmovegolddetails_set.all(),20)
         self.extra_context = {
             'object': obj,
+            'alloy_chunks': alloy_chunks,
         }
         return render(self.request, self.template_name, self.extra_context)    
 
