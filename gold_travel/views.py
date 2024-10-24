@@ -27,10 +27,16 @@ class GoldTravelCert(LoginRequiredMixin,UserPermissionMixin,TemplateView):
         id = int(self.request.GET['id'])
         obj = get_object_or_404(AppMoveGold,pk=id)
 
+        state_repr = {}
+        for r in TblStateRepresentative.objects.filter(state=obj.source_state):
+            state_repr[f"{r.authority}"]= r.name
+
         alloy_chunks = self._partition(obj.appmovegolddetails_set.all(),20)
+
         self.extra_context = {
             'object': obj,
             'alloy_chunks': alloy_chunks,
+            'state_repr': state_repr,
         }
         return render(self.request, self.template_name, self.extra_context)    
 

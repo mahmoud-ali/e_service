@@ -71,11 +71,11 @@
         </tr>
         <tr>
             <th height="30px" class="active">الإسم</th>
-            <td height="30px">{{request.user.state_representative.name}}</td>
-            <td height="30px">&nbsp;</td>
-            <td height="30px">&nbsp;</td>
+            <td height="30px">{% if state_repr.2 %} {{state_repr.2}} {% endif %}</td>
+            <td height="30px">{% if state_repr.3 %} {{state_repr.3}} {% endif %}</td>
+            <td height="30px">{% if state_repr.4 %} {{state_repr.4}} {% endif %}</td>
             {% if has_astikhbarat %}
-            <td height="30px">&nbsp;</td>
+            <td height="30px">{% if state_repr.5 %} {{state_repr.5}} {% endif %}</td>
             {% endif %}
         </tr>
         <tr>

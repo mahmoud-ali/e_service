@@ -50,6 +50,10 @@ class TblStateRepresentative(models.Model):
         return f'{self.user} ({self.state.name})'
 
     class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['state', 'authority'], name='unique_state_authority ')
+        ]
+
         verbose_name = _("state representative")
         verbose_name_plural = _("state representatives")
 
