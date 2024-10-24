@@ -579,104 +579,215 @@ class M2moria():
     def __repr__(self) -> str:
         return self.__str__()
 
+class Wi7datMosa3idaMokaf2tFarigMoratab():
+    def __init__(self,payroll_2lsharika,payroll_2ljiha_2l2om,has_diff,damga,sandog):
+        self._payroll_2lsharika = payroll_2lsharika
+        self._payroll_2ljiha_2l2om = payroll_2ljiha_2l2om
+        self._has_diff = has_diff
+        self._damga = damga
+        self._sandog = sandog
+    
+    @property
+    def payroll_2lsharika(self):
+        return self._payroll_2lsharika
+    
+    @property
+    def payroll_2ljiha_2l2om(self):
+        return self._payroll_2ljiha_2l2om
+    
+    @property
+    def payroll_diff(self):
+        return self.payroll_2lsharika - self.payroll_2ljiha_2l2om
+    
+    @property
+    def has_diff(self):
+        return self._has_diff
+    
+    @property
+    def sandog(self):
+        return self._sandog
+        
+    @property
+    def dariba(self):
+        return (self.payroll_diff *0.05)
+    
+    @property
+    def damga(self):
+        return self._damga
 
-def example():
-    # badal = Badalat_3lawat(15022.0281121467,10708.1720490482,gasima=25000,atfal=60000,moahil=20000,ma3adin=52736.6266882452)
-    # khosomat = Khosomat(badal,215617,156159,sandog=20000)
+    @property
+    def safi_alisti7gag(self):
+        if self.has_diff:
+            return (self.payroll_diff -self.dariba -self.sandog -self.damga)
+        
+        return 0
 
-    # print(badal)
-    # print("\n")
-    # print(khosomat)
+    def __iter__(self):
+        props = [
+            ('payroll_2lsharika',self.payroll_2lsharika),
+            ('payroll_2ljiha_2l2om',self.payroll_2ljiha_2l2om),
+            ('payroll_diff',self.payroll_diff),
+            ('dariba',self.dariba),
+            ('sandog',self.sandog),
+            ('damga',self.damga),
+            ('safi_alisti7gag',self.safi_alisti7gag),
+        ]
 
-    year = 2024
-    month = 5
+        for p in props:
+            yield(p[0],p[1])
+    
+    def __str__(self) -> str:
+        return 'Wi7datMosa3idaMokaf2tFarigMoratab => '+', '.join([f'{b[0]}: {round(b[1],2)}' for b in self.__iter__()])
 
-    class Empty:
-        def __str__(self) -> str:
-            end = None
-            if hasattr(self,'end_dt'):
-                end = self.end_dt
-            elif hasattr(self,'end_dt_actual'):
-                end = self.end_dt_actual
+class Wi7datMosa3idaMokaf2():
+    def __init__(self,payroll_2lsharika,has_diff,damga,sandog):
+        self._payroll_2lsharika = payroll_2lsharika
+        self._has_diff = has_diff
+        self._damga = damga
+        self._sandog = sandog
+    
+    @property
+    def payroll_2lsharika(self):
+        return self._payroll_2lsharika
+        
+    @property
+    def sandog(self):
+        return self._sandog
+        
+    @property
+    def dariba(self):
+        return (self.payroll_2lsharika *0.05)
+    
+    @property
+    def damga(self):
+        return self._damga
 
-            return f'start: {self.start_dt}, end: {end}'
-        def __repr__(self) -> str:
-            return self.__str__()
+    @property
+    def safi_alisti7gag(self):
+        return (self.payroll_2lsharika -self.dariba -self.sandog -self.damga)
 
-    obj = Empty()
+    def __iter__(self):
+        props = [
+            ('payroll_2lsharika',self.payroll_2lsharika),
+            ('dariba',self.dariba),
+            ('sandog',self.sandog),
+            ('damga',self.damga),
+            ('safi_alisti7gag',self.safi_alisti7gag),
+        ]
 
-    #mobashara tbd2 o tantahi khlal 2lshahr
-    obj.start_dt = datetime.date(year,month,2)
-    obj.end_dt = datetime.date(year,month,15)
+        for p in props:
+            yield(p[0],p[1])
+    
+    def __str__(self) -> str:
+        return 'Wi7datMosa3idaMokaf2t => '+', '.join([f'{b[0]}: {round(b[1],2)}' for b in self.__iter__()])
 
-    mobashara = Mobashara(year,month,obj)
+class Ta3agodMosimiMoratab():
+    def __init__(self,ajmali,damga):
+        self._ajmali = ajmali
+        self._damga = damga
+    
+    @property
+    def ajmali(self):
+        return self._ajmali
+    
+    @property
+    def asasi(self):
+        return self.ajmali*0.27
+        
+    @property
+    def sakan(self):
+        return self.ajmali*0.14
+        
+    @property
+    def tar7il(self):
+        return self.ajmali*0.11
+        
+    @property
+    def ma3isha(self):
+        return self.ajmali*0.11
+        
+    @property
+    def el3laj(self):
+        return self.ajmali*0.10
+        
+    @property
+    def laban(self):
+        return self.ajmali*0.07
+        
+    @property
+    def tabi3at_3amal(self):
+        return self.ajmali*0.20
+                
+    @property
+    def dariba(self):
+        return (self.ajmali *0.05)
+    
+    @property
+    def damga(self):
+        return self._damga
 
-    #mobashara tbd2 khlal 2lshahr o bdon nehaia
-    obj.start_dt = datetime.date(year,month,2)
-    obj.end_dt = None
+    @property
+    def t2min(self):
+        return (self.ajmali *0.08)
+    
 
-    mobashara = Mobashara(year,month,obj)
-    print("mobashara tbd2 khlal 2lshahr o bdon nehaia",obj.start_dt,obj.end_dt,mobashara.ayam_2lmobashara_2lkoliah)
+    @property
+    def safi_alisti7gag(self):
+        return (self.ajmali -self.dariba -self.damga -self.t2min)
 
-    #mobashara fi awal youm fi 2lshahr o bdon nehaia
-    obj.start_dt = datetime.date(year,month,1)
-    obj.end_dt = None
+    def __iter__(self):
+        props = [
+            ('asasi',self.asasi),
+            ('sakan',self.sakan),
+            ('tar7il',self.tar7il),
+            ('ma3isha',self.ma3isha),
+            ('el3laj',self.el3laj),
+            ('laban',self.laban),
+            ('tabi3at_3amal',self.tabi3at_3amal),
+            ('ajmali',self.ajmali),
+            ('damga',self.damga),
+            ('t2min',self.t2min),
+            ('dariba',self.dariba),
+            ('safi_alisti7gag',self.safi_alisti7gag),
+        ]
 
-    mobashara = Mobashara(year,month,obj)
-    print("mobashara fi awal youm fi 2lshahr o bdon nehaia",obj.start_dt,obj.end_dt,mobashara.ayam_2lmobashara_2lkoliah)
+        for p in props:
+            yield(p[0],p[1])
+    
+    def __str__(self) -> str:
+        return 'Ta3agodMosimiPayroll => '+', '.join([f'{b[0]}: {round(b[1],2)}' for b in self.__iter__()])
 
-    #mobashara gabl 2lshahr o bdon nehaia
-    obj.start_dt = datetime.date(year,month-1,2)
-    obj.end_dt = None
+class Ta3agodMosimiMokaf2():
+    def __init__(self,mokaf2,damga):
+        self._mokaf2 = mokaf2
+        self._damga = damga
+    
+    @property
+    def mokaf2(self):
+        return self._mokaf2
+                    
+    @property
+    def dariba(self):
+        return (self.mokaf2 *0.05)
+    
+    @property
+    def damga(self):
+        return self._damga
 
-    mobashara = Mobashara(year,month,obj)
-    print("mobashara gabl 2lshahr o bdon nehaia",obj.start_dt,obj.end_dt,mobashara.ayam_2lmobashara_2lkoliah)
+    @property
+    def safi_alisti7gag(self):
+        return (self.mokaf2 -self.dariba -self.damga)
 
-    #mobashara entahat gabl awal 2lshahr
-    obj.start_dt = datetime.date(year,month-2,2)
-    obj.end_dt = datetime.date(year,month-1,2)
+    def __iter__(self):
+        props = [
+            ('mokaf2',self.mokaf2),
+            ('damga',self.damga),
+            ('dariba',self.dariba),
+            ('safi_alisti7gag',self.safi_alisti7gag),
+        ]
 
-    mobashara = Mobashara(year,month,obj)
-    print("mobashara entahat gabl awal 2lshahr",obj.start_dt,obj.end_dt,mobashara.ayam_2lmobashara_2lkoliah)
-
-    #mobashara entahat fi awal 2lshahr
-    obj.start_dt = datetime.date(year,month-2,2)
-    obj.end_dt = datetime.date(year,month,1)
-
-    mobashara = Mobashara(year,month,obj)
-    print("mobashara entahat fi awal 2lshahr",obj.start_dt,obj.end_dt,mobashara.ayam_2lmobashara_2lkoliah)
-
-    #mobashara entahat fi n9 2lshahr
-    obj.start_dt = datetime.date(year,month-2,2)
-    obj.end_dt = datetime.date(year,month,15)
-
-    mobashara = Mobashara(year,month,obj)
-    print("mobashara entahat fi n9 2lshahr",obj.start_dt,obj.end_dt,mobashara.ayam_2lmobashara_2lkoliah)
-
-    #mobashara entahat fi akher 2lshahr
-    obj.start_dt = datetime.date(year,month-2,2)
-    obj.end_dt = datetime.date(year,month,31)
-
-    mobashara = Mobashara(year,month,obj)
-    print("mobashara entahat fi akher 2lshahr",obj.start_dt,obj.end_dt,mobashara.ayam_2lmobashara_2lkoliah)
-
-    #ayam 2l2jazaa
-    obj.start_dt = datetime.date(year,month,15)
-    obj.end_dt = datetime.date(year,month,31)
-    obj.employee_rate = 50000.0
-    obj1 = Empty()
-    obj1.start_dt = datetime.date(year,month-1,2)
-    obj1.end_dt_actual = datetime.date(year,month,6)
-    obj2 = Empty()
-    obj2.start_dt = datetime.date(year,month,20)
-    obj2.end_dt_actual = datetime.date(year,month+1,5)
-
-    obj3 = Empty()
-    obj3.start_dt = datetime.date(year,month,13)
-    obj3.end_dt_actual = datetime.date(year,month,14)
-    obj3.mokalaf_rate = 60000.0
-
-    mobashara = Mobashara(year,month,obj,[obj1,obj2],[obj3])
-    print(mobashara)
-
-    return mobashara
+        for p in props:
+            yield(p[0],p[1])
+    
+    def __str__(self) -> str:
+        return 'Ta3agodMosimiMokaf2 => '+', '.join([f'{b[0]}: {round(b[1],2)}' for b in self.__iter__()])

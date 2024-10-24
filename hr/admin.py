@@ -1,15 +1,16 @@
 import codecs
 import csv
-from django.http import HttpResponse
+from django.contrib.admin.options import InlineModelAdmin
+from django.http import HttpRequest, HttpResponse
 
 from django.contrib import admin
 from django.urls import reverse
 from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
 
-from hr.payroll import M2moriaSheet, MobasharaSheet, Payroll
+from hr.payroll import M2moriaSheet, MobasharaSheet, Payroll, Ta3agodMosimiPayroll, Wi7datMosa3idaMokaf2tFarigMoratabPayroll
 
-from .models import Drajat3lawat, EmployeeBankAccount, EmployeeFamily, EmployeeM2moria, EmployeeMoahil, EmployeeJazaat, EmployeeMobashra, EmployeeVacation, Gisim, HikalWazifi, MosamaWazifi,Edara3ama,Edarafar3ia,EmployeeBasic, PayrollDetail, PayrollMaster, EmployeeSalafiat,Settings, Wi7da
+from .models import Drajat3lawat, EmployeeBankAccount, EmployeeFamily, EmployeeM2moria, EmployeeMoahil, EmployeeJazaat, EmployeeMobashra, EmployeeVacation, EmployeeWi7datMosa3da, Gisim, HikalWazifi, MosamaWazifi,Edara3ama,Edarafar3ia,EmployeeBasic, PayrollDetail, PayrollDetailTa3agodMosimi, PayrollDetailWi7datMosa3ida, PayrollMaster, EmployeeSalafiat,Settings, Wi7da
 from mptt.admin import MPTTModelAdmin,TreeRelatedFieldListFilter
 
 admin.site.title = _("Site header")
@@ -83,7 +84,14 @@ class Edara3amaFilter(admin.SimpleListFilter):
     title = _("Edara 3ama")    
     parameter_name = "edara3ama"
     def lookups(self, request, model_admin):
-        qs = HikalWazifi.objects.filter(elmostoa_eltanzimi=HikalWazifi.ELMOSTOA_ELTANZIMI_2DARA_3AMA).order_by('name').distinct("name").values_list("id","name")
+        org_qs = model_admin.get_queryset(request)
+        qs = HikalWazifi.objects.filter(
+            elmostoa_eltanzimi=HikalWazifi.ELMOSTOA_ELTANZIMI_2DARA_3AMA,
+            id__in=org_qs.order_by("hikal_wazifi").distinct("hikal_wazifi").values_list("hikal_wazifi")
+            )\
+            .order_by('name')\
+            .distinct("name")\
+            .values_list("id","name")
         return [(x[0],x[1]) for x in qs]
     
     def queryset(self, request, queryset):
@@ -101,7 +109,15 @@ class Edarafar3iaFilter(admin.SimpleListFilter):
     title = _("Edara far3ia")    
     parameter_name = "edarafar3ia"
     def lookups(self, request, model_admin):
-        qs = HikalWazifi.objects.filter(elmostoa_eltanzimi=HikalWazifi.ELMOSTOA_ELTANZIMI_2DARA_FAR3IA).order_by('name').distinct("name").values_list("id","name")
+        org_qs = model_admin.get_queryset(request)
+        qs = HikalWazifi.objects.filter(
+            elmostoa_eltanzimi=HikalWazifi.ELMOSTOA_ELTANZIMI_2DARA_FAR3IA,
+            id__in=org_qs.order_by("hikal_wazifi").distinct("hikal_wazifi").values_list("hikal_wazifi")
+            )\
+            .order_by('name')\
+            .distinct("name")\
+            .values_list("id","name")
+
         return [(x[0],x[1]) for x in qs]
     
     def queryset(self, request, queryset):
@@ -112,6 +128,33 @@ class Edarafar3iaFilter(admin.SimpleListFilter):
                 return queryset.filter(hikal_wazifi__in=hikal.get_descendants(include_self=True))            
         except:
             pass
+        
+        return queryset
+
+class EmployeeWi7daMosa3daFilter(admin.SimpleListFilter):
+    title = _("tajmi3 no3 2lrtibt")    
+    parameter_name = "tajmi3_no3_2lrtibt"
+    def lookups(self, request, model_admin):
+        return [
+            ('1',_('wi7dat_mosa3da')),
+            ('2',_('ta3agod_kha9')),
+            ('3',_('ta3agod_mosimi')),
+            ('4',_('mashro3')),
+            ('5',_('others')),
+        ]
+    
+    def queryset(self, request, queryset):
+        val = self.value()
+        if val == '1':
+            return queryset.filter(no3_2lertibat=EmployeeBasic.NO3_2LERTIBAT_2L7ag)
+        if val == '2': 
+            return queryset.filter(no3_2lertibat=EmployeeBasic.NO3_2LERTIBAT_TA3AGOD)
+        if val == '3': 
+            return queryset.filter(no3_2lertibat=EmployeeBasic.NO3_2LERTIBAT_TA3AGOD_MOSIMI)
+        if val == '4': 
+            return queryset.filter(no3_2lertibat=EmployeeBasic.NO3_2LERTIBAT_MASHRO3)
+        if val == '5': 
+            return queryset.exclude(no3_2lertibat__in=[EmployeeBasic.NO3_2LERTIBAT_2L7ag, EmployeeBasic.NO3_2LERTIBAT_TA3AGOD, EmployeeBasic.NO3_2LERTIBAT_TA3AGOD_MOSIMI,EmployeeBasic.NO3_2LERTIBAT_MASHRO3])
         
         return queryset
 
@@ -228,12 +271,17 @@ class EmployeeM2moriaInline(admin.TabularInline):
     exclude = ["created_at","created_by","updated_at","updated_by"]
     extra = 1    
 
+class EmployeeWi7datMosa3daInline(admin.TabularInline):
+    model = EmployeeWi7datMosa3da
+    exclude = ["created_at","created_by","updated_at","updated_by"]
+    extra = 1
+
 class EmployeeBasicAdmin(admin.ModelAdmin):
     fields = ["code","name", "draja_wazifia","alawa_sanawia","hikal_wazifi", "edara_3ama_tmp","edara_far3ia_tmp", "mosama_wazifi","sex","tarikh_milad","tarikh_ta3in","tarikh_akhir_targia","phone","no3_2lertibat","sanoat_2lkhibra","moahil","gasima","atfal","aadoa","m3ash","status"]        
     inlines = [EmployeeFamilyInline,EmployeeMoahilInline,EmployeeBankAccountInline,SalafiatInline,JazaatInline,EmployeeMobashraInline,EmployeeVacationInline,EmployeeM2moriaInline]
     list_display = ["code","name", "draja_wazifia","alawa_sanawia", "edara_3ama","edara_far3ia","gisim", "mosama_wazifi","tarikh_ta3in","tarikh_akhir_targia","sex","moahil","gasima","atfal","aadoa","m3ash","status"]    
     list_display_links = ["code","name"]
-    list_filter = ["draja_wazifia","alawa_sanawia",Edara3amaFilter,Edarafar3iaFilter,"mosama_wazifi__category","gasima","atfal",EmployeeTarikhTa3inFilter,EmployeeWifg2lwazaifFilter,EmployeeWifg2lmostawiatFilter,"sex","moahil","aadoa","status"] #
+    list_filter = ["draja_wazifia","alawa_sanawia",Edara3amaFilter,Edarafar3iaFilter,EmployeeWi7daMosa3daFilter,"no3_2lertibat","mosama_wazifi__category","gasima","atfal",EmployeeTarikhTa3inFilter,EmployeeWifg2lwazaifFilter,EmployeeWifg2lmostawiatFilter,"sex","moahil","aadoa","status"] #
     view_on_site = False
     autocomplete_fields = ["mosama_wazifi"] #,"hikal_wazifi"
     search_fields = ["name","code"]
@@ -242,6 +290,12 @@ class EmployeeBasicAdmin(admin.ModelAdmin):
 
     def has_delete_permission(self, request, obj=None):
         return False
+    
+    def get_inlines(self, request, obj):
+        inlines = self.inlines
+        if obj and obj.no3_2lertibat==EmployeeBasic.NO3_2LERTIBAT_2L7ag:
+            return [EmployeeWi7datMosa3daInline] + inlines
+        return inlines
         
     @admin.action(description=_('Export data'))
     def export_as_csv(self, request, queryset):
@@ -437,9 +491,31 @@ class PayrollDetailInline(admin.TabularInline):
     def has_add_permission(self,request, obj):
         return False
     
+class PayrollDetailWi7datMosa3idaInline(admin.TabularInline):
+    model = PayrollDetailWi7datMosa3ida
+    #exclude = ["created_at","created_by","updated_at","updated_by"]
+    fields = ['employee','draja_wazifia','alawa_sanawia','bank','account_no','abtdai','galaa_m3isha','ma3adin','payroll_2ljiha_2l2om','payroll_2lsharika','has_diff','salafiat','jazaat','damga','sandog','sandog_kahraba','salafiat_sandog','salafiat_3la_2lmoratab','salafiat_3la_2lmokaf2','tarikh_milad']
+    extra = 0
+    readonly_fields = fields
+    can_delete = False
+    list_select_related = True
+    def has_add_permission(self,request, obj):
+        return False
+    
+class PayrollDetailTa3agodMosimiInline(admin.TabularInline):
+    model = PayrollDetailTa3agodMosimi
+    #exclude = ["created_at","created_by","updated_at","updated_by"]
+    fields = ['employee','draja_wazifia','alawa_sanawia','bank','account_no','payroll_ajmali','payroll_mokaf2','salafiat','jazaat','damga','sandog','sandog_kahraba','salafiat_sandog','salafiat_3la_2lmoratab','salafiat_3la_2lmokaf2','tarikh_milad']
+    extra = 0
+    readonly_fields = fields
+    can_delete = False
+    list_select_related = True
+    def has_add_permission(self,request, obj):
+        return False
+    
 class PayrollMasterAdmin(admin.ModelAdmin):
     exclude = ["created_at","created_by","updated_at","updated_by","zaka_kafaf","zaka_nisab","confirmed","enable_sandog_kahraba","enable_youm_algoat_almosalaha","daribat_2lmokafa","m3ash_age","khasm_salafiat_elsandog_min_elomoratab"]
-    inlines = [PayrollDetailInline]
+    inlines = [PayrollDetailInline,PayrollDetailWi7datMosa3idaInline,PayrollDetailTa3agodMosimiInline]
 
     # list_display = ["year","month","confirmed","show_badalat_link","show_khosomat_link","show_mokaf2_link","show_mobashara_link"]
     list_filter = ["year","month","confirmed"]
@@ -536,6 +612,12 @@ class PayrollMasterAdmin(admin.ModelAdmin):
 
         m2moria = M2moriaSheet(obj.year,obj.month)
         m2moria.calculate()
+
+        wi7dat_mosa3da = Wi7datMosa3idaMokaf2tFarigMoratabPayroll(obj.year,obj.month)
+        wi7dat_mosa3da.calculate()
+
+        ta3agod_mosimi = Ta3agodMosimiPayroll(obj.year,obj.month)
+        ta3agod_mosimi.calculate()
 
     def has_change_permission(self, request, obj=None):
         return False

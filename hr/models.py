@@ -133,6 +133,10 @@ class Settings(LoggingModel):
 
     SETTINGS_KHASM_ELSANDOG_MIN_ELOMORATAB = 'khasm_elsandog_min_elomoratab'
 
+    SETTINGS_TA3AGODMOSIMI_MOZAF = 'ta3agod_mosimi_mozaf'
+    SETTINGS_TA3AGODMOSIMI_3AMIL = 'ta3agod_mosimi_3amil'
+    SETTINGS_TA3AGODMOSIMI_MOKAF2 = 'ta3agod_mosimi_mokaf2'
+
     SETTINGS_CHOICES = {
         SETTINGS_ZAKA_KAFAF: _('SETTINGS_ZAKAT_KAFAF'),
         SETTINGS_ZAKA_NISAB: _('SETTINGS_ZAKAT_NISAB'),
@@ -149,6 +153,9 @@ class Settings(LoggingModel):
         SETTINGS_KHARJ_ELSHARIKA: _('SETTINGS_KHARJ_ELSHARIKA'),
         SETTINGS_OMER_2LMA3ASH: _('SETTINGS_OMER_2LMA3ASH'),
         SETTINGS_KHASM_ELSANDOG_MIN_ELOMORATAB: _('SETTINGS_KHASM_ELSANDOG_MIN_ELOMORATAB'),
+        SETTINGS_TA3AGODMOSIMI_MOZAF: _('SETTINGS_TA3AGODMOSIMI_MOZAF'),
+        SETTINGS_TA3AGODMOSIMI_3AMIL: _('SETTINGS_TA3AGODMOSIMI_3AMIL'),
+        SETTINGS_TA3AGODMOSIMI_MOKAF2: _('SETTINGS_TA3AGODMOSIMI_MOKAF2'),
     }
 
     for moahil in MOAHIL_CHOICES:
@@ -396,16 +403,18 @@ class EmployeeBasic(LoggingModel):
     NO3_2LERTIBAT_2L7ag = '2l7ag'
     NO3_2LERTIBAT_2NTEDAB = '2ntedab'
     NO3_2LERTIBAT_TAKLEEF = 'takleef'
-    NO3_2LERTIBAT_TA3AGOD = 'ta3agod'
+    NO3_2LERTIBAT_TA3AGOD = 'ta3agod_mosimi'
+    NO3_2LERTIBAT_TA3AGOD_MOSIMI = 'ta3agod'
     NO3_2LERTIBAT_MASHRO3 = 'mashro3'
 
     NO3_2LERTIBAT_CHOICES = {
         NO3_2LERTIBAT_TA3EEN: _("NO3_2LERTIBAT_TA3EEN"),
         NO3_2LERTIBAT_NAGL: _("NO3_2LERTIBAT_NAGL"),
-        NO3_2LERTIBAT_2L7ag: _("NO3_2LERTIBAT_2L7ag"),
         NO3_2LERTIBAT_2NTEDAB: _("NO3_2LERTIBAT_2NTEDAB"),
         NO3_2LERTIBAT_TAKLEEF: _("NO3_2LERTIBAT_TAKLEEF"),
+        NO3_2LERTIBAT_2L7ag: _("NO3_2LERTIBAT_2L7ag"), #wi7dat mosa3da
         NO3_2LERTIBAT_TA3AGOD: _("NO3_2LERTIBAT_TA3AGOD"),
+        NO3_2LERTIBAT_TA3AGOD_MOSIMI: _("NO3_2LERTIBAT_TA3AGOD_MOSIMI"),
         NO3_2LERTIBAT_MASHRO3: _("NO3_2LERTIBAT_MASHRO3"),
     }
 
@@ -455,7 +464,7 @@ class EmployeeBasic(LoggingModel):
     tarikh_akhir_targia = models.DateField(_("tarikh_akhir_targia"),blank=True,null=True)
     sex = models.CharField(_("sex"),max_length=7, choices=SEX_CHOICES)
     phone = models.CharField(_("phone"),max_length=30,blank=True,null=True)
-    no3_2lertibat = models.CharField(_("no3_2lertibat"),max_length=10, choices=NO3_2LERTIBAT_CHOICES)
+    no3_2lertibat = models.CharField(_("no3_2lertibat"),max_length=15, choices=NO3_2LERTIBAT_CHOICES)
     sanoat_2lkhibra = models.FloatField(_("sanoat_2lkhibra"),default=0)
     gasima = models.BooleanField(_("gasima"),default=False)
     atfal = models.IntegerField(_("3dad_atfal"),default=0)
@@ -544,6 +553,18 @@ class EmployeeBasic(LoggingModel):
                     {"alawa_sanawia":_("akhtar 3lawat gair t3akod")}
                 )
 
+class EmployeeWi7datMosa3da(LoggingModel):
+    employee = models.OneToOneField(EmployeeBasic, on_delete=models.PROTECT,verbose_name=_("employee_name"),related_name="wi7dat_mosa3da")
+    has_diff = models.BooleanField(_("has_diff"),default=False)
+    payroll_2ljiha_2l2om = models.FloatField(_("payroll_2ljiha_2l2om"))
+    
+    class Meta:
+        verbose_name = _("2lwi7dat 2lmosa3da")
+        verbose_name_plural = _("2lwi7dat 2lmosa3da")
+
+    def __str__(self) -> str:
+        return f'{self.employee.name}'
+    
 class EmployeeBankAccount(LoggingModel):
     BANK_KHARTOUM = 'bok'
     BANK_OMDURMAN = 'onb'
@@ -871,18 +892,9 @@ class PayrollMaster(LoggingModel):
     def __str__(self) -> str:
         return f'{_("Payroll")} {self.get_month_display()} {self.year}'
 
-class PayrollDetail(models.Model):
+class PayrollDetailAbstract(models.Model):
     payroll_master = models.ForeignKey(PayrollMaster, on_delete=models.CASCADE)
     employee = models.ForeignKey(EmployeeBasic, on_delete=models.PROTECT,verbose_name=_("employee_name"))
-    abtdai = models.FloatField(_("abtdai"),default=0)
-    galaa_m3isha = models.FloatField(_("galaa_m3isha"),default=0)
-    shakhsia = models.FloatField(_("shakhsia"),default=0)
-    aadoa = models.FloatField(_("aadoa"),default=0)
-    gasima = models.FloatField(_("gasima"),default=0)
-    atfal = models.FloatField(_("atfal"),default=0)
-    moahil = models.FloatField(_("moahil"),default=0)
-    ma3adin = models.FloatField(_("ma3adin"),default=0)
-    m3ash = models.FloatField(_("m3ash"),default=0)
     salafiat = models.FloatField(_("salafiat"),default=0)
     jazaat = models.FloatField(_("jazaat"),default=0)
     damga = models.FloatField(_("damga"),default=0)
@@ -897,6 +909,31 @@ class PayrollDetail(models.Model):
     bank = models.CharField(_("bank"), choices=EmployeeBankAccount.BANK_CHOICES,max_length=10,blank=True,null=True)
     account_no = models.CharField(_("account_no"),max_length=20,blank=True,null=True)
 
+    def __str__(self) -> str:
+        return f'{self.employee.name} ({self.employee.edara_3ama})'
+
+    class Meta:
+        abstract = True
+
+class PayrollDetailHikalRatibiAbstract(PayrollDetailAbstract):
+    abtdai = models.FloatField(_("abtdai"),default=0)
+    galaa_m3isha = models.FloatField(_("galaa_m3isha"),default=0)
+    shakhsia = models.FloatField(_("shakhsia"),default=0)
+    ma3adin = models.FloatField(_("ma3adin"),default=0)
+
+    def __str__(self) -> str:
+        return f'{self.employee.name} ({self.employee.edara_3ama})'
+
+    class Meta:
+        abstract = True
+
+class PayrollDetail(PayrollDetailHikalRatibiAbstract):
+    aadoa = models.FloatField(_("aadoa"),default=0)
+    gasima = models.FloatField(_("gasima"),default=0)
+    atfal = models.FloatField(_("atfal"),default=0)
+    moahil = models.FloatField(_("moahil"),default=0)
+    m3ash = models.FloatField(_("m3ash"),default=0)
+
     class Meta:
         constraints = [
             models.UniqueConstraint(fields=['payroll_master','employee'],name="unique_employee_payroll")
@@ -906,5 +943,29 @@ class PayrollDetail(models.Model):
         verbose_name = _("Payroll detail")
         verbose_name_plural = _("Payroll details")
 
-    def __str__(self) -> str:
-        return f'{self.employee.name} ({self.employee.edara_3ama})'
+class PayrollDetailWi7datMosa3ida(PayrollDetailHikalRatibiAbstract):
+    payroll_2ljiha_2l2om = models.FloatField(_("payroll_2ljiha_2l2om"),default=0)
+    payroll_2lsharika = models.FloatField(_("payroll_2lsharika"),default=0)
+    has_diff = models.BooleanField(_("has_diff"),default=False)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['payroll_master','employee'],name="unique_employee_payroll_wi7dat_mosa3da")
+        ]
+        ordering = ["employee__code"]
+
+        verbose_name = _("Payroll detail (wi7dat mosa3da)")
+        verbose_name_plural = _("Payroll details (wi7dat mosa3da)")
+
+class PayrollDetailTa3agodMosimi(PayrollDetailAbstract):
+    payroll_ajmali = models.FloatField(_("payroll_ajmali"),default=0)
+    payroll_mokaf2 = models.FloatField(_("payroll_mokaf2"),default=0)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['payroll_master','employee'],name="unique_employee_payroll_ta3agod_mosimi")
+        ]
+        ordering = ["employee__code"]
+
+        verbose_name = _("Payroll detail (ta3agod mosimi)")
+        verbose_name_plural = _("Payroll details (ta3agod mosimi)")
