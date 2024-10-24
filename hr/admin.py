@@ -306,7 +306,7 @@ class EmployeeBasicAdmin(admin.ModelAdmin):
         header = [
                     _("code"),_("name"),_("draja_wazifia"),_("alawa_sanawia"),_( "edara_3ama"),\
                     _("edara_far3ia"),_("gisim"),_("wi7da"),_("mosama_wazifi"),_("tarikh_milad"),_("tarikh_ta3in"),_("tarikh_akhir_targia"),_("sex"),_("gasima"),_("atfal"),\
-                    _("moahil"),_("m3ash"),_("aadoa"),_("no3_2lertibat"),_("phone"),_("sanoat_2lkhibra"),_("status")
+                    _("moahil"),_("m3ash"),_("aadoa"),_("no3_2lertibat"),_("phone"),_("sanoat_2lkhibra"),_("bank"),_("account_no"),_("status")
         ]
 
         # BOM
@@ -324,11 +324,13 @@ class EmployeeBasicAdmin(admin.ModelAdmin):
             if emp.aadoa:
                 aadoa = _('yes')
 
+            account = emp.employeebankaccount_set.filter(active=True).first()
+
             row = [
                     emp.code,emp.name,emp.get_draja_wazifia_display(),emp.get_alawa_sanawia_display(),\
                     emp.edara_3ama,emp.edara_far3ia,emp.gisim,emp.wi7da,emp.mosama_wazifi.name,emp.tarikh_milad,emp.tarikh_ta3in,emp.tarikh_akhir_targia,\
                     emp.get_sex_display(),gasima,emp.atfal,emp.get_moahil_display(),emp.m3ash,aadoa,emp.get_no3_2lertibat_display(),\
-                    emp.phone,emp.sanoat_2lkhibra,emp.get_status_display()
+                    emp.phone,emp.sanoat_2lkhibra,account.get_bank_display(),account.account_no,emp.get_status_display()
             ]
             writer.writerow(row)
 
