@@ -8,9 +8,9 @@ from django.urls import reverse
 from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
 
-from hr.payroll import M2moriaSheet, MobasharaSheet, Payroll, Ta3agodMosimiPayroll, Wi7datMosa3idaMokaf2tFarigMoratabPayroll
+from hr.payroll import M2moriaSheet, MajlisEl2daraMokaf2Payroll, MobasharaSheet, Payroll, Ta3agodMosimiPayroll, Wi7datMosa3idaMokaf2tFarigMoratabPayroll
 
-from .models import Drajat3lawat, EmployeeBankAccount, EmployeeFamily, EmployeeM2moria, EmployeeMoahil, EmployeeJazaat, EmployeeMobashra, EmployeeVacation, EmployeeWi7datMosa3da, Gisim, HikalWazifi, MosamaWazifi,Edara3ama,Edarafar3ia,EmployeeBasic, PayrollDetail, PayrollDetailTa3agodMosimi, PayrollDetailWi7datMosa3ida, PayrollMaster, EmployeeSalafiat,Settings, Wi7da
+from .models import Drajat3lawat, EmployeeBankAccount, EmployeeFamily, EmployeeM2moria, EmployeeMajlisEl2dara, EmployeeMoahil, EmployeeJazaat, EmployeeMobashra, EmployeeVacation, EmployeeWi7datMosa3da, Gisim, HikalWazifi, MosamaWazifi,Edara3ama,Edarafar3ia,EmployeeBasic, PayrollDetail, PayrollDetailMajlisEl2dara, PayrollDetailTa3agodMosimi, PayrollDetailWi7datMosa3ida, PayrollMaster, EmployeeSalafiat,Settings, Wi7da
 from mptt.admin import MPTTModelAdmin,TreeRelatedFieldListFilter
 
 admin.site.title = _("Site header")
@@ -140,7 +140,8 @@ class EmployeeWi7daMosa3daFilter(admin.SimpleListFilter):
             ('2',_('ta3agod_kha9')),
             ('3',_('ta3agod_mosimi')),
             ('4',_('mashro3')),
-            ('5',_('others')),
+            ('5',_('majlis el2dara')),
+            ('6',_('others')),
         ]
     
     def queryset(self, request, queryset):
@@ -154,7 +155,9 @@ class EmployeeWi7daMosa3daFilter(admin.SimpleListFilter):
         if val == '4': 
             return queryset.filter(no3_2lertibat=EmployeeBasic.NO3_2LERTIBAT_MASHRO3)
         if val == '5': 
-            return queryset.exclude(no3_2lertibat__in=[EmployeeBasic.NO3_2LERTIBAT_2L7ag, EmployeeBasic.NO3_2LERTIBAT_TA3AGOD, EmployeeBasic.NO3_2LERTIBAT_TA3AGOD_MOSIMI,EmployeeBasic.NO3_2LERTIBAT_MASHRO3])
+            return queryset.filter(no3_2lertibat=EmployeeBasic.NO3_2LERTIBAT_MAJLIS_EL2DARA)
+        if val == '6': 
+            return queryset.exclude(no3_2lertibat__in=[EmployeeBasic.NO3_2LERTIBAT_2L7ag, EmployeeBasic.NO3_2LERTIBAT_TA3AGOD, EmployeeBasic.NO3_2LERTIBAT_TA3AGOD_MOSIMI,EmployeeBasic.NO3_2LERTIBAT_MASHRO3,EmployeeBasic.NO3_2LERTIBAT_MAJLIS_EL2DARA])
         
         return queryset
 
@@ -276,6 +279,11 @@ class EmployeeWi7datMosa3daInline(admin.TabularInline):
     exclude = ["created_at","created_by","updated_at","updated_by"]
     extra = 1
 
+class EmployeeMajlisEl2daraInline(admin.TabularInline):
+    model = EmployeeMajlisEl2dara
+    exclude = ["created_at","created_by","updated_at","updated_by"]
+    extra = 1
+
 class EmployeeBasicAdmin(admin.ModelAdmin):
     fields = ["code","name", "draja_wazifia","alawa_sanawia","hikal_wazifi", "edara_3ama_tmp","edara_far3ia_tmp", "mosama_wazifi","sex","tarikh_milad","tarikh_ta3in","tarikh_akhir_targia","phone","no3_2lertibat","sanoat_2lkhibra","moahil","gasima","atfal","aadoa","m3ash","status"]        
     inlines = [EmployeeFamilyInline,EmployeeMoahilInline,EmployeeBankAccountInline,SalafiatInline,JazaatInline,EmployeeMobashraInline,EmployeeVacationInline,EmployeeM2moriaInline]
@@ -295,6 +303,9 @@ class EmployeeBasicAdmin(admin.ModelAdmin):
         inlines = self.inlines
         if obj and obj.no3_2lertibat==EmployeeBasic.NO3_2LERTIBAT_2L7ag:
             return [EmployeeWi7datMosa3daInline] + inlines
+        if obj and obj.no3_2lertibat==EmployeeBasic.NO3_2LERTIBAT_MAJLIS_EL2DARA:
+            return [EmployeeMajlisEl2daraInline] + inlines
+
         return inlines
         
     @admin.action(description=_('Export data'))
@@ -514,10 +525,21 @@ class PayrollDetailTa3agodMosimiInline(admin.TabularInline):
     list_select_related = True
     def has_add_permission(self,request, obj):
         return False
-    
+
+class PayrollDetailMajlisEl2daraInline(admin.TabularInline):
+    model = PayrollDetailMajlisEl2dara
+    #exclude = ["created_at","created_by","updated_at","updated_by"]
+    fields = ['employee','draja_wazifia','alawa_sanawia','bank','account_no','payroll_mokaf2','payroll_asasi','salafiat','jazaat','damga','sandog','sandog_kahraba','salafiat_sandog','salafiat_3la_2lmoratab','salafiat_3la_2lmokaf2','tarikh_milad']
+    extra = 0
+    readonly_fields = fields
+    can_delete = False
+    list_select_related = True
+    def has_add_permission(self,request, obj):
+        return False
+
 class PayrollMasterAdmin(admin.ModelAdmin):
     exclude = ["created_at","created_by","updated_at","updated_by","zaka_kafaf","zaka_nisab","confirmed","enable_sandog_kahraba","enable_youm_algoat_almosalaha","daribat_2lmokafa","m3ash_age","khasm_salafiat_elsandog_min_elomoratab"]
-    inlines = [PayrollDetailInline,PayrollDetailWi7datMosa3idaInline,PayrollDetailTa3agodMosimiInline]
+    inlines = [PayrollDetailInline,PayrollDetailWi7datMosa3idaInline,PayrollDetailTa3agodMosimiInline,PayrollDetailMajlisEl2daraInline]
 
     # list_display = ["year","month","confirmed","show_badalat_link","show_khosomat_link","show_mokaf2_link","show_mobashara_link"]
     list_filter = ["year","month","confirmed"]
@@ -529,7 +551,7 @@ class PayrollMasterAdmin(admin.ModelAdmin):
     # readonly_fields = ["year","month","confirmed"]
 
     def get_list_display(self,request):
-        links = ["year","month","confirmed","show_badalat_link","cmp_badalat_prev_month_link","show_khosomat_link","cmp_khosomat_prev_month_link","show_mokaf2_link","show_wi7dat_mosa3ida_farig_moratab_link","show_wi7dat_mosa3ida_mokaf2_link","show_ta3agod_mosimi_moratab_link","show_ta3agod_mosimi_mokaf2_link"]
+        links = ["year","month","confirmed","show_badalat_link","cmp_badalat_prev_month_link","show_khosomat_link","cmp_khosomat_prev_month_link","show_mokaf2_link","show_wi7dat_mosa3ida_farig_moratab_link","show_wi7dat_mosa3ida_mokaf2_link","show_ta3agod_mosimi_moratab_link","show_ta3agod_mosimi_mokaf2_link","show_majlis_el2dara_link"]
         if request.user.groups.filter(name="hr_manager").exists():
             return links + ["show_mobashara_link","show_m2moria_link"]
         else:
@@ -643,6 +665,14 @@ class PayrollMasterAdmin(admin.ModelAdmin):
                                +'<a target="_blank" href="{url}?year={year}&month={month}&format=csv">CSV</a>',
                            url=url,year=obj.year,month=obj.month)
 
+    @admin.display(description=_('Show majlis el2dara sheet'))
+    def show_majlis_el2dara_link(self, obj):
+        url = reverse('hr:payroll_majlis_el2dara_mokaf2')
+        return format_html('<a target="_blank" class="viewlink" href="{url}?year={year}&month={month}">'+_('Show majlis el2dara sheet')\
+                               +'</a> / '\
+                               +'<a target="_blank" href="{url}?year={year}&month={month}&format=csv&bank_sheet=1">'+_('bank sheet')+'</a> / '\
+                               +'<a target="_blank" href="{url}?year={year}&month={month}&format=csv">CSV</a>',
+                           url=url,year=obj.year,month=obj.month)
 
     def save_model(self, request, obj, form, change):
         payroll = Payroll(obj.year,obj.month)
@@ -659,6 +689,9 @@ class PayrollMasterAdmin(admin.ModelAdmin):
 
         ta3agod_mosimi = Ta3agodMosimiPayroll(obj.year,obj.month)
         ta3agod_mosimi.calculate()
+
+        majlis_el2dara = MajlisEl2daraMokaf2Payroll(obj.year,obj.month)
+        majlis_el2dara.calculate()
 
     def has_change_permission(self, request, obj=None):
         return False

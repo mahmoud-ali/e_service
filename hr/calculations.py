@@ -784,3 +784,43 @@ class Ta3agodMosimiMokaf2():
     
     def __str__(self) -> str:
         return 'Ta3agodMosimiMokaf2 => '+', '.join([f'{b[0]}: {round(b[1],2)}' for b in self.__iter__()])
+
+class MajlisEl2daraMokaf2():
+    def __init__(self,mokaf2,damga):
+        self._mokaf2 = mokaf2
+        self._damga = damga
+    
+    @property
+    def mokaf2(self):
+        return self._mokaf2
+                    
+    @property
+    def dariba(self):
+        return (self.mokaf2 *0.15)
+    
+    @property
+    def damga(self):
+        return self._damga
+
+    @property
+    def ajmali_el2stigta3(self):
+        return (self.dariba +self.damga)
+    
+    @property
+    def safi_alisti7gag(self):
+        return (self.mokaf2 -self.ajmali_el2stigta3)
+
+    def __iter__(self):
+        props = [
+            ('mokaf2',self.mokaf2),
+            ('dariba',self.dariba),
+            ('damga',self.damga),
+            ('ajmali_el2stigta3',self.ajmali_el2stigta3),
+            ('safi_alisti7gag',self.safi_alisti7gag),
+        ]
+
+        for p in props:
+            yield(p[0],p[1])
+    
+    def __str__(self) -> str:
+        return 'MajlisEl2daraMokaf2 => '+', '.join([f'{b[0]}: {round(b[1],2)}' for b in self.__iter__()])

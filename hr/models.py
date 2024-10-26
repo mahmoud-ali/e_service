@@ -137,6 +137,9 @@ class Settings(LoggingModel):
     SETTINGS_TA3AGODMOSIMI_3AMIL = 'ta3agod_mosimi_3amil'
     SETTINGS_TA3AGODMOSIMI_MOKAF2 = 'ta3agod_mosimi_mokaf2'
 
+    SETTINGS_MAJLIS_EL2DARA_R2IS_2LMAJLIS = 'majlis_el2dara_r2is'
+    SETTINGS_MAJLIS_EL2DARA_3ODO = 'majlis_el2dara_3odo'
+
     SETTINGS_CHOICES = {
         SETTINGS_ZAKA_KAFAF: _('SETTINGS_ZAKAT_KAFAF'),
         SETTINGS_ZAKA_NISAB: _('SETTINGS_ZAKAT_NISAB'),
@@ -156,6 +159,9 @@ class Settings(LoggingModel):
         SETTINGS_TA3AGODMOSIMI_MOZAF: _('SETTINGS_TA3AGODMOSIMI_MOZAF'),
         SETTINGS_TA3AGODMOSIMI_3AMIL: _('SETTINGS_TA3AGODMOSIMI_3AMIL'),
         SETTINGS_TA3AGODMOSIMI_MOKAF2: _('SETTINGS_TA3AGODMOSIMI_MOKAF2'),
+
+        SETTINGS_MAJLIS_EL2DARA_R2IS_2LMAJLIS: _('SETTINGS_MAJLIS_EL2DARA_R2IS_2LMAJLIS'),
+        SETTINGS_MAJLIS_EL2DARA_3ODO: _('SETTINGS_MAJLIS_EL2DARA_3ODO'),
     }
 
     for moahil in MOAHIL_CHOICES:
@@ -406,6 +412,7 @@ class EmployeeBasic(LoggingModel):
     NO3_2LERTIBAT_TA3AGOD = 'ta3agod_mosimi'
     NO3_2LERTIBAT_TA3AGOD_MOSIMI = 'ta3agod'
     NO3_2LERTIBAT_MASHRO3 = 'mashro3'
+    NO3_2LERTIBAT_MAJLIS_EL2DARA = 'majlis_el2dara'
 
     NO3_2LERTIBAT_CHOICES = {
         NO3_2LERTIBAT_TA3EEN: _("NO3_2LERTIBAT_TA3EEN"),
@@ -416,6 +423,7 @@ class EmployeeBasic(LoggingModel):
         NO3_2LERTIBAT_TA3AGOD: _("NO3_2LERTIBAT_TA3AGOD"),
         NO3_2LERTIBAT_TA3AGOD_MOSIMI: _("NO3_2LERTIBAT_TA3AGOD_MOSIMI"),
         NO3_2LERTIBAT_MASHRO3: _("NO3_2LERTIBAT_MASHRO3"),
+        NO3_2LERTIBAT_MAJLIS_EL2DARA: _("NO3_2LERTIBAT_MAJLIS_EL2DARA"),
     }
 
     STATUS_ACTIVE = 1
@@ -565,6 +573,27 @@ class EmployeeWi7datMosa3da(LoggingModel):
     def __str__(self) -> str:
         return f'{self.employee.name}'
     
+class EmployeeMajlisEl2dara(LoggingModel):
+    POSITION_R2IS_2LMAJLIS = 1
+    POSITION_MODIR_3AM = 2
+    POSITION_3ODO = 3
+
+    POSITION_CHOICES = {
+        POSITION_R2IS_2LMAJLIS: _('POSITION_R2IS_2LMAJLIS'),
+        POSITION_MODIR_3AM: _('POSITION_MODIR_3AM'),
+        POSITION_3ODO: _('POSITION_3ODO'),
+    }
+
+    employee = models.OneToOneField(EmployeeBasic, on_delete=models.PROTECT,verbose_name=_("employee_name"),related_name="majlis_el2dara")
+    position = models.IntegerField(_("position"), choices=POSITION_CHOICES,default=POSITION_3ODO)
+    
+    class Meta:
+        verbose_name = _("majlis el2dara")
+        verbose_name_plural = _("majlis el2dara")
+
+    def __str__(self) -> str:
+        return f'{self.employee.name}'
+
 class EmployeeBankAccount(LoggingModel):
     BANK_KHARTOUM = 'bok'
     BANK_OMDURMAN = 'onb'
@@ -969,3 +998,16 @@ class PayrollDetailTa3agodMosimi(PayrollDetailAbstract):
 
         verbose_name = _("Payroll detail (ta3agod mosimi)")
         verbose_name_plural = _("Payroll details (ta3agod mosimi)")
+
+class PayrollDetailMajlisEl2dara(PayrollDetailAbstract):
+    payroll_mokaf2 = models.FloatField(_("payroll_mokaf2"),default=0)
+    payroll_asasi = models.FloatField(_("payroll_asasi"),default=0)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['payroll_master','employee'],name="unique_employee_payroll_majlis_el2dara")
+        ]
+        ordering = ["employee__code"]
+
+        verbose_name = _("Payroll detail (majlis el2dara)")
+        verbose_name_plural = _("Payroll details (majlis el2dara)")
