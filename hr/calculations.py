@@ -786,14 +786,37 @@ class Ta3agodMosimiMokaf2():
         return 'Ta3agodMosimiMokaf2 => '+', '.join([f'{b[0]}: {round(b[1],2)}' for b in self.__iter__()])
 
 class MajlisEl2daraMokaf2():
-    def __init__(self,mokaf2,damga):
+    def __init__(self,mokaf2,damga,asasi,gasima,atfal,moahil,sandog):
         self._mokaf2 = mokaf2
         self._damga = damga
+        self._asasi = asasi
+
+        self._gasima = gasima
+        self._atfal = atfal
+        self._moahil = moahil
+
+        self._sandog = sandog
     
+    @property
+    def asasi(self):
+        return self._asasi
+                    
     @property
     def mokaf2(self):
         return self._mokaf2
                     
+    @property
+    def ajtima3ia_gasima(self):
+        return self._gasima
+    
+    @property
+    def ajtima3ia_atfal(self):
+        return self._atfal
+    
+    @property
+    def moahil(self):
+        return self._moahil
+
     @property
     def dariba(self):
         return (self.mokaf2 *0.15)
@@ -801,6 +824,10 @@ class MajlisEl2daraMokaf2():
     @property
     def damga(self):
         return self._damga
+
+    @property
+    def sandog(self):
+        return self._sandog
 
     @property
     def ajmali_el2stigta3(self):

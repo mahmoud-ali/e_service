@@ -140,6 +140,8 @@ class Settings(LoggingModel):
     SETTINGS_MAJLIS_EL2DARA_R2IS_2LMAJLIS = 'majlis_el2dara_r2is'
     SETTINGS_MAJLIS_EL2DARA_3ODO = 'majlis_el2dara_3odo'
 
+    SETTINGS_MODIR_3AM_ASAI = 'modir_3am_asai'
+
     SETTINGS_CHOICES = {
         SETTINGS_ZAKA_KAFAF: _('SETTINGS_ZAKAT_KAFAF'),
         SETTINGS_ZAKA_NISAB: _('SETTINGS_ZAKAT_NISAB'),
@@ -162,6 +164,8 @@ class Settings(LoggingModel):
 
         SETTINGS_MAJLIS_EL2DARA_R2IS_2LMAJLIS: _('SETTINGS_MAJLIS_EL2DARA_R2IS_2LMAJLIS'),
         SETTINGS_MAJLIS_EL2DARA_3ODO: _('SETTINGS_MAJLIS_EL2DARA_3ODO'),
+
+        SETTINGS_MODIR_3AM_ASAI: _('SETTINGS_MODIR_3AM_ASAI'),
     }
 
     for moahil in MOAHIL_CHOICES:
@@ -1002,6 +1006,9 @@ class PayrollDetailTa3agodMosimi(PayrollDetailAbstract):
 class PayrollDetailMajlisEl2dara(PayrollDetailAbstract):
     payroll_mokaf2 = models.FloatField(_("payroll_mokaf2"),default=0)
     payroll_asasi = models.FloatField(_("payroll_asasi"),default=0)
+    gasima = models.FloatField(_("gasima"),default=0)
+    atfal = models.FloatField(_("atfal"),default=0)
+    moahil = models.FloatField(_("moahil"),default=0)
 
     class Meta:
         constraints = [

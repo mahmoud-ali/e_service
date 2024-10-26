@@ -529,7 +529,7 @@ class PayrollDetailTa3agodMosimiInline(admin.TabularInline):
 class PayrollDetailMajlisEl2daraInline(admin.TabularInline):
     model = PayrollDetailMajlisEl2dara
     #exclude = ["created_at","created_by","updated_at","updated_by"]
-    fields = ['employee','draja_wazifia','alawa_sanawia','bank','account_no','payroll_mokaf2','payroll_asasi','salafiat','jazaat','damga','sandog','sandog_kahraba','salafiat_sandog','salafiat_3la_2lmoratab','salafiat_3la_2lmokaf2','tarikh_milad']
+    fields = ['employee','draja_wazifia','alawa_sanawia','bank','account_no','payroll_mokaf2','payroll_asasi','gasima','atfal','moahil','salafiat','jazaat','damga','sandog','sandog_kahraba','salafiat_sandog','salafiat_3la_2lmoratab','salafiat_3la_2lmokaf2','tarikh_milad']
     extra = 0
     readonly_fields = fields
     can_delete = False

@@ -963,14 +963,33 @@ class MajlisEl2daraMokaf2Payroll():
             except:
                 pass
 
+            mokaf2 = self.hr_settings.get_code_as_float(Settings.SETTINGS_MAJLIS_EL2DARA_3ODO)
+
+            asasi = 0
+            gasima = 0
+            atfal = 0
+            moahil = 0
+            sandog = 0
+
             if emp_majlis_position == EmployeeMajlisEl2dara.POSITION_R2IS_2LMAJLIS:
                 mokaf2 = self.hr_settings.get_code_as_float(Settings.SETTINGS_MAJLIS_EL2DARA_R2IS_2LMAJLIS)
-            else:
-                mokaf2 = self.hr_settings.get_code_as_float(Settings.SETTINGS_MAJLIS_EL2DARA_3ODO)
+            elif emp_majlis_position == EmployeeMajlisEl2dara.POSITION_MODIR_3AM:
+                asasi = self.hr_settings.get_code_as_float(Settings.SETTINGS_MODIR_3AM_ASAI)
+                moahil_str = Settings.MOAHIL_PREFIX + employee.moahil
+                moahil=self.hr_settings.get_code_as_float(moahil_str)
+                atfal=(employee.atfal *self.hr_settings.get_code_as_float(Settings.SETTINGS_ATFAL))
+                sandog=self.hr_settings.get_code_as_float(Settings.SETTINGS_SANDOG)
+                if(employee.gasima):
+                    gasima = self.hr_settings.get_code_as_float(Settings.SETTINGS_GASIMA)
 
             moratab = MajlisEl2daraMokaf2(
                 mokaf2=mokaf2,
+                asasi=asasi,
                 damga=self.hr_settings.get_code_as_float(Settings.SETTINGS_DAMGA),
+                gasima=gasima,
+                atfal=atfal,
+                moahil=moahil,
+                sandog=sandog,
             )
 
             return (employee,moratab)
@@ -986,7 +1005,12 @@ class MajlisEl2daraMokaf2Payroll():
     def employee_payroll_from_db(self,emp_payroll:PayrollDetailMajlisEl2dara):
         moratab = MajlisEl2daraMokaf2(
             mokaf2 = emp_payroll.payroll_mokaf2,
+            asasi = emp_payroll.payroll_asasi,
             damga=emp_payroll.damga,
+            gasima=emp_payroll.gasima,
+            atfal=emp_payroll.atfal,
+            moahil=emp_payroll.moahil,
+            sandog=emp_payroll.sandog,
         )
 
         return (emp_payroll.employee,moratab,emp_payroll.draja_wazifia,emp_payroll.alawa_sanawia)
@@ -1022,8 +1046,6 @@ class MajlisEl2daraMokaf2Payroll():
         try:
             with transaction.atomic():        
                 if not self.payroll_master:
-
-
                     self.payroll_master = PayrollMaster.objects.get(
                         year = self.year,
                         month = self.month,
@@ -1056,6 +1078,11 @@ class MajlisEl2daraMokaf2Payroll():
                         # salafiat_3la_2lmokaf2 = khosomat._salafiat_3la_2lmokaf2,
                         tarikh_milad = emp.tarikh_milad,
                         payroll_mokaf2 = moratab.mokaf2,
+                        payroll_asasi = moratab.asasi,
+                        gasima = moratab.ajtima3ia_gasima,
+                        atfal = moratab.ajtima3ia_atfal,
+                        moahil = moratab.moahil,
+                        sandog = moratab.sandog,
                         draja_wazifia = emp.draja_wazifia,
                         alawa_sanawia = emp.alawa_sanawia,
                         bank = bank,
