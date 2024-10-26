@@ -624,8 +624,8 @@ class Wi7datMosa3idaMokaf2tFarigMoratab():
 
     def __iter__(self):
         props = [
-            ('payroll_2lsharika',self.payroll_2lsharika),
             ('payroll_2ljiha_2l2om',self.payroll_2ljiha_2l2om),
+            ('payroll_2lsharika',self.payroll_2lsharika),
             ('payroll_diff',self.payroll_diff),
             ('dariba',self.dariba),
             ('sandog',self.sandog),
@@ -640,20 +640,14 @@ class Wi7datMosa3idaMokaf2tFarigMoratab():
         return 'Wi7datMosa3idaMokaf2tFarigMoratab => '+', '.join([f'{b[0]}: {round(b[1],2)}' for b in self.__iter__()])
 
 class Wi7datMosa3idaMokaf2():
-    def __init__(self,payroll_2lsharika,has_diff,damga,sandog):
+    def __init__(self,payroll_2lsharika,damga):
         self._payroll_2lsharika = payroll_2lsharika
-        self._has_diff = has_diff
         self._damga = damga
-        self._sandog = sandog
     
     @property
     def payroll_2lsharika(self):
         return self._payroll_2lsharika
-        
-    @property
-    def sandog(self):
-        return self._sandog
-        
+                
     @property
     def dariba(self):
         return (self.payroll_2lsharika *0.05)
@@ -664,13 +658,12 @@ class Wi7datMosa3idaMokaf2():
 
     @property
     def safi_alisti7gag(self):
-        return (self.payroll_2lsharika -self.dariba -self.sandog -self.damga)
+        return (self.payroll_2lsharika -self.dariba -self.damga)
 
     def __iter__(self):
         props = [
             ('payroll_2lsharika',self.payroll_2lsharika),
             ('dariba',self.dariba),
-            ('sandog',self.sandog),
             ('damga',self.damga),
             ('safi_alisti7gag',self.safi_alisti7gag),
         ]

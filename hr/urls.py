@@ -2,8 +2,7 @@ from django.urls import path
 
 from django.conf import settings
 
-from .views import Badalat, FargKhosomat,Khosomat, M2moria, Mobashara, Mokaf2,FargBadalat
-
+from .views import Badalat, FargKhosomat,Khosomat, M2moria, Mobashara, Mokaf2,FargBadalat, Ta3agodMosimiMokaf2, Ta3agodMosimiMoratab, Wi7datMosa3idaMokaf2tFarigMoratab,Wi7datMosa3idaMokaf2t
 
 app_name = "hr"
 urlpatterns = [                                                        
@@ -15,5 +14,11 @@ urlpatterns = [
 
     path('payroll/diff_badalat', FargBadalat.as_view(), name='payroll_diff_badalat'),
     path('payroll/diff_khosomat', FargKhosomat.as_view(), name='payroll_diff_khosomat'),
+
+    path('payroll/wi7dat_mosa3ida_farg_moratab', Wi7datMosa3idaMokaf2tFarigMoratab.as_view(), name='payroll_wi7dat_mosa3ida_farg_moratab'),
+    path('payroll/wi7dat_mosa3ida_mokaf2', Wi7datMosa3idaMokaf2t.as_view(), name='payroll_wi7dat_mosa3ida_mokaf2'),
+
+    path('payroll/ta3agod_mosimi_moratab', Ta3agodMosimiMoratab.as_view(), name='payroll_ta3agod_mosimi_moratab'),
+    path('payroll/ta3agod_mosimi_mokaf2', Ta3agodMosimiMokaf2.as_view(), name='payroll_ta3agod_mosimi_mokaf2'),
 
 ]

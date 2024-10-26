@@ -529,10 +529,11 @@ class PayrollMasterAdmin(admin.ModelAdmin):
     # readonly_fields = ["year","month","confirmed"]
 
     def get_list_display(self,request):
+        links = ["year","month","confirmed","show_badalat_link","cmp_badalat_prev_month_link","show_khosomat_link","cmp_khosomat_prev_month_link","show_mokaf2_link","show_wi7dat_mosa3ida_farig_moratab_link","show_wi7dat_mosa3ida_mokaf2_link","show_ta3agod_mosimi_moratab_link","show_ta3agod_mosimi_mokaf2_link"]
         if request.user.groups.filter(name="hr_manager").exists():
-            return ["year","month","confirmed","show_badalat_link","cmp_badalat_prev_month_link","show_khosomat_link","cmp_khosomat_prev_month_link","show_mokaf2_link","show_mobashara_link","show_m2moria_link"]
+            return links + ["show_mobashara_link","show_m2moria_link"]
         else:
-            return ["year","month","confirmed","show_badalat_link","cmp_badalat_prev_month_link","show_khosomat_link","cmp_khosomat_prev_month_link","show_mokaf2_link"]
+            return links
 
     @admin.display(description=_('Show badalat sheet'))
     def show_badalat_link(self, obj):
@@ -604,6 +605,44 @@ class PayrollMasterAdmin(admin.ModelAdmin):
                                +'<a target="_blank" href="{url}?year={year}&month={month}&format=csv&bank_sheet=1">'+_('bank sheet')+'</a> / '\
                                +'<a target="_blank" href="{url}?year={year}&month={month}&format=csv">CSV</a>',
                            url=url,year=obj.year,month=obj.month)
+
+    @admin.display(description=_('Show wi7dat mosa3ida farig moratab sheet'))
+    def show_wi7dat_mosa3ida_farig_moratab_link(self, obj):
+        url = reverse('hr:payroll_wi7dat_mosa3ida_farg_moratab')
+        return format_html('<a target="_blank" class="viewlink" href="{url}?year={year}&month={month}">'+_('Show wi7dat mosa3ida farig moratab sheet')\
+                               +'</a> / '\
+                               +'<a target="_blank" href="{url}?year={year}&month={month}&format=csv&bank_sheet=1">'+_('bank sheet')+'</a> / '\
+                               +'<a target="_blank" href="{url}?year={year}&month={month}&format=csv">CSV</a>',
+                           url=url,year=obj.year,month=obj.month)
+
+    @admin.display(description=_('Show wi7dat mosa3ida mokaf2 sheet'))
+    def show_wi7dat_mosa3ida_mokaf2_link(self, obj):
+        url = reverse('hr:payroll_wi7dat_mosa3ida_mokaf2')
+        return format_html('<a target="_blank" class="viewlink" href="{url}?year={year}&month={month}">'+_('Show wi7dat mosa3ida mokaf2 sheet')\
+                               +'</a> / '\
+                               +'<a target="_blank" href="{url}?year={year}&month={month}&format=csv&bank_sheet=1">'+_('bank sheet')+'</a> / '\
+                               +'<a target="_blank" href="{url}?year={year}&month={month}&format=csv">CSV</a>',
+                           url=url,year=obj.year,month=obj.month)
+
+
+    @admin.display(description=_('Show ta3agod mosimi moratab sheet'))
+    def show_ta3agod_mosimi_moratab_link(self, obj):
+        url = reverse('hr:payroll_ta3agod_mosimi_moratab')
+        return format_html('<a target="_blank" class="viewlink" href="{url}?year={year}&month={month}">'+_('Show ta3agod mosimi moratab sheet')\
+                               +'</a> / '\
+                               +'<a target="_blank" href="{url}?year={year}&month={month}&format=csv&bank_sheet=1">'+_('bank sheet')+'</a> / '\
+                               +'<a target="_blank" href="{url}?year={year}&month={month}&format=csv">CSV</a>',
+                           url=url,year=obj.year,month=obj.month)
+
+    @admin.display(description=_('Show ta3agod mosimi mokaf2 sheet'))
+    def show_ta3agod_mosimi_mokaf2_link(self, obj):
+        url = reverse('hr:payroll_ta3agod_mosimi_mokaf2')
+        return format_html('<a target="_blank" class="viewlink" href="{url}?year={year}&month={month}">'+_('Show ta3agod mosimi mokaf2 sheet')\
+                               +'</a> / '\
+                               +'<a target="_blank" href="{url}?year={year}&month={month}&format=csv&bank_sheet=1">'+_('bank sheet')+'</a> / '\
+                               +'<a target="_blank" href="{url}?year={year}&month={month}&format=csv">CSV</a>',
+                           url=url,year=obj.year,month=obj.month)
+
 
     def save_model(self, request, obj, form, change):
         payroll = Payroll(obj.year,obj.month)

@@ -9,7 +9,7 @@ from django.views.defaults import bad_request
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 
 from hr.models import Drajat3lawat, EmployeeBankAccount, EmployeeBasic, PayrollDetail, PayrollMaster,MONTH_CHOICES
-from hr.payroll import M2moriaSheet, MobasharaSheet, Payroll,Mokaf2Sheet
+from hr.payroll import M2moriaSheet, MobasharaSheet, Payroll,Mokaf2Sheet, Ta3agodMosimiMokaf2Payroll, Ta3agodMosimiPayroll, Wi7datMosa3idaMokaf2tFarigMoratabPayroll, Wi7datMosa3idaMokaf2tPayroll
 
 SHOW_CSV_TOTAL = False
 
@@ -705,6 +705,319 @@ class M2moria(LoginRequiredMixin,UserPermissionMixin,View):
                 'title':'كشف المأمورية',
                 'header':header,
                 'data': data,
+            }
+
+            response = render(self.request,template_name,context)
+            cache.patch_cache_control(response, max_age=0)
+            return response
+
+
+################################
+class Wi7datMosa3idaMokaf2tFarigMoratab(LoginRequiredMixin,UserPermissionMixin,View):
+    user_groups = ['hr_manager','hr_payroll']
+    def get(self,*args,**kwargs):
+        year = self.request.GET['year']
+        month = int(self.request.GET['month'])
+        format = self.request.GET.get('format',None)
+        bank_sheet = self.request.GET.get('bank_sheet',False)
+        data = []
+        
+        payroll = Wi7datMosa3idaMokaf2tFarigMoratabPayroll(year,month)
+        header = ['الرمز','الموظف','الدرجة الوظيفية','العلاوة','مرتب الجهة الأم','مرتب الشركة','فرق المرتب','الضريبة','خصم الصندوق','الدمغة','الصافي']
+        summary_list = []
+
+        if bank_sheet:
+            template_name = 'hr/bank.html'
+            header = ['الرمز','الموظف','البنك','رقم الحساب','صافي الاستحقاق']
+            emp_accounts = get_employee_accounts()
+
+            for (emp,badalat,mokaf2,draja_wazifia,alawa_sanawia) in payroll.all_employees_payroll_from_db():
+                try:
+                    bnk_no,bank = emp_accounts[emp.id] #employeeemp.employeebankaccount_set.get(active=True).account_no
+                except KeyError:
+                    bnk_no,bank = ('-','-')
+
+                l = [emp.code,emp.name,bank,bnk_no,round(mokaf2.safi_alisti7gag,2)]
+                data.append(l)
+        else:
+            template_name = 'hr/wi7dat_mosa3ida.html'
+            for (emp,badalat,mokaf2,draja_wazifia,alawa_sanawia) in payroll.all_employees_payroll_from_db():
+                badalat_list = [round(b[1],2) for b in mokaf2]
+                l = [emp.code,emp.name,Drajat3lawat.DRAJAT_CHOICES[draja_wazifia],Drajat3lawat.ALAWAT_CHOICES[alawa_sanawia]] + badalat_list
+                data.append(l)
+
+                for idx,s in enumerate(badalat_list):
+                    try:
+                        summary_list[idx] += badalat_list[idx]
+                    except IndexError:
+                        summary_list.insert(idx,badalat_list[idx])
+
+            summary_list = [round(s,2) for s in summary_list]
+
+        if format == 'csv':
+            sheet_name = 'mokaf2_wi7dat_mosa3da_farig'
+            response = HttpResponse(
+                content_type="text/csv",
+                headers={"Content-Disposition": f'attachment; filename="{sheet_name}_{month}_{year}.csv"'},
+            )
+
+            # BOM
+            response.write(codecs.BOM_UTF8)
+
+            writer = csv.writer(response)
+            writer.writerow(header)
+
+            if SHOW_CSV_TOTAL:
+                data.append(['-','-','-','-',]+summary_list)
+
+            for r in data:
+                writer.writerow(r)
+
+            cache.patch_cache_control(response, max_age=0)
+            return response
+
+        else:
+            context = {
+                'title':'كشف مكافئة الوحدات المساعدة (فرق مرتب)',
+                'header':header,
+                'data': data,
+                'summary':summary_list,
+                'month':MONTH_CHOICES[month],
+                'year':year,
+            }
+
+            response = render(self.request,template_name,context)
+            cache.patch_cache_control(response, max_age=0)
+            return response
+
+#################################
+class Wi7datMosa3idaMokaf2t(LoginRequiredMixin,UserPermissionMixin,View):
+    user_groups = ['hr_manager','hr_payroll']
+    def get(self,*args,**kwargs):
+        year = self.request.GET['year']
+        month = int(self.request.GET['month'])
+        format = self.request.GET.get('format',None)
+        bank_sheet = self.request.GET.get('bank_sheet',False)
+        data = []
+        
+        payroll = Wi7datMosa3idaMokaf2tPayroll(year,month)
+        header = ['الرمز','الموظف','الدرجة الوظيفية','العلاوة','مرتب الشركة','الضريبة','الدمغة','الصافي']
+        summary_list = []
+
+        if bank_sheet:
+            template_name = 'hr/bank.html'
+            header = ['الرمز','الموظف','البنك','رقم الحساب','صافي الاستحقاق']
+            emp_accounts = get_employee_accounts()
+
+            for (emp,badalat,mokaf2,draja_wazifia,alawa_sanawia) in payroll.all_employees_payroll_from_db():
+                try:
+                    bnk_no,bank = emp_accounts[emp.id] #employeeemp.employeebankaccount_set.get(active=True).account_no
+                except KeyError:
+                    bnk_no,bank = ('-','-')
+
+                l = [emp.code,emp.name,bank,bnk_no,round(mokaf2.safi_alisti7gag,2)]
+                data.append(l)
+        else:
+            template_name = 'hr/wi7dat_mosa3ida.html'
+            for (emp,badalat,mokaf2,draja_wazifia,alawa_sanawia) in payroll.all_employees_payroll_from_db():
+                badalat_list = [round(b[1],2) for b in mokaf2]
+                l = [emp.code,emp.name,Drajat3lawat.DRAJAT_CHOICES[draja_wazifia],Drajat3lawat.ALAWAT_CHOICES[alawa_sanawia]] + badalat_list
+                data.append(l)
+
+                for idx,s in enumerate(badalat_list):
+                    try:
+                        summary_list[idx] += badalat_list[idx]
+                    except IndexError:
+                        summary_list.insert(idx,badalat_list[idx])
+
+            summary_list = [round(s,2) for s in summary_list]
+
+        if format == 'csv':
+            sheet_name = 'mokaf2_wi7dat_mosa3da'
+            response = HttpResponse(
+                content_type="text/csv",
+                headers={"Content-Disposition": f'attachment; filename="{sheet_name}_{month}_{year}.csv"'},
+            )
+
+            # BOM
+            response.write(codecs.BOM_UTF8)
+
+            writer = csv.writer(response)
+            writer.writerow(header)
+
+            if SHOW_CSV_TOTAL:
+                data.append(['-','-','-','-',]+summary_list)
+
+            for r in data:
+                writer.writerow(r)
+
+            cache.patch_cache_control(response, max_age=0)
+            return response
+
+        else:
+            context = {
+                'title':'كشف مكافئة الوحدات المساعدة',
+                'header':header,
+                'data': data,
+                'summary':summary_list,
+                'month':MONTH_CHOICES[month],
+                'year':year,
+            }
+
+            response = render(self.request,template_name,context)
+            cache.patch_cache_control(response, max_age=0)
+            return response
+
+#############################
+class Ta3agodMosimiMoratab(LoginRequiredMixin,UserPermissionMixin,View):
+    user_groups = ['hr_manager','hr_payroll']
+    def get(self,*args,**kwargs):
+        year = self.request.GET['year']
+        month = int(self.request.GET['month'])
+        format = self.request.GET.get('format',None)
+        bank_sheet = self.request.GET.get('bank_sheet',False)
+        data = []
+        
+        payroll = Ta3agodMosimiPayroll(year,month)
+        header = ['الرمز','الموظف','الدرجة الوظيفية','العلاوة','الاساسي','سكن','ترحيل','معيشة','علاج','بدل لبن','طبيعة عمل','الاجمالي','دمغة','التأمين','الضريبة','صافي الأجر']
+        summary_list = []
+
+        if bank_sheet:
+            template_name = 'hr/bank.html'
+            header = ['الرمز','الموظف','البنك','رقم الحساب','صافي الاستحقاق']
+            emp_accounts = get_employee_accounts()
+
+            for (emp,moratab,draja_wazifia,alawa_sanawia) in payroll.all_employees_payroll_from_db():
+                try:
+                    bnk_no,bank = emp_accounts[emp.id] #employeeemp.employeebankaccount_set.get(active=True).account_no
+                except KeyError:
+                    bnk_no,bank = ('-','-')
+
+                l = [emp.code,emp.name,bank,bnk_no,round(moratab.safi_alisti7gag,2)]
+                data.append(l)
+        else:
+            template_name = 'hr/wi7dat_mosa3ida.html'
+            for (emp,moratab,draja_wazifia,alawa_sanawia) in payroll.all_employees_payroll_from_db():
+                badalat_list = [round(b[1],2) for b in moratab]
+                l = [emp.code,emp.name,Drajat3lawat.DRAJAT_CHOICES[draja_wazifia],Drajat3lawat.ALAWAT_CHOICES[alawa_sanawia]] + badalat_list
+                data.append(l)
+
+                for idx,s in enumerate(badalat_list):
+                    try:
+                        summary_list[idx] += badalat_list[idx]
+                    except IndexError:
+                        summary_list.insert(idx,badalat_list[idx])
+
+            summary_list = [round(s,2) for s in summary_list]
+
+        if format == 'csv':
+            sheet_name = 'moratab_wi7dat_mosa3da_farig'
+            response = HttpResponse(
+                content_type="text/csv",
+                headers={"Content-Disposition": f'attachment; filename="{sheet_name}_{month}_{year}.csv"'},
+            )
+
+            # BOM
+            response.write(codecs.BOM_UTF8)
+
+            writer = csv.writer(response)
+            writer.writerow(header)
+
+            if SHOW_CSV_TOTAL:
+                data.append(['-','-','-','-',]+summary_list)
+
+            for r in data:
+                writer.writerow(r)
+
+            cache.patch_cache_control(response, max_age=0)
+            return response
+
+        else:
+            context = {
+                'title':'كشف مرتبات عاملي التعاقدات الموسيمية',
+                'header':header,
+                'data': data,
+                'summary':summary_list,
+                'month':MONTH_CHOICES[month],
+                'year':year,
+            }
+
+            response = render(self.request,template_name,context)
+            cache.patch_cache_control(response, max_age=0)
+            return response
+
+#############################
+class Ta3agodMosimiMokaf2(LoginRequiredMixin,UserPermissionMixin,View):
+    user_groups = ['hr_manager','hr_payroll']
+    def get(self,*args,**kwargs):
+        year = self.request.GET['year']
+        month = int(self.request.GET['month'])
+        format = self.request.GET.get('format',None)
+        bank_sheet = self.request.GET.get('bank_sheet',False)
+        data = []
+        
+        payroll = Ta3agodMosimiMokaf2Payroll(year,month)
+        header = ['الرمز','الموظف','الدرجة الوظيفية','العلاوة','المكافئة الشهرية','الضريبة','الدمغة','الصافي']
+        summary_list = []
+
+        if bank_sheet:
+            template_name = 'hr/bank.html'
+            header = ['الرمز','الموظف','البنك','رقم الحساب','صافي الاستحقاق']
+            emp_accounts = get_employee_accounts()
+
+            for (emp,moratab,draja_wazifia,alawa_sanawia) in payroll.all_employees_payroll_from_db():
+                try:
+                    bnk_no,bank = emp_accounts[emp.id] #employeeemp.employeebankaccount_set.get(active=True).account_no
+                except KeyError:
+                    bnk_no,bank = ('-','-')
+
+                l = [emp.code,emp.name,bank,bnk_no,round(moratab.safi_alisti7gag,2)]
+                data.append(l)
+        else:
+            template_name = 'hr/wi7dat_mosa3ida.html'
+            for (emp,moratab,draja_wazifia,alawa_sanawia) in payroll.all_employees_payroll_from_db():
+                badalat_list = [round(b[1],2) for b in moratab]
+                l = [emp.code,emp.name,Drajat3lawat.DRAJAT_CHOICES[draja_wazifia],Drajat3lawat.ALAWAT_CHOICES[alawa_sanawia]] + badalat_list
+                data.append(l)
+
+                for idx,s in enumerate(badalat_list):
+                    try:
+                        summary_list[idx] += badalat_list[idx]
+                    except IndexError:
+                        summary_list.insert(idx,badalat_list[idx])
+
+            summary_list = [round(s,2) for s in summary_list]
+
+        if format == 'csv':
+            sheet_name = 'mokaf2_wi7dat_mosa3da'
+            response = HttpResponse(
+                content_type="text/csv",
+                headers={"Content-Disposition": f'attachment; filename="{sheet_name}_{month}_{year}.csv"'},
+            )
+
+            # BOM
+            response.write(codecs.BOM_UTF8)
+
+            writer = csv.writer(response)
+            writer.writerow(header)
+
+            if SHOW_CSV_TOTAL:
+                data.append(['-','-','-','-',]+summary_list)
+
+            for r in data:
+                writer.writerow(r)
+
+            cache.patch_cache_control(response, max_age=0)
+            return response
+
+        else:
+            context = {
+                'title':'كشف مكافئة المتعاقدين',
+                'header':header,
+                'data': data,
+                'summary':summary_list,
+                'month':MONTH_CHOICES[month],
+                'year':year,
             }
 
             response = render(self.request,template_name,context)

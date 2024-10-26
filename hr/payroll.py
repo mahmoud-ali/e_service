@@ -4,7 +4,7 @@ from django.db import transaction
 from django.db.models import Q, Sum
 from django.contrib.auth import get_user_model
 
-from hr.calculations import Badalat_3lawat, Khosomat, M2moria, Mobashara, Mokaf2, Ta3agodMosimiMoratab,Wi7datMosa3idaMokaf2tFarigMoratab
+from hr.calculations import Badalat_3lawat, Khosomat, M2moria, Mobashara, Mokaf2, Ta3agodMosimiMokaf2, Ta3agodMosimiMoratab, Wi7datMosa3idaMokaf2,Wi7datMosa3idaMokaf2tFarigMoratab
 
 from .models import EmployeeM2moria, EmployeeM2moriaMonthly, EmployeeMobashra, EmployeeJazaat,EmployeeBasic,Drajat3lawat, EmployeeMobashraMonthly, EmployeeWi7datMosa3da, PayrollDetail, PayrollDetailTa3agodMosimi, PayrollDetailWi7datMosa3ida, PayrollMaster,Settings,EmployeeSalafiat
 
@@ -33,7 +33,9 @@ class Payroll():
         self.hr_settings = HrSettings()
         self.salafiat_qs = EmployeeSalafiat.objects.filter(year=self.year,month=self.month)
         self.jazaat_qs = EmployeeJazaat.objects.filter(year=self.year,month=self.month)
-        self.employees = EmployeeBasic.objects.filter(status=EmployeeBasic.STATUS_ACTIVE) #exclude(hikal_wazifi=self.hr_settings.get_code_as_float(Settings.SETTINGS_KHARJ_ELSHARIKA)) #all() #filter(id=1794)
+        self.employees = EmployeeBasic.objects \
+            .filter(status=EmployeeBasic.STATUS_ACTIVE) \
+            .exclude(no3_2lertibat__in=[EmployeeBasic.NO3_2LERTIBAT_2L7ag, EmployeeBasic.NO3_2LERTIBAT_TA3AGOD, EmployeeBasic.NO3_2LERTIBAT_TA3AGOD_MOSIMI,EmployeeBasic.NO3_2LERTIBAT_MASHRO3])
 
         self.admin_user = get_user_model().objects.get(id=1)
 
@@ -241,10 +243,9 @@ class Payroll():
             print(f'Payroll not calculated: {e}')
             return False
         
-        self.payroll_details = PayrollDetail.objects \
-            .filter(payroll_master=self.payroll_master).prefetch_related("employee") \
-            .exclude(employee__no3_2lertibat__in=[EmployeeBasic.NO3_2LERTIBAT_2L7ag, EmployeeBasic.NO3_2LERTIBAT_TA3AGOD, EmployeeBasic.NO3_2LERTIBAT_TA3AGOD_MOSIMI,EmployeeBasic.NO3_2LERTIBAT_MASHRO3])
-            # .exclude(employee__hikal_wazifi=self.hr_settings.get_code_as_float(Settings.SETTINGS_KHARJ_ELSHARIKA))
+        # self.payroll_details = PayrollDetail.objects \
+        #     .filter(payroll_master=self.payroll_master).prefetch_related("employee") \
+        #     .exclude(employee__no3_2lertibat__in=[EmployeeBasic.NO3_2LERTIBAT_2L7ag, EmployeeBasic.NO3_2LERTIBAT_TA3AGOD, EmployeeBasic.NO3_2LERTIBAT_TA3AGOD_MOSIMI,EmployeeBasic.NO3_2LERTIBAT_MASHRO3])
 
     def confirm(self):
         if not self.payroll_master:
@@ -398,7 +399,6 @@ class Mokaf2Sheet():
             if x:
                 yield(emp.employee,x)
     
-
 class M2moriaSheet():
     def __init__(self,year,month) -> None:
         self.year = int(year)
@@ -501,7 +501,9 @@ class Wi7datMosa3idaMokaf2tFarigMoratabPayroll():
         try:
             self.payroll_master = PayrollMaster.objects.get(year=self.year,month=self.month)
             self.payroll_details = PayrollDetailWi7datMosa3ida.objects \
-                .filter(payroll_master=self.payroll_master).prefetch_related("payroll_master","employee")
+                .filter(payroll_master=self.payroll_master)\
+                .filter(has_diff=True)\
+                .prefetch_related("payroll_master","employee")
                 
         except PayrollMaster.DoesNotExist:
             self.payroll_master = None
@@ -510,10 +512,12 @@ class Wi7datMosa3idaMokaf2tFarigMoratabPayroll():
     def employee_payroll_calculated(self,employee:EmployeeBasic):
         try:
             obj = employee.wi7dat_mosa3da
+            obj_payroll_2ljiha_2l2om = obj.payroll_2ljiha_2l2om
+            obj_has_diff = obj.has_diff
         except EmployeeWi7datMosa3da.DoesNotExist as e:
-            print(f"Employee not exists {employee}")
-            return
-
+            obj_payroll_2ljiha_2l2om = 0
+            obj_has_diff = False
+            
         gasima = 0
         aadoa = 0
         atfal = 0
@@ -536,8 +540,8 @@ class Wi7datMosa3idaMokaf2tFarigMoratabPayroll():
 
             mokaf2 = Wi7datMosa3idaMokaf2tFarigMoratab(
                 payroll_2lsharika=badal.ajmali_almoratab,
-                payroll_2ljiha_2l2om=obj.payroll_2ljiha_2l2om,
-                has_diff=obj.has_diff,
+                payroll_2ljiha_2l2om=obj_payroll_2ljiha_2l2om,
+                has_diff=obj_has_diff,
                 damga=self.hr_settings.get_code_as_float(Settings.SETTINGS_DAMGA),
                 sandog=self.hr_settings.get_code_as_float(Settings.SETTINGS_SANDOG),
             )
@@ -677,6 +681,78 @@ class Wi7datMosa3idaMokaf2tFarigMoratabPayroll():
             return False
         
         return self.payroll_master.confirmed
+
+###########
+class Wi7datMosa3idaMokaf2tPayroll():
+    def __init__(self,year,month) -> None:
+        self.year = year
+        self.month = month
+
+        self.hr_settings = HrSettings()
+        self.employees = EmployeeBasic.objects \
+            .filter(no3_2lertibat=EmployeeBasic.NO3_2LERTIBAT_2L7ag) \
+            .filter(status=EmployeeBasic.STATUS_ACTIVE)
+        
+        self.admin_user = get_user_model().objects.get(id=1)
+
+        try:
+            self.payroll_master = PayrollMaster.objects.get(year=self.year,month=self.month)
+            self.payroll_details = PayrollDetailWi7datMosa3ida.objects \
+                .filter(payroll_master=self.payroll_master)\
+                .prefetch_related("payroll_master","employee")
+                
+        except PayrollMaster.DoesNotExist:
+            self.payroll_master = None
+            self.payroll_details = []
+    
+    def all_employees_payroll_calculated(self):
+        for emp in self.employees:
+            x = self.employee_payroll_calculated(emp)
+            if x:
+                yield(x)
+
+    def employee_payroll_from_db(self,emp_payroll:PayrollDetailWi7datMosa3ida):
+        badal = Badalat_3lawat(
+            emp_payroll.abtdai,
+            emp_payroll.galaa_m3isha,
+            shakhsia=emp_payroll.shakhsia,
+            aadoa=0,
+            gasima=0,
+            atfal=0,
+            moahil=0,
+            ma3adin=emp_payroll.ma3adin,
+            month = emp_payroll.payroll_master.month,
+            year = emp_payroll.payroll_master.year,
+        )
+
+        mokaf2 = Wi7datMosa3idaMokaf2(
+                payroll_2lsharika=badal.ajmali_almoratab,
+                damga=self.hr_settings.get_code_as_float(Settings.SETTINGS_DAMGA),
+        )
+
+        return (emp_payroll.employee,badal,mokaf2,emp_payroll.draja_wazifia,emp_payroll.alawa_sanawia)
+    
+    def all_employees_payroll_from_db(self):
+        for emp_payroll in self.payroll_details:
+            yield(self.employee_payroll_from_db(emp_payroll))
+
+    def employee_payroll_from_db_with_bank_account(self,emp_payroll:PayrollDetailWi7datMosa3ida):
+        tmp_lst = list(self.employee_payroll_from_db(emp_payroll))
+        tmp_lst.append(emp_payroll.bank)
+        tmp_lst.append(emp_payroll.account_no)
+        return tuple(tmp_lst)
+    
+    def all_employees_payroll_from_db_with_bank_account(self):
+        for emp_payroll in self.payroll_details:
+            yield(self.employee_payroll_from_db_with_bank_account(emp_payroll))
+
+
+    def employee_payroll_from_employee(self,emp:EmployeeBasic):
+        emp_payroll = PayrollDetailWi7datMosa3ida.objects.filter(payroll_master=self.payroll_master,employee=emp).prefetch_related("employee").first()
+        if emp_payroll:
+            return self.employee_payroll_from_db(emp_payroll)
+        
+        return (None,None,None,None,None,)
     
 ###########
 class Ta3agodMosimiPayroll():
@@ -829,3 +905,55 @@ class Ta3agodMosimiPayroll():
         
         return self.payroll_master.confirmed
     
+###########
+class Ta3agodMosimiMokaf2Payroll():
+    def __init__(self,year,month) -> None:
+        self.year = year
+        self.month = month
+
+        self.hr_settings = HrSettings()
+        self.employees = EmployeeBasic.objects \
+            .filter(no3_2lertibat=EmployeeBasic.NO3_2LERTIBAT_TA3AGOD_MOSIMI) \
+            .filter(status=EmployeeBasic.STATUS_ACTIVE)
+        
+        self.admin_user = get_user_model().objects.get(id=1)
+
+        try:
+            self.payroll_master = PayrollMaster.objects.get(year=self.year,month=self.month)
+            self.payroll_details = PayrollDetailTa3agodMosimi.objects \
+                .filter(payroll_master=self.payroll_master).prefetch_related("payroll_master","employee")
+                
+        except PayrollMaster.DoesNotExist:
+            self.payroll_master = None
+            self.payroll_details = []
+
+    def employee_payroll_from_db(self,emp_payroll:PayrollDetailTa3agodMosimi):
+        moratab = Ta3agodMosimiMokaf2(
+            mokaf2 = emp_payroll.payroll_mokaf2,
+            damga=emp_payroll.damga,
+        )
+
+        return (emp_payroll.employee,moratab,emp_payroll.draja_wazifia,emp_payroll.alawa_sanawia)
+    
+    def all_employees_payroll_from_db(self):
+        for emp_payroll in self.payroll_details:
+            yield(self.employee_payroll_from_db(emp_payroll))
+
+    def employee_payroll_from_db_with_bank_account(self,emp_payroll:PayrollDetailTa3agodMosimi):
+        tmp_lst = list(self.employee_payroll_from_db(emp_payroll))
+        tmp_lst.append(emp_payroll.bank)
+        tmp_lst.append(emp_payroll.account_no)
+        return tuple(tmp_lst)
+    
+    def all_employees_payroll_from_db_with_bank_account(self):
+        for emp_payroll in self.payroll_details:
+            yield(self.employee_payroll_from_db_with_bank_account(emp_payroll))
+
+
+    def employee_payroll_from_employee(self,emp:EmployeeBasic):
+        emp_payroll = PayrollDetailTa3agodMosimi.objects.filter(payroll_master=self.payroll_master,employee=emp).prefetch_related("employee").first()
+        if emp_payroll:
+            return self.employee_payroll_from_db(emp_payroll)
+        
+        return (None,None,None,None,None,)
+
