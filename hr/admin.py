@@ -336,12 +336,17 @@ class EmployeeBasicAdmin(admin.ModelAdmin):
                 aadoa = _('yes')
 
             account = emp.employeebankaccount_set.filter(active=True).first()
+            bank_name = ''
+            account_no = ''
+            if account:
+                bank_name = account.get_bank_display()
+                account_no = account.account_no
 
             row = [
                     emp.code,emp.name,emp.get_draja_wazifia_display(),emp.get_alawa_sanawia_display(),\
                     emp.edara_3ama,emp.edara_far3ia,emp.gisim,emp.wi7da,emp.mosama_wazifi.name,emp.tarikh_milad,emp.tarikh_ta3in,emp.tarikh_akhir_targia,\
                     emp.get_sex_display(),gasima,emp.atfal,emp.get_moahil_display(),emp.m3ash,aadoa,emp.get_no3_2lertibat_display(),\
-                    emp.phone,emp.sanoat_2lkhibra,account.get_bank_display(),account.account_no,emp.get_status_display()
+                    emp.phone,emp.sanoat_2lkhibra,bank_name,account_no,emp.get_status_display()
             ]
             writer.writerow(row)
 
