@@ -851,3 +851,168 @@ class MajlisEl2daraMokaf2():
     
     def __str__(self) -> str:
         return 'MajlisEl2daraMokaf2 => '+', '.join([f'{b[0]}: {round(b[1],2)}' for b in self.__iter__()])
+
+class BadalatModir3am():
+    def __init__(self,abtdai,gasima=0,atfal=0,moahil=0):
+        self._abtdai = abtdai
+        self._asasi = self._abtdai
+        self._gasima = gasima
+        self._atfal = atfal
+        self._moahil = moahil
+
+    @property
+    def abtdai(self):
+        return self._abtdai
+    
+    @property
+    def galaa_m3isha(self):
+        return self.abtdai*0.50
+    
+    @property
+    def asasi(self):
+        return self._asasi
+    
+    @property
+    def tabi3at_3mal(self):
+        return self._asasi *0.25
+    
+    @property
+    def mas2olia(self):
+        return self._asasi *1.45
+    
+    @property
+    def ajtima3ia_gasima(self):
+        return self._gasima
+    
+    @property
+    def ajtima3ia_atfal(self):
+        return self._atfal
+    
+    @property
+    def moahil(self):
+        return self._moahil
+            
+    @property
+    def ajmali_almoratab(self):
+        return (self._asasi +self.tabi3at_3mal +self.galaa_m3isha +self.mas2olia \
+                 +self.moahil +self.ajtima3ia_gasima +self.ajtima3ia_atfal)
+
+    def __iter__(self):
+        props = [
+            ('abtdai',self.abtdai),
+            ('galaa_m3isha',self.galaa_m3isha),
+            ('tabi3at_3mal',self.tabi3at_3mal),
+            ('mas2olia',self.mas2olia),
+            ('ajtima3ia_gasima',self.ajtima3ia_gasima),
+            ('ajtima3ia_atfal',self.ajtima3ia_atfal),
+            ('moahil',self.moahil),
+            ('ajmali_almoratab',self.ajmali_almoratab),
+        ]
+
+        for p in props:
+            yield(p[0],p[1])
+    
+    def __str__(self) -> str:
+        return 'BadalatModir3am => '+', '.join([f'{b[0]}: {round(b[1],2)}' for b in self.__iter__()])
+
+class KhosomatModir3am():
+    def __init__(self,Badalat:BadalatModir3am,zaka_kafaf,zaka_nisab,salafiat=0,damga=1,sandog=0):
+        self.Badalat = Badalat
+        self._zaka_kafaf = zaka_kafaf
+        self._zaka_nisab = zaka_nisab
+        self._salafiat = salafiat
+        self._damga = damga
+        self._sandog = sandog
+    
+    @property
+    def tameen_ajtima3i(self):
+        return self.Badalat.ajmali_almoratab *0.08
+    
+    @property
+    def sandog(self):
+        return self._sandog
+    
+    @property
+    def dariba(self):
+        return ((self.Badalat.ajmali_almoratab -self.Badalat.moahil \
+                 -self.Badalat.ajtima3ia_atfal -self.Badalat.ajtima3ia_gasima \
+                 -1200 -115 -self.tameen_ajtima3i) *0.05) +2.5
+    
+    @property
+    def damga(self):
+        return self._damga
+
+    @property
+    def salafiat(self):
+        return self._salafiat
+
+    @property
+    def zakat(self):
+        x = self.Badalat.ajmali_almoratab -self._zaka_kafaf
+        if x >= self._zaka_nisab:
+            return x *0.025
+        return 0
+
+    @property
+    def ajmali_astgta3at_koli(self):
+        return (self.tameen_ajtima3i +self.sandog +self.dariba +self.damga +self.zakat )
+    
+    @property
+    def safi_alisti7gag(self):
+        return (self.Badalat.ajmali_almoratab -self.ajmali_astgta3at_koli)
+
+    def __iter__(self):
+        props = [
+            ('tameen_ajtima3i',self.tameen_ajtima3i),
+            ('sandog',self.sandog),
+            ('dariba',self.dariba),
+            ('zakat',self.zakat),
+            ('damga',self.damga),
+            ('ajmali_astgta3at_koli',self.ajmali_astgta3at_koli),
+            ('safi_alisti7gag',self.safi_alisti7gag),
+        ]
+
+        for p in props:
+            yield(p[0],p[1])
+    
+    def __str__(self) -> str:
+        return 'KhosomatModir3am => '+', '.join([f'{b[0]}: {round(b[1],2)}' for b in self.__iter__()])
+
+class Mokaf2Modir3am():
+    def __init__(self,Badalat:Badalat_3lawat,dariba=0.05,damga=1):
+        self.Badalat = Badalat
+        self._dariba = dariba
+        self._damga = damga
+
+    @property
+    def ajmali_2lmoratab(self):
+        return self.Badalat.ajmali_almoratab
+
+    @property
+    def dariba(self):
+        return (self.ajmali_2lmoratab *self._dariba)
+
+    @property
+    def damga(self):
+        return self._damga
+    
+    @property
+    def safi_alisti7gag(self):
+        return (self.ajmali_2lmoratab - self.dariba -self.damga)
+
+    def __iter__(self):
+        props = [
+            ('ajmali_2lmoratab',self.ajmali_2lmoratab),
+            ('dariba',self.dariba),
+            ('damga',self.damga),
+            ('safi_alisti7gag',self.safi_alisti7gag),
+        ]
+
+        for p in props:
+            yield(p[0],p[1])
+    
+    def __str__(self) -> str:
+        return 'Mokaf2Modir3am ('+', '.join([f'{b[0]}: {round(b[1],2)}' for b in self.__iter__()])+')'
+    
+    def __repr__(self) -> str:
+        return self.__str__()

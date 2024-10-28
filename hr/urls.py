@@ -2,7 +2,7 @@ from django.urls import path
 
 from django.conf import settings
 
-from .views import Badalat, FargKhosomat,Khosomat, M2moria, MajlisEl2daraMokaf2View, Mobashara, Mokaf2,FargBadalat, Ta3agodMosimiMokaf2, Ta3agodMosimiMoratab, Wi7datMosa3idaMokaf2tFarigMoratab,Wi7datMosa3idaMokaf2t
+from .views import Badalat, FargKhosomat,Khosomat, M2moria, MajlisEl2daraMokaf2View, Mobashara, Modir3amBadalatView, Modir3amKhosomatView, Modir3amMokaf2View, Mokaf2,FargBadalat, Ta3agodMosimiMokaf2, Ta3agodMosimiMoratab, Wi7datMosa3idaMokaf2tFarigMoratab,Wi7datMosa3idaMokaf2t
 
 app_name = "hr"
 urlpatterns = [                                                        
@@ -22,5 +22,9 @@ urlpatterns = [
     path('payroll/ta3agod_mosimi_mokaf2', Ta3agodMosimiMokaf2.as_view(), name='payroll_ta3agod_mosimi_mokaf2'),
 
     path('payroll/majlis_el2dara_mokaf2', MajlisEl2daraMokaf2View.as_view(), name='payroll_majlis_el2dara_mokaf2'),
+
+    path('payroll/modir_3am_badalat', Modir3amBadalatView.as_view(), name='payroll_modir_3am_badalat'),
+    path('payroll/modir_3am_khosomat', Modir3amKhosomatView.as_view(), name='payroll_modir_3am_khosomat'),
+    path('payroll/modir_3am_mokaf2', Modir3amMokaf2View.as_view(), name='payroll_modir_3am_mokaf2'),
 
 ]

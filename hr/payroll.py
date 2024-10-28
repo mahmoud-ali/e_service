@@ -4,7 +4,7 @@ from django.db import transaction
 from django.db.models import Q, Sum
 from django.contrib.auth import get_user_model
 
-from hr.calculations import Badalat_3lawat, Khosomat, M2moria, MajlisEl2daraMokaf2, Mobashara, Mokaf2, Ta3agodMosimiMokaf2, Ta3agodMosimiMoratab, Wi7datMosa3idaMokaf2,Wi7datMosa3idaMokaf2tFarigMoratab
+from hr.calculations import Badalat_3lawat, BadalatModir3am, Khosomat, KhosomatModir3am, M2moria, MajlisEl2daraMokaf2, Mobashara, Mokaf2, Mokaf2Modir3am, Ta3agodMosimiMokaf2, Ta3agodMosimiMoratab, Wi7datMosa3idaMokaf2,Wi7datMosa3idaMokaf2tFarigMoratab
 
 from .models import EmployeeM2moria, EmployeeM2moriaMonthly, EmployeeMajlisEl2dara, EmployeeMobashra, EmployeeJazaat,EmployeeBasic,Drajat3lawat, EmployeeMobashraMonthly, EmployeeWi7datMosa3da, PayrollDetail, PayrollDetailMajlisEl2dara, PayrollDetailTa3agodMosimi, PayrollDetailWi7datMosa3ida, PayrollMaster,Settings,EmployeeSalafiat
 
@@ -1098,4 +1098,71 @@ class MajlisEl2daraMokaf2Payroll():
             return False
         
         return self.payroll_master.confirmed
+
+###########################
+class Modir3amPayroll():
+    def __init__(self,year,month) -> None:
+        self.year = year
+        self.month = month
+
+        self.hr_settings = HrSettings()
+        self.employees = EmployeeBasic.objects \
+            .filter(id__in=EmployeeMajlisEl2dara.objects.filter(position=EmployeeMajlisEl2dara.POSITION_MODIR_3AM).values_list("id")) \
+            .filter(status=EmployeeBasic.STATUS_ACTIVE)
+        
+        self.admin_user = get_user_model().objects.get(id=1)
+
+        try:
+            self.payroll_master = PayrollMaster.objects.get(year=self.year,month=self.month)
+            self.payroll_details = PayrollDetailMajlisEl2dara.objects \
+                .filter(payroll_master=self.payroll_master).filter(payroll_asasi__gt=0).prefetch_related("payroll_master","employee")
+                
+        except PayrollMaster.DoesNotExist:
+            self.payroll_master = None
+            self.payroll_details = []
+
+    def employee_payroll_from_db(self,emp_payroll:PayrollDetailMajlisEl2dara):
+        badalat = BadalatModir3am(
+            abtdai = emp_payroll.payroll_asasi,
+            gasima = emp_payroll.gasima,
+            atfal=emp_payroll.atfal,
+            moahil=emp_payroll.moahil,
+        )
+
+        khosomat = KhosomatModir3am(
+            badalat,
+            zaka_kafaf=self.payroll_master.zaka_kafaf,
+            zaka_nisab=self.payroll_master.zaka_nisab,
+            salafiat=emp_payroll.salafiat,
+            damga=emp_payroll.damga,
+            sandog=emp_payroll.sandog,
+        )
+
+        mokaf2 = Mokaf2Modir3am(
+            badalat,
+            damga=emp_payroll.damga,
+        )
+
+        return (emp_payroll.employee,badalat,khosomat,mokaf2,emp_payroll.draja_wazifia,emp_payroll.alawa_sanawia)
+    
+    def all_employees_payroll_from_db(self):
+        for emp_payroll in self.payroll_details:
+            yield(self.employee_payroll_from_db(emp_payroll))
+
+    def employee_payroll_from_db_with_bank_account(self,emp_payroll:PayrollDetailMajlisEl2dara):
+        tmp_lst = list(self.employee_payroll_from_db(emp_payroll))
+        tmp_lst.append(emp_payroll.bank)
+        tmp_lst.append(emp_payroll.account_no)
+        return tuple(tmp_lst)
+    
+    def all_employees_payroll_from_db_with_bank_account(self):
+        for emp_payroll in self.payroll_details:
+            yield(self.employee_payroll_from_db_with_bank_account(emp_payroll))
+
+    def employee_payroll_from_employee(self,emp:EmployeeBasic):
+        emp_payroll = PayrollDetailMajlisEl2dara.objects.filter(payroll_master=self.payroll_master,employee=emp).prefetch_related("employee").first()
+        if emp_payroll:
+            return self.employee_payroll_from_db(emp_payroll)
+        
+        return (None,None,None,None,None,)
 
