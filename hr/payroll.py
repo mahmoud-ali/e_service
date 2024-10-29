@@ -954,7 +954,8 @@ class MajlisEl2daraMokaf2Payroll():
         try:
             self.payroll_master = PayrollMaster.objects.get(year=self.year,month=self.month)
             self.payroll_details = PayrollDetailMajlisEl2dara.objects \
-                .filter(payroll_master=self.payroll_master).prefetch_related("payroll_master","employee")
+                .filter(payroll_master=self.payroll_master).prefetch_related("payroll_master","employee")\
+                .order_by('-payroll_mokaf2')
                 
         except PayrollMaster.DoesNotExist:
             self.payroll_master = None
