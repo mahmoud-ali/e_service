@@ -54,6 +54,7 @@
 			<table id="badalat_table"  class="table table-bordered">
 				<thead>
 					<tr>
+						<th>#</th>
 					{% for col in header %}
 						<th class="col_{{ forloop.counter }}">
 						{{ col }}
@@ -64,6 +65,7 @@
 				<tbody>
 					{% for row in data %}
 					<tr class="row_{% cycle 'odd' 'even' %}">
+						<td>{{ forloop.counter }}</td>
 						{% for cell in row %}
 						<td class="col_{{ forloop.counter }}">
 							{% if forloop.counter <= 4 %}
@@ -76,6 +78,7 @@
 					</tr>
 					{% endfor %}        	
 					<tr>
+						<th>-</th>
 						<th>-</th>
 						<th>-</th>
 						{% for col in summary %}
