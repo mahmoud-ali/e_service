@@ -497,6 +497,8 @@ class Wi7datMosa3idaMokaf2tFarigMoratabPayroll():
             .filter(status=EmployeeBasic.STATUS_ACTIVE) \
             .order_by('hikal_wazifi')
         
+        self.salafiat_qs = EmployeeSalafiat.objects.filter(year=self.year,month=self.month)
+
         self.admin_user = get_user_model().objects.get(id=1)
 
         try:
@@ -625,6 +627,8 @@ class Wi7datMosa3idaMokaf2tFarigMoratabPayroll():
                     emp,badalat,mokaf2 = emp_payroll
                     bank = ''
                     account_no = ''
+                    salafiat_sandog_total = self.salafiat_qs.filter(employee=emp,no3_2lsalafia=EmployeeSalafiat.NO3_2LSALAFIA_SANDOG).aggregate(total=Sum("amount"))['total'] or 0
+
                     try:
                         bank_account = emp.employeebankaccount_set.get(active=True)
                         bank = bank_account.bank
@@ -647,6 +651,7 @@ class Wi7datMosa3idaMokaf2tFarigMoratabPayroll():
                         # salafiat_sandog = khosomat.salafiat_sandog,
                         # salafiat_3la_2lmoratab = khosomat.salafiat_3la_2lmoratab,
                         # salafiat_3la_2lmokaf2 = khosomat._salafiat_3la_2lmokaf2,
+                        salafiat_sandog=salafiat_sandog_total,
                         tarikh_milad = emp.tarikh_milad,
                         payroll_2ljiha_2l2om = mokaf2.payroll_2ljiha_2l2om,
                         payroll_2lsharika = mokaf2.payroll_2lsharika,
@@ -716,6 +721,7 @@ class Wi7datMosa3idaMokaf2tPayroll():
         mokaf2 = Wi7datMosa3idaMokaf2(
                 payroll_2lsharika=badal.ajmali_almoratab,
                 damga=self.hr_settings.get_code_as_float(Settings.SETTINGS_DAMGA),
+                salafiat_sandog=emp_payroll.salafiat_sandog,
         )
 
         return (emp_payroll.employee,badal,mokaf2,emp_payroll.draja_wazifia,emp_payroll.alawa_sanawia)

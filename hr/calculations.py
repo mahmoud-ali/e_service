@@ -640,9 +640,10 @@ class Wi7datMosa3idaMokaf2tFarigMoratab():
         return 'Wi7datMosa3idaMokaf2tFarigMoratab => '+', '.join([f'{b[0]}: {round(b[1],2)}' for b in self.__iter__()])
 
 class Wi7datMosa3idaMokaf2():
-    def __init__(self,payroll_2lsharika,damga):
+    def __init__(self,payroll_2lsharika,damga,salafiat_sandog=0):
         self._payroll_2lsharika = payroll_2lsharika
         self._damga = damga
+        self._salafiat_sandog = salafiat_sandog
     
     @property
     def payroll_2lsharika(self):
@@ -657,13 +658,18 @@ class Wi7datMosa3idaMokaf2():
         return self._damga
 
     @property
+    def salafiat_sandog(self):
+        return self._salafiat_sandog
+
+    @property
     def safi_alisti7gag(self):
-        return (self.payroll_2lsharika -self.dariba -self.damga)
+        return (self.payroll_2lsharika -self.dariba -self.damga -self.salafiat_sandog)
 
     def __iter__(self):
         props = [
             ('payroll_2lsharika',self.payroll_2lsharika),
             ('dariba',self.dariba),
+            ('salafiat_sandog',self.salafiat_sandog),
             ('damga',self.damga),
             ('safi_alisti7gag',self.safi_alisti7gag),
         ]

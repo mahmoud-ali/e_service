@@ -801,7 +801,7 @@ class Wi7datMosa3idaMokaf2t(LoginRequiredMixin,UserPermissionMixin,View):
         data = []
         
         payroll = Wi7datMosa3idaMokaf2tPayroll(year,month)
-        header = ['الرمز','الموظف','الإدارة','الدرجة الوظيفية','العلاوة','مرتب الشركة','الضريبة','الدمغة','الصافي']
+        header = ['الرمز','الموظف','الإدارة','الدرجة الوظيفية','العلاوة','مرتب الشركة','الضريبة',' سلفيات الصندوق','الدمغة','الصافي']
         summary_list = []
 
         if bank_sheet:
