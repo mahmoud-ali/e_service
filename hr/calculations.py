@@ -934,9 +934,7 @@ class KhosomatModir3am():
     
     @property
     def dariba(self):
-        return ((self.Badalat.ajmali_almoratab -self.Badalat.moahil \
-                 -self.Badalat.ajtima3ia_atfal -self.Badalat.ajtima3ia_gasima \
-                 -1200 -115 -self.tameen_ajtima3i) *0.05) +2.5
+        return ((self.Badalat.ajmali_almoratab -self.tameen_ajtima3i) *0.05) 
     
     @property
     def damga(self):
