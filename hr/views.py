@@ -723,7 +723,7 @@ class Wi7datMosa3idaMokaf2tFarigMoratab(LoginRequiredMixin,UserPermissionMixin,V
         data = []
         
         payroll = Wi7datMosa3idaMokaf2tFarigMoratabPayroll(year,month)
-        header = ['الرمز','الموظف','الدرجة الوظيفية','العلاوة','مرتب الجهة الأم','مرتب الشركة','فرق المرتب','الضريبة','خصم الصندوق','الدمغة','الصافي']
+        header = ['الرمز','الموظف','الإدارة','الدرجة الوظيفية','العلاوة','مرتب الجهة الأم','مرتب الشركة','فرق المرتب','الضريبة','خصم الصندوق','الدمغة','الصافي']
         summary_list = []
 
         if bank_sheet:
@@ -743,7 +743,7 @@ class Wi7datMosa3idaMokaf2tFarigMoratab(LoginRequiredMixin,UserPermissionMixin,V
             template_name = 'hr/wi7dat_mosa3ida.html'
             for (emp,badalat,mokaf2,draja_wazifia,alawa_sanawia) in payroll.all_employees_payroll_from_db():
                 badalat_list = [round(b[1],2) for b in mokaf2]
-                l = [emp.code,emp.name,Drajat3lawat.DRAJAT_CHOICES[draja_wazifia],Drajat3lawat.ALAWAT_CHOICES[alawa_sanawia]] + badalat_list
+                l = [emp.code,emp.name,emp.hikal_wazifi,Drajat3lawat.DRAJAT_CHOICES[draja_wazifia],Drajat3lawat.ALAWAT_CHOICES[alawa_sanawia]] + badalat_list
                 data.append(l)
 
                 for idx,s in enumerate(badalat_list):

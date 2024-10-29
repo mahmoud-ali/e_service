@@ -494,7 +494,8 @@ class Wi7datMosa3idaMokaf2tFarigMoratabPayroll():
         self.hr_settings = HrSettings()
         self.employees = EmployeeBasic.objects \
             .filter(no3_2lertibat=EmployeeBasic.NO3_2LERTIBAT_2L7ag) \
-            .filter(status=EmployeeBasic.STATUS_ACTIVE)
+            .filter(status=EmployeeBasic.STATUS_ACTIVE) \
+            .order_by('hikal_wazifi')
         
         self.admin_user = get_user_model().objects.get(id=1)
 
