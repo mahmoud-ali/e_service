@@ -1,3 +1,6 @@
+import codecs
+import csv
+from django.http import HttpResponse
 from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
 from django.urls import reverse
@@ -99,7 +102,7 @@ class AppMoveGoldAdmin(LogAdminMixin,admin.ModelAdmin):
     ]
     list_filter = ["date","state",("source_state",admin.RelatedOnlyFieldListFilter)]
     search_fields = ["code","owner_name","owner_address","repr_name","repr_phone","repr_identity"]
-    actions = ['confirm_app']
+    actions = ['confirm_app','export_as_csv']
 
     view_on_site = False
 
@@ -162,6 +165,7 @@ class AppMoveGoldAdmin(LogAdminMixin,admin.ModelAdmin):
                 del actions['confirm_app']
 
         return actions
+    
     @admin.action(description=_('Confirm application'))
     def confirm_app(self, request, queryset):
         try:
@@ -177,6 +181,34 @@ class AppMoveGoldAdmin(LogAdminMixin,admin.ModelAdmin):
                 self.message_user(request,_('application confirmed successfully!'))
         except:
             pass
+
+    @admin.action(description=_('Export data'))
+    def export_as_csv(self, request, queryset):
+        response = HttpResponse(
+            content_type="text/csv",
+            headers={"Content-Disposition": f'attachment; filename="move_gold_form.csv"'},
+        )
+        header = [
+                    _("code"),_("date"),_('gold_weight_in_gram'),_('gold_alloy_count'),_("destination"),_("owner_name"),_( "owner_address"),\
+                    _("repr_name"),_("repr_address"),_("repr_phone"),_("repr_identity_type"),_("repr_identity"),_("repr_identity_issue_date"),_("record_state"),_("source_state")
+        ]
+
+        # BOM
+        response.write(codecs.BOM_UTF8)
+
+        writer = csv.writer(response)
+        writer.writerow(header)
+
+        for emp in queryset.order_by("source_state","code"):
+
+            row = [
+                    emp.code,emp.date,emp.gold_weight_in_gram,emp.gold_alloy_count,emp.get_destination_display(),emp.owner_name,\
+                    emp.owner_address,emp.repr_name,emp.repr_address,emp.repr_phone,emp.get_repr_identity_type_display(),emp.repr_identity,emp.repr_identity_issue_date,emp.get_state_display(),\
+                    emp.source_state
+            ]
+            writer.writerow(row)
+
+        return response
 
     @admin.display(description=_('gold_weight_in_gram'))
     def gold_weight_in_gram(self, obj):
