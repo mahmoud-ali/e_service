@@ -726,6 +726,15 @@ class EmployeeSalafiat(LoggingModel):
         verbose_name = _("Salafiat")
         verbose_name_plural = _("Salafiat")
 
+    def validate_unique(self, exclude=None):
+        qs = EmployeeSalafiat.objects.filter(no3_2lsalafia=EmployeeSalafiat.NO3_2LSALAFIA_SANDOG,employee=self.employee,year=self.year,month=self.month)
+        count = qs.count()
+
+        if not (count==0 or (count==1 and self.pk)):
+            raise ValidationError(_('Duplicated: Record already exists!'))
+        
+        return super().validate_unique(exclude=exclude)
+
 class EmployeeJazaat(LoggingModel):
     employee = models.ForeignKey(EmployeeBasic, on_delete=models.PROTECT,verbose_name=_("employee_name"))
     year = models.IntegerField(_("year"), validators=[MinValueValidator(limit_value=2015),MaxValueValidator(limit_value=2100)])
