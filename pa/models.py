@@ -408,6 +408,12 @@ class TblCompanyRequestMaster(LoggingModel):
         qs = TblCompanyRequestMaster.objects.filter(
             commitment__company__id=self.commitment.company.id,
         )
+
+        if self.commitment.license and self.commitment.license.id:
+            qs = TblCompanyRequestMaster.objects.filter(
+                commitment__license__id=self.commitment.license.id
+            )
+
         if self.id:
             qs = qs.exclude(id=self.id)
 
