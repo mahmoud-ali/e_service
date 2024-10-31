@@ -112,7 +112,6 @@
     <div style="page-break-after: always;"></div>
     <br/>
     <image src="{% static 'gold_travel/img/logo.png'%}" class="center"/>
-    <br />
 
     <h4 style="text-align:center">الإدارة العامة للرقابة والإشراف على شركات الصادر وأسواق الذهب</h4>
     <h4 style="text-align:center">إدارة أسواق الذهب ولاية {{request.user.state_representative.state}}</h4>
@@ -125,7 +124,7 @@
         <div style="page-break-after: always;"></div>
         <br/>
         <image src="{% static 'gold_travel/img/logo.png'%}" class="center"/>
-        <br />
+        <br/>
     {%endif%}
 
     <div class="table-responsive">
@@ -156,8 +155,9 @@
             </tbody>
         </table>
     </div>
-    {% endfor %}
     <h4>الإعتماد: ..........................</h4>
+
+    {% endfor %}
 
   
 {% endblock content %}
