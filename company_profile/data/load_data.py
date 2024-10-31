@@ -453,12 +453,14 @@ def import_companies_emtiaz_email(file_name='exp_email.csv'):
             email = row[2].strip()
             confirmed = row[3]
             try:
+                company = TblCompanyProduction.objects.get(
+                    company_type=TblCompany.COMPANY_TYPE_EMTIAZ,
+                    id=id
+                )
                 if confirmed:
-                    company = TblCompanyProduction.objects.get(
-                        company_type=TblCompany.COMPANY_TYPE_EMTIAZ,
-                        id=id
-                    )
                     company.email = email
-                    company.save()
+                else:
+                    company.email = ''
+                company.save()
             except Exception as e:
                 print(f'id: {id}, email: {email}, Exception: {e}')
