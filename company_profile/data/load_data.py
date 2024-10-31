@@ -443,3 +443,22 @@ def update_locality(r,a):
         obj.state = nat_a.state
         obj.locality = nat_a
         obj.save()
+
+def import_companies_emtiaz_email(file_name='exp_email.csv'):    
+    with open('./company_profile/data/'+file_name, newline='') as csvfile:
+        reader = csv.reader(csvfile, delimiter=',')
+        next(reader, None)  # skip the headers
+        for row in reader:
+            id = row[0].strip()
+            email = row[2].strip()
+            confirmed = row[3]
+            try:
+                if confirmed:
+                    company = TblCompanyProduction.objects.get(
+                        company_type=TblCompany.COMPANY_TYPE_EMTIAZ,
+                        id=id
+                    )
+                    company.email = email
+                    company.save()
+            except Exception as e:
+                print(f'id: {id}, email: {email}, Exception: {e}')
