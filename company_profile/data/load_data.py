@@ -464,3 +464,14 @@ def import_companies_emtiaz_email(file_name='exp_email.csv'):
                 company.save()
             except Exception as e:
                 print(f'id: {id}, email: {email}, Exception: {e}')
+
+
+import re
+regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b'
+
+def check_is_email_valid():
+    for obj in TblCompanyProduction.objects.all():
+        if obj.email and not re.fullmatch(regex, obj.email):
+            print(f"invalid email: {obj.id} => {obj.email}")
+            obj.email = ''
+            obj.save()
