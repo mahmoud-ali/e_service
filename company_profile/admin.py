@@ -165,7 +165,7 @@ class TblCompanyProductionAdmin(ExportActionMixin,LoggingAdminMixin,admin.ModelA
      ]
      
     list_display = ["company_type","code","name_ar", "name_en", "status",'license_count','show_summary_link']
-    list_filter = ["company_type","nationality","status","created_at",LicenseCountFilter]
+    list_filter = ["company_type","nationality","status","created_at",LicenseCountFilter,('email',admin.EmptyFieldListFilter)]
     search_fields = ["code","name_ar","name_en"]
     exclude = ["created_at","created_by","updated_at","updated_by"]
     view_on_site = False
