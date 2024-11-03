@@ -114,7 +114,7 @@ class TblCompanyRequestMasterAdmin(LogAdminMixin,admin.ModelAdmin):
             formset = inline.get_formset(request, obj)
             if isinstance(inline,TblCompanyRequestMasterDetailInline):
                 formset.form = TblCompanyRequestDetailsForm
-                formset.form.company_type = get_company_types_from_groups(request.user)[0] #obj.commitment.company.company_type
+                formset.form.company_type = obj.commitment.company.company_type #get_company_types_from_groups(request.user)[0] #obj.commitment.company.company_type
             yield formset,inline
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
@@ -149,7 +149,7 @@ class TblCompanyPaymentMasterAdmin(LogAdminMixin,admin.ModelAdmin):
             formset = inline.get_formset(request, obj)
             if isinstance(inline,TblCompanyPaymentMasterDetailInline):
                 formset.form = TblCompanyPaymentDetailForm
-                formset.form.company_type = get_company_types_from_groups(request.user)[0] #obj.request.commitment.company.company_type
+                formset.form.company_type = obj.request.commitment.company.company_type #get_company_types_from_groups(request.user)[0] #obj.request.commitment.company.company_type
             yield formset,inline
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
