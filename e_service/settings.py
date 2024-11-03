@@ -155,9 +155,6 @@ DATABASES = {
         "CONN_MAX_AGE": 300,
         "CONN_HEALTH_CHECKS": True,
         "ATOMIC_REQUESTS": True,
-        "OPTIONS": {
-            "pool": True,
-        },
     }    
 }
 
