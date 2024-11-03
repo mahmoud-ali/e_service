@@ -153,7 +153,7 @@ class TblCompanyPaymentMasterAdmin(LogAdminMixin,admin.ModelAdmin):
             yield formset,inline
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
-        print(db_field.name)
+        # print(db_field.name)
         if db_field.name == "request":
             kwargs["queryset"] = TblCompanyRequestMaster.objects.filter(state=STATE_TYPE_CONFIRM)
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
