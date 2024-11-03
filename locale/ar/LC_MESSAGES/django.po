@@ -2492,7 +2492,7 @@ msgstr "الممثلين بالولاية"
 
 #: gold_travel/models.py:59
 msgid "ssmo_name"
-msgstr "الهيئة السودانية للمواصفات والمقاييس"
+msgstr "الهيئة السودانية للمواصفات والمقاييس / بورتسودان"
 
 #: gold_travel/models.py:69 gold_travel/models.py:170
 msgid "state_draft"
