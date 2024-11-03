@@ -896,7 +896,7 @@ class Ta3agodMosimiMoratab(LoginRequiredMixin,UserPermissionMixin,View):
                 l = [emp.code,emp.name,bank,bnk_no,round(moratab.safi_alisti7gag,2)]
                 data.append(l)
         else:
-            template_name = 'hr/wi7dat_mosa3ida.html'
+            template_name = 'hr/t3agood_mosimi.html'
             for (emp,moratab,draja_wazifia,alawa_sanawia) in payroll.all_employees_payroll_from_db():
                 badalat_list = [round(b[1],2) for b in moratab]
                 l = [emp.code,emp.name,Drajat3lawat.DRAJAT_CHOICES[draja_wazifia],Drajat3lawat.ALAWAT_CHOICES[alawa_sanawia]] + badalat_list
@@ -974,7 +974,7 @@ class Ta3agodMosimiMokaf2(LoginRequiredMixin,UserPermissionMixin,View):
                 l = [emp.code,emp.name,bank,bnk_no,round(moratab.safi_alisti7gag,2)]
                 data.append(l)
         else:
-            template_name = 'hr/wi7dat_mosa3ida.html'
+            template_name = 'hr/t3agood_mosimi.html'
             for (emp,moratab,draja_wazifia,alawa_sanawia) in payroll.all_employees_payroll_from_db():
                 badalat_list = [round(b[1],2) for b in moratab]
                 l = [emp.code,emp.name,Drajat3lawat.DRAJAT_CHOICES[draja_wazifia],Drajat3lawat.ALAWAT_CHOICES[alawa_sanawia]] + badalat_list
