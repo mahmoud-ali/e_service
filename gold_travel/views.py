@@ -19,9 +19,14 @@ class UserPermissionMixin(UserPassesTestMixin):
 class GoldTravelCert(LoginRequiredMixin,UserPermissionMixin,TemplateView):
     template_name = 'gold_travel/gold_travel.html'
 
-    def _partition(self,lst, size):
-        for i in range(0, len(lst), size):
-            yield lst[i : i+size]
+    def _partition(self,lst, size=20):
+        l = len(lst)
+        if l <= 18:
+            yield lst
+        else:
+            yield lst[0 : 18]
+            for i in range(18, l, size):
+                yield lst[i : i+size]
 
     def get(self,*args,**kwargs):
         id = int(self.request.GET['id'])
@@ -31,7 +36,7 @@ class GoldTravelCert(LoginRequiredMixin,UserPermissionMixin,TemplateView):
         for r in TblStateRepresentative.objects.filter(state=obj.source_state):
             state_repr[f"{r.authority}"]= r.name
 
-        alloy_chunks = self._partition(obj.appmovegolddetails_set.all(),20)
+        alloy_chunks = self._partition(obj.appmovegolddetails_set.all())
 
         self.extra_context = {
             'object': obj,
