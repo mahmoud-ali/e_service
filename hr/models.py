@@ -890,25 +890,6 @@ class EmployeeM2moria(LoggingModel):
         verbose_name = _("M2moria")
         verbose_name_plural = _("M2moria")
 
-class EmployeeM2moriaMonthly(LoggingModel):
-    employee = models.ForeignKey(EmployeeBasic, on_delete=models.PROTECT,verbose_name=_("employee_name"))
-    year = models.IntegerField(_("year"), validators=[MinValueValidator(limit_value=2015),MaxValueValidator(limit_value=2100)])
-    month = models.IntegerField(_("month"), choices=MONTH_CHOICES)
-    ajmali_2lmoratab = models.FloatField(_("amount"))
-    no_days = models.IntegerField(_("no_days"))
-    damga = models.FloatField(_("damga"))
-    safi_2l2sti7gag = models.FloatField(_("safi_2l2sti7gag"))
-    confirmed = models.BooleanField(_("confirmed"),default=False)
-
-    class Meta:
-        constraints = [
-            models.UniqueConstraint(fields=['employee','year','month'],name="unique_m2moriaemployee_year_month")
-        ]
-        indexes = [
-            models.Index(fields=["year","month"]),
-            models.Index(fields=["employee", "year","month"]),
-        ]
-
 class PayrollMaster(LoggingModel):
     year = models.IntegerField(_("year"), validators=[MinValueValidator(limit_value=2015),MaxValueValidator(limit_value=2100)])
     month = models.IntegerField(_("month"), choices=MONTH_CHOICES)
@@ -933,6 +914,21 @@ class PayrollMaster(LoggingModel):
 
     def __str__(self) -> str:
         return f'{_("Payroll")} {self.get_month_display()} {self.year}'
+
+class EmployeeM2moriaMonthly(LoggingModel):
+    payroll_master = models.ForeignKey(PayrollMaster, on_delete=models.CASCADE)
+    m2moria_master = models.ForeignKey(EmployeeM2moria, on_delete=models.CASCADE)
+    employee = models.ForeignKey(EmployeeBasic, on_delete=models.PROTECT,verbose_name=_("employee_name"))
+    # year = models.IntegerField(_("year"), validators=[MinValueValidator(limit_value=2015),MaxValueValidator(limit_value=2100)])
+    # month = models.IntegerField(_("month"), choices=MONTH_CHOICES)
+    ajmali_2lmoratab = models.FloatField(_("amount"))
+    no_days = models.IntegerField(_("no_days"))
+    damga = models.FloatField(_("damga"))
+    safi_2l2sti7gag = models.FloatField(_("safi_2l2sti7gag"))
+
+    class Meta:
+        verbose_name = _("M2moria detail")
+        verbose_name_plural = _("M2moria details")
 
 class PayrollDetailAbstract(models.Model):
     payroll_master = models.ForeignKey(PayrollMaster, on_delete=models.CASCADE)

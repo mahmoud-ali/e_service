@@ -404,12 +404,16 @@ class M2moriaSheet():
         self.year = int(year)
         self.month = int(month)
 
+        self.payroll_master = PayrollMaster.objects.get(
+                year = self.year,
+                month = self.month,
+            )
+
         first_day_in_month = datetime.date(self.year,self.month,1)
 
         self.hr_settings = HrSettings()
         self.employees = EmployeeM2moria.objects.filter(
-            Q(end_dt_actual__gte=first_day_in_month) |
-            Q(end_dt_actual__isnull=True)
+            Q(end_dt_actual__gte=first_day_in_month) 
         ).prefetch_related("employee").filter(employee__status=EmployeeBasic.STATUS_ACTIVE)
 
         self.admin_user = get_user_model().objects.get(id=1)
@@ -450,18 +454,27 @@ class M2moriaSheet():
                 yield(x)
 
     def calculate(self):
-        if EmployeeM2moriaMonthly.objects.filter(year = self.year,month = self.month,confirmed=True).exists():
-            return False
+        # if EmployeeM2moriaMonthly.objects.filter(year = self.year,month = self.month,confirmed=True).exists():
+        #     return False
+
+        if not self.payroll_master:
+            self.payroll_master = PayrollMaster.objects.get(
+                year = self.year,
+                month = self.month,
+            )
+        else:
+            EmployeeM2moriaMonthly.objects.filter(payroll_master = self.payroll_master).delete()
 
         try:
             with transaction.atomic():        
-                EmployeeM2moriaMonthly.objects.filter(year = self.year,month = self.month).delete()
 
                 for emp_m2moria in self.all_employees_m2moria_calculated():
                     EmployeeM2moriaMonthly.objects.create(
+                        payroll_master = self.payroll_master,
+                        m2moria_master = emp_m2moria._m2moria_model,
                         employee = emp_m2moria.employee,
-                        year = self.year,
-                        month = self.month,
+                        # year = self.year,
+                        # month = self.month,
                         ajmali_2lmoratab = emp_m2moria.ajmali_2lmoratab,
                         no_days = emp_m2moria.ayam_2l3mal,
                         damga = emp_m2moria.damga,
@@ -475,15 +488,15 @@ class M2moriaSheet():
             return False
         
     def all_employees_m2moria_from_db(self):
-        return EmployeeM2moriaMonthly.objects.filter(year = self.year,month = self.month).prefetch_related("employee")
+        return EmployeeM2moriaMonthly.objects.filter(payroll_master = self.payroll_master).prefetch_related("employee")
     
-    def confirm(self):
-        with transaction.atomic():
-            for p in self.all_employees_m2moria_from_db():
-                p.confirmed = True
-                p.save(update_fields=['confirmed'])
+    # def confirm(self):
+    #     with transaction.atomic():
+    #         for p in self.all_employees_m2moria_from_db():
+    #             p.confirmed = True
+    #             p.save(update_fields=['confirmed'])
 
-            return True
+    #         return True
 
 ###########
 class Wi7datMosa3idaMokaf2tFarigMoratabPayroll():

@@ -536,22 +536,24 @@ class M2moria():
         start_dt = self._m2moria_model.start_dt
         end_dt = self._m2moria_model.end_dt_actual
 
-        ayam_2lmobashra = self.ayam_2lshahar
+        return (self.get_days_between_dates(start_dt,end_dt))
 
-        if start_dt > self.akhar_youm_fi_2lshahar: #fi almostagbal
-            return 0
+        # ayam_2lmobashra = self.ayam_2lshahar
+
+        # if start_dt > self.akhar_youm_fi_2lshahar: #fi almostagbal
+        #     return 0
         
-        if start_dt > self.awal_youm_fi_2lshahar:
-            ayam_2lmobashra -= (self.get_days_between_dates(self.awal_youm_fi_2lshahar,start_dt))
+        # if start_dt > self.awal_youm_fi_2lshahar:
+        #     ayam_2lmobashra -= (self.get_days_between_dates(self.awal_youm_fi_2lshahar,start_dt))
 
-        if end_dt:
-            if end_dt < self.awal_youm_fi_2lshahar:
-                return 0
+        # if end_dt:
+        #     if end_dt < self.awal_youm_fi_2lshahar:
+        #         return 0
             
-            if end_dt < self.akhar_youm_fi_2lshahar:
-                ayam_2lmobashra -= (self.get_days_between_dates(end_dt,self.akhar_youm_fi_2lshahar))
+        #     if end_dt < self.akhar_youm_fi_2lshahar:
+        #         ayam_2lmobashra -= (self.get_days_between_dates(end_dt,self.akhar_youm_fi_2lshahar))
 
-        return ayam_2lmobashra
+        # return ayam_2lmobashra
 
     @property
     def damga(self):

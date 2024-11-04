@@ -10,7 +10,7 @@ from django.utils.translation import gettext_lazy as _
 
 from hr.payroll import M2moriaSheet, MajlisEl2daraMokaf2Payroll, MobasharaSheet, Payroll, Ta3agodMosimiPayroll, Wi7datMosa3idaMokaf2tFarigMoratabPayroll
 
-from .models import Drajat3lawat, EmployeeBankAccount, EmployeeFamily, EmployeeM2moria, EmployeeMajlisEl2dara, EmployeeMoahil, EmployeeJazaat, EmployeeMobashra, EmployeeVacation, EmployeeWi7datMosa3da, Gisim, HikalWazifi, MosamaWazifi,Edara3ama,Edarafar3ia,EmployeeBasic, PayrollDetail, PayrollDetailMajlisEl2dara, PayrollDetailTa3agodMosimi, PayrollDetailWi7datMosa3ida, PayrollMaster, EmployeeSalafiat,Settings, Wi7da
+from .models import Drajat3lawat, EmployeeBankAccount, EmployeeFamily, EmployeeM2moria, EmployeeM2moriaMonthly, EmployeeMajlisEl2dara, EmployeeMoahil, EmployeeJazaat, EmployeeMobashra, EmployeeVacation, EmployeeWi7datMosa3da, Gisim, HikalWazifi, MosamaWazifi,Edara3ama,Edarafar3ia,EmployeeBasic, PayrollDetail, PayrollDetailMajlisEl2dara, PayrollDetailTa3agodMosimi, PayrollDetailWi7datMosa3ida, PayrollMaster, EmployeeSalafiat,Settings, Wi7da
 from mptt.admin import MPTTModelAdmin,TreeRelatedFieldListFilter
 
 admin.site.title = _("Site header")
@@ -542,9 +542,20 @@ class PayrollDetailMajlisEl2daraInline(admin.TabularInline):
     def has_add_permission(self,request, obj):
         return False
 
+class EmployeeM2moriaMonthlyInline(admin.TabularInline):
+    model = EmployeeM2moriaMonthly
+    #exclude = ["created_at","created_by","updated_at","updated_by"]
+    fields = ['employee','ajmali_2lmoratab','no_days','damga','safi_2l2sti7gag']
+    extra = 0
+    readonly_fields = fields #['employee','abtdai','galaa_m3isha','shakhsia','aadoa','gasima','atfal','moahil','ma3adin','m3ash','salafiat','jazaat','damga','sandog','sandog_kahraba','salafiat_sandog','tarikh_milad','draja_wazifia','alawa_sanawia']
+    can_delete = False
+    list_select_related = True
+    def has_add_permission(self,request, obj):
+        return False
+
 class PayrollMasterAdmin(admin.ModelAdmin):
     exclude = ["created_at","created_by","updated_at","updated_by","zaka_kafaf","zaka_nisab","confirmed","enable_sandog_kahraba","enable_youm_algoat_almosalaha","daribat_2lmokafa","m3ash_age","khasm_salafiat_elsandog_min_elomoratab"]
-    inlines = [PayrollDetailInline,PayrollDetailWi7datMosa3idaInline,PayrollDetailTa3agodMosimiInline,PayrollDetailMajlisEl2daraInline]
+    inlines = [PayrollDetailInline,PayrollDetailWi7datMosa3idaInline,PayrollDetailTa3agodMosimiInline,PayrollDetailMajlisEl2daraInline,EmployeeM2moriaMonthlyInline]
 
     # list_display = ["year","month","confirmed","show_badalat_link","show_khosomat_link","show_mokaf2_link","show_mobashara_link"]
     list_filter = ["year","month","confirmed"]
@@ -740,9 +751,6 @@ class PayrollMasterAdmin(admin.ModelAdmin):
         for q in queryset:
             mobashara = MobasharaSheet(q.year,q.month)
             mobashara.confirm()
-
-            m2moria = M2moriaSheet(q.year,q.month)
-            m2moria.calculate()
 
             EmployeeSalafiat.objects.filter(year=q.year,month=q.month).update(deducted=True)
 
