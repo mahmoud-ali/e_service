@@ -919,8 +919,6 @@ class EmployeeM2moriaMonthly(LoggingModel):
     payroll_master = models.ForeignKey(PayrollMaster, on_delete=models.CASCADE)
     m2moria_master = models.ForeignKey(EmployeeM2moria, on_delete=models.CASCADE)
     employee = models.ForeignKey(EmployeeBasic, on_delete=models.PROTECT,verbose_name=_("employee_name"))
-    # year = models.IntegerField(_("year"), validators=[MinValueValidator(limit_value=2015),MaxValueValidator(limit_value=2100)])
-    # month = models.IntegerField(_("month"), choices=MONTH_CHOICES)
     ajmali_2lmoratab = models.FloatField(_("amount"))
     no_days = models.IntegerField(_("no_days"))
     damga = models.FloatField(_("damga"))
