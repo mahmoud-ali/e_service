@@ -80,11 +80,13 @@ class AppMoveGold(LoggingModel):
     IDENTITY_PASSPORT = 1
     IDENTITY_PERSONAL = 2
     IDENTITY_NATIONAL_ID = 3
+    IDENTITY_DRIVING_LICENSE = 4
 
     IDENTITY_CHOICES = {
         IDENTITY_PASSPORT: _('identity_passport'),
         IDENTITY_PERSONAL: _('identity_personal'),
         IDENTITY_NATIONAL_ID: _('identity_national_id'),
+        IDENTITY_DRIVING_LICENSE: _('identity_driving_license'),
     }
 
     def attachement_path(self, filename):

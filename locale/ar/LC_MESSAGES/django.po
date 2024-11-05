@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-24 13:13+0200\n"
+"POT-Creation-Date: 2024-11-04 15:07+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -132,7 +132,7 @@ msgstr "بيانات العقد"
 msgid "company_type"
 msgstr "نوع الشركة"
 
-#: company_profile/admin.py:313
+#: company_profile/admin.py:313 gold_travel/admin.py:185
 msgid "Export data"
 msgstr "تصدير البيانات"
 
@@ -200,7 +200,7 @@ msgstr "عدد الرخص"
 
 #: company_profile/admin.py:321 company_profile/models.py:81
 #: company_profile/models.py:209 gold_travel/models.py:22
-#: gold_travel/models.py:46 gold_travel/models.py:107 gold_travel/models.py:179
+#: gold_travel/models.py:46 gold_travel/models.py:113 gold_travel/models.py:185
 #: pa/templates/pa/company_panel.html:21 traditional_api/models.py:30
 #: traditional_api/models.py:43
 msgid "state"
@@ -331,8 +331,8 @@ msgstr "امتياز استكشاف"
 msgid "sageer"
 msgstr "تعدين صغير"
 
-#: company_profile/models.py:115 gold_travel/models.py:23
-#: gold_travel/models.py:91
+#: company_profile/models.py:115 gold_travel/admin.py:192
+#: gold_travel/models.py:23 gold_travel/models.py:97
 msgid "code"
 msgstr "الرمز"
 
@@ -1459,8 +1459,8 @@ msgstr "تعليق مختصر عن الدراسة"
 
 #: company_profile/models.py:888 company_profile/models.py:914
 #: company_profile/models.py:997 company_profile/models.py:1088
-#: company_profile/models.py:1104 gold_travel/models.py:106 pa/models.py:309
-#: pa/models.py:515 pa/models.py:631
+#: company_profile/models.py:1104 gold_travel/models.py:112 pa/models.py:309
+#: pa/models.py:521 pa/models.py:637
 msgid "attachement_file"
 msgstr "المرفقات"
 
@@ -2405,36 +2405,89 @@ msgstr ""
 msgid "Wrong transition path."
 msgstr ""
 
-#: gold_travel/admin.py:76
+#: gold_travel/admin.py:79
 msgid "owner data"
 msgstr "بيانات المالك"
 
-#: gold_travel/admin.py:82
+#: gold_travel/admin.py:85
 msgid "representative data"
 msgstr "بيانات الناقل"
 
-#: gold_travel/admin.py:94
+#: gold_travel/admin.py:97
 msgid "attachments"
 msgstr "المرفقات"
 
-#: gold_travel/admin.py:165
+#: gold_travel/admin.py:169
 msgid "Confirm application"
 msgstr "اعتماد الطلب"
 
-#: gold_travel/admin.py:177
+#: gold_travel/admin.py:181
 msgid "application confirmed successfully!"
 msgstr "تم إعتماد الطلب بنجاح."
 
-#: gold_travel/admin.py:181 gold_travel/models.py:176
+#: gold_travel/admin.py:192 gold_travel/models.py:98 gold_travel/models.py:180
+#: pa/templates/pa/pa_daily.html:75 revenu_dist/models.py:108
+msgid "date"
+msgstr "التاريخ"
+
+#: gold_travel/admin.py:192 gold_travel/admin.py:213 gold_travel/models.py:182
 msgid "gold_weight_in_gram"
 msgstr "اجمالي وزن الذهب بالجرام"
 
-#: gold_travel/admin.py:185
+#: gold_travel/admin.py:192 gold_travel/admin.py:217
 msgid "gold_alloy_count"
 msgstr "عدد السبائك"
 
-#: gold_travel/admin.py:189 gold_travel/admin.py:192 gold_travel/admin.py:247
-#: gold_travel/admin.py:250
+#: gold_travel/admin.py:192 gold_travel/models.py:99
+msgid "destination"
+msgstr "الوجهة"
+
+#: gold_travel/admin.py:192 gold_travel/models.py:100 gold_travel/models.py:181
+msgid "owner_name"
+msgstr "اسم المالك"
+
+#: gold_travel/admin.py:192 gold_travel/models.py:101
+msgid "owner_address"
+msgstr "عنوان المالك"
+
+#: gold_travel/admin.py:193 gold_travel/models.py:102
+msgid "repr_name"
+msgstr "اسم الناقل"
+
+#: gold_travel/admin.py:193 gold_travel/models.py:103
+msgid "repr_address"
+msgstr "عنوان الناقل"
+
+#: gold_travel/admin.py:193 gold_travel/models.py:104
+msgid "repr_phone"
+msgstr "تلفون الناقل"
+
+#: gold_travel/admin.py:193 gold_travel/models.py:105
+msgid "repr_identity_type"
+msgstr "نوع اثبات هوية الناقل"
+
+#: gold_travel/admin.py:193 gold_travel/models.py:106
+msgid "repr_identity"
+msgstr "اثبات هوية الناقل"
+
+#: gold_travel/admin.py:193 gold_travel/models.py:107
+msgid "repr_identity_issue_date"
+msgstr "تاريخ اصدار هوية الناقل"
+
+#: gold_travel/admin.py:193 gold_travel/models.py:111 gold_travel/models.py:184
+#: pa/models.py:95 pa/models.py:133 pa/models.py:197 pa/models.py:307
+#: pa/models.py:519 pa/tables/payment.py:34 pa/tables/request.py:53
+msgid "record_state"
+msgstr "الحالة"
+
+#: gold_travel/admin.py:193
+#, fuzzy
+#| msgid "record_state"
+msgid "source_state"
+msgstr "الحالة"
+
+#: gold_travel/admin.py:221 gold_travel/admin.py:224 gold_travel/admin.py:279
+#: gold_travel/admin.py:282
 msgid "Show certificate"
 msgstr "عرض الشهادة"
 
@@ -2482,142 +2535,99 @@ msgstr "هيئة الإستخبارات العسكرية"
 msgid "authority"
 msgstr "الجهة"
 
-#: gold_travel/models.py:53
+#: gold_travel/models.py:57
 msgid "state representative"
 msgstr "الممثل بالولاية"
 
-#: gold_travel/models.py:54
+#: gold_travel/models.py:58
 msgid "state representatives"
 msgstr "الممثلين بالولاية"
 
-#: gold_travel/models.py:59
+#: gold_travel/models.py:63
 msgid "ssmo_name"
 msgstr "الهيئة السودانية للمواصفات والمقاييس / بورتسودان"
 
-#: gold_travel/models.py:69 gold_travel/models.py:170
+#: gold_travel/models.py:73 gold_travel/models.py:176
 msgid "state_draft"
 msgstr "مسودة"
 
-#: gold_travel/models.py:70
+#: gold_travel/models.py:74
 msgid "state_smrc"
 msgstr "اعتماد ممثل الشركة السودانية"
 
-#: gold_travel/models.py:71
+#: gold_travel/models.py:75
 msgid "state_2mn_2lm3adin"
 msgstr "اعتماد ممثل أمن إقتصاديات المعادن"
 
-#: gold_travel/models.py:72
+#: gold_travel/models.py:76
 msgid "state_shortat_2lm3adin"
 msgstr "اعتماد ممثل شرطة تأمين التعدين "
 
-#: gold_travel/models.py:73
+#: gold_travel/models.py:77
 msgid "state_2lestikhbarat_2l3askria"
 msgstr "اعتماد ممثل هيئة الإستخبارات العسكرية"
 
-#: gold_travel/models.py:81
+#: gold_travel/models.py:86
 msgid "identity_passport"
 msgstr "جواز"
 
-#: gold_travel/models.py:82
+#: gold_travel/models.py:87
 msgid "identity_personal"
 msgstr "بطاقة شخصية"
 
-#: gold_travel/models.py:83
+#: gold_travel/models.py:88
 msgid "identity_national_id"
 msgstr "رقم وطني"
 
-#: gold_travel/models.py:92 gold_travel/models.py:174
-#: pa/templates/pa/pa_daily.html:75 revenu_dist/models.py:108
-msgid "date"
-msgstr "التاريخ"
+#: gold_travel/models.py:89
+msgid "identity_driving_license"
+msgstr "رخصة قيادة"
 
-#: gold_travel/models.py:93
-msgid "destination"
-msgstr "الوجهة"
-
-#: gold_travel/models.py:94 gold_travel/models.py:175
-msgid "owner_name"
-msgstr "اسم المالك"
-
-#: gold_travel/models.py:95
-msgid "owner_address"
-msgstr "عنوان المالك"
-
-#: gold_travel/models.py:96
-msgid "repr_name"
-msgstr "اسم الناقل"
-
-#: gold_travel/models.py:97
-msgid "repr_address"
-msgstr "عنوان الناقل"
-
-#: gold_travel/models.py:98
-msgid "repr_phone"
-msgstr "تلفون الناقل"
-
-#: gold_travel/models.py:99
-msgid "repr_identity_type"
-msgstr "نوع اثبات هوية الناقل"
-
-#: gold_travel/models.py:100
-msgid "repr_identity"
-msgstr "اثبات هوية الناقل"
-
-#: gold_travel/models.py:101
-msgid "repr_identity_issue_date"
-msgstr "تاريخ اصدار هوية الناقل"
-
-#: gold_travel/models.py:105 gold_travel/models.py:178 pa/models.py:95
-#: pa/models.py:133 pa/models.py:197 pa/models.py:307 pa/models.py:513
-#: pa/tables/payment.py:34 pa/tables/request.py:53
-msgid "record_state"
-msgstr "الحالة"
-
-#: gold_travel/models.py:138 gold_travel/models.py:139
+#: gold_travel/models.py:144 gold_travel/models.py:145
 msgid "Move Gold"
 msgstr "طلب ترحيل ذهب"
 
-#: gold_travel/models.py:149
+#: gold_travel/models.py:155
 msgid "alloy_shape_rectangular"
 msgstr "مستطيلة"
 
-#: gold_travel/models.py:150
+#: gold_travel/models.py:156
 msgid "alloy_shape_circular"
 msgstr "دائرية"
 
-#: gold_travel/models.py:154
+#: gold_travel/models.py:160
 msgid "alloy_id"
 msgstr "رقم السبيكة"
 
-#: gold_travel/models.py:155
+#: gold_travel/models.py:161
 msgid "alloy_weight_in_gram"
 msgstr "الوزن بالجرام"
 
-#: gold_travel/models.py:156
+#: gold_travel/models.py:162
 msgid "alloy_shape"
 msgstr "شكل السبيكة/السبائك"
 
-#: gold_travel/models.py:157
+#: gold_travel/models.py:163
 msgid "alloy_note"
 msgstr "ملاحظات عن السبيكة/السبائك"
 
-#: gold_travel/models.py:163
+#: gold_travel/models.py:169
 msgid "alloy detail"
 msgstr "تفاصيل وزن السبيكة"
 
-#: gold_travel/models.py:164
+#: gold_travel/models.py:170
 msgid "alloy details"
 msgstr "تفاصيل وزن السبائك"
 
-#: gold_travel/models.py:171
+#: gold_travel/models.py:177
 msgid "state_confirmed"
 msgstr "مؤكد"
 
-#: gold_travel/models.py:177
+#: gold_travel/models.py:183
 msgid "issuer"
 msgstr "مصدر الطلب"
 
-#: gold_travel/models.py:185 gold_travel/models.py:186
+#: gold_travel/models.py:191 gold_travel/models.py:192
 msgid "prepare gold"
 msgstr "طلب شراء وسبك وتجهيز الذهب"
 
@@ -2675,7 +2685,7 @@ msgid "all"
 msgstr "الكل"
 
 #: pa/forms/daily.py:10 pa/models.py:94 pa/models.py:131 pa/models.py:305
-#: pa/models.py:510 pa/templates/pa/pa_daily.html:47
+#: pa/models.py:516 pa/templates/pa/pa_daily.html:47
 #: pa/templates/pa/pa_daily.html:77 revenu_dist/models.py:112
 msgid "currency"
 msgstr "العملة"
@@ -2689,7 +2699,7 @@ msgid "to_dt"
 msgstr "الى"
 
 #: pa/forms/payment.py:26 pa/forms/payment.py:47 pa/forms/payment.py:74
-#: pa/models.py:508
+#: pa/models.py:514
 msgid "request"
 msgstr "المطالبة"
 
@@ -2757,12 +2767,12 @@ msgstr "الرصيد الافتتاحي"
 msgid "Openning balances"
 msgstr "الارصدة الافتتاحية"
 
-#: pa/models.py:113 pa/models.py:169 pa/models.py:453 pa/models.py:562
+#: pa/models.py:113 pa/models.py:169 pa/models.py:459 pa/models.py:568
 #: pa/templates/pa/pa_daily.html:76
 msgid "financial item"
 msgstr "البند"
 
-#: pa/models.py:114 pa/models.py:454 pa/models.py:563 pa/models.py:628
+#: pa/models.py:114 pa/models.py:460 pa/models.py:569 pa/models.py:634
 #: revenu_dist/models.py:111 revenu_dist/models.py:149
 #: traditional_api/models.py:57
 msgid "amount"
@@ -2784,7 +2794,7 @@ msgstr "اختر بند مناسب لنوع الشركة"
 msgid "license"
 msgstr "الاتفاقية/العقد"
 
-#: pa/models.py:132 pa/models.py:308 pa/models.py:514 revenu_dist/models.py:109
+#: pa/models.py:132 pa/models.py:308 pa/models.py:520 revenu_dist/models.py:109
 msgid "note"
 msgstr "البيان"
 
@@ -2844,12 +2854,12 @@ msgstr "جدولة التزامات مالية"
 msgid "field is required"
 msgstr "ادخال الحقل اجباري"
 
-#: pa/models.py:241 pa/models.py:417
+#: pa/models.py:241 pa/models.py:423
 msgid "to_dt should be great or equal than from_dt"
 msgstr "حقل تاريخ النهاية يجب ان يكون اكبر او يساوي حقل تاريخ البداية"
 
-#: pa/models.py:248 pa/models.py:422 pa/models.py:427 pa/models.py:433
-#: pa/models.py:434
+#: pa/models.py:248 pa/models.py:428 pa/models.py:433 pa/models.py:439
+#: pa/models.py:440
 msgid "conflicted date"
 msgstr "تاريخ متضارب"
 
@@ -2877,79 +2887,79 @@ msgstr "المطالبة بإنتظار السداد"
 msgid "Request paied"
 msgstr "تم سداد المطالبة"
 
-#: pa/models.py:440
+#: pa/models.py:446
 msgid "Financial request"
 msgstr "مطالبة مالية"
 
-#: pa/models.py:441
+#: pa/models.py:447
 msgid "Financial requests"
 msgstr "مطالبات مالية"
 
-#: pa/models.py:482
+#: pa/models.py:488
 msgid "request already confirmed!"
 msgstr "لايمكن تعديل مطالبة مؤكدة"
 
-#: pa/models.py:489
+#: pa/models.py:495
 msgid "request amount should match commitment amount: "
 msgstr "قيمة المطالبة يجب ان تساوي قيمة الالتزام"
 
-#: pa/models.py:494
+#: pa/models.py:500
 msgid "receive_dt"
 msgstr "تاريخ الاستلام"
 
-#: pa/models.py:495
+#: pa/models.py:501
 msgid "receiver_name"
 msgstr "اسم المستلم"
 
-#: pa/models.py:509
+#: pa/models.py:515
 msgid "payment_dt"
 msgstr "تاريخ السداد"
 
-#: pa/models.py:511 pa/templates/pa/pa_daily.html:78
+#: pa/models.py:517 pa/templates/pa/pa_daily.html:78
 msgid "exchange_rate"
 msgstr "سعر الصرف"
 
-#: pa/models.py:512
+#: pa/models.py:518
 msgid "exchange_attachement_file"
 msgstr "مرفق سعر الصرف"
 
-#: pa/models.py:522 pa/models.py:549
+#: pa/models.py:528 pa/models.py:555
 msgid "Financial payment"
 msgstr "السداد"
 
-#: pa/models.py:530
+#: pa/models.py:536
 msgid "payment currency equal to request currency"
 msgstr "عملة السداد مساوية لعملة الدفع"
 
-#: pa/models.py:534
+#: pa/models.py:540
 msgid "attach document"
 msgstr "ملف المرفقات"
 
-#: pa/models.py:550
+#: pa/models.py:556
 msgid "Financial payments"
 msgstr "السداد"
 
-#: pa/models.py:593
+#: pa/models.py:599
 msgid "payment already confirmed!"
 msgstr "لايمكن تعديل مطالبة مؤكدة"
 
-#: pa/models.py:603
+#: pa/models.py:609
 msgid "item not exists in request"
 msgstr "البند غير موجود في المطالبة"
 
-#: pa/models.py:607
+#: pa/models.py:613
 msgid "sum of payments more than request amount: "
 msgstr "مجموع قيم السداد اكبر من قيمة المطالبة"
 
-#: pa/models.py:611
+#: pa/models.py:617
 msgid "payment_method_name"
 msgstr "طريقة السداد"
 
-#: pa/models.py:615 pa/models.py:616 pa/models.py:629
+#: pa/models.py:621 pa/models.py:622 pa/models.py:635
 msgid "Payment method"
 msgstr "طريقة السداد"
 
-#: pa/models.py:630
+#: pa/models.py:636
 msgid "reference_key"
 msgstr "الرقم المرجعي"
 
