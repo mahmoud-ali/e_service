@@ -8,7 +8,7 @@ from ..models import TblCompanyOpenningBalanceDetail, TblCompanyOpenningBalanceM
 class TblCompanyOpenningBalanceAdminForm(ModelForm):
     class Meta:
         model = TblCompanyOpenningBalanceMaster
-        fields = ["company","currency","state"] 
+        fields = ["company","currency"] #,"state"
         
 class TblCompanyOpenningBalanceForm(TblCompanyOpenningBalanceAdminForm):
     layout = [["company","currency"]]

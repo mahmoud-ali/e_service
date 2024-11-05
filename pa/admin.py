@@ -14,7 +14,15 @@ class LogAdminMixin:
             obj.created_by = obj.updated_by = request.user
         super().save_model(request, obj, form, change)                
 
+class StateMixin:
+    def change_view(self,request,object_id, form_url='', extra_context=None):
+        template = super().change_view(request,object_id, form_url, extra_context)
+        if request.POST.get('_save_confirm',None):
+            obj = self.get_queryset(request).get(id=object_id)
+            obj.state = STATE_TYPE_CONFIRM
+            obj.save()
 
+        return template
 
 # admin.site.register(LkpItem)
 admin.site.register(LkpPaymentMethod)
@@ -54,8 +62,9 @@ class TblCompanyCommitmentMasterDetailInline(admin.TabularInline):
     #     kwargs["form"].company_type = obj.company.company_type
     #     return super().get_form(request, obj, **kwargs)
 
-class TblCompanyCommitmentMasterAdmin(LogAdminMixin,admin.ModelAdmin):
+class TblCompanyCommitmentMasterAdmin(LogAdminMixin,StateMixin,admin.ModelAdmin):
     model = TblCompanyCommitmentAdminForm
+    fields = ['company','license','currency','note']
     inlines = [TblCompanyCommitmentMasterDetailInline]     
     
     list_display = ["license", "company", "currency","state"]        
@@ -78,10 +87,11 @@ class TblCompanyCommitmentMasterAdmin(LogAdminMixin,admin.ModelAdmin):
 
 admin.site.register(TblCompanyCommitmentMaster, TblCompanyCommitmentMasterAdmin)
 
-class TblCompanyCommitmentSchedularAdmin(LogAdminMixin,admin.ModelAdmin):
+class TblCompanyCommitmentSchedularAdmin(LogAdminMixin,StateMixin,admin.ModelAdmin):
     model = TblCompanyCommitmentSchedular
+    readonly_fields = ['state']
     
-    list_display = ["commitment", "created_at", "created_by","updated_at", "updated_by"]        
+    list_display = ["commitment","state", "created_at", "created_by","updated_at", "updated_by"]        
     list_filter = ["commitment__company__company_type"]
     autocomplete_fields = ["commitment"]
     view_on_site = False        
@@ -98,7 +108,7 @@ class TblCompanyRequestReceiveInline(admin.TabularInline):
     exclude = ["created_at","created_by","updated_at","updated_by"]
     extra = 1    
 
-class TblCompanyRequestMasterAdmin(LogAdminMixin,admin.ModelAdmin):
+class TblCompanyRequestMasterAdmin(LogAdminMixin,StateMixin,admin.ModelAdmin):
     form = TblCompanyRequestAdminForm
     inlines = [TblCompanyRequestMasterDetailInline,TblCompanyRequestReceiveInline]     
     
@@ -134,7 +144,7 @@ class TblCompanyPaymentMethodInline(admin.TabularInline):
     exclude = ["created_at","created_by","updated_at","updated_by"]
     extra = 1    
 
-class TblCompanyPaymentMasterAdmin(LogAdminMixin,admin.ModelAdmin):
+class TblCompanyPaymentMasterAdmin(LogAdminMixin,StateMixin,admin.ModelAdmin):
     form = TblCompanyPaymentAdminForm
     inlines = [TblCompanyPaymentMasterDetailInline,TblCompanyPaymentMethodInline]     
     

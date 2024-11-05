@@ -14,7 +14,7 @@ item_all_qs = LkpItem.objects.all()
 class TblCompanyPaymentAdminForm(ModelForm):
     class Meta:
         model = TblCompanyPaymentMaster
-        fields = ["request","payment_dt","currency","exchange_rate","exchange_attachement_file","note","attachement_file","state"] 
+        fields = ["request","payment_dt","currency","exchange_rate","exchange_attachement_file","note","attachement_file"] #,"state"
 
     def __init__(self, *args,request_id=None, **kwargs):
         super().__init__(*args, **kwargs)

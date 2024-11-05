@@ -25,7 +25,7 @@ item_all_qs = LkpItem.objects.all()
 class TblCompanyRequestAdminForm(ModelForm):
     class Meta:
         model = TblCompanyRequestMaster
-        fields = ["commitment","from_dt","to_dt","currency","state","note","attachement_file"] 
+        fields = ["commitment","from_dt","to_dt","currency","note","attachement_file"] #,"state"
         
 class TblCompanyRequestShowEditForm(TblCompanyRequestAdminForm):
     layout = ["commitment",["from_dt","to_dt"],["currency","total_payment"],"note","attachement_file"]
