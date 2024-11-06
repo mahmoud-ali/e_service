@@ -4,7 +4,7 @@ from pa.forms.commitment import TblCompanyCommitmentAdminForm, TblCompanyCommitm
 from pa.forms.payment import TblCompanyPaymentAdminForm, TblCompanyPaymentDetailForm
 from pa.forms.request import TblCompanyRequestAdminForm, TblCompanyRequestDetailsForm
 from pa.utils import get_company_types_from_groups
-from .models import STATE_TYPE_CONFIRM, LkpItem, LkpPaymentMethod,TblCompanyCommitmentMaster,TblCompanyCommitmentDetail, TblCompanyCommitmentSchedular, TblCompanyOpenningBalanceDetail, TblCompanyOpenningBalanceMaster, TblCompanyPaymentDetail, TblCompanyPaymentMaster, TblCompanyPaymentMethod, TblCompanyRequestDetail, TblCompanyRequestMaster, TblCompanyRequestReceive
+from .models import STATE_TYPE_CONFIRM, STATE_TYPE_DRAFT, LkpItem, LkpPaymentMethod,TblCompanyCommitmentMaster,TblCompanyCommitmentDetail, TblCompanyCommitmentSchedular, TblCompanyOpenningBalanceDetail, TblCompanyOpenningBalanceMaster, TblCompanyPaymentDetail, TblCompanyPaymentMaster, TblCompanyPaymentMethod, TblCompanyRequestDetail, TblCompanyRequestMaster, TblCompanyRequestReceive
 
 class LogAdminMixin:
     def save_model(self, request, obj, form, change):
@@ -15,6 +15,23 @@ class LogAdminMixin:
         super().save_model(request, obj, form, change)                
 
 class StateMixin:
+    save_as_continue = False
+        
+    def has_add_permission(self, request):        
+        return super().has_add_permission(request)
+
+    def has_change_permission(self, request, obj=None):
+        if not obj or obj.state==STATE_TYPE_DRAFT:
+            return super().has_change_permission(request,obj)
+        
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        if not obj or obj.state==STATE_TYPE_DRAFT:
+            return super().has_delete_permission(request,obj)
+        
+        return False
+
     def change_view(self,request,object_id, form_url='', extra_context=None):
         template = super().change_view(request,object_id, form_url, extra_context)
         if request.POST.get('_save_confirm',None):
@@ -82,7 +99,10 @@ class TblCompanyCommitmentMasterAdmin(LogAdminMixin,StateMixin,admin.ModelAdmin)
             formset = inline.get_formset(request, obj)
             if isinstance(inline,TblCompanyCommitmentMasterDetailInline):
                 formset.form = TblCompanyCommitmentDetailForm
-                formset.form.company_type = obj.company.company_type
+                if obj:
+                    formset.form.company_type = obj.company.company_type
+                else:
+                    formset.form.company_type = get_company_types_from_groups(request.user)[0]
             yield formset,inline
 
 admin.site.register(TblCompanyCommitmentMaster, TblCompanyCommitmentMasterAdmin)
@@ -124,7 +144,10 @@ class TblCompanyRequestMasterAdmin(LogAdminMixin,StateMixin,admin.ModelAdmin):
             formset = inline.get_formset(request, obj)
             if isinstance(inline,TblCompanyRequestMasterDetailInline):
                 formset.form = TblCompanyRequestDetailsForm
-                formset.form.company_type = obj.commitment.company.company_type #get_company_types_from_groups(request.user)[0] #obj.commitment.company.company_type
+                if obj:
+                    formset.form.company_type = obj.commitment.company.company_type #get_company_types_from_groups(request.user)[0] #obj.commitment.company.company_type
+                else:
+                    formset.form.company_type = get_company_types_from_groups(request.user)[0]
             yield formset,inline
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
@@ -159,7 +182,10 @@ class TblCompanyPaymentMasterAdmin(LogAdminMixin,StateMixin,admin.ModelAdmin):
             formset = inline.get_formset(request, obj)
             if isinstance(inline,TblCompanyPaymentMasterDetailInline):
                 formset.form = TblCompanyPaymentDetailForm
-                formset.form.company_type = obj.request.commitment.company.company_type #get_company_types_from_groups(request.user)[0] #obj.request.commitment.company.company_type
+                if obj:
+                    formset.form.company_type = obj.request.commitment.company.company_type
+                else:
+                    formset.form.company_type = get_company_types_from_groups(request.user)[0]
             yield formset,inline
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
