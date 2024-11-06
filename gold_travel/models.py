@@ -33,12 +33,14 @@ class TblStateRepresentative(models.Model):
     AUTHORITY_2MN_2LM3ADIN = 3
     AUTHORITY_SHORTAT_2LM3ADIN = 4
     AUTHORITY_2LESTIKHBARAT_2L3ASKRIA = 5
+    AUTHORITY_SMRC_NAFIZA = 6
 
     AUTHORITY_CHOICES = {
         AUTHORITY_SMRC: _('authority_smrc'),
         AUTHORITY_2MN_2LM3ADIN: _('authority_2mn_2lm3adin'),
         AUTHORITY_SHORTAT_2LM3ADIN: _('authority_shortat_2lm3adin'),
         AUTHORITY_2LESTIKHBARAT_2L3ASKRIA: _('authority_2lestikhbarat_2l3askria'),
+        AUTHORITY_SMRC_NAFIZA: _('authority_smrc_nafiza'),
     }
 
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.PROTECT,related_name="state_representative",verbose_name=_("user"))
@@ -68,6 +70,7 @@ class AppMoveGold(LoggingModel):
     STATE_2MN_2LM3ADIN = 3
     STATE_SHORTAT_2LM3ADIN = 4
     STATE_2LESTIKHBARAT_2L3ASKRIA = 5
+    STATE_SSMO = 6
 
     STATE_CHOICES = {
         STATE_DRAFT: _('state_draft'),
@@ -75,6 +78,7 @@ class AppMoveGold(LoggingModel):
         STATE_2MN_2LM3ADIN: _('state_2mn_2lm3adin'),
         STATE_SHORTAT_2LM3ADIN: _('state_shortat_2lm3adin'),
         STATE_2LESTIKHBARAT_2L3ASKRIA: _('state_2lestikhbarat_2l3askria'),
+        STATE_SSMO: _('state_ssmo'),
     }
 
     IDENTITY_PASSPORT = 1

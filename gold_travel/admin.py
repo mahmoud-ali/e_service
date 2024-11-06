@@ -102,7 +102,7 @@ class AppMoveGoldAdmin(LogAdminMixin,admin.ModelAdmin):
     ]
     list_filter = ["date","state",("source_state",admin.RelatedOnlyFieldListFilter)]
     search_fields = ["code","owner_name","owner_address","repr_name","repr_phone","repr_identity"]
-    actions = ['confirm_app','export_as_csv']
+    actions = ['confirm_app','arrived_to_ssmo_app','export_as_csv']
 
     view_on_site = False
 
@@ -126,7 +126,10 @@ class AppMoveGoldAdmin(LogAdminMixin,admin.ModelAdmin):
         try:
             state_representative = request.user.state_representative
             if state_representative.authority!=TblStateRepresentative.AUTHORITY_SMRC:
-                qs = qs.filter(state=(state_representative.authority-1),source_state=state_representative.state)
+                if state_representative.authority==TblStateRepresentative.AUTHORITY_SMRC_NAFIZA:
+                    qs = qs.filter(state__gte=AppMoveGold.STATE_SMRC,source_state=state_representative.state)
+                else:
+                    qs = qs.filter(state=(state_representative.authority-1),source_state=state_representative.state)
             else:
                 qs = qs.filter(source_state=state_representative.state)
         except:
@@ -160,9 +163,16 @@ class AppMoveGoldAdmin(LogAdminMixin,admin.ModelAdmin):
             if authority!=TblStateRepresentative.AUTHORITY_SMRC:
                 if "confirm_app" in actions:
                     del actions['confirm_app']
+
+            if authority!=TblStateRepresentative.AUTHORITY_SMRC_NAFIZA:
+                if "arrived_to_ssmo_app" in actions:
+                    del actions['arrived_to_ssmo_app']
         except:
             if "confirm_app" in actions:
                 del actions['confirm_app']
+
+            if "arrived_to_ssmo_app" in actions:
+                del actions['arrived_to_ssmo_app']
 
         return actions
     
@@ -181,6 +191,13 @@ class AppMoveGoldAdmin(LogAdminMixin,admin.ModelAdmin):
                 self.message_user(request,_('application confirmed successfully!'))
         except:
             pass
+
+    @admin.action(description=_('Arrived to SSMO'))
+    def arrived_to_ssmo_app(self, request, queryset):
+        for obj in queryset:
+            if obj.state >= AppMoveGold.STATE_SMRC:
+                obj.state = AppMoveGold.STATE_SSMO
+                obj.save()
 
     @admin.action(description=_('Export data'))
     def export_as_csv(self, request, queryset):
