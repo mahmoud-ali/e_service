@@ -8,7 +8,7 @@ from gold_travel.models import TblStateRepresentative
 UserModel = get_user_model()
 
 class TblStateRepresentativeForm(forms.ModelForm):
-    user = forms.ModelChoiceField(queryset=UserModel.objects.filter(groups__name='gold_travel_user'), label=_("user"))
+    user = forms.ModelChoiceField(queryset=UserModel.objects.filter(groups__name__in=('gold_travel_state','gold_travel_ssmo')), label=_("user"))
     # def __init__(self, *args, **kwargs):        
     #     super().__init__(*args, **kwargs)
 

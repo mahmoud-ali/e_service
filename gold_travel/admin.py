@@ -12,25 +12,33 @@ from gold_travel.forms import TblStateRepresentativeForm
 from gold_travel.models import AppPrepareGold, LkpStateDetails, TblStateRepresentative,AppMoveGold, AppMoveGoldDetails
 
 class LogAdminMixin:
-    def has_add_permission(self, request, obj=None):
+    def has_add_permission(self, request):
         try:
             if request.user.state_representative.authority==TblStateRepresentative.AUTHORITY_SMRC:
-                return True
+                return super().has_add_permission(request)
         except:
             pass
         
         return False
 
     def has_change_permission(self, request, obj=None):
-        if not obj or obj.state==1:
-            return super().has_change_permission(request,obj)
+        try:
+            if request.user.state_representative.authority==TblStateRepresentative.AUTHORITY_SMRC:
+                if not obj or obj.state==1:
+                    return super().has_change_permission(request,obj)
+        except:
+            pass
         
         return False
 
     def has_delete_permission(self, request, obj=None):
-        if not obj or obj.state==1:
-            return super().has_delete_permission(request,obj)
-        
+        try:
+            if request.user.state_representative.authority==TblStateRepresentative.AUTHORITY_SMRC:
+                if not obj or obj.state==1:
+                    return super().has_delete_permission(request,obj)
+        except:
+            pass
+     
         return False
 
     def save_model(self, request, obj, form, change):
