@@ -236,7 +236,7 @@ class AppMoveGoldAdmin(LogAdminMixin,admin.ModelAdmin):
 
     @admin.display(description=_('gold_weight_in_gram'))
     def gold_weight_in_gram(self, obj):
-        return obj.gold_weight_in_gram
+        return f'{obj.gold_weight_in_gram:,}'
 
     @admin.display(description=_('gold_alloy_count'))
     def gold_alloy_count(self, obj):
