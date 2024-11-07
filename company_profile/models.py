@@ -146,8 +146,14 @@ class TblCompanyProduction(TblCompany):
     status = models.ForeignKey(LkpCompanyProductionStatus, on_delete=models.PROTECT,verbose_name=_("status"))
     
     class Meta:
+        ordering = ["name_ar"]
         verbose_name = _("Production Company")
         verbose_name_plural = _("Production Companies")
+        indexes = [
+            models.Index(fields=["code"]),
+            models.Index(fields=["email"]),
+            models.Index(fields=["status"]),
+        ]
 
     def get_absolute_url(self): 
         return reverse('profile:pro_company_detail', args=[str(self.id)])        
@@ -231,8 +237,13 @@ class TblCompanyProductionLicense(LoggingModel):
         return self.company.name_ar+"("+str(self.license_no)+")"
 
     class Meta:
+        ordering = ["-date"]
         verbose_name = _("Production Company License")
         verbose_name_plural = _("Production Company Licenses")
+        indexes = [
+            models.Index(fields=["date"]),
+            models.Index(fields=["contract_status"]),
+        ]
 
 def company_applications_path(instance, filename):
     # file will be uploaded to MEDIA_ROOT/company_<id>/applications/<filename>
