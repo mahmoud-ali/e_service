@@ -166,8 +166,8 @@ class AppMoveGoldDetails(models.Model):
     alloy_shape = models.IntegerField(_("alloy_shape"), choices=ALLOY_SHAPE_CHOICES)
     alloy_note = models.CharField(_("alloy_note"),max_length=150,null=True,blank=True)
 
-    # def __str__(self):
-    #     return f'{self.alloy_id}'
+    def __str__(self):
+        return f"{_('alloy_id')} {self.alloy_id}"
 
     class Meta:
         verbose_name = _("alloy detail")

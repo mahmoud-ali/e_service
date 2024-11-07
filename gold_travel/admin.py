@@ -127,7 +127,7 @@ class AppMoveGoldAdmin(LogAdminMixin,admin.ModelAdmin):
             state_representative = request.user.state_representative
             if state_representative.authority!=TblStateRepresentative.AUTHORITY_SMRC:
                 if state_representative.authority==TblStateRepresentative.AUTHORITY_SMRC_NAFIZA:
-                    qs = qs.filter(state__gte=AppMoveGold.STATE_SMRC,source_state=state_representative.state)
+                    qs = qs.filter(state__gte=AppMoveGold.STATE_SMRC)
                 else:
                     qs = qs.filter(state=(state_representative.authority-1),source_state=state_representative.state)
             else:
