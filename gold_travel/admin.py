@@ -249,7 +249,7 @@ class AppMoveGoldAdmin(LogAdminMixin,admin.ModelAdmin):
                     url=url,id=obj.id
                 )
 
-    @admin.display(description=_('state'))
+    @admin.display(description=_('record_state'))
     def state_str(self, obj):
         if obj.state == AppMoveGold.STATE_SSMO:
             return format_html(f'<span style="color:green">{obj.get_state_display()}</span>')
