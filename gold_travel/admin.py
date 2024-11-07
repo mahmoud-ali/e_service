@@ -7,7 +7,6 @@ from django.urls import reverse
 from django.utils.html import format_html
 from django.db import models
 from django.forms.widgets import TextInput
-
 from gold_travel.forms import TblStateRepresentativeForm
 from gold_travel.models import AppPrepareGold, LkpStateDetails, TblStateRepresentative,AppMoveGold, AppMoveGoldDetails
 
@@ -115,7 +114,7 @@ class AppMoveGoldAdmin(LogAdminMixin,admin.ModelAdmin):
     view_on_site = False
 
     def get_list_display(self,request):
-        list_display = ["code","date","owner_name","repr_name","gold_weight_in_gram","gold_alloy_count","state","source_state"]
+        list_display = ["code","date","owner_name","repr_name","gold_weight_in_gram","gold_alloy_count","state_str","source_state"]
         try:
             authority = request.user.state_representative.authority
             if authority == TblStateRepresentative.AUTHORITY_SMRC:
@@ -249,6 +248,13 @@ class AppMoveGoldAdmin(LogAdminMixin,admin.ModelAdmin):
         return format_html('<a target="_blank" class="viewlink" href="{url}?id={id}">'+_('Show certificate')+'</a>',
                     url=url,id=obj.id
                 )
+
+    @admin.display(description=_('state'))
+    def state_str(self, obj):
+        if obj.state == AppMoveGold.STATE_SSMO:
+            return format_html(f'<span style="color:green">{obj.get_state_display()}</span>')
+        
+        return obj.get_state_display()
 
 admin.site.register(AppMoveGold, AppMoveGoldAdmin)
 
