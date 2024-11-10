@@ -2623,11 +2623,11 @@ msgstr "ملاحظات عن السبيكة/السبائك"
 
 #: gold_travel/models.py:173
 msgid "alloy detail"
-msgstr "تفاصيل وزن السبيكة"
+msgstr "تفاصيل السبيكة"
 
 #: gold_travel/models.py:174
 msgid "alloy details"
-msgstr "تفاصيل وزن السبائك"
+msgstr "تفاصيل السبائك"
 
 #: gold_travel/models.py:181
 msgid "state_confirmed"
