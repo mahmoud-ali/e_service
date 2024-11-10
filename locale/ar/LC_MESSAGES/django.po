@@ -2311,7 +2311,7 @@ msgstr "عرض طلب تنازل عن شراكة او سهم"
 
 #: company_profile/views/visibilty_study.py:30
 msgid "List of Visibity Study"
-msgstr "قائمة طلبات دراسة الجدوى "
+msgstr "قائمة طلبات دراسة الجدوى"
 
 #: company_profile/views/visibilty_study.py:50
 msgid "Add Visibity Study"
@@ -2485,10 +2485,8 @@ msgid "record_state"
 msgstr "الحالة"
 
 #: gold_travel/admin.py:207
-#, fuzzy
-#| msgid "record_state"
 msgid "source_state"
-msgstr "الحالة"
+msgstr "الولاية المصدر"
 
 #: gold_travel/admin.py:235 gold_travel/admin.py:238 gold_travel/admin.py:293
 #: gold_travel/admin.py:296
@@ -2597,7 +2595,7 @@ msgstr "رخصة قيادة"
 
 #: gold_travel/models.py:148 gold_travel/models.py:149
 msgid "Move Gold"
-msgstr "طلب ترحيل ذهب"
+msgstr "استمارة ترحيل الصادر"
 
 #: gold_travel/models.py:159
 msgid "alloy_shape_rectangular"
