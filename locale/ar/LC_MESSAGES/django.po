@@ -2639,7 +2639,7 @@ msgstr "مصدر الطلب"
 
 #: gold_travel/models.py:195 gold_travel/models.py:196
 msgid "prepare gold"
-msgstr "طلب شراء وسبك وتجهيز الذهب"
+msgstr "استمارة شراء وسبك وتجهيز الذهب"
 
 #: gold_travel/templates/admin/gold_travel/appmovegold/pagination.html:16
 msgid "Show all"
