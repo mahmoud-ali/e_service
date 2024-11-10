@@ -192,6 +192,7 @@ class AppMoveGoldAdmin(LogAdminMixin,admin.ModelAdmin):
                 if (obj.state+1)==authority:
                     obj.state = authority
                     obj.save()
+                    self.log_change(request,obj,_('state_smrc'))
                     change_flag = True
 
             if change_flag:
@@ -205,6 +206,7 @@ class AppMoveGoldAdmin(LogAdminMixin,admin.ModelAdmin):
             if obj.state >= AppMoveGold.STATE_SMRC:
                 obj.state = AppMoveGold.STATE_SSMO
                 obj.save()
+                self.log_change(request,obj,_('state_ssmo'))
 
     @admin.action(description=_('Export data'))
     def export_as_csv(self, request, queryset):
