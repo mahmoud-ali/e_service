@@ -166,3 +166,14 @@ def import_commitment_sageer(file_name='commitment_sageer.csv',items=['اجار'
             except Exception as e:
                 print(f'id: {license_id} Exception: {e}')
 
+def remove_request_with_zero_total():
+    for request in TblCompanyRequestMaster.objects.all():
+        if request.total == 0:
+            print("request will be deleted:",request.id)
+            request.tblcompanyrequestdetail_set.all().delete()
+            request.delete()
+        else:
+            for obj in request.tblcompanyrequestdetail_set.all():
+                if obj.amount == 0:
+                    print("request detail of request:",request.id," will be deleted:",obj.id)
+                    obj.delete()
