@@ -7,7 +7,7 @@ from django.utils.translation import gettext_lazy as _
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from django.contrib.gis.geos import GEOSGeometry
+from django.contrib.gis.geos import Polygon,Point
 
 from .models import SmallMining
 from .forms import PointCordinateForm
@@ -41,12 +41,11 @@ class CheckCordinatesView(LoginRequiredMixin,View):
             points = []
             for form in formset:
                 x,y = (form.cleaned_data['x'],form.cleaned_data['y'])
-                points.append(str(x)+' '+str(y))
+                points.append(Point(float(x), float(y)))
 
             points.append(points[0])
 
-            poly_wkt = "POLYGON(("+', '.join(points)+"))"
-            poly = GEOSGeometry(poly_wkt)
+            poly = Polygon(points)
             data = SmallMining.objects.filter(geom__intersects=poly).values_list("company_name")
             if len(data) > 0:
                 tmp = []

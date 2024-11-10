@@ -10,3 +10,6 @@ class SmallMining(models.Model):
     area = models.FloatField(blank=True,null=True)
     nots = models.CharField(max_length=150,blank=True,null=True)
     geom = models.MultiPolygonField(srid=32636)
+
+    def __str__(self):
+        return self.geom.ewkt
