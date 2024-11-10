@@ -2595,7 +2595,7 @@ msgstr "رخصة قيادة"
 
 #: gold_travel/models.py:148 gold_travel/models.py:149
 msgid "Move Gold"
-msgstr "استمارة ترحيل الصادر"
+msgstr "استمارة ترحيل صادر"
 
 #: gold_travel/models.py:159
 msgid "alloy_shape_rectangular"
