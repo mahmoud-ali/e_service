@@ -2575,7 +2575,7 @@ msgstr "اعتماد ممثل هيئة الإستخبارات العسكرية"
 
 #: gold_travel/models.py:81
 msgid "state_ssmo"
-msgstr "وصلت الشهادة للمواصفات والمقاييس"
+msgstr "وصلت الاستمارة للمواصفات والمقاييس"
 
 #: gold_travel/models.py:90
 msgid "identity_passport"
@@ -2595,7 +2595,7 @@ msgstr "رخصة قيادة"
 
 #: gold_travel/models.py:148 gold_travel/models.py:149
 msgid "Move Gold"
-msgstr "استمارة ترحيل صادر"
+msgstr "استمارة ترحيل ذهب صادر"
 
 #: gold_travel/models.py:159
 msgid "alloy_shape_rectangular"
