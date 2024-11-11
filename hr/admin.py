@@ -561,6 +561,7 @@ class PayrollMasterAdmin(admin.ModelAdmin):
     list_filter = ["year","month","confirmed"]
     view_on_site = False
     list_select_related = True
+    save_on_top = True
 
     actions = ["confirm_payroll"]
 
@@ -584,11 +585,13 @@ class PayrollMasterAdmin(admin.ModelAdmin):
     @admin.display(description=_('Show khosomat sheet'))
     def show_khosomat_link(self, obj):
         url = reverse('hr:payroll_khosomat')
+        check_payroll_url = reverse('hr:payroll_check')
         return format_html('<a target="_blank" class="viewlink" href="{url}?year={year}&month={month}">'+_('Show khosomat sheet')\
                                +'</a> / '\
                                +'<a target="_blank" href="{url}?year={year}&month={month}&format=csv&bank_sheet=1">'+_('bank sheet')+'</a> / '\
+                               +'<a target="_blank" href="{check_payroll_url}?year={year}&month={month}">'+_('check payroll')+'</a> / '\
                                +'<a target="_blank" href="{url}?year={year}&month={month}&format=csv">CSV</a>',
-                           url=url,year=obj.year,month=obj.month)
+                           url=url,check_payroll_url=check_payroll_url,year=obj.year,month=obj.month)
 
     @admin.display(description=_('Diff badalat sheet'))
     def cmp_badalat_prev_month_link(self, obj):

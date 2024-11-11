@@ -1322,3 +1322,58 @@ class Modir3amMokaf2View(LoginRequiredMixin,UserPermissionMixin,View):
             response = render(self.request,template_name,context)
             cache.patch_cache_control(response, max_age=0)
             return response
+
+################
+class CheckPayroll(LoginRequiredMixin,UserPermissionMixin,View):
+    user_groups = ['hr_manager','hr_payroll']
+    def get(self,*args,**kwargs):
+        year = self.request.GET['year']
+        month = int(self.request.GET['month'])
+        data = []
+        payroll_master = None
+
+        try:
+            payroll_master = PayrollMaster.objects.get(year=year,month=month)
+        except PayrollMaster.DoesNotExist as e:
+            bad_request(self.request,e)
+        
+        payroll = Payroll(year,month)
+
+        header = ['الرمز','الموظف','الدرجة الوظيفية','العلاوة','تأمين اجتماعي','معاش','الصندوق','الضريبة','دمغه','إجمالي الإستقطاعات الأساسية',]
+
+        if payroll_master.enable_sandog_kahraba:
+            header += ['صندوق كهربائيه',]
+
+        header += ['السلفيات',]
+
+        if payroll_master.enable_youm_algoat_almosalaha:
+            header += ['استقطاع القوات المسلحه',]
+
+        header += ['الزكاة','سلفيات الصندوق','سلفية على المرتب','إجمالي الإستقطاعات السنوية','خصومات - جزاءات','إجمالي الإستقطاع الكلي','صافي الإستحقاق']
+
+        summary_list = []
+
+
+        template_name = 'hr/check_payroll.html'
+
+        for (emp,badalat,khosomat,draja_wazifia,alawa_sanawia) in payroll.all_employees_payroll_from_db():
+            khosomat_list = [round(k[1],2) for k in khosomat]
+            l = [emp.code,emp.name,Drajat3lawat.DRAJAT_CHOICES[draja_wazifia],Drajat3lawat.ALAWAT_CHOICES[alawa_sanawia]] + khosomat_list
+            if khosomat.ajmali_astgta3at_koli > badalat.ajmali_almoratab:
+                print(khosomat.ajmali_astgta3at_koli , badalat.ajmali_almoratab)
+                data.append(l)
+
+        context = {
+            'khosomat':{
+                'title':'اجمالي الإستقطاعات اكبر من اجمالي المرتب',
+                'header':header,
+                'data': data,
+            },
+            'month':MONTH_CHOICES[month],
+            'year':year,
+        }
+
+        response = render(self.request,template_name,context)
+        cache.patch_cache_control(response, max_age=0)
+        return response
+ 
