@@ -18,7 +18,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='employeem2moriamonthly',
             name='payroll_master',
-            field=models.ForeignKey(default=1, on_delete=django.db.models.deletion.CASCADE, to='hr.payrollmaster'),
+            field=models.ForeignKey(default=62, on_delete=django.db.models.deletion.CASCADE, to='hr.payrollmaster'),
             preserve_default=False,
         ),
     ]
