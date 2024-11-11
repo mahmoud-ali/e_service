@@ -1360,7 +1360,6 @@ class CheckPayroll(LoginRequiredMixin,UserPermissionMixin,View):
             khosomat_list = [round(k[1],2) for k in khosomat]
             l = [emp.code,emp.name,Drajat3lawat.DRAJAT_CHOICES[draja_wazifia],Drajat3lawat.ALAWAT_CHOICES[alawa_sanawia],badalat.ajmali_almoratab] + khosomat_list
             if khosomat.ajmali_astgta3at_koli > badalat.ajmali_almoratab:
-                print(khosomat.ajmali_astgta3at_koli , badalat.ajmali_almoratab)
                 data.append(l)
 
         context = {
