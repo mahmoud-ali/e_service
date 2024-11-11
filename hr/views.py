@@ -1339,7 +1339,7 @@ class CheckPayroll(LoginRequiredMixin,UserPermissionMixin,View):
         
         payroll = Payroll(year,month)
 
-        header = ['الرمز','الموظف','الدرجة الوظيفية','العلاوة','تأمين اجتماعي','معاش','الصندوق','الضريبة','دمغه','إجمالي الإستقطاعات الأساسية',]
+        header = ['الرمز','الموظف','الدرجة الوظيفية','العلاوة','اجمالي المرتب','تأمين اجتماعي','معاش','الصندوق','الضريبة','دمغه','إجمالي الإستقطاعات الأساسية',]
 
         if payroll_master.enable_sandog_kahraba:
             header += ['صندوق كهربائيه',]
@@ -1358,7 +1358,7 @@ class CheckPayroll(LoginRequiredMixin,UserPermissionMixin,View):
 
         for (emp,badalat,khosomat,draja_wazifia,alawa_sanawia) in payroll.all_employees_payroll_from_db():
             khosomat_list = [round(k[1],2) for k in khosomat]
-            l = [emp.code,emp.name,Drajat3lawat.DRAJAT_CHOICES[draja_wazifia],Drajat3lawat.ALAWAT_CHOICES[alawa_sanawia]] + khosomat_list
+            l = [emp.code,emp.name,Drajat3lawat.DRAJAT_CHOICES[draja_wazifia],Drajat3lawat.ALAWAT_CHOICES[alawa_sanawia],badalat.ajmali_almoratab] + khosomat_list
             if khosomat.ajmali_astgta3at_koli > badalat.ajmali_almoratab:
                 print(khosomat.ajmali_astgta3at_koli , badalat.ajmali_almoratab)
                 data.append(l)
