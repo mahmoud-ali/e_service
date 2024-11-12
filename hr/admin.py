@@ -349,6 +349,12 @@ class EmployeeBasicAdmin(admin.ModelAdmin):
     readonly_fields = ["moahil","gasima","atfal","edara_3ama_tmp","edara_far3ia_tmp"]
     actions = ['export_as_csv']
 
+    def get_readonly_fields(self,request,obj):
+        if request.user.groups.filter(name="hr_payroll").exists():
+            return self.fields
+        
+        return self.readonly_fields
+
     def has_delete_permission(self, request, obj=None):
         return False
     
