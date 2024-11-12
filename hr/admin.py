@@ -52,7 +52,8 @@ class SalafiatMixin(ModelForm):
                 msg = _("Total of deduction more than last employee payroll:")
                 raise ValidationError(f'{msg} {badal.ajmali_almoratab}')
             
-            total = amount + employee.employeesalafiat_set.filter(month=old_month,year=old_year).exclude(pk=self.instance.pk).aggregate(total=Sum('amount'))['total'] or 0
+            pre_total = (employee.employeesalafiat_set.filter(month=old_month,year=old_year).exclude(pk=self.instance.pk).aggregate(total=Sum('amount'))['total'] or 0)
+            total = amount + pre_total
 
             if total > badal.ajmali_almoratab:
                 msg = _("Total of deduction more than last employee payroll:")

@@ -267,7 +267,7 @@ class Payroll():
         return self.payroll_master.confirmed
     
     def is_calculated(self):
-        if not self.payroll_master or self.payroll_master.count()==0:
+        if not self.payroll_master or (hasattr(self.payroll_master,'count') and self.payroll_master.count()==0):
             return False
         
         return True
