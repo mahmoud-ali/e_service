@@ -266,6 +266,12 @@ class Payroll():
         
         return self.payroll_master.confirmed
     
+    def is_calculated(self):
+        if not self.payroll_master or self.payroll_master.count()==0:
+            return False
+        
+        return True
+    
 class MobasharaSheet():
     def __init__(self,year,month) -> None:
         self.year = year

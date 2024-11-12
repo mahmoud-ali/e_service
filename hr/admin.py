@@ -1,6 +1,7 @@
 import codecs
 import csv
 from django.contrib.admin.options import InlineModelAdmin
+from django.forms import ModelForm, ValidationError
 from django.http import HttpRequest, HttpResponse
 
 from django.contrib import admin
@@ -8,10 +9,46 @@ from django.urls import reverse
 from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
 
+from hr.calculations import PayrollValidation
 from hr.payroll import M2moriaSheet, MajlisEl2daraMokaf2Payroll, MobasharaSheet, Payroll, Ta3agodMosimiPayroll, Wi7datMosa3idaMokaf2tFarigMoratabPayroll
 
 from .models import Drajat3lawat, EmployeeBankAccount, EmployeeFamily, EmployeeM2moria, EmployeeM2moriaMonthly, EmployeeMajlisEl2dara, EmployeeMoahil, EmployeeJazaat, EmployeeMobashra, EmployeeVacation, EmployeeWi7datMosa3da, Gisim, HikalWazifi, MosamaWazifi,Edara3ama,Edarafar3ia,EmployeeBasic, PayrollDetail, PayrollDetailMajlisEl2dara, PayrollDetailTa3agodMosimi, PayrollDetailWi7datMosa3ida, PayrollMaster, EmployeeSalafiat,Settings, Wi7da
 from mptt.admin import MPTTModelAdmin,TreeRelatedFieldListFilter
+
+class SalafiatMixin(ModelForm):
+    def clean_amount(self):
+        amount = uploaded_image = self.cleaned_data.get("amount",  0)
+        month = uploaded_image = self.cleaned_data.get("month",  None)
+        year = uploaded_image = self.cleaned_data.get("year",  None)
+
+        if not month or not year:
+            raise ValidationError("invalid month or year")
+
+        payroll_curr = Payroll(year,month)
+
+        is_changed = 'amount' in self.changed_data
+
+        if is_changed and payroll_curr.is_calculated():
+            raise ValidationError("you can not change this record")
+        
+        if month == 1:
+            year = year -1
+            month = 12
+        else:
+            month = month -1
+
+        master = PayrollMaster.objects.filter(month__lte=month,year__lte=year,confirmed=True).last()
+
+        if master:
+            payroll_confirmed = Payroll(master.year,master.month)
+
+            employee,badal,khosomat = payroll_confirmed.employee_payroll_calculated(self.instance.employee)
+
+            if amount > badal.ajmali_almoratab:
+                msg = _("Total of deduction more than last employee payroll:")
+                raise ValidationError(f'{msg} {badal.ajmali_almoratab}')
+        
+        return amount
 
 admin.site.title = _("Site header")
 admin.site.site_title = _("Site header")
@@ -247,14 +284,20 @@ class EmployeeMoahilInline(admin.TabularInline):
     exclude = ["created_at","created_by","updated_at","updated_by"]
     extra = 1    
 
+class SalafiatForm(SalafiatMixin,ModelForm):
+    class Meta:
+        model = EmployeeSalafiat
+        fields = ['employee','year','month','no3_2lsalafia','note','amount']
+ 
 class SalafiatInline(admin.TabularInline):
     model = EmployeeSalafiat
-    exclude = ["created_at","created_by","updated_at","updated_by","deducted"]
+    form = SalafiatForm
+    # readonly_fields = ['deducted']
     extra = 1    
 
 class JazaatInline(admin.TabularInline):
     model = EmployeeJazaat
-    exclude = ["created_at","created_by","updated_at","updated_by","deducted"]
+    exclude = ["created_at","created_by","updated_at","updated_by"]
     extra = 1    
 
 class EmployeeMobashraInline(admin.TabularInline):
@@ -406,8 +449,13 @@ class SettingsAdmin(admin.ModelAdmin):
 
 admin.site.register(Settings,SettingsAdmin)
 
+class SalafiatSandogForm(SalafiatMixin,ModelForm):
+    class Meta:
+        model = EmployeeSalafiat
+        fields = ['employee','year','month','note','amount']
+
 class SalafiatAdmin(admin.ModelAdmin):
-    exclude = ["created_at","created_by","updated_at","updated_by","no3_2lsalafia","deducted"]
+    form = SalafiatSandogForm
     
     list_display = ["code","employee", "year","month","note","amount","deducted"] 
     list_filter = ["year","month"]
@@ -749,15 +797,25 @@ class PayrollMasterAdmin(admin.ModelAdmin):
     
     @admin.action(description=_('Confirm payroll'))
     def confirm_payroll(self, request, queryset):
-        queryset.update(confirmed=True)
+        # queryset.update(confirmed=True)
 
         for q in queryset:
-            mobashara = MobasharaSheet(q.year,q.month)
-            mobashara.confirm()
+            payroll = Payroll(q.year,q.month)
 
-            EmployeeSalafiat.objects.filter(year=q.year,month=q.month).update(deducted=True)
+            payroll_validation = PayrollValidation(payroll,Drajat3lawat)
 
-            EmployeeJazaat.objects.filter(year=q.year,month=q.month).update(deducted=True)
+            if payroll_validation.is_all_khosomat_valid():
+                payroll.confirm()
+
+                mobashara = MobasharaSheet(q.year,q.month)
+                mobashara.confirm()
+
+            else:
+                self.message_user(request, f'الرجاء التأكد من صحة بيانات {q.get_month_display()} {q.year} اولاً.')
+
+            # EmployeeSalafiat.objects.filter(year=q.year,month=q.month).update(deducted=True)
+
+            # EmployeeJazaat.objects.filter(year=q.year,month=q.month).update(deducted=True)
 
 admin.site.register(PayrollMaster,PayrollMasterAdmin)
 

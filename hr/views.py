@@ -8,6 +8,7 @@ from django.utils import cache
 from django.views.defaults import bad_request
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 
+from hr.calculations import PayrollValidation
 from hr.models import Drajat3lawat, EmployeeBankAccount, EmployeeBasic, PayrollDetail, PayrollMaster,MONTH_CHOICES
 from hr.payroll import M2moriaSheet, MajlisEl2daraMokaf2Payroll, MobasharaSheet, Modir3amPayroll, Payroll,Mokaf2Sheet, Ta3agodMosimiMokaf2Payroll, Ta3agodMosimiPayroll, Wi7datMosa3idaMokaf2tFarigMoratabPayroll, Wi7datMosa3idaMokaf2tPayroll
 
@@ -1351,22 +1352,15 @@ class CheckPayroll(LoginRequiredMixin,UserPermissionMixin,View):
 
         header += ['الزكاة','سلفيات الصندوق','سلفية على المرتب','إجمالي الإستقطاعات السنوية','خصومات - جزاءات','إجمالي الإستقطاع الكلي','صافي الإستحقاق']
 
-        summary_list = []
-
-
         template_name = 'hr/check_payroll.html'
 
-        for (emp,badalat,khosomat,draja_wazifia,alawa_sanawia) in payroll.all_employees_payroll_from_db():
-            khosomat_list = [round(k[1],2) for k in khosomat]
-            l = [emp.code,emp.name,Drajat3lawat.DRAJAT_CHOICES[draja_wazifia],Drajat3lawat.ALAWAT_CHOICES[alawa_sanawia],badalat.ajmali_almoratab] + khosomat_list
-            if khosomat.ajmali_astgta3at_koli > badalat.ajmali_almoratab:
-                data.append(l)
+        payroll_validation = PayrollValidation(payroll,Drajat3lawat)
 
         context = {
             'khosomat':{
                 'title':'اجمالي الإستقطاعات اكبر من اجمالي المرتب',
                 'header':header,
-                'data': data,
+                'data': payroll_validation.khosomat_validation(),
             },
             'month':MONTH_CHOICES[month],
             'year':year,

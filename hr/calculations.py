@@ -1022,3 +1022,27 @@ class Mokaf2Modir3am():
     
     def __repr__(self) -> str:
         return self.__str__()
+
+class PayrollValidation():
+    def __init__(self,Payroll,Drajat3lawat):
+        self.Payroll = Payroll
+        self.Drajat3lawat = Drajat3lawat
+
+    def khosomat_validation(self):
+        data = []
+
+        for (emp,badalat,khosomat,draja_wazifia,alawa_sanawia) in self.Payroll.all_employees_payroll_from_db():
+            khosomat_list = [round(k[1],2) for k in khosomat]
+            l = [emp.code,emp.name,self.Drajat3lawat.DRAJAT_CHOICES[draja_wazifia],self.Drajat3lawat.ALAWAT_CHOICES[alawa_sanawia],badalat.ajmali_almoratab] + khosomat_list
+            if khosomat.ajmali_astgta3at_koli > badalat.ajmali_almoratab:
+                data.append(l)
+
+        return data
+    
+    def is_all_khosomat_valid(self):
+        flag = True
+        for (emp,badalat,khosomat,draja_wazifia,alawa_sanawia) in self.Payroll.all_employees_payroll_from_db():
+            if khosomat.ajmali_astgta3at_koli > badalat.ajmali_almoratab:
+                return False
+
+        return flag
