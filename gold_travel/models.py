@@ -71,6 +71,7 @@ class AppMoveGold(LoggingModel):
     STATE_SHORTAT_2LM3ADIN = 4
     STATE_2LESTIKHBARAT_2L3ASKRIA = 5
     STATE_SSMO = 6
+    STATE_CANCELED = 7
 
     STATE_CHOICES = {
         STATE_DRAFT: _('state_draft'),
@@ -79,6 +80,7 @@ class AppMoveGold(LoggingModel):
         STATE_SHORTAT_2LM3ADIN: _('state_shortat_2lm3adin'),
         STATE_2LESTIKHBARAT_2L3ASKRIA: _('state_2lestikhbarat_2l3askria'),
         STATE_SSMO: _('state_ssmo'),
+        STATE_CANCELED: _('state_canceled'),
     }
 
     IDENTITY_PASSPORT = 1

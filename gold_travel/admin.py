@@ -109,7 +109,7 @@ class AppMoveGoldAdmin(LogAdminMixin,admin.ModelAdmin):
     ]
     list_filter = ["date","state",("source_state",admin.RelatedOnlyFieldListFilter)]
     search_fields = ["code","owner_name","owner_address","repr_name","repr_phone","repr_identity"]
-    actions = ['confirm_app','arrived_to_ssmo_app','export_as_csv']
+    actions = ['confirm_app','arrived_to_ssmo_app','cancel_app','export_as_csv']
 
     view_on_site = False
 
@@ -134,7 +134,7 @@ class AppMoveGoldAdmin(LogAdminMixin,admin.ModelAdmin):
             state_representative = request.user.state_representative
             if state_representative.authority!=TblStateRepresentative.AUTHORITY_SMRC:
                 if state_representative.authority==TblStateRepresentative.AUTHORITY_SMRC_NAFIZA:
-                    qs = qs.filter(state__gte=AppMoveGold.STATE_SMRC)
+                    qs = qs.filter(state__gte=AppMoveGold.STATE_SMRC,state__lte=AppMoveGold.STATE_SSMO)
                 else:
                     qs = qs.filter(state=(state_representative.authority-1),source_state=state_representative.state)
             else:
@@ -174,12 +174,20 @@ class AppMoveGoldAdmin(LogAdminMixin,admin.ModelAdmin):
             if authority!=TblStateRepresentative.AUTHORITY_SMRC_NAFIZA:
                 if "arrived_to_ssmo_app" in actions:
                     del actions['arrived_to_ssmo_app']
+
+            if request.user.groups.filter(name='gold_travel_manager').count() == 0:
+                if "cancel_app" in actions:
+                    del actions['cancel_app']
+
         except:
             if "confirm_app" in actions:
                 del actions['confirm_app']
 
             if "arrived_to_ssmo_app" in actions:
                 del actions['arrived_to_ssmo_app']
+
+            if "cancel_app" in actions:
+                del actions['cancel_app']
 
         return actions
     
@@ -203,10 +211,18 @@ class AppMoveGoldAdmin(LogAdminMixin,admin.ModelAdmin):
     @admin.action(description=_('Arrived to SSMO'))
     def arrived_to_ssmo_app(self, request, queryset):
         for obj in queryset:
-            if obj.state >= AppMoveGold.STATE_SMRC:
+            if obj.state >= AppMoveGold.STATE_SMRC and obj.state < AppMoveGold.STATE_SSMO:
                 obj.state = AppMoveGold.STATE_SSMO
                 obj.save()
                 self.log_change(request,obj,_('state_ssmo'))
+
+    @admin.action(description=_('state_canceled'))
+    def cancel_app(self, request, queryset):
+        for obj in queryset:
+            if obj.state >= AppMoveGold.STATE_SMRC and obj.state < AppMoveGold.STATE_SSMO:
+                obj.state = AppMoveGold.STATE_CANCELED
+                obj.save()
+                self.log_change(request,obj,_('state_canceled'))
 
     @admin.action(description=_('Export data'))
     def export_as_csv(self, request, queryset):
