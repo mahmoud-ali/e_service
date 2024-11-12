@@ -1,5 +1,6 @@
 import codecs
 import csv
+from django.db.models import Sum
 from django.contrib.admin.options import InlineModelAdmin
 from django.forms import ModelForm, ValidationError
 from django.http import HttpRequest, HttpResponse
@@ -18,8 +19,11 @@ from mptt.admin import MPTTModelAdmin,TreeRelatedFieldListFilter
 class SalafiatMixin(ModelForm):
     def clean_amount(self):
         amount = uploaded_image = self.cleaned_data.get("amount",  0)
-        month = uploaded_image = self.cleaned_data.get("month",  None)
-        year = uploaded_image = self.cleaned_data.get("year",  None)
+        old_month = uploaded_image = self.cleaned_data.get("month",  None)
+        old_year = uploaded_image = self.cleaned_data.get("year",  None)
+
+        month=old_month
+        year = old_year
 
         if not month or not year:
             raise ValidationError("invalid month or year")
@@ -47,7 +51,12 @@ class SalafiatMixin(ModelForm):
             if amount > badal.ajmali_almoratab:
                 msg = _("Total of deduction more than last employee payroll:")
                 raise ValidationError(f'{msg} {badal.ajmali_almoratab}')
-        
+            
+            total = amount + employee.employeesalafiat_set.filter(month=old_month,year=old_year).exclude(pk=self.instance.pk).aggregate(total=Sum('amount'))['total'] or 0
+
+            if total > badal.ajmali_almoratab:
+                msg = _("Total of deduction more than last employee payroll:")
+                raise ValidationError(f'{msg} {badal.ajmali_almoratab}')
         return amount
 
 admin.site.title = _("Site header")

@@ -2466,7 +2466,7 @@ msgstr "العمال"
 
 #: hr/admin.py:286
 msgid "Total of deduction more than last employee payroll:"
-msgstr "قيمة الخصم اكبر من مرتب الموظف"
+msgstr "قيمة الخصم او اجمالي الخصومات اكبر من مرتب الموظف"
 
 #: hr/admin.py:366 hr/admin.py:478
 msgid "Export data"
