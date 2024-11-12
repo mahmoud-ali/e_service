@@ -33,7 +33,7 @@ class SalafiatMixin(ModelForm):
         is_changed = 'amount' in self.changed_data
 
         if is_changed and payroll_curr.is_calculated():
-            raise ValidationError("you can not change this record")
+            raise ValidationError(_("you can not change this record salary already calculated!"))
         
         if month == 1:
             year = year -1
