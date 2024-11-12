@@ -165,6 +165,11 @@ class AppMoveGoldAdmin(LogAdminMixin,admin.ModelAdmin):
 
     def get_actions(self, request):
         actions = super().get_actions(request)
+
+        if request.user.groups.filter(name='gold_travel_manager').count() == 0:
+            if "cancel_app" in actions:
+                del actions['cancel_app']
+
         try:
             authority = request.user.state_representative.authority
             if authority!=TblStateRepresentative.AUTHORITY_SMRC:
@@ -174,11 +179,6 @@ class AppMoveGoldAdmin(LogAdminMixin,admin.ModelAdmin):
             if authority!=TblStateRepresentative.AUTHORITY_SMRC_NAFIZA:
                 if "arrived_to_ssmo_app" in actions:
                     del actions['arrived_to_ssmo_app']
-
-            if request.user.groups.filter(name='gold_travel_manager').count() == 0:
-                if "cancel_app" in actions:
-                    del actions['cancel_app']
-
         except:
             if "confirm_app" in actions:
                 del actions['confirm_app']
