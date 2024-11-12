@@ -186,9 +186,6 @@ class AppMoveGoldAdmin(LogAdminMixin,admin.ModelAdmin):
             if "arrived_to_ssmo_app" in actions:
                 del actions['arrived_to_ssmo_app']
 
-            if "cancel_app" in actions:
-                del actions['cancel_app']
-
         return actions
     
     @admin.action(description=_('Confirm application'))
