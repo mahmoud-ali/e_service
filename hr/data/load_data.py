@@ -292,3 +292,9 @@ def import_bank_accounts():
                     )
             except Exception as e:
                 print('not imported',e)
+
+def correct_bank_accounts():    
+    for obj in EmployeeBankAccount.objects.filter(bank='bok'):
+        n = 16 - len(obj.account_no)
+        obj.account_no='0'*n + obj.account_no
+        obj.save()
