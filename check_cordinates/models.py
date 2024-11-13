@@ -12,4 +12,4 @@ class SmallMining(models.Model):
     geom = models.MultiPolygonField(srid=32636)
 
     def __str__(self):
-        return self.geom.ewkt
+        return f'{self.company_name} ({self.license_nu}) {self.geom.ewkt}'

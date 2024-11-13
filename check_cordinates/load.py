@@ -29,6 +29,7 @@ small_shp2 = Path(__file__).resolve().parent / "data" / "bbb.shp"
 small_shp3 = Path(__file__).resolve().parent / "data" / "ccc.shp"
 
 def run(verbose=True):
+    SmallMining.objects.all().delete()
     lm = LayerMapping(SmallMining, small_shp1, smallmining_mapping1, transform=True)
     lm.save( verbose=verbose)
 
