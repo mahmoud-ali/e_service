@@ -715,6 +715,9 @@ class EmployeeSalafiat(LoggingModel):
     amount = models.FloatField(_("amount"))
     deducted = models.BooleanField(_("deducted"),default=False)
 
+    def __str__(self) -> str:
+        return f'{self.amount}'
+
     class Meta:
         constraints = [
             models.UniqueConstraint(fields=['employee','year','month','no3_2lsalafia'],name="unique_salafiat_employee_year_month")

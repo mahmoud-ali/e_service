@@ -454,10 +454,14 @@ class Mokaf2():
     @property
     def khasm_salafiat_elsandog_min_elmokaf2(self):
         return self._khasm_salafiat_elsandog_min_elmokaf2
-    
+
+    @property
+    def safi_2l2sti7gag_gabl_alsalafiat(self):
+        return (self.ajmali_2lmoratab - self.dariba -self.damga)
+
     @property
     def safi_2l2sti7gag_gabl_salafiat_sandog(self):
-        return (self.ajmali_2lmoratab - self.dariba -self.damga -self.salafiat_3la_2lmokaf2)
+        return (self.safi_2l2sti7gag_gabl_alsalafiat -self.salafiat_3la_2lmokaf2)
 
     @property
     def safi_2l2sti7gag(self):

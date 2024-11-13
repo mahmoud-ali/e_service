@@ -11,7 +11,7 @@ from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
 
 from hr.calculations import PayrollValidation
-from hr.payroll import M2moriaSheet, MajlisEl2daraMokaf2Payroll, MobasharaSheet, Payroll, Ta3agodMosimiPayroll, Wi7datMosa3idaMokaf2tFarigMoratabPayroll
+from hr.payroll import M2moriaSheet, MajlisEl2daraMokaf2Payroll, MobasharaSheet, Mokaf2Sheet, Payroll, Ta3agodMosimiPayroll, Wi7datMosa3idaMokaf2tFarigMoratabPayroll
 
 from .models import Drajat3lawat, EmployeeBankAccount, EmployeeFamily, EmployeeM2moria, EmployeeM2moriaMonthly, EmployeeMajlisEl2dara, EmployeeMoahil, EmployeeJazaat, EmployeeMobashra, EmployeeVacation, EmployeeWi7datMosa3da, Gisim, HikalWazifi, MosamaWazifi,Edara3ama,Edarafar3ia,EmployeeBasic, PayrollDetail, PayrollDetailMajlisEl2dara, PayrollDetailTa3agodMosimi, PayrollDetailWi7datMosa3ida, PayrollMaster, EmployeeSalafiat,Settings, Wi7da
 from mptt.admin import MPTTModelAdmin,TreeRelatedFieldListFilter
@@ -21,6 +21,7 @@ class SalafiatMixin(ModelForm):
         amount = uploaded_image = self.cleaned_data.get("amount",  0)
         old_month = uploaded_image = self.cleaned_data.get("month",  None)
         old_year = uploaded_image = self.cleaned_data.get("year",  None)
+        no3_2lsalafia = uploaded_image = self.cleaned_data.get("no3_2lsalafia",  EmployeeSalafiat.NO3_2LSALAFIA_SANDOG)
 
         month=old_month
         year = old_year
@@ -43,21 +44,51 @@ class SalafiatMixin(ModelForm):
 
         master = PayrollMaster.objects.filter(month__lte=month,year__lte=year,confirmed=True).last()
 
-        if master:
+        emp_payroll = None
+        try:
+            emp_payroll = master.payrolldetail_set.get(employee=self.instance.employee)
+        except:
+            pass
+
+        if master and emp_payroll:
             payroll_confirmed = Payroll(master.year,master.month)
+            mokaf2_sheet = Mokaf2Sheet(year,month)
 
             employee,badal,khosomat = payroll_confirmed.employee_payroll_calculated(self.instance.employee)
+            mokaf2 = mokaf2_sheet.employee_mokaf2_from_db(emp_payroll)
 
-            if amount > badal.ajmali_almoratab:
-                msg = _("Total of deduction more than last employee payroll:")
-                raise ValidationError(f'{msg} {badal.ajmali_almoratab}')
+            # if amount > badal.ajmali_almoratab:
+            #     msg = _("Total of deduction more than last employee payroll:")
+            #     raise ValidationError(f'{msg} {badal.ajmali_almoratab}')
             
-            pre_total = (employee.employeesalafiat_set.filter(month=old_month,year=old_year).exclude(pk=self.instance.pk).aggregate(total=Sum('amount'))['total'] or 0)
-            total = amount + pre_total
+            salafiat_qs = employee.employeesalafiat_set.filter(month=old_month,year=old_year).exclude(pk=self.instance.pk)
+            pre_total_all_salafiat = (salafiat_qs.aggregate(total=Sum('amount'))['total'] or 0)
+            total_all_salafiat = amount + pre_total_all_salafiat
 
-            if total > badal.ajmali_almoratab:
+            # print("****",old_month,old_year,employee,salafiat_qs,pre_total_all_salafiat,total_all_salafiat)
+            
+            if no3_2lsalafia == EmployeeSalafiat.NO3_2LSALAFIA_3LA_2LMORATAB:
+                salafiat_3la_2lmoratab_qs = salafiat_qs.filter(no3_2lsalafia=EmployeeSalafiat.NO3_2LSALAFIA_3LA_2LMORATAB)
+                pre_total_3la_2lmoratab_salafiat = (salafiat_3la_2lmoratab_qs.aggregate(total=Sum('amount'))['total'] or 0)
+                total_3la_2lmoratab_salafiat = amount + pre_total_3la_2lmoratab_salafiat
+
+                if total_3la_2lmoratab_salafiat > (badal.ajmali_almoratab):
+                    msg = _("salafia 3la 2lmoratab more than last employee payroll:")
+                    raise ValidationError(f'{msg} {round(badal.ajmali_almoratab,2)}')
+
+            if no3_2lsalafia == EmployeeSalafiat.NO3_2LSALAFIA_3LA_2LMOKAF2:
+                salafiat_3la_mokaf2_qs = salafiat_qs.filter(no3_2lsalafia=EmployeeSalafiat.NO3_2LSALAFIA_3LA_2LMOKAF2)
+                pre_total_3la_mokaf2_salafiat = (salafiat_3la_mokaf2_qs.aggregate(total=Sum('amount'))['total'] or 0)
+                total_3la_mokaf2_salafiat = amount + pre_total_3la_mokaf2_salafiat
+
+                if total_3la_mokaf2_salafiat > (mokaf2.safi_2l2sti7gag_gabl_alsalafiat):
+                    msg = _("salafia 3la mokaf2 more than last employee payroll:")
+                    raise ValidationError(f'{msg} {round(mokaf2.safi_2l2sti7gag_gabl_alsalafiat,2)}')
+
+            if total_all_salafiat > (badal.ajmali_almoratab + mokaf2.safi_2l2sti7gag_gabl_alsalafiat):
                 msg = _("Total of deduction more than last employee payroll:")
-                raise ValidationError(f'{msg} {badal.ajmali_almoratab}')
+                raise ValidationError(f'{msg} {round((badal.ajmali_almoratab+ mokaf2.safi_2l2sti7gag_gabl_alsalafiat),2)}')
+
         return amount
 
 admin.site.title = _("Site header")
