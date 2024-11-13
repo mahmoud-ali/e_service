@@ -17,7 +17,7 @@ from .models import Drajat3lawat, EmployeeBankAccount, EmployeeFamily, EmployeeM
 from mptt.admin import MPTTModelAdmin,TreeRelatedFieldListFilter
 
 class SalafiatMixin(ModelForm):
-    def _clean_amount(self):
+    def clean_amount(self):
         amount = uploaded_image = self.cleaned_data.get("amount",  0)
         old_month = uploaded_image = self.cleaned_data.get("month",  None)
         old_year = uploaded_image = self.cleaned_data.get("year",  None)
