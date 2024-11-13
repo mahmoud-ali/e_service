@@ -571,8 +571,7 @@ class Mokaf2(LoginRequiredMixin,UserPermissionMixin,View):
             header = ['الرمز','الموظف','البنك','رقم الحساب','صافي الاستحقاق']
             emp_accounts = get_employee_accounts()
 
-            for emp_mokaf2 in mokaf2.all_employees_mokaf2_from_db():
-                emp = emp_mokaf2.employee
+            for (emp,emp_mokaf2) in mokaf2.all_employees_mokaf2_from_db():
                 try:
                     bnk_no,bank = emp_accounts[emp.id] #employeeemp.employeebankaccount_set.get(active=True).account_no
                 except KeyError:
