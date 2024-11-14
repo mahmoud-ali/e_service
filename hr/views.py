@@ -11,7 +11,7 @@ from django.db.models import Sum
 
 from hr.calculations import PayrollValidation
 from hr.models import Drajat3lawat, EmployeeBankAccount, EmployeeBasic, PayrollDetail, PayrollMaster,MONTH_CHOICES
-from hr.payroll import M2moriaSheet, MajlisEl2daraMokaf2Payroll, MobasharaSheet, Modir3amPayroll, Payroll,Mokaf2Sheet, Ta3agodMosimiMokaf2Payroll, Ta3agodMosimiPayroll, Wi7datMosa3idaMokaf2tFarigMoratabPayroll, Wi7datMosa3idaMokaf2tPayroll
+from hr.payroll import M2moriaSheet, MajlisEl2daraMokaf2Payroll, MobasharaSheet, Modir3amPayroll, Payroll,Mokaf2Sheet, Ta3agodMosimiMokaf2Payroll, Ta3agodMosimiPayroll, TasoiaPayroll, Wi7datMosa3idaMokaf2tFarigMoratabPayroll, Wi7datMosa3idaMokaf2tPayroll
 
 SHOW_CSV_TOTAL = False
 
@@ -1370,81 +1370,23 @@ class CheckPayroll(LoginRequiredMixin,UserPermissionMixin,View):
         cache.patch_cache_control(response, max_age=0)
         return response
  
-class TasoiaPayroll(LoginRequiredMixin,UserPermissionMixin,View):
+class Tasoia(LoginRequiredMixin,UserPermissionMixin,View):
     user_groups = ['hr_manager','hr_payroll']
     def get(self,*args,**kwargs):
         year = self.request.GET['year']
         month = int(self.request.GET['month'])
+
+        t = TasoiaPayroll(year,month)
+        obj = t.from_db()
+        # print(obj)
         
-        qs = PayrollMaster.objects.get(month=month,year=year).payrolldetail_set.all()
-        # total_abtdai = qs.aggregate(total=Sum('abtdai'))['total'] or 0
-        # total_galaa_m3isha = qs.aggregate(total=Sum('galaa_m3isha'))['total'] or 0
+        template_name = 'hr/tasoia.html'
 
-        payroll = Payroll(year,month)
-
-        total_abtdai = 0
-        total_galaa_m3isha = 0
-        total_tabi3at_3mal = 0
-        total_tamtheel = 0
-        total_mihna = 0
-
-        total_ma3adin = 0
-        total_aadoa = 0
-        total_gasima = 0
-        total_atfal = 0
-        total_moahil = 0
-        total_shakhsia = 0
-        total_makhatir = 0
-
-        total_salafiat = 0
-        total_damga = 0
-        total_m3ash = 0
-
-        total_dariba = 0 
-        total_tameen_ajtima3i = 0 
-        total_zakat = 0 
-        total_youm_algoat_almosalaha = 0
-        total_sandog = 0
-        total_jazaat = 0
-        total_salafiat_sandog = 0
-
-        for (emp,badalat,khosomat,draja_wazifia,alawa_sanawia) in payroll.all_employees_payroll_from_db():
-            total_abtdai += badalat.abtdai
-            total_galaa_m3isha += badalat.galaa_m3isha
-            total_tabi3at_3mal += badalat.tabi3at_3mal
-            total_tamtheel += badalat.tamtheel
-            total_mihna += badalat.mihna
-            total_ma3adin += badalat.ma3adin
-            total_aadoa += badalat.aadoa
-            total_gasima += badalat.ajtima3ia_gasima
-            total_atfal += badalat.ajtima3ia_atfal
-            total_moahil += badalat.moahil
-            total_shakhsia += badalat.shakhsia
-            total_makhatir += badalat.makhatir
-
-            total_salafiat += khosomat.salafiat
-            total_dariba += khosomat.dariba
-            total_damga += khosomat.damga
-            total_tameen_ajtima3i += khosomat.tameen_ajtima3i
-            total_m3ash += khosomat.m3ash
-            total_sandog = khosomat.sandog            
-            total_zakat += khosomat.zakat
-            total_youm_algoat_almosalaha += khosomat.youm_algoat_almosalaha
-            total_jazaat += khosomat.jazaat
-            total_salafiat_sandog +=khosomat.salafiat_sandog
-
-        total_band_2wal = (total_abtdai + total_galaa_m3isha)
-
-        ajtima3ia = (total_gasima + total_atfal)
-        total_band_tani = (total_tabi3at_3mal+total_tamtheel+total_mihna+total_ma3adin+total_aadoa+ajtima3ia+total_moahil+total_shakhsia+total_makhatir)
-
-        total_band_2wal_tani = (total_band_2wal+total_band_tani)
-
-        print(total_abtdai,total_galaa_m3isha,total_band_2wal,total_tabi3at_3mal,total_tamtheel,total_mihna,total_ma3adin,total_aadoa,ajtima3ia,total_moahil,total_shakhsia,total_makhatir,total_band_tani,total_band_2wal_tani,total_salafiat,total_damga,total_m3ash,total_sandog,total_jazaat,total_salafiat_sandog)
-        print(total_abtdai,total_galaa_m3isha,total_dariba,total_tameen_ajtima3i,total_zakat,total_youm_algoat_almosalaha)
-        template_name = 'hr/check_payroll.html'
-
-        context = {}
+        context = {
+            'object':obj,
+            'month':MONTH_CHOICES[month],
+            'year':year,
+        }
 
         response = render(self.request,template_name,context)
         cache.patch_cache_control(response, max_age=0)

@@ -11,9 +11,9 @@ from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
 
 from hr.calculations import PayrollValidation
-from hr.payroll import M2moriaSheet, MajlisEl2daraMokaf2Payroll, MobasharaSheet, Mokaf2Sheet, Payroll, Ta3agodMosimiPayroll, Wi7datMosa3idaMokaf2tFarigMoratabPayroll
+from hr.payroll import M2moriaSheet, MajlisEl2daraMokaf2Payroll, MobasharaSheet, Mokaf2Sheet, Payroll, Ta3agodMosimiPayroll, TasoiaPayroll, Wi7datMosa3idaMokaf2tFarigMoratabPayroll
 
-from .models import Drajat3lawat, EmployeeBankAccount, EmployeeFamily, EmployeeM2moria, EmployeeM2moriaMonthly, EmployeeMajlisEl2dara, EmployeeMoahil, EmployeeJazaat, EmployeeMobashra, EmployeeVacation, EmployeeWi7datMosa3da, Gisim, HikalWazifi, MosamaWazifi,Edara3ama,Edarafar3ia,EmployeeBasic, PayrollDetail, PayrollDetailMajlisEl2dara, PayrollDetailTa3agodMosimi, PayrollDetailWi7datMosa3ida, PayrollMaster, EmployeeSalafiat,Settings, Wi7da
+from .models import Drajat3lawat, EmployeeBankAccount, EmployeeFamily, EmployeeM2moria, EmployeeM2moriaMonthly, EmployeeMajlisEl2dara, EmployeeMoahil, EmployeeJazaat, EmployeeMobashra, EmployeeVacation, EmployeeWi7datMosa3da, Gisim, HikalWazifi, MosamaWazifi,Edara3ama,Edarafar3ia,EmployeeBasic, PayrollDetail, PayrollDetailMajlisEl2dara, PayrollDetailTa3agodMosimi, PayrollDetailWi7datMosa3ida, PayrollMaster, EmployeeSalafiat, PayrollTasoia,Settings, Wi7da
 from mptt.admin import MPTTModelAdmin,TreeRelatedFieldListFilter
 
 class SalafiatMixin(ModelForm):
@@ -647,10 +647,14 @@ class EmployeeM2moriaMonthlyInline(admin.TabularInline):
     list_select_related = True
     def has_add_permission(self,request, obj):
         return False
+    
+class PayrollTasoiaInline(admin.TabularInline):
+    model = PayrollTasoia
+
 
 class PayrollMasterAdmin(admin.ModelAdmin):
     exclude = ["created_at","created_by","updated_at","updated_by","zaka_kafaf","zaka_nisab","confirmed","enable_sandog_kahraba","enable_youm_algoat_almosalaha","daribat_2lmokafa","m3ash_age","khasm_salafiat_elsandog_min_elomoratab"]
-    inlines = [PayrollDetailInline,PayrollDetailWi7datMosa3idaInline,PayrollDetailTa3agodMosimiInline,PayrollDetailMajlisEl2daraInline,EmployeeM2moriaMonthlyInline]
+    inlines = [PayrollDetailInline,PayrollDetailWi7datMosa3idaInline,PayrollDetailTa3agodMosimiInline,PayrollDetailMajlisEl2daraInline,EmployeeM2moriaMonthlyInline,PayrollTasoiaInline]
 
     # list_display = ["year","month","confirmed","show_badalat_link","show_khosomat_link","show_mokaf2_link","show_mobashara_link"]
     list_filter = ["year","month","confirmed"]
@@ -680,13 +684,15 @@ class PayrollMasterAdmin(admin.ModelAdmin):
     @admin.display(description=_('Show khosomat sheet'))
     def show_khosomat_link(self, obj):
         url = reverse('hr:payroll_khosomat')
+        url_tasoia = reverse('hr:payroll_tasoia')
         check_payroll_url = reverse('hr:payroll_check')
         return format_html('<a target="_blank" class="viewlink" href="{url}?year={year}&month={month}">'+_('Show khosomat sheet')\
                                +'</a> / '\
+                               +'<a target="_blank" href="{url_tasoia}?year={year}&month={month}">'+_('tasoia sheet')+'</a> / '\
                                +'<a target="_blank" href="{url}?year={year}&month={month}&format=csv&bank_sheet=1">'+_('bank sheet')+'</a> / '\
                                +'<a target="_blank" href="{check_payroll_url}?year={year}&month={month}">'+_('check payroll')+'</a> / '\
                                +'<a target="_blank" href="{url}?year={year}&month={month}&format=csv">CSV</a>',
-                           url=url,check_payroll_url=check_payroll_url,year=obj.year,month=obj.month)
+                           url=url,url_tasoia=url_tasoia,check_payroll_url=check_payroll_url,year=obj.year,month=obj.month)
 
     @admin.display(description=_('Diff badalat sheet'))
     def cmp_badalat_prev_month_link(self, obj):
@@ -817,6 +823,9 @@ class PayrollMasterAdmin(admin.ModelAdmin):
     def save_model(self, request, obj, form, change):
         payroll = Payroll(obj.year,obj.month)
         payroll.calculate()
+
+        tasoia = TasoiaPayroll(obj.year,obj.month)
+        tasoia.calculate()
 
         mobashara = MobasharaSheet(obj.year,obj.month)
         mobashara.calculate()

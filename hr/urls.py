@@ -2,7 +2,7 @@ from django.urls import path
 
 from django.conf import settings
 
-from .views import Badalat, CheckPayroll, FargKhosomat,Khosomat, M2moria, MajlisEl2daraMokaf2View, Mobashara, Modir3amBadalatView, Modir3amKhosomatView, Modir3amMokaf2View, Mokaf2,FargBadalat, Ta3agodMosimiMokaf2, Ta3agodMosimiMoratab, TasoiaPayroll, Wi7datMosa3idaMokaf2tFarigMoratab,Wi7datMosa3idaMokaf2t
+from .views import Badalat, CheckPayroll, FargKhosomat,Khosomat, M2moria, MajlisEl2daraMokaf2View, Mobashara, Modir3amBadalatView, Modir3amKhosomatView, Modir3amMokaf2View, Mokaf2,FargBadalat, Ta3agodMosimiMokaf2, Ta3agodMosimiMoratab, Tasoia, Wi7datMosa3idaMokaf2tFarigMoratab,Wi7datMosa3idaMokaf2t
 
 app_name = "hr"
 urlpatterns = [                                                        
@@ -27,6 +27,6 @@ urlpatterns = [
     path('payroll/modir_3am_badalat', Modir3amBadalatView.as_view(), name='payroll_modir_3am_badalat'),
     path('payroll/modir_3am_khosomat', Modir3amKhosomatView.as_view(), name='payroll_modir_3am_khosomat'),
     path('payroll/modir_3am_mokaf2', Modir3amMokaf2View.as_view(), name='payroll_modir_3am_mokaf2'),
-    path('payroll/tasoia', TasoiaPayroll.as_view(), name='payroll_tasoia'),
+    path('payroll/tasoia', Tasoia.as_view(), name='payroll_tasoia'),
 
 ]

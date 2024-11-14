@@ -1024,3 +1024,31 @@ class PayrollDetailMajlisEl2dara(PayrollDetailAbstract):
 
         verbose_name = _("Payroll detail (majlis el2dara)")
         verbose_name_plural = _("Payroll details (majlis el2dara)")
+
+class PayrollTasoia(models.Model):
+    payroll_master = models.OneToOneField(PayrollMaster, on_delete=models.CASCADE)
+    total_abtdai = models.FloatField(_("abtdai"),default=0)
+    total_galaa_m3isha = models.FloatField(_("galaa_m3isha"),default=0)
+    total_tabi3at_3mal = models.FloatField(_("tabi3at_3mal"),default=0)
+    total_tamtheel = models.FloatField(_("tamtheel"),default=0)
+    total_mihna = models.FloatField(_("mihna"),default=0)
+    total_ma3adin = models.FloatField(_("ma3adin"),default=0)
+    total_aadoa = models.FloatField(_("aadoa"),default=0)
+    total_ajtima3ia = models.FloatField(_("ajtima3ia"),default=0)
+    total_moahil = models.FloatField(_("moahil"),default=0)
+    total_shakhsia = models.FloatField(_("shakhsia"),default=0)
+    total_makhatir = models.FloatField(_("makhatir"),default=0)
+    total_salafiat = models.FloatField(_("salafiat"),default=0)
+    total_dariba = models.FloatField(_("dariba"),default=0)
+    total_damga = models.FloatField(_("damga"),default=0)
+    total_m3ash = models.FloatField(_("m3ash"),default=0)
+    total_tameen_ajtima3i = models.FloatField(_("tameen_ajtima3i"),default=0)
+    total_sandog = models.FloatField(_("sandog"),default=0)
+    total_zakat = models.FloatField(_("zakat"),default=0)
+    total_youm_algoat_almosalaha = models.FloatField(_("youm_algoat_almosalaha"),default=0)
+    total_jazaat = models.FloatField(_("jazaat"),default=0)
+    total_salafiat_sandog = models.FloatField(_("salafiat_sandog"),default=0)
+
+    class Meta:
+        verbose_name = _("Payroll tasoia")
+        verbose_name_plural = _("Payroll tasoia")

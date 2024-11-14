@@ -1,12 +1,12 @@
 import datetime
 from django.utils.translation import gettext_lazy as _
-from django.db import transaction
+from django.db import IntegrityError, transaction
 from django.db.models import Q, Sum
 from django.contrib.auth import get_user_model
 
 from hr.calculations import Badalat_3lawat, BadalatModir3am, Khosomat, KhosomatModir3am, M2moria, MajlisEl2daraMokaf2, Mobashara, Mokaf2, Mokaf2Modir3am, Ta3agodMosimiMokaf2, Ta3agodMosimiMoratab, Wi7datMosa3idaMokaf2,Wi7datMosa3idaMokaf2tFarigMoratab
 
-from .models import EmployeeM2moria, EmployeeM2moriaMonthly, EmployeeMajlisEl2dara, EmployeeMobashra, EmployeeJazaat,EmployeeBasic,Drajat3lawat, EmployeeMobashraMonthly, EmployeeWi7datMosa3da, PayrollDetail, PayrollDetailMajlisEl2dara, PayrollDetailTa3agodMosimi, PayrollDetailWi7datMosa3ida, PayrollMaster,Settings,EmployeeSalafiat
+from .models import EmployeeM2moria, EmployeeM2moriaMonthly, EmployeeMajlisEl2dara, EmployeeMobashra, EmployeeJazaat,EmployeeBasic,Drajat3lawat, EmployeeMobashraMonthly, EmployeeWi7datMosa3da, PayrollDetail, PayrollDetailMajlisEl2dara, PayrollDetailTa3agodMosimi, PayrollDetailWi7datMosa3ida, PayrollMaster, PayrollTasoia,Settings,EmployeeSalafiat
 
 class HrSettings():
     def __init__(self) -> None:
@@ -1193,3 +1193,103 @@ class Modir3amPayroll():
         
         return (None,None,None,None,None,)
 
+class TasoiaPayroll():
+    def __init__(self,year,month) -> None:
+        self.year = year
+        self.month = month
+
+        self.payroll = Payroll(self.year,self.month)
+
+    def calculate(self):
+        total_abtdai = 0
+        total_galaa_m3isha = 0
+        total_tabi3at_3mal = 0
+        total_tamtheel = 0
+        total_mihna = 0
+
+        total_ma3adin = 0
+        total_aadoa = 0
+        total_gasima = 0
+        total_atfal = 0
+        total_moahil = 0
+        total_shakhsia = 0
+        total_makhatir = 0
+
+        total_salafiat = 0
+        total_damga = 0
+        total_m3ash = 0
+
+        total_dariba = 0 
+        total_tameen_ajtima3i = 0 
+        total_zakat = 0 
+        total_youm_algoat_almosalaha = 0
+        total_sandog = 0
+        total_jazaat = 0
+        total_salafiat_sandog = 0
+
+        for (emp,badalat,khosomat,draja_wazifia,alawa_sanawia) in self.payroll.all_employees_payroll_from_db():
+            total_abtdai += badalat.abtdai
+            total_galaa_m3isha += badalat.galaa_m3isha
+            total_tabi3at_3mal += badalat.tabi3at_3mal
+            total_tamtheel += badalat.tamtheel
+            total_mihna += badalat.mihna
+            total_ma3adin += badalat.ma3adin
+            total_aadoa += badalat.aadoa
+            total_gasima += badalat.ajtima3ia_gasima
+            total_atfal += badalat.ajtima3ia_atfal
+            total_moahil += badalat.moahil
+            total_shakhsia += badalat.shakhsia
+            total_makhatir += badalat.makhatir
+
+            total_salafiat += khosomat.salafiat
+            total_dariba += khosomat.dariba
+            total_damga += khosomat.damga
+            total_tameen_ajtima3i += khosomat.tameen_ajtima3i
+            total_m3ash += khosomat.m3ash
+            total_sandog = khosomat.sandog            
+            total_zakat += khosomat.zakat
+            total_youm_algoat_almosalaha += khosomat.youm_algoat_almosalaha
+            total_jazaat += khosomat.jazaat
+            total_salafiat_sandog +=khosomat.salafiat_sandog
+
+        total_band_2wal = (total_abtdai + total_galaa_m3isha)
+
+        ajtima3ia = (total_gasima + total_atfal)
+        total_band_tani = (total_tabi3at_3mal+total_tamtheel+total_mihna+total_ma3adin+total_aadoa+ajtima3ia+total_moahil+total_shakhsia+total_makhatir)
+
+        total_band_2wal_tani = (total_band_2wal+total_band_tani)
+
+        try:
+            obj = PayrollTasoia.objects.create(
+                payroll_master = self.payroll.payroll_master,
+                total_abtdai = total_abtdai,
+                total_galaa_m3isha = total_galaa_m3isha,
+                total_tabi3at_3mal = total_tabi3at_3mal,
+                total_tamtheel = total_tamtheel,
+                total_mihna = total_mihna,
+                total_ma3adin = total_ma3adin,
+                total_aadoa = total_aadoa,
+                total_ajtima3ia = ajtima3ia,
+                total_moahil = total_moahil,
+                total_shakhsia = total_shakhsia,
+                total_makhatir = total_makhatir,
+                total_salafiat = total_salafiat,
+                total_dariba = total_dariba,
+                total_damga = total_damga,
+                total_m3ash = total_m3ash,
+                total_tameen_ajtima3i = total_tameen_ajtima3i,
+                total_sandog = total_sandog,
+                total_zakat = total_zakat,
+                total_youm_algoat_almosalaha = total_youm_algoat_almosalaha,
+                total_jazaat = total_jazaat,
+                total_salafiat_sandog = total_salafiat_sandog
+            )
+
+        except IntegrityError:
+            pass
+
+    def from_db(self):
+        try:
+            return PayrollTasoia.objects.get(payroll_master=self.payroll.payroll_master)
+        except:
+            return None
