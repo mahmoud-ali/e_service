@@ -1379,7 +1379,7 @@ class Tasoia(LoginRequiredMixin,UserPermissionMixin,View):
         t = TasoiaPayroll(year,month)
         obj = t.from_db()
         # print(obj)
-
+        total_2ltizam_t2min17 = (obj.total_tameen_ajtima3i / 8)*17
         total_band_2wal = (obj.total_abtdai + obj.total_galaa_m3isha)
         total_band_tani = (obj.total_tabi3at_3mal+obj.total_tamtheel+obj.total_mihna+obj.total_ma3adin+obj.total_aadoa+obj.total_ajtima3ia+obj.total_moahil+obj.total_shakhsia+obj.total_makhatir)
         total_band_2wal_tani = (total_band_2wal+total_band_tani)
@@ -1399,7 +1399,8 @@ class Tasoia(LoginRequiredMixin,UserPermissionMixin,View):
             'moragib_2lmoratab':moragib_2lmoratab,
             'total_2manat':total_2manat,
             'total_2manat_salafiat':total_2manat_salafiat,
-            'total_2manat_safi':(total_2manat_salafiat+obj.total_safi_alisti7gag)
+            'total_2manat_safi':(total_2manat_salafiat+obj.total_safi_alisti7gag),
+            'total_2ltizam_t2min17':total_2ltizam_t2min17,
         }
 
         response = render(self.request,template_name,context)
