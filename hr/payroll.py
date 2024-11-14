@@ -1246,7 +1246,7 @@ class TasoiaPayroll():
             total_damga += khosomat.damga
             total_tameen_ajtima3i += khosomat.tameen_ajtima3i
             total_m3ash += khosomat.m3ash
-            total_sandog = khosomat.sandog            
+            total_sandog += khosomat.sandog            
             total_zakat += khosomat.zakat
             total_youm_algoat_almosalaha += khosomat.youm_algoat_almosalaha
             total_jazaat += khosomat.jazaat
