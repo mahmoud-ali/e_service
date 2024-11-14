@@ -1252,7 +1252,7 @@ class TasoiaPayroll():
             total_shakhsia += badalat.shakhsia
             total_makhatir += badalat.makhatir
 
-            total_salafiat += khosomat.salafiat
+            total_salafiat += (khosomat.salafiat + khosomat.salafiat_3la_2lmoratab)
             total_dariba += khosomat.dariba
             total_damga += khosomat.damga
             total_tameen_ajtima3i += khosomat.tameen_ajtima3i
