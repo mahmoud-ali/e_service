@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-11-14 09:35+0200\n"
+"POT-Creation-Date: 2024-11-14 11:08+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -3646,7 +3646,11 @@ msgstr "تأمين اجتماعي"
 msgid "youm_algoat_almosalaha"
 msgstr "دعم القوات المسلحة"
 
-#: hr/models.py:1053 hr/models.py:1054
+#: hr/models.py:1051
+msgid "total_safi_alisti7gag"
+msgstr "صافي الاستحقاق"
+
+#: hr/models.py:1054 hr/models.py:1055
 msgid "Payroll tasoia"
 msgstr "تسوية مرتب"
 

@@ -1048,6 +1048,7 @@ class PayrollTasoia(models.Model):
     total_youm_algoat_almosalaha = models.FloatField(_("youm_algoat_almosalaha"),default=0)
     total_jazaat = models.FloatField(_("jazaat"),default=0)
     total_salafiat_sandog = models.FloatField(_("salafiat_sandog"),default=0)
+    total_safi_alisti7gag = models.FloatField(_("total_safi_alisti7gag"),default=0)
 
     class Meta:
         verbose_name = _("Payroll tasoia")

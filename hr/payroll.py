@@ -27,14 +27,15 @@ class HrSettings():
 
 class Payroll():
     def __init__(self,year,month) -> None:
-        self.year = year
-        self.month = month
+        self.year = int(year)
+        self.month = int(month)
 
         self.hr_settings = HrSettings()
         self.salafiat_qs = EmployeeSalafiat.objects.filter(year=self.year,month=self.month)
         self.jazaat_qs = EmployeeJazaat.objects.filter(year=self.year,month=self.month)
         self.employees = EmployeeBasic.objects \
             .filter(status=EmployeeBasic.STATUS_ACTIVE) \
+            .filter(tarikh_ta3in__lt=datetime.date(self.year,(self.month+1),1)) \
             .exclude(no3_2lertibat__in=[EmployeeBasic.NO3_2LERTIBAT_2L7ag, EmployeeBasic.NO3_2LERTIBAT_TA3AGOD, EmployeeBasic.NO3_2LERTIBAT_TA3AGOD_MOSIMI,EmployeeBasic.NO3_2LERTIBAT_MASHRO3,EmployeeBasic.NO3_2LERTIBAT_MAJLIS_EL2DARA])
 
         self.admin_user = get_user_model().objects.get(id=1)
@@ -213,23 +214,29 @@ class Payroll():
                     except:
                         pass
 
+                    factor = 1
+                    month_first = datetime.date(self.year,self.month,1)
+                    if emp.tarikh_ta3in > month_first:
+                        delta = emp.tarikh_ta3in - month_first
+                        factor = (delta.days+1)/30
+
                     PayrollDetail.objects.create(
                         payroll_master = self.payroll_master,
                         employee = emp,
-                        abtdai = badalat.abtdai,
-                        galaa_m3isha = badalat.galaa_m3isha,
-                        shakhsia = badalat.shakhsia,
-                        aadoa = badalat.aadoa,
-                        gasima = badalat.ajtima3ia_gasima,
-                        atfal = badalat.ajtima3ia_atfal,
-                        moahil = badalat.moahil,
-                        ma3adin = badalat.ma3adin,
-                        m3ash = khosomat.m3ash,
-                        salafiat = khosomat.salafiat,
-                        jazaat = khosomat.jazaat,
-                        damga = khosomat.damga,
-                        sandog = khosomat.sandog,
-                        sandog_kahraba = khosomat.sandog_kahraba,
+                        abtdai = badalat.abtdai*factor,
+                        galaa_m3isha = badalat.galaa_m3isha*factor,
+                        shakhsia = badalat.shakhsia*factor,
+                        aadoa = badalat.aadoa*factor,
+                        gasima = badalat.ajtima3ia_gasima*factor,
+                        atfal = badalat.ajtima3ia_atfal*factor,
+                        moahil = badalat.moahil*factor,
+                        ma3adin = badalat.ma3adin*factor,
+                        m3ash = khosomat.m3ash*factor,
+                        salafiat = khosomat.salafiat*factor,
+                        jazaat = khosomat.jazaat*factor,
+                        damga = khosomat.damga*factor,
+                        sandog = khosomat.sandog*factor,
+                        sandog_kahraba = khosomat.sandog_kahraba*factor,
                         tarikh_milad = emp.tarikh_milad,
                         salafiat_sandog = khosomat.salafiat_sandog,
                         salafiat_3la_2lmoratab = khosomat.salafiat_3la_2lmoratab,
@@ -1226,6 +1233,7 @@ class TasoiaPayroll():
         total_sandog = 0
         total_jazaat = 0
         total_salafiat_sandog = 0
+        total_safi_alisti7gag = 0
 
         for (emp,badalat,khosomat,draja_wazifia,alawa_sanawia) in self.payroll.all_employees_payroll_from_db():
             total_abtdai += badalat.abtdai
@@ -1250,7 +1258,8 @@ class TasoiaPayroll():
             total_zakat += khosomat.zakat
             total_youm_algoat_almosalaha += khosomat.youm_algoat_almosalaha
             total_jazaat += khosomat.jazaat
-            total_salafiat_sandog +=khosomat.salafiat_sandog
+            total_salafiat_sandog +=khosomat.salafiat_sandog_remain
+            total_safi_alisti7gag += khosomat.safi_alisti7gag
 
         ajtima3ia = (total_gasima + total_atfal)
 
@@ -1277,7 +1286,8 @@ class TasoiaPayroll():
                 total_zakat = total_zakat,
                 total_youm_algoat_almosalaha = total_youm_algoat_almosalaha,
                 total_jazaat = total_jazaat,
-                total_salafiat_sandog = total_salafiat_sandog
+                total_salafiat_sandog = total_salafiat_sandog,
+                total_safi_alisti7gag = total_safi_alisti7gag,
             )
 
         except IntegrityError:
