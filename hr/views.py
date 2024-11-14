@@ -1399,6 +1399,7 @@ class Tasoia(LoginRequiredMixin,UserPermissionMixin,View):
             'moragib_2lmoratab':moragib_2lmoratab,
             'total_2manat':total_2manat,
             'total_2manat_salafiat':total_2manat_salafiat,
+            'total_2manat_safi':(total_2manat_salafiat+obj.total_safi_alisti7gag)
         }
 
         response = render(self.request,template_name,context)
