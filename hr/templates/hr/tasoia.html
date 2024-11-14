@@ -41,9 +41,18 @@
 
 <link rel="stylesheet" type="text/css" href="{% static 'hr/css/print.css' %}" />
 <style>
-	@media print {
+	table{
+		font-size: 14px;
+	}
+
+	th.money_align, td.money_align {
+		text-align: right !important;
+	}
+
+	@media print {		
 		@page {
 			size: A4 portrait;
+			margin:30px;
 		}
 	}	
 
@@ -88,20 +97,20 @@
 					</tr>
 					<tr>
 						<td>فئة ابتدائية</td>
-						<td>{{object.total_abtdai|floatformat:"2g"}}</td>
+						<td class="money_align">{{object.total_abtdai|floatformat:"2g"}}</td>
 						<td></td>
 						<td></td>
 					</tr>
 					<tr>
 						<td>غلاء المعيشة</td>
-						<td>{{object.total_galaa_m3isha|floatformat:"2g"}}</td>
+						<td class="money_align">{{object.total_galaa_m3isha|floatformat:"2g"}}</td>
 						<td></td>
 						<td></td>
 					</tr>
 					<tr>
 						<th>المجموع</th>
 						<th></th>
-						<th>{{total_band_2wal|floatformat:"2g"}}</th>
+						<th class="money_align">{{total_band_2wal|floatformat:"2g"}}</th>
 						<th></th>
 					</tr>
 
@@ -113,55 +122,55 @@
 					</tr>
 					<tr>
 						<td>طبيعة عمل</td>
-						<td>{{object.total_tabi3at_3mal|floatformat:"2g"}}</td>
+						<td class="money_align">{{object.total_tabi3at_3mal|floatformat:"2g"}}</td>
 						<td></td>
 						<td></td>
 					</tr>
 					<tr>
 						<td>بدل تمثيل</td>
-						<td>{{object.total_tamtheel|floatformat:"2g"}}</td>
+						<td class="money_align">{{object.total_tamtheel|floatformat:"2g"}}</td>
 						<td></td>
 						<td></td>
 					</tr>
 					<tr>
 						<td>علاوة مهنة</td>
-						<td>{{object.total_mihna|floatformat:"2g"}}</td>
+						<td class="money_align">{{object.total_mihna|floatformat:"2g"}}</td>
 						<td></td>
 						<td></td>
 					</tr>
 					<tr>
 						<td>علاوة معادن</td>
-						<td>{{object.total_ma3adin|floatformat:"2g"}}</td>
+						<td class="money_align">{{object.total_ma3adin|floatformat:"2g"}}</td>
 						<td></td>
 						<td></td>
 					</tr>
 					<tr>
 						<td>بدل عدوى</td>
-						<td>{{object.total_aadoa|floatformat:"2g"}}</td>
+						<td class="money_align">{{object.total_aadoa|floatformat:"2g"}}</td>
 						<td></td>
 						<td></td>
 					</tr>
 					<tr>
 						<td>علاوة اجتماعية</td>
-						<td>{{object.total_ajtima3ia|floatformat:"2g"}}</td>
+						<td class="money_align">{{object.total_ajtima3ia|floatformat:"2g"}}</td>
 						<td></td>
 						<td></td>
 					</tr>
 					<tr>
 						<td>علاوة مؤهل</td>
-						<td>{{object.total_moahil|floatformat:"2g"}}</td>
+						<td class="money_align">{{object.total_moahil|floatformat:"2g"}}</td>
 						<td></td>
 						<td></td>
 					</tr>
 					<tr>
 						<td>علاوة شخصية</td>
-						<td>{{object.total_shakhsia|floatformat:"2g"}}</td>
+						<td class="money_align">{{object.total_shakhsia|floatformat:"2g"}}</td>
 						<td></td>
 						<td></td>
 					</tr>
 					<tr>
 						<td>بدل مخاطر</td>
-						<td>{{object.total_makhatir|floatformat:"2g"}}</td>
+						<td class="money_align">{{object.total_makhatir|floatformat:"2g"}}</td>
 						<td></td>
 						<td></td>
 					</tr>
@@ -169,14 +178,14 @@
 					<tr>
 						<th>مجموع البند الثاتي</th>
 						<th></th>
-						<th>{{total_band_tani|floatformat:"2g"}}</th>
+						<th class="money_align">{{total_band_tani|floatformat:"2g"}}</th>
 						<th></th>
 					</tr>
 
 					<tr>
 						<th>مجموع البند الاول والثاني</th>
 						<th></th>
-						<th>{{total_band_2wal_tani|floatformat:"2g"}}</th>
+						<th class="money_align">{{total_band_2wal_tani|floatformat:"2g"}}</th>
 						<th></th>
 					</tr>
 
@@ -188,7 +197,7 @@
 					</tr>
 					<tr>
 						<td>السلفيات</td>
-						<td>{{object.total_salafiat|floatformat:"2g"}}</td>
+						<td class="money_align">{{object.total_salafiat|floatformat:"2g"}}</td>
 						<td></td>
 						<td></td>
 					</tr>
@@ -196,7 +205,7 @@
 						<td></td>
 						<td></td>
 						<td></td>
-						<td>{{object.total_salafiat|floatformat:"2g"}}</td>
+						<td class="money_align">{{object.total_salafiat|floatformat:"2g"}}</td>
 					</tr>
 					<tr>
 						<td>إلى ح الامانات</td>
@@ -206,61 +215,61 @@
 					</tr>
 					<tr>
 						<td>الضرائب</td>
-						<td>{{object.total_dariba|floatformat:"2g"}}</td>
+						<td class="money_align">{{object.total_dariba|floatformat:"2g"}}</td>
 						<td></td>
 						<td></td>
 					</tr>
 					<tr>
 						<td>الدمغة</td>
-						<td>{{object.total_damga|floatformat:"2g"}}</td>
+						<td class="money_align">{{object.total_damga|floatformat:"2g"}}</td>
 						<td></td>
 						<td></td>
 					</tr>					<tr>
 						<td>جاري المعاش</td>
-						<td>{{object.total_m3ash|floatformat:"2g"}}</td>
+						<td class="money_align">{{object.total_m3ash|floatformat:"2g"}}</td>
 						<td></td>
 						<td></td>
 					</tr>
 					<tr>
 						<td>تأمين اجتماعي</td>
-						<td>{{object.total_tameen_ajtima3i|floatformat:"2g"}}</td>
+						<td class="money_align">{{object.total_tameen_ajtima3i|floatformat:"2g"}}</td>
 						<td></td>
 						<td></td>
 					</tr>
 					<tr>
 						<td>اشتراك الصندوق</td>
-						<td>{{object.total_sandog|floatformat:"2g"}}</td>
+						<td class="money_align">{{object.total_sandog|floatformat:"2g"}}</td>
 						<td></td>
 						<td></td>
 					</tr>
 					<tr>
 						<td>الزكاة</td>
-						<td>{{object.total_zakat|floatformat:"2g"}}</td>
+						<td class="money_align">{{object.total_zakat|floatformat:"2g"}}</td>
 						<td></td>
 						<td></td>
 					</tr>
 					<tr>
 						<td>دعم القوات المسلحة</td>
-						<td>{{object.total_youm_algoat_almosalaha|floatformat:"2g"}}</td>
+						<td class="money_align">{{object.total_youm_algoat_almosalaha|floatformat:"2g"}}</td>
 						<td></td>
 						<td></td>
 					</tr>
 					<tr>
 						<td>خصومات - جزاءات</td>
-						<td>{{object.total_jazaat|floatformat:"2g"}}</td>
+						<td class="money_align">{{object.total_jazaat|floatformat:"2g"}}</td>
 						<td></td>
 						<td></td>
 					</tr>
 					<tr>
 						<td>خصومات لصالح الصندوق</td>
-						<td>{{object.total_salafiat_sandog|floatformat:"2g"}}</td>
+						<td class="money_align">{{object.total_salafiat_sandog|floatformat:"2g"}}</td>
 						<td></td>
 						<td></td>
 					</tr>
 
 					<tr>
 						<th>مراقبة المرتب</th>
-						<th>{{object.total_safi_alisti7gag|floatformat:"2g"}}</th>
+						<th class="money_align">{{object.total_safi_alisti7gag|floatformat:"2g"}}</th>
 						<th></th>
 						<th></th>
 					</tr>
@@ -268,19 +277,19 @@
 						<th>مجموع الامانات</th>
 						<th></th>
 						<th></th>
-						<th>{{total_2manat|floatformat:"2g"}}</th>
+						<th class="money_align">{{total_2manat|floatformat:"2g"}}</th>
 					</tr>
 					<tr>
 						<th>مجموع السلفيات والامانات</th>
 						<th></th>
 						<th></th>
-						<th>{{total_2manat_salafiat|floatformat:"2g"}}</th>
+						<th class="money_align">{{total_2manat_salafiat|floatformat:"2g"}}</th>
 					</tr>
 					<tr>
 						<th></th>
 						<th></th>
-						<th>{{total_band_2wal_tani|floatformat:"2g"}}</th>
-						<th>{{total_2manat_safi|floatformat:"2g"}}</th>
+						<th class="money_align">{{total_band_2wal_tani|floatformat:"2g"}}</th>
+						<th class="money_align">{{total_2manat_safi|floatformat:"2g"}}</th>
 					</tr>
 
 				</tbody>
