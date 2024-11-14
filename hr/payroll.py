@@ -1,4 +1,5 @@
 import datetime
+from calendar import monthrange
 from django.utils.translation import gettext_lazy as _
 from django.db import IntegrityError, transaction
 from django.db.models import Q, Sum
@@ -217,7 +218,9 @@ class Payroll():
                     factor = 1
                     month_first = datetime.date(self.year,self.month,1)
                     if emp.tarikh_ta3in > month_first:
-                        delta = emp.tarikh_ta3in - month_first
+                        f,l = monthrange(self.year, self.month)
+                        month_last = datetime.date(self.year,self.month,l)
+                        delta = month_last - emp.tarikh_ta3in
                         factor = (delta.days+1)/30
 
                     PayrollDetail.objects.create(
