@@ -1252,12 +1252,7 @@ class TasoiaPayroll():
             total_jazaat += khosomat.jazaat
             total_salafiat_sandog +=khosomat.salafiat_sandog
 
-        total_band_2wal = (total_abtdai + total_galaa_m3isha)
-
         ajtima3ia = (total_gasima + total_atfal)
-        total_band_tani = (total_tabi3at_3mal+total_tamtheel+total_mihna+total_ma3adin+total_aadoa+ajtima3ia+total_moahil+total_shakhsia+total_makhatir)
-
-        total_band_2wal_tani = (total_band_2wal+total_band_tani)
 
         try:
             obj = PayrollTasoia.objects.create(

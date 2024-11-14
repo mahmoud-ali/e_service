@@ -1379,13 +1379,26 @@ class Tasoia(LoginRequiredMixin,UserPermissionMixin,View):
         t = TasoiaPayroll(year,month)
         obj = t.from_db()
         # print(obj)
-        
+
+        total_band_2wal = (obj.total_abtdai + obj.total_galaa_m3isha)
+        total_band_tani = (obj.total_tabi3at_3mal+obj.total_tamtheel+obj.total_mihna+obj.total_ma3adin+obj.total_aadoa+obj.total_ajtima3ia+obj.total_moahil+obj.total_shakhsia+obj.total_makhatir)
+        total_band_2wal_tani = (total_band_2wal+total_band_tani)
+        total_2manat = (obj.total_dariba+obj.total_damga+obj.total_m3ash+obj.total_tameen_ajtima3i+obj.total_sandog+obj.total_zakat+obj.total_youm_algoat_almosalaha+obj.total_jazaat+obj.total_salafiat_sandog)
+        total_2manat_salafiat = total_2manat+obj.total_salafiat
+        moragib_2lmoratab = total_2manat
+
         template_name = 'hr/tasoia.html'
 
         context = {
             'object':obj,
             'month':MONTH_CHOICES[month],
             'year':year,
+            'total_band_2wal':total_band_2wal,
+            'total_band_tani':total_band_tani,
+            'total_band_2wal_tani':total_band_2wal_tani,
+            'moragib_2lmoratab':moragib_2lmoratab,
+            'total_2manat':total_2manat,
+            'total_2manat_salafiat':total_2manat_salafiat,
         }
 
         response = render(self.request,template_name,context)
