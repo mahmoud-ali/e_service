@@ -9,7 +9,7 @@ from django.contrib import admin
 from django.urls import reverse
 from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
-
+from django.contrib import messages
 from hr.calculations import PayrollValidation
 from hr.payroll import M2moriaSheet, MajlisEl2daraMokaf2Payroll, MobasharaSheet, Mokaf2Sheet, Payroll, Ta3agodMosimiPayroll, TasoiaPayroll, Wi7datMosa3idaMokaf2tFarigMoratabPayroll
 
@@ -867,7 +867,7 @@ class PayrollMasterAdmin(admin.ModelAdmin):
                 mobashara.confirm()
 
             else:
-                self.message_user(request, f'الرجاء التأكد من صحة بيانات {q.get_month_display()} {q.year} اولاً.')
+                self.message_user(request, f'الرجاء التأكد من صحة بيانات {q.get_month_display()} {q.year} اولاً.',messages.ERROR)
 
             # EmployeeSalafiat.objects.filter(year=q.year,month=q.month).update(deducted=True)
 
