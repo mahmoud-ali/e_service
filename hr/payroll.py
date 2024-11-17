@@ -31,12 +31,18 @@ class Payroll():
         self.year = int(year)
         self.month = int(month)
 
+        next_year = self.year
+        next_month = (self.month+1)
+        if next_month > 12:
+            self.month = 1
+            next_year += 1
+
         self.hr_settings = HrSettings()
         self.salafiat_qs = EmployeeSalafiat.objects.filter(year=self.year,month=self.month)
         self.jazaat_qs = EmployeeJazaat.objects.filter(year=self.year,month=self.month)
         self.employees = EmployeeBasic.objects \
             .filter(status=EmployeeBasic.STATUS_ACTIVE) \
-            .filter(tarikh_ta3in__lt=datetime.date(self.year,(self.month+1),1)) \
+            .filter(tarikh_ta3in__lt=datetime.date(next_year,next_month,1)) \
             .exclude(no3_2lertibat__in=[EmployeeBasic.NO3_2LERTIBAT_2L7ag, EmployeeBasic.NO3_2LERTIBAT_TA3AGOD, EmployeeBasic.NO3_2LERTIBAT_TA3AGOD_MOSIMI,EmployeeBasic.NO3_2LERTIBAT_MASHRO3,EmployeeBasic.NO3_2LERTIBAT_MAJLIS_EL2DARA])
 
         self.admin_user = get_user_model().objects.get(id=1)
@@ -187,7 +193,6 @@ class Payroll():
 
                     khasm_salafiat_elsandog_min_elomoratab = self.hr_settings.get_code_as_boolean(Settings.SETTINGS_KHASM_ELSANDOG_MIN_ELOMORATAB)
 
-
                     self.payroll_master = PayrollMaster.objects.create(
                         year = self.year,
                         month = self.month,
@@ -218,10 +223,10 @@ class Payroll():
                     factor = 1
                     month_first = datetime.date(self.year,self.month,1)
                     if emp.tarikh_ta3in > month_first:
-                        f,l = monthrange(self.year, self.month)
-                        month_last = datetime.date(self.year,self.month,l)
+                        f_day,l_day = monthrange(self.year, self.month)
+                        month_last = datetime.date(self.year,self.month,l_day)
                         delta = month_last - emp.tarikh_ta3in
-                        factor = (delta.days+1)/30
+                        factor = (delta.days+1)/(l_day-f_day+1)
 
                     PayrollDetail.objects.create(
                         payroll_master = self.payroll_master,
