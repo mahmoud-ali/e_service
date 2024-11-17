@@ -21,6 +21,9 @@ class LogAdminMixin:
         return False
 
     def has_change_permission(self, request, obj=None):
+        if request.user.is_superuser:
+            return True
+        
         try:
             if request.user.state_representative.authority==TblStateRepresentative.AUTHORITY_SMRC:
                 if not obj or obj.state==1:
