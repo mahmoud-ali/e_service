@@ -59,6 +59,17 @@ class TblStateRepresentative(models.Model):
         verbose_name = _("state representative")
         verbose_name_plural = _("state representatives")
 
+class LkpOwner(models.Model):
+    name = models.CharField(_("name"),max_length=100)
+
+    def __str__(self):
+        return f'{self.name}'
+
+    class Meta:
+        ordering = ["name"]
+        verbose_name = _("owner_name")
+        verbose_name_plural = _("owner_name")
+
 class AppMoveGold(LoggingModel):
     DESTINATION_SSMO = 1
     DESTINATION_CHOICES = {
@@ -103,7 +114,8 @@ class AppMoveGold(LoggingModel):
     code = models.CharField(_("code"),max_length=20, default='')
     date = models.DateField(_("date"))
     destination = models.IntegerField(_("destination"), choices=DESTINATION_CHOICES, default=DESTINATION_SSMO)
-    owner_name = models.CharField(_("owner_name"),max_length=100)
+    owner_name_str = models.CharField(_("owner_name"),max_length=100,null=True,blank=True)
+    owner_name_lst = models.ForeignKey(LkpOwner, on_delete=models.PROTECT,verbose_name=_("owner_name"),null=True,blank=True)
     owner_address = models.CharField(_("owner_address"),max_length=150)
     repr_name = models.CharField(_("repr_name"),max_length=100)
     repr_address = models.CharField(_("repr_address"),max_length=150)
@@ -117,6 +129,13 @@ class AppMoveGold(LoggingModel):
     state = models.IntegerField(_("record_state"), choices=STATE_CHOICES, default=STATE_DRAFT)
     attachement_file = models.FileField(_("attachement_file"),upload_to=attachement_path,null=True,blank=True)
     source_state = models.ForeignKey(LkpState, on_delete=models.PROTECT,verbose_name=_("state"))
+
+    @property
+    def owner_name(self):
+        if self.owner_name_lst:
+            return self.owner_name_lst.name
+        
+        return self.owner_name_str
 
     @property
     def gold_weight_in_gram(self):
@@ -151,7 +170,7 @@ class AppMoveGold(LoggingModel):
         verbose_name_plural = _("Move Gold")
         indexes = [
             models.Index(fields=["code"]),
-            models.Index(fields=["owner_name"]),
+            # models.Index(fields=["owner_name"]),
         ]
 
 class AppMoveGoldDetails(models.Model):

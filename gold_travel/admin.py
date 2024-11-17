@@ -8,7 +8,7 @@ from django.utils.html import format_html
 from django.db import models
 from django.forms.widgets import TextInput
 from gold_travel.forms import TblStateRepresentativeForm
-from gold_travel.models import AppPrepareGold, LkpStateDetails, TblStateRepresentative,AppMoveGold, AppMoveGoldDetails
+from gold_travel.models import AppPrepareGold, LkpOwner, LkpStateDetails, TblStateRepresentative,AppMoveGold, AppMoveGoldDetails
 
 class LogAdminMixin:
     def has_add_permission(self, request):
@@ -54,6 +54,14 @@ class LkpStateDetailsAdmin(admin.ModelAdmin):
 
 admin.site.register(LkpStateDetails, LkpStateDetailsAdmin)
 
+class LkpOwnerAdmin(admin.ModelAdmin):
+    model = LkpOwner
+    list_display = ["name"]
+    # list_filter = ["name"]
+    search_fields = ["name"]
+
+admin.site.register(LkpOwner, LkpOwnerAdmin)
+
 class TblStateRepresentativeAdmin(admin.ModelAdmin):
     model = TblStateRepresentative
     form = TblStateRepresentativeForm
@@ -85,7 +93,7 @@ class AppMoveGoldAdmin(LogAdminMixin,admin.ModelAdmin):
         (
             _("owner data"),
             {
-                'fields': ["owner_name","owner_address"]
+                'fields': ["owner_name_lst","owner_address"]
             },
         ),
         (
@@ -108,8 +116,9 @@ class AppMoveGoldAdmin(LogAdminMixin,admin.ModelAdmin):
         ),
     ]
     list_filter = ["date","state",("source_state",admin.RelatedOnlyFieldListFilter)]
-    search_fields = ["code","owner_name","owner_address","repr_name","repr_phone","repr_identity"]
+    search_fields = ["code","owner_name_lst__name","owner_name_str","owner_address","repr_name","repr_phone","repr_identity"]
     actions = ['confirm_app','arrived_to_ssmo_app','cancel_app','export_as_csv']
+    autocomplete_fields = ["owner_name_lst"]
 
     view_on_site = False
 
@@ -248,6 +257,10 @@ class AppMoveGoldAdmin(LogAdminMixin,admin.ModelAdmin):
             writer.writerow(row)
 
         return response
+
+    @admin.display(description=_('owner_name'))
+    def owner_name(self, obj):
+        return f'{obj.owner_name}'
 
     @admin.display(description=_('gold_weight_in_gram'))
     def gold_weight_in_gram(self, obj):
