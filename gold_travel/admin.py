@@ -119,7 +119,7 @@ class AppMoveGoldAdmin(LogAdminMixin,admin.ModelAdmin):
         ),
     ]
     list_filter = ["date","state",("source_state",admin.RelatedOnlyFieldListFilter)]
-    search_fields = ["code","owner_name_lst__name","owner_name_str","owner_address","repr_name","repr_phone","repr_identity"]
+    search_fields = ["code","owner_name_lst__name","owner_address","repr_name","repr_phone","repr_identity"]
     actions = ['confirm_app','arrived_to_ssmo_app','cancel_app','export_as_csv']
     autocomplete_fields = ["owner_name_lst"]
     list_display = ["code","date","owner_name_lst","gold_weight_in_gram","gold_alloy_count","state_str","repr_name","source_state"]

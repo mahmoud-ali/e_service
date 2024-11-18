@@ -132,10 +132,7 @@ class AppMoveGold(LoggingModel):
 
     @property
     def owner_name(self):
-        if self.owner_name_lst:
-            return self.owner_name_lst.name
-        
-        return self.owner_name_str
+        return self.owner_name_lst.name
 
     @property
     def gold_weight_in_gram(self):
