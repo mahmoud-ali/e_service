@@ -90,6 +90,7 @@ INSTALLED_APPS = [
     'revenu_dist',
     'traditional_api',
     'gold_travel',
+    'mokhalafat',
 
     # Debug
     'debug_toolbar',

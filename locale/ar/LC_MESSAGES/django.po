@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-11-12 14:03+0200\n"
+"POT-Creation-Date: 2024-11-18 10:15+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -75,11 +75,11 @@ msgstr "خروج"
 msgid "Check cordinates"
 msgstr "فحص الاحداثيات"
 
-#: check_cordinates/views.py:55
+#: check_cordinates/views.py:56
 msgid "Intersect with other data: "
 msgstr "يوجد تداخل مع بيانات اخرى: "
 
-#: check_cordinates/views.py:57
+#: check_cordinates/views.py:58
 msgid "No intersection!"
 msgstr "لايوجد تداخل!"
 
@@ -130,7 +130,7 @@ msgstr "بيانات العقد"
 msgid "company_type"
 msgstr "نوع الشركة"
 
-#: company_profile/admin.py:313 gold_travel/admin.py:227
+#: company_profile/admin.py:313 gold_travel/admin.py:238
 msgid "Export data"
 msgstr "تصدير البيانات"
 
@@ -198,7 +198,7 @@ msgstr "عدد الرخص"
 
 #: company_profile/admin.py:321 company_profile/models.py:81
 #: company_profile/models.py:215 gold_travel/models.py:22
-#: gold_travel/models.py:48 gold_travel/models.py:119 gold_travel/models.py:191
+#: gold_travel/models.py:48 gold_travel/models.py:131 gold_travel/models.py:210
 #: pa/templates/pa/company_panel.html:21 traditional_api/models.py:30
 #: traditional_api/models.py:43
 msgid "state"
@@ -232,14 +232,14 @@ msgstr "نوع الرخصة"
 #: company_profile/templates/company_profile/home.html:16
 #: company_profile/templates/company_profile/home.html:38
 #: company_profile/templates/company_profile/home.html:59
-#: gold_travel/models.py:12 help_request/models.py:11 pa/models.py:46
-#: revenu_dist/models.py:53 traditional_api/models.py:10
+#: gold_travel/models.py:12 help_request/models.py:11 mokhalafat/models.py:6
+#: pa/models.py:46 revenu_dist/models.py:53 traditional_api/models.py:10
 msgid "created_at"
 msgstr "تاريخ الانشاء"
 
 #: company_profile/models.py:18 gold_travel/models.py:13
-#: help_request/models.py:13 pa/models.py:47 revenu_dist/models.py:54
-#: traditional_api/models.py:11
+#: help_request/models.py:13 mokhalafat/models.py:7 pa/models.py:47
+#: revenu_dist/models.py:54 traditional_api/models.py:11
 msgid "created_by"
 msgstr "المستخدم المسئول عن الانشاء"
 
@@ -247,14 +247,14 @@ msgstr "المستخدم المسئول عن الانشاء"
 #: company_profile/templates/company_profile/home.html:17
 #: company_profile/templates/company_profile/home.html:39
 #: company_profile/templates/company_profile/home.html:60
-#: gold_travel/models.py:15 help_request/models.py:12 pa/models.py:49
-#: revenu_dist/models.py:56 traditional_api/models.py:13
+#: gold_travel/models.py:15 help_request/models.py:12 mokhalafat/models.py:9
+#: pa/models.py:49 revenu_dist/models.py:56 traditional_api/models.py:13
 msgid "updated_at"
 msgstr "تاريخ اخر تعديل"
 
 #: company_profile/models.py:21 gold_travel/models.py:16
-#: help_request/models.py:14 pa/models.py:50 revenu_dist/models.py:57
-#: traditional_api/models.py:14
+#: help_request/models.py:14 mokhalafat/models.py:10 pa/models.py:50
+#: revenu_dist/models.py:57 traditional_api/models.py:14
 msgid "updated_by"
 msgstr "المستخدم المسئول عن التعديل"
 
@@ -275,9 +275,10 @@ msgstr ""
 #: company_profile/models.py:135 company_profile/models.py:173
 #: company_profile/models.py:195 company_profile/models.py:718
 #: company_profile/models.py:816 company_profile/models.py:1072
-#: gold_travel/models.py:47 revenu_dist/models.py:63 revenu_dist/models.py:73
-#: revenu_dist/models.py:96 traditional_api/models.py:20
-#: traditional_api/models.py:31 traditional_api/models.py:42
+#: gold_travel/models.py:47 gold_travel/models.py:63 revenu_dist/models.py:63
+#: revenu_dist/models.py:73 revenu_dist/models.py:96
+#: traditional_api/models.py:20 traditional_api/models.py:31
+#: traditional_api/models.py:42
 msgid "name"
 msgstr "الاسم"
 
@@ -329,8 +330,8 @@ msgstr "امتياز استكشاف"
 msgid "sageer"
 msgstr "تعدين صغير"
 
-#: company_profile/models.py:115 gold_travel/admin.py:234
-#: gold_travel/models.py:23 gold_travel/models.py:103
+#: company_profile/models.py:115 gold_travel/admin.py:245
+#: gold_travel/models.py:23 gold_travel/models.py:114 mokhalafat/models.py:16
 msgid "code"
 msgstr "الرمز"
 
@@ -1457,7 +1458,7 @@ msgstr "تعليق مختصر عن الدراسة"
 
 #: company_profile/models.py:899 company_profile/models.py:925
 #: company_profile/models.py:1008 company_profile/models.py:1099
-#: company_profile/models.py:1115 gold_travel/models.py:118 pa/models.py:309
+#: company_profile/models.py:1115 gold_travel/models.py:130 pa/models.py:309
 #: pa/models.py:521 pa/models.py:637
 msgid "attachement_file"
 msgstr "المرفقات"
@@ -2403,106 +2404,109 @@ msgstr ""
 msgid "Wrong transition path."
 msgstr ""
 
-#: gold_travel/admin.py:86
+#: gold_travel/admin.py:97
 msgid "owner data"
 msgstr "بيانات المالك"
 
-#: gold_travel/admin.py:92
+#: gold_travel/admin.py:103
 msgid "representative data"
 msgstr "بيانات الناقل"
 
-#: gold_travel/admin.py:104
+#: gold_travel/admin.py:115
 msgid "attachments"
 msgstr "المرفقات"
 
-#: gold_travel/admin.py:194
+#: gold_travel/admin.py:205
 msgid "Confirm application"
 msgstr "اعتماد الطلب"
 
-#: gold_travel/admin.py:203 gold_travel/models.py:78
+#: gold_travel/admin.py:214 gold_travel/models.py:89
 msgid "state_smrc"
 msgstr "اعتماد ممثل الشركة السودانية"
 
-#: gold_travel/admin.py:207
+#: gold_travel/admin.py:218
 msgid "application confirmed successfully!"
 msgstr "تم إعتماد الطلب بنجاح."
 
-#: gold_travel/admin.py:211
+#: gold_travel/admin.py:222
 msgid "Arrived to SSMO"
 msgstr "وصل للمواصفات والمقاييس"
 
-#: gold_travel/admin.py:217 gold_travel/models.py:82
+#: gold_travel/admin.py:228 gold_travel/models.py:93
 msgid "state_ssmo"
 msgstr "وصلت الاستمارة للمواصفات والمقاييس"
 
-#: gold_travel/admin.py:219 gold_travel/admin.py:225 gold_travel/models.py:83
+#: gold_travel/admin.py:230 gold_travel/admin.py:236 gold_travel/models.py:94
 msgid "state_canceled"
 msgstr "إلغاء الطلب"
 
-#: gold_travel/admin.py:234 gold_travel/models.py:104 gold_travel/models.py:186
-#: pa/templates/pa/pa_daily.html:75 revenu_dist/models.py:108
+#: gold_travel/admin.py:245 gold_travel/models.py:115 gold_travel/models.py:205
+#: mokhalafat/models.py:17 pa/templates/pa/pa_daily.html:75
+#: revenu_dist/models.py:108
 msgid "date"
 msgstr "التاريخ"
 
-#: gold_travel/admin.py:234 gold_travel/admin.py:255 gold_travel/models.py:188
+#: gold_travel/admin.py:245 gold_travel/admin.py:270 gold_travel/models.py:207
 #: gold_travel/templates/admin/gold_travel/appmovegold/pagination.html:13
 msgid "gold_weight_in_gram"
 msgstr "اجمالي وزن الذهب بالجرام"
 
-#: gold_travel/admin.py:234 gold_travel/admin.py:259
+#: gold_travel/admin.py:245 gold_travel/admin.py:274
 #: gold_travel/templates/admin/gold_travel/appmovegold/pagination.html:14
 msgid "gold_alloy_count"
 msgstr "عدد السبائك"
 
-#: gold_travel/admin.py:234 gold_travel/models.py:105
+#: gold_travel/admin.py:245 gold_travel/models.py:116
 msgid "destination"
 msgstr "الوجهة"
 
-#: gold_travel/admin.py:234 gold_travel/models.py:106 gold_travel/models.py:187
+#: gold_travel/admin.py:245 gold_travel/admin.py:266 gold_travel/models.py:70
+#: gold_travel/models.py:71 gold_travel/models.py:117 gold_travel/models.py:118
+#: gold_travel/models.py:206
 msgid "owner_name"
 msgstr "اسم المالك"
 
-#: gold_travel/admin.py:234 gold_travel/models.py:107
+#: gold_travel/admin.py:245 gold_travel/models.py:119
 msgid "owner_address"
 msgstr "عنوان المالك"
 
-#: gold_travel/admin.py:235 gold_travel/models.py:108
+#: gold_travel/admin.py:246 gold_travel/models.py:120
 msgid "repr_name"
 msgstr "اسم الناقل"
 
-#: gold_travel/admin.py:235 gold_travel/models.py:109
+#: gold_travel/admin.py:246 gold_travel/models.py:121
 msgid "repr_address"
 msgstr "عنوان الناقل"
 
-#: gold_travel/admin.py:235 gold_travel/models.py:110
+#: gold_travel/admin.py:246 gold_travel/models.py:122
 msgid "repr_phone"
 msgstr "تلفون الناقل"
 
-#: gold_travel/admin.py:235 gold_travel/models.py:111
+#: gold_travel/admin.py:246 gold_travel/models.py:123
 msgid "repr_identity_type"
 msgstr "نوع اثبات هوية الناقل"
 
-#: gold_travel/admin.py:235 gold_travel/models.py:112
+#: gold_travel/admin.py:246 gold_travel/models.py:124
 msgid "repr_identity"
 msgstr "اثبات هوية الناقل"
 
-#: gold_travel/admin.py:235 gold_travel/models.py:113
+#: gold_travel/admin.py:246 gold_travel/models.py:125
 msgid "repr_identity_issue_date"
 msgstr "تاريخ اصدار هوية الناقل"
 
-#: gold_travel/admin.py:235 gold_travel/admin.py:270 gold_travel/models.py:117
-#: gold_travel/models.py:190 pa/models.py:95 pa/models.py:133 pa/models.py:197
+#: gold_travel/admin.py:246 gold_travel/admin.py:285 gold_travel/models.py:129
+#: gold_travel/models.py:209 pa/models.py:95 pa/models.py:133 pa/models.py:197
 #: pa/models.py:307 pa/models.py:519 pa/tables/payment.py:34
 #: pa/tables/request.py:53
 msgid "record_state"
 msgstr "الحالة"
 
-#: gold_travel/admin.py:235
+#: gold_travel/admin.py:246
 msgid "source_state"
 msgstr "الولاية المصدر"
 
-#: gold_travel/admin.py:263 gold_travel/admin.py:266 gold_travel/admin.py:328
-#: gold_travel/admin.py:331
+#: gold_travel/admin.py:278 gold_travel/admin.py:281 gold_travel/admin.py:343
+#: gold_travel/admin.py:346
 msgid "Show certificate"
 msgstr "عرض الشهادة"
 
@@ -2562,87 +2566,87 @@ msgstr "الممثل بالولاية"
 msgid "state representatives"
 msgstr "الممثلين بالولاية"
 
-#: gold_travel/models.py:65
+#: gold_travel/models.py:76
 msgid "ssmo_name"
 msgstr "الهيئة السودانية للمواصفات والمقاييس / بورتسودان"
 
-#: gold_travel/models.py:77 gold_travel/models.py:182
+#: gold_travel/models.py:88 gold_travel/models.py:201
 msgid "state_draft"
 msgstr "مسودة"
 
-#: gold_travel/models.py:79
+#: gold_travel/models.py:90
 msgid "state_2mn_2lm3adin"
 msgstr "اعتماد ممثل أمن إقتصاديات المعادن"
 
-#: gold_travel/models.py:80
+#: gold_travel/models.py:91
 msgid "state_shortat_2lm3adin"
 msgstr "اعتماد ممثل شرطة تأمين التعدين "
 
-#: gold_travel/models.py:81
+#: gold_travel/models.py:92
 msgid "state_2lestikhbarat_2l3askria"
 msgstr "اعتماد ممثل هيئة الإستخبارات العسكرية"
 
-#: gold_travel/models.py:92
+#: gold_travel/models.py:103
 msgid "identity_passport"
 msgstr "جواز"
 
-#: gold_travel/models.py:93
+#: gold_travel/models.py:104
 msgid "identity_personal"
 msgstr "بطاقة شخصية"
 
-#: gold_travel/models.py:94
+#: gold_travel/models.py:105
 msgid "identity_national_id"
 msgstr "رقم وطني"
 
-#: gold_travel/models.py:95
+#: gold_travel/models.py:106
 msgid "identity_driving_license"
 msgstr "رخصة قيادة"
 
-#: gold_travel/models.py:150 gold_travel/models.py:151
+#: gold_travel/models.py:169 gold_travel/models.py:170
 msgid "Move Gold"
 msgstr "استمارة ترحيل ذهب صادر"
 
-#: gold_travel/models.py:161
+#: gold_travel/models.py:180
 msgid "alloy_shape_rectangular"
 msgstr "مستطيلة"
 
-#: gold_travel/models.py:162
+#: gold_travel/models.py:181
 msgid "alloy_shape_circular"
 msgstr "دائرية"
 
-#: gold_travel/models.py:166
+#: gold_travel/models.py:185
 msgid "alloy_id"
 msgstr "رقم السبيكة"
 
-#: gold_travel/models.py:167
+#: gold_travel/models.py:186
 msgid "alloy_weight_in_gram"
 msgstr "الوزن بالجرام"
 
-#: gold_travel/models.py:168
+#: gold_travel/models.py:187
 msgid "alloy_shape"
 msgstr "شكل السبيكة/السبائك"
 
-#: gold_travel/models.py:169
+#: gold_travel/models.py:188
 msgid "alloy_note"
 msgstr "ملاحظات عن السبيكة/السبائك"
 
-#: gold_travel/models.py:175
+#: gold_travel/models.py:194
 msgid "alloy detail"
 msgstr "تفاصيل السبيكة"
 
-#: gold_travel/models.py:176
+#: gold_travel/models.py:195
 msgid "alloy details"
 msgstr "تفاصيل السبائك"
 
-#: gold_travel/models.py:183
+#: gold_travel/models.py:202
 msgid "state_confirmed"
 msgstr "مؤكد"
 
-#: gold_travel/models.py:189
+#: gold_travel/models.py:208
 msgid "issuer"
 msgstr "مصدر الطلب"
 
-#: gold_travel/models.py:197 gold_travel/models.py:198
+#: gold_travel/models.py:216 gold_travel/models.py:217
 msgid "prepare gold"
 msgstr "استمارة شراء وسبك وتجهيز الذهب"
 
@@ -2693,6 +2697,58 @@ msgstr "ارسال"
 #: help_request/templatetags/help_request.py:13
 msgid "help_link"
 msgstr "طلب مساعدة"
+
+#: mokhalafat/apps.py:7
+msgid "mokhalafat app"
+msgstr "رصد وتحليل المخالفات"
+
+#: mokhalafat/models.py:18
+msgid "aism_almukhalafa"
+msgstr "اسم المخالفة"
+
+#: mokhalafat/models.py:19
+msgid "wasf_almukhalafa"
+msgstr "وصف المخالفة"
+
+#: mokhalafat/models.py:20
+msgid "tahlil_almukhalafa"
+msgstr "تحليل المخالفة"
+
+#: mokhalafat/models.py:22 mokhalafat/models.py:23
+msgid "AppMokhalafat"
+msgstr "مخالفات التعدين"
+
+#: mokhalafat/models.py:27
+msgid "procedure_name"
+msgstr "الاجراء"
+
+#: mokhalafat/models.py:29 mokhalafat/models.py:30
+msgid "AppMokhalafatProcedure"
+msgstr "الاجراءات"
+
+#: mokhalafat/models.py:34
+msgid "recommendation_name"
+msgstr "التوصية"
+
+#: mokhalafat/models.py:35
+msgid "jihat_altanfidh"
+msgstr "جهة التنفيذ"
+
+#: mokhalafat/models.py:36
+msgid "from_date"
+msgstr "من"
+
+#: mokhalafat/models.py:37
+msgid "to_date"
+msgstr "الى"
+
+#: mokhalafat/models.py:38
+msgid "comments"
+msgstr "ملاحظات"
+
+#: mokhalafat/models.py:40 mokhalafat/models.py:41
+msgid "AppMokhalafatRecommendation"
+msgstr "التوصيات"
 
 #: pa/apps.py:8
 msgid "Production Accounting"
