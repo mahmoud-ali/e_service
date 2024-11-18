@@ -114,7 +114,7 @@ class AppMoveGold(LoggingModel):
     code = models.CharField(_("code"),max_length=20, default='')
     date = models.DateField(_("date"))
     destination = models.IntegerField(_("destination"), choices=DESTINATION_CHOICES, default=DESTINATION_SSMO)
-    owner_name_str = models.CharField(_("owner_name"),max_length=100,null=True,blank=True)
+    # owner_name_str = models.CharField(_("owner_name"),max_length=100,null=True,blank=True)
     owner_name_lst = models.ForeignKey(LkpOwner, on_delete=models.PROTECT,verbose_name=_("owner_name"))
     owner_address = models.CharField(_("owner_address"),max_length=150)
     repr_name = models.CharField(_("repr_name"),max_length=100)
