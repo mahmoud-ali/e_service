@@ -317,7 +317,7 @@ class TblCompanyProductionLicenseAdmin(LoggingAdminMixin,admin.ModelAdmin):
             headers={"Content-Disposition": f'attachment; filename="licenses.csv"'},
         )
         header = [
-                    _("company"),_("License no"),_("start_date"),_("end_date"),_( "License count"),\
+                    _("id"),_("company"),_("License no"),_("start_date"),_("end_date"),_( "License count"),\
                     _("state"),_("sheet_no"),_("contract_status")
         ]
 
@@ -330,7 +330,7 @@ class TblCompanyProductionLicenseAdmin(LoggingAdminMixin,admin.ModelAdmin):
         for license in queryset.order_by("company"):
 
             row = [
-                    license.company,license.license_no,license.start_date,license.end_date,license.license_count,license.state,\
+                    license.id,license.company,license.license_no,license.start_date,license.end_date,license.license_count,license.state,\
                     license.sheet_no,license.contract_status
             ]
             writer.writerow(row)
