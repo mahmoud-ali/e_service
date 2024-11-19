@@ -33,7 +33,7 @@ class AppMokhalafatAdmin(LogAdminMixin,admin.ModelAdmin):
     form = AppMokhalafatAdminForm
     inlines = [AppMokhalafatProcedureInline,AppMokhalafatRecommendationInline]
     fields = ["code","date","aism_almukhalafa","wasf_almukhalafa","tahlil_almukhalafa"]
-    list_display = ["code","date","aism_almukhalafa","tahlil_almukhalafa"]
+    list_display = ["date","code","aism_almukhalafa","tahlil_almukhalafa"]
     list_filter = ["date"]
     search_fields = ["code","aism_almukhalafa","wasf_almukhalafa","tahlil_almukhalafa"]
     view_on_site = False
