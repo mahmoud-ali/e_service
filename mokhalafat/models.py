@@ -16,7 +16,7 @@ class AppMokhalafat(LoggingModel):
     code = models.IntegerField(_("code"))
     date = models.DateField(_("date"))
     aism_almukhalafa = models.CharField(_("aism_almukhalafa"),max_length=150)
-    wasf_almukhalafa = models.CharField(_("wasf_almukhalafa"),max_length=255)
+    wasf_almukhalafa = models.CharField(_("wasf_almukhalafa"),max_length=1000)
     tahlil_almukhalafa = models.CharField(_("tahlil_almukhalafa"),max_length=150)
 
     class Meta:
