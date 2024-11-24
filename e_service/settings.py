@@ -91,6 +91,7 @@ INSTALLED_APPS = [
     'traditional_api',
     'gold_travel',
     'mokhalafat',
+    'production_control',
 
     # Debug
     'debug_toolbar',
