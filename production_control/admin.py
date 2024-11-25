@@ -204,6 +204,12 @@ class GoldShippingFormAdmin(AuditorMixin,StateMixin,LogAdminMixin,admin.ModelAdm
                 formset.form = GoldShippingFormAlloyForm
                 if obj:
                     formset.form.master_id = obj.id
+                    formset.form.company_ids = [obj.company.id]
+                else:
+                    try:
+                        formset.form.company_ids = request.user.gold_production_user.goldproductionuserdetail_set.values_list('company')
+                    except Exception as e:
+                        print('err',e)
 
             yield formset,inline
 

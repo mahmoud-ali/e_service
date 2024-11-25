@@ -73,10 +73,11 @@ class GoldShippingFormForm(forms.ModelForm):
 class GoldShippingFormAlloyForm(forms.ModelForm):
     alloy_serial_no = forms.ModelChoiceField(queryset=alloy_none,disabled=True, label=_("alloy_serial_no"))
     master_id = None
+    company_ids = None
     def __init__(self, *args, **kwargs):        
         super().__init__(*args, **kwargs)
 
-        self.fields["alloy_serial_no"].queryset = alloy_all_qs.filter(alloy_shipped=False)
+        self.fields["alloy_serial_no"].queryset = alloy_all_qs.filter(master__company__id__in=self.company_ids,alloy_shipped=False)
         if self.master_id:
             self.fields["alloy_serial_no"].queryset |= alloy_all_qs.filter(id__in=GoldShippingFormAlloy.objects.filter(master=self.master_id).values_list('alloy_serial_no'))
 
