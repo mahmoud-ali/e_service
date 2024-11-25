@@ -2,6 +2,7 @@ from django.db import models
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from django.conf import settings
+from django.forms import ValidationError
 
 from company_profile.models import TblCompany, TblCompanyProduction
 
@@ -123,3 +124,11 @@ class GoldShippingFormAlloy(models.Model):
     class Meta:
         verbose_name = _("Gold Shipping Form - Alloy")
         verbose_name_plural = _("Gold Shipping Form - Alloy")
+
+    def clean(self) -> None:
+        if self.master.company != self.alloy_serial_no.master.company:
+            raise ValidationError(
+                {"alloy_serial_no":_("alloy should belong to same company!")}
+            )
+
+        return super().clean()
