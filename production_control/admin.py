@@ -45,6 +45,7 @@ class StateMixin:
 class GoldProductionUserDetailInline(admin.TabularInline):
     model = GoldProductionUserDetail
     fields = ['company']
+    autocomplete_fields = ['company']
     extra = 1    
 
 class GoldProductionUserAdmin(StateMixin,LogAdminMixin,admin.ModelAdmin):
