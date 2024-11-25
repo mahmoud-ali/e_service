@@ -51,7 +51,8 @@ class GoldProductionUserAdmin(StateMixin,LogAdminMixin,admin.ModelAdmin):
     model = GoldProductionUser
     inlines = [GoldProductionUserDetailInline]
     form = GoldProductionUserForm
-    list_display = ["user","name"]
+    list_display = ["user","name","state"]
+    list_filter = ["state"]
 
     def get_formsets_with_inlines(self, request, obj=None):
         for inline in self.get_inline_instances(request, obj):
@@ -65,9 +66,14 @@ class GoldProductionUserAdmin(StateMixin,LogAdminMixin,admin.ModelAdmin):
     def get_queryset(self, request):
         qs = super().get_queryset(request)
 
+        if request.user.is_superuser:
+            return qs
+
         if request.user.groups.filter(name__in=("pro_company_application_accept","pro_company_application_approve")).exists():
             ids = GoldProductionUserDetail.objects.filter(company__company_type__in= get_company_types(request)).values_list("master")
             return qs.filter(id__in=ids)
+
+        # return qs.filter(user__groups__name__in=get_company_types(request))
         
         return qs
 
@@ -81,8 +87,8 @@ class GoldProductionUserAdmin(StateMixin,LogAdminMixin,admin.ModelAdmin):
         if not request.user.groups.filter(name__in=("pro_company_application_accept","pro_company_application_approve")).exists():
             return False
         
-        if not obj or obj.state == STATE_CONFIRMED:
-            return False
+        # if not obj or obj.state == STATE_CONFIRMED:
+        #     return False
         
         return super().has_change_permission(request,obj)
 
@@ -101,7 +107,7 @@ class AuditorMixin:
         except:
             pass
 
-        return super().get_queryset(request)
+        return qs.none() #super().get_queryset(request)
     
     def has_add_permission(self, request):        
         try:
