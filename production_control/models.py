@@ -115,7 +115,7 @@ class GoldShippingForm(LoggingModel):
 class GoldShippingFormAlloy(models.Model):
     master = models.ForeignKey(GoldShippingForm, on_delete=models.PROTECT)    
     alloy_serial_no = models.ForeignKey(GoldProductionFormAlloy, on_delete=models.PROTECT,verbose_name=_('alloy_serial_no'))
-    alloy_weight = models.FloatField(_("alloy_weight"))
+    # alloy_weight = models.FloatField(_("alloy_weight"))
 
     def __str__(self):
         return f'{self.master.form_no} ({self.alloy_serial_no})'

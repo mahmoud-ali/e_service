@@ -172,7 +172,7 @@ admin.site.register(GoldProductionForm, GoldProductionFormAdmin)
 
 class GoldShippingFormInline(admin.TabularInline):
     model = GoldShippingFormAlloy
-    fields = ['alloy_serial_no','alloy_weight']
+    fields = ['alloy_serial_no'] #,'alloy_weight'
     extra = 1    
 
 class GoldShippingFormAdmin(AuditorMixin,StateMixin,LogAdminMixin,admin.ModelAdmin):

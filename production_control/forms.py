@@ -83,5 +83,5 @@ class GoldShippingFormAlloyForm(forms.ModelForm):
         self.fields["alloy_serial_no"].disabled = False
     class Meta:
         model = GoldShippingFormAlloy
-        fields = ["alloy_serial_no","alloy_weight"] 
+        fields = ["alloy_serial_no"] #,"alloy_weight"
         widgets = {}
