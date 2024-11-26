@@ -77,7 +77,7 @@ class GoldProductionForm(LoggingModel):
         return round(total,2)
 
 class GoldProductionFormAlloy(models.Model):
-    master = models.ForeignKey(GoldProductionForm, on_delete=models.PROTECT)    
+    master = models.ForeignKey(GoldProductionForm, on_delete=models.CASCADE)    
     alloy_serial_no = models.CharField(_("alloy_serial_no"),max_length=30)
     alloy_weight = models.FloatField(_("alloy_weight"))
     # alloy_jaf = models.FloatField(_("alloy_jaf"))
@@ -119,7 +119,7 @@ class GoldShippingForm(LoggingModel):
         verbose_name_plural = _("Gold Shipping Form")
 
 class GoldShippingFormAlloy(models.Model):
-    master = models.ForeignKey(GoldShippingForm, on_delete=models.PROTECT)    
+    master = models.ForeignKey(GoldShippingForm, on_delete=models.CASCADE)    
     alloy_serial_no = models.ForeignKey(GoldProductionFormAlloy, on_delete=models.PROTECT,verbose_name=_('alloy_serial_no'))
     # alloy_weight = models.FloatField(_("alloy_weight"))
 

@@ -122,6 +122,9 @@ class AuditorMixin:
 
     def has_change_permission(self, request, obj=None):
         if request.user.groups.filter(name__in=("pro_company_application_accept","pro_company_application_approve")).exists():
+            if obj and obj.state == STATE_CONFIRMED:
+                return False
+
             return True
 
         try:
@@ -133,8 +136,17 @@ class AuditorMixin:
         return False
 
     def has_delete_permission(self, request, obj=None):
+        if request.user.groups.filter(name__in=("pro_company_application_accept","pro_company_application_approve")).exists():
+            if obj and obj.state == STATE_CONFIRMED:
+                return False
+            else:
+                return True
+
         try:
             company_lst = request.user.gold_production_user.goldproductionuserdetail_set.filter(master__state=STATE_CONFIRMED).values_list('company',flat=True)
+            if obj and obj.state == STATE_CONFIRMED:
+                return False
+
             return super().has_delete_permission(request,obj)
         except:
             pass
