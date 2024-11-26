@@ -3295,7 +3295,7 @@ msgstr "تفاصيل مراقبي الانتاج"
 
 #: production_control/models.py:61
 msgid "alloy_jaf"
-msgstr "وزن الجاف"
+msgstr "وزن الركاز (المركز)"
 
 #: production_control/models.py:62
 msgid "alloy_khabath"
@@ -3311,7 +3311,7 @@ msgstr "مرفق استمارة العهدة"
 
 #: production_control/models.py:69 production_control/models.py:70
 msgid "Gold Production Form"
-msgstr "استمارة انتاج الذهب"
+msgstr "استمارة انتاج"
 
 #: production_control/models.py:82
 msgid "alloy_weight"
@@ -3335,7 +3335,7 @@ msgstr "مرفق استمارة ترحيل"
 
 #: production_control/models.py:118 production_control/models.py:119
 msgid "Gold Shipping Form"
-msgstr "استمارة ترحيل الذهب"
+msgstr "استمارة ترحيل"
 
 #: production_control/models.py:130 production_control/models.py:131
 msgid "Gold Shipping Form - Alloy"
