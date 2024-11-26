@@ -58,7 +58,11 @@ class GoldProductionForm(LoggingModel):
 
     form_no = models.CharField(_("form_no"),max_length=20)
     state = models.IntegerField(_("record_state"), choices=STATE_CHOICES, default=STATE_DRAFT)
-    attachement_file = models.FileField(_("gold_production_form_file"),upload_to=company_applications_path,blank=True,null=True)
+    alloy_jaf = models.FloatField(_("alloy_jaf"),default=0)
+    alloy_khabath = models.FloatField(_("alloy_khabath"),default=0)
+    alloy_remaind = models.FloatField(_("alloy_remaind"),blank=True,null=True,default=0)
+    gold_production_form_file = models.FileField(_("gold_production_form_file"),upload_to=company_applications_path,blank=True,null=True)
+    gold_production_3hda_file = models.FileField(_("gold_production_3hda_file"),upload_to=company_applications_path,blank=True,null=True)
 
     class Meta:
         ordering = ["-id"]
@@ -76,10 +80,10 @@ class GoldProductionFormAlloy(models.Model):
     master = models.ForeignKey(GoldProductionForm, on_delete=models.PROTECT)    
     alloy_serial_no = models.CharField(_("alloy_serial_no"),max_length=30)
     alloy_weight = models.FloatField(_("alloy_weight"))
-    alloy_jaf = models.FloatField(_("alloy_jaf"))
-    alloy_khabath = models.FloatField(_("alloy_khabath"))
+    # alloy_jaf = models.FloatField(_("alloy_jaf"))
+    # alloy_khabath = models.FloatField(_("alloy_khabath"))
     alloy_added_gold = models.FloatField(_("alloy_added_gold"),blank=True,null=True)
-    alloy_remaind = models.FloatField(_("alloy_remaind"),blank=True,null=True)
+    # alloy_remaind = models.FloatField(_("alloy_remaind"),blank=True,null=True)
     alloy_shipped = models.BooleanField(_("alloy_shipped"),default=False)
 
     def __str__(self):

@@ -143,8 +143,8 @@ class AuditorMixin:
 
 class GoldProductionFormAlloyInline(admin.TabularInline):
     model = GoldProductionFormAlloy
-    fields = ['alloy_serial_no','alloy_weight','alloy_jaf','alloy_khabath','alloy_added_gold','alloy_remaind']
-    extra = 1    
+    fields = ['alloy_serial_no','alloy_weight','alloy_added_gold']
+    extra = 10 
 
 class GoldProductionFormAdmin(AuditorMixin,StateMixin,LogAdminMixin,admin.ModelAdmin):
     model = GoldProductionForm
@@ -177,7 +177,7 @@ admin.site.register(GoldProductionForm, GoldProductionFormAdmin)
 class GoldShippingFormInline(admin.TabularInline):
     model = GoldShippingFormAlloy
     fields = ['alloy_serial_no'] #,'alloy_weight'
-    extra = 1    
+    extra = 10  
 
 class GoldShippingFormAdmin(AuditorMixin,StateMixin,LogAdminMixin,admin.ModelAdmin):
     model = GoldShippingForm

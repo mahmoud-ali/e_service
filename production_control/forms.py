@@ -49,7 +49,7 @@ class GoldProductionFormForm(forms.ModelForm):
         self.fields["company"].disabled = False
     class Meta:
         model = GoldProductionForm     
-        fields = ["company","date","form_no","attachement_file"]
+        fields = ["company","date","form_no","alloy_jaf","alloy_khabath","alloy_remaind","gold_production_form_file","gold_production_3hda_file"]
         widgets = {}
 
 class GoldShippingFormForm(forms.ModelForm):
