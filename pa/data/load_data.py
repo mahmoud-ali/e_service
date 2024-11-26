@@ -174,7 +174,7 @@ def import_commitment_exp(file_name='commitment_exp.csv',items=['أخرى/تسو
             try:
                 license_id = int(row[0].strip())
                 license = TblCompanyProductionLicense.objects.get(pk=license_id)
-                currency_str = row[5].strip()
+                currency_str = row[9].strip()
                 currency = currency_map[currency_str]
                 
                 commitmentMaster = TblCompanyCommitmentMaster.objects.create(
