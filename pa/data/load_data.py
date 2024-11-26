@@ -201,7 +201,10 @@ def import_commitment_exp(file_name='commitment_exp.csv',items=['أخرى/تسو
 
                 for (i,v) in enumerate(items):
                     item,created = LkpItem.objects.get_or_create(name=v+' (قيمة محددة)',company_type=TblCompany.COMPANY_TYPE_EMTIAZ,calculation_method=LkpItem.CALCULATION_METHOD_FIXED_VALUE)
-                    amount = float(row[11+i].strip())
+                    try:
+                        amount = float(row[11+i].strip())
+                    except:
+                        amount = 0
 
                     commitmentDetail = TblCompanyCommitmentDetail.objects.create(
                         commitment_master=commitmentMaster,
