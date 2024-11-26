@@ -165,7 +165,7 @@ class TblCompanyCommitmentMaster(LoggingModel):
             )
 
 class TblCompanyCommitmentDetail(models.Model):
-    commitment_master  = models.ForeignKey(TblCompanyCommitmentMaster, on_delete=models.PROTECT)
+    commitment_master  = models.ForeignKey(TblCompanyCommitmentMaster, on_delete=models.CASCADE)
     item  = models.ForeignKey(LkpItem, on_delete=models.PROTECT,verbose_name=_("financial item"))    
     amount_factor = models.FloatField(_("amount_factor"))
 
@@ -455,7 +455,7 @@ class TblCompanyRequestDetail(models.Model):
         date = self.request_master.created_at.date()
         return "company_{0}/requests/{1}/{2}".format(company.id,date, filename)    
     
-    request_master  = models.ForeignKey(TblCompanyRequestMaster, on_delete=models.PROTECT)
+    request_master  = models.ForeignKey(TblCompanyRequestMaster, on_delete=models.CASCADE)
     item  = models.ForeignKey(LkpItem, on_delete=models.PROTECT,verbose_name=_("financial item"))    
     amount = models.FloatField(_("amount"))
 
