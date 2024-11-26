@@ -99,7 +99,7 @@ class GoldShippingForm(LoggingModel):
 
     form_no = models.CharField(_("form_no"),max_length=20)
     state = models.IntegerField(_("record_state"), choices=STATE_CHOICES, default=STATE_DRAFT)
-    attachement_file = models.FileField(_("gold_production_form_file"),upload_to=company_applications_path,blank=True,null=True)
+    attachement_file = models.FileField(_("gold_shipping_form_file"),upload_to=company_applications_path,blank=True,null=True)
 
     def __str__(self):
         return f'{self.company} ({self.form_no})' 

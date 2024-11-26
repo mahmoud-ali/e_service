@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-11-26 11:33+0200\n"
+"POT-Creation-Date: 2024-11-26 13:52+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1732,7 +1732,6 @@ msgid "form_no"
 msgstr "رقم الاستمارة"
 
 #: company_profile/models.py:1156 production_control/models.py:64
-#: production_control/models.py:102
 msgid "gold_production_form_file"
 msgstr "مرفق استمارة الانتاج"
 
@@ -3265,7 +3264,7 @@ msgstr "تعديل مطالبة "
 msgid "Delete request"
 msgstr "حذف سجل مطالبة"
 
-#: production_control/admin.py:171
+#: production_control/admin.py:187
 msgid "total_weight"
 msgstr "إجمالي الوزن بالجرام"
 
@@ -3329,6 +3328,10 @@ msgstr "سبيكة مرحلة"
 #: production_control/models.py:93 production_control/models.py:94
 msgid "Gold Production Form - Alloy"
 msgstr "انتاج الذهب - السبائك"
+
+#: production_control/models.py:102
+msgid "gold_shipping_form_file"
+msgstr "مرفق استمارة ترحيل"
 
 #: production_control/models.py:118 production_control/models.py:119
 msgid "Gold Shipping Form"
