@@ -186,7 +186,7 @@ class GoldProductionFormAdmin(AuditorMixin,StateMixin,LogAdminMixin,admin.ModelA
 
     @admin.display(description=_('total_weight'))
     def total_weight(self, obj):
-        return f'{obj.total_weight()}'
+        return f'{obj.total_weight():,}'
 
 admin.site.register(GoldProductionForm, GoldProductionFormAdmin)
 
