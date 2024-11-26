@@ -170,7 +170,11 @@ class GoldProductionFormAdmin(AuditorMixin,StateMixin,LogAdminMixin,admin.ModelA
 
         try:
             if request.user.groups.filter(name__in=("pro_company_application_accept","pro_company_application_approve")).exists():
-                kwargs["form"].company_types = get_company_types(request)
+                if obj:
+                    company_lst = [obj.company.id]
+                    kwargs["form"].company_list = company_lst
+                else:
+                    kwargs["form"].company_types = get_company_types(request)
             else:
                 company_lst = request.user.gold_production_user.goldproductionuserdetail_set.filter(master__state=STATE_CONFIRMED).values_list('company',flat=True)
                 kwargs["form"].company_list = company_lst
@@ -203,7 +207,12 @@ class GoldShippingFormAdmin(AuditorMixin,StateMixin,LogAdminMixin,admin.ModelAdm
 
         try:
             if request.user.groups.filter(name__in=("pro_company_application_accept","pro_company_application_approve")).exists():
-                kwargs["form"].company_types = get_company_types(request)
+                if obj:
+                    company_lst = [obj.company.id]
+                    kwargs["form"].company_list = company_lst
+                else:
+                    kwargs["form"].company_types = get_company_types(request)
+
             else:
                 company_lst = request.user.gold_production_user.goldproductionuserdetail_set.filter(master__state=STATE_CONFIRMED).values_list('company',flat=True)
                 kwargs["form"].company_list = company_lst
