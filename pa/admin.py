@@ -30,7 +30,7 @@ class StateMixin:
         if not obj or obj.state==STATE_TYPE_DRAFT:
             return super().has_delete_permission(request,obj)
         
-        return super().has_delete_permission(request,obj)
+        return False
 
     def change_view(self,request,object_id, form_url='', extra_context=None):
         template = super().change_view(request,object_id, form_url, extra_context)
