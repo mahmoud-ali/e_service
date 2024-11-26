@@ -132,7 +132,7 @@ class TblCompanyRequestMasterAdmin(LogAdminMixin,StateMixin,admin.ModelAdmin):
     form = TblCompanyRequestAdminForm
     inlines = [TblCompanyRequestMasterDetailInline,TblCompanyRequestReceiveInline]     
     
-    list_display = ["commitment","payment_state", "from_dt", "to_dt","state"]        
+    list_display = ["commitment","payment_state", "from_dt", "to_dt","state","total","sum_of_confirmed_payment"]        
     list_filter = ["commitment__company__company_type","currency",'payment_state',"state"]
     search_fields = ["commitment__company__name_ar","commitment__company__name_en","commitment__license__license_no","commitment__license__sheet_no"]
     # autocomplete_fields = ["commitment"]
