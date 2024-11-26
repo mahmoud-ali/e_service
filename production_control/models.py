@@ -60,16 +60,17 @@ class GoldProductionForm(LoggingModel):
     state = models.IntegerField(_("record_state"), choices=STATE_CHOICES, default=STATE_DRAFT)
     attachement_file = models.FileField(_("gold_production_form_file"),upload_to=company_applications_path,blank=True,null=True)
 
-    def __str__(self):
-        return f'{self.company} ({self.form_no})' 
-        
-    def get_absolute_url(self): 
-        return reverse('profile:app_gold_production_show',args=[str(self.id)])                
-    
     class Meta:
         ordering = ["-id"]
         verbose_name = _("Gold Production Form")
         verbose_name_plural = _("Gold Production Form")
+
+    def __str__(self):
+        return f'{self.company} ({self.form_no})' 
+        
+    def total_weight(self):
+        total = self.goldproductionformalloy_set.aggregate(total=models.Sum('alloy_weight'))['total'] or 0
+        return round(total,2)
 
 class GoldProductionFormAlloy(models.Model):
     master = models.ForeignKey(GoldProductionForm, on_delete=models.PROTECT)    

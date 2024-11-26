@@ -150,7 +150,7 @@ class GoldProductionFormAdmin(AuditorMixin,StateMixin,LogAdminMixin,admin.ModelA
     model = GoldProductionForm
     inlines = [GoldProductionFormAlloyInline]
     form = GoldProductionFormForm
-    list_display = ["company","date","form_no","state"]
+    list_display = ["company","date","form_no","total_weight","state"]
     list_filter = ["state","date"]
 
     def get_form(self, request, obj=None, **kwargs):
@@ -167,6 +167,10 @@ class GoldProductionFormAdmin(AuditorMixin,StateMixin,LogAdminMixin,admin.ModelA
             pass
 
         return super().get_form(request, obj, **kwargs)
+
+    @admin.display(description=_('total_weight'))
+    def total_weight(self, obj):
+        return f'{obj.total_weight()}'
 
 admin.site.register(GoldProductionForm, GoldProductionFormAdmin)
 
