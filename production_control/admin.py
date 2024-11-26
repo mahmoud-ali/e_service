@@ -187,7 +187,7 @@ class GoldShippingFormAdmin(AuditorMixin,StateMixin,LogAdminMixin,admin.ModelAdm
     list_filter = ["state","date"]
 
     def get_form(self, request, obj=None, **kwargs):
-        kwargs["form"] = GoldProductionFormForm
+        kwargs["form"] = GoldShippingFormForm
 
         try:
             if request.user.groups.filter(name__in=("pro_company_application_accept","pro_company_application_approve")).exists():
