@@ -161,11 +161,11 @@ class TblCompanyRequestMasterAdmin(LogAdminMixin,StateMixin,admin.ModelAdmin):
 
     @admin.display(description=_("request_total"))
     def total(self,obj):
-        return obj.total
+        return f'{round(obj.total,2):,}'
 
     @admin.display(description=_("payments total"))
     def sum_of_confirmed_payment(self,obj):
-        return obj.sum_of_confirmed_payment
+        return f'{round(obj.sum_of_confirmed_payment,2):,}'
 
     # def formfield_for_foreignkey(self, db_field, request, **kwargs):
     #     if db_field.name == "commitment":
