@@ -23,6 +23,14 @@ item_none = LkpItem.objects.none()
 item_all_qs = LkpItem.objects.all()
 
 class TblCompanyRequestAdminForm(ModelForm):
+    commitment_id = None
+    def __init__(self, *args, **kwargs):        
+        super().__init__(*args, **kwargs)
+        if self.commitment_id:
+            self.fields["commitment"].queryset = commitment_confirmed_qs.filter(id=self.commitment_id)
+        else:
+            self.fields["commitment"].queryset = commitment_confirmed_qs
+
     class Meta:
         model = TblCompanyRequestMaster
         fields = ["commitment","from_dt","to_dt","currency","note","attachement_file"] #,"state"

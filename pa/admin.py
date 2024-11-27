@@ -135,10 +135,18 @@ class TblCompanyRequestMasterAdmin(LogAdminMixin,StateMixin,admin.ModelAdmin):
     list_display = ["commitment","payment_state", "from_dt", "to_dt","state","total","sum_of_confirmed_payment"]        
     list_filter = ["commitment__company__company_type","currency",'payment_state',"state"]
     search_fields = ["commitment__company__name_ar","commitment__company__name_en","commitment__license__license_no","commitment__license__sheet_no"]
+    list_select_related = ["commitment__license","commitment__company"]
     # autocomplete_fields = ["commitment"]
 
     view_on_site = False
             
+    def get_form(self, request, obj=None, **kwargs):
+        kwargs["form"] = self.form
+        if obj and obj.commitment:
+            kwargs["form"].commitment_id = obj.commitment.id
+
+        return super().get_form(request, obj, **kwargs)
+
     def get_formsets_with_inlines(self, request, obj=None):
         for inline in self.get_inline_instances(request, obj):
             formset = inline.get_formset(request, obj)
@@ -150,10 +158,10 @@ class TblCompanyRequestMasterAdmin(LogAdminMixin,StateMixin,admin.ModelAdmin):
                     formset.form.company_type = get_company_types_from_groups(request.user)[0]
             yield formset,inline
 
-    def formfield_for_foreignkey(self, db_field, request, **kwargs):
-        if db_field.name == "commitment":
-            kwargs["queryset"] = TblCompanyCommitmentMaster.objects.filter(state=STATE_TYPE_CONFIRM)
-        return super().formfield_for_foreignkey(db_field, request, **kwargs)
+    # def formfield_for_foreignkey(self, db_field, request, **kwargs):
+    #     if db_field.name == "commitment":
+    #         kwargs["queryset"] = TblCompanyCommitmentMaster.objects.filter(state=STATE_TYPE_CONFIRM)
+    #     return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
 admin.site.register(TblCompanyRequestMaster, TblCompanyRequestMasterAdmin)
 
