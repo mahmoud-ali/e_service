@@ -26,10 +26,13 @@ class TblCompanyRequestAdminForm(ModelForm):
     commitment_id = None
     def __init__(self, *args, **kwargs):        
         super().__init__(*args, **kwargs)
-        if self.commitment_id:
-            self.fields["commitment"].queryset = commitment_confirmed_qs.filter(id=self.commitment_id)
-        else:
-            self.fields["commitment"].queryset = commitment_confirmed_qs
+        try:
+            if self.commitment_id:
+                self.fields["commitment"].queryset = commitment_confirmed_qs.filter(id=self.commitment_id)
+            else:
+                self.fields["commitment"].queryset = commitment_confirmed_qs
+        except:
+            pass
 
     class Meta:
         model = TblCompanyRequestMaster

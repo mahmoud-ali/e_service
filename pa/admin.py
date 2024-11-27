@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.utils.translation import gettext_lazy as _
 
 from pa.forms.commitment import TblCompanyCommitmentAdminForm, TblCompanyCommitmentDetailForm
 from pa.forms.payment import TblCompanyPaymentAdminForm, TblCompanyPaymentDetailForm
@@ -157,6 +158,14 @@ class TblCompanyRequestMasterAdmin(LogAdminMixin,StateMixin,admin.ModelAdmin):
                 else:
                     formset.form.company_type = get_company_types_from_groups(request.user)[0]
             yield formset,inline
+
+    @admin.display(description=_("request_total"))
+    def total(self,obj):
+        return obj.total
+
+    @admin.display(description=_("payments total"))
+    def sum_of_confirmed_payment(self,obj):
+        return obj.sum_of_confirmed_payment
 
     # def formfield_for_foreignkey(self, db_field, request, **kwargs):
     #     if db_field.name == "commitment":
