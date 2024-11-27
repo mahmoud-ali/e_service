@@ -34,7 +34,7 @@ class Payroll():
         next_year = self.year
         next_month = (self.month+1)
         if next_month > 12:
-            self.month = 1
+            next_month = 1
             next_year += 1
 
         self.hr_settings = HrSettings()
