@@ -162,7 +162,7 @@ class AppMoveGold(LoggingModel):
         return f'{self.owner_name} ({self.gold_weight_in_gram} {_("gram")})'
 
     class Meta:
-        ordering = ["-id"]
+        ordering = ["-date"]
         verbose_name = _("Move Gold")
         verbose_name_plural = _("Move Gold")
         indexes = [
