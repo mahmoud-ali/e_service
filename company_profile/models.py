@@ -205,9 +205,20 @@ def company_contract_path(instance, filename):
     # file will be uploaded to MEDIA_ROOT/company_<id>/contract_<id>/<filename>
     return "company_{0}/contract_{1}/{2}".format(instance.company.id,instance.date, filename)    
 
-class TblCompanyProductionLicense(LoggingModel): 
+class TblCompanyProductionLicense(LoggingModel):
+    LICENSE_TYPE_2TIFAGIA = 1
+    LICENSE_TYPE_3AGD = 2
+    LICENSE_TYPE_ROKH9A = 3
+
+    LICENSE_TYPE_CHOICES = {
+        LICENSE_TYPE_2TIFAGIA: _("license_type_2tifagia"),
+        LICENSE_TYPE_3AGD: _("license_type_3agd"),
+        LICENSE_TYPE_ROKH9A: _("license_type_rokh9a"),
+    }
+
     company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
     license_no = models.CharField(_("License no"),max_length=20)
+    license_type = models.IntegerField(_("license_type"),choices=LICENSE_TYPE_CHOICES,blank=True,null=True)
     license_count = models.IntegerField(_("License count"),default=1)
     date = models.DateField(_("Sign date"))
     start_date = models.DateField(_("start_date"))

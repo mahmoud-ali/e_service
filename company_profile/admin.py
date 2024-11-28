@@ -267,14 +267,14 @@ class TblCompanyProductionFactoryAdmin(LoggingAdminMixin,admin.ModelAdmin):
 
 class TblCompanyProductionLicenseAdmin(LoggingAdminMixin,admin.ModelAdmin):
     fieldsets = [
-        (None, {"fields": ["company",("license_no","license_count")]}),
+        (None, {"fields": ["company",("license_no","license_type","license_count")]}),
         (_("General information"), {"fields": ["date",("start_date","end_date")]}),
         (_("Location information"), {"fields": [("state","locality","location","sheet_no")]}),
         (_("Contract information"), {"fields": ["mineral","area_initial","area","reserve","royalty","zakat","annual_rent","gov_rep","rep_percent","com_percent","business_profit","social_responsibility","contract_status","contract_file"]}),
      ]        
     exclude = ["created_at","created_by","updated_at","updated_by"]
     
-    list_display = ["company","license_no", "start_date", "end_date","license_count","state","sheet_no","area_initial","area","contract_status","date","company_type"]        
+    list_display = ["company","license_no","license_type", "start_date", "end_date","license_count","state","sheet_no","area_initial","area","contract_status","date","company_type"]        
     list_filter = ["company__company_type","state","mineral","contract_status",("contract_file",admin.EmptyFieldListFilter),"created_at"]
     search_fields = ["company__name_ar","company__name_en","sheet_no","license_no"]
     autocomplete_fields = ["company"]
@@ -317,7 +317,7 @@ class TblCompanyProductionLicenseAdmin(LoggingAdminMixin,admin.ModelAdmin):
             headers={"Content-Disposition": f'attachment; filename="licenses.csv"'},
         )
         header = [
-                    _("id"),_("company"),_("License no"),_("start_date"),_("end_date"),_( "License count"),\
+                    _("id"),_("company"),_("License no"),_("license_type"),_("start_date"),_("end_date"),_( "License count"),\
                     _("state"),_("sheet_no"),_("contract_status")
         ]
 
@@ -330,7 +330,7 @@ class TblCompanyProductionLicenseAdmin(LoggingAdminMixin,admin.ModelAdmin):
         for license in queryset.order_by("company"):
 
             row = [
-                    license.id,license.company,license.license_no,license.start_date,license.end_date,license.license_count,license.state,\
+                    license.id,license.company,license.license_no,license.get_license_type_display(),license.start_date,license.end_date,license.license_count,license.state,\
                     license.sheet_no,license.contract_status
             ]
             writer.writerow(row)
