@@ -475,3 +475,22 @@ def check_is_email_valid():
             print(f"invalid email: {obj.id} => {obj.email}")
             obj.email = ''
             obj.save()
+
+def import_licenses_type(file_name='licenses_type.csv'):
+    with open('./company_profile/data/'+file_name, newline='') as csvfile:
+        reader = csv.reader(csvfile, delimiter=',')
+        next(reader, None)  # skip the headers
+        for row in reader:
+            try:
+
+                id = int(row[0].strip())
+                license_type = int(row[1].strip())
+
+                license = TblCompanyProductionLicense.objects.get(
+                    id=id
+                )
+
+                license.license_type = license_type
+                license.save()
+            except Exception as e:
+                print(f'id: {id} Exception: {e}')
