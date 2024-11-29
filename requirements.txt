@@ -18,3 +18,4 @@ django-bootstrap-datepicker-plus
 # django-pwa
 djangorestframework
 #djoser
+gunicorn
