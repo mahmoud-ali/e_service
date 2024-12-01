@@ -9,7 +9,7 @@ from ..models import AppMoveGold, AppMoveGoldDetails, LkpOwner
 
 admin_user = get_user_model().objects.get(id=1)
 
-def import_history(file_name='rn_import.csv'):
+def import_history(source_state_id=1,file_name='rn_import.csv'):
     date_format = '%d/%m/%Y'
     with open('./gold_travel/data/'+file_name, newline='') as csvfile:
         reader = csv.reader(csvfile, delimiter=',')
@@ -20,7 +20,7 @@ def import_history(file_name='rn_import.csv'):
                 date_str = row[2].strip()
                 date = datetime.datetime.strptime(date_str, date_format)
                 owner_name_lst = LkpOwner.objects.get(pk=int(row[5].strip()))
-                source_state=LkpState.objects.get(pk=1)
+                source_state=LkpState.objects.get(pk=source_state_id)
 
                 alloy_weight_in_gram = float(row[3].strip())
                 
