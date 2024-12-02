@@ -2447,7 +2447,7 @@ msgstr "اعتماد الطلب"
 
 #: gold_travel/admin.py:214 gold_travel/models.py:89
 msgid "state_smrc"
-msgstr "اعتماد ممثل الشركة السودانية"
+msgstr "اعتماد ممثل الشركة السودانية بالولاية"
 
 #: gold_travel/admin.py:218
 msgid "application confirmed successfully!"
