@@ -51,3 +51,18 @@ def import_history(source_state_id=1,file_name='rn_import.csv'):
 
             except Exception as e:
                 print(f"id: {id}, Exception: {e}")
+
+def change_state(new_state=AppMoveGold.STATE_CANCELED,file_name='change_state.csv'):
+    date_format = '%d/%m/%Y'
+    with open('./gold_travel/data/'+file_name, newline='') as csvfile:
+        reader = csv.reader(csvfile, delimiter=',')
+        next(reader, None)  # skip the headers
+        for row in reader:
+            try:
+                code = row[0].strip()
+                move = AppMoveGold.objects.get(code=code)
+                move.state = new_state
+                move.save()
+            except Exception as e:
+                print(f"code: {code}, Exception: {e}")
+
