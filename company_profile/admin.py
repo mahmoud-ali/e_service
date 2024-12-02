@@ -218,7 +218,7 @@ class TblCompanyProductionAdmin(ExportActionMixin,LoggingAdminMixin,admin.ModelA
                 self.message_user(request,_('Email already exists!'),level=message_constants.ERROR)
                 obj.email = ''
                 obj.save()
-            elif not TblCompanyProductionUserRole.objects.filter(user__email=email).exists() and not TblCompanyProductionUserRole.objects.filter(company=obj).exists():
+            elif not TblCompanyProductionUserRole.objects.filter(user__email=email).exists():
                 #print("*****",obj,email)
                 email = email.lower()
                 User = get_user_model()     
@@ -229,6 +229,10 @@ class TblCompanyProductionAdmin(ExportActionMixin,LoggingAdminMixin,admin.ModelA
 
                 com_user.lang = 'ar'
                 com_user.save()
+
+                for role in TblCompanyProductionUserRole.objects.filter(company=obj):
+                    role.delete()
+
                 u = TblCompanyProductionUserRole(company=obj,user=com_user)
                 u.save()
         
