@@ -168,6 +168,44 @@ class DateFieldListFilterWithLast30days(admin.DateFieldListFilter):
             ),
         )
 
+class ChoicesFieldListFilterNotEmpty(admin.ChoicesFieldListFilter):
+    def choices(self, changelist):
+        add_facets = changelist.add_facets
+        facet_counts = self.get_facet_queryset(changelist)
+        yield {
+            "selected": self.lookup_val is None,
+            "query_string": changelist.get_query_string(
+                remove=[self.lookup_kwarg, self.lookup_kwarg_isnull]
+            ),
+            "display": _("All"),
+        }
+        none_title = ""
+        for i, (lookup, title) in enumerate(self.field.flatchoices):
+            count = facet_counts[f"{i}__c"]
+            if count == 0:
+                continue
+            if add_facets:
+                title = f"{title} ({count})"
+            if lookup is None:
+                none_title = title
+                continue
+            yield {
+                "selected": self.lookup_val is not None
+                and str(lookup) in self.lookup_val,
+                "query_string": changelist.get_query_string(
+                    {self.lookup_kwarg: lookup}, [self.lookup_kwarg_isnull]
+                ),
+                "display": title,
+            }
+        if none_title:
+            yield {
+                "selected": bool(self.lookup_val_isnull),
+                "query_string": changelist.get_query_string(
+                    {self.lookup_kwarg_isnull: "True"}, [self.lookup_kwarg]
+                ),
+                "display": none_title,
+            }
+
 class AppMoveGoldAdmin(LogAdminMixin,admin.ModelAdmin):
     model = AppMoveGold
     inlines = [AppMoveGoldDetailInline]     
@@ -204,7 +242,7 @@ class AppMoveGoldAdmin(LogAdminMixin,admin.ModelAdmin):
             },
         ),
     ]
-    list_filter = [("date",DateFieldListFilterWithLast30days),"state",("source_state",admin.RelatedOnlyFieldListFilter),("owner_name_lst",admin.RelatedOnlyFieldListFilter)]
+    list_filter = [("date",DateFieldListFilterWithLast30days),("state",ChoicesFieldListFilterNotEmpty),("source_state",admin.RelatedOnlyFieldListFilter),("owner_name_lst",admin.RelatedOnlyFieldListFilter)]
     search_fields = ["code","owner_name_lst__name","owner_address","repr_name","repr_phone","repr_identity"]
     actions = ['confirm_app','arrived_to_ssmo_app','cancel_app','export_as_csv']
     autocomplete_fields = ["owner_name_lst"]
