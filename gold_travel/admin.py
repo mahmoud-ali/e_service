@@ -271,7 +271,7 @@ class AppMoveGoldAdmin(LogAdminMixin,admin.ModelAdmin):
     @admin.display(description=_('gold_weight_in_gram'))
     def gold_weight_in_gram(self, obj):
         sum = obj.appmovegolddetails_set.aggregate(sum=models.Sum("alloy_weight_in_gram"))['sum'] or 0
-        return f'{sum:,}'
+        return f'{round(sum,2):,}'
 
     @admin.display(description=_('gold_alloy_count'))
     def gold_alloy_count(self, obj):
