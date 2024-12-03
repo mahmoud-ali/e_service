@@ -159,7 +159,7 @@ class AppMoveGold(LoggingModel):
         return '، '.join(arr)+'.'
 
     def __str__(self):
-        return f'{self.owner_name} ({self.gold_weight_in_gram} {_("gram")})'
+        return f'{self.owner_name} ({self.code})'
 
     class Meta:
         ordering = ["-date","-id"]

@@ -1,6 +1,6 @@
 import codecs
 import csv
-from django.http import HttpResponse
+from django.http import HttpRequest, HttpResponse
 from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
 from django.urls import reverse
@@ -140,6 +140,7 @@ class AppMoveGoldAdmin(LogAdminMixin,admin.ModelAdmin):
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
+        qs = qs.prefetch_related('source_state').prefetch_related(models.Prefetch("appmovegolddetails_set"))
 
         if request.user.is_superuser or request.user.groups.filter(name="gold_travel_manager").exists():
             return qs
@@ -269,11 +270,13 @@ class AppMoveGoldAdmin(LogAdminMixin,admin.ModelAdmin):
 
     @admin.display(description=_('gold_weight_in_gram'))
     def gold_weight_in_gram(self, obj):
-        return f'{obj.gold_weight_in_gram:,}'
+        sum = obj.appmovegolddetails_set.aggregate(sum=models.Sum("alloy_weight_in_gram"))['sum'] or 0
+        return f'{sum:,}'
 
     @admin.display(description=_('gold_alloy_count'))
     def gold_alloy_count(self, obj):
-        return obj.gold_alloy_count
+        count = obj.appmovegolddetails_set.count()
+        return count
 
     @admin.display(description=_('Show certificate'))
     def show_certificate_link(self, obj):
