@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-03 15:33+0200\n"
+"POT-Creation-Date: 2024-12-03 15:41+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -130,7 +130,7 @@ msgstr "بيانات العقد"
 msgid "company_type"
 msgstr "نوع الشركة"
 
-#: company_profile/admin.py:317 gold_travel/admin.py:317
+#: company_profile/admin.py:317 gold_travel/admin.py:325
 msgid "Export data"
 msgstr "تصدير البيانات"
 
@@ -343,7 +343,7 @@ msgstr "امتياز استكشاف"
 msgid "sageer"
 msgstr "تعدين صغير"
 
-#: company_profile/models.py:115 gold_travel/admin.py:324
+#: company_profile/models.py:115 gold_travel/admin.py:332
 #: gold_travel/models.py:23 gold_travel/models.py:114 mokhalafat/models.py:16
 msgid "code"
 msgstr "الرمز"
@@ -2430,125 +2430,129 @@ msgstr ""
 msgid "Wrong transition path."
 msgstr ""
 
-#: gold_travel/admin.py:118
+#: gold_travel/admin.py:119
 msgid "Any date"
 msgstr "أي تاريخ"
 
-#: gold_travel/admin.py:120
+#: gold_travel/admin.py:121
 msgid "Today"
 msgstr "اليوم"
 
-#: gold_travel/admin.py:127
+#: gold_travel/admin.py:128
 msgid "Past 7 days"
 msgstr "الايام السبعة الاخيرة"
 
-#: gold_travel/admin.py:134
+#: gold_travel/admin.py:135
 msgid "Past 30 days"
 msgstr "الايام الثلاثين الاخيرة"
 
-#: gold_travel/admin.py:141
+#: gold_travel/admin.py:142
 msgid "This month"
 msgstr "هذا الشهر"
 
-#: gold_travel/admin.py:148
+#: gold_travel/admin.py:149
 msgid "Last month"
 msgstr "الشهر الماضي"
 
-#: gold_travel/admin.py:155
+#: gold_travel/admin.py:156
 msgid "This year"
 msgstr "هذا العام"
 
-#: gold_travel/admin.py:175
+#: gold_travel/admin.py:163
+msgid "Last year"
+msgstr "العام الماضي"
+
+#: gold_travel/admin.py:183
 msgid "owner data"
 msgstr "بيانات المالك"
 
-#: gold_travel/admin.py:181
+#: gold_travel/admin.py:189
 msgid "representative data"
 msgstr "بيانات الناقل"
 
-#: gold_travel/admin.py:193
+#: gold_travel/admin.py:201
 msgid "attachments"
 msgstr "المرفقات"
 
-#: gold_travel/admin.py:284
+#: gold_travel/admin.py:292
 msgid "Confirm application"
 msgstr "اعتماد الطلب"
 
-#: gold_travel/admin.py:293 gold_travel/models.py:89
+#: gold_travel/admin.py:301 gold_travel/models.py:89
 msgid "state_smrc"
 msgstr "اعتماد ممثل الشركة السودانية بالولاية"
 
-#: gold_travel/admin.py:297
+#: gold_travel/admin.py:305
 msgid "application confirmed successfully!"
 msgstr "تم إعتماد الطلب بنجاح."
 
-#: gold_travel/admin.py:301
+#: gold_travel/admin.py:309
 msgid "Arrived to SSMO"
 msgstr "وصل للمواصفات والمقاييس"
 
-#: gold_travel/admin.py:307 gold_travel/models.py:93
+#: gold_travel/admin.py:315 gold_travel/models.py:93
 msgid "state_ssmo"
 msgstr "وصلت الاستمارة للمواصفات والمقاييس"
 
-#: gold_travel/admin.py:309 gold_travel/admin.py:315 gold_travel/models.py:94
+#: gold_travel/admin.py:317 gold_travel/admin.py:323 gold_travel/models.py:94
 msgid "state_canceled"
 msgstr "تم التنازل عن الطلب"
 
-#: gold_travel/admin.py:324 gold_travel/models.py:115 gold_travel/models.py:202
+#: gold_travel/admin.py:332 gold_travel/models.py:115 gold_travel/models.py:202
 #: mokhalafat/models.py:17 pa/templates/pa/pa_daily.html:75
 #: production_control/models.py:57 production_control/models.py:98
 #: revenu_dist/models.py:108
 msgid "date"
 msgstr "التاريخ"
 
-#: gold_travel/admin.py:324 gold_travel/admin.py:349 gold_travel/models.py:204
+#: gold_travel/admin.py:332 gold_travel/admin.py:357 gold_travel/models.py:204
 #: gold_travel/templates/admin/gold_travel/appmovegold/pagination.html:13
 msgid "gold_weight_in_gram"
 msgstr "اجمالي وزن الذهب بالجرام"
 
-#: gold_travel/admin.py:324 gold_travel/admin.py:354
+#: gold_travel/admin.py:332 gold_travel/admin.py:362
 #: gold_travel/templates/admin/gold_travel/appmovegold/pagination.html:14
 msgid "gold_alloy_count"
 msgstr "عدد السبائك"
 
-#: gold_travel/admin.py:324 gold_travel/models.py:116
+#: gold_travel/admin.py:332 gold_travel/models.py:116
 msgid "destination"
 msgstr "الوجهة"
 
-#: gold_travel/admin.py:324 gold_travel/admin.py:345 gold_travel/models.py:70
+#: gold_travel/admin.py:332 gold_travel/admin.py:353 gold_travel/models.py:70
 #: gold_travel/models.py:71 gold_travel/models.py:118 gold_travel/models.py:203
 msgid "owner_name"
 msgstr "اسم المالك"
 
-#: gold_travel/admin.py:324 gold_travel/models.py:119
+#: gold_travel/admin.py:332 gold_travel/models.py:119
 msgid "owner_address"
 msgstr "عنوان المالك"
 
-#: gold_travel/admin.py:325 gold_travel/models.py:120
+#: gold_travel/admin.py:333 gold_travel/models.py:120
 msgid "repr_name"
 msgstr "اسم الناقل"
 
-#: gold_travel/admin.py:325 gold_travel/models.py:121
+#: gold_travel/admin.py:333 gold_travel/models.py:121
 msgid "repr_address"
 msgstr "عنوان الناقل"
 
-#: gold_travel/admin.py:325 gold_travel/models.py:122
+#: gold_travel/admin.py:333 gold_travel/models.py:122
 msgid "repr_phone"
 msgstr "تلفون الناقل"
 
-#: gold_travel/admin.py:325 gold_travel/models.py:123
+#: gold_travel/admin.py:333 gold_travel/models.py:123
 msgid "repr_identity_type"
 msgstr "نوع اثبات هوية الناقل"
 
-#: gold_travel/admin.py:325 gold_travel/models.py:124
+#: gold_travel/admin.py:333 gold_travel/models.py:124
 msgid "repr_identity"
 msgstr "اثبات هوية الناقل"
 
-#: gold_travel/admin.py:325 gold_travel/models.py:125
+#: gold_travel/admin.py:333 gold_travel/models.py:125
 msgid "repr_identity_issue_date"
 msgstr "تاريخ اصدار هوية الناقل"
 
-#: gold_travel/admin.py:325 gold_travel/admin.py:366 gold_travel/models.py:129
+#: gold_travel/admin.py:333 gold_travel/admin.py:374 gold_travel/models.py:129
 #: gold_travel/models.py:206 pa/models.py:95 pa/models.py:133 pa/models.py:197
 #: pa/models.py:307 pa/models.py:519 pa/tables/payment.py:34
 #: pa/tables/request.py:53 production_control/models.py:35
@@ -2556,12 +2560,12 @@ msgstr "تاريخ اصدار هوية الناقل"
 msgid "record_state"
 msgstr "الحالة"
 
-#: gold_travel/admin.py:325
+#: gold_travel/admin.py:333
 msgid "source_state"
 msgstr "الولاية المصدر"
 
-#: gold_travel/admin.py:359 gold_travel/admin.py:362 gold_travel/admin.py:424
-#: gold_travel/admin.py:427
+#: gold_travel/admin.py:367 gold_travel/admin.py:370 gold_travel/admin.py:432
+#: gold_travel/admin.py:435
 msgid "Show certificate"
 msgstr "عرض الشهادة"
 

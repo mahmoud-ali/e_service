@@ -110,6 +110,7 @@ class DateFieldListFilterWithLast30days(admin.DateFieldListFilter):
             last_month = today.replace(month=today.month - 1, day=1)
 
         next_year = today.replace(year=today.year + 1, month=1, day=1)
+        last_year = today.replace(year=today.year - 1, month=1, day=1)
 
         self.lookup_kwarg_since = "%s__gte" % field_path
         self.lookup_kwarg_until = "%s__lt" % field_path
@@ -156,6 +157,13 @@ class DateFieldListFilterWithLast30days(admin.DateFieldListFilter):
                 {
                     self.lookup_kwarg_since: today.replace(month=1, day=1),
                     self.lookup_kwarg_until: next_year,
+                },
+            ),
+            (
+                _("Last year"),
+                {
+                    self.lookup_kwarg_since: last_year,
+                    self.lookup_kwarg_until: today.replace(month=1, day=1),
                 },
             ),
         )
