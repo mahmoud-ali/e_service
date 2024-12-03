@@ -1,9 +1,11 @@
+import datetime
 import codecs
 import csv
 from django.http import HttpRequest, HttpResponse
 from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
 from django.urls import reverse
+from django.utils import timezone
 from django.utils.html import format_html
 from django.db import models
 from django.forms.widgets import TextInput
@@ -82,6 +84,82 @@ class AppMoveGoldDetailInline(admin.TabularInline):
         models.FloatField: {"widget": TextInput},
     }    
 
+class DateFieldListFilterWithLast30days(admin.DateFieldListFilter):
+    def __init__(self, field, request, params, model, model_admin, field_path):
+        super().__init__(field, request, params, model, model_admin, field_path)
+        now = timezone.now()
+        # When time zone support is enabled, convert "now" to the user's time
+        # zone so Django's definition of "Today" matches what the user expects.
+        if timezone.is_aware(now):
+            now = timezone.localtime(now)
+
+        if isinstance(field, models.DateTimeField):
+            today = now.replace(hour=0, minute=0, second=0, microsecond=0)
+        else:  # field is a models.DateField
+            today = now.date()
+        tomorrow = today + datetime.timedelta(days=1)
+
+        if today.month == 12:
+            next_month = today.replace(year=today.year + 1, month=1, day=1)
+        else:
+            next_month = today.replace(month=today.month + 1, day=1)
+
+        if today.month == 1:
+            last_month = today.replace(year=today.year - 1, month=12, day=1)
+        else:
+            last_month = today.replace(month=today.month - 1, day=1)
+
+        next_year = today.replace(year=today.year + 1, month=1, day=1)
+
+        self.lookup_kwarg_since = "%s__gte" % field_path
+        self.lookup_kwarg_until = "%s__lt" % field_path
+
+        self.links = (
+            (_("Any date"), {}),
+            (
+                _("Today"),
+                {
+                    self.lookup_kwarg_since: today,
+                    self.lookup_kwarg_until: tomorrow,
+                },
+            ),
+            (
+                _("Past 7 days"),
+                {
+                    self.lookup_kwarg_since: today - datetime.timedelta(days=7),
+                    self.lookup_kwarg_until: tomorrow,
+                },
+            ),
+            (
+                _("Past 30 days"),
+                {
+                    self.lookup_kwarg_since: today - datetime.timedelta(days=30),
+                    self.lookup_kwarg_until: tomorrow,
+                },
+            ),
+            (
+                _("This month"),
+                {
+                    self.lookup_kwarg_since: today.replace(day=1),
+                    self.lookup_kwarg_until: next_month,
+                },
+            ),
+            (
+                _("Last month"),
+                {
+                    self.lookup_kwarg_since: last_month,
+                    self.lookup_kwarg_until: today.replace(day=1),
+                },
+            ),
+            (
+                _("This year"),
+                {
+                    self.lookup_kwarg_since: today.replace(month=1, day=1),
+                    self.lookup_kwarg_until: next_year,
+                },
+            ),
+        )
+
 class AppMoveGoldAdmin(LogAdminMixin,admin.ModelAdmin):
     model = AppMoveGold
     inlines = [AppMoveGoldDetailInline]     
@@ -118,7 +196,7 @@ class AppMoveGoldAdmin(LogAdminMixin,admin.ModelAdmin):
             },
         ),
     ]
-    list_filter = ["date","state",("source_state",admin.RelatedOnlyFieldListFilter),("owner_name_lst",admin.RelatedOnlyFieldListFilter)]
+    list_filter = [("date",DateFieldListFilterWithLast30days),"state",("source_state",admin.RelatedOnlyFieldListFilter),("owner_name_lst",admin.RelatedOnlyFieldListFilter)]
     search_fields = ["code","owner_name_lst__name","owner_address","repr_name","repr_phone","repr_identity"]
     actions = ['confirm_app','arrived_to_ssmo_app','cancel_app','export_as_csv']
     autocomplete_fields = ["owner_name_lst"]
