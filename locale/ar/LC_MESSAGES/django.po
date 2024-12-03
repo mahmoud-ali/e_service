@@ -2496,7 +2496,7 @@ msgstr "وصلت الاستمارة للمواصفات والمقاييس"
 
 #: gold_travel/admin.py:317 gold_travel/admin.py:323 gold_travel/models.py:94
 msgid "state_canceled"
-msgstr "تم التنازل عن الطلب"
+msgstr "تم التنازل"
 
 #: gold_travel/admin.py:332 gold_travel/models.py:115 gold_travel/models.py:202
 #: mokhalafat/models.py:17 pa/templates/pa/pa_daily.html:75
