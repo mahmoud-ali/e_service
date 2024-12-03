@@ -2452,7 +2452,7 @@ msgstr "هذا الشهر"
 
 #: gold_travel/admin.py:149
 msgid "Last month"
-msgstr "الشهر الماضي"
+msgstr "الشهر السابق"
 
 #: gold_travel/admin.py:156
 msgid "This year"
@@ -2460,7 +2460,7 @@ msgstr "هذا العام"
 
 #: gold_travel/admin.py:163
 msgid "Last year"
-msgstr "العام الماضي"
+msgstr "العام السابق"
 
 #: gold_travel/admin.py:183
 msgid "owner data"
