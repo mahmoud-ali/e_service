@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-03 15:41+0200\n"
+"POT-Creation-Date: 2024-12-05 15:48+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -83,62 +83,62 @@ msgstr "يوجد تداخل مع بيانات اخرى: "
 msgid "No intersection!"
 msgstr "لايوجد تداخل!"
 
-#: company_profile/admin.py:41 company_profile/admin.py:42
-#: company_profile/admin.py:43 templates/admin/__base_site.html:6
+#: company_profile/admin.py:43 company_profile/admin.py:44
+#: company_profile/admin.py:45 templates/admin/__base_site.html:6
 msgid "Site header"
 msgstr "بوابة الخدمات الإلكترونية"
 
-#: company_profile/admin.py:133 company_profile/admin.py:173
+#: company_profile/admin.py:135 company_profile/admin.py:175
 msgid "license_count"
 msgstr "عدد الرخص"
 
-#: company_profile/admin.py:139
+#: company_profile/admin.py:141
 msgid "more"
 msgstr "المزيد"
 
-#: company_profile/admin.py:163
+#: company_profile/admin.py:165
 msgid "Contact information"
 msgstr "بيانات التواصل"
 
-#: company_profile/admin.py:164 company_profile/models.py:141
+#: company_profile/admin.py:166 company_profile/models.py:141
 #: company_profile/models.py:142
 msgid "Company Status"
 msgstr "موقف الشركة"
 
-#: company_profile/admin.py:218
+#: company_profile/admin.py:220
 msgid "Email already exists!"
 msgstr ""
 
-#: company_profile/admin.py:239 company_profile/admin.py:242
+#: company_profile/admin.py:241 company_profile/admin.py:244
 msgid "Show summary"
 msgstr "عرض ملخص"
 
-#: company_profile/admin.py:275
+#: company_profile/admin.py:277
 msgid "General information"
 msgstr "بيانات عامة"
 
-#: company_profile/admin.py:276
+#: company_profile/admin.py:278
 msgid "Location information"
 msgstr "الموقع الجغرافي"
 
-#: company_profile/admin.py:277
+#: company_profile/admin.py:279
 msgid "Contract information"
 msgstr "بيانات العقد"
 
-#: company_profile/admin.py:313 company_profile/forms.py:29
+#: company_profile/admin.py:315 company_profile/forms.py:29
 #: company_profile/models.py:114 pa/models.py:67
 msgid "company_type"
 msgstr "نوع الشركة"
 
-#: company_profile/admin.py:317 gold_travel/admin.py:325
+#: company_profile/admin.py:319 gold_travel/admin.py:402
 msgid "Export data"
 msgstr "تصدير البيانات"
 
-#: company_profile/admin.py:324
+#: company_profile/admin.py:326
 msgid "id"
 msgstr ""
 
-#: company_profile/admin.py:324 company_profile/forms.py:48
+#: company_profile/admin.py:326 company_profile/forms.py:48
 #: company_profile/forms.py:65 company_profile/forms.py:94
 #: company_profile/forms.py:111 company_profile/forms.py:128
 #: company_profile/forms.py:142 company_profile/forms.py:159
@@ -185,45 +185,45 @@ msgstr ""
 msgid "company"
 msgstr "شركة"
 
-#: company_profile/admin.py:324 company_profile/models.py:220
+#: company_profile/admin.py:326 company_profile/models.py:220
 msgid "License no"
 msgstr "رقم الاتفاقية/العقد"
 
-#: company_profile/admin.py:324 company_profile/forms.py:365
+#: company_profile/admin.py:326 company_profile/forms.py:365
 #: company_profile/forms.py:419 company_profile/models.py:221
 #: company_profile/models.py:666 company_profile/models.py:774
 #: company_profile/models.py:903
 msgid "license_type"
 msgstr "النوع"
 
-#: company_profile/admin.py:324 company_profile/models.py:224
+#: company_profile/admin.py:326 company_profile/models.py:224
 #: pa/templates/pa/company_panel.html:23
 msgid "start_date"
 msgstr "تاريح البداية"
 
-#: company_profile/admin.py:324 company_profile/models.py:225
+#: company_profile/admin.py:326 company_profile/models.py:225
 #: pa/templates/pa/company_panel.html:24
 msgid "end_date"
 msgstr "تاريخ النهاية"
 
-#: company_profile/admin.py:324 company_profile/models.py:222
+#: company_profile/admin.py:326 company_profile/models.py:222
 msgid "License count"
 msgstr "عدد الرخص"
 
-#: company_profile/admin.py:325 company_profile/models.py:81
+#: company_profile/admin.py:327 company_profile/models.py:81
 #: company_profile/models.py:226 gold_travel/models.py:22
-#: gold_travel/models.py:48 gold_travel/models.py:131 gold_travel/models.py:207
+#: gold_travel/models.py:48 gold_travel/models.py:133 gold_travel/models.py:209
 #: pa/templates/pa/company_panel.html:21 traditional_api/models.py:30
 #: traditional_api/models.py:43
 msgid "state"
 msgstr "الولاية"
 
-#: company_profile/admin.py:325 company_profile/models.py:229
+#: company_profile/admin.py:327 company_profile/models.py:229
 #: pa/templates/pa/company_panel.html:22
 msgid "sheet_no"
 msgstr "رقم المربع"
 
-#: company_profile/admin.py:325 company_profile/models.py:244
+#: company_profile/admin.py:327 company_profile/models.py:244
 #: pa/templates/pa/company_panel.html:35
 msgid "contract_status"
 msgstr "حالة الاتفاقية/العقد"
@@ -240,15 +240,15 @@ msgstr "الشركة المستلف منها"
 #: company_profile/templates/company_profile/home.html:16
 #: company_profile/templates/company_profile/home.html:38
 #: company_profile/templates/company_profile/home.html:59
-#: gold_travel/models.py:12 help_request/models.py:11 mokhalafat/models.py:6
-#: pa/models.py:46 production_control/models.py:18 revenu_dist/models.py:53
-#: traditional_api/models.py:10
+#: gold_travel/models.py:12 help_request/models.py:11 hr_portal/models.py:89
+#: mokhalafat/models.py:6 pa/models.py:46 production_control/models.py:18
+#: revenu_dist/models.py:53 traditional_api/models.py:10
 msgid "created_at"
 msgstr "تاريخ الانشاء"
 
 #: company_profile/models.py:18 gold_travel/models.py:13
-#: help_request/models.py:13 mokhalafat/models.py:7 pa/models.py:47
-#: production_control/models.py:19 revenu_dist/models.py:54
+#: help_request/models.py:13 hr_portal/models.py:90 mokhalafat/models.py:7
+#: pa/models.py:47 production_control/models.py:19 revenu_dist/models.py:54
 #: traditional_api/models.py:11
 msgid "created_by"
 msgstr "المستخدم المسئول عن الانشاء"
@@ -257,15 +257,15 @@ msgstr "المستخدم المسئول عن الانشاء"
 #: company_profile/templates/company_profile/home.html:17
 #: company_profile/templates/company_profile/home.html:39
 #: company_profile/templates/company_profile/home.html:60
-#: gold_travel/models.py:15 help_request/models.py:12 mokhalafat/models.py:9
-#: pa/models.py:49 production_control/models.py:21 revenu_dist/models.py:56
-#: traditional_api/models.py:13
+#: gold_travel/models.py:15 help_request/models.py:12 hr_portal/models.py:92
+#: mokhalafat/models.py:9 pa/models.py:49 production_control/models.py:21
+#: revenu_dist/models.py:56 traditional_api/models.py:13
 msgid "updated_at"
 msgstr "تاريخ اخر تعديل"
 
 #: company_profile/models.py:21 gold_travel/models.py:16
-#: help_request/models.py:14 mokhalafat/models.py:10 pa/models.py:50
-#: production_control/models.py:22 revenu_dist/models.py:57
+#: help_request/models.py:14 hr_portal/models.py:93 mokhalafat/models.py:10
+#: pa/models.py:50 production_control/models.py:22 revenu_dist/models.py:57
 #: traditional_api/models.py:14
 msgid "updated_by"
 msgstr "المستخدم المسئول عن التعديل"
@@ -287,7 +287,7 @@ msgstr ""
 #: company_profile/models.py:135 company_profile/models.py:173
 #: company_profile/models.py:195 company_profile/models.py:729
 #: company_profile/models.py:827 company_profile/models.py:1083
-#: gold_travel/models.py:47 gold_travel/models.py:63
+#: gold_travel/models.py:47 gold_travel/models.py:63 hr_portal/models.py:405
 #: production_control/models.py:34 revenu_dist/models.py:63
 #: revenu_dist/models.py:73 revenu_dist/models.py:96
 #: traditional_api/models.py:20 traditional_api/models.py:31
@@ -343,8 +343,8 @@ msgstr "امتياز استكشاف"
 msgid "sageer"
 msgstr "تعدين صغير"
 
-#: company_profile/models.py:115 gold_travel/admin.py:332
-#: gold_travel/models.py:23 gold_travel/models.py:114 mokhalafat/models.py:16
+#: company_profile/models.py:115 gold_travel/admin.py:409
+#: gold_travel/models.py:23 gold_travel/models.py:116 mokhalafat/models.py:16
 msgid "code"
 msgstr "الرمز"
 
@@ -388,7 +388,7 @@ msgstr "تلفون ممثل الشركة"
 msgid "Official email"
 msgstr "البريد الالكتروني الرسمي"
 
-#: company_profile/models.py:146
+#: company_profile/models.py:146 hr_portal/models.py:298
 msgid "status"
 msgstr "الحالة"
 
@@ -1292,7 +1292,8 @@ msgstr "طلب اجراءات اجنبي"
 msgid "procedure_master"
 msgstr ""
 
-#: company_profile/models.py:765
+#: company_profile/models.py:765 hr_portal/models.py:285
+#: hr_portal/models.py:369 hr_portal/models.py:403 hr_portal/models.py:417
 msgid "employee_name"
 msgstr "الاسم"
 
@@ -1483,7 +1484,7 @@ msgstr "تعليق مختصر عن الدراسة"
 
 #: company_profile/models.py:910 company_profile/models.py:936
 #: company_profile/models.py:1019 company_profile/models.py:1110
-#: company_profile/models.py:1126 gold_travel/models.py:130 pa/models.py:309
+#: company_profile/models.py:1126 gold_travel/models.py:132 pa/models.py:309
 #: pa/models.py:521 pa/models.py:637
 msgid "attachement_file"
 msgstr "المرفقات"
@@ -2462,110 +2463,116 @@ msgstr "هذا العام"
 msgid "Last year"
 msgstr "العام السابق"
 
-#: gold_travel/admin.py:183
+#: gold_travel/admin.py:180 gold_travel/admin.py:218
+#, fuzzy
+#| msgid "all"
+msgid "All"
+msgstr "الكل"
+
+#: gold_travel/admin.py:260
 msgid "owner data"
 msgstr "بيانات المالك"
 
-#: gold_travel/admin.py:189
+#: gold_travel/admin.py:266
 msgid "representative data"
 msgstr "بيانات الناقل"
 
-#: gold_travel/admin.py:201
+#: gold_travel/admin.py:278
 msgid "attachments"
 msgstr "المرفقات"
 
-#: gold_travel/admin.py:292
+#: gold_travel/admin.py:369
 msgid "Confirm application"
 msgstr "اعتماد الطلب"
 
-#: gold_travel/admin.py:301 gold_travel/models.py:89
+#: gold_travel/admin.py:378 gold_travel/models.py:90
 msgid "state_smrc"
 msgstr "اعتماد ممثل الشركة السودانية بالولاية"
 
-#: gold_travel/admin.py:305
+#: gold_travel/admin.py:382
 msgid "application confirmed successfully!"
 msgstr "تم إعتماد الطلب بنجاح."
 
-#: gold_travel/admin.py:309
+#: gold_travel/admin.py:386
 msgid "Arrived to SSMO"
 msgstr "وصل للمواصفات والمقاييس"
 
-#: gold_travel/admin.py:315 gold_travel/models.py:93
+#: gold_travel/admin.py:392 gold_travel/models.py:94
 msgid "state_ssmo"
 msgstr "وصلت الاستمارة للمواصفات والمقاييس"
 
-#: gold_travel/admin.py:317 gold_travel/admin.py:323 gold_travel/models.py:94
+#: gold_travel/admin.py:394 gold_travel/admin.py:400 gold_travel/models.py:96
 msgid "state_canceled"
-msgstr "تم التنازل"
+msgstr "تم الإلغاء"
 
-#: gold_travel/admin.py:332 gold_travel/models.py:115 gold_travel/models.py:202
+#: gold_travel/admin.py:409 gold_travel/models.py:117 gold_travel/models.py:204
 #: mokhalafat/models.py:17 pa/templates/pa/pa_daily.html:75
 #: production_control/models.py:57 production_control/models.py:98
 #: revenu_dist/models.py:108
 msgid "date"
 msgstr "التاريخ"
 
-#: gold_travel/admin.py:332 gold_travel/admin.py:357 gold_travel/models.py:204
+#: gold_travel/admin.py:409 gold_travel/admin.py:434 gold_travel/models.py:206
 #: gold_travel/templates/admin/gold_travel/appmovegold/pagination.html:13
 msgid "gold_weight_in_gram"
 msgstr "اجمالي وزن الذهب بالجرام"
 
-#: gold_travel/admin.py:332 gold_travel/admin.py:362
+#: gold_travel/admin.py:409 gold_travel/admin.py:439
 #: gold_travel/templates/admin/gold_travel/appmovegold/pagination.html:14
 msgid "gold_alloy_count"
 msgstr "عدد السبائك"
 
-#: gold_travel/admin.py:332 gold_travel/models.py:116
+#: gold_travel/admin.py:409 gold_travel/models.py:118
 msgid "destination"
 msgstr "الوجهة"
 
-#: gold_travel/admin.py:332 gold_travel/admin.py:353 gold_travel/models.py:70
-#: gold_travel/models.py:71 gold_travel/models.py:118 gold_travel/models.py:203
+#: gold_travel/admin.py:409 gold_travel/admin.py:430 gold_travel/models.py:70
+#: gold_travel/models.py:71 gold_travel/models.py:120 gold_travel/models.py:205
 msgid "owner_name"
 msgstr "اسم المالك"
 
-#: gold_travel/admin.py:332 gold_travel/models.py:119
+#: gold_travel/admin.py:409 gold_travel/models.py:121
 msgid "owner_address"
 msgstr "عنوان المالك"
 
-#: gold_travel/admin.py:333 gold_travel/models.py:120
+#: gold_travel/admin.py:410 gold_travel/models.py:122
 msgid "repr_name"
 msgstr "اسم الناقل"
 
-#: gold_travel/admin.py:333 gold_travel/models.py:121
+#: gold_travel/admin.py:410 gold_travel/models.py:123
 msgid "repr_address"
 msgstr "عنوان الناقل"
 
-#: gold_travel/admin.py:333 gold_travel/models.py:122
+#: gold_travel/admin.py:410 gold_travel/models.py:124
 msgid "repr_phone"
 msgstr "تلفون الناقل"
 
-#: gold_travel/admin.py:333 gold_travel/models.py:123
+#: gold_travel/admin.py:410 gold_travel/models.py:125
 msgid "repr_identity_type"
 msgstr "نوع اثبات هوية الناقل"
 
-#: gold_travel/admin.py:333 gold_travel/models.py:124
+#: gold_travel/admin.py:410 gold_travel/models.py:126
 msgid "repr_identity"
 msgstr "اثبات هوية الناقل"
 
-#: gold_travel/admin.py:333 gold_travel/models.py:125
+#: gold_travel/admin.py:410 gold_travel/models.py:127
 msgid "repr_identity_issue_date"
 msgstr "تاريخ اصدار هوية الناقل"
 
-#: gold_travel/admin.py:333 gold_travel/admin.py:374 gold_travel/models.py:129
-#: gold_travel/models.py:206 pa/models.py:95 pa/models.py:133 pa/models.py:197
+#: gold_travel/admin.py:410 gold_travel/admin.py:451 gold_travel/models.py:131
+#: gold_travel/models.py:208 pa/models.py:95 pa/models.py:133 pa/models.py:197
 #: pa/models.py:307 pa/models.py:519 pa/tables/payment.py:34
 #: pa/tables/request.py:53 production_control/models.py:35
 #: production_control/models.py:60 production_control/models.py:101
 msgid "record_state"
 msgstr "الحالة"
 
-#: gold_travel/admin.py:333
+#: gold_travel/admin.py:410
 msgid "source_state"
 msgstr "الولاية المصدر"
 
-#: gold_travel/admin.py:367 gold_travel/admin.py:370 gold_travel/admin.py:432
-#: gold_travel/admin.py:435
+#: gold_travel/admin.py:444 gold_travel/admin.py:447 gold_travel/admin.py:509
+#: gold_travel/admin.py:512
 msgid "Show certificate"
 msgstr "عرض الشهادة"
 
@@ -2630,85 +2637,89 @@ msgstr "الممثلين بالولاية"
 msgid "ssmo_name"
 msgstr "الهيئة السودانية للمواصفات والمقاييس / بورتسودان"
 
-#: gold_travel/models.py:88 gold_travel/models.py:198
+#: gold_travel/models.py:89 gold_travel/models.py:200
 #: production_control/models.py:13
 msgid "state_draft"
 msgstr "مسودة"
 
-#: gold_travel/models.py:90
+#: gold_travel/models.py:91
 msgid "state_2mn_2lm3adin"
 msgstr "اعتماد ممثل أمن إقتصاديات المعادن"
 
-#: gold_travel/models.py:91
+#: gold_travel/models.py:92
 msgid "state_shortat_2lm3adin"
 msgstr "اعتماد ممثل شرطة تأمين التعدين "
 
-#: gold_travel/models.py:92
+#: gold_travel/models.py:93
 msgid "state_2lestikhbarat_2l3askria"
 msgstr "اعتماد ممثل هيئة الإستخبارات العسكرية"
 
-#: gold_travel/models.py:103
+#: gold_travel/models.py:95
+msgid "state_waived"
+msgstr "تم التنازل"
+
+#: gold_travel/models.py:105
 msgid "identity_passport"
 msgstr "جواز"
 
-#: gold_travel/models.py:104
+#: gold_travel/models.py:106
 msgid "identity_personal"
 msgstr "بطاقة شخصية"
 
-#: gold_travel/models.py:105
+#: gold_travel/models.py:107
 msgid "identity_national_id"
 msgstr "رقم وطني"
 
-#: gold_travel/models.py:106
+#: gold_travel/models.py:108
 msgid "identity_driving_license"
 msgstr "رخصة قيادة"
 
-#: gold_travel/models.py:166 gold_travel/models.py:167
+#: gold_travel/models.py:168 gold_travel/models.py:169
 msgid "Move Gold"
 msgstr "استمارة ترحيل ذهب صادر"
 
-#: gold_travel/models.py:177
+#: gold_travel/models.py:179
 msgid "alloy_shape_rectangular"
 msgstr "مستطيلة"
 
-#: gold_travel/models.py:178
+#: gold_travel/models.py:180
 msgid "alloy_shape_circular"
 msgstr "دائرية"
 
-#: gold_travel/models.py:182
+#: gold_travel/models.py:184
 msgid "alloy_id"
 msgstr "رقم السبيكة"
 
-#: gold_travel/models.py:183
+#: gold_travel/models.py:185
 msgid "alloy_weight_in_gram"
 msgstr "الوزن بالجرام"
 
-#: gold_travel/models.py:184
+#: gold_travel/models.py:186
 msgid "alloy_shape"
 msgstr "شكل السبيكة/السبائك"
 
-#: gold_travel/models.py:185
+#: gold_travel/models.py:187
 msgid "alloy_note"
 msgstr "ملاحظات عن السبيكة/السبائك"
 
-#: gold_travel/models.py:191
+#: gold_travel/models.py:193
 msgid "alloy detail"
 msgstr "تفاصيل السبيكة"
 
-#: gold_travel/models.py:192
+#: gold_travel/models.py:194
 msgid "alloy details"
 msgstr "تفاصيل السبائك"
 
-#: gold_travel/models.py:199 production_control/admin.py:41
+#: gold_travel/models.py:201 production_control/admin.py:41
 #: production_control/models.py:14
 msgid "state_confirmed"
 msgstr "مؤكد"
 
-#: gold_travel/models.py:205
+#: gold_travel/models.py:207
 msgid "issuer"
 msgstr "مصدر الطلب"
 
-#: gold_travel/models.py:213 gold_travel/models.py:214
+#: gold_travel/models.py:215 gold_travel/models.py:216
 msgid "prepare gold"
 msgstr "استمارة شراء وسبك وتجهيز الذهب"
 
@@ -2759,6 +2770,536 @@ msgstr "ارسال"
 #: help_request/templatetags/help_request.py:13
 msgid "help_link"
 msgstr "طلب مساعدة"
+
+#: hr_portal/models.py:22 revenu_dist/models.py:22
+msgid "MONTH_JAN"
+msgstr "يناير"
+
+#: hr_portal/models.py:23 revenu_dist/models.py:23
+msgid "MONTH_FEB"
+msgstr "فبراير"
+
+#: hr_portal/models.py:24 revenu_dist/models.py:24
+msgid "MONTH_MAR"
+msgstr "مارس"
+
+#: hr_portal/models.py:25 revenu_dist/models.py:25
+msgid "MONTH_APR"
+msgstr "ابريل"
+
+#: hr_portal/models.py:26 revenu_dist/models.py:26
+msgid "MONTH_MAY"
+msgstr "مايو"
+
+#: hr_portal/models.py:27 revenu_dist/models.py:27
+msgid "MONTH_JUN"
+msgstr "يونيو"
+
+#: hr_portal/models.py:28 revenu_dist/models.py:28
+msgid "MONTH_JLY"
+msgstr "يوليو"
+
+#: hr_portal/models.py:29 revenu_dist/models.py:29
+msgid "MONTH_AUG"
+msgstr "اغسطس"
+
+#: hr_portal/models.py:30 revenu_dist/models.py:30
+msgid "MONTH_SEP"
+msgstr "سبتمبر"
+
+#: hr_portal/models.py:31 revenu_dist/models.py:31
+msgid "MONTH_OCT"
+msgstr "اكتوبر"
+
+#: hr_portal/models.py:32 revenu_dist/models.py:32
+msgid "MONTH_NOV"
+msgstr "نوفمبر"
+
+#: hr_portal/models.py:33 revenu_dist/models.py:33
+msgid "MONTH_DEC"
+msgstr "ديسمبر"
+
+#: hr_portal/models.py:46
+msgid "MOAHIL_THANOI"
+msgstr ""
+
+#: hr_portal/models.py:47
+msgid "MOAHIL_DEPLOM_TEGANI"
+msgstr ""
+
+#: hr_portal/models.py:48
+msgid "MOAHIL_DEPLOM_WASEET"
+msgstr ""
+
+#: hr_portal/models.py:49
+msgid "MOAHIL_BAKLARIOS"
+msgstr ""
+
+#: hr_portal/models.py:50
+msgid "MOAHIL_BAKLARIOS_SHARAF"
+msgstr ""
+
+#: hr_portal/models.py:51
+msgid "MOAHIL_DAPLOM_3ALI"
+msgstr ""
+
+#: hr_portal/models.py:52
+msgid "MOAHIL_MAJSTEAR"
+msgstr ""
+
+#: hr_portal/models.py:53
+#, fuzzy
+#| msgid "MONTH_DEC"
+msgid "MOAHIL_DECTORA"
+msgstr "ديسمبر"
+
+#: hr_portal/models.py:76
+msgid "CATEGORY_2LMODIR_2L3AM"
+msgstr ""
+
+#: hr_portal/models.py:77
+msgid "CATEGORY_2LMOSA3DEEN"
+msgstr ""
+
+#: hr_portal/models.py:78
+msgid "CATEGORY_MODRA2_2L2DARAT_2L3AMA"
+msgstr ""
+
+#: hr_portal/models.py:79
+msgid "CATEGORY_MODRA2_2L2DARAT_2LFAR3IA"
+msgstr ""
+
+#: hr_portal/models.py:80
+msgid "CATEGORY_RO2SA2_2L2GSAM"
+msgstr ""
+
+#: hr_portal/models.py:81
+msgid "CATEGORY_2LMOZAFEEN"
+msgstr ""
+
+#: hr_portal/models.py:82
+msgid "CATEGORY_2L3MAL_SAGEEN"
+msgstr ""
+
+#: hr_portal/models.py:116
+msgid "DRAJAT_TALTA_KHASA"
+msgstr ""
+
+#: hr_portal/models.py:117
+msgid "DRAJAT_TANIA_KHASA"
+msgstr ""
+
+#: hr_portal/models.py:118
+msgid "DRAJAT_AWLA_KHASA"
+msgstr ""
+
+#: hr_portal/models.py:119
+msgid "DRAJAT_AWLA"
+msgstr ""
+
+#: hr_portal/models.py:120
+msgid "DRAJAT_TANIA"
+msgstr ""
+
+#: hr_portal/models.py:121
+msgid "DRAJAT_TALTA"
+msgstr ""
+
+#: hr_portal/models.py:122
+msgid "DRAJAT_RAB3A"
+msgstr ""
+
+#: hr_portal/models.py:123
+msgid "DRAJAT_KHAMSA"
+msgstr ""
+
+#: hr_portal/models.py:124
+msgid "DRAJAT_SAB3A"
+msgstr ""
+
+#: hr_portal/models.py:125
+msgid "DRAJAT_TAMNA"
+msgstr ""
+
+#: hr_portal/models.py:126
+msgid "DRAJAT_TAS3A"
+msgstr ""
+
+#: hr_portal/models.py:127
+msgid "DRAJAT_3ASHRA"
+msgstr ""
+
+#: hr_portal/models.py:128
+msgid "DRAJAT_ATNASHAR"
+msgstr ""
+
+#: hr_portal/models.py:129
+msgid "DRAJAT_KHAMSTASHR"
+msgstr ""
+
+#: hr_portal/models.py:130
+msgid "DRAJAT_TA3AKOD"
+msgstr ""
+
+#: hr_portal/models.py:141
+msgid "ALAWAT_AWALA"
+msgstr ""
+
+#: hr_portal/models.py:142
+msgid "ALAWAT_TANIA"
+msgstr ""
+
+#: hr_portal/models.py:143
+msgid "ALAWAT_TALTA"
+msgstr ""
+
+#: hr_portal/models.py:144
+msgid "ALAWAT_RAB3A"
+msgstr ""
+
+#: hr_portal/models.py:145
+msgid "ALAWAT_KHAMSA"
+msgstr ""
+
+#: hr_portal/models.py:146
+msgid "ALAWAT_TA3AKOD"
+msgstr ""
+
+#: hr_portal/models.py:149 hr_portal/models.py:287
+msgid "draja_wazifia"
+msgstr ""
+
+#: hr_portal/models.py:150 hr_portal/models.py:288
+msgid "alawa_sanawia"
+msgstr ""
+
+#: hr_portal/models.py:151
+msgid "abtdai"
+msgstr ""
+
+#: hr_portal/models.py:152
+msgid "galaa_m3isha"
+msgstr ""
+
+#: hr_portal/models.py:153
+msgid "shakhsia"
+msgstr ""
+
+#: hr_portal/models.py:154
+#, fuzzy
+#| msgid "mo3adin_name"
+msgid "ma3adin"
+msgstr "اسم المعدن"
+
+#: hr_portal/models.py:169 hr_portal/models.py:170
+msgid "Drajat & 3lawat"
+msgstr ""
+
+#: hr_portal/models.py:173 hr_portal/models.py:286
+msgid "mosama_wazifi"
+msgstr ""
+
+#: hr_portal/models.py:174
+msgid "mosama_category"
+msgstr ""
+
+#: hr_portal/models.py:187 hr_portal/models.py:188
+msgid "Mosama Wazifi"
+msgstr ""
+
+#: hr_portal/models.py:199
+msgid "ELMOSTOA_ELTANZIMI_MODIR_3AM"
+msgstr ""
+
+#: hr_portal/models.py:200
+msgid "ELMOSTOA_ELTANZIMI_MOSA3ID_MODIR_3AM"
+msgstr ""
+
+#: hr_portal/models.py:201
+msgid "ELMOSTOA_ELTANZIMI_2DARA_3AMA"
+msgstr ""
+
+#: hr_portal/models.py:202
+msgid "ELMOSTOA_ELTANZIMI_2DARA_FAR3IA"
+msgstr ""
+
+#: hr_portal/models.py:203
+msgid "ELMOSTOA_ELTANZIMI_GISIM"
+msgstr ""
+
+#: hr_portal/models.py:204
+msgid "ELMOSTOA_ELTANZIMI_WI7DA"
+msgstr ""
+
+#: hr_portal/models.py:209
+msgid "elmostoa_eltanzimi"
+msgstr ""
+
+#: hr_portal/models.py:215 hr_portal/models.py:216
+msgid "HikalWazifi"
+msgstr ""
+
+#: hr_portal/models.py:226
+msgid "SEX_MALE"
+msgstr ""
+
+#: hr_portal/models.py:227
+msgid "SEX_FEMALE"
+msgstr ""
+
+#: hr_portal/models.py:241
+msgid "NO3_2LERTIBAT_TA3EEN"
+msgstr ""
+
+#: hr_portal/models.py:242
+msgid "NO3_2LERTIBAT_NAGL"
+msgstr ""
+
+#: hr_portal/models.py:243
+msgid "NO3_2LERTIBAT_2NTEDAB"
+msgstr ""
+
+#: hr_portal/models.py:244
+msgid "NO3_2LERTIBAT_TAKLEEF"
+msgstr ""
+
+#: hr_portal/models.py:245
+msgid "NO3_2LERTIBAT_2L7ag"
+msgstr ""
+
+#: hr_portal/models.py:246
+msgid "NO3_2LERTIBAT_TA3AGOD"
+msgstr ""
+
+#: hr_portal/models.py:247
+msgid "NO3_2LERTIBAT_TA3AGOD_MOSIMI"
+msgstr ""
+
+#: hr_portal/models.py:248
+msgid "NO3_2LERTIBAT_MASHRO3"
+msgstr ""
+
+#: hr_portal/models.py:249
+msgid "NO3_2LERTIBAT_MAJLIS_EL2DARA"
+msgstr ""
+
+#: hr_portal/models.py:268
+msgid "STATUS_ACTIVE"
+msgstr ""
+
+#: hr_portal/models.py:269
+msgid "STATUS_MA3ASH"
+msgstr ""
+
+#: hr_portal/models.py:270
+msgid "STATUS_TAGA3D_EKHTIARI"
+msgstr ""
+
+#: hr_portal/models.py:271
+msgid "STATUS_ESTIKALA"
+msgstr ""
+
+#: hr_portal/models.py:272
+msgid "STATUS_3DAM_ELIAGA_ELTIBIA"
+msgstr ""
+
+#: hr_portal/models.py:273
+msgid "STATUS_ELFASL"
+msgstr ""
+
+#: hr_portal/models.py:274
+msgid "STATUS_ENTIHA2_2L3AGD"
+msgstr ""
+
+#: hr_portal/models.py:275
+msgid "STATUS_SHAGL_MANSAB_DASTORY"
+msgstr ""
+
+#: hr_portal/models.py:276
+msgid "STATUS_ELWAFAH"
+msgstr ""
+
+#: hr_portal/models.py:277
+msgid "STATUS_FOGDAN_ELJENSIA_ELSODANIA"
+msgstr ""
+
+#: hr_portal/models.py:278
+msgid "STATUS_ENHA2_ENTIDAB"
+msgstr ""
+
+#: hr_portal/models.py:279
+msgid "STATUS_NAGL"
+msgstr ""
+
+#: hr_portal/models.py:280
+msgid "STATUS_2L7AG"
+msgstr ""
+
+#: hr_portal/models.py:281
+msgid "STATUS_EJAZA_MIN_GAIR_MORATAB"
+msgstr ""
+
+#: hr_portal/models.py:284
+#, fuzzy
+#| msgid "employee_name"
+msgid "employee_code"
+msgstr "الاسم"
+
+#: hr_portal/models.py:285 hr_portal/models.py:405
+msgid "2dkhil al2sm roba3i"
+msgstr ""
+
+#: hr_portal/models.py:289
+msgid "tarikh_milad"
+msgstr ""
+
+#: hr_portal/models.py:290
+msgid "tarikh_ta3in"
+msgstr ""
+
+#: hr_portal/models.py:291
+msgid "tarikh_akhir_targia"
+msgstr ""
+
+#: hr_portal/models.py:292
+msgid "sex"
+msgstr ""
+
+#: hr_portal/models.py:293
+#, fuzzy
+#| msgid "repr_phone"
+msgid "phone"
+msgstr "تلفون الناقل"
+
+#: hr_portal/models.py:294
+msgid "no3_2lertibat"
+msgstr ""
+
+#: hr_portal/models.py:295
+msgid "sanoat_2lkhibra"
+msgstr ""
+
+#: hr_portal/models.py:296
+msgid "m3ash"
+msgstr ""
+
+#: hr_portal/models.py:297
+msgid "aadoa"
+msgstr ""
+
+#: hr_portal/models.py:299
+msgid "hikal_wazifi"
+msgstr ""
+
+#: hr_portal/models.py:322 hr_portal/models.py:323
+#, fuzzy
+#| msgid "Export data"
+msgid "Employee data"
+msgstr "تصدير البيانات"
+
+#: hr_portal/models.py:334
+msgid "edara_3ama"
+msgstr ""
+
+#: hr_portal/models.py:345
+msgid "edara_far3ia"
+msgstr ""
+
+#: hr_portal/models.py:350
+msgid "gisim"
+msgstr ""
+
+#: hr_portal/models.py:355
+msgid "wi7da"
+msgstr ""
+
+#: hr_portal/models.py:365
+msgid "BANK_KHARTOUM"
+msgstr ""
+
+#: hr_portal/models.py:366
+msgid "BANK_OMDURMAN"
+msgstr ""
+
+#: hr_portal/models.py:370
+msgid "bank"
+msgstr ""
+
+#: hr_portal/models.py:371
+#, fuzzy
+#| msgid "accounts"
+msgid "account_no"
+msgstr "حسابات المستخدمين"
+
+#: hr_portal/models.py:372
+msgid "active"
+msgstr ""
+
+#: hr_portal/models.py:382
+#, fuzzy
+#| msgid "accounts"
+msgid "Bank Account"
+msgstr "حسابات المستخدمين"
+
+#: hr_portal/models.py:383
+#, fuzzy
+#| msgid "accounts"
+msgid "Bank Accounts"
+msgstr "حسابات المستخدمين"
+
+#: hr_portal/models.py:398
+msgid "FAMILY_RELATION_PARENT"
+msgstr ""
+
+#: hr_portal/models.py:399
+msgid "FAMILY_RELATION_CHILD"
+msgstr ""
+
+#: hr_portal/models.py:400
+msgid "FAMILY_RELATION_CONSORT"
+msgstr ""
+
+#: hr_portal/models.py:404
+#, fuzzy
+#| msgid "location"
+msgid "relation"
+msgstr "المنطقة"
+
+#: hr_portal/models.py:406 hr_portal/models.py:422
+msgid "tarikh_el2dafa"
+msgstr ""
+
+#: hr_portal/models.py:407 hr_portal/models.py:423
+#, fuzzy
+#| msgid "attachments"
+msgid "attachement"
+msgstr "المرفقات"
+
+#: hr_portal/models.py:410 hr_portal/models.py:411
+#, fuzzy
+#| msgid "employee_name"
+msgid "Employee Family"
+msgstr "الاسم"
+
+#: hr_portal/models.py:418
+msgid "moahil"
+msgstr ""
+
+#: hr_portal/models.py:419
+msgid "university"
+msgstr ""
+
+#: hr_portal/models.py:420
+msgid "takhasos"
+msgstr ""
+
+#: hr_portal/models.py:421
+msgid "graduate_dt"
+msgstr ""
+
+#: hr_portal/models.py:426 hr_portal/models.py:427
+msgid "Employee Moahil"
+msgstr ""
 
 #: mokhalafat/apps.py:7
 msgid "mokhalafat app"
@@ -3402,54 +3943,6 @@ msgstr "مجموع الايرادات الموزعة لايساوي اجمالي
 #: revenu_dist/apps.py:7
 msgid "Revenu distiribution"
 msgstr "توزيع الايرادات"
-
-#: revenu_dist/models.py:22
-msgid "MONTH_JAN"
-msgstr "يناير"
-
-#: revenu_dist/models.py:23
-msgid "MONTH_FEB"
-msgstr "فبراير"
-
-#: revenu_dist/models.py:24
-msgid "MONTH_MAR"
-msgstr "مارس"
-
-#: revenu_dist/models.py:25
-msgid "MONTH_APR"
-msgstr "ابريل"
-
-#: revenu_dist/models.py:26
-msgid "MONTH_MAY"
-msgstr "مايو"
-
-#: revenu_dist/models.py:27
-msgid "MONTH_JUN"
-msgstr "يونيو"
-
-#: revenu_dist/models.py:28
-msgid "MONTH_JLY"
-msgstr "يوليو"
-
-#: revenu_dist/models.py:29
-msgid "MONTH_AUG"
-msgstr "اغسطس"
-
-#: revenu_dist/models.py:30
-msgid "MONTH_SEP"
-msgstr "سبتمبر"
-
-#: revenu_dist/models.py:31
-msgid "MONTH_OCT"
-msgstr "اكتوبر"
-
-#: revenu_dist/models.py:32
-msgid "MONTH_NOV"
-msgstr "نوفمبر"
-
-#: revenu_dist/models.py:33
-msgid "MONTH_DEC"
-msgstr "ديسمبر"
 
 #: revenu_dist/models.py:69 revenu_dist/models.py:88 revenu_dist/models.py:148
 msgid "Partner"

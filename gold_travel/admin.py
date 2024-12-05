@@ -283,7 +283,7 @@ class AppMoveGoldAdmin(LogAdminMixin,admin.ModelAdmin):
     ]
     list_filter = [("date",DateFieldListFilterWithLast30days),("state",ChoicesFieldListFilterNotEmpty),("source_state",RelatedOnlyFieldListFilterNotEmpty),("owner_name_lst",RelatedOnlyFieldListFilterNotEmpty)]
     search_fields = ["code","owner_name_lst__name","owner_address","repr_name","repr_phone","repr_identity"]
-    actions = ['confirm_app','arrived_to_ssmo_app','cancel_app','export_as_csv']
+    actions = ['confirm_app','arrived_to_ssmo_app','waived_app','cancel_app','export_as_csv']
     autocomplete_fields = ["owner_name_lst"]
     list_display = ["code","date","owner_name_lst","gold_weight_in_gram","gold_alloy_count","state_str","source_state","repr_name"]
     # list_editable = ['owner_name_lst']
@@ -345,6 +345,9 @@ class AppMoveGoldAdmin(LogAdminMixin,admin.ModelAdmin):
         actions = super().get_actions(request)
 
         if request.user.groups.filter(name='gold_travel_manager').count() == 0:
+            if "waived_app" in actions:
+                del actions['waived_app']
+
             if "cancel_app" in actions:
                 del actions['cancel_app']
 
@@ -390,6 +393,14 @@ class AppMoveGoldAdmin(LogAdminMixin,admin.ModelAdmin):
                 obj.state = AppMoveGold.STATE_SSMO
                 obj.save()
                 self.log_change(request,obj,_('state_ssmo'))
+
+    @admin.action(description=_('state_waived'))
+    def waived_app(self, request, queryset):
+        for obj in queryset:
+            if obj.state >= AppMoveGold.STATE_SMRC and obj.state < AppMoveGold.STATE_SSMO:
+                obj.state = AppMoveGold.STATE_WAIVED
+                obj.save()
+                self.log_change(request,obj,_('state_waived'))
 
     @admin.action(description=_('state_canceled'))
     def cancel_app(self, request, queryset):
