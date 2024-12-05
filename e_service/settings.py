@@ -313,7 +313,7 @@ if not DEBUG:
 SHOW_REQUESTS_URL = "profile:pa_request_show"
 
 CRONJOBS = [
-    ('*/5 * * * *', 'pa.cron.generate_requests')
+    ('*/30 5-17 * * *', 'pa.cron.generate_requests')
 ]
 
 BOOTSTRAP3 = {
