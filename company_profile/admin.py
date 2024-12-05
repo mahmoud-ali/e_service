@@ -37,7 +37,9 @@ from .forms import AppCyanideCertificateAdminForm, AppExplosivePermissionAdminFo
                    AppVisibityStudyAdminForm
 
 from .workflow import SUBMITTED, get_state_choices,send_transition_email,ACCEPTED,APPROVED,REJECTED
+# import django_otp
 
+# admin.site.__class__ =  django_otp.admin.OTPAdminSite #
 admin.site.title = _("Site header")
 admin.site.site_title = _("Site header")
 admin.site.site_header = _("Site header")
