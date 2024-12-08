@@ -201,7 +201,6 @@ class TblCompanyProductionAdmin(ExportActionMixin,LoggingAdminMixin,admin.ModelA
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
-        qs= qs.prefetch_related(models.Prefetch("tblcompanyproductionlicense_set"))
         company_types = []
 
         if request.user.groups.filter(name="company_type_entaj").exists():
@@ -214,7 +213,8 @@ class TblCompanyProductionAdmin(ExportActionMixin,LoggingAdminMixin,admin.ModelA
             company_types += [TblCompany.COMPANY_TYPE_SAGEER]
 
         qs = qs.filter(company_type__in=company_types)
-
+        qs= qs.prefetch_related(models.Prefetch("tblcompanyproductionlicense_set"))
+        
         return qs
 
     
