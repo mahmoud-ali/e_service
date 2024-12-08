@@ -196,7 +196,7 @@ class TblCompanyProductionAdmin(ExportActionMixin,LoggingAdminMixin,admin.ModelA
 
     @admin.display(description=_("company state"))
     def states(self, obj):
-        states = ", ".join(list(obj.tblcompanyproductionlicense_set.all().values_list("state__name",flat=True)))
+        states = ", ".join(list(obj.tblcompanyproductionlicense_set.distinct("state__name").values_list("state__name",flat=True)))
         return states
 
     def get_queryset(self, request):
