@@ -116,20 +116,24 @@ class WorkflowAdminMixin:
         
         url = 'https://'+Site.objects.get_current().domain+'/app' #settings.BASE_URL
         
-        if obj.notify:
-            # print("next transition*****",obj.state)
-            if obj.state in (ACCEPTED,APPROVED,REJECTED):
-                email = obj.company.email
-                lang = get_user_model().objects.get(email=email).lang
-                url += obj.get_absolute_url()
-            else:
-                email = request.user.email
-                lang = get_user_model().objects.get(email=email).lang
-                url += request.path
-                                
-            send_transition_email(obj.state,email,url,lang.lower())
-            obj.notify = False
-            obj.save()
+        try:
+            if obj.notify:
+                # print("next transition*****",obj.state)
+                if obj.state in (ACCEPTED,APPROVED,REJECTED):
+                    email = obj.company.email
+                    lang = get_user_model().objects.get(email__iexact=email).lang
+                    url += obj.get_absolute_url()
+                else:
+                    email = request.user.email
+                    lang = get_user_model().objects.get(email__iexact=email).lang
+                    url += request.path
+                                    
+                send_transition_email(obj.state,email,url,lang.lower())
+                obj.notify = False
+                obj.save()
+
+        except:
+            print(f"Error: Unable to send email to {email} {obj}")
         
 class LicenseCountFilter(admin.SimpleListFilter):
     title = _("license_count")    
