@@ -148,8 +148,8 @@ class LicenseCountFilter(admin.SimpleListFilter):
     def queryset(self, request, queryset):
         facets = request.GET.get('_facets',False)
 
-        if facets:
-            return queryset
+        # if facets:
+        #     return queryset
     
         qs = queryset.annotate(license_count=Count("tblcompanyproductionlicense"))
         val = self.value()
@@ -162,6 +162,20 @@ class LicenseCountFilter(admin.SimpleListFilter):
         
         return queryset
 
+class CompanyStateFilter(admin.SimpleListFilter):
+    title = _("company state")    
+    parameter_name = "company_state"
+    def lookups(self, request, model_admin):
+        return LkpState.objects.all().values_list("id","name")
+    
+    def queryset(self, request, queryset):
+        val = self.value()
+        qs = queryset
+        if val:
+            qs = qs.filter(tblcompanyproductionlicense__state=val)
+        
+        return qs
+
 class TblCompanyProductionAdmin(ExportActionMixin,LoggingAdminMixin,admin.ModelAdmin):
     form = TblCompanyProductionForm
     fieldsets = [
@@ -170,18 +184,24 @@ class TblCompanyProductionAdmin(ExportActionMixin,LoggingAdminMixin,admin.ModelA
         (_("Company Status"), {"fields": ["status"]}),
      ]
      
-    list_display = ["company_type","code","name_ar", "name_en", "status",'license_count','show_summary_link']
-    list_filter = ["company_type","nationality","status","created_at",LicenseCountFilter,('email',admin.EmptyFieldListFilter)]
+    list_display = ["company_type","code","name_ar", "name_en", "status",'license_count','states'] #,'show_summary_link'
+    list_filter = ["company_type","nationality","status","created_at",LicenseCountFilter,('email',admin.EmptyFieldListFilter),CompanyStateFilter]
     search_fields = ["code","name_ar","name_en","email"]
     exclude = ["created_at","created_by","updated_at","updated_by"]
     view_on_site = False
 
     @admin.display(description=_("license_count"))
     def license_count(self, obj):
-        return obj.tblcompanyproductionlicense_set.count()
+        return obj.tblcompanyproductionlicense_set.all().count()
+
+    @admin.display(description=_("company state"))
+    def states(self, obj):
+        states = ", ".join(list(obj.tblcompanyproductionlicense_set.all().values_list("state__name",flat=True)))
+        return states
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
+        qs= qs.prefetch_related(models.Prefetch("tblcompanyproductionlicense_set"))
         company_types = []
 
         if request.user.groups.filter(name="company_type_entaj").exists():
