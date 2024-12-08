@@ -115,7 +115,7 @@ class AuditorMixin:
             company_lst = request.user.gold_production_user.goldproductionuserdetail_set.filter(master__state=STATE_CONFIRMED).values_list('company',flat=True)
             return super().has_add_permission(request)
         except Exception as e:
-            print('err',e)
+            # print('err',e)
             pass
 
         return False
