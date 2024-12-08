@@ -232,8 +232,8 @@ class TblCompanyProductionAdmin(ExportActionMixin,LoggingAdminMixin,admin.ModelA
                 com_user.lang = 'ar'
                 com_user.save()
 
-                for role in TblCompanyProductionUserRole.objects.filter(company=obj):
-                    role.delete()
+                TblCompanyProductionUserRole.objects.filter(company=obj).delete()
+                TblCompanyProductionUserRole.objects.filter(user=com_user).delete()
 
                 u = TblCompanyProductionUserRole(company=obj,user=com_user)
                 u.save()
