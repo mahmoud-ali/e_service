@@ -176,8 +176,21 @@ class CompanyStateFilter(admin.SimpleListFilter):
         
         return qs
 
+# class TblCompanyProductionLicenseInline(LoggingAdminMixin,admin.StackedInline):
+#     model = TblCompanyProductionLicense
+#     fieldsets = [
+#         (None, {"fields": ["company",("license_no","license_type","license_count")]}),
+#         (_("General information"), {"fields": ["date",("start_date","end_date")]}),
+#         (_("Location information"), {"fields": [("state","locality","location","sheet_no")]}),
+#         (_("Contract information"), {"fields": ["mineral","area_initial","area","reserve","royalty","zakat","annual_rent","gov_rep","rep_percent","com_percent","business_profit","social_responsibility","contract_status","contract_file"]}),
+#      ]        
+#     exclude = ["created_at","created_by","updated_at","updated_by"]
+#     extra = 1    
+
+
 class TblCompanyProductionAdmin(ExportActionMixin,LoggingAdminMixin,admin.ModelAdmin):
     form = TblCompanyProductionForm
+    # inlines = [TblCompanyProductionLicenseInline]
     fieldsets = [
         (None, {"fields": [("company_type","code"),("name_ar","name_en"),"nationality"]}),
         (_("Contact information"), {"fields": [("website","email"),("manager_name","manager_phone"),("rep_name","rep_phone"),"address"]}),
@@ -237,7 +250,7 @@ class TblCompanyProductionAdmin(ExportActionMixin,LoggingAdminMixin,admin.ModelA
         super().save_model(request, obj, form, change)                
 
         email = obj.email
-        email = email.lower()
+        email = email.lower() if email else None
         if email:
             if TblCompanyProductionUserRole.objects.filter(company=obj).filter(user__email__iexact=email).exists():
                 pass #nothing to do
@@ -247,7 +260,7 @@ class TblCompanyProductionAdmin(ExportActionMixin,LoggingAdminMixin,admin.ModelA
                 obj.save()
             elif not TblCompanyProductionUserRole.objects.filter(user__email__iexact=email).exists():
                 #print("*****",obj,email)
-                email = email.lower()
+                email = email.lower() if email else None
                 User = get_user_model()     
                 try:  
                     com_user = User.objects.get(email__iexact=email)
