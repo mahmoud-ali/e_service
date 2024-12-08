@@ -213,19 +213,20 @@ class TblCompanyProductionAdmin(ExportActionMixin,LoggingAdminMixin,admin.ModelA
         super().save_model(request, obj, form, change)                
 
         email = obj.email
+        email = email.lower()
         if email:
-            if TblCompanyProductionUserRole.objects.filter(company=obj).filter(user__email=email).exists():
+            if TblCompanyProductionUserRole.objects.filter(company=obj).filter(user__email__iexact=email).exists():
                 pass #nothing to do
-            elif TblCompanyProductionUserRole.objects.exclude(company=obj).filter(user__email=email).exists():
+            elif TblCompanyProductionUserRole.objects.exclude(company=obj).filter(user__email__iexact=email).exists():
                 self.message_user(request,_('Email already exists!'),level=message_constants.ERROR)
                 obj.email = ''
                 obj.save()
-            elif not TblCompanyProductionUserRole.objects.filter(user__email=email).exists():
+            elif not TblCompanyProductionUserRole.objects.filter(user__email__iexact=email).exists():
                 #print("*****",obj,email)
                 email = email.lower()
                 User = get_user_model()     
                 try:  
-                    com_user = User.objects.get(email=email)
+                    com_user = User.objects.get(email__iexact=email)
                 except:
                     com_user = User.objects.create_user(email,email,settings.ACCOUNT_DEFAULT_PASSWORD)
 
