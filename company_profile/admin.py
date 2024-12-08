@@ -225,7 +225,7 @@ class TblCompanyProductionAdmin(ExportActionMixin,LoggingAdminMixin,admin.ModelA
                 email = email.lower()
                 User = get_user_model()     
                 try:  
-                    com_user = User.objects.get(username=email)
+                    com_user = User.objects.get(email=email)
                 except:
                     com_user = User.objects.create_user(email,email,settings.ACCOUNT_DEFAULT_PASSWORD)
 
