@@ -231,30 +231,19 @@ class AppBorrowMaterialListView(ApplicationListView):
     def get_queryset(self):
         query = super().get_queryset()        
         return query.filter(company__id=self.request.user.pro_company.company.id) #.only(*self.table_class.Meta.fields)
-        
+
 class AppBorrowMaterialCreateView(ApplicationMasterDetailCreateView):
     model = AppBorrowMaterial
     model_details = AppBorrowMaterialDetail
     model_details_fields = ["material","quantity"]
-    form_class = AppBorrowMaterialForm    
+    form_class = AppBorrowMaterialForm
     detail_formset = None
     menu_name = "profile:app_borrow_list"
     title = _("Add new borrow materials")
     template_name = "company_profile/application_add_master_details.html"
 
-    def dispatch(self, *args, **kwargs):         
-        if not hasattr(self.request.user,"pro_company"):
-            return HttpResponseRedirect(reverse_lazy("profile:home"))    
-            
-        return super().dispatch(*args, **kwargs)                    
-    
-    def get(self,request):        
-        form = self.extra_context['form'](company_id=self.request.user.pro_company.company.id)
-        self.extra_context['form'] = form
-        return render(request, self.template_name, self.extra_context)
-
     def post(self, request, *args, **kwargs):
-        form = self.form_class(request.POST,request.FILES,company_id=self.request.user.pro_company.company.id)
+        form = self.form_class(request.POST,request.FILES)
         self.extra_context["form"] = form
         
         if form.is_valid():

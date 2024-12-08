@@ -288,7 +288,8 @@ class AppForignerMovement(WorkflowModel):
     
 class AppBorrowMaterial(WorkflowModel):
     company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,related_name="borrow_to",verbose_name=_("company"))    
-    company_from  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,related_name="borrow_from",verbose_name=_("company_borrow_from"))    
+    company_from  = models.ForeignKey(TblCompanyProduction,null=True,blank=True, on_delete=models.PROTECT,related_name="borrow_from",verbose_name=_("company_borrow_from"))    
+    company_from_str = models.CharField(_("company_borrow_from_str"),max_length=200,default="-")
     borrow_date = models.DateField(_("borrow_date"))
     borrow_materials_list_file = models.FileField(_("borrow_materials_list_file"),blank=True,upload_to=company_applications_path)    
     borrow_from_approval_file = models.FileField(_("borrow_from_approval_file"),upload_to=company_applications_path)        

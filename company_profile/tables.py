@@ -33,7 +33,7 @@ class AppBorrowMaterialTable(AppTable):
     class Meta:
         model = AppBorrowMaterial
         template_name = "django_tables2/bootstrap.html"
-        fields = ("id","company_from","borrow_date")        
+        fields = ("id","company_from_str","borrow_date")        
         empty_text = _("No records.")
 
     def render_id(self,value):

@@ -63,7 +63,7 @@ class AppForignerMovementForm(AppForignerMovementAdminForm):
         
 class AppBorrowMaterialAdminForm(WorkflowFormMixin,ModelForm):
     company = forms.ModelChoiceField(queryset=TblCompanyProduction.objects.all(), disabled=True, label=_("company"))
-    company_from = forms.ModelChoiceField(queryset=None, label=_("company_borrow_from"))
+    company_from = forms.ModelChoiceField(queryset=None, label=_("company_borrow_from"), required=False)
     def __init__(self, *args,company_id = None, **kwargs):        
         super().__init__(*args, **kwargs)
         #company_id = None
@@ -77,15 +77,15 @@ class AppBorrowMaterialAdminForm(WorkflowFormMixin,ModelForm):
 
     class Meta:
         model = AppBorrowMaterial
-        fields = ["company","company_from","borrow_date","state","reject_comments","reject_comments","borrow_materials_list_file","borrow_from_approval_file"]
+        fields = ["company","company_from","company_from_str","borrow_date","state","reject_comments","reject_comments","borrow_materials_list_file","borrow_from_approval_file"]
         
 
 class AppBorrowMaterialForm(AppBorrowMaterialAdminForm):
-    layout = ["company_from","borrow_date",["borrow_materials_list_file","borrow_from_approval_file"]]
+    layout = ["company_from_str","borrow_date",["borrow_materials_list_file","borrow_from_approval_file"]]
     company = None
     class Meta:
         model = AppBorrowMaterial        
-        exclude = ["company","state","reject_comments","reject_comments"]
+        exclude = ["company","state","reject_comments","company_from"]
         widgets = {
             "borrow_date":DatePickerInput(),
         }
