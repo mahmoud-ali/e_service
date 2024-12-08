@@ -29,7 +29,7 @@ DEBUG = config('DEBUG', default=False, cast=bool)
 
 #Site id: django.contrib.sites
 SITE_ID = 1
-ADMINS = config('ADMINS', cast=Csv())
+ADMINS = [('Mahmoud Ali','mahmoud.ali@smrc.sd')]
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=Csv())
 
 # Force https
