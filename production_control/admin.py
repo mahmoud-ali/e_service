@@ -42,59 +42,6 @@ class StateMixin:
 
         return template
 
-class GoldProductionUserDetailInline(admin.TabularInline):
-    model = GoldProductionUserDetail
-    fields = ['company']
-    autocomplete_fields = ['company']
-    extra = 1    
-
-class GoldProductionUserAdmin(StateMixin,LogAdminMixin,admin.ModelAdmin):
-    model = GoldProductionUser
-    inlines = [GoldProductionUserDetailInline]
-    form = GoldProductionUserForm
-    list_display = ["user","name","state"]
-    list_filter = ["state"]
-
-    def get_formsets_with_inlines(self, request, obj=None):
-        for inline in self.get_inline_instances(request, obj):
-            formset = inline.get_formset(request, obj)
-            if isinstance(inline,GoldProductionUserDetailInline):
-                formset.form = GoldProductionUserDetailForm
-                formset.form.company_types = get_company_types(request)
-
-            yield formset,inline
-
-    def get_queryset(self, request):
-        qs = super().get_queryset(request)
-
-        if request.user.is_superuser:
-            return qs
-
-        if request.user.groups.filter(name__in=("pro_company_application_accept","pro_company_application_approve")).exists():
-            ids = GoldProductionUserDetail.objects.filter(company__company_type__in= get_company_types(request)).values_list("master")
-            return qs.filter(id__in=ids)
-
-        # return qs.filter(user__groups__name__in=get_company_types(request))
-        
-        return qs
-
-    def has_add_permission(self, request):        
-        if not request.user.groups.filter(name__in=("pro_company_application_accept","pro_company_application_approve")).exists():
-            return False
-        
-        return super().has_add_permission(request)
-
-    def has_change_permission(self, request, obj=None):
-        if not request.user.groups.filter(name__in=("pro_company_application_accept","pro_company_application_approve")).exists():
-            return False
-        
-        # if not obj or obj.state == STATE_CONFIRMED:
-        #     return False
-        
-        return super().has_change_permission(request,obj)
-
-admin.site.register(GoldProductionUser, GoldProductionUserAdmin)
-
 class AuditorMixin:
     def get_queryset(self, request):
         qs = super().get_queryset(request)
@@ -152,6 +99,59 @@ class AuditorMixin:
             pass
 
         return False
+
+class GoldProductionUserDetailInline(admin.TabularInline):
+    model = GoldProductionUserDetail
+    fields = ['company']
+    autocomplete_fields = ['company']
+    extra = 1    
+
+class GoldProductionUserAdmin(StateMixin,LogAdminMixin,admin.ModelAdmin):
+    model = GoldProductionUser
+    inlines = [GoldProductionUserDetailInline]
+    form = GoldProductionUserForm
+    list_display = ["user","name","state"]
+    list_filter = ["state"]
+
+    def get_formsets_with_inlines(self, request, obj=None):
+        for inline in self.get_inline_instances(request, obj):
+            formset = inline.get_formset(request, obj)
+            if isinstance(inline,GoldProductionUserDetailInline):
+                formset.form = GoldProductionUserDetailForm
+                formset.form.company_types = get_company_types(request)
+
+            yield formset,inline
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+
+        if request.user.is_superuser:
+            return qs
+
+        if request.user.groups.filter(name__in=("pro_company_application_accept","pro_company_application_approve")).exists():
+            ids = GoldProductionUserDetail.objects.filter(company__company_type__in= get_company_types(request)).values_list("master")
+            return qs.filter(id__in=ids)
+
+        # return qs.filter(user__groups__name__in=get_company_types(request))
+        
+        return qs
+
+    def has_add_permission(self, request):        
+        if not request.user.groups.filter(name__in=("pro_company_application_accept","pro_company_application_approve")).exists():
+            return False
+        
+        return super().has_add_permission(request)
+
+    def has_change_permission(self, request, obj=None):
+        if not request.user.groups.filter(name__in=("pro_company_application_accept","pro_company_application_approve")).exists():
+            return False
+        
+        # if not obj or obj.state == STATE_CONFIRMED:
+        #     return False
+        
+        return super().has_change_permission(request,obj)
+
+admin.site.register(GoldProductionUser, GoldProductionUserAdmin)
 
 class GoldProductionFormAlloyInline(admin.TabularInline):
     model = GoldProductionFormAlloy
@@ -234,6 +234,7 @@ class GoldShippingFormAdmin(AuditorMixin,StateMixin,LogAdminMixin,admin.ModelAdm
                     try:
                         formset.form.company_ids = request.user.gold_production_user.goldproductionuserdetail_set.values_list('company')
                     except Exception as e:
+                        formset.form.company_ids = []
                         print('err',e)
 
             yield formset,inline
