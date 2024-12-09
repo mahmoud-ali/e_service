@@ -279,7 +279,7 @@ LOGGING = {
     'handlers': {
         # Send all messages to console
         'console': {
-            'level': 'DEBUG',
+            'level': 'ERROR',
             'class': 'logging.StreamHandler',
         },
     },
@@ -287,7 +287,7 @@ LOGGING = {
         # This is the "catch all" logger
         '': {
             'handlers': ['console'],
-            'level': 'DEBUG',
+            'level': 'ERROR',
             'propagate': False,
         },
     }
