@@ -396,6 +396,7 @@ class AppMoveGoldAdmin(LogAdminMixin,admin.ModelAdmin):
                 obj.state = AppMoveGold.STATE_SSMO
                 obj.save()
                 self.log_change(request,obj,_('state_ssmo'))
+                self.message_user(request,_('application changed successfully!'))
 
     @admin.action(description=_('state_waived'))
     def waived_app(self, request, queryset):
@@ -404,6 +405,7 @@ class AppMoveGoldAdmin(LogAdminMixin,admin.ModelAdmin):
                 obj.state = AppMoveGold.STATE_WAIVED
                 obj.save()
                 self.log_change(request,obj,_('state_waived'))
+                self.message_user(request,_('application changed successfully!'))
 
     @admin.action(description=_('state_canceled'))
     def cancel_app(self, request, queryset):
@@ -412,6 +414,7 @@ class AppMoveGoldAdmin(LogAdminMixin,admin.ModelAdmin):
                 obj.state = AppMoveGold.STATE_CANCELED
                 obj.save()
                 self.log_change(request,obj,_('state_canceled'))
+                self.message_user(request,_('application changed successfully!'))
 
     @admin.action(description=_('return_to_draft'))
     def return_to_draft(self, request, queryset):
@@ -420,6 +423,7 @@ class AppMoveGoldAdmin(LogAdminMixin,admin.ModelAdmin):
                 obj.state = AppMoveGold.STATE_DRAFT
                 obj.save()
                 self.log_change(request,obj,_('return_to_draft'))
+                self.message_user(request,_('application changed successfully!'))
 
     @admin.action(description=_('Export data'))
     def export_as_csv(self, request, queryset):
@@ -481,8 +485,9 @@ admin.site.register(AppMoveGold, AppMoveGoldAdmin)
 
 class AppPrepareGoldAdmin(LogAdminMixin,admin.ModelAdmin):
     model = AppPrepareGold
-    fields = ["date","owner_name","gold_weight_in_gram","state"] 
+    fields = ["date","owner_name","gold_weight_in_gram"] 
     list_filter = ["date","state",("source_state",admin.RelatedOnlyFieldListFilter)]
+    actions = ['confirm_app','return_to_draft','done_app']
     search_fields = ["owner_name"]
     view_on_site = False
     formfield_overrides = {
@@ -534,5 +539,63 @@ class AppPrepareGoldAdmin(LogAdminMixin,admin.ModelAdmin):
         return format_html('<a target="_blank" class="viewlink" href="{url}?id={id}">'+_('Show certificate')+'</a>',
                     url=url,id=obj.id
                 )
+
+    def get_actions(self, request):
+        actions = super().get_actions(request)
+
+        if request.user.groups.filter(name='gold_travel_manager').count() == 0:
+            if "return_to_draft" in actions:
+                del actions['return_to_draft']
+
+            if "done_app" in actions:
+                del actions['done_app']
+
+        try:
+            authority = request.user.state_representative.authority
+            if authority!=TblStateRepresentative.AUTHORITY_SMRC:
+                if "confirm_app" in actions:
+                    del actions['confirm_app']
+
+        except:
+            if "confirm_app" in actions:
+                del actions['confirm_app']
+
+        return actions
+
+    @admin.action(description=_('Confirm application'))
+    def confirm_app(self, request, queryset):
+        try:
+            authority = request.user.state_representative.authority
+            if authority==TblStateRepresentative.AUTHORITY_SMRC:
+                change_flag = False
+                for obj in queryset:
+                    if obj.state==AppPrepareGold.STATE_DRAFT:
+                        obj.state = AppPrepareGold.STATE_CONFIRMED
+                        obj.save()
+                        self.log_change(request,obj,_('Confirm application'))
+                        change_flag = True
+
+                if change_flag:
+                    self.message_user(request,_('application confirmed successfully!'))
+        except:
+            pass
+
+    @admin.action(description=_('return_to_draft'))
+    def return_to_draft(self, request, queryset):
+        for obj in queryset:
+            if obj.state == AppPrepareGold.STATE_CONFIRMED:
+                obj.state = AppPrepareGold.STATE_DRAFT
+                obj.save()
+                self.log_change(request,obj,_('return_to_draft'))
+                self.message_user(request,_('application changed successfully!'))
+
+    @admin.action(description=_('state_done'))
+    def done_app(self, request, queryset):
+        for obj in queryset:
+            if obj.state == AppPrepareGold.STATE_CONFIRMED:
+                obj.state = AppPrepareGold.STATE_DONE
+                obj.save()
+                self.log_change(request,obj,_('state_done'))
+                self.message_user(request,_('application changed successfully!'))
 
 admin.site.register(AppPrepareGold, AppPrepareGoldAdmin)

@@ -196,9 +196,11 @@ class AppMoveGoldDetails(models.Model):
 class AppPrepareGold(LoggingModel):
     STATE_DRAFT = 1
     STATE_CONFIRMED = 2
+    STATE_DONE = 3
     STATE_CHOICES = {
         STATE_DRAFT: _('state_draft'),
         STATE_CONFIRMED: _('state_confirmed'),
+        STATE_DONE: _('state_done'),
     }
 
     date = models.DateField(_("date"))

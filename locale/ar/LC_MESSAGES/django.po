@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-09 13:18+0200\n"
+"POT-Creation-Date: 2024-12-10 15:14+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -216,7 +216,7 @@ msgstr "عدد الرخص"
 
 #: company_profile/admin.py:365 company_profile/models.py:81
 #: company_profile/models.py:226 gold_travel/models.py:22
-#: gold_travel/models.py:48 gold_travel/models.py:133 gold_travel/models.py:209
+#: gold_travel/models.py:48 gold_travel/models.py:133 gold_travel/models.py:211
 #: pa/templates/pa/company_panel.html:21 traditional_api/models.py:30
 #: traditional_api/models.py:43
 msgid "state"
@@ -2489,7 +2489,7 @@ msgstr "بيانات الناقل"
 msgid "attachments"
 msgstr "المرفقات"
 
-#: gold_travel/admin.py:375
+#: gold_travel/admin.py:375 gold_travel/admin.py:561 gold_travel/admin.py:571
 msgid "Confirm application"
 msgstr "اعتماد الطلب"
 
@@ -2497,7 +2497,7 @@ msgstr "اعتماد الطلب"
 msgid "state_smrc"
 msgstr "اعتماد ممثل الشركة السودانية بالولاية"
 
-#: gold_travel/admin.py:388
+#: gold_travel/admin.py:388 gold_travel/admin.py:575
 msgid "application confirmed successfully!"
 msgstr "تم إعتماد الطلب بنجاح."
 
@@ -2517,18 +2517,19 @@ msgstr "تم التنازل"
 msgid "state_canceled"
 msgstr "تم الإلغاء"
 
-#: gold_travel/admin.py:416 gold_travel/admin.py:422
+#: gold_travel/admin.py:416 gold_travel/admin.py:422 gold_travel/admin.py:579
+#: gold_travel/admin.py:585
 msgid "return_to_draft"
 msgstr "إرجاع إلى مسودة"
 
-#: gold_travel/admin.py:431 gold_travel/models.py:117 gold_travel/models.py:204
+#: gold_travel/admin.py:431 gold_travel/models.py:117 gold_travel/models.py:206
 #: mokhalafat/models.py:17 pa/templates/pa/pa_daily.html:75
 #: production_control/models.py:57 production_control/models.py:98
 #: revenu_dist/models.py:108
 msgid "date"
 msgstr "التاريخ"
 
-#: gold_travel/admin.py:431 gold_travel/admin.py:456 gold_travel/models.py:206
+#: gold_travel/admin.py:431 gold_travel/admin.py:456 gold_travel/models.py:208
 #: gold_travel/templates/admin/gold_travel/appmovegold/pagination.html:13
 msgid "gold_weight_in_gram"
 msgstr "اجمالي وزن الذهب بالجرام"
@@ -2543,7 +2544,7 @@ msgid "destination"
 msgstr "الوجهة"
 
 #: gold_travel/admin.py:431 gold_travel/admin.py:452 gold_travel/models.py:70
-#: gold_travel/models.py:71 gold_travel/models.py:120 gold_travel/models.py:205
+#: gold_travel/models.py:71 gold_travel/models.py:120 gold_travel/models.py:207
 msgid "owner_name"
 msgstr "اسم المالك"
 
@@ -2576,7 +2577,7 @@ msgid "repr_identity_issue_date"
 msgstr "تاريخ اصدار هوية الناقل"
 
 #: gold_travel/admin.py:432 gold_travel/admin.py:473 gold_travel/models.py:131
-#: gold_travel/models.py:208 pa/models.py:95 pa/models.py:133 pa/models.py:197
+#: gold_travel/models.py:210 pa/models.py:95 pa/models.py:133 pa/models.py:197
 #: pa/models.py:307 pa/models.py:519 pa/tables/payment.py:34
 #: pa/tables/request.py:53 production_control/models.py:35
 #: production_control/models.py:60 production_control/models.py:101
@@ -2587,10 +2588,18 @@ msgstr "الحالة"
 msgid "source_state"
 msgstr "الولاية المصدر"
 
-#: gold_travel/admin.py:466 gold_travel/admin.py:469 gold_travel/admin.py:531
-#: gold_travel/admin.py:534
+#: gold_travel/admin.py:466 gold_travel/admin.py:469 gold_travel/admin.py:532
+#: gold_travel/admin.py:535
 msgid "Show certificate"
 msgstr "عرض الشهادة"
+
+#: gold_travel/admin.py:586 gold_travel/admin.py:595
+msgid "application changed successfully!"
+msgstr "تم تعديل الطلب بنجاح."
+
+#: gold_travel/admin.py:588 gold_travel/admin.py:594 gold_travel/models.py:203
+msgid "state_done"
+msgstr "تم التنفيذ"
 
 #: gold_travel/apps.py:7
 msgid "Gold travel"
@@ -2653,7 +2662,7 @@ msgstr "الممثلين بالولاية"
 msgid "ssmo_name"
 msgstr "الهيئة السودانية للمواصفات والمقاييس / بورتسودان"
 
-#: gold_travel/models.py:89 gold_travel/models.py:200
+#: gold_travel/models.py:89 gold_travel/models.py:201
 #: production_control/models.py:13
 msgid "state_draft"
 msgstr "مسودة"
@@ -2722,16 +2731,16 @@ msgstr "تفاصيل السبيكة"
 msgid "alloy details"
 msgstr "تفاصيل السبائك"
 
-#: gold_travel/models.py:201 production_control/admin.py:41
+#: gold_travel/models.py:202 production_control/admin.py:41
 #: production_control/models.py:14
 msgid "state_confirmed"
 msgstr "مؤكد"
 
-#: gold_travel/models.py:207
+#: gold_travel/models.py:209
 msgid "issuer"
 msgstr "مصدر الطلب"
 
-#: gold_travel/models.py:215 gold_travel/models.py:216
+#: gold_travel/models.py:217 gold_travel/models.py:218
 msgid "prepare gold"
 msgstr "استمارة شراء وسبك وتجهيز الذهب"
 
