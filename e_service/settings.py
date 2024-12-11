@@ -161,7 +161,7 @@ DATABASES = {
         "HOST": config('DB_HOST'),
         "PORT": config('DB_PORT'),
         "SSLMODE" :'require',
-        # "CONN_MAX_AGE": 300,
+        "CONN_MAX_AGE": 15,
         "CONN_HEALTH_CHECKS": True,
         "ATOMIC_REQUESTS": True,
         "OPTIONS": {
