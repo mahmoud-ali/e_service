@@ -399,7 +399,7 @@ admin.site.register(TblCompanyProductionLicense,TblCompanyProductionLicenseAdmin
 class TblCompanyProductionUserRoleAdmin( admin.ModelAdmin):
     
     list_display = ["company","user"]        
-    list_filter = ["company","user"]
+    search_fields = ["company__name_ar","company__name_en","user__email"]
     
 admin.site.register(TblCompanyProductionUserRole, TblCompanyProductionUserRoleAdmin)
 
