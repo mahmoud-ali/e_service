@@ -165,7 +165,7 @@ DATABASES = {
         "CONN_HEALTH_CHECKS": True,
         "ATOMIC_REQUESTS": True,
         "OPTIONS": {
-            "pool": True,
+            # "pool": True,
         },
     }    
 }
