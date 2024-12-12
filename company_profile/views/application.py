@@ -150,7 +150,7 @@ class ApplicationMasterDetailReadonlyView(LoginRequiredMixin,DetailView):
 
     def get(self,request,pk=0):        
         obj = self.get_object()
-        if obj.company == self.request.user.pro_company.company:
+        if self.request.user.is_superuser or (hasattr(self.request.user,'pro_company') and obj.company == self.request.user.pro_company.company):
             self.extra_context["form"] = self.form_class(instance=obj)
             self.extra_context["detail_formset"] = self.detail_formset(instance=obj)
             self.extra_context["object"] = obj
