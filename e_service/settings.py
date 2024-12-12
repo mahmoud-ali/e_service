@@ -97,6 +97,7 @@ INSTALLED_APPS = [
     'gold_travel',
     'mokhalafat',
     'production_control',
+    'gold_travel_traditional',
 
     # Debug
     'debug_toolbar',
@@ -161,7 +162,7 @@ DATABASES = {
         "HOST": config('DB_HOST'),
         "PORT": config('DB_PORT'),
         "SSLMODE" :'require',
-        "CONN_MAX_AGE": 15,
+        # "CONN_MAX_AGE": 15,
         "CONN_HEALTH_CHECKS": True,
         "ATOMIC_REQUESTS": True,
         "OPTIONS": {
