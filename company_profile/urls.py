@@ -236,4 +236,4 @@ urlpatterns = [
     path('pa_request/<int:pk>/show/', AppRequestReadonlyView.as_view(), name='pa_request_show'),    
 
 
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+] + static('/app' + settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
