@@ -119,7 +119,10 @@ class HomePageView(LoginRequiredMixin,TranslationMixin,TemplateView):
         if self.request.user.is_superuser:
             return filter_dict
         
-        return filter_dict.update({'company__id':self.request.user.pro_company.company.id})
+        
+        filter_dict.update({'company__id':self.request.user.pro_company.company.id})
+        dict = filter_dict
+        return dict
 
     def dispatch(self, *args, **kwargs): 
         is_admin = self.request.user.is_superuser
