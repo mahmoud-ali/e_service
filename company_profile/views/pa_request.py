@@ -141,8 +141,8 @@ class ApplicationReadonlyView(LoginRequiredMixin,UserPassesTestMixin,SingleObjec
         self.success_url = reverse_lazy(self.menu_name)    
         self.extra_context = {
                             "menu_name":self.menu_name,
-                            "menu_edit_name":self.menu_edit_name,
-                            "menu_delete_name":self.menu_delete_name,
+                            "menu_edit_name":self.menu_name,
+                            "menu_delete_name":self.menu_name,
                             "title":self.title, 
                             "form": self.form_class,
                             "details": self.details_formset,
