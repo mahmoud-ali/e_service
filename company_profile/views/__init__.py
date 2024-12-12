@@ -114,25 +114,33 @@ class CompanySummaryView(LoginRequiredMixin,TemplateView):
 class HomePageView(LoginRequiredMixin,TranslationMixin,TemplateView):
     template_name = 'company_profile/home.html'
     menu_name = 'profile:home'
+
+    def _get_filter(self,filter_dict={}):
+        if self.request.user.is_superuser:
+            return filter_dict
+        
+        return filter_dict.update({'company__id':self.request.user.pro_company.company.id})
+
     def dispatch(self, *args, **kwargs): 
-        if hasattr(self.request.user,'pro_company'):
+        is_admin = self.request.user.is_superuser
+        if is_admin or hasattr(self.request.user,'pro_company'):
             in_progress_qs = get_app_metrics( \
                 ['id','company','created_at','updated_at'], #fields
-                {'state__in':[SUBMITTED,ACCEPTED],'company__id':self.request.user.pro_company.company.id}, #filter
+                self._get_filter({'state__in':[SUBMITTED,ACCEPTED]}), #,'company__id':self.request.user.pro_company.company.id}, #filter
                 ['company'], #select_related
                 ["-created_at"] #order_by
             )[:10]
     
             accepted_qs = get_app_metrics( \
                 ['id','company','created_at','updated_at'], #fields
-                {'state__in':[APPROVED],'company__id':self.request.user.pro_company.company.id}, #filter
+                self._get_filter({'state__in':[APPROVED]}), #{'state__in':[APPROVED],'company__id':self.request.user.pro_company.company.id}, #filter
                 ['company'], #select_related
                 ["-created_at"] #order_by
             )[:10]
 
             rejected_qs = get_app_metrics( \
                 ['id','company','created_at','updated_at'], #fields
-                {'state__in':[REJECTED],'company__id':self.request.user.pro_company.company.id}, #filter
+                self._get_filter({'state__in':[REJECTED]}), #{'state__in':[REJECTED],'company__id':self.request.user.pro_company.company.id}, #filter
                 ['company'], #select_related
                 ["-created_at"] #order_by
             )[:10]
