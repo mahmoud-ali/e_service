@@ -36,7 +36,7 @@
 
 {% load static  %}
 {% load help_request %}
-
+{% load company_user %}
 <!-- <link rel="stylesheet" type="text/css" href="{% static 'admin/css/base.css' %}" /> -->
 <link rel="stylesheet" type="text/css" href="{% static 'admin/css/widgets.css' %}" />
 
@@ -117,11 +117,11 @@ $(document).ready(function(){
 			{% endblock content %}
 	  </div>	  
 
-	  {% if user.is_authenticated %}
-
 		  <div class="col-sm-4 col-md-2 sidebar">
 		  <h4 class="text-center">{% translate "Menu" %}</h4>
 		  <ul class="nav nav-sidebar">
+			{% if  user|is_company_user %}
+
 			 <li class="{% if menu_name == 'profile:home' %}active{% endif %} ">  
 					<a href="{% url 'profile:home' %}">{% translate "Home page" %}</a>
 			 </li>
@@ -276,11 +276,12 @@ $(document).ready(function(){
 			 <li class="{% if menu_name == 'profile:app_hse_performance_list' %}active{% endif %} ">  
 				<a href="{% url 'profile:app_hse_performance_list' %}">{% translate "Application: HSE Performance Report" %}</a>
 		 	</li>
-
-		  </ul>
+			 {% else %}
+			 <p>Not a valid company! contact Adminisrtator.</p>
+			 {% endif %}
+			 </ul>
 		  </div>	  
 
-		  {% endif %}
 
 		  {% comment %} <div class="col-sm-8 col-sm-offset-4 col-md-9 col-md-offset-3 main"> {% endcomment %}
 		</div>
