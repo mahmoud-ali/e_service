@@ -93,8 +93,9 @@ class ApplicationReadonlyView(LoginRequiredMixin,SingleObjectMixin,View):
                         
     def get(self,request,pk=0):     
         obj = self.get_object()
-        self.extra_context["form"] = self.form_class(instance=obj)
-        self.extra_context["object"] = obj
+        if obj.company == self.request.user.pro_company.company:
+            self.extra_context["form"] = self.form_class(instance=obj)
+            self.extra_context["object"] = obj
         return render(request, self.template_name, self.extra_context)
 
 class ApplicationMasterDetailCreateView(LoginRequiredMixin,View):
@@ -149,9 +150,10 @@ class ApplicationMasterDetailReadonlyView(LoginRequiredMixin,DetailView):
 
     def get(self,request,pk=0):        
         obj = self.get_object()
-        self.extra_context["form"] = self.form_class(instance=obj)
-        self.extra_context["detail_formset"] = self.detail_formset(instance=obj)
-        self.extra_context["object"] = obj
+        if obj.company == self.request.user.pro_company.company:
+            self.extra_context["form"] = self.form_class(instance=obj)
+            self.extra_context["detail_formset"] = self.detail_formset(instance=obj)
+            self.extra_context["object"] = obj
 
         return render(request, self.template_name, self.extra_context)
 
