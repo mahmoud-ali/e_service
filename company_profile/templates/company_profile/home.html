@@ -11,12 +11,14 @@
 {%if accepted_progress%}
 <table id="detail_table"  class="table table-bordered">
     <tr>
+        <th>#</th>
         <th style="width:60%">{% translate 'application'%}</th>
         <th>{% translate 'created_at'%}</th>
         <th>{% translate 'updated_at'%}</th>
     </tr>
     {% for record in accepted_progress %}
     <tr>
+        <td>{{ forloop.counter }}</td>
         <td><a href="{% url record.app_url record.id %}" class="changelink">{% translate record.app%} {% if user.is_superuser%} ({{record.company}}) {% endif%}</a></td>
         <td>{{record.created_at}}</td>
         <td>{{record.updated_at}}</td>
@@ -33,12 +35,14 @@
 {%if rejected_progress%}
 <table id="detail_table"  class="table table-bordered">
     <tr>
+        <th>#</th>
         <th style="width:60%">{% translate 'application'%}</th>
         <th>{% translate 'created_at'%}</th>
         <th>{% translate 'updated_at'%}</th>
     </tr>
     {% for record in rejected_progress %}
     <tr>
+        <td>{{ forloop.counter }}</td>
         <td><a href="{% url record.app_url record.id %}" class="changelink">{% translate record.app%} {% if user.is_superuser%} ({{record.company}}) {% endif%}</a></td>
         <td>{{record.created_at}}</td>
         <td>{{record.updated_at}}</td>
@@ -54,12 +58,14 @@
 {%if in_progress%}
 <table id="detail_table"  class="table table-bordered">
     <tr>
+        <th>#</th>
         <th style="width:60%">{% translate 'application'%}</th>
         <th>{% translate 'created_at'%}</th>
         <th>{% translate 'updated_at'%}</th>
     </tr>
     {% for record in in_progress %}
     <tr>
+        <td>{{ forloop.counter }}</td>
         <td><a href="{% url record.app_url record.id %}" class="changelink">{% translate record.app%} {% if user.is_superuser%} ({{record.company}}) {% endif%}</a></td>
         <td>{{record.created_at}}</td>
         <td>{{record.updated_at}}</td>
