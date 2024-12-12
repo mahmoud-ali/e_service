@@ -61,6 +61,8 @@
 <a target="_blank" href="{{ MEDIA_URL }}{{ object.whom_attachement_file}}">{% translate "whom_attachement_file" %}</a>
 {% endif %}
 
+{{ form.media }}
+
 <script>
     $(document).ready(function(){
         $('div.main form :input').attr('disabled','true');
