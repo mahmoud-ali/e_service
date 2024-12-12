@@ -126,27 +126,28 @@ class HomePageView(LoginRequiredMixin,TranslationMixin,TemplateView):
 
     def dispatch(self, *args, **kwargs): 
         is_admin = self.request.user.is_superuser
+        data_length = 100 if is_admin else 10
         if is_admin or hasattr(self.request.user,'pro_company'):
             in_progress_qs = get_app_metrics( \
                 ['id','company','created_at','updated_at'], #fields
                 self._get_filter({'state__in':[SUBMITTED,ACCEPTED]}), #,'company__id':self.request.user.pro_company.company.id}, #filter
                 ['company'], #select_related
                 ["-created_at"] #order_by
-            )[:10]
+            )[:data_length]
     
             accepted_qs = get_app_metrics( \
                 ['id','company','created_at','updated_at'], #fields
                 self._get_filter({'state__in':[APPROVED]}), #{'state__in':[APPROVED],'company__id':self.request.user.pro_company.company.id}, #filter
                 ['company'], #select_related
                 ["-created_at"] #order_by
-            )[:10]
+            )[:data_length]
 
             rejected_qs = get_app_metrics( \
                 ['id','company','created_at','updated_at'], #fields
                 self._get_filter({'state__in':[REJECTED]}), #{'state__in':[REJECTED],'company__id':self.request.user.pro_company.company.id}, #filter
                 ['company'], #select_related
                 ["-created_at"] #order_by
-            )[:10]
+            )[:data_length]
 
             self.extra_context = {
                 "accepted_progress":accepted_qs,
