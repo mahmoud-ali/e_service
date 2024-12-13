@@ -19,6 +19,7 @@ django-bootstrap-datepicker-plus
 djangorestframework
 #djoser
 # gunicorn
+django-user-sessions
 django-otp
 qrcode
 ipython
