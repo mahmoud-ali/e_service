@@ -20,6 +20,7 @@ djangorestframework
 #djoser
 # gunicorn
 django-user-sessions
+setuptools
 django-otp
 qrcode
 ipython
