@@ -1,0 +1,23 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_urls static %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+<a href="{% url 'admin:index' %}">{% translate 'Home' %}</a>
+&rsaquo; <a href="{% url 'admin:app_list' app_label=opts.app_label %}">{{ opts.app_config.verbose_name }}</a>
+&rsaquo; <a href="{% url opts|admin_urlname:'changelist' %}">{{ opts.verbose_name_plural|capfirst }}</a>
+&rsaquo; <a href="{% url opts|admin_urlname:'change' object.pk|admin_urlquote %}">{{ object|truncatewords:"18" }}</a>
+&rsaquo; {% translate 'state_sold' %}
+</div>
+{% endblock %}
+
+{% block content %}
+<form method="post">{% csrf_token %}
+    <div id="content-main">
+        {{form}}
+        <div class="submit-row">
+            <input class="default" type="submit" value="{% translate 'Save' %}" name="_save">
+        </div>
+    </div>
+</form>
+{% endblock %}

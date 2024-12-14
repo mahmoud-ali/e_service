@@ -314,8 +314,10 @@ if not DEBUG:
 SHOW_REQUESTS_URL = "profile:pa_request_show"
 
 CRONJOBS = [
-    ('*/30 5-17 * * *', 'pa.cron.generate_requests')
+    ('*/30 5-17 * * *', 'pa.cron.generate_requests'),
+    ('0 0 * * *', 'gold_travel_traditional.cron.expired_app'),
 ]
+
 
 SILENCED_SYSTEM_CHECKS = ['admin.E410']
 
