@@ -1,0 +1,33 @@
+ul.actions-list {
+    display: block;
+    padding: 0;
+    color: var(--object-tools-fg);
+    font-weight: 400;
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* ul.actions-list li {
+    display: block;
+    float: right;
+    margin-left: 5px;
+    height: 1rem;
+} */
+
+ul.actions-list a {
+    border-radius: 15px;
+}
+
+ul.actions-list a:link, ul.actions-list a:visited {
+    display: block;
+    float: right;
+    padding: 3px 12px;
+    /* padding-left: 12px; */
+    background: var(--object-tools-bg);
+    color: var(--object-tools-fg);
+    font-weight: 400;
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}

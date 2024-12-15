@@ -1,9 +1,10 @@
 from django.utils import timezone
 from .models import AppMoveGoldTraditional
 
-def before_three_days():
-    return timezone.now() - timezone.timedelta(days=3)
-
 def expired_app():
-    for obj in AppMoveGoldTraditional.objects.filter(issue_date__lt=before_three_days):
-        obj.state = AppMoveGoldTraditional.STATE_EXPIRED
+    before_three_days = (timezone.now() - timezone.timedelta(days=3)).date()
+
+    AppMoveGoldTraditional.objects\
+        .filter(state__in=[AppMoveGoldTraditional.STATE_NEW,AppMoveGoldTraditional.STATE_RENEW],issue_date__lt=before_three_days)\
+        .update(state=AppMoveGoldTraditional.STATE_EXPIRED)
+    

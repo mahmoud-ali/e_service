@@ -53,7 +53,7 @@ class GoldTravelTraditionalUserDetail(models.Model):
     soug  = models.ForeignKey(LkpSoag, on_delete=models.PROTECT,verbose_name=_("Soag"))
 
     def __str__(self):
-        return f'{self.master} ({self.company})'
+        return f'{self.master} ({self.soug})'
 
     class Meta:
         verbose_name = _("gold_travel_user_detail")
@@ -64,12 +64,14 @@ class AppMoveGoldTraditional(LoggingModel):
     STATE_SOLD = 2
     STATE_EXPIRED = 3
     STATE_RENEW = 4
+    STATE_CANCLED = 5
 
     STATE_CHOICES = {
         STATE_NEW: _('state_new'),
         STATE_SOLD: _('state_sold'),
         STATE_EXPIRED: _('state_expired'),
         STATE_RENEW: _('state_renew'),
+        STATE_CANCLED: _('state_cancled'),
     }
 
     # IDENTITY_PASSPORT = 1
@@ -105,7 +107,7 @@ class AppMoveGoldTraditional(LoggingModel):
 
     almushtari_name = models.CharField(_("almushtari_name"),max_length=150,null=True,blank=True)
 
-    tarikh_akhar_tajdid = models.DateField(_("tarikh_akhar_tajdid"),null=True,blank=True)
+    parent = models.OneToOneField('self', on_delete=models.PROTECT,related_name="child",verbose_name=_("parent"),null=True,blank=True)
 
     state = models.IntegerField(_("record_state"), choices=STATE_CHOICES, default=STATE_NEW)
     # attachement_file = models.FileField(_("attachement_file"),upload_to=attachement_path,null=True,blank=True)

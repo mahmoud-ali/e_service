@@ -7,6 +7,5 @@ class GoldTravelTraditionalConfig(AppConfig):
     verbose_name = _("Gold travel Traditional")
 
     def ready(self) -> None:
-
         return super().ready()
     

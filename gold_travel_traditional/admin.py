@@ -1,18 +1,36 @@
 from django.db import models
+from django.http import HttpResponseRedirect
 from django.shortcuts import redirect
 from django.urls import path, reverse
 
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django.utils.html import format_html
 from django.template.response import TemplateResponse
-from django.contrib import admin
 from django.forms.widgets import TextInput
 
-from company_profile.models import LkpState
-from gold_travel_traditional.forms import AppMoveGoldTraditionalRenewForm, AppMoveGoldTraditionalSoldForm
-from gold_travel_traditional.models import AppMoveGoldTraditional, GoldTravelTraditionalUserDetail, LkpJihatAlaisdar, LkpSoag
+from django.contrib import admin
 
-DEFAULT_STATE = LkpState.objects.get(pk=1)
+from company_profile.models import LkpState
+from gold_travel_traditional.forms import AppMoveGoldTraditionalRenewForm, AppMoveGoldTraditionalSoldForm, GoldTravelTraditionalUserForm
+from gold_travel_traditional.models import AppMoveGoldTraditional, GoldTravelTraditionalUser, GoldTravelTraditionalUserDetail, LkpJihatAlaisdar, LkpSoag
+
+def get_user_state(request):
+    try:
+        state = request.user.gold_travel_traditional.state
+        return state  
+    except:
+        pass
+
+    return None
+
+class LogAdminMixin:
+    def save_model(self, request, obj, form, change):
+        if obj.pk:
+            obj.updated_by = request.user
+        else:
+            obj.created_by = obj.updated_by = request.user
+        return super().save_model(request, obj, form, change)                
 
 class LkpSoagAdmin(admin.ModelAdmin):
     model = LkpSoag
@@ -35,46 +53,13 @@ class GoldTravelTraditionalUserDetailInline(admin.TabularInline):
     exclude = ["created_at","created_by","updated_at","updated_by"]
     extra = 1    
 
-class GoldTravelTraditionalUser(admin.ModelAdmin):
-    model = AppMoveGoldTraditional
+class GoldTravelTraditionalUserAdmin(LogAdminMixin,admin.ModelAdmin):
+    form = GoldTravelTraditionalUserForm
     inlines = [GoldTravelTraditionalUserDetailInline]     
 
     fields = ["user","name","state"]
 
-class LogAdminMixin:
-    def has_add_permission(self, request):
-        try:
-            request.user.gold_travel_traditional
-            return True
-        except:
-            pass
-        
-        return super().has_add_permission(request)
-
-    def has_change_permission(self, request, obj=None):
-        try:
-            request.user.gold_travel_traditional
-            return True
-        except:
-            pass
-        
-        return super().has_change_permission(request,obj)
-
-    def has_delete_permission(self, request, obj=None):
-        try:
-            request.user.gold_travel_traditional
-            return True
-        except:
-            pass
-     
-        return super().has_delete_permission(request,obj)
-
-    def save_model(self, request, obj, form, change):
-        if obj.pk:
-            obj.updated_by = request.user
-        else:
-            obj.created_by = obj.updated_by = request.user
-        return super().save_model(request, obj, form, change)                
+admin.site.register(GoldTravelTraditionalUser, GoldTravelTraditionalUserAdmin)
 
 class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
     model = AppMoveGoldTraditional
@@ -95,11 +80,11 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
         (
             _("others"),
             {
-                'fields': [("jihat_alaisdar","wijhat_altarhil",),"muharir_alaistimara"]
+                'fields': [("jihat_alaisdar","wijhat_altarhil",),("muharir_alaistimara","almushtari_name")]
             },
         ),
     ]
-
+    readonly_fields = ["almushtari_name"]
     list_display = ["code","issue_date","gold_weight_in_gram","almustafid_name","almustafid_phone","jihat_alaisdar","wijhat_altarhil","almushtari_name","source_state","state","show_actions"]
     list_filter = ["issue_date",("state",admin.ChoicesFieldListFilter),("source_state",admin.RelatedFieldListFilter),("jihat_alaisdar",admin.RelatedFieldListFilter),("wijhat_altarhil",admin.RelatedFieldListFilter)]
     search_fields = ["code","muharir_alaistimara","almustafid_name","almustafid_phone","almushtari_name"]
@@ -111,11 +96,47 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
     }    
 
     view_on_site = False
+    class Media:
+        css = {
+        "all": ["gold_travel_traditional/css/all.css"],
+        }
+
+        js = ["admin/js/jquery.init.js"]
 
     def save_model(self, request, obj, form, change):
-        obj.source_state = DEFAULT_STATE
+        obj.source_state = get_user_state(request)
 
         return super().save_model(request, obj, form, change)                
+
+    def has_add_permission(self, request):
+        try:
+            request.user.gold_travel_traditional
+            return True
+        except:
+            pass
+        
+        return super().has_add_permission(request)
+
+    def has_change_permission(self, request, obj=None):
+        # try:
+        #     request.user.gold_travel_traditional
+        #     if obj and obj.state in [AppMoveGoldTraditional.STATE_NEW,AppMoveGoldTraditional.STATE_RENEW]:
+        #         return True
+        #     else:
+        #         return False
+        # except:
+        #     pass
+
+        if obj and obj.state in [AppMoveGoldTraditional.STATE_SOLD,AppMoveGoldTraditional.STATE_CANCLED]:
+            return False
+        
+        return super().has_change_permission(request,obj)
+
+    def has_delete_permission(self, request, obj=None):
+        if obj and obj.state in [AppMoveGoldTraditional.STATE_SOLD,AppMoveGoldTraditional.STATE_CANCLED]:
+            return False
+
+        return super().has_delete_permission(request,obj)
 
     def get_urls(self):
         urls = super().get_urls()
@@ -131,8 +152,11 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
         if request.method == "POST":
             my_form = AppMoveGoldTraditionalSoldForm(request.POST,instance=obj)
             if my_form.is_valid():
-                my_form.save()
-                self.message_user(request,_('application changed successfully!'))
+                if obj and obj.state in [AppMoveGoldTraditional.STATE_NEW,AppMoveGoldTraditional.STATE_RENEW]:
+                    new_obj = my_form.save(commit=False)
+                    new_obj.state = AppMoveGoldTraditional.STATE_SOLD
+                    new_obj.save()
+                    self.message_user(request,_('application changed successfully!'))
 
             return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
         else:
@@ -150,49 +174,107 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
 
     def renew_view(self, request, pk):
         obj = AppMoveGoldTraditional.objects.get(pk=pk)
-        obj_dict = obj.__dict__
-        obj_dict['id'] = None
-        obj_dict['code'] = ''
-        print("dict",obj_dict)
 
         if request.method == "POST":
             my_form = AppMoveGoldTraditionalRenewForm(request.POST)
-            new_obj = my_form.save(commit=False)
-            new_obj.state = AppMoveGoldTraditional.STATE_RENEW
-            new_obj.created_by = new_obj.updated_by = request.user
-            new_obj.source_state = DEFAULT_STATE
 
             if my_form.is_valid():
-                my_form.save()
-                self.message_user(request,_('application changed successfully!'))
+                if obj and obj.state in [AppMoveGoldTraditional.STATE_EXPIRED]:
+                    obj.state = AppMoveGoldTraditional.STATE_CANCLED
+                    obj.save()
 
-            return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
+                    new_obj = my_form.save(commit=False)
+                    new_obj.id = new_obj.pk = None
+                    new_obj.state = AppMoveGoldTraditional.STATE_RENEW
+                    new_obj.created_by = new_obj.updated_by = request.user
+                    new_obj.source_state = get_user_state(request)
+                    new_obj.parent = obj
+
+                    new_obj.save()
+                    self.message_user(request,_('application changed successfully!'))
+
+                return HttpResponseRedirect(
+                    reverse(
+                        "%s:%s_%s_changelist"
+                        % (
+                            self.admin_site.name,
+                            obj._meta.app_label,
+                            obj._meta.model_name,
+                        )
+                    )
+                )
         else:
-            my_form = AppMoveGoldTraditionalRenewForm(initial=obj_dict)
+            obj.code = ''
+            obj.issue_date = timezone.now().date()
+            my_form = AppMoveGoldTraditionalRenewForm(instance=obj)
 
+        fieldsets = [
+            (
+                None,
+                {
+                    'fields': [("code","issue_date"),"gold_weight_in_gram"]
+                },
+            ),
+            (
+                _("almustafid data"),
+                {
+                    'fields': [("almustafid_name","almustafid_phone")]
+                },
+            ),
+            (
+                _("others"),
+                {
+                    'fields': [("jihat_alaisdar","wijhat_altarhil",),("muharir_alaistimara",)]
+                },
+            ),
+        ]
+        # fieldsets = [(None, {"fields": list(my_form.base_fields)})]
+        admin_form = admin.helpers.AdminForm(my_form, fieldsets, {})
 
         context = dict(
             self.admin_site.each_context(request),
-            object=obj,
-            form=my_form,
-            opts=AppMoveGoldTraditional._meta,
+            original= obj,
+            adminform =admin_form, 
+            opts=self.opts,
             title=_("renew_data"),
+            has_add_permission=True,
+            has_change_permission=True,
+            has_delete_permission=False,
+            has_view_permission=True,
+            has_editable_inline_admin_formsets=False,
+            add=False,
+            change= True,
+            save_as=False,
+            show_save=False,
         )
-        return TemplateResponse(request, "admin/gold_travel_traditional/appmovegoldtraditional/sold_application.html", context)
+        # return TemplateResponse(request, "admin/gold_travel_traditional/appmovegoldtraditional/renew_application.html", context)
+        return TemplateResponse(request, "admin/change_form.html", context)
 
     @admin.display(description=_('show_actions'))
     def show_actions(self, obj):
         url = 'url'
-        return format_html('''
-                           <ul class="object-tools-actions">
-                                <li>
-                                    <a class="changelink" href="{id}/sold">{action1} </a>
-                                </li>
-                                <li>
-                                    <a class="changelink" href="{id}/renew">{action2} </a>
-                                </li>
-                            </ul>
-                            ''',
-                           id=obj.pk,action1=_('state_sold'),action2=_('state_renew')) #,state1=AppMoveGoldTraditional.STATE_SOLD,action2=_('state_renew'),state2=AppMoveGoldTraditional.STATE_RENEW
+
+        def get_allowed_actions(obj):
+            if obj.state in [AppMoveGoldTraditional.STATE_NEW,AppMoveGoldTraditional.STATE_RENEW]:
+                return format_html('''
+                    <ul class="actions-list">
+                        <li>
+                            <a class="changelink" href="{id}/sold">{action1} </a>
+                        </li>
+                    </ul>
+                ''',id=obj.pk,action1=_('state_sold'))
+            
+            if obj.state in [AppMoveGoldTraditional.STATE_EXPIRED]:
+                return format_html('''
+                    <ul class="actions-list">
+                        <li>
+                            <a class="changelink" href="{id}/renew">{action1} </a>
+                        </li>
+                    </ul>
+                ''',id=obj.pk,action1=_('state_renew'))
+            
+            return format_html('<ul class="actions-list"><li>&nbsp;</li></ul>')
+
+        return get_allowed_actions(obj)
 
 admin.site.register(AppMoveGoldTraditional, AppMoveGoldTraditionalAdmin)

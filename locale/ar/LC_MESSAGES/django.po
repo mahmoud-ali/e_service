@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-14 21:04+0200\n"
+"POT-Creation-Date: 2024-12-15 14:19+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -218,7 +218,7 @@ msgstr "عدد الرخص"
 #: company_profile/models.py:226 gold_travel/models.py:22
 #: gold_travel/models.py:48 gold_travel/models.py:133 gold_travel/models.py:211
 #: gold_travel_traditional/models.py:18 gold_travel_traditional/models.py:29
-#: gold_travel_traditional/models.py:42 gold_travel_traditional/models.py:112
+#: gold_travel_traditional/models.py:42 gold_travel_traditional/models.py:114
 #: pa/templates/pa/company_panel.html:21 traditional_api/models.py:30
 #: traditional_api/models.py:43
 msgid "state"
@@ -357,7 +357,7 @@ msgstr "تعدين صغير"
 
 #: company_profile/models.py:115 gold_travel/admin.py:435
 #: gold_travel/models.py:23 gold_travel/models.py:116
-#: gold_travel_traditional/models.py:92 mokhalafat/models.py:16
+#: gold_travel_traditional/models.py:94 mokhalafat/models.py:16
 msgid "code"
 msgstr "الرمز"
 
@@ -2520,7 +2520,7 @@ msgstr "وصلت الاستمارة للمواصفات والمقاييس"
 
 #: gold_travel/admin.py:399 gold_travel/admin.py:408 gold_travel/admin.py:417
 #: gold_travel/admin.py:426 gold_travel/admin.py:590 gold_travel/admin.py:599
-#: gold_travel_traditional/admin.py:133
+#: gold_travel_traditional/admin.py:153 gold_travel_traditional/admin.py:188
 msgid "application changed successfully!"
 msgstr "تم تعديل الطلب بنجاح."
 
@@ -2546,7 +2546,7 @@ msgstr "التاريخ"
 
 #: gold_travel/admin.py:435 gold_travel/admin.py:460 gold_travel/models.py:208
 #: gold_travel/templates/admin/gold_travel/appmovegold/pagination.html:13
-#: gold_travel_traditional/models.py:104
+#: gold_travel_traditional/models.py:106
 msgid "gold_weight_in_gram"
 msgstr "اجمالي وزن الذهب بالجرام"
 
@@ -2593,7 +2593,7 @@ msgid "repr_identity_issue_date"
 msgstr "تاريخ اصدار هوية الناقل"
 
 #: gold_travel/admin.py:436 gold_travel/admin.py:477 gold_travel/models.py:131
-#: gold_travel/models.py:210 gold_travel_traditional/models.py:110
+#: gold_travel/models.py:210 gold_travel_traditional/models.py:112
 #: pa/models.py:95 pa/models.py:133 pa/models.py:197 pa/models.py:307
 #: pa/models.py:519 pa/tables/payment.py:34 pa/tables/request.py:53
 #: production_control/models.py:35 production_control/models.py:60
@@ -2619,8 +2619,8 @@ msgid "Gold travel"
 msgstr "نقل وترحيل الذهب"
 
 #: gold_travel/forms.py:11 gold_travel/models.py:46
-#: gold_travel_traditional/models.py:40 production_control/forms.py:19
-#: production_control/models.py:32
+#: gold_travel_traditional/forms.py:12 gold_travel_traditional/models.py:40
+#: production_control/forms.py:19 production_control/models.py:32
 msgid "user"
 msgstr "المستخدم"
 
@@ -2763,30 +2763,38 @@ msgid "Show all"
 msgstr "عرض الكل"
 
 #: gold_travel/templates/admin/gold_travel/appmovegold/pagination.html:17
-#: gold_travel_traditional/templates/admin/gold_travel_traditional/appmovegoldtraditional/sold_application.html:18
+#: gold_travel_traditional/templates/admin/gold_travel_traditional/appmovegoldtraditional/sold_application.html:19
 msgid "Save"
 msgstr "حفظ"
 
-#: gold_travel_traditional/admin.py:88
+#: gold_travel_traditional/admin.py:75
 msgid "almustafid data"
 msgstr "بيانات المستفيد"
 
-#: gold_travel_traditional/admin.py:94
+#: gold_travel_traditional/admin.py:81
 msgid "others"
 msgstr "اخرى"
 
-#: gold_travel_traditional/admin.py:145
+#: gold_travel_traditional/admin.py:165
 msgid "almushtari_data"
 msgstr "بيانات المشتري"
 
-#: gold_travel_traditional/admin.py:149
+#: gold_travel_traditional/admin.py:214
+msgid "renew_data"
+msgstr "بيانات التجديد"
+
+#: gold_travel_traditional/admin.py:228
 msgid "show_actions"
 msgstr "العمليات"
 
-#: gold_travel_traditional/admin.py:159 gold_travel_traditional/models.py:70
+#: gold_travel_traditional/admin.py:238 gold_travel_traditional/models.py:71
 #: gold_travel_traditional/templates/admin/gold_travel_traditional/appmovegoldtraditional/sold_application.html:10
 msgid "state_sold"
 msgstr "تم البيع"
+
+#: gold_travel_traditional/admin.py:245 gold_travel_traditional/models.py:73
+msgid "state_renew"
+msgstr "تجديد"
 
 #: gold_travel_traditional/apps.py:7
 msgid "Gold travel Traditional"
@@ -2799,7 +2807,7 @@ msgid "Soag"
 msgstr "السوق"
 
 #: gold_travel_traditional/models.py:36 gold_travel_traditional/models.py:37
-#: gold_travel_traditional/models.py:101
+#: gold_travel_traditional/models.py:103
 msgid "jihat_alaisdar"
 msgstr "جهة الاصدار"
 
@@ -2819,49 +2827,59 @@ msgstr "تفاصيل مستخدم نظام نقل الذهب (تقليدي)"
 msgid "gold_travel_user_details"
 msgstr "تفاصيل مستخدمي نظام نقل الذهب (تقليدي)"
 
-#: gold_travel_traditional/models.py:69
+#: gold_travel_traditional/models.py:70
 msgid "state_new"
 msgstr "جديد"
 
-#: gold_travel_traditional/models.py:71
+#: gold_travel_traditional/models.py:72
 msgid "state_expired"
 msgstr "انتهاء صلاحية"
 
-#: gold_travel_traditional/models.py:72
-msgid "state_renew"
-msgstr "تجديد"
+#: gold_travel_traditional/models.py:74
+msgid "state_cancled"
+msgstr "تم الإلغاء"
 
-#: gold_travel_traditional/models.py:93
+#: gold_travel_traditional/models.py:95
 msgid "issue_date"
 msgstr "تاريخ الاصدار"
 
-#: gold_travel_traditional/models.py:94
+#: gold_travel_traditional/models.py:96
 msgid "muharir_alaistimara"
 msgstr "محرر الاستمارة"
 
-#: gold_travel_traditional/models.py:95
+#: gold_travel_traditional/models.py:97
 msgid "almustafid_name"
 msgstr "اسم المستفيد"
 
-#: gold_travel_traditional/models.py:96
+#: gold_travel_traditional/models.py:98
 msgid "almustafid_phone"
 msgstr "تلفون المستفيد"
 
-#: gold_travel_traditional/models.py:102
+#: gold_travel_traditional/models.py:104
 msgid "wijhat altarhil"
 msgstr "وجهة الترحيل"
 
-#: gold_travel_traditional/models.py:106
+#: gold_travel_traditional/models.py:108
 msgid "almushtari_name"
 msgstr "اسم المشتري"
 
-#: gold_travel_traditional/models.py:108
-msgid "tarikh_akhar_tajdid"
-msgstr "تاريخ اخر تجديد"
+#: gold_travel_traditional/models.py:110
+msgid "parent"
+msgstr ""
 
-#: gold_travel_traditional/models.py:119 gold_travel_traditional/models.py:120
+#: gold_travel_traditional/models.py:121 gold_travel_traditional/models.py:122
 msgid "Move Gold Traditional"
 msgstr "إستمارة ترحيل الذهب"
+
+#: gold_travel_traditional/templates/admin/gold_travel_traditional/appmovegoldtraditional/renew_application.html:22
+msgid "Please correct the error below."
+msgid_plural "Please correct the errors below."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+msgstr[4] ""
+msgstr[5] ""
 
 #: gold_travel_traditional/templates/admin/gold_travel_traditional/appmovegoldtraditional/sold_application.html:6
 #: templates/admin/company_profile/app_index.html:62
@@ -4234,6 +4252,9 @@ msgstr "تم تسجيل الدخول بنجاح."
 #: traditional_api/views.py:125
 msgid "Record added sucessfully."
 msgstr "تم حفظ السجل بنجاح."
+
+#~ msgid "tarikh_akhar_tajdid"
+#~ msgstr "تاريخ اخر تجديد"
 
 #~ msgid "gold data"
 #~ msgstr "بيانات الذهب المنقول"
