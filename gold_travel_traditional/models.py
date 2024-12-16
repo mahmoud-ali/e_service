@@ -19,7 +19,7 @@ class LkpSoag(models.Model):
     name = models.CharField(_("name"),max_length=100)
     
     def __str__(self):
-        return self.name
+        return f"{self.name} ({self.state})"
         
     class Meta:
         verbose_name = _("Soag")

@@ -12,7 +12,7 @@ from django.forms.widgets import TextInput
 from django.contrib import admin
 
 from company_profile.models import LkpState
-from gold_travel_traditional.forms import AppMoveGoldTraditionalRenewForm, AppMoveGoldTraditionalSoldForm, GoldTravelTraditionalUserForm
+from gold_travel_traditional.forms import AppMoveGoldTraditionalAddForm, AppMoveGoldTraditionalRenewForm, AppMoveGoldTraditionalSoldForm, GoldTravelTraditionalUserForm
 from gold_travel_traditional.models import AppMoveGoldTraditional, GoldTravelTraditionalUser, GoldTravelTraditionalUserDetail, LkpJihatAlaisdar, LkpSoag
 
 def get_user_state(request):
@@ -62,7 +62,8 @@ class GoldTravelTraditionalUserAdmin(LogAdminMixin,admin.ModelAdmin):
 admin.site.register(GoldTravelTraditionalUser, GoldTravelTraditionalUserAdmin)
 
 class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
-    model = AppMoveGoldTraditional
+    # model = AppMoveGoldTraditional
+    form = AppMoveGoldTraditionalAddForm
 
     fieldsets = [
         (
@@ -107,6 +108,28 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
         obj.source_state = get_user_state(request)
 
         return super().save_model(request, obj, form, change)                
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+
+        if request.user.is_superuser or request.user.groups.filter(name="gold_travel_traditional_manager").exists():
+            return qs
+
+        try:
+            gold_travel_traditional_user = request.user.gold_travel_traditional
+            qs = qs\
+                .filter(source_state=gold_travel_traditional_user.state)\
+                .filter(wijhat_altarhil__in=gold_travel_traditional_user.goldtraveltraditionaluserdetail_set.values_list('soug',flat=True))
+        except:
+            qs = qs.none()
+
+        return qs
+
+    def get_form(self, request, obj=None, **kwargs):
+        my_form = self.form
+        my_form.allowed_state = get_user_state(request)
+        kwargs["form"] = my_form
+        return super().get_form(request, obj, **kwargs)
 
     def has_add_permission(self, request):
         try:
