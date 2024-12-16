@@ -310,7 +310,8 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
         )
         header = [
                     _("code"),_("issue_date"),_('gold_weight_in_gram'),_("almustafid_name"),_("almustafid_phone"),_( "jihat_alaisdar"),\
-                    _("wijhat_altarhil"),_("almushtari_name"),_("muharir_alaistimara"),_("source_state"),_("record_state"),_("parent")
+                    _("wijhat_altarhil"),_("almushtari_name"),_("muharir_alaistimara"),_("source_state"),_("record_state"),_("parent"),\
+                    _("created_at"),_("created_by"),_("updated_at"),_("updated_by")
         ]
 
         # BOM
@@ -326,7 +327,8 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
 
             row = [
                     app.code,app.issue_date,app.gold_weight_in_gram,app.almustafid_name,app.almustafid_phone,app.jihat_alaisdar,\
-                    app.wijhat_altarhil,app.almushtari_name,app.muharir_alaistimara,app.source_state,app.get_state_display(),parent_code
+                    app.wijhat_altarhil,app.almushtari_name,app.muharir_alaistimara,app.source_state,app.get_state_display(),parent_code,\
+                    app.created_at,app.created_by,app.updated_at,app.updated_by,
             ]
             writer.writerow(row)
 
