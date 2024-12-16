@@ -2616,7 +2616,7 @@ msgstr "تم التنفيذ"
 
 #: gold_travel/apps.py:7
 msgid "Gold travel"
-msgstr "نقل وترحيل الذهب"
+msgstr "نقل وترحيل الذهب بغرض الصادر"
 
 #: gold_travel/forms.py:11 gold_travel/models.py:46
 #: gold_travel_traditional/forms.py:12 gold_travel_traditional/models.py:40
