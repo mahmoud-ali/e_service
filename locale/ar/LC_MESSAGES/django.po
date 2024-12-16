@@ -2798,7 +2798,7 @@ msgstr "تجديد"
 
 #: gold_travel_traditional/apps.py:7
 msgid "Gold travel Traditional"
-msgstr "رصد وتتبع نظام ترحيل الذهب - التعدين التقليدي"
+msgstr "نظام رصد وتتبع ترحيل الذهب (التعدين التقليدي)"
 
 #: gold_travel_traditional/forms.py:19 gold_travel_traditional/models.py:36
 #: gold_travel_traditional/models.py:37 gold_travel_traditional/models.py:103
