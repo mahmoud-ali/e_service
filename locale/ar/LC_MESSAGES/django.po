@@ -2865,7 +2865,7 @@ msgstr "اسم المشتري"
 
 #: gold_travel_traditional/models.py:110
 msgid "parent"
-msgstr ""
+msgstr "الوالد"
 
 #: gold_travel_traditional/models.py:121 gold_travel_traditional/models.py:122
 msgid "Move Gold Traditional"

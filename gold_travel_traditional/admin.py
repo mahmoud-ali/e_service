@@ -1,5 +1,7 @@
+import codecs
+import csv
 from django.db import models
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect
 from django.urls import path, reverse
 
@@ -89,7 +91,7 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
     list_display = ["code","issue_date","gold_weight_in_gram","almustafid_name","almustafid_phone","jihat_alaisdar","wijhat_altarhil","almushtari_name","source_state","state","show_actions"]
     list_filter = ["issue_date",("state",admin.ChoicesFieldListFilter),("source_state",admin.RelatedFieldListFilter),("jihat_alaisdar",admin.RelatedFieldListFilter),("wijhat_altarhil",admin.RelatedFieldListFilter)]
     search_fields = ["code","muharir_alaistimara","almustafid_name","almustafid_phone","almushtari_name"]
-    # actions = ['confirm_app','arrived_to_ssmo_app','waived_app','cancel_app','return_to_draft','export_as_csv']
+    actions = ['export_as_csv']
     autocomplete_fields = ["jihat_alaisdar","wijhat_altarhil"]
     # list_editable = ['owner_name_lst']
     formfield_overrides = {
@@ -299,5 +301,35 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
             return format_html('<ul class="actions-list"><li>&nbsp;</li></ul>')
 
         return get_allowed_actions(obj)
+
+    @admin.action(description=_('Export data'))
+    def export_as_csv(self, request, queryset):
+        response = HttpResponse(
+            content_type="text/csv",
+            headers={"Content-Disposition": f'attachment; filename="move_gold_form.csv"'},
+        )
+        header = [
+                    _("code"),_("issue_date"),_('gold_weight_in_gram'),_("almustafid_name"),_("almustafid_phone"),_( "jihat_alaisdar"),\
+                    _("wijhat_altarhil"),_("almushtari_name"),_("muharir_alaistimara"),_("record_state"),_("source_state"),_("parent")
+        ]
+
+        # BOM
+        response.write(codecs.BOM_UTF8)
+
+        writer = csv.writer(response)
+        writer.writerow(header)
+
+        for app in queryset:
+            parent_code = None
+            if hasattr(app,'parent') and app.parent:
+                parent_code = app.parent.code
+
+            row = [
+                    app.code,app.issue_date,app.gold_weight_in_gram,app.almustafid_name,app.almustafid_phone,app.jihat_alaisdar,\
+                    app.wijhat_altarhil,app.almushtari_name,app.muharir_alaistimara,app.get_state_display(),app.source_state,parent_code
+            ]
+            writer.writerow(row)
+
+        return response
 
 admin.site.register(AppMoveGoldTraditional, AppMoveGoldTraditionalAdmin)
