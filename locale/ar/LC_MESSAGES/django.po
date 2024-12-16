@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-15 14:19+0200\n"
+"POT-Creation-Date: 2024-12-16 09:20+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2520,7 +2520,7 @@ msgstr "وصلت الاستمارة للمواصفات والمقاييس"
 
 #: gold_travel/admin.py:399 gold_travel/admin.py:408 gold_travel/admin.py:417
 #: gold_travel/admin.py:426 gold_travel/admin.py:590 gold_travel/admin.py:599
-#: gold_travel_traditional/admin.py:153 gold_travel_traditional/admin.py:188
+#: gold_travel_traditional/admin.py:182 gold_travel_traditional/admin.py:217
 msgid "application changed successfully!"
 msgstr "تم تعديل الطلب بنجاح."
 
@@ -2767,32 +2767,32 @@ msgstr "عرض الكل"
 msgid "Save"
 msgstr "حفظ"
 
-#: gold_travel_traditional/admin.py:75
+#: gold_travel_traditional/admin.py:76 gold_travel_traditional/admin.py:242
 msgid "almustafid data"
 msgstr "بيانات المستفيد"
 
-#: gold_travel_traditional/admin.py:81
+#: gold_travel_traditional/admin.py:82 gold_travel_traditional/admin.py:248
 msgid "others"
 msgstr "اخرى"
 
-#: gold_travel_traditional/admin.py:165
+#: gold_travel_traditional/admin.py:194
 msgid "almushtari_data"
 msgstr "بيانات المشتري"
 
-#: gold_travel_traditional/admin.py:214
+#: gold_travel_traditional/admin.py:262
 msgid "renew_data"
 msgstr "بيانات التجديد"
 
-#: gold_travel_traditional/admin.py:228
+#: gold_travel_traditional/admin.py:276
 msgid "show_actions"
 msgstr "العمليات"
 
-#: gold_travel_traditional/admin.py:238 gold_travel_traditional/models.py:71
+#: gold_travel_traditional/admin.py:288 gold_travel_traditional/models.py:71
 #: gold_travel_traditional/templates/admin/gold_travel_traditional/appmovegoldtraditional/sold_application.html:10
 msgid "state_sold"
 msgstr "تم البيع"
 
-#: gold_travel_traditional/admin.py:245 gold_travel_traditional/models.py:73
+#: gold_travel_traditional/admin.py:297 gold_travel_traditional/models.py:73
 msgid "state_renew"
 msgstr "تجديد"
 
@@ -2800,16 +2800,16 @@ msgstr "تجديد"
 msgid "Gold travel Traditional"
 msgstr "رصد وتتبع نظام ترحيل الذهب - التعدين التقليدي"
 
+#: gold_travel_traditional/forms.py:19 gold_travel_traditional/models.py:36
+#: gold_travel_traditional/models.py:37 gold_travel_traditional/models.py:103
+msgid "jihat_alaisdar"
+msgstr "جهة الاصدار"
+
 #: gold_travel_traditional/models.py:25 gold_travel_traditional/models.py:26
 #: gold_travel_traditional/models.py:53 traditional_api/models.py:37
 #: traditional_api/models.py:38 traditional_api/models.py:44
 msgid "Soag"
 msgstr "السوق"
-
-#: gold_travel_traditional/models.py:36 gold_travel_traditional/models.py:37
-#: gold_travel_traditional/models.py:103
-msgid "jihat_alaisdar"
-msgstr "جهة الاصدار"
 
 #: gold_travel_traditional/models.py:48
 msgid "gold_travel_user"
@@ -2870,16 +2870,6 @@ msgstr ""
 #: gold_travel_traditional/models.py:121 gold_travel_traditional/models.py:122
 msgid "Move Gold Traditional"
 msgstr "إستمارة ترحيل الذهب"
-
-#: gold_travel_traditional/templates/admin/gold_travel_traditional/appmovegoldtraditional/renew_application.html:22
-msgid "Please correct the error below."
-msgid_plural "Please correct the errors below."
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
-msgstr[4] ""
-msgstr[5] ""
 
 #: gold_travel_traditional/templates/admin/gold_travel_traditional/appmovegoldtraditional/sold_application.html:6
 #: templates/admin/company_profile/app_index.html:62
