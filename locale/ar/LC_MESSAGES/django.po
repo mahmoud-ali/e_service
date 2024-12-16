@@ -4002,7 +4002,7 @@ msgstr "إجمالي الوزن بالجرام"
 
 #: production_control/apps.py:8
 msgid "production_control"
-msgstr "مراقب الانتاج"
+msgstr "نظام إنتاج وترحيل الذهب بالشركات"
 
 #: production_control/forms.py:74 production_control/models.py:81
 #: production_control/models.py:123
