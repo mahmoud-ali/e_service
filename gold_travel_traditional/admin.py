@@ -14,7 +14,7 @@ from django.forms.widgets import TextInput
 from django.contrib import admin
 
 from company_profile.models import LkpState
-from gold_travel_traditional.forms import AppMoveGoldTraditionalAddForm, AppMoveGoldTraditionalRenewForm, AppMoveGoldTraditionalSoldForm, GoldTravelTraditionalUserForm
+from gold_travel_traditional.forms import AppMoveGoldTraditionalAddForm, AppMoveGoldTraditionalRenewForm, AppMoveGoldTraditionalSoldForm, GoldTravelTraditionalUserDetailForm, GoldTravelTraditionalUserForm
 from gold_travel_traditional.models import AppMoveGoldTraditional, GoldTravelTraditionalUser, GoldTravelTraditionalUserDetail, LkpJihatAlaisdar, LkpSoag
 
 def get_user_state(request):
@@ -52,7 +52,7 @@ admin.site.register(LkpJihatAlaisdar, LkpJihatAlaisdarAdmin)
 
 class GoldTravelTraditionalUserDetailInline(admin.TabularInline):
     model = GoldTravelTraditionalUserDetail
-    exclude = ["created_at","created_by","updated_at","updated_by"]
+    form = GoldTravelTraditionalUserDetailForm
     extra = 1    
 
 class GoldTravelTraditionalUserAdmin(LogAdminMixin,admin.ModelAdmin):
@@ -60,6 +60,21 @@ class GoldTravelTraditionalUserAdmin(LogAdminMixin,admin.ModelAdmin):
     inlines = [GoldTravelTraditionalUserDetailInline]     
 
     fields = ["user","name","state"]
+
+    def get_readonly_fields(self,request, obj=None):
+        if obj:
+            return self.fields
+        
+        return super().get_readonly_fields(request,obj)
+    
+    def get_formsets_with_inlines(self, request, obj=None):
+        for inline in self.get_inline_instances(request, obj):
+            formset = inline.get_formset(request, obj)
+            if isinstance(inline,GoldTravelTraditionalUserDetailInline):
+                formset.form = GoldTravelTraditionalUserDetailForm
+                if obj:
+                    formset.form.allowed_state = obj.state
+            yield formset,inline
 
 admin.site.register(GoldTravelTraditionalUser, GoldTravelTraditionalUserAdmin)
 

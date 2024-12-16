@@ -4,7 +4,7 @@ from django.contrib import admin
 from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
 
-from gold_travel_traditional.models import AppMoveGoldTraditional, GoldTravelTraditionalUser, LkpJihatAlaisdar, LkpSoag
+from gold_travel_traditional.models import AppMoveGoldTraditional, GoldTravelTraditionalUser, GoldTravelTraditionalUserDetail, LkpJihatAlaisdar, LkpSoag
 
 UserModel = get_user_model()
 
@@ -14,6 +14,18 @@ class GoldTravelTraditionalUserForm(forms.ModelForm):
     class Meta:
         model = GoldTravelTraditionalUser    
         fields = ["user","name","state",] 
+
+class GoldTravelTraditionalUserDetailForm(forms.ModelForm):
+    soug = forms.ModelChoiceField(queryset=LkpSoag.objects.none(), label=_("user"))
+    allowed_state = None
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields["soug"].queryset = LkpSoag.objects.filter(state=self.allowed_state)
+
+    class Meta:
+        model = GoldTravelTraditionalUserDetail   
+        fields = ["soug",] 
 
 class AppMoveGoldTraditionalAddForm(forms.ModelForm):
     jihat_alaisdar = forms.ModelChoiceField(queryset=LkpJihatAlaisdar.objects.none(), label=_("jihat_alaisdar"))
