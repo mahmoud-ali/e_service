@@ -49,7 +49,7 @@ class GoldTravelTraditionalUser(LoggingModel):
         verbose_name_plural = _("gold_travel_users")
 
 class GoldTravelTraditionalUserDetail(models.Model):
-    master = models.ForeignKey(GoldTravelTraditionalUser, on_delete=models.PROTECT)    
+    master = models.ForeignKey(GoldTravelTraditionalUser, on_delete=models.CASCADE)    
     soug  = models.ForeignKey(LkpSoag, on_delete=models.PROTECT,verbose_name=_("Soag"))
 
     def __str__(self):
