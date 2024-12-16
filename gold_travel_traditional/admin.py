@@ -181,6 +181,7 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
                     new_obj = my_form.save(commit=False)
                     new_obj.state = AppMoveGoldTraditional.STATE_SOLD
                     new_obj.save()
+                    self.log_change(request,obj,_('state_sold'))
                     self.message_user(request,_('application changed successfully!'))
 
             return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
@@ -207,6 +208,7 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
                 if obj and obj.state in [AppMoveGoldTraditional.STATE_EXPIRED]:
                     obj.state = AppMoveGoldTraditional.STATE_CANCLED
                     obj.save()
+                    self.log_change(request,obj,_('state_cancled'))
 
                     new_obj = my_form.save(commit=False)
                     new_obj.id = new_obj.pk = None
@@ -216,6 +218,7 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
                     new_obj.parent = obj
 
                     new_obj.save()
+                    self.log_change(request,new_obj,_('state_renew'))
                     self.message_user(request,_('application changed successfully!'))
 
                 return HttpResponseRedirect(
