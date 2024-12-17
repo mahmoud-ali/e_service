@@ -120,7 +120,7 @@ class GoldProductionUserAdmin(StateMixin,LogAdminMixin,admin.ModelAdmin):
     model = GoldProductionUser
     inlines = [GoldProductionUserDetailInline]
     form = GoldProductionUserForm
-    list_display = ["user","name","moragib","company_type","state"]
+    list_display = ["moragib","company_type","state"] #"user","name",
     list_filter = ["moragib__company_type","state"]
     autocomplete_fields = ["moragib"]
 

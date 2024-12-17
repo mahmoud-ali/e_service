@@ -44,9 +44,9 @@ class LkpMoragib(models.Model):
         verbose_name_plural = _("moragib_list")
 
 class GoldProductionUser(LoggingModel):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.PROTECT,related_name="gold_production_user",verbose_name=_("user"))
-    name = models.CharField(_("name"),max_length=100)
-    moragib = models.OneToOneField(LkpMoragib, on_delete=models.PROTECT,related_name="moragib_distribution",verbose_name=_("moragib"),default=None,null=True)
+    # user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.PROTECT,related_name="gold_production_user",verbose_name=_("user"))
+    # name = models.CharField(_("name"),max_length=100)
+    moragib = models.OneToOneField(LkpMoragib, on_delete=models.PROTECT,related_name="moragib_distribution",verbose_name=_("moragib"))
     state = models.IntegerField(_("record_state"), choices=STATE_CHOICES, default=STATE_DRAFT)
 
     def __str__(self):

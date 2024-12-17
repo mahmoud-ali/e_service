@@ -23,10 +23,10 @@ class MoragibForm(forms.ModelForm):
         fields = ["company_type","user","name",] 
 
 class GoldProductionUserForm(forms.ModelForm):
-    user = forms.ModelChoiceField(queryset=UserModel.objects.filter(groups__name__in=('production_control_auditor',)), label=_("user"))
+    # user = forms.ModelChoiceField(queryset=UserModel.objects.filter(groups__name__in=('production_control_auditor',)), label=_("user"))
     class Meta:
         model = GoldProductionUser    
-        fields = ["user","name","moragib"] 
+        fields = ["moragib"] #"user","name",
 
 class TblCompanyProductionAutocomplete(autocomplete.Select2QuerySetView):
     def get_queryset(self):
