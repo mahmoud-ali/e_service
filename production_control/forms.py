@@ -2,10 +2,11 @@ from django import forms
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
+from dal import autocomplete
 
 from company_profile.models import TblCompanyProduction
 
-from .models import GoldProductionForm, GoldProductionFormAlloy, GoldProductionUser, GoldProductionUserDetail, GoldShippingForm, GoldShippingFormAlloy
+from .models import GoldProductionForm, GoldProductionFormAlloy, GoldProductionUser, GoldProductionUserDetail, GoldShippingForm, GoldShippingFormAlloy, LkpMoragib
 
 UserModel = get_user_model()
 
@@ -15,14 +16,38 @@ company_all_qs = TblCompanyProduction.objects.all()
 alloy_none = GoldProductionFormAlloy.objects.none()
 alloy_all_qs = GoldProductionFormAlloy.objects.all()
 
+class MoragibForm(forms.ModelForm):
+    user = forms.ModelChoiceField(queryset=UserModel.objects.filter(groups__name__in=('production_control_auditor',)), label=_("user"))
+    class Meta:
+        model = LkpMoragib    
+        fields = ["company_type","user","name",] 
+
 class GoldProductionUserForm(forms.ModelForm):
     user = forms.ModelChoiceField(queryset=UserModel.objects.filter(groups__name__in=('production_control_auditor',)), label=_("user"))
     class Meta:
         model = GoldProductionUser    
-        fields = ["user","name"] 
+        fields = ["user","name","moragib"] 
 
+class TblCompanyProductionAutocomplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        # Don't forget to filter out results depending on the visitor !
+        if not self.request.user.is_authenticated:
+            return TblCompanyProduction.objects.none()
+
+        qs = TblCompanyProduction.objects.all()
+
+        if self.q:
+            qs = qs.filter(name_ar__contains=self.q) | qs.filter(name_en__contains=self.q)
+
+        return qs
+    
 class GoldProductionUserDetailForm(forms.ModelForm):
-    company = forms.ModelChoiceField(queryset=company_none,disabled=True, label=_("company"))
+    company = forms.ModelChoiceField(
+        queryset=company_none,
+        disabled=True, 
+        label=_("company"), 
+        widget=autocomplete.ModelSelect2(url='admin:lkp_company_list'),
+    )
     company_types = []
     def __init__(self, *args, **kwargs):        
         super().__init__(*args, **kwargs)
@@ -30,9 +55,8 @@ class GoldProductionUserDetailForm(forms.ModelForm):
         self.fields["company"].queryset = company_all_qs.filter(company_type__in=self.company_types)
         self.fields["company"].disabled = False
     class Meta:
-        model = GoldProductionUserDetail     
+        model = GoldProductionUserDetail
         fields = ["company"] 
-        widgets = {}
 
 class GoldProductionFormForm(forms.ModelForm):
     company = forms.ModelChoiceField(queryset=company_none,disabled=True, label=_("company"))

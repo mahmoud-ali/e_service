@@ -1,9 +1,10 @@
 from django.contrib import admin
+from django.urls import path
 from django.utils.translation import gettext_lazy as _
 
 from company_profile.models import TblCompany
-from production_control.forms import GoldProductionFormForm, GoldProductionUserDetailForm, GoldProductionUserForm, GoldShippingFormAlloyForm, GoldShippingFormForm
-from production_control.models import STATE_CONFIRMED, STATE_DRAFT, GoldProductionForm, GoldProductionFormAlloy, GoldProductionUser, GoldProductionUserDetail, GoldShippingForm, GoldShippingFormAlloy
+from production_control.forms import GoldProductionFormForm, GoldProductionUserDetailForm, GoldProductionUserForm, GoldShippingFormAlloyForm, GoldShippingFormForm, MoragibForm, TblCompanyProductionAutocomplete
+from production_control.models import STATE_CONFIRMED, STATE_DRAFT, GoldProductionForm, GoldProductionFormAlloy, GoldProductionUser, GoldProductionUserDetail, GoldShippingForm, GoldShippingFormAlloy, LkpMoragib
 
 def get_company_types(request):
     company_types = []
@@ -100,18 +101,28 @@ class AuditorMixin:
 
         return False
 
+@admin.register(LkpMoragib)
+class LkpMoragibAdmin(admin.ModelAdmin):
+    model = LkpMoragib
+    form = MoragibForm
+    list_display = ["name","user","company_type"]
+    search_fields = ["name","user__email"]
+    list_filter = ["company_type"]
+
 class GoldProductionUserDetailInline(admin.TabularInline):
     model = GoldProductionUserDetail
-    fields = ['company']
-    autocomplete_fields = ['company']
+    form = GoldProductionUserDetailForm
+    # fields = ['company']
+
     extra = 1    
 
 class GoldProductionUserAdmin(StateMixin,LogAdminMixin,admin.ModelAdmin):
     model = GoldProductionUser
     inlines = [GoldProductionUserDetailInline]
     form = GoldProductionUserForm
-    list_display = ["user","name","state"]
-    list_filter = ["state"]
+    list_display = ["user","name","moragib","company_type","state"]
+    list_filter = ["moragib__company_type","state"]
+    autocomplete_fields = ["moragib"]
 
     def get_formsets_with_inlines(self, request, obj=None):
         for inline in self.get_inline_instances(request, obj):
@@ -150,6 +161,20 @@ class GoldProductionUserAdmin(StateMixin,LogAdminMixin,admin.ModelAdmin):
         #     return False
         
         return super().has_change_permission(request,obj)
+
+    @admin.display(description=_('company_type'))
+    def company_type(self, obj):
+        if obj.moragib and hasattr(obj.moragib,"company_type"):
+            return f'{obj.moragib.get_company_type_display()}'
+        
+        return '-'
+
+    def get_urls(self):
+        urls = super().get_urls()
+        my_urls = [
+            path("company_list/", TblCompanyProductionAutocomplete.as_view(),name="lkp_company_list"),
+        ]
+        return my_urls + urls
 
 admin.site.register(GoldProductionUser, GoldProductionUserAdmin)
 

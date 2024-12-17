@@ -47,6 +47,8 @@ CSRF_COOKIE_SECURE = config("CSRF_COOKIE_SECURE", default=True, cast=bool)
 # Application definition
 
 INSTALLED_APPS = [
+    'dal', #django-autocomplete-light
+    'dal_select2',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

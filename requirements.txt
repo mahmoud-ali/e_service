@@ -24,3 +24,4 @@ setuptools
 django-otp
 qrcode
 ipython
+django-autocomplete-light

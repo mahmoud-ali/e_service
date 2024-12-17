@@ -8,10 +8,12 @@ from company_profile.models import TblCompany, TblCompanyProduction
 
 STATE_DRAFT = 1
 STATE_CONFIRMED = 2
+STATE_EXPIRED = 3
 
 STATE_CHOICES = {
     STATE_DRAFT: _('state_draft'),
     STATE_CONFIRMED: _('state_confirmed'),
+    STATE_EXPIRED: _('state_expired'),
 }
 
 class LoggingModel(models.Model):
@@ -28,18 +30,31 @@ def company_applications_path(instance, filename):
     # file will be uploaded to MEDIA_ROOT/company_<id>/applications/<filename>
     return "company_{0}/applications/{1}".format(instance.company.id, filename)    
 
+class LkpMoragib(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.PROTECT,related_name="moragib_list",verbose_name=_("user"))
+    name = models.CharField(_("name"),max_length=100)
+    emp_code = models.CharField(_("name"),max_length=20,default='',null=True)
+    company_type = models.CharField(_("company_type"),max_length=15, choices=TblCompany.COMPANY_TYPE_CHOICES)
+
+    def __str__(self):
+        return f'{self.name} ({self.user})'
+
+    class Meta:
+        verbose_name = _("moragib_list")
+        verbose_name_plural = _("moragib_list")
+
 class GoldProductionUser(LoggingModel):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.PROTECT,related_name="gold_production_user",verbose_name=_("user"))
-    # company_type = models.CharField(_("company_type"),max_length=15, choices=TblCompany.COMPANY_TYPE_CHOICES)
     name = models.CharField(_("name"),max_length=100)
+    moragib = models.OneToOneField(LkpMoragib, on_delete=models.PROTECT,related_name="moragib_distribution",verbose_name=_("moragib"),default=None,null=True)
     state = models.IntegerField(_("record_state"), choices=STATE_CHOICES, default=STATE_DRAFT)
 
     def __str__(self):
         return f'{self.user} ({self.name})'
 
     class Meta:
-        verbose_name = _("gold_production_user")
-        verbose_name_plural = _("gold_production_users")
+        verbose_name = _("moragib_distribution")
+        verbose_name_plural = _("moragib_distribution")
 
 class GoldProductionUserDetail(models.Model):
     master = models.ForeignKey(GoldProductionUser, on_delete=models.PROTECT)    
