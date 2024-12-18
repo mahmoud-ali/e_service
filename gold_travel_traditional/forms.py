@@ -38,7 +38,8 @@ class AppMoveGoldTraditionalAddForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
 
         self.fields["jihat_alaisdar"].queryset = LkpJihatAlaisdar.objects.filter(state=self.allowed_state)
-        self.fields["almushtari_name"].disabled = True
+        if hasattr(self.fields,"almushtari_name"):
+            self.fields["almushtari_name"].disabled = True
         # self.fields["wijhat_altarhil"].queryset = LkpSoag.filter(state=self.allowed_state,id__in=self.allowed_soug_list)
 
     class Meta:
