@@ -38,7 +38,7 @@ class AuditorMixin:
             return qs.filter(company__company_type__in= get_company_types(request))
         
         try:
-            company_lst = request.user.gold_production_user.goldproductionuserdetail_set.filter(master__state=STATE_CONFIRMED).values_list('company',flat=True)
+            company_lst = request.user.moragib_list.moragib_distribution.goldproductionuserdetail_set.filter(master__state=STATE_CONFIRMED).values_list('company',flat=True)
             return qs.filter(company__id__in=company_lst)
         except:
             pass
@@ -47,7 +47,8 @@ class AuditorMixin:
     
     def has_add_permission(self, request):        
         try:
-            company_lst = request.user.gold_production_user.goldproductionuserdetail_set.filter(master__state=STATE_CONFIRMED).values_list('company',flat=True)
+            company_lst = request.user.moragib_list.moragib_distribution.goldproductionuserdetail_set.filter(master__state=STATE_CONFIRMED).values_list('company',flat=True)
+            print("*****",company_lst)
             return super().has_add_permission(request)
         except Exception as e:
             # print('err',e)
@@ -63,7 +64,7 @@ class AuditorMixin:
             return True
 
         try:
-            company_lst = request.user.gold_production_user.goldproductionuserdetail_set.filter(master__state=STATE_CONFIRMED).values_list('company',flat=True)
+            company_lst = request.user.moragib_list.moragib_distribution.goldproductionuserdetail_set.filter(master__state=STATE_CONFIRMED).values_list('company',flat=True)
             return super().has_change_permission(request,obj)
         except:
             pass
@@ -78,7 +79,7 @@ class AuditorMixin:
                 return True
 
         try:
-            company_lst = request.user.gold_production_user.goldproductionuserdetail_set.filter(master__state=STATE_CONFIRMED).values_list('company',flat=True)
+            company_lst = request.user.moragib_list.moragib_distribution.goldproductionuserdetail_set.filter(master__state=STATE_CONFIRMED).values_list('company',flat=True)
             if obj and obj.state == STATE_CONFIRMED:
                 return False
 
@@ -188,7 +189,7 @@ class GoldProductionFormAdmin(AuditorMixin,StateMixin,LogAdminMixin,admin.ModelA
                 else:
                     kwargs["form"].company_types = get_company_types(request)
             else:
-                company_lst = request.user.gold_production_user.goldproductionuserdetail_set.filter(master__state=STATE_CONFIRMED).values_list('company',flat=True)
+                company_lst = request.user.moragib_list.moragib_distribution.goldproductionuserdetail_set.filter(master__state=STATE_CONFIRMED).values_list('company',flat=True)
                 kwargs["form"].company_list = company_lst
 
         except:
@@ -226,7 +227,7 @@ class GoldShippingFormAdmin(AuditorMixin,StateMixin,LogAdminMixin,admin.ModelAdm
                     kwargs["form"].company_types = get_company_types(request)
 
             else:
-                company_lst = request.user.gold_production_user.goldproductionuserdetail_set.filter(master__state=STATE_CONFIRMED).values_list('company',flat=True)
+                company_lst = request.user.moragib_list.moragib_distribution.goldproductionuserdetail_set.filter(master__state=STATE_CONFIRMED).values_list('company',flat=True)
                 kwargs["form"].company_list = company_lst
 
         except:
@@ -244,7 +245,7 @@ class GoldShippingFormAdmin(AuditorMixin,StateMixin,LogAdminMixin,admin.ModelAdm
                     formset.form.company_ids = [obj.company.id]
                 else:
                     try:
-                        formset.form.company_ids = request.user.gold_production_user.goldproductionuserdetail_set.values_list('company')
+                        formset.form.company_ids = request.user.moragib_list.moragib_distribution.goldproductionuserdetail_set.values_list('company')
                     except Exception as e:
                         formset.form.company_ids = []
                         print('err',e)
