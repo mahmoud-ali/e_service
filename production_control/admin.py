@@ -48,7 +48,6 @@ class AuditorMixin:
     def has_add_permission(self, request):        
         try:
             company_lst = request.user.moragib_list.moragib_distribution.goldproductionuserdetail_set.filter(master__state=STATE_CONFIRMED).values_list('company',flat=True)
-            print("*****",company_lst)
             return super().has_add_permission(request)
         except Exception as e:
             # print('err',e)
