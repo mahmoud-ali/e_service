@@ -22,7 +22,7 @@ class HelpView(LoginRequiredMixin,View):
         
         if form.is_valid():
             self.object = form.save(commit=False)            
-            self.object.created_by = self.request.user
+            self.object.created_by = self.object.updated_by = self.request.user
             self.object.save()
 
             return JsonResponse({"message":"record added."})
