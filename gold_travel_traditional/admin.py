@@ -102,7 +102,7 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
             },
         ),
     ]
-    # readonly_fields = ["almushtari_name"]
+    readonly_fields = ["almushtari_name"]
     list_display = ["code","issue_date","gold_weight_in_gram","almustafid_name","almustafid_phone","jihat_alaisdar","wijhat_altarhil","almushtari_name","source_state","state","show_actions"]
     list_filter = ["issue_date",("state",admin.ChoicesFieldListFilter),("source_state",admin.RelatedFieldListFilter),("jihat_alaisdar",admin.RelatedFieldListFilter),("wijhat_altarhil",admin.RelatedFieldListFilter)]
     search_fields = ["code","muharir_alaistimara","almustafid_name","almustafid_phone","almushtari_name"]
