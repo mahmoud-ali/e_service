@@ -30,7 +30,7 @@ class GoldTravelTraditionalUserDetailForm(forms.ModelForm):
 class AppMoveGoldTraditionalAddForm(forms.ModelForm):
     jihat_alaisdar = forms.ModelChoiceField(queryset=LkpJihatAlaisdar.objects.none(), label=_("jihat_alaisdar"))
     # wijhat_altarhil = forms.ModelChoiceField(queryset=LkpSoag.objects.none(), label=_("wijhat altarhil"))
-    almushtari_name = forms.CharField(max_length=150, disabled=True)
+    # almushtari_name = forms.CharField(max_length=150, disabled=True)
     allowed_state = None
     allowed_soug_list = []
 
@@ -38,6 +38,7 @@ class AppMoveGoldTraditionalAddForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
 
         self.fields["jihat_alaisdar"].queryset = LkpJihatAlaisdar.objects.filter(state=self.allowed_state)
+        self.fields["almushtari_name"].disabled = True
         # self.fields["wijhat_altarhil"].queryset = LkpSoag.filter(state=self.allowed_state,id__in=self.allowed_soug_list)
 
     class Meta:
