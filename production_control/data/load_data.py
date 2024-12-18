@@ -35,6 +35,9 @@ def import_moragbin(company_type=None,file_name='mokhlafat.csv'):
                 except:
                     user = User.objects.create_user(email, email, settings.ACCOUNT_DEFAULT_PASSWORD)
 
+                user.is_staff = True
+                user.save()
+
                 moragib_group.user_set.add(user)
                 
                 moragib,created = LkpMoragib.objects.get_or_create(
