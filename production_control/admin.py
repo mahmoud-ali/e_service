@@ -2,23 +2,10 @@ from django.contrib import admin
 from django.urls import path
 from django.utils.translation import gettext_lazy as _
 
-from company_profile.models import TblCompany
 from production_control.forms import GoldProductionFormForm, GoldProductionUserDetailForm, GoldProductionUserForm, GoldShippingFormAlloyForm, GoldShippingFormForm, MoragibForm, TblCompanyProductionAutocomplete
 from production_control.models import STATE_CONFIRMED, STATE_DRAFT, GoldProductionForm, GoldProductionFormAlloy, GoldProductionUser, GoldProductionUserDetail, GoldShippingForm, GoldShippingFormAlloy, LkpMoragib
 
-def get_company_types(request):
-    company_types = []
-
-    if request.user.groups.filter(name="company_type_entaj").exists():
-        company_types += [TblCompany.COMPANY_TYPE_ENTAJ]
-    if request.user.groups.filter(name="company_type_mokhalfat").exists():
-        company_types += [TblCompany.COMPANY_TYPE_MOKHALFAT]
-    if request.user.groups.filter(name="company_type_emtiaz").exists():
-        company_types += [TblCompany.COMPANY_TYPE_EMTIAZ]
-    if request.user.groups.filter(name="company_type_sageer").exists():
-        company_types += [TblCompany.COMPANY_TYPE_SAGEER]
-
-    return company_types
+from .utils import get_company_types
 
 class LogAdminMixin:
     view_on_site = False

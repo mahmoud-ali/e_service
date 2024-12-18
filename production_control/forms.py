@@ -8,6 +8,8 @@ from company_profile.models import TblCompanyProduction
 
 from .models import GoldProductionForm, GoldProductionFormAlloy, GoldProductionUser, GoldProductionUserDetail, GoldShippingForm, GoldShippingFormAlloy, LkpMoragib
 
+from .utils import get_company_types
+
 UserModel = get_user_model()
 
 company_none = TblCompanyProduction.objects.none()
@@ -34,7 +36,7 @@ class TblCompanyProductionAutocomplete(autocomplete.Select2QuerySetView):
         if not self.request.user.is_authenticated:
             return TblCompanyProduction.objects.none()
 
-        qs = TblCompanyProduction.objects.all()
+        qs = TblCompanyProduction.objects.filter(company_type__in= get_company_types(self.request))
 
         if self.q:
             qs = qs.filter(name_ar__contains=self.q) | qs.filter(name_en__contains=self.q)

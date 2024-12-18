@@ -50,7 +50,7 @@ class GoldProductionUser(LoggingModel):
     state = models.IntegerField(_("record_state"), choices=STATE_CHOICES, default=STATE_DRAFT)
 
     def __str__(self):
-        return f'{self.user} ({self.name})'
+        return f'{self.moragib}' # ({self.state})
 
     class Meta:
         verbose_name = _("moragib_distribution")
