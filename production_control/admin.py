@@ -135,13 +135,13 @@ class GoldProductionUserAdmin(StateMixin,LogAdminMixin,admin.ModelAdmin):
         return qs
 
     def has_add_permission(self, request):        
-        if not request.user.groups.filter(name__in=("pro_company_application_accept","pro_company_application_approve")).exists():
+        if not request.user.groups.filter(name__in=("production_control_auditor_distributor",)).exists():
             return False
         
         return super().has_add_permission(request)
 
     def has_change_permission(self, request, obj=None):
-        if not request.user.groups.filter(name__in=("pro_company_application_accept","pro_company_application_approve")).exists():
+        if not request.user.groups.filter(name__in=("production_control_auditor_distributor",)).exists():
             return False
         
         # if not obj or obj.state == STATE_CONFIRMED:
