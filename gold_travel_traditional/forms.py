@@ -30,7 +30,7 @@ class GoldTravelTraditionalUserDetailForm(forms.ModelForm):
 class AppMoveGoldTraditionalAddForm(forms.ModelForm):
     jihat_alaisdar = forms.ModelChoiceField(queryset=LkpJihatAlaisdar.objects.none(), label=_("jihat_alaisdar"))
     # wijhat_altarhil = forms.ModelChoiceField(queryset=LkpSoag.objects.none(), label=_("wijhat altarhil"))
-    # almushtari_name = forms.CharField(max_length=150, disabled=True)
+    almushtari_name = forms.CharField(label=_("almushtari_name"), max_length=150, disabled=True, required=False)
     allowed_state = None
     allowed_soug_list = []
 
