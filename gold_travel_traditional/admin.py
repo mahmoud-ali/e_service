@@ -297,7 +297,7 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
     def parent_link(self,obj):
         if obj.parent:
             url = reverse("admin:gold_travel_traditional_appmovegoldtraditional_change", args=(obj.parent.id,))
-            return format_html('<a href="{url}">{txt}</a>',url=url,txt=obj.parent)
+            return format_html('<a href="{url}">{txt}</a>',url=url,txt=obj.parent.code)
         
         return '-'
     
