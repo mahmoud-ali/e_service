@@ -305,7 +305,7 @@ class AppMoveGoldAdmin(LogAdminMixin,admin.ModelAdmin):
         qs = super().get_queryset(request)
         qs = qs.prefetch_related('source_state').prefetch_related(models.Prefetch("appmovegolddetails_set"))
 
-        if request.user.is_superuser or request.user.groups.filter(name="gold_travel_manager").exists():
+        if request.user.is_superuser or request.user.groups.filter(name__in=["gold_travel_manager","gold_travel_show"]).exists():
             return qs
 
         try:
