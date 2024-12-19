@@ -76,7 +76,7 @@ class GoldProductionForm(LoggingModel):
     alloy_jaf = models.FloatField(_("alloy_jaf"),default=0)
     alloy_khabath = models.FloatField(_("alloy_khabath"),default=0)
     alloy_remaind = models.FloatField(_("alloy_remaind"),blank=True,null=True,default=0)
-    alloy_weight_expected = models.FloatField(_("alloy_weight_expected"),default=0)
+    alloy_weight_expected = models.FloatField(_("alloy_weight_expected"),default=0,null=True)
     gold_production_form_file = models.FileField(_("gold_production_form_file"),upload_to=company_applications_path,blank=True,null=True)
     gold_production_3hda_file = models.FileField(_("gold_production_3hda_file"),upload_to=company_applications_path,blank=True,null=True)
 
