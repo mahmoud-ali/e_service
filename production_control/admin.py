@@ -1,6 +1,7 @@
 from django.db import models
 
 from django.contrib import admin
+from django.forms import TextInput
 from django.urls import path
 from django.utils.translation import gettext_lazy as _
 
@@ -187,6 +188,9 @@ admin.site.register(GoldProductionUser, GoldProductionUserAdmin)
 class GoldProductionFormAlloyInline(admin.TabularInline):
     model = GoldProductionFormAlloy
     fields = ['alloy_serial_no','alloy_weight','alloy_added_gold']
+    formfield_overrides = {
+        models.FloatField: {"widget": TextInput},
+    }    
     extra = 10 
 
 class GoldProductionFormAdmin(AuditorMixin,StateMixin,LogAdminMixin,admin.ModelAdmin):
@@ -195,6 +199,9 @@ class GoldProductionFormAdmin(AuditorMixin,StateMixin,LogAdminMixin,admin.ModelA
     form = GoldProductionFormForm
     list_display = ["company","date","form_no","total_weight","state"]
     list_filter = ["state","date"]
+    formfield_overrides = {
+        models.FloatField: {"widget": TextInput},
+    }    
 
     def get_form(self, request, obj=None, **kwargs):
         kwargs["form"] = GoldProductionFormForm
