@@ -16,7 +16,7 @@ class GoldTravelTraditionalUserForm(forms.ModelForm):
         fields = ["user","name","state",] 
 
 class GoldTravelTraditionalUserDetailForm(forms.ModelForm):
-    soug = forms.ModelChoiceField(queryset=LkpSoag.objects.none(), label=_("user"))
+    soug = forms.ModelChoiceField(queryset=LkpSoag.objects.none(), label=_("soug"))
     allowed_state = None
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
