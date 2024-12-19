@@ -98,6 +98,14 @@ class LkpMoragibAdmin(admin.ModelAdmin):
     search_fields = ["name","user__email"]
     list_filter = ["company_type"]
 
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+
+        if request.user.groups.filter(name__in=("pro_company_application_accept","pro_company_application_approve")).exists():
+            return qs.filter(company_type__in= get_company_types(request))
+        
+        return qs.none()
+
 class GoldProductionUserDetailInline(admin.TabularInline):
     model = GoldProductionUserDetail
     form = GoldProductionUserDetailForm
