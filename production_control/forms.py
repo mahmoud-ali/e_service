@@ -62,6 +62,7 @@ class GoldProductionUserDetailForm(forms.ModelForm):
 
 class GoldProductionFormForm(forms.ModelForm):
     company = forms.ModelChoiceField(queryset=company_none,disabled=True, label=_("company"))
+    alloy_weight_expected = forms.FloatField(required=False,label=_('alloy_weight_expected'))
     company_list = []
     company_types = []
     def __init__(self, *args, **kwargs):        
@@ -75,7 +76,7 @@ class GoldProductionFormForm(forms.ModelForm):
         self.fields["company"].disabled = False
     class Meta:
         model = GoldProductionForm     
-        fields = ["company","date","form_no","alloy_jaf","alloy_khabath","alloy_remaind","gold_production_form_file","gold_production_3hda_file"]
+        fields = ["company","date","form_no","alloy_jaf","alloy_khabath","alloy_remaind","alloy_weight_expected","gold_production_form_file","gold_production_3hda_file"]
         widgets = {}
 
 class GoldShippingFormForm(forms.ModelForm):
