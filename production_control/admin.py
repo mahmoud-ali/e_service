@@ -109,7 +109,7 @@ class GoldProductionUserAdmin(StateMixin,LogAdminMixin,admin.ModelAdmin):
     model = GoldProductionUser
     inlines = [GoldProductionUserDetailInline]
     form = GoldProductionUserForm
-    list_display = ["moragib","companies","company_type","state"] #"user","name",
+    list_display = ["moragib_name","companies","company_type","state"] #"user","name",
     list_filter = ["moragib__company_type","state"]
     autocomplete_fields = ["moragib"]
 
@@ -162,6 +162,10 @@ class GoldProductionUserAdmin(StateMixin,LogAdminMixin,admin.ModelAdmin):
     @admin.display(description=_('company'))
     def companies(self, obj):
         return "، ".join(obj.goldproductionuserdetail_set.all().values_list('company__name_ar',flat=True))
+
+    @admin.display(description=_('moragib'))
+    def moragib_name(self, obj):
+        return obj.moragib.name
 
     def get_urls(self):
         urls = super().get_urls()
