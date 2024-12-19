@@ -1,3 +1,5 @@
+from django.db import models
+
 from django.contrib import admin
 from django.urls import path
 from django.utils.translation import gettext_lazy as _
@@ -107,7 +109,7 @@ class GoldProductionUserAdmin(StateMixin,LogAdminMixin,admin.ModelAdmin):
     model = GoldProductionUser
     inlines = [GoldProductionUserDetailInline]
     form = GoldProductionUserForm
-    list_display = ["moragib","company_type","state"] #"user","name",
+    list_display = ["moragib","companies","company_type","state"] #"user","name",
     list_filter = ["moragib__company_type","state"]
     autocomplete_fields = ["moragib"]
 
@@ -122,6 +124,7 @@ class GoldProductionUserAdmin(StateMixin,LogAdminMixin,admin.ModelAdmin):
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
+        qs= qs.prefetch_related(models.Prefetch("goldproductionuserdetail_set"))
 
         if request.user.is_superuser:
             return qs
@@ -155,6 +158,10 @@ class GoldProductionUserAdmin(StateMixin,LogAdminMixin,admin.ModelAdmin):
             return f'{obj.moragib.get_company_type_display()}'
         
         return '-'
+
+    @admin.display(description=_('company'))
+    def companies(self, obj):
+        return "، ".join(obj.goldproductionuserdetail_set.all().values_list('company__name_ar',flat=True))
 
     def get_urls(self):
         urls = super().get_urls()
