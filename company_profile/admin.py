@@ -792,7 +792,32 @@ class AppHSEAccidentReportAdmin(WorkflowAdminMixin,admin.ModelAdmin):
     list_display = ["company","accident_dt","accident_place","accident_type","accident_class", "created_at", "created_by","updated_at", "updated_by"]        
     list_filter = ["company"]
     view_on_site = False
-    
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        filter = []
+        company_types = []
+
+        if request.user.groups.filter(name="hse_accept").exists():
+            filter += ["submitted"]
+        if request.user.groups.filter(name="hse_approve").exists():
+            filter += ["accepted","approved","rejected"]
+
+        if request.user.groups.filter(name="company_type_entaj").exists():
+            company_types += [TblCompany.COMPANY_TYPE_ENTAJ]
+        if request.user.groups.filter(name="company_type_mokhalfat").exists():
+            company_types += [TblCompany.COMPANY_TYPE_MOKHALFAT]
+        if request.user.groups.filter(name="company_type_emtiaz").exists():
+            company_types += [TblCompany.COMPANY_TYPE_EMTIAZ]
+        if request.user.groups.filter(name="company_type_sageer").exists():
+            company_types += [TblCompany.COMPANY_TYPE_SAGEER]
+
+
+        qs = qs.filter(state__in=filter)
+        qs = qs.filter(company__company_type__in=company_types)
+
+        return qs
+
 admin.site.register(AppHSEAccidentReport, AppHSEAccidentReportAdmin)
 
 class AppHSEPerformanceReportAdmin(WorkflowAdminMixin,admin.ModelAdmin):
