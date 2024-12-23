@@ -794,7 +794,7 @@ class AppHSEAccidentReportAdmin(WorkflowAdminMixin,admin.ModelAdmin):
     view_on_site = False
 
     def get_queryset(self, request):
-        qs = super().get_queryset(request)
+        qs = self.get_queryset(request)
         filter = []
         company_types = []
 
@@ -828,7 +828,7 @@ class AppHSEPerformanceReportAdmin(WorkflowAdminMixin,admin.ModelAdmin):
     view_on_site = False
 
     def get_queryset(self, request):
-        qs = super().get_queryset(request)
+        qs = self.get_queryset(request)
         filter = []
         company_types = []
 
