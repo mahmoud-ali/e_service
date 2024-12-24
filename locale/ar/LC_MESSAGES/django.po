@@ -4038,7 +4038,7 @@ msgstr "حذف سجل مطالبة"
 
 #: production_control/admin.py:174 production_control/models.py:49
 msgid "moragib"
-msgstr "مراقب"
+msgstr "مشرف ميداني"
 
 #: production_control/admin.py:218
 msgid "total_weight"
@@ -4055,19 +4055,19 @@ msgstr "رقم السبيكة"
 
 #: production_control/models.py:43 production_control/models.py:44
 msgid "moragib_list"
-msgstr "قائمة المراقبين"
+msgstr "قائمة المشرفين الميدانيين"
 
 #: production_control/models.py:56 production_control/models.py:57
 msgid "moragib_distribution"
-msgstr "توزيع المراقبين"
+msgstr "توزيع المشرفين الميدانيين"
 
 #: production_control/models.py:67
 msgid "gold_production_user_detail"
-msgstr "تفاصيل مراقب الانتاج"
+msgstr "تفاصيل مشرف ميداني"
 
 #: production_control/models.py:68
 msgid "gold_production_user_details"
-msgstr "تفاصيل مراقبي الانتاج"
+msgstr "تفاصيل المشرفين الميدانيين"
 
 #: production_control/models.py:76
 msgid "alloy_jaf"
