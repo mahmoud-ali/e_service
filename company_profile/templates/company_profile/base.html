@@ -233,7 +233,7 @@ $(document).ready(function(){
 			</li>
 			{% endif %}
 			</li>
-			{% if user.pro_company.company.company_type == 'entaj' or user.pro_company.company.company_type == 'mokhalfat' %}
+			{% if user.pro_company.company.company_type == 'entaj' or user.pro_company.company.company_type == 'mokhalfat' or user.pro_company.company.company_type == 'sageer' %}
 			<li class="{% if menu_name == 'profile:app_local_purchase_list' %}active{% endif %} ">  
 				<a href="{% url 'profile:app_local_purchase_list' %}">{% translate "Application: Local Purchase" %}</a>
 		 	</li>
