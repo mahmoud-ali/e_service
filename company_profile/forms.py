@@ -592,7 +592,7 @@ class AppWhomConcernForm(AppWhomConcernAdminForm):
     company = None
     class Meta:
         model = AppWhomConcern
-        exclude = ["company","state","reject_comments","whom_attachement_file"]
+        exclude = ["company","state","reject_comments"] #,"whom_attachement_file"
         widgets = {}
 
 class AppGoldProductionAdminForm(WorkflowFormMixin,ModelForm):
