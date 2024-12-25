@@ -1,8 +1,10 @@
 import codecs
 import csv
+from django.db import models
 from django.db.models import Sum
 from django.contrib.admin.options import InlineModelAdmin
 from django.forms import ModelForm, ValidationError
+from django.forms.widgets import TextInput
 from django.http import HttpRequest, HttpResponse
 
 from django.contrib import admin
@@ -13,7 +15,7 @@ from django.contrib import messages
 from hr.calculations import PayrollValidation
 from hr.payroll import M2moriaSheet, MajlisEl2daraMokaf2Payroll, MobasharaSheet, Mokaf2Sheet, Payroll, Ta3agodMosimiPayroll, TasoiaPayroll, Wi7datMosa3idaMokaf2tFarigMoratabPayroll
 
-from .models import Drajat3lawat, EmployeeBankAccount, EmployeeFamily, EmployeeM2moria, EmployeeM2moriaMonthly, EmployeeMajlisEl2dara, EmployeeMoahil, EmployeeJazaat, EmployeeMobashra, EmployeeVacation, EmployeeWi7datMosa3da, Gisim, HikalWazifi, MosamaWazifi,Edara3ama,Edarafar3ia,EmployeeBasic, PayrollDetail, PayrollDetailMajlisEl2dara, PayrollDetailTa3agodMosimi, PayrollDetailWi7datMosa3ida, PayrollMaster, EmployeeSalafiat, PayrollTasoia,Settings, Wi7da
+from .models import Drajat3lawat, EmployeeBankAccount, EmployeeFamily, EmployeeM2moria, EmployeeM2moriaMonthly, EmployeeMajlisEl2dara, EmployeeMoahil, EmployeeJazaat, EmployeeMobashra, EmployeeTelegram, EmployeeTelegramRegistration, EmployeeVacation, EmployeeWi7datMosa3da, Gisim, HikalWazifi, MosamaWazifi,Edara3ama,Edarafar3ia,EmployeeBasic, PayrollDetail, PayrollDetailMajlisEl2dara, PayrollDetailTa3agodMosimi, PayrollDetailWi7datMosa3ida, PayrollMaster, EmployeeSalafiat, PayrollTasoia,Settings, Wi7da
 from mptt.admin import MPTTModelAdmin,TreeRelatedFieldListFilter
 
 class SalafiatMixin(ModelForm):
@@ -310,6 +312,24 @@ class EmployeeWifg2lmostawiatFilter(admin.SimpleListFilter):
         
         return queryset
 
+class EmployeeTelegramInline(admin.TabularInline):
+    model = EmployeeTelegram
+    exclude = ["created_at","created_by","updated_at","updated_by"]
+    formfield_overrides = {
+        models.FloatField: {"widget": TextInput},
+    }    
+
+    extra = 1    
+
+class EmployeeTelegramRegistrationInline(admin.TabularInline):
+    model = EmployeeTelegramRegistration
+    exclude = ["created_at","created_by","updated_at","updated_by"]
+    formfield_overrides = {
+        models.FloatField: {"widget": TextInput},
+    }    
+
+    extra = 1    
+
 class EmployeeBankAccountInline(admin.TabularInline):
     model = EmployeeBankAccount
     exclude = ["created_at","created_by","updated_at","updated_by"]
@@ -333,17 +353,29 @@ class SalafiatForm(SalafiatMixin,ModelForm):
 class SalafiatInline(admin.TabularInline):
     model = EmployeeSalafiat
     form = SalafiatForm
-    # readonly_fields = ['deducted']
+    formfield_overrides = {
+        models.FloatField: {"widget": TextInput},
+        models.IntegerField: {"widget": TextInput},
+    }    
     extra = 1    
 
 class JazaatInline(admin.TabularInline):
     model = EmployeeJazaat
     exclude = ["created_at","created_by","updated_at","updated_by"]
+    formfield_overrides = {
+        models.FloatField: {"widget": TextInput},
+        models.IntegerField: {"widget": TextInput},
+    }    
+
     extra = 1    
 
 class EmployeeMobashraInline(admin.TabularInline):
     model = EmployeeMobashra
     exclude = ["created_at","created_by","updated_at","updated_by"]
+    formfield_overrides = {
+        models.FloatField: {"widget": TextInput},
+        models.IntegerField: {"widget": TextInput},
+    }    
     extra = 1    
 
 class EmployeeVacationInline(admin.TabularInline):
@@ -351,11 +383,19 @@ class EmployeeVacationInline(admin.TabularInline):
     fk_name = "employee"
     exclude = ["created_at","created_by","updated_at","updated_by"]
     autocomplete_fields = ["mokalaf",]
+    formfield_overrides = {
+        models.FloatField: {"widget": TextInput},
+        models.IntegerField: {"widget": TextInput},
+    }    
     extra = 1    
 
 class EmployeeM2moriaInline(admin.TabularInline):
     model = EmployeeM2moria
     exclude = ["created_at","created_by","updated_at","updated_by"]
+    formfield_overrides = {
+        models.FloatField: {"widget": TextInput},
+        models.IntegerField: {"widget": TextInput},
+    }    
     extra = 1    
 
 class EmployeeWi7datMosa3daInline(admin.TabularInline):
@@ -370,7 +410,7 @@ class EmployeeMajlisEl2daraInline(admin.TabularInline):
 
 class EmployeeBasicAdmin(admin.ModelAdmin):
     fields = ["code","name", "draja_wazifia","alawa_sanawia","hikal_wazifi", "edara_3ama_tmp","edara_far3ia_tmp", "mosama_wazifi","sex","tarikh_milad","tarikh_ta3in","tarikh_akhir_targia","phone","no3_2lertibat","sanoat_2lkhibra","moahil","gasima","atfal","aadoa","m3ash","status"]        
-    inlines = [EmployeeFamilyInline,EmployeeMoahilInline,EmployeeBankAccountInline,SalafiatInline,JazaatInline,EmployeeMobashraInline,EmployeeVacationInline,EmployeeM2moriaInline]
+    inlines = [EmployeeTelegramInline,EmployeeTelegramRegistrationInline,EmployeeFamilyInline,EmployeeMoahilInline,EmployeeBankAccountInline,SalafiatInline,JazaatInline,EmployeeMobashraInline,EmployeeVacationInline,EmployeeM2moriaInline]
     list_display = ["code","name", "draja_wazifia","alawa_sanawia", "edara_3ama","edara_far3ia","gisim", "mosama_wazifi","tarikh_ta3in","tarikh_akhir_targia","sex","moahil","gasima","atfal","aadoa","m3ash","status"]    
     list_display_links = ["code","name"]
     list_filter = ["draja_wazifia","alawa_sanawia",Edara3amaFilter,Edarafar3iaFilter,EmployeeWi7daMosa3daFilter,"no3_2lertibat","mosama_wazifi__category","gasima","atfal",EmployeeTarikhTa3inFilter,EmployeeWifg2lwazaifFilter,EmployeeWifg2lmostawiatFilter,"sex","moahil","aadoa","status"] #
@@ -379,6 +419,10 @@ class EmployeeBasicAdmin(admin.ModelAdmin):
     search_fields = ["name","code"]
     readonly_fields = ["moahil","gasima","atfal","edara_3ama_tmp","edara_far3ia_tmp"]
     actions = ['export_as_csv']
+
+    formfield_overrides = {
+        models.FloatField: {"widget": TextInput},
+    }    
 
     def get_readonly_fields(self,request,obj):
         if request.user.groups.filter(name="hr_payroll").exists():
