@@ -7,7 +7,7 @@ def get_app_metrics(fields={},filter={},related=[],order=[]):
                         AppChangeCompanyName, AppExplorationTime, AppAddArea,AppRemoveArea, AppTnazolShraka, \
                         AppTajeelTnazol, AppTajmeed,AppTakhali,AppTamdeed,AppTaaweed,AppMda,AppChangeWorkProcedure, \
                         AppExportGold,AppExportGoldRaw,AppSendSamplesForAnalysis,AppForeignerProcedure,AppAifaaJomrki, \
-                        AppVisibityStudy,AppReexportEquipments,AppRequirementsList,TblCompany,AppWhomConcern,AppHSEAccidentReport, AppHSEPerformanceReport
+                        AppVisibityStudy,AppReexportEquipments,AppRequirementsList,TblCompany,AppWhomConcern,AppHSEAccidentReport, AppHSEPerformanceReport, AppLocalPurchase
 
     models = [
         AppCyanideCertificate, AppExplosivePermission, AppFuelPermission, AppImportPermission, 
