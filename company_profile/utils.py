@@ -15,7 +15,7 @@ def get_app_metrics(fields={},filter={},related=[],order=[]):
         AppChangeCompanyName, AppExplorationTime, AppAddArea,AppRemoveArea, AppTnazolShraka, 
         AppTajeelTnazol, AppTajmeed,AppTakhali,AppTamdeed,AppTaaweed,AppMda,AppChangeWorkProcedure, 
         AppExportGold,AppExportGoldRaw,AppSendSamplesForAnalysis,AppForeignerProcedure,AppAifaaJomrki,
-        AppVisibityStudy,AppReexportEquipments,AppRequirementsList,AppWhomConcern,AppHSEAccidentReport, AppHSEPerformanceReport
+        AppVisibityStudy,AppReexportEquipments,AppRequirementsList,AppWhomConcern,AppHSEAccidentReport, AppHSEPerformanceReport, AppLocalPurchase
     ]
 
     profile_show_urls = {
@@ -49,6 +49,7 @@ def get_app_metrics(fields={},filter={},related=[],order=[]):
         "appwhomconcern":"app_whom_concern_show",
         "apphseaccidentreport":"app_hse_accident_show",
         "apphseperformancereport":"app_hse_performance_show",
+        "applocalpurchase":"app_local_purchase_show",
     }
 
     qs_list = [
