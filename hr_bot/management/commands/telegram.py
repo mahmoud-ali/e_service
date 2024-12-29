@@ -13,5 +13,5 @@ class Command(BaseCommand):
             #     self.style.SUCCESS('Hello from hr_bot')
             # )
         except Exception as e:
-            raise CommandError('Error')
+            raise CommandError(f'Error: {e}')
         

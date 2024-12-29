@@ -565,17 +565,6 @@ class EmployeeBasic(LoggingModel):
                     {"alawa_sanawia":_("akhtar 3lawat gair t3akod")}
                 )
 
-class EmployeeTelegram(LoggingModel):
-    employee = models.ForeignKey(EmployeeBasic, on_delete=models.PROTECT,verbose_name=_("employee_name"))
-    user_id = models.FloatField(_("user_id"),unique=True)
-    phone = models.CharField(_("phone"),max_length=30,unique=True)
-
-class EmployeeTelegramRegistration(LoggingModel):
-    employee = models.ForeignKey(EmployeeBasic, on_delete=models.PROTECT,verbose_name=_("employee_name"))
-    user_id = models.FloatField(_("user_id"),unique=True)
-    name = models.CharField(_("employee_name"),max_length=150)
-    phone = models.CharField(_("phone"),max_length=30,unique=True)
-
 class EmployeeWi7datMosa3da(LoggingModel):
     employee = models.OneToOneField(EmployeeBasic, on_delete=models.PROTECT,verbose_name=_("employee_name"),related_name="wi7dat_mosa3da")
     has_diff = models.BooleanField(_("has_diff"),default=False)

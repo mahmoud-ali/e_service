@@ -1,9 +1,10 @@
+import datetime
 import logging
 import traceback
 import html
 import json
 
-from telegram import KeyboardButton, MenuButton, MenuButtonCommands, ReplyKeyboardMarkup, ReplyKeyboardRemove, Update
+from telegram import KeyboardButton, MenuButton, MenuButtonCommands, ReplyKeyboardMarkup, ReplyKeyboardRemove, Update,File
 from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, ContextTypes, ConversationHandler, filters
 from telegram.constants import ParseMode
 
@@ -12,10 +13,11 @@ from uuid import uuid4
 import re
 from asgiref.sync import sync_to_async
 from django.contrib.auth import get_user_model
+from django.core.files import File
+from hr.models import EmployeeBasic, EmployeeFamily
+from hr_bot.models import EmployeeTelegram, EmployeeTelegramFamily, EmployeeTelegramRegistration
 
-from hr.models import EmployeeBasic, EmployeeFamily, EmployeeTelegram, EmployeeTelegramRegistration
-
-GET_NAME, GET_CODE, GET_CONTACT, CHOOSING, ADD_CHILD, GET_CHILDREN = range(6)
+GET_NAME, GET_CODE, GET_CONTACT, CHOOSING, ADD_CHILD, GET_CHILDREN, ADD_CHILD_NAME, ADD_CHILD_DOCUMENT = range(8)
 
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
@@ -38,11 +40,11 @@ TOKEN_ID = "7654221372:AAFpmuPgA0F9pN35QHMeedz3wPVXTVkoa7k"
 def compare_phone(phone1,phone2):
     return (re.sub(r'\D', '', phone1) == re.sub(r'\D', '', phone2))
 
-@sync_to_async
-def register(code,user_id,phone,name):
+# @sync_to_async
+async def register(code,user_id,phone,name):
     admin_user = get_user_model().objects.get(id=1)
 
-    emp = EmployeeBasic.objects.get(code=code)
+    emp = await EmployeeBasic.objects.aget(code=code)
     return EmployeeTelegramRegistration.objects.create(
         employee=emp,
         user_id=user_id,
@@ -52,42 +54,42 @@ def register(code,user_id,phone,name):
         updated_by=admin_user,
     )
 
-@sync_to_async
-def get_employee(user_id):
-    return EmployeeTelegram.objects.filter(user_id=user_id).first()
+# @sync_to_async
+async def get_employee(user_id):
+    return await EmployeeTelegram.objects.filter(user_id=user_id).afirst()
 
-@sync_to_async
-def get_employee_info(user_id):
-    emp = EmployeeTelegram.objects.filter(user_id=user_id).first()
+# @sync_to_async
+async def get_employee_info(user_id):
+    emp = await EmployeeTelegram.objects.filter(user_id=user_id).prefetch_related('employee').afirst()
     if emp:
         return emp.employee
     
     return None
 
-@sync_to_async
-def get_employee_children(user_id):
-    emp = EmployeeTelegram.objects.filter(user_id=user_id).first()
+# @sync_to_async
+async def get_employee_children(user_id):
+    emp = await EmployeeTelegram.objects.filter(user_id=user_id).prefetch_related('employee').afirst()
     
     if emp:
-        ch =  list(emp.employee.employeefamily_set.filter(relation=EmployeeFamily.FAMILY_RELATION_CHILD).values_list('name',flat=True))
+        ch = EmployeeFamily.objects.filter(employee=emp.employee,relation=EmployeeFamily.FAMILY_RELATION_CHILD).values_list('name',flat=True).aiterator()
+        #await emp.employee.employeefamily_set.filter(relation=EmployeeFamily.FAMILY_RELATION_CHILD).values_list('name',flat=True)
         return ch
     
     return None
 
-@sync_to_async
-def get_employee_by_code(code):
-    emp = EmployeeBasic.objects.filter(code=code).first()
+# @sync_to_async
+async def get_employee_by_code(code):
+    emp = await EmployeeBasic.objects.filter(code=code).afirst()
     if emp:
         return emp
     
     return None
 
-@sync_to_async
-def register_employee(code,user_id,phone):
+# @sync_to_async
+async def register_employee(code,user_id,phone):
     admin_user = get_user_model().objects.get(id=1)
-    emp = EmployeeBasic.objects.get(code=code)
-    print('Emp',emp)
-    obj, _ = EmployeeTelegram.objects.get_or_create(
+    emp = await EmployeeBasic.objects.aget(code=code)
+    obj, _ = await EmployeeTelegram.objects.aget_or_create(
         employee=emp,
         user_id=user_id,
         phone=phone,
@@ -98,9 +100,9 @@ def register_employee(code,user_id,phone):
     return obj
 
 #register_employee
-@sync_to_async
-def get_employees_count():
-    return EmployeeBasic.objects.all().count()
+# @sync_to_async
+async def get_employees_count():
+    return await EmployeeBasic.objects.all().acount()
 
 async def check_registration(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     user_id = update.effective_user.id
@@ -109,6 +111,23 @@ async def check_registration(update: Update, context: ContextTypes.DEFAULT_TYPE)
     
     return True if is_registered else False
 
+async def add_employee_child(emp,name,attachment_file):
+    admin_user = await get_user_model().objects.aget(id=1)
+
+    with open(attachment_file) as f:
+        return await EmployeeTelegramFamily.objects.acreate(
+            employee=emp,
+            relation=EmployeeFamily.FAMILY_RELATION_CHILD,
+            name=name,
+            tarikh_el2dafa=datetime.datetime.now(),
+            attachement_file=File(f),
+            # state=1,
+            created_by=admin_user,
+            updated_by=admin_user,
+        )
+    
+    return None
+    
 def menu():
     keyboard = [
                 [
@@ -135,11 +154,12 @@ async def get_name(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     user_id = update.effective_user.id
     name = update.message.text
 
-    context.user_data = {
+    context.user_data.update({
         'name': name,
         'code': None,
         'phone': None,
-    }
+    })
+
     await update.message.reply_text(f'ok, now enter your code:')
     return GET_CODE
 
@@ -194,15 +214,43 @@ async def get_contact(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
 
 async def get_children(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     user_id = update.effective_user.id
-    children = await get_employee_children(user_id)
-    await update.message.reply_html("<b>You have: </b> \n - {0}".format('\n - '.join(children)))
+    children = [x async for x in await get_employee_children(user_id)]
+    if children:
+        await update.message.reply_html("<b>You have: </b> \n - {0}".format('\n - '.join(children)))
+    else:
+        await update.message.reply_html("No children assigned to you!")
 
     await update.message.reply_html("Do you want to make a new choise or /cancel?",reply_markup=menu())
     return CHOOSING
 
 async def add_child(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     user_id = update.effective_user.id
-    await update.message.reply_text(f'add a child',reply_markup=ReplyKeyboardRemove())
+    await update.message.reply_text(f'Enter your child name:',reply_markup=ReplyKeyboardRemove())
+    return ADD_CHILD_NAME
+
+async def add_child_name(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    user_id = update.effective_user.id
+    name = update.effective_message.text
+    context.user_data.update({
+        'name': name,
+    })
+
+    await update.message.reply_text(f'Upload child document:',reply_markup=ReplyKeyboardRemove())
+    return ADD_CHILD_DOCUMENT
+
+async def add_child_document(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    user_id = update.effective_user.id
+    document = update.effective_message.document or update.effective_message.photo[-1]
+    file = await document.get_file()
+    file_name = "/tmp/"+file.file_unique_id
+    f = await file.download_to_drive(file_name)
+    name = context.user_data['name']
+    emp = await get_employee_info(user_id)
+    await add_employee_child(emp,name,f)
+
+    await update.message.reply_text(f'Thank you.', reply_markup=ReplyKeyboardRemove())
+
+    await update.message.reply_text("Do you want to make a new choise or /cancel?",reply_markup=menu())
     return CHOOSING
 
 async def get_choise(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
@@ -290,8 +338,6 @@ async def error_handler(update: object, context: ContextTypes.DEFAULT_TYPE) -> N
 def main():
     app = ApplicationBuilder().token(TOKEN_ID).build()
 
-    # app.add_handler(CommandHandler("start", start))
-
     conv_handler = ConversationHandler(
         entry_points=[CommandHandler("start", start)],
         states={
@@ -300,8 +346,11 @@ def main():
             GET_CONTACT: [MessageHandler(filters.CONTACT, get_contact)],
             CHOOSING: [MessageHandler(filters.Regex("^(Get children data|Add a child)$"), get_choise)],
             GET_CHILDREN:[MessageHandler(filters.TEXT, get_children)],
+            ADD_CHILD:[MessageHandler(filters.TEXT, add_child)],
+            ADD_CHILD_NAME:[MessageHandler(filters.TEXT, add_child_name)],
+            ADD_CHILD_DOCUMENT:[MessageHandler(filters.PHOTO | filters.ATTACHMENT, add_child_document)],
         },
-        fallbacks=[CommandHandler("cancel", cancel)],
+        fallbacks=[CommandHandler("start", start), CommandHandler("cancel", cancel)],
     )
 
     app.add_handler(conv_handler)
