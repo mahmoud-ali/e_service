@@ -361,7 +361,7 @@ def main():
     )
 
     app.add_handler(conv_handler)
-    app.add_handler(CommandHandler('start',start))
+    # app.add_handler(CommandHandler('start',start))
     #app.bot.set_chat_menu_button
     app.add_handler(MessageHandler(filters.COMMAND, unknown)) #for unknown commands
 
