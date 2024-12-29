@@ -1,5 +1,6 @@
 import datetime
 import logging
+import os
 import traceback
 import html
 import json
@@ -42,10 +43,10 @@ def compare_phone(phone1,phone2):
 
 # @sync_to_async
 async def register(code,user_id,phone,name):
-    admin_user = get_user_model().objects.get(id=1)
+    admin_user = await get_user_model().objects.aget(id=1)
 
     emp = await EmployeeBasic.objects.aget(code=code)
-    return EmployeeTelegramRegistration.objects.create(
+    return await EmployeeTelegramRegistration.objects.acreate(
         employee=emp,
         user_id=user_id,
         phone=phone,
@@ -114,7 +115,7 @@ async def check_registration(update: Update, context: ContextTypes.DEFAULT_TYPE)
 async def add_employee_child(emp,name,attachment_file):
     admin_user = await get_user_model().objects.aget(id=1)
 
-    with open(attachment_file) as f:
+    with open(attachment_file, 'rb') as f:
         return await EmployeeTelegramFamily.objects.acreate(
             employee=emp,
             relation=EmployeeFamily.FAMILY_RELATION_CHILD,
@@ -240,9 +241,15 @@ async def add_child_name(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
 
 async def add_child_document(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     user_id = update.effective_user.id
-    document = update.effective_message.document or update.effective_message.photo[-1]
-    file = await document.get_file()
-    file_name = "/tmp/"+file.file_unique_id
+    document = update.message.effective_attachment
+    if hasattr(document,'file_id'):
+        file = await document.get_file()
+    else:
+        file = await document[-1].get_file() 
+    
+    # file = await context.bot.get_file(file_id) #await document.get_file()
+    _, file_extension = os.path.splitext(file.file_path)
+    file_name = "/tmp/"+file.file_unique_id+file_extension
     f = await file.download_to_drive(file_name)
     name = context.user_data['name']
     emp = await get_employee_info(user_id)
@@ -348,12 +355,13 @@ def main():
             GET_CHILDREN:[MessageHandler(filters.TEXT, get_children)],
             ADD_CHILD:[MessageHandler(filters.TEXT, add_child)],
             ADD_CHILD_NAME:[MessageHandler(filters.TEXT, add_child_name)],
-            ADD_CHILD_DOCUMENT:[MessageHandler(filters.PHOTO | filters.ATTACHMENT, add_child_document)],
+            ADD_CHILD_DOCUMENT:[MessageHandler(filters.ATTACHMENT, add_child_document)],
         },
         fallbacks=[CommandHandler("start", start), CommandHandler("cancel", cancel)],
     )
 
     app.add_handler(conv_handler)
+    app.add_handler(CommandHandler('start',start))
     #app.bot.set_chat_menu_button
     app.add_handler(MessageHandler(filters.COMMAND, unknown)) #for unknown commands
 
