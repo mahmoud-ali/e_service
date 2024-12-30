@@ -62,7 +62,7 @@ class GoldProductionUserDetailForm(forms.ModelForm):
 
 class GoldProductionFormForm(forms.ModelForm):
     company = forms.ModelChoiceField(queryset=company_none,disabled=True, label=_("company"))
-    alloy_weight_expected = forms.FloatField(required=False,label=_('alloy_weight_expected'))
+    alloy_weight_expected = forms.FloatField(required=False,label=_('alloy_weight_expected'),widget=forms.TextInput)
     company_list = []
     company_types = []
     def __init__(self, *args, **kwargs):        
