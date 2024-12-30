@@ -6,7 +6,7 @@ from django.urls import path
 from django.utils.translation import gettext_lazy as _
 
 from production_control.forms import GoldProductionFormForm, GoldProductionUserDetailForm, GoldProductionUserForm, GoldShippingFormAlloyForm, GoldShippingFormForm, MoragibForm, TblCompanyProductionAutocomplete
-from production_control.models import STATE_CONFIRMED, STATE_DRAFT, GoldProductionForm, GoldProductionFormAlloy, GoldProductionUser, GoldProductionUserDetail, GoldShippingForm, GoldShippingFormAlloy, LkpMoragib
+from production_control.models import STATE_CONFIRMED, STATE_DRAFT, STATE_EXPIRED, GoldProductionForm, GoldProductionFormAlloy, GoldProductionUser, GoldProductionUserDetail, GoldShippingForm, GoldShippingFormAlloy, LkpMoragib
 
 from .utils import get_company_types
 
@@ -60,10 +60,10 @@ class AuditorMixin:
 
     def has_change_permission(self, request, obj=None):
         if request.user.groups.filter(name__in=("pro_company_application_accept","pro_company_application_approve")).exists():
-            if obj and obj.state == STATE_CONFIRMED:
-                return False
+            if obj and obj.state == STATE_DRAFT:
+                return True
 
-            return True
+            return False
 
         try:
             company_lst = request.user.moragib_list.moragib_distribution.goldproductionuserdetail_set.filter(master__state=STATE_CONFIRMED).values_list('company',flat=True)
@@ -74,15 +74,16 @@ class AuditorMixin:
         return False
 
     def has_delete_permission(self, request, obj=None):
+        if obj and obj.state != STATE_DRAFT:
+            return False
+
         if request.user.groups.filter(name__in=("pro_company_application_accept","pro_company_application_approve")).exists():
-            if obj and obj.state == STATE_CONFIRMED:
-                return False
-            else:
+            if obj and obj.state == STATE_DRAFT:
                 return True
 
         try:
             company_lst = request.user.moragib_list.moragib_distribution.goldproductionuserdetail_set.filter(master__state=STATE_CONFIRMED).values_list('company',flat=True)
-            if obj and obj.state == STATE_CONFIRMED:
+            if obj and obj.state != STATE_DRAFT:
                 return False
 
             return super().has_delete_permission(request,obj)
@@ -120,6 +121,7 @@ class GoldProductionUserAdmin(StateMixin,LogAdminMixin,admin.ModelAdmin):
     form = GoldProductionUserForm
     list_display = ["moragib_name","companies","company_type","state"] #"user","name",
     list_filter = ["moragib__company_type","state"]
+    actions=['end_distribution']
     autocomplete_fields = ["moragib"]
 
     def get_formsets_with_inlines(self, request, obj=None):
@@ -153,13 +155,19 @@ class GoldProductionUserAdmin(StateMixin,LogAdminMixin,admin.ModelAdmin):
         return super().has_add_permission(request)
 
     def has_change_permission(self, request, obj=None):
+        if not obj or obj.state != STATE_DRAFT:
+            return False
+
         if not request.user.groups.filter(name__in=("production_control_auditor_distributor",)).exists():
             return False
-        
-        # if not obj or obj.state == STATE_CONFIRMED:
-        #     return False
-        
+                
         return super().has_change_permission(request,obj)
+
+    @admin.action(description=_('end distribution'))
+    def end_distribution(self, request, queryset):
+        for obj in queryset:
+            obj.state = STATE_EXPIRED
+            obj.save()
 
     @admin.display(description=_('company_type'))
     def company_type(self, obj):
