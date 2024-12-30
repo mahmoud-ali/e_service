@@ -147,7 +147,7 @@ class GoldShippingFormAlloy(models.Model):
         verbose_name_plural = _("Gold Shipping Form - Alloy")
 
     def clean(self) -> None:
-        if self.master.company != self.alloy_serial_no.master.company:
+        if self.master and (self.master.company != self.alloy_serial_no.master.company):
             raise ValidationError(
                 {"alloy_serial_no":_("alloy should belong to same company!")}
             )
