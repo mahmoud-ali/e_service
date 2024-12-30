@@ -37,7 +37,7 @@ class AuditorMixin:
     def get_queryset(self, request):
         qs = super().get_queryset(request)
 
-        if request.user.groups.filter(name__in=("pro_company_application_accept","pro_company_application_approve")).exists():
+        if request.user.groups.filter(name__in=("pro_company_application_accept","pro_company_application_approve","pro_company_application_show")).exists():
             return qs.filter(company__company_type__in= get_company_types(request))
         
         try:
