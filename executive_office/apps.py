@@ -9,7 +9,8 @@ class ExecutiveOfficeConfig(AppConfig):
 
     def ready(self) -> None:
         #register & call signals
-        from .models import InboxTasks
+        from .models import Inbox,InboxTasks
         from . import signals
 
+        post_save.connect(signals.add_tasks_from_template,sender=Inbox, dispatch_uid="add_tasks_from_template_signal_id")
         post_save.connect(signals.update_inbox_state,sender=InboxTasks, dispatch_uid="update_inbox_state_signal_id")

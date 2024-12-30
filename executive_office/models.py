@@ -101,6 +101,18 @@ class Inbox(LoggingModel):
             self.finish_date = timezone.now()
             self.save()
 
+    def add_tasks_from_template(self):
+        qs = self.inboxtasks_set.all()
+
+        if qs.count() == 0:
+            for obj in self.procedure_type.proceduretypetaskstemplate_set.all():
+                InboxTasks.objects.create(
+                    inbox=self,
+                    title=obj.title,
+                    order=obj.order,
+                    assign_to=obj.assign_to,
+                )
+
 def inbox_path(instance, filename):
     return "executive_office/{0}/{1}".format(instance.inbox.sender_entity, filename)    
 

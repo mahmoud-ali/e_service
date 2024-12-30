@@ -2586,11 +2586,11 @@ msgstr "المرفقات"
 
 #: executive_office/models.py:112
 msgid "inbox attachment"
-msgstr "مرفقات صندوق الوارد"
+msgstr "الخطابات الواردة"
 
 #: executive_office/models.py:113
 msgid "inbox attachments"
-msgstr "مرفقات صندوق الوارد"
+msgstr "الخطابات الواردة"
 
 #: executive_office/models.py:131
 msgid "inbox task"
