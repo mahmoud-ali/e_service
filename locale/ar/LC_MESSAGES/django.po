@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-19 13:34+0200\n"
+"POT-Creation-Date: 2024-12-30 14:38+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -131,7 +131,7 @@ msgstr "بيانات العقد"
 
 #: company_profile/admin.py:353 company_profile/forms.py:29
 #: company_profile/models.py:114 pa/models.py:67
-#: production_control/admin.py:163 production_control/models.py:37
+#: production_control/admin.py:172 production_control/models.py:37
 msgid "company_type"
 msgstr "نوع الشركة"
 
@@ -184,9 +184,9 @@ msgstr ""
 #: company_profile/models.py:1141 company_profile/models.py:1165
 #: pa/forms/commitment.py:80 pa/forms/daily.py:9 pa/models.py:93
 #: pa/models.py:129 pa/tables/payment.py:33 pa/tables/request.py:51
-#: pa/templates/pa/pa_daily.html:46 production_control/admin.py:170
+#: pa/templates/pa/pa_daily.html:46 production_control/admin.py:179
 #: production_control/forms.py:50 production_control/forms.py:64
-#: production_control/forms.py:82 production_control/models.py:61
+#: production_control/forms.py:83 production_control/models.py:61
 #: production_control/models.py:71 production_control/models.py:113
 msgid "company"
 msgstr "شركة"
@@ -203,7 +203,7 @@ msgid "license_type"
 msgstr "النوع"
 
 #: company_profile/admin.py:364 company_profile/models.py:224
-#: pa/templates/pa/company_panel.html:23
+#: executive_office/models.py:82 pa/templates/pa/company_panel.html:23
 msgid "start_date"
 msgstr "تاريح البداية"
 
@@ -248,18 +248,19 @@ msgstr "الشركة المستلف منها"
 #: company_profile/templates/company_profile/home.html:17
 #: company_profile/templates/company_profile/home.html:41
 #: company_profile/templates/company_profile/home.html:64
-#: gold_travel/models.py:12 gold_travel_traditional/admin.py:340
-#: gold_travel_traditional/models.py:8 help_request/models.py:11
-#: hr_portal/models.py:89 mokhalafat/models.py:6 pa/models.py:46
-#: production_control/models.py:20 revenu_dist/models.py:53
+#: executive_office/models.py:26 gold_travel/models.py:12
+#: gold_travel_traditional/admin.py:340 gold_travel_traditional/models.py:8
+#: help_request/models.py:11 hr_portal/models.py:89 mokhalafat/models.py:6
+#: pa/models.py:46 production_control/models.py:20 revenu_dist/models.py:53
 #: traditional_api/models.py:10
 msgid "created_at"
 msgstr "تاريخ الانشاء"
 
-#: company_profile/models.py:18 gold_travel/models.py:13
-#: gold_travel_traditional/admin.py:340 gold_travel_traditional/models.py:9
-#: help_request/models.py:13 hr_portal/models.py:90 mokhalafat/models.py:7
-#: pa/models.py:47 production_control/models.py:21 revenu_dist/models.py:54
+#: company_profile/models.py:18 executive_office/models.py:27
+#: gold_travel/models.py:13 gold_travel_traditional/admin.py:340
+#: gold_travel_traditional/models.py:9 help_request/models.py:13
+#: hr_portal/models.py:90 mokhalafat/models.py:7 pa/models.py:47
+#: production_control/models.py:21 revenu_dist/models.py:54
 #: traditional_api/models.py:11
 msgid "created_by"
 msgstr "المستخدم المسئول عن الانشاء"
@@ -268,18 +269,19 @@ msgstr "المستخدم المسئول عن الانشاء"
 #: company_profile/templates/company_profile/home.html:18
 #: company_profile/templates/company_profile/home.html:42
 #: company_profile/templates/company_profile/home.html:65
-#: gold_travel/models.py:15 gold_travel_traditional/admin.py:340
-#: gold_travel_traditional/models.py:11 help_request/models.py:12
-#: hr_portal/models.py:92 mokhalafat/models.py:9 pa/models.py:49
-#: production_control/models.py:23 revenu_dist/models.py:56
+#: executive_office/models.py:29 gold_travel/models.py:15
+#: gold_travel_traditional/admin.py:340 gold_travel_traditional/models.py:11
+#: help_request/models.py:12 hr_portal/models.py:92 mokhalafat/models.py:9
+#: pa/models.py:49 production_control/models.py:23 revenu_dist/models.py:56
 #: traditional_api/models.py:13
 msgid "updated_at"
 msgstr "تاريخ اخر تعديل"
 
-#: company_profile/models.py:21 gold_travel/models.py:16
-#: gold_travel_traditional/admin.py:340 gold_travel_traditional/models.py:12
-#: help_request/models.py:14 hr_portal/models.py:93 mokhalafat/models.py:10
-#: pa/models.py:50 production_control/models.py:24 revenu_dist/models.py:57
+#: company_profile/models.py:21 executive_office/models.py:30
+#: gold_travel/models.py:16 gold_travel_traditional/admin.py:340
+#: gold_travel_traditional/models.py:12 help_request/models.py:14
+#: hr_portal/models.py:93 mokhalafat/models.py:10 pa/models.py:50
+#: production_control/models.py:24 revenu_dist/models.py:57
 #: traditional_api/models.py:14
 msgid "updated_by"
 msgstr "المستخدم المسئول عن التعديل"
@@ -301,11 +303,13 @@ msgstr ""
 #: company_profile/models.py:135 company_profile/models.py:173
 #: company_profile/models.py:195 company_profile/models.py:730
 #: company_profile/models.py:828 company_profile/models.py:1084
-#: gold_travel/models.py:47 gold_travel/models.py:63
-#: gold_travel_traditional/models.py:19 gold_travel_traditional/models.py:30
-#: gold_travel_traditional/models.py:41 hr_portal/models.py:405
-#: production_control/models.py:35 production_control/models.py:36
-#: revenu_dist/models.py:63 revenu_dist/models.py:73 revenu_dist/models.py:96
+#: executive_office/models.py:37 executive_office/models.py:47
+#: executive_office/models.py:70 gold_travel/models.py:47
+#: gold_travel/models.py:63 gold_travel_traditional/models.py:19
+#: gold_travel_traditional/models.py:30 gold_travel_traditional/models.py:41
+#: hr_portal/models.py:405 production_control/models.py:35
+#: production_control/models.py:36 revenu_dist/models.py:63
+#: revenu_dist/models.py:73 revenu_dist/models.py:96
 #: traditional_api/models.py:20 traditional_api/models.py:31
 #: traditional_api/models.py:42
 msgid "name"
@@ -1270,7 +1274,8 @@ msgstr "نوع تصديق اجنبي"
 msgid "Foreigner Procedure Types"
 msgstr "انواع تصديق اجنبي"
 
-#: company_profile/models.py:741
+#: company_profile/models.py:741 executive_office/models.py:53
+#: executive_office/models.py:57 executive_office/models.py:80
 msgid "procedure_type"
 msgstr "نوع التصديق"
 
@@ -2453,6 +2458,140 @@ msgstr ""
 msgid "Wrong transition path."
 msgstr ""
 
+#: executive_office/admin.py:95
+msgid "inbox_attachments"
+msgstr "الخطاب الوارد"
+
+#: executive_office/admin.py:106
+msgid "mark_done"
+msgstr "تم التنفيذ"
+
+#: executive_office/admin.py:112 pa/views/application.py:97
+#: pa/views/application.py:219
+msgid "Record saved successfully."
+msgstr "تم حفظ السجل بنجاح."
+
+#: executive_office/apps.py:8
+msgid "Executive Office"
+msgstr "المكتب التنفيذي"
+
+#: executive_office/forms.py:11 executive_office/models.py:36
+#: gold_travel/forms.py:11 gold_travel/models.py:46
+#: gold_travel_traditional/forms.py:12 gold_travel_traditional/models.py:40
+#: production_control/forms.py:22 production_control/models.py:34
+msgid "user"
+msgstr "المستخدم"
+
+#: executive_office/models.py:12 gold_travel/models.py:89
+#: gold_travel/models.py:201 production_control/models.py:14
+msgid "state_draft"
+msgstr "مسودة"
+
+#: executive_office/models.py:13
+msgid "state_processing"
+msgstr "قيد الاجراء"
+
+#: executive_office/models.py:14 gold_travel/admin.py:592
+#: gold_travel/admin.py:598 gold_travel/models.py:203
+msgid "state_done"
+msgstr "تم التنفيذ"
+
+#: executive_office/models.py:21
+msgid "order_procedure"
+msgstr "للاجراء"
+
+#: executive_office/models.py:22
+msgid "order_followup"
+msgstr "للمتابعة"
+
+#: executive_office/models.py:43
+msgid "contact"
+msgstr "التواصل"
+
+#: executive_office/models.py:44
+msgid "contacts"
+msgstr "التواصل"
+
+#: executive_office/models.py:54
+msgid "procedure_types"
+msgstr "انواع الاجراءات"
+
+#: executive_office/models.py:58 executive_office/models.py:118
+#: executive_office/models.py:121
+msgid "title"
+msgstr "العتوان"
+
+#: executive_office/models.py:59 executive_office/models.py:119
+msgid "order"
+msgstr "التوجيه"
+
+#: executive_office/models.py:60 executive_office/models.py:120
+msgid "assign_to"
+msgstr "المسئول عن التنفيذ"
+
+#: executive_office/models.py:66
+msgid "procedure type task template"
+msgstr "قالب مهام انواع الاجراءات"
+
+#: executive_office/models.py:67
+msgid "procedure type task templates"
+msgstr "قوالب مهام انواع الاجراءات"
+
+#: executive_office/models.py:76 executive_office/models.py:81
+msgid "sender_entity"
+msgstr "الجهة المرسلة"
+
+#: executive_office/models.py:77
+msgid "sender_entities"
+msgstr "الجهات المرسلة"
+
+#: executive_office/models.py:83
+msgid "expected_due_date"
+msgstr "تاريخ النهاية المتوقع"
+
+#: executive_office/models.py:84
+msgid "finish_date"
+msgstr "تاريخ النهاية"
+
+#: executive_office/models.py:85
+msgid "comment"
+msgstr "ملاحظات"
+
+#: executive_office/models.py:86 executive_office/models.py:123
+#: gold_travel/admin.py:436 gold_travel/admin.py:477 gold_travel/models.py:131
+#: gold_travel/models.py:210 gold_travel_traditional/admin.py:339
+#: gold_travel_traditional/models.py:112 pa/models.py:95 pa/models.py:133
+#: pa/models.py:197 pa/models.py:307 pa/models.py:519 pa/tables/payment.py:34
+#: pa/tables/request.py:53 production_control/models.py:50
+#: production_control/models.py:75 production_control/models.py:117
+msgid "record_state"
+msgstr "الحالة"
+
+#: executive_office/models.py:92 executive_office/models.py:93
+#: executive_office/models.py:106 executive_office/models.py:117
+msgid "inbox"
+msgstr "صندوق الوارد"
+
+#: executive_office/models.py:107 executive_office/models.py:122
+msgid "attachment_file"
+msgstr "المرفقات"
+
+#: executive_office/models.py:110
+msgid "inbox attachment"
+msgstr "مرفقات صندوق الوارد"
+
+#: executive_office/models.py:111
+msgid "inbox attachments"
+msgstr "مرفقات صندوق الوارد"
+
+#: executive_office/models.py:129
+msgid "inbox task"
+msgstr "مهمة"
+
+#: executive_office/models.py:130
+msgid "inbox tasks"
+msgstr "قائمة المهام"
+
 #: gold_travel/admin.py:119
 msgid "Any date"
 msgstr "أي تاريخ"
@@ -2486,8 +2625,6 @@ msgid "Last year"
 msgstr "العام السابق"
 
 #: gold_travel/admin.py:180 gold_travel/admin.py:218
-#, fuzzy
-#| msgid "all"
 msgid "All"
 msgstr "الكل"
 
@@ -2597,15 +2734,6 @@ msgstr "اثبات هوية الناقل"
 msgid "repr_identity_issue_date"
 msgstr "تاريخ اصدار هوية الناقل"
 
-#: gold_travel/admin.py:436 gold_travel/admin.py:477 gold_travel/models.py:131
-#: gold_travel/models.py:210 gold_travel_traditional/admin.py:339
-#: gold_travel_traditional/models.py:112 pa/models.py:95 pa/models.py:133
-#: pa/models.py:197 pa/models.py:307 pa/models.py:519 pa/tables/payment.py:34
-#: pa/tables/request.py:53 production_control/models.py:50
-#: production_control/models.py:75 production_control/models.py:117
-msgid "record_state"
-msgstr "الحالة"
-
 #: gold_travel/admin.py:436 gold_travel_traditional/admin.py:339
 msgid "source_state"
 msgstr "الولاية المصدر"
@@ -2615,20 +2743,9 @@ msgstr "الولاية المصدر"
 msgid "Show certificate"
 msgstr "عرض الشهادة"
 
-#: gold_travel/admin.py:592 gold_travel/admin.py:598 gold_travel/models.py:203
-msgid "state_done"
-msgstr "تم التنفيذ"
-
 #: gold_travel/apps.py:7
 msgid "Gold travel"
 msgstr "نقل وترحيل الذهب بغرض الصادر"
-
-#: gold_travel/forms.py:11 gold_travel/models.py:46
-#: gold_travel_traditional/forms.py:12 gold_travel_traditional/forms.py:19
-#: gold_travel_traditional/models.py:40 production_control/forms.py:22
-#: production_control/models.py:34
-msgid "user"
-msgstr "المستخدم"
 
 #: gold_travel/models.py:24
 msgid "next_serial_no"
@@ -2681,11 +2798,6 @@ msgstr "الممثلين بالولاية"
 #: gold_travel/models.py:76
 msgid "ssmo_name"
 msgstr "الهيئة السودانية للمواصفات والمقاييس / بورتسودان"
-
-#: gold_travel/models.py:89 gold_travel/models.py:201
-#: production_control/models.py:14
-msgid "state_draft"
-msgstr "مسودة"
 
 #: gold_travel/models.py:91
 msgid "state_2mn_2lm3adin"
@@ -2751,7 +2863,7 @@ msgstr "تفاصيل السبيكة"
 msgid "alloy details"
 msgstr "تفاصيل السبائك"
 
-#: gold_travel/models.py:202 production_control/admin.py:31
+#: gold_travel/models.py:202 production_control/admin.py:32
 #: production_control/models.py:15
 msgid "state_confirmed"
 msgstr "مؤكد"
@@ -2849,9 +2961,10 @@ msgstr "محرر الاستمارة"
 msgid "Gold travel Traditional"
 msgstr "نظام رصد وتتبع ترحيل الذهب (التعدين التقليدي)"
 
-#: gold_travel_traditional/models.py:25 gold_travel_traditional/models.py:26
-#: gold_travel_traditional/models.py:53 traditional_api/models.py:37
-#: traditional_api/models.py:38 traditional_api/models.py:44
+#: gold_travel_traditional/forms.py:19 gold_travel_traditional/models.py:25
+#: gold_travel_traditional/models.py:26 gold_travel_traditional/models.py:53
+#: traditional_api/models.py:37 traditional_api/models.py:38
+#: traditional_api/models.py:44
 msgid "Soag"
 msgstr "السوق"
 
@@ -2891,31 +3004,6 @@ msgstr "إستمارة ترحيل الذهب"
 #: templates/admin/company_profile/app_index.html:62
 msgid "Home"
 msgstr "الرئيسية"
-
-#: gold_travel_traditional/templates/admin/gold_travel_traditional/change_list.html:7
-msgid "Filter"
-msgstr ""
-
-#: gold_travel_traditional/templates/admin/gold_travel_traditional/change_list.html:10
-#, fuzzy
-#| msgid "License count"
-msgid "Hide counts"
-msgstr "عدد الرخص"
-
-#: gold_travel_traditional/templates/admin/gold_travel_traditional/change_list.html:11
-#, fuzzy
-#| msgid "Show movement"
-msgid "Show counts"
-msgstr "عرض طلب حركة اجنبي"
-
-#: gold_travel_traditional/templates/admin/gold_travel_traditional/change_list.html:14
-msgid "Clear all filters"
-msgstr ""
-
-#: gold_travel_traditional/templates/admin/my_filter.html:4
-#, python-format
-msgid " By %(filter_title)s "
-msgstr ""
 
 #: help_request/apps.py:8 help_request/models.py:22 help_request/models.py:26
 msgid "help request"
@@ -3936,10 +4024,6 @@ msgstr "قبل"
 msgid "befor_balance"
 msgstr "الرصيد السابق"
 
-#: pa/views/application.py:97 pa/views/application.py:219
-msgid "Record saved successfully."
-msgstr "تم حفظ السجل بنجاح."
-
 #: pa/views/application.py:397 pa/views/application.py:454
 msgid "Record removed successfully."
 msgstr "تم حذف السجل بنجاح."
@@ -4036,11 +4120,17 @@ msgstr "تعديل مطالبة "
 msgid "Delete request"
 msgstr "حذف سجل مطالبة"
 
-#: production_control/admin.py:174 production_control/models.py:49
+#: production_control/admin.py:166
+#, fuzzy
+#| msgid "Revenu distribution"
+msgid "end distribution"
+msgstr "توزيع الايرادات"
+
+#: production_control/admin.py:183 production_control/models.py:49
 msgid "moragib"
 msgstr "مشرف ميداني"
 
-#: production_control/admin.py:218
+#: production_control/admin.py:233
 msgid "total_weight"
 msgstr "إجمالي الوزن بالجرام"
 
@@ -4048,7 +4138,11 @@ msgstr "إجمالي الوزن بالجرام"
 msgid "production_control"
 msgstr "نظام إنتاج وترحيل الذهب بالشركات"
 
-#: production_control/forms.py:100 production_control/models.py:97
+#: production_control/forms.py:65 production_control/models.py:79
+msgid "alloy_weight_expected"
+msgstr "الوزن المتوقع بالجرام"
+
+#: production_control/forms.py:101 production_control/models.py:97
 #: production_control/models.py:139
 msgid "alloy_serial_no"
 msgstr "رقم السبيكة"
@@ -4080,10 +4174,6 @@ msgstr "وزن الخبث"
 #: production_control/models.py:78
 msgid "alloy_remaind"
 msgstr "وزن الذهب المتبقي"
-
-#: production_control/models.py:79
-msgid "alloy_weight_expected"
-msgstr "الوزن المتوقع بالجرام"
 
 #: production_control/models.py:81
 msgid "gold_production_3hda_file"
@@ -4291,6 +4381,16 @@ msgstr "تم تسجيل الدخول بنجاح."
 msgid "Record added sucessfully."
 msgstr "تم حفظ السجل بنجاح."
 
+#, fuzzy
+#~| msgid "License count"
+#~ msgid "Hide counts"
+#~ msgstr "عدد الرخص"
+
+#, fuzzy
+#~| msgid "Show movement"
+#~ msgid "Show counts"
+#~ msgstr "عرض طلب حركة اجنبي"
+
 #~ msgid "gold_production_user"
 #~ msgstr "مراقب الانتاج"
 
@@ -4323,9 +4423,6 @@ msgstr "تم حفظ السجل بنجاح."
 #~| msgid "end_date"
 #~ msgid "end_dt"
 #~ msgstr "تاريخ النهاية"
-
-#~ msgid "include attachments"
-#~ msgstr "يحتوي على مرفقات"
 
 #~ msgid "not include attachments"
 #~ msgstr "لايحتوي على مرفقات"

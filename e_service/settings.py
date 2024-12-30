@@ -100,6 +100,7 @@ INSTALLED_APPS = [
     'mokhalafat',
     'production_control',
     'gold_travel_traditional',
+    'executive_office',
 
     # Debug
     'debug_toolbar',

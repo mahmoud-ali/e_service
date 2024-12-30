@@ -1,17 +1,18 @@
 from django.db import models
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
+from django.utils import timezone
 
 from company_profile.models import LkpState
 
 STATE_DRAFT = 1
-STATE_CONFIRMED = 2
-STATE_EXPIRED = 3
+STATE_PROCESSING = 2
+STATE_DONE = 3
 
 STATE_CHOICES = {
     STATE_DRAFT: _('state_draft'),
-    STATE_CONFIRMED: _('state_confirmed'),
-    STATE_EXPIRED: _('state_expired'),
+    STATE_PROCESSING: _('state_processing'),
+    STATE_DONE: _('state_done'),
 }
 
 ORDER_PROCEDURE = 1
@@ -70,18 +71,20 @@ class SenderEntity(models.Model):
     name = models.CharField(_("name"),max_length=100)
 
     def __str__(self):
-        return f'{self.name} ({self.user})'
+        return f'{self.name}'
 
     class Meta:
-        verbose_name = _("contact")
-        verbose_name_plural = _("contacts")
+        verbose_name = _("sender_entity")
+        verbose_name_plural = _("sender_entities")
 
 class Inbox(LoggingModel):
     procedure_type = models.ForeignKey(ProcedureType, on_delete=models.PROTECT,verbose_name=_("procedure_type"))
     sender_entity = models.ForeignKey(SenderEntity, on_delete=models.PROTECT,verbose_name=_("sender_entity"))
-    start_date = models.DateTimeField(_("start_date"))
-    expected_due_date = models.DateTimeField(_("expected_due_date"))
-    finish_date = models.DateTimeField(_("finish_date"),null=True)
+    start_date = models.DateField(_("start_date"))
+    expected_due_date = models.DateField(_("expected_due_date"))
+    finish_date = models.DateField(_("finish_date"),null=True)
+    comment = models.TextField(_("comment"),null=True,blank=True)
+    state = models.IntegerField(_("record_state"), choices=STATE_CHOICES, default=STATE_DRAFT)
 
     def __str__(self):
         return f'{self.procedure_type} ({self.sender_entity})'
@@ -89,6 +92,14 @@ class Inbox(LoggingModel):
     class Meta:
         verbose_name = _("inbox")
         verbose_name_plural = _("inbox")
+
+    def update_inbox_state(self):
+        qs = self.inboxtasks_set.all()
+
+        if qs.count() == qs.filter(state=STATE_DONE).count():
+            self.state = STATE_DONE
+            self.finish_date = timezone.now()
+            self.save()
 
 def inbox_path(instance, filename):
     return "executive_office/{0}/{1}".format(instance.inbox.sender_entity, filename)    
@@ -101,14 +112,20 @@ class InboxAttachment(models.Model):
         verbose_name = _("inbox attachment")
         verbose_name_plural = _("inbox attachments")
 
+def task_path(instance, filename):
+    return "executive_office/{0}/tasks/{1}".format(instance.inbox.sender_entity, filename)    
+
 class InboxTasks(models.Model):
     inbox = models.ForeignKey(Inbox, on_delete=models.PROTECT,verbose_name=_("inbox"))
     title = models.CharField(_("title"),max_length=200)
     order = models.IntegerField(_("order"),choices=ORDER_CHOICES)
     assign_to = models.ForeignKey(Contact, on_delete=models.PROTECT,verbose_name=_("assign_to"))
+    comment = models.TextField(_("comment"),null=True,blank=True)
+    attachment_file = models.FileField(_("attachment_file"),upload_to=task_path,null=True,blank=True,default='')
+    state = models.IntegerField(_("record_state"), choices=STATE_CHOICES, default=STATE_DRAFT)
 
     def __str__(self):
-        return f'{self.inbox} ({self.title}/{self.assign_to})'
+        return f'{self.inbox} ({self.id})'
 
     class Meta:
         verbose_name = _("inbox task")
