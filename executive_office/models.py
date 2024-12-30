@@ -51,11 +51,11 @@ class ProcedureType(models.Model):
         return f'{self.name}'
 
     class Meta:
-        verbose_name = _("procedure_type")
+        verbose_name = _("procedure_type2")
         verbose_name_plural = _("procedure_types")
 
 class ProcedureTypeTasksTemplate(models.Model):
-    procedure_type = models.ForeignKey(ProcedureType, on_delete=models.PROTECT,verbose_name=_("procedure_type"))
+    procedure_type = models.ForeignKey(ProcedureType, on_delete=models.PROTECT,verbose_name=_("procedure_type2"))
     title = models.CharField(_("title"),max_length=200)
     order = models.IntegerField(_("order"),choices=ORDER_CHOICES)
     assign_to = models.ForeignKey(Contact, on_delete=models.PROTECT,verbose_name=_("assign_to"))
@@ -78,7 +78,7 @@ class SenderEntity(models.Model):
         verbose_name_plural = _("sender_entities")
 
 class Inbox(LoggingModel):
-    procedure_type = models.ForeignKey(ProcedureType, on_delete=models.PROTECT,verbose_name=_("procedure_type"))
+    procedure_type = models.ForeignKey(ProcedureType, on_delete=models.PROTECT,verbose_name=_("procedure_type2"))
     sender_entity = models.ForeignKey(SenderEntity, on_delete=models.PROTECT,verbose_name=_("sender_entity"))
     start_date = models.DateField(_("start_date"))
     expected_due_date = models.DateField(_("expected_due_date"))
