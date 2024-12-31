@@ -147,7 +147,7 @@ class InboxTasksAdmin(admin.ModelAdmin):
 
         try:
             contact =  request.user.executive_user
-            qs.filter(assign_to = contact)
+            qs = qs.filter(assign_to = contact)
         except:
             return qs.none()
         
