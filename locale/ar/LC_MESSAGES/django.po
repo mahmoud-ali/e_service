@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-30 16:23+0200\n"
+"POT-Creation-Date: 2024-12-31 08:50+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -182,6 +182,7 @@ msgstr ""
 #: company_profile/models.py:1034 company_profile/models.py:1059
 #: company_profile/models.py:1105 company_profile/models.py:1125
 #: company_profile/models.py:1141 company_profile/models.py:1165
+#: executive_office/forms.py:24 executive_office/models.py:130
 #: pa/forms/commitment.py:80 pa/forms/daily.py:9 pa/models.py:93
 #: pa/models.py:129 pa/tables/payment.py:33 pa/tables/request.py:51
 #: pa/templates/pa/pa_daily.html:46 production_control/admin.py:179
@@ -203,7 +204,7 @@ msgid "license_type"
 msgstr "النوع"
 
 #: company_profile/admin.py:364 company_profile/models.py:224
-#: executive_office/models.py:83 pa/templates/pa/company_panel.html:23
+#: executive_office/models.py:84 pa/templates/pa/company_panel.html:23
 msgid "start_date"
 msgstr "تاريح البداية"
 
@@ -1274,7 +1275,7 @@ msgstr "نوع تصديق اجنبي"
 msgid "Foreigner Procedure Types"
 msgstr "انواع تصديق اجنبي"
 
-#: company_profile/models.py:741 executive_office/models.py:81
+#: company_profile/models.py:741
 msgid "procedure_type"
 msgstr "نوع التصديق"
 
@@ -2457,25 +2458,25 @@ msgstr ""
 msgid "Wrong transition path."
 msgstr ""
 
-#: executive_office/admin.py:66 executive_office/admin.py:115
+#: executive_office/admin.py:73 executive_office/admin.py:122
 #: gold_travel/models.py:202 production_control/admin.py:32
 #: production_control/models.py:15
 msgid "state_confirmed"
 msgstr "مؤكد"
 
-#: executive_office/admin.py:119 executive_office/models.py:84
+#: executive_office/admin.py:126 executive_office/models.py:85
 msgid "expected_due_date"
 msgstr "تاريخ النهاية المتوقع"
 
-#: executive_office/admin.py:123
+#: executive_office/admin.py:130
 msgid "inbox_attachments"
 msgstr "الخطاب الوارد"
 
-#: executive_office/admin.py:134
+#: executive_office/admin.py:141
 msgid "mark_done"
 msgstr "تم التنفيذ"
 
-#: executive_office/admin.py:140 pa/views/application.py:97
+#: executive_office/admin.py:147 pa/views/application.py:97
 #: pa/views/application.py:219
 msgid "Record saved successfully."
 msgstr "تم حفظ السجل بنجاح."
@@ -2484,7 +2485,7 @@ msgstr "تم حفظ السجل بنجاح."
 msgid "Executive Office"
 msgstr "المكتب التنفيذي"
 
-#: executive_office/forms.py:11 executive_office/models.py:37
+#: executive_office/forms.py:15 executive_office/models.py:37
 #: gold_travel/forms.py:11 gold_travel/models.py:46
 #: gold_travel_traditional/forms.py:12 gold_travel_traditional/models.py:40
 #: production_control/forms.py:22 production_control/models.py:34
@@ -2522,6 +2523,7 @@ msgid "contacts"
 msgstr "التواصل"
 
 #: executive_office/models.py:54 executive_office/models.py:58
+#: executive_office/models.py:82
 msgid "procedure_type2"
 msgstr "نوع الاجراء"
 
@@ -2529,15 +2531,15 @@ msgstr "نوع الاجراء"
 msgid "procedure_types"
 msgstr "انواع الاجراءات"
 
-#: executive_office/models.py:59 executive_office/models.py:120
+#: executive_office/models.py:59 executive_office/models.py:144
 msgid "title"
 msgstr "العتوان"
 
-#: executive_office/models.py:60 executive_office/models.py:121
+#: executive_office/models.py:60 executive_office/models.py:145
 msgid "order"
 msgstr "التوجيه"
 
-#: executive_office/models.py:61 executive_office/models.py:122
+#: executive_office/models.py:61 executive_office/models.py:146
 msgid "assign_to"
 msgstr "المسئول عن التنفيذ"
 
@@ -2549,7 +2551,7 @@ msgstr "قالب مهام انواع الاجراءات"
 msgid "procedure type task templates"
 msgstr "قوالب مهام انواع الاجراءات"
 
-#: executive_office/models.py:77 executive_office/models.py:82
+#: executive_office/models.py:77 executive_office/models.py:83
 msgid "sender_entity"
 msgstr "الجهة المرسلة"
 
@@ -2557,15 +2559,19 @@ msgstr "الجهة المرسلة"
 msgid "sender_entities"
 msgstr "الجهات المرسلة"
 
-#: executive_office/models.py:85
+#: executive_office/models.py:81
+msgid "subject"
+msgstr "الموضوع"
+
+#: executive_office/models.py:86
 msgid "finish_date"
 msgstr "تاريخ النهاية"
 
-#: executive_office/models.py:86 executive_office/models.py:123
+#: executive_office/models.py:87 executive_office/models.py:147
 msgid "comment"
 msgstr "ملاحظات"
 
-#: executive_office/models.py:87 executive_office/models.py:125
+#: executive_office/models.py:88 executive_office/models.py:149
 #: gold_travel/admin.py:436 gold_travel/admin.py:477 gold_travel/models.py:131
 #: gold_travel/models.py:210 gold_travel_traditional/admin.py:339
 #: gold_travel_traditional/models.py:112 pa/models.py:95 pa/models.py:133
@@ -2575,28 +2581,37 @@ msgstr "ملاحظات"
 msgid "record_state"
 msgstr "الحالة"
 
-#: executive_office/models.py:93 executive_office/models.py:94
-#: executive_office/models.py:108 executive_office/models.py:119
+#: executive_office/models.py:94 executive_office/models.py:95
+#: executive_office/models.py:121 executive_office/models.py:129
+#: executive_office/models.py:143
 msgid "inbox"
 msgstr "صندوق الوارد"
 
-#: executive_office/models.py:109 executive_office/models.py:124
+#: executive_office/models.py:122 executive_office/models.py:148
 msgid "attachment_file"
 msgstr "المرفقات"
 
-#: executive_office/models.py:112
+#: executive_office/models.py:125
 msgid "inbox attachment"
 msgstr "الخطابات الواردة"
 
-#: executive_office/models.py:113
+#: executive_office/models.py:126
 msgid "inbox attachments"
 msgstr "الخطابات الواردة"
 
-#: executive_office/models.py:131
+#: executive_office/models.py:136
+msgid "inbox company"
+msgstr "الشركة"
+
+#: executive_office/models.py:137
+msgid "inbox companies"
+msgstr "الشركات"
+
+#: executive_office/models.py:155
 msgid "inbox task"
 msgstr "مهمة"
 
-#: executive_office/models.py:132
+#: executive_office/models.py:156
 msgid "inbox tasks"
 msgstr "قائمة المهام"
 
@@ -4128,10 +4143,8 @@ msgid "Delete request"
 msgstr "حذف سجل مطالبة"
 
 #: production_control/admin.py:166
-#, fuzzy
-#| msgid "Revenu distribution"
 msgid "end distribution"
-msgstr "توزيع الايرادات"
+msgstr "انهاء توزيع مشرف ميداني"
 
 #: production_control/admin.py:183 production_control/models.py:49
 msgid "moragib"

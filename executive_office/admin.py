@@ -2,16 +2,16 @@ from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
 from django.utils.html import format_html
 
-from executive_office.forms import ContactForm
-from executive_office.models import STATE_DONE, STATE_DRAFT, STATE_PROCESSING, Contact, Inbox, InboxAttachment, InboxTasks, ProcedureType, ProcedureTypeTasksTemplate, SenderEntity
+from executive_office.forms import ContactForm, InboxCompanyForm
+from executive_office.models import STATE_DONE, STATE_DRAFT, STATE_PROCESSING, Contact, Inbox, InboxAttachment, InboxCompany, InboxTasks, ProcedureType, ProcedureTypeTasksTemplate, SenderEntity
 
-@admin.register(Contact)
-class ContactAdmin(admin.ModelAdmin):
-    model = Contact
-    form = ContactForm
-    list_display = ["name","user"]
-    search_fields = ["name","user__email"]
-    # list_filter = ["company_type"]
+# @admin.register(Contact)
+# class ContactAdmin(admin.ModelAdmin):
+#     model = Contact
+#     form = ContactForm
+#     list_display = ["name","user"]
+#     search_fields = ["name","user__email"]
+#     # list_filter = ["company_type"]
 
 class ProcedureTypeTasksTemplateInline(admin.TabularInline):
     model = ProcedureTypeTasksTemplate
@@ -25,15 +25,21 @@ class ProcedureTypeAdmin(admin.ModelAdmin):
     list_display = ["name"]
     search_fields = ["name"]
 
-@admin.register(SenderEntity)
-class SenderEntityAdmin(admin.ModelAdmin):
-    model = SenderEntity
-    list_display = ["name"]
-    search_fields = ["name"]
+# @admin.register(SenderEntity)
+# class SenderEntityAdmin(admin.ModelAdmin):
+#     model = SenderEntity
+#     list_display = ["name"]
+#     search_fields = ["name"]
 
 class InboxAttachmentInline(admin.TabularInline):
     model = InboxAttachment
     fields = ['attachment_file']
+    extra = 1
+
+class InboxCompanyInline(admin.TabularInline):
+    model = InboxCompany
+    form = InboxCompanyForm
+    fields = ['company']
     extra = 1
 
 class InboxTasksInline(admin.TabularInline):
@@ -50,9 +56,10 @@ class InboxTasksInline(admin.TabularInline):
 @admin.register(Inbox)
 class InboxAdmin(admin.ModelAdmin):
     model = Inbox
-    exclude = ["finish_date","state"]
-    inlines = [InboxAttachmentInline,InboxTasksInline]
-    list_display = ["procedure_type","sender_entity","start_date","expected_due_date","finish_date","state"]
+    # exclude = ["finish_date","state"]
+    fields = ["subject","sender_entity","procedure_type",("start_date","expected_due_date"),"comment"]
+    inlines = [InboxAttachmentInline,InboxCompanyInline,InboxTasksInline]
+    list_display = ["subject","procedure_type","sender_entity","start_date","expected_due_date","finish_date","state"]
     search_fields = ["procedure_type__name","sender_entity__name"]
 
     def change_view(self,request,object_id, form_url='', extra_context=None):

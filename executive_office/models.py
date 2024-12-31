@@ -3,7 +3,7 @@ from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
 
-from company_profile.models import LkpState
+from company_profile.models import LkpState, TblCompanyProduction
 
 STATE_DRAFT = 1
 STATE_PROCESSING = 2
@@ -78,6 +78,7 @@ class SenderEntity(models.Model):
         verbose_name_plural = _("sender_entities")
 
 class Inbox(LoggingModel):
+    subject = models.CharField(_("subject"),max_length=150)    
     procedure_type = models.ForeignKey(ProcedureType, on_delete=models.PROTECT,verbose_name=_("procedure_type2"))
     sender_entity = models.ForeignKey(SenderEntity, on_delete=models.PROTECT,verbose_name=_("sender_entity"))
     start_date = models.DateField(_("start_date"))
@@ -123,6 +124,17 @@ class InboxAttachment(models.Model):
     class Meta:
         verbose_name = _("inbox attachment")
         verbose_name_plural = _("inbox attachments")
+
+class InboxCompany(models.Model):
+    inbox = models.ForeignKey(Inbox, on_delete=models.PROTECT,verbose_name=_("inbox"))
+    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
+
+    def __str__(self):
+        return f'{self.inbox} ({self.id})'
+
+    class Meta:
+        verbose_name = _("inbox company")
+        verbose_name_plural = _("inbox companies")
 
 def task_path(instance, filename):
     return "executive_office/{0}/tasks/{1}".format(instance.inbox.sender_entity, filename)    
