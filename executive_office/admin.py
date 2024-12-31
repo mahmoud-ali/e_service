@@ -144,6 +144,13 @@ class InboxTasksAdmin(admin.ModelAdmin):
     def get_queryset(self, request):
         qs =  super().get_queryset(request)
         qs = qs.filter(state__gt = STATE_DRAFT)
+
+        try:
+            contact =  request.user.executive_user
+            qs.filter(assign_to = contact)
+        except:
+            return qs.none()
+        
         return qs
 
     @admin.display(description=_('expected_due_date'))

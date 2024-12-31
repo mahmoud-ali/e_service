@@ -12,7 +12,7 @@ UserModel = get_user_model()
 company_emtiaz_qs = TblCompanyProduction.objects.filter(company_type=TblCompany.COMPANY_TYPE_EMTIAZ)
 
 class ContactForm(forms.ModelForm):
-    user = forms.ModelChoiceField(queryset=UserModel.objects.filter(groups__name__in=['executive_office_mngr',]), label=_("user"))
+    user = forms.ModelChoiceField(queryset=UserModel.objects.filter(groups__name__in=['executive_office_general_mngr','executive_office_mngr','executive_office_general_admin']), label=_("user"))
 
     class Meta:
         model = Contact
