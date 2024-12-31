@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-31 08:50+0200\n"
+"POT-Creation-Date: 2024-12-31 09:26+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -182,7 +182,8 @@ msgstr ""
 #: company_profile/models.py:1034 company_profile/models.py:1059
 #: company_profile/models.py:1105 company_profile/models.py:1125
 #: company_profile/models.py:1141 company_profile/models.py:1165
-#: executive_office/forms.py:24 executive_office/models.py:130
+#: executive_office/admin.py:113 executive_office/admin.py:165
+#: executive_office/forms.py:37 executive_office/models.py:130
 #: pa/forms/commitment.py:80 pa/forms/daily.py:9 pa/models.py:93
 #: pa/models.py:129 pa/tables/payment.py:33 pa/tables/request.py:51
 #: pa/templates/pa/pa_daily.html:46 production_control/admin.py:179
@@ -2458,25 +2459,29 @@ msgstr ""
 msgid "Wrong transition path."
 msgstr ""
 
-#: executive_office/admin.py:73 executive_office/admin.py:122
+#: executive_office/admin.py:74 executive_office/admin.py:139
 #: gold_travel/models.py:202 production_control/admin.py:32
 #: production_control/models.py:15
 msgid "state_confirmed"
 msgstr "مؤكد"
 
-#: executive_office/admin.py:126 executive_office/models.py:85
+#: executive_office/admin.py:148 executive_office/models.py:85
 msgid "expected_due_date"
 msgstr "تاريخ النهاية المتوقع"
 
-#: executive_office/admin.py:130
+#: executive_office/admin.py:152 executive_office/models.py:81
+msgid "subject"
+msgstr "الموضوع"
+
+#: executive_office/admin.py:156
 msgid "inbox_attachments"
 msgstr "الخطاب الوارد"
 
-#: executive_office/admin.py:141
+#: executive_office/admin.py:176
 msgid "mark_done"
 msgstr "تم التنفيذ"
 
-#: executive_office/admin.py:147 pa/views/application.py:97
+#: executive_office/admin.py:182 pa/views/application.py:97
 #: pa/views/application.py:219
 msgid "Record saved successfully."
 msgstr "تم حفظ السجل بنجاح."
@@ -2531,7 +2536,7 @@ msgstr "نوع الاجراء"
 msgid "procedure_types"
 msgstr "انواع الاجراءات"
 
-#: executive_office/models.py:59 executive_office/models.py:144
+#: executive_office/models.py:59
 msgid "title"
 msgstr "العتوان"
 
@@ -2558,10 +2563,6 @@ msgstr "الجهة المرسلة"
 #: executive_office/models.py:78
 msgid "sender_entities"
 msgstr "الجهات المرسلة"
-
-#: executive_office/models.py:81
-msgid "subject"
-msgstr "الموضوع"
 
 #: executive_office/models.py:86
 msgid "finish_date"
@@ -2606,6 +2607,10 @@ msgstr "الشركة"
 #: executive_office/models.py:137
 msgid "inbox companies"
 msgstr "الشركات"
+
+#: executive_office/models.py:144
+msgid "task_title"
+msgstr "عنوان المهمة"
 
 #: executive_office/models.py:155
 msgid "inbox task"

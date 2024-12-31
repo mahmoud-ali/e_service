@@ -130,7 +130,7 @@ class InboxCompany(models.Model):
     company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
 
     def __str__(self):
-        return f'{self.inbox} ({self.id})'
+        return f'{self.inbox} ({self.company.name_ar})'
 
     class Meta:
         verbose_name = _("inbox company")
@@ -141,7 +141,7 @@ def task_path(instance, filename):
 
 class InboxTasks(models.Model):
     inbox = models.ForeignKey(Inbox, on_delete=models.PROTECT,verbose_name=_("inbox"))
-    title = models.CharField(_("title"),max_length=200)
+    title = models.CharField(_("task_title"),max_length=200)
     order = models.IntegerField(_("order"),choices=ORDER_CHOICES)
     assign_to = models.ForeignKey(Contact, on_delete=models.PROTECT,verbose_name=_("assign_to"))
     comment = models.TextField(_("comment"),null=True,blank=True)

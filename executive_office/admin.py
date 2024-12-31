@@ -1,17 +1,18 @@
 from django.contrib import admin
+from django.urls import path
 from django.utils.translation import gettext_lazy as _
 from django.utils.html import format_html
 
-from executive_office.forms import ContactForm, InboxCompanyForm
+from executive_office.forms import ContactForm, InboxCompanyForm, TblCompanyProductionEmtiazAutocomplete
 from executive_office.models import STATE_DONE, STATE_DRAFT, STATE_PROCESSING, Contact, Inbox, InboxAttachment, InboxCompany, InboxTasks, ProcedureType, ProcedureTypeTasksTemplate, SenderEntity
 
-# @admin.register(Contact)
-# class ContactAdmin(admin.ModelAdmin):
-#     model = Contact
-#     form = ContactForm
-#     list_display = ["name","user"]
-#     search_fields = ["name","user__email"]
-#     # list_filter = ["company_type"]
+@admin.register(Contact)
+class ContactAdmin(admin.ModelAdmin):
+    model = Contact
+    form = ContactForm
+    list_display = ["name","user"]
+    search_fields = ["name","user__email"]
+    # list_filter = ["company_type"]
 
 class ProcedureTypeTasksTemplateInline(admin.TabularInline):
     model = ProcedureTypeTasksTemplate
@@ -25,11 +26,11 @@ class ProcedureTypeAdmin(admin.ModelAdmin):
     list_display = ["name"]
     search_fields = ["name"]
 
-# @admin.register(SenderEntity)
-# class SenderEntityAdmin(admin.ModelAdmin):
-#     model = SenderEntity
-#     list_display = ["name"]
-#     search_fields = ["name"]
+@admin.register(SenderEntity)
+class SenderEntityAdmin(admin.ModelAdmin):
+    model = SenderEntity
+    list_display = ["name"]
+    search_fields = ["name"]
 
 class InboxAttachmentInline(admin.TabularInline):
     model = InboxAttachment
@@ -39,7 +40,7 @@ class InboxAttachmentInline(admin.TabularInline):
 class InboxCompanyInline(admin.TabularInline):
     model = InboxCompany
     form = InboxCompanyForm
-    fields = ['company']
+    # fields = ['company']
     extra = 1
 
 class InboxTasksInline(admin.TabularInline):
@@ -59,8 +60,9 @@ class InboxAdmin(admin.ModelAdmin):
     # exclude = ["finish_date","state"]
     fields = ["subject","sender_entity","procedure_type",("start_date","expected_due_date"),"comment"]
     inlines = [InboxAttachmentInline,InboxCompanyInline,InboxTasksInline]
-    list_display = ["subject","procedure_type","sender_entity","start_date","expected_due_date","finish_date","state"]
+    list_display = ["subject","procedure_type","sender_entity","inbox_companies","start_date","expected_due_date","finish_date","state"]
     search_fields = ["procedure_type__name","sender_entity__name"]
+    list_filter = ["procedure_type","sender_entity","state",]
 
     def change_view(self,request,object_id, form_url='', extra_context=None):
         template = super().change_view(request,object_id, form_url, extra_context)
@@ -102,13 +104,29 @@ class InboxAdmin(admin.ModelAdmin):
         
         return super().has_delete_permission(request,obj)
 
+    def get_urls(self):
+        urls = super().get_urls()
+        my_urls = [
+            path("company_list/", TblCompanyProductionEmtiazAutocomplete.as_view(),name="lkp_company_emtiaz_list"),
+        ]
+        return my_urls + urls
+
+    @admin.display(description=_('company'))
+    def inbox_companies(self,obj:Inbox):
+        l = []
+        for rec in obj.inboxcompany_set.all():
+            link = f'{rec.company.name_ar}'
+            l.append(link)
+            
+        return format_html(", ".join(l))
+
 @admin.register(InboxTasks)
 class InboxTasksAdmin(admin.ModelAdmin):
     model = InboxTasks
     fields = ['title','order','assign_to','comment','attachment_file']
     readonly_fields = ['title','order','assign_to']
-    list_display = ['title','order','assign_to','comment','expected_due_date','inbox_attachments','state']
-    search_fields = ['title','order','assign_to',]
+    list_display = ['subject','title','order','inbox_companies','inbox_attachments','expected_due_date','state']
+    search_fields = ['inbox__subject','title','order','assign_to',]
     list_filter = ["state","assign_to"]
 
     actions = ['mark_done']
@@ -122,16 +140,34 @@ class InboxTasksAdmin(admin.ModelAdmin):
             self.log_change(request,obj,_('state_confirmed'))
 
         return template
+    
+    def get_queryset(self, request):
+        qs =  super().get_queryset(request)
+        qs = qs.filter(state__gt = STATE_DRAFT)
+        return qs
 
     @admin.display(description=_('expected_due_date'))
     def expected_due_date(self,obj:InboxTasks):
         return obj.inbox.expected_due_date
+
+    @admin.display(description=_('subject'))
+    def subject(self,obj:InboxTasks):
+        return obj.inbox.subject
 
     @admin.display(description=_('inbox_attachments'))
     def inbox_attachments(self,obj:InboxTasks):
         l = []
         for rec in obj.inbox.inboxattachment_set.all():
             link = f'<a href="{rec.attachment_file.url}">{rec.attachment_file.name}</a>'
+            l.append(link)
+            
+        return format_html(", ".join(l))
+    
+    @admin.display(description=_('company'))
+    def inbox_companies(self,obj:InboxTasks):
+        l = []
+        for rec in obj.inbox.inboxcompany_set.all():
+            link = f'{rec.company.name_ar}'
             l.append(link)
             
         return format_html(", ".join(l))
