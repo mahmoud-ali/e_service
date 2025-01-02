@@ -39,7 +39,7 @@ class TblCompanyProductionAutocomplete(autocomplete.Select2QuerySetView):
         qs = TblCompanyProduction.objects.filter(company_type__in= get_company_types(self.request))
 
         if self.q:
-            qs = qs.filter(name_ar__contains=self.q) | qs.filter(name_en__contains=self.q)
+            qs = qs.filter(name_ar__icontains=self.q) | qs.filter(name_en__icontains=self.q)
 
         return qs
     

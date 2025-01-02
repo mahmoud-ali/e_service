@@ -27,7 +27,7 @@ class TblCompanyProductionEmtiazAutocomplete(autocomplete.Select2QuerySetView):
         qs = company_emtiaz_qs
 
         if self.q:
-            qs = qs.filter(name_ar__contains=self.q) | qs.filter(name_en__contains=self.q)
+            qs = qs.filter(name_ar__icontains=self.q) | qs.filter(name_en__icontains=self.q)
 
         return qs
 
