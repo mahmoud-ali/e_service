@@ -34,6 +34,7 @@ urlpatterns = [
     path('pa/', include('pa.urls')), 
     path('help/', include('help_request.urls')), 
     path('gold_travel/', include('gold_travel.urls')), 
+    path('production/', include('production_control.urls')), 
     path('', include('user_sessions.urls', 'user_sessions')),
     path('', include('company_profile.urls')),
     # path('', include('pwa.urls')),  # You MUST use an empty string as the URL prefix    
