@@ -47,7 +47,7 @@ def ShippingView(request):
                 'details':
                         map(
                             lambda detail: {
-                                'production_id':detail.alloy_serial_no.id,                        
+                                'production_id':detail.alloy_serial_no.master.id,                        
                                 'alloy_serial_no':detail.alloy_serial_no.alloy_serial_no,                        
                                 'alloy_weight':detail.alloy_serial_no.alloy_weight,                        
                                 'alloy_added_gold':detail.alloy_serial_no.alloy_added_gold,                        
