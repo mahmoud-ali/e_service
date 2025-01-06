@@ -109,102 +109,6 @@ class LoggingModel(models.Model):
     class Meta:
         abstract = True
 
-class Settings(LoggingModel):
-    MOAHIL_PREFIX = 'moahil_'
-    MOSAMA_PREFIX = 'mosama_'
-
-    SETTINGS_ZAKA_KAFAF = 'zaka_kafaf'
-    SETTINGS_ZAKA_NISAB = 'zaka_nisab'
-    SETTINGS_GASIMA = 'gasima'
-    SETTINGS_ATFAL = 'atfal'
-    SETTINGS_DAMGA = 'damga'
-    SETTINGS_SANDOG = 'sandog'
-    SETTINGS_AADOA = 'aadoa'
-    SETTINGS_DARIBAT_2LMOKAFA = 'daribat_2lmokafa'
-    SETTINGS_ENABLE_SANDOG_KAHRABA = 'enable_kahraba' #enable_sandog_kahraba
-    SETTINGS_ENABLE_YOUM_ALGOAT_ALMOSALAHA = 'enable_algoat' #enable_youm_algoat_almosalaha
-
-    SETTINGS_M2MORIA_RATE = 'm2moria_rate'
-    SETTINGS_E3ASHA_RATE = 'e3asha_rate'
-
-    SETTINGS_KHARJ_ELSHARIKA = 'kharj_elsharika'
-
-    SETTINGS_OMER_2LMA3ASH = 'omer_2lma3ash'
-
-    SETTINGS_KHASM_ELSANDOG_MIN_ELOMORATAB = 'khasm_elsandog_min_elomoratab'
-
-    SETTINGS_TA3AGODMOSIMI_MOZAF = 'ta3agod_mosimi_mozaf'
-    SETTINGS_TA3AGODMOSIMI_3AMIL = 'ta3agod_mosimi_3amil'
-    SETTINGS_TA3AGODMOSIMI_MOKAF2 = 'ta3agod_mosimi_mokaf2'
-
-    SETTINGS_MAJLIS_EL2DARA_R2IS_2LMAJLIS = 'majlis_el2dara_r2is'
-    SETTINGS_MAJLIS_EL2DARA_3ODO = 'majlis_el2dara_3odo'
-
-    SETTINGS_MODIR_3AM_ASAI = 'modir_3am_asai'
-
-    SETTINGS_CHOICES = {
-        SETTINGS_ZAKA_KAFAF: _('SETTINGS_ZAKAT_KAFAF'),
-        SETTINGS_ZAKA_NISAB: _('SETTINGS_ZAKAT_NISAB'),
-        SETTINGS_GASIMA: _('SETTINGS_GASIMA'),
-        SETTINGS_ATFAL: _('SETTINGS_ATFAL'),
-        SETTINGS_DAMGA: _('SETTINGS_DAMGA'),
-        SETTINGS_SANDOG: _('SETTINGS_SANDOG'),
-        SETTINGS_AADOA: _('SETTINGS_AADOA'),
-        SETTINGS_DARIBAT_2LMOKAFA: _('SETTINGS_DARIBAT_2LMOKAFA'),
-        SETTINGS_ENABLE_SANDOG_KAHRABA: _('SETTINGS_ENABLE_SANDOG_KAHRABA'),
-        SETTINGS_ENABLE_YOUM_ALGOAT_ALMOSALAHA: _('SETTINGS_ENABLE_YOUM_ALGOAT_ALMOSALAHA'),
-        SETTINGS_M2MORIA_RATE: _('SETTINGS_M2MORIA_RATE'),
-        SETTINGS_E3ASHA_RATE: _('SETTINGS_E3ASHA_RATE'),
-        SETTINGS_KHARJ_ELSHARIKA: _('SETTINGS_KHARJ_ELSHARIKA'),
-        SETTINGS_OMER_2LMA3ASH: _('SETTINGS_OMER_2LMA3ASH'),
-        SETTINGS_KHASM_ELSANDOG_MIN_ELOMORATAB: _('SETTINGS_KHASM_ELSANDOG_MIN_ELOMORATAB'),
-        SETTINGS_TA3AGODMOSIMI_MOZAF: _('SETTINGS_TA3AGODMOSIMI_MOZAF'),
-        SETTINGS_TA3AGODMOSIMI_3AMIL: _('SETTINGS_TA3AGODMOSIMI_3AMIL'),
-        SETTINGS_TA3AGODMOSIMI_MOKAF2: _('SETTINGS_TA3AGODMOSIMI_MOKAF2'),
-
-        SETTINGS_MAJLIS_EL2DARA_R2IS_2LMAJLIS: _('SETTINGS_MAJLIS_EL2DARA_R2IS_2LMAJLIS'),
-        SETTINGS_MAJLIS_EL2DARA_3ODO: _('SETTINGS_MAJLIS_EL2DARA_3ODO'),
-
-        SETTINGS_MODIR_3AM_ASAI: _('SETTINGS_MODIR_3AM_ASAI'),
-    }
-
-    for moahil in MOAHIL_CHOICES:
-        key = MOAHIL_PREFIX + moahil
-        SETTINGS_CHOICES[key] = _('moahil')+' '+MOAHIL_CHOICES[moahil]
-
-    for mosama in MOSAMA_CATEGORY_CHOICES:
-        key = MOSAMA_PREFIX + mosama
-        SETTINGS_CHOICES[key] = _('2sti7gag 2lmobashara')+' '+MOSAMA_CATEGORY_CHOICES[mosama]
-
-    code = models.CharField(_("code"), choices=SETTINGS_CHOICES,max_length=30)
-    value = models.CharField(_("value"),max_length=255)
-
-    def __str__(self) -> str:
-        return f'{self.get_code_display()}: {self.value}'
-    
-    def clean(self) -> None:
-        if self.code in [self.SETTINGS_ENABLE_SANDOG_KAHRABA,self.SETTINGS_ENABLE_YOUM_ALGOAT_ALMOSALAHA]:
-            if not self.value or not is_float(self.value) or not int(self.value) in [0,1]:
-                raise ValidationError(
-                    {"value":_("value should be 0 or 1")}
-                )
-        else:
-            if not self.value or not is_float(self.value) or float(self.value) < 0:
-                raise ValidationError(
-                    {"value":_("value should be positive number")}
-                )
-        return super().clean()
-
-    class Meta:
-        constraints = [
-            models.UniqueConstraint(fields=['code'],name="unique_setting_code")
-        ]
-        indexes = [
-            models.Index(fields=["code"]),
-        ]
-        verbose_name = _("HR Setting")
-        verbose_name_plural = _("HR Settings")
-
 class Drajat3lawat(LoggingModel):
     DRAJAT_TALTA_KHASA = -3
     DRAJAT_TANIA_KHASA = -2
@@ -278,6 +182,106 @@ class Drajat3lawat(LoggingModel):
         ordering = ["draja_wazifia","-alawa_sanawia"]
         verbose_name = _("Drajat & 3lawat")
         verbose_name_plural = _("Drajat & 3lawat")
+
+class Settings(LoggingModel):
+    MOAHIL_PREFIX = 'moahil_'
+    MOSAMA_PREFIX = 'mosama_'
+
+    SETTINGS_ZAKA_KAFAF = 'zaka_kafaf'
+    SETTINGS_ZAKA_NISAB = 'zaka_nisab'
+    SETTINGS_GASIMA = 'gasima'
+    SETTINGS_ATFAL = 'atfal'
+    SETTINGS_DAMGA = 'damga'
+    SETTINGS_SANDOG = 'sandog'
+    SETTINGS_AADOA = 'aadoa'
+    SETTINGS_DARIBAT_2LMOKAFA = 'daribat_2lmokafa'
+    SETTINGS_ENABLE_SANDOG_KAHRABA = 'enable_kahraba' #enable_sandog_kahraba
+    SETTINGS_ENABLE_YOUM_ALGOAT_ALMOSALAHA = 'enable_algoat' #enable_youm_algoat_almosalaha
+
+    SETTINGS_M2MORIA_RATE = 'm2moria_rate'
+    SETTINGS_E3ASHA_RATE = 'e3asha_rate'
+
+    SETTINGS_KHARJ_ELSHARIKA = 'kharj_elsharika'
+
+    SETTINGS_OMER_2LMA3ASH = 'omer_2lma3ash'
+
+    SETTINGS_KHASM_ELSANDOG_MIN_ELOMORATAB = 'khasm_elsandog_min_elomoratab'
+
+    SETTINGS_TA3AGODMOSIMI_MOZAF = 'ta3agod_mosimi_mozaf'
+    SETTINGS_TA3AGODMOSIMI_3AMIL = 'ta3agod_mosimi_3amil'
+    SETTINGS_TA3AGODMOSIMI_MOKAF2 = 'ta3agod_mosimi_mokaf2'
+
+    SETTINGS_MAJLIS_EL2DARA_R2IS_2LMAJLIS = 'majlis_el2dara_r2is'
+    SETTINGS_MAJLIS_EL2DARA_3ODO = 'majlis_el2dara_3odo'
+
+    SETTINGS_MODIR_3AM_ASAI = 'modir_3am_asai'
+
+    SETTINGS_CHOICES = {
+        SETTINGS_ZAKA_KAFAF: _('SETTINGS_ZAKAT_KAFAF'),
+        SETTINGS_ZAKA_NISAB: _('SETTINGS_ZAKAT_NISAB'),
+        SETTINGS_GASIMA: _('SETTINGS_GASIMA'),
+        SETTINGS_ATFAL: _('SETTINGS_ATFAL'),
+        SETTINGS_DAMGA: _('SETTINGS_DAMGA'),
+        SETTINGS_SANDOG: _('SETTINGS_SANDOG'),
+        # SETTINGS_AADOA: _('SETTINGS_AADOA'),
+        SETTINGS_DARIBAT_2LMOKAFA: _('SETTINGS_DARIBAT_2LMOKAFA'),
+        SETTINGS_ENABLE_SANDOG_KAHRABA: _('SETTINGS_ENABLE_SANDOG_KAHRABA'),
+        SETTINGS_ENABLE_YOUM_ALGOAT_ALMOSALAHA: _('SETTINGS_ENABLE_YOUM_ALGOAT_ALMOSALAHA'),
+        SETTINGS_M2MORIA_RATE: _('SETTINGS_M2MORIA_RATE'),
+        SETTINGS_E3ASHA_RATE: _('SETTINGS_E3ASHA_RATE'),
+        SETTINGS_KHARJ_ELSHARIKA: _('SETTINGS_KHARJ_ELSHARIKA'),
+        SETTINGS_OMER_2LMA3ASH: _('SETTINGS_OMER_2LMA3ASH'),
+        SETTINGS_KHASM_ELSANDOG_MIN_ELOMORATAB: _('SETTINGS_KHASM_ELSANDOG_MIN_ELOMORATAB'),
+        SETTINGS_TA3AGODMOSIMI_MOZAF: _('SETTINGS_TA3AGODMOSIMI_MOZAF'),
+        SETTINGS_TA3AGODMOSIMI_3AMIL: _('SETTINGS_TA3AGODMOSIMI_3AMIL'),
+        SETTINGS_TA3AGODMOSIMI_MOKAF2: _('SETTINGS_TA3AGODMOSIMI_MOKAF2'),
+
+        SETTINGS_MAJLIS_EL2DARA_R2IS_2LMAJLIS: _('SETTINGS_MAJLIS_EL2DARA_R2IS_2LMAJLIS'),
+        SETTINGS_MAJLIS_EL2DARA_3ODO: _('SETTINGS_MAJLIS_EL2DARA_3ODO'),
+
+        SETTINGS_MODIR_3AM_ASAI: _('SETTINGS_MODIR_3AM_ASAI'),
+    }
+
+    for moahil in MOAHIL_CHOICES:
+        key = MOAHIL_PREFIX + moahil
+        SETTINGS_CHOICES[key] = _('moahil')+' '+MOAHIL_CHOICES[moahil]
+
+    for mosama in MOSAMA_CATEGORY_CHOICES:
+        key = MOSAMA_PREFIX + mosama
+        SETTINGS_CHOICES[key] = _('2sti7gag 2lmobashara')+' '+MOSAMA_CATEGORY_CHOICES[mosama]
+
+    for draja in Drajat3lawat.DRAJAT_CHOICES:
+        key = SETTINGS_AADOA+'_daraja_' + str(draja)
+        SETTINGS_CHOICES[key] = _('SETTINGS_AADOA')+' '+Drajat3lawat.DRAJAT_CHOICES[draja]
+
+    code = models.CharField(_("code"), choices=SETTINGS_CHOICES,max_length=30)
+    value = models.CharField(_("value"),max_length=255)
+
+    def __str__(self) -> str:
+        return f'{self.get_code_display()}: {self.value}'
+    
+    def clean(self) -> None:
+        if self.code in [self.SETTINGS_ENABLE_SANDOG_KAHRABA,self.SETTINGS_ENABLE_YOUM_ALGOAT_ALMOSALAHA]:
+            if not self.value or not is_float(self.value) or not int(self.value) in [0,1]:
+                raise ValidationError(
+                    {"value":_("value should be 0 or 1")}
+                )
+        else:
+            if not self.value or not is_float(self.value) or float(self.value) < 0:
+                raise ValidationError(
+                    {"value":_("value should be positive number")}
+                )
+        return super().clean()
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['code'],name="unique_setting_code")
+        ]
+        indexes = [
+            models.Index(fields=["code"]),
+        ]
+        verbose_name = _("HR Setting")
+        verbose_name_plural = _("HR Settings")
 
 class MosamaWazifi(models.Model):
     name = models.CharField(_("mosama_wazifi"),max_length=100)

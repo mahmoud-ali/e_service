@@ -68,9 +68,12 @@ class Payroll():
         if(employee.gasima):
             gasima = self.hr_settings.get_code_as_float(Settings.SETTINGS_GASIMA)
 
-        aadoa = 0
-        if(employee.aadoa):
-            aadoa = self.hr_settings.get_code_as_float(Settings.SETTINGS_AADOA)
+        # aadoa = 0
+        # if(employee.aadoa):
+        #     aadoa = self.hr_settings.get_code_as_float(Settings.SETTINGS_AADOA)
+
+        k = Settings.SETTINGS_AADOA+'_daraja_' + str(employee.draja_wazifia)
+        aadoa = self.hr_settings.get_code_as_float(k)
 
         enable_sandog = self.hr_settings.get_code_as_boolean(Settings.SETTINGS_ENABLE_SANDOG_KAHRABA)
 
@@ -446,9 +449,12 @@ class M2moriaSheet():
         if(employee.gasima):
             gasima = self.hr_settings.get_code_as_float(Settings.SETTINGS_GASIMA)
 
-        aadoa = 0
-        if(employee.aadoa):
-            aadoa = self.hr_settings.get_code_as_float(Settings.SETTINGS_AADOA)
+        # aadoa = 0
+        # if(employee.aadoa):
+        #     aadoa = self.hr_settings.get_code_as_float(Settings.SETTINGS_AADOA)
+
+        k = Settings.SETTINGS_AADOA+'_daraja_' + str(employee.draja_wazifia)
+        aadoa = self.hr_settings.get_code_as_float(k)
 
         try:
             draj_obj = Drajat3lawat.objects.get(draja_wazifia=employee.draja_wazifia,alawa_sanawia=employee.alawa_sanawia)
