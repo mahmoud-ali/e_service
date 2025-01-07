@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-31 09:26+0200\n"
+"POT-Creation-Date: 2025-01-07 13:58+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -182,7 +182,7 @@ msgstr ""
 #: company_profile/models.py:1034 company_profile/models.py:1059
 #: company_profile/models.py:1105 company_profile/models.py:1125
 #: company_profile/models.py:1141 company_profile/models.py:1165
-#: executive_office/admin.py:113 executive_office/admin.py:165
+#: executive_office/admin.py:114 executive_office/admin.py:173
 #: executive_office/forms.py:37 executive_office/models.py:130
 #: pa/forms/commitment.py:80 pa/forms/daily.py:9 pa/models.py:93
 #: pa/models.py:129 pa/tables/payment.py:33 pa/tables/request.py:51
@@ -253,8 +253,8 @@ msgstr "الشركة المستلف منها"
 #: executive_office/models.py:27 gold_travel/models.py:12
 #: gold_travel_traditional/admin.py:340 gold_travel_traditional/models.py:8
 #: help_request/models.py:11 hr_portal/models.py:89 mokhalafat/models.py:6
-#: pa/models.py:46 production_control/models.py:20 revenu_dist/models.py:53
-#: traditional_api/models.py:10
+#: pa/models.py:46 planning/models.py:36 production_control/models.py:20
+#: revenu_dist/models.py:53 traditional_api/models.py:10
 msgid "created_at"
 msgstr "تاريخ الانشاء"
 
@@ -262,8 +262,8 @@ msgstr "تاريخ الانشاء"
 #: gold_travel/models.py:13 gold_travel_traditional/admin.py:340
 #: gold_travel_traditional/models.py:9 help_request/models.py:13
 #: hr_portal/models.py:90 mokhalafat/models.py:7 pa/models.py:47
-#: production_control/models.py:21 revenu_dist/models.py:54
-#: traditional_api/models.py:11
+#: planning/models.py:37 production_control/models.py:21
+#: revenu_dist/models.py:54 traditional_api/models.py:11
 msgid "created_by"
 msgstr "المستخدم المسئول عن الانشاء"
 
@@ -274,8 +274,8 @@ msgstr "المستخدم المسئول عن الانشاء"
 #: executive_office/models.py:30 gold_travel/models.py:15
 #: gold_travel_traditional/admin.py:340 gold_travel_traditional/models.py:11
 #: help_request/models.py:12 hr_portal/models.py:92 mokhalafat/models.py:9
-#: pa/models.py:49 production_control/models.py:23 revenu_dist/models.py:56
-#: traditional_api/models.py:13
+#: pa/models.py:49 planning/models.py:38 production_control/models.py:23
+#: revenu_dist/models.py:56 traditional_api/models.py:13
 msgid "updated_at"
 msgstr "تاريخ اخر تعديل"
 
@@ -283,8 +283,8 @@ msgstr "تاريخ اخر تعديل"
 #: gold_travel/models.py:16 gold_travel_traditional/admin.py:340
 #: gold_travel_traditional/models.py:12 help_request/models.py:14
 #: hr_portal/models.py:93 mokhalafat/models.py:10 pa/models.py:50
-#: production_control/models.py:24 revenu_dist/models.py:57
-#: traditional_api/models.py:14
+#: planning/models.py:39 production_control/models.py:24
+#: revenu_dist/models.py:57 traditional_api/models.py:14
 msgid "updated_by"
 msgstr "المستخدم المسئول عن التعديل"
 
@@ -309,7 +309,8 @@ msgstr ""
 #: executive_office/models.py:71 gold_travel/models.py:47
 #: gold_travel/models.py:63 gold_travel_traditional/models.py:19
 #: gold_travel_traditional/models.py:30 gold_travel_traditional/models.py:41
-#: hr_portal/models.py:405 production_control/models.py:35
+#: hr_portal/models.py:405 planning/models.py:46 planning/models.py:58
+#: planning/models.py:73 production_control/models.py:35
 #: production_control/models.py:36 revenu_dist/models.py:63
 #: revenu_dist/models.py:73 revenu_dist/models.py:96
 #: traditional_api/models.py:20 traditional_api/models.py:31
@@ -368,7 +369,7 @@ msgstr "تعدين صغير"
 #: company_profile/models.py:115 gold_travel/admin.py:435
 #: gold_travel/models.py:23 gold_travel/models.py:116
 #: gold_travel_traditional/admin.py:338 gold_travel_traditional/models.py:94
-#: mokhalafat/models.py:16
+#: mokhalafat/models.py:16 planning/models.py:57
 msgid "code"
 msgstr "الرمز"
 
@@ -2459,29 +2460,29 @@ msgstr ""
 msgid "Wrong transition path."
 msgstr ""
 
-#: executive_office/admin.py:74 executive_office/admin.py:139
+#: executive_office/admin.py:75 executive_office/admin.py:140
 #: gold_travel/models.py:202 production_control/admin.py:32
 #: production_control/models.py:15
 msgid "state_confirmed"
 msgstr "مؤكد"
 
-#: executive_office/admin.py:148 executive_office/models.py:85
+#: executive_office/admin.py:156 executive_office/models.py:85
 msgid "expected_due_date"
 msgstr "تاريخ النهاية المتوقع"
 
-#: executive_office/admin.py:152 executive_office/models.py:81
+#: executive_office/admin.py:160 executive_office/models.py:81
 msgid "subject"
 msgstr "الموضوع"
 
-#: executive_office/admin.py:156
+#: executive_office/admin.py:164
 msgid "inbox_attachments"
 msgstr "الخطاب الوارد"
 
-#: executive_office/admin.py:176
+#: executive_office/admin.py:184
 msgid "mark_done"
 msgstr "تم التنفيذ"
 
-#: executive_office/admin.py:182 pa/views/application.py:97
+#: executive_office/admin.py:190 pa/views/application.py:97
 #: pa/views/application.py:219
 msgid "Record saved successfully."
 msgstr "تم حفظ السجل بنجاح."
@@ -2493,7 +2494,8 @@ msgstr "المكتب التنفيذي"
 #: executive_office/forms.py:15 executive_office/models.py:37
 #: gold_travel/forms.py:11 gold_travel/models.py:46
 #: gold_travel_traditional/forms.py:12 gold_travel_traditional/models.py:40
-#: production_control/forms.py:22 production_control/models.py:34
+#: planning/models.py:45 production_control/forms.py:22
+#: production_control/models.py:34
 msgid "user"
 msgstr "المستخدم"
 
@@ -3089,51 +3091,51 @@ msgstr "ارسال"
 msgid "help_link"
 msgstr "طلب مساعدة"
 
-#: hr_portal/models.py:22 revenu_dist/models.py:22
+#: hr_portal/models.py:22 planning/models.py:21 revenu_dist/models.py:22
 msgid "MONTH_JAN"
 msgstr "يناير"
 
-#: hr_portal/models.py:23 revenu_dist/models.py:23
+#: hr_portal/models.py:23 planning/models.py:22 revenu_dist/models.py:23
 msgid "MONTH_FEB"
 msgstr "فبراير"
 
-#: hr_portal/models.py:24 revenu_dist/models.py:24
+#: hr_portal/models.py:24 planning/models.py:23 revenu_dist/models.py:24
 msgid "MONTH_MAR"
 msgstr "مارس"
 
-#: hr_portal/models.py:25 revenu_dist/models.py:25
+#: hr_portal/models.py:25 planning/models.py:24 revenu_dist/models.py:25
 msgid "MONTH_APR"
 msgstr "ابريل"
 
-#: hr_portal/models.py:26 revenu_dist/models.py:26
+#: hr_portal/models.py:26 planning/models.py:25 revenu_dist/models.py:26
 msgid "MONTH_MAY"
 msgstr "مايو"
 
-#: hr_portal/models.py:27 revenu_dist/models.py:27
+#: hr_portal/models.py:27 planning/models.py:26 revenu_dist/models.py:27
 msgid "MONTH_JUN"
 msgstr "يونيو"
 
-#: hr_portal/models.py:28 revenu_dist/models.py:28
+#: hr_portal/models.py:28 planning/models.py:27 revenu_dist/models.py:28
 msgid "MONTH_JLY"
 msgstr "يوليو"
 
-#: hr_portal/models.py:29 revenu_dist/models.py:29
+#: hr_portal/models.py:29 planning/models.py:28 revenu_dist/models.py:29
 msgid "MONTH_AUG"
 msgstr "اغسطس"
 
-#: hr_portal/models.py:30 revenu_dist/models.py:30
+#: hr_portal/models.py:30 planning/models.py:29 revenu_dist/models.py:30
 msgid "MONTH_SEP"
 msgstr "سبتمبر"
 
-#: hr_portal/models.py:31 revenu_dist/models.py:31
+#: hr_portal/models.py:31 planning/models.py:30 revenu_dist/models.py:31
 msgid "MONTH_OCT"
 msgstr "اكتوبر"
 
-#: hr_portal/models.py:32 revenu_dist/models.py:32
+#: hr_portal/models.py:32 planning/models.py:31 revenu_dist/models.py:32
 msgid "MONTH_NOV"
 msgstr "نوفمبر"
 
-#: hr_portal/models.py:33 revenu_dist/models.py:33
+#: hr_portal/models.py:33 planning/models.py:32 revenu_dist/models.py:33
 msgid "MONTH_DEC"
 msgstr "ديسمبر"
 
@@ -4146,6 +4148,86 @@ msgstr "تعديل مطالبة "
 #: pa/views/request.py:153
 msgid "Delete request"
 msgstr "حذف سجل مطالبة"
+
+#: planning/models.py:52
+msgid "Department"
+msgstr "إدارة"
+
+#: planning/models.py:53
+msgid "Departments"
+msgstr "إدارات"
+
+#: planning/models.py:56
+msgid "parent_goal"
+msgstr "الهدف الرئيسي"
+
+#: planning/models.py:59
+msgid "outcome"
+msgstr "المخرجات"
+
+#: planning/models.py:60
+msgid "kpi"
+msgstr "مؤشرات الأداء"
+
+#: planning/models.py:61
+msgid "responsible"
+msgstr "المسئول عن التنفيذ"
+
+#: planning/models.py:67
+msgid "Goal"
+msgstr "هدف"
+
+#: planning/models.py:68
+msgid "Goals"
+msgstr "اهداف"
+
+#: planning/models.py:71
+msgid "goal"
+msgstr "هدف"
+
+#: planning/models.py:72
+msgid "year"
+msgstr "العام"
+
+#: planning/models.py:79
+msgid "Task"
+msgstr "مهمة"
+
+#: planning/models.py:80
+msgid "Tasks"
+msgstr "مهام"
+
+#: planning/models.py:83 planning/models.py:94
+msgid "task"
+msgstr "مهمة"
+
+#: planning/models.py:84
+msgid "month"
+msgstr "شهر"
+
+#: planning/models.py:90
+msgid "TaskDuration"
+msgstr "وقت التنفيذ"
+
+#: planning/models.py:91
+msgid "TaskDurations"
+msgstr "مواقيت التنفيذ"
+
+#: planning/models.py:95
+msgid "percentage"
+msgstr "نسبة التنفيذ"
+
+#: planning/models.py:96
+msgid "problems"
+msgstr "معوقات"
+
+#: planning/models.py:102
+msgid "TaskExecution"
+msgstr "اداء مهمة"
+
+#: planning/models.py:103
+msgid "TaskExecutions"
+msgstr "اداء مهام"
 
 #: production_control/admin.py:166
 msgid "end distribution"

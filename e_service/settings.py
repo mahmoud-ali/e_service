@@ -101,6 +101,7 @@ INSTALLED_APPS = [
     'production_control',
     'gold_travel_traditional',
     'executive_office',
+    'planning',
 
     # Debug
     'debug_toolbar',
