@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-07 13:58+0200\n"
+"POT-Creation-Date: 2025-01-07 14:48+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -310,7 +310,7 @@ msgstr ""
 #: gold_travel/models.py:63 gold_travel_traditional/models.py:19
 #: gold_travel_traditional/models.py:30 gold_travel_traditional/models.py:41
 #: hr_portal/models.py:405 planning/models.py:46 planning/models.py:58
-#: planning/models.py:73 production_control/models.py:35
+#: planning/models.py:74 production_control/models.py:35
 #: production_control/models.py:36 revenu_dist/models.py:63
 #: revenu_dist/models.py:73 revenu_dist/models.py:96
 #: traditional_api/models.py:20 traditional_api/models.py:31
@@ -4149,6 +4149,20 @@ msgstr "تعديل مطالبة "
 msgid "Delete request"
 msgstr "حذف سجل مطالبة"
 
+#: planning/admin.py:42
+msgid "main_goal"
+msgstr "الهدف الرئيسي"
+
+#: planning/admin.py:46
+#, fuzzy
+#| msgid "goal"
+msgid "sub_goal"
+msgstr "الهدف الفرعي"
+
+#: planning/apps.py:7
+msgid "Planning app"
+msgstr "نظام الخطط والتقارير"
+
 #: planning/models.py:52
 msgid "Department"
 msgstr "إدارة"
@@ -4181,51 +4195,51 @@ msgstr "هدف"
 msgid "Goals"
 msgstr "اهداف"
 
-#: planning/models.py:71
+#: planning/models.py:72
 msgid "goal"
 msgstr "هدف"
 
-#: planning/models.py:72
+#: planning/models.py:73
 msgid "year"
 msgstr "العام"
 
-#: planning/models.py:79
+#: planning/models.py:80
 msgid "Task"
 msgstr "مهمة"
 
-#: planning/models.py:80
+#: planning/models.py:81
 msgid "Tasks"
 msgstr "مهام"
 
-#: planning/models.py:83 planning/models.py:94
+#: planning/models.py:84 planning/models.py:95
 msgid "task"
 msgstr "مهمة"
 
-#: planning/models.py:84
+#: planning/models.py:85
 msgid "month"
 msgstr "شهر"
 
-#: planning/models.py:90
+#: planning/models.py:91
 msgid "TaskDuration"
 msgstr "وقت التنفيذ"
 
-#: planning/models.py:91
+#: planning/models.py:92
 msgid "TaskDurations"
 msgstr "مواقيت التنفيذ"
 
-#: planning/models.py:95
+#: planning/models.py:96
 msgid "percentage"
 msgstr "نسبة التنفيذ"
 
-#: planning/models.py:96
+#: planning/models.py:97
 msgid "problems"
 msgstr "معوقات"
 
-#: planning/models.py:102
+#: planning/models.py:103
 msgid "TaskExecution"
 msgstr "اداء مهمة"
 
-#: planning/models.py:103
+#: planning/models.py:104
 msgid "TaskExecutions"
 msgstr "اداء مهام"
 
