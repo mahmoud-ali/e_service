@@ -4154,8 +4154,6 @@ msgid "main_goal"
 msgstr "الهدف الرئيسي"
 
 #: planning/admin.py:46
-#, fuzzy
-#| msgid "goal"
 msgid "sub_goal"
 msgstr "الهدف الفرعي"
 
