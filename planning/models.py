@@ -64,7 +64,7 @@ class Department(models.Model):
 
 class Goal(models.Model):
     parent = models.ForeignKey('self', on_delete=models.CASCADE, related_name='children',verbose_name=_("parent_goal"),blank=True,null=True)
-    code = models.CharField(_("code"),max_length=10)
+    code = models.IntegerField(_("code"))
     name = models.CharField(_("name"),max_length=255)
     outcome = models.TextField(_("outcome"),blank=True,null=True)
     kpi = models.TextField(_("kpi"),blank=True,null=True)
