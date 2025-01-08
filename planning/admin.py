@@ -95,7 +95,7 @@ class TaskAdmin(admin.ModelAdmin):
 class TaskExecutionAdmin(LogAdminMixin,admin.ModelAdmin):
     model = TaskExecution
     fields = ["percentage","problems"]
-    list_display = ["main_goal","sub_goal","task","percentage"]
+    list_display = ["main_goal","sub_goal","task_name","percentage"]
     readonly_fields = ["task"]
     search_fields = ('task__goal__parent__name','task__goal__name','task__name', 'problems')
     ordering = ('task__goal__code',)
@@ -126,3 +126,7 @@ class TaskExecutionAdmin(LogAdminMixin,admin.ModelAdmin):
     @admin.display(description=_('sub_goal'))
     def sub_goal(self, obj):
         return f'{obj.task.goal}'
+
+    @admin.display(description=_('task'))
+    def task_name(self, obj):
+        return f'{obj.task.name}'
