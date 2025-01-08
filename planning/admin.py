@@ -16,7 +16,7 @@ class LogAdminMixin:
                 return True
         
         try:
-            if obj and request.user.planning_department==obj.task.goal.responsible:
+            if obj and request.user.planning_department==obj.task.responsible:
                 if obj.state==STATE_DRAFT:
                     return super().has_change_permission(request,obj)
         except Exception as e:
@@ -43,7 +43,7 @@ class DepartmentAdmin(admin.ModelAdmin):
 @admin.register(Goal)
 class GoalAdmin(admin.ModelAdmin):
     model = Goal
-    list_display = ["parent","code","name","outcome","kpi","responsible"]
+    list_display = ["parent","code","name","outcome","kpi"]
     # list_filter = ["state","has_2lestikhbarat_2l3askria"]
 
 class TaskDurationInline(admin.TabularInline):
@@ -85,7 +85,7 @@ class TaskExecutionAdmin(LogAdminMixin,admin.ModelAdmin):
     def get_queryset(self, request):
         qs = super().get_queryset(request)
 
-        qs = qs.filter(task__goal__responsible=request.user.planning_department)
+        qs = qs.filter(task__responsible=request.user.planning_department)
 
         return qs
     

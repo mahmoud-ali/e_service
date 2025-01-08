@@ -68,7 +68,6 @@ class Goal(models.Model):
     name = models.CharField(_("name"),max_length=255)
     outcome = models.TextField(_("outcome"),blank=True,null=True)
     kpi = models.TextField(_("kpi"),blank=True,null=True)
-    responsible = models.ForeignKey(Department, on_delete=models.CASCADE, verbose_name=_("responsible"), related_name='departments')
 
     def __str__(self):
         return self.name
@@ -81,6 +80,7 @@ class Goal(models.Model):
 class Task(models.Model):
     goal = models.ForeignKey(Goal, on_delete=models.CASCADE, verbose_name=_("goal"), related_name='tasks')
     year = models.PositiveIntegerField(_("year"), validators=[MinValueValidator(limit_value=2015),MaxValueValidator(limit_value=2100)])
+    responsible = models.ForeignKey(Department, on_delete=models.CASCADE, verbose_name=_("responsible"), related_name='departments')
     name = models.CharField(_("name"), max_length=255)
 
     def __str__(self):
