@@ -3,6 +3,8 @@ from django.db import models
 from django.forms import TextInput
 from django.utils.translation import gettext_lazy as _
 
+from planning.forms import DepartmentForm
+
 from .models import STATE_DRAFT, Goal, Department, Task, TaskDuration, TaskExecution
 
 class LogAdminMixin:
@@ -38,6 +40,7 @@ class LogAdminMixin:
 @admin.register(Department)
 class DepartmentAdmin(admin.ModelAdmin):
     model = Department
+    form = DepartmentForm
     list_display = ["user","name"]
 
 @admin.register(Goal)
