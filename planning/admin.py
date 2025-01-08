@@ -95,7 +95,7 @@ class TaskAdmin(admin.ModelAdmin):
 class TaskExecutionAdmin(LogAdminMixin,admin.ModelAdmin):
     model = TaskExecution
     fields = ["percentage","problems"]
-    list_display = ["main_goal","sub_goal","task_name","percentage"]
+    list_display = ["task_name","main_goal","sub_goal","percentage"]
     readonly_fields = ["task"]
     search_fields = ('task__goal__parent__name','task__goal__name','task__name', 'problems')
     ordering = ('task__goal__code',)
