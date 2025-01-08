@@ -90,6 +90,9 @@ class TaskExecutionAdmin(LogAdminMixin,admin.ModelAdmin):
     def get_queryset(self, request):
         qs = super().get_queryset(request)
 
+        if request.user.is_superuser:
+            return qs
+
         try:
             qs = qs.filter(task__responsible=request.user.planning_department)
 
