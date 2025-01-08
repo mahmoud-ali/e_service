@@ -91,7 +91,7 @@ class TaskDuration(models.Model):
         verbose_name = _("TaskDuration")
         verbose_name_plural = _("TaskDurations")
 
-class TaskExecution(models.Model):
+class TaskExecution(LoggingModel):
     task = models.ForeignKey(Task, on_delete=models.CASCADE, verbose_name=_("task"), related_name='execution')
     percentage = models.PositiveIntegerField(verbose_name=_("percentage"), validators=[MaxValueValidator(limit_value=100)])
     problems = models.TextField(verbose_name=_("problems"), blank=True)

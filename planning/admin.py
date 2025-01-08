@@ -5,6 +5,46 @@ from django.utils.translation import gettext_lazy as _
 
 from .models import Goal, Department, Task, TaskDuration, TaskExecution
 
+class LogAdminMixin:
+    # def has_add_permission(self, request):
+    #     try:
+    #         if request.user.state_representative.authority==TblStateRepresentative.AUTHORITY_SMRC:
+    #             return super().has_add_permission(request)
+    #     except:
+    #         pass
+        
+    #     return False
+
+    # def has_change_permission(self, request, obj=None):
+    #     # if request.user.is_superuser:
+    #     #     return True
+        
+    #     try:
+    #         if request.user.state_representative.authority==TblStateRepresentative.AUTHORITY_SMRC:
+    #             if not obj or obj.state==1:
+    #                 return super().has_change_permission(request,obj)
+    #     except:
+    #         pass
+        
+    #     return False
+
+    # def has_delete_permission(self, request, obj=None):
+    #     try:
+    #         if request.user.state_representative.authority==TblStateRepresentative.AUTHORITY_SMRC:
+    #             if not obj or obj.state==1:
+    #                 return super().has_delete_permission(request,obj)
+    #     except:
+    #         pass
+     
+    #     return False
+
+    def save_model(self, request, obj, form, change):
+        if obj.pk:
+            obj.updated_by = request.user
+        else:
+            obj.created_by = obj.updated_by = request.user
+        super().save_model(request, obj, form, change)                
+
 @admin.register(Department)
 class DepartmentAdmin(admin.ModelAdmin):
     model = Department
@@ -41,11 +81,16 @@ class TaskAdmin(admin.ModelAdmin):
         return f'{obj.goal.parent.name}'
 
 @admin.register(TaskExecution)
-class TaskExecutionAdmin(admin.ModelAdmin):
+class TaskExecutionAdmin(LogAdminMixin,admin.ModelAdmin):
     model = TaskExecution
     list_display = ["main_goal","sub_goal","task","percentage"]
     search_fields = ('task__goal__parent__name','task__goal__name','task__name', 'problems')
 
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+
+        return qs
+    
     @admin.display(description=_('main_goal'))
     def main_goal(self, obj):
         return f'{obj.task.goal.parent}'
