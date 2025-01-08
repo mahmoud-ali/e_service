@@ -45,11 +45,26 @@ class DepartmentAdmin(admin.ModelAdmin):
     form = DepartmentForm
     list_display = ["user","name"]
 
+class MainGoalFilter(admin.SimpleListFilter):
+    title = _("main_goal")    
+    parameter_name = "main_goal"
+    def lookups(self, request, model_admin):
+        qs = Goal.objects.filter(parent__isnull=True).order_by('code').distinct("code").values_list("id","name")
+        return [(x[0],x[1]) for x in qs]
+    
+    def queryset(self, request, queryset):
+        goal = self.value()
+        if goal:
+            goal = int(goal)
+            return queryset.filter(id=goal)|queryset.filter(parent=goal)
+        
+        return queryset
+    
 @admin.register(Goal)
 class GoalAdmin(admin.ModelAdmin):
     model = Goal
     list_display = ["parent","code","name","outcome","kpi"]
-    # list_filter = ["state","has_2lestikhbarat_2l3askria"]
+    list_filter = [MainGoalFilter,]
 
 class TaskDurationInline(admin.TabularInline):
     model = TaskDuration
