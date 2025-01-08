@@ -58,8 +58,8 @@ class TaskDurationInline(admin.TabularInline):
 class TaskAdmin(admin.ModelAdmin):
     model = Task
     inlines = [TaskDurationInline]
-    list_display = ["main_goal","goal","year","name"]
-    list_filter = ["year"]
+    list_display = ["name","main_goal","goal","year",]
+    list_filter = ["year","responsible"]
     search_fields = ('name', 'goal__parent__name','goal__name')
     ordering = ('goal__code',)
 
