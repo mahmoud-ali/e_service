@@ -27,7 +27,9 @@ class LogAdminMixin:
         return False
 
     def has_delete_permission(self, request, obj=None):
-
+        if request.user.is_superuser:
+            if obj.state==STATE_DRAFT:
+                return True
         return False
 
     def save_model(self, request, obj, form, change):
