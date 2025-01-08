@@ -61,6 +61,7 @@ class TaskAdmin(admin.ModelAdmin):
     list_display = ["main_goal","goal","year","name"]
     list_filter = ["year"]
     search_fields = ('name', 'goal__parent__name','goal__name')
+    ordering = ('goal__code',)
 
     formfield_overrides = {
         models.IntegerField: {"widget": TextInput},
@@ -77,6 +78,7 @@ class TaskExecutionAdmin(LogAdminMixin,admin.ModelAdmin):
     list_display = ["main_goal","sub_goal","task","percentage"]
     readonly_fields = ["task"]
     search_fields = ('task__goal__parent__name','task__goal__name','task__name', 'problems')
+    ordering = ('task__goal__code',)
 
     formfield_overrides = {
         models.IntegerField: {"widget": TextInput},
