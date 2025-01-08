@@ -87,9 +87,14 @@ class TaskExecutionAdmin(LogAdminMixin,admin.ModelAdmin):
     def get_queryset(self, request):
         qs = super().get_queryset(request)
 
-        qs = qs.filter(task__responsible=request.user.planning_department)
+        try:
+            qs = qs.filter(task__responsible=request.user.planning_department)
 
-        return qs
+            return qs
+        except:
+            pass
+
+        return qs.none()
     
     @admin.display(description=_('main_goal'))
     def main_goal(self, obj):
