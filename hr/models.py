@@ -448,6 +448,7 @@ class EmployeeBasic(LoggingModel):
     STATUS_NAGL = 12
     STATUS_2L7AG = 13
     STATUS_EJAZA_MIN_GAIR_MORATAB = 14
+    STATUS_EIGAF_MO2KAT = 15
 
     STATUS_CHOICES = {
         STATUS_ACTIVE: _("STATUS_ACTIVE"),
@@ -464,6 +465,7 @@ class EmployeeBasic(LoggingModel):
         STATUS_NAGL: _("STATUS_NAGL"),
         STATUS_2L7AG: _("STATUS_2L7AG"),
         STATUS_EJAZA_MIN_GAIR_MORATAB: _("STATUS_EJAZA_MIN_GAIR_MORATAB"),
+        STATUS_EIGAF_MO2KAT: _("STATUS_EIGAF_MO2KAT"),
     }
 
     code = models.IntegerField(_("employee_code"))
