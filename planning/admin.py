@@ -3,40 +3,30 @@ from django.db import models
 from django.forms import TextInput
 from django.utils.translation import gettext_lazy as _
 
-from .models import Goal, Department, Task, TaskDuration, TaskExecution
+from .models import STATE_DRAFT, Goal, Department, Task, TaskDuration, TaskExecution
 
 class LogAdminMixin:
-    # def has_add_permission(self, request):
-    #     try:
-    #         if request.user.state_representative.authority==TblStateRepresentative.AUTHORITY_SMRC:
-    #             return super().has_add_permission(request)
-    #     except:
-    #         pass
+    def has_add_permission(self, request):
         
-    #     return False
+        return False
 
-    # def has_change_permission(self, request, obj=None):
-    #     # if request.user.is_superuser:
-    #     #     return True
+    def has_change_permission(self, request, obj=None):
+        if obj and request.user.is_superuser:
+            if obj.state==STATE_DRAFT:
+                return True
         
-    #     try:
-    #         if request.user.state_representative.authority==TblStateRepresentative.AUTHORITY_SMRC:
-    #             if not obj or obj.state==1:
-    #                 return super().has_change_permission(request,obj)
-    #     except:
-    #         pass
+        try:
+            if obj and request.user.planning_department==obj.task.goal.responsible:
+                if obj.state==STATE_DRAFT:
+                    return super().has_change_permission(request,obj)
+        except Exception as e:
+            print("User not accepted",e)
         
-    #     return False
+        return False
 
-    # def has_delete_permission(self, request, obj=None):
-    #     try:
-    #         if request.user.state_representative.authority==TblStateRepresentative.AUTHORITY_SMRC:
-    #             if not obj or obj.state==1:
-    #                 return super().has_delete_permission(request,obj)
-    #     except:
-    #         pass
-     
-    #     return False
+    def has_delete_permission(self, request, obj=None):
+
+        return False
 
     def save_model(self, request, obj, form, change):
         if obj.pk:
@@ -83,11 +73,19 @@ class TaskAdmin(admin.ModelAdmin):
 @admin.register(TaskExecution)
 class TaskExecutionAdmin(LogAdminMixin,admin.ModelAdmin):
     model = TaskExecution
+    fields = ["percentage","problems"]
     list_display = ["main_goal","sub_goal","task","percentage"]
+    readonly_fields = ["task"]
     search_fields = ('task__goal__parent__name','task__goal__name','task__name', 'problems')
+
+    formfield_overrides = {
+        models.IntegerField: {"widget": TextInput},
+    }    
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
+
+        qs = qs.filter(task__goal__responsible=request.user.planning_department)
 
         return qs
     

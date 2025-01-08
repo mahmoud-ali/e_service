@@ -32,6 +32,16 @@ MONTH_CHOICES = {
     MONTH_DEC: _('MONTH_DEC'),
 }
 
+STATE_DRAFT = 1
+STATE_CONFIRMED = 2
+STATE_EXPIRED = 3
+
+STATE_CHOICES = {
+    STATE_DRAFT: _('state_draft'),
+    STATE_CONFIRMED: _('state_confirmed'),
+    STATE_EXPIRED: _('state_expired'),
+}
+
 class LoggingModel(models.Model):
     created_at = models.DateTimeField(_("created_at"),auto_now_add=True,editable=False,)
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT,related_name="+",editable=False,verbose_name=_("created_by")) 
@@ -42,7 +52,7 @@ class LoggingModel(models.Model):
         abstract = True
 
 class Department(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT,related_name="+",verbose_name=_("user"))
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.PROTECT,related_name="planning_department",verbose_name=_("user"),blank=True,null=True)
     name = models.CharField(_("name"),max_length=255)
 
     def __str__(self):
@@ -74,7 +84,7 @@ class Task(models.Model):
     name = models.CharField(_("name"), max_length=255)
 
     def __str__(self):
-        return self.name
+        return f'{self.goal.parent} / {self.goal} / {self.name}'
     
     class Meta:
         verbose_name = _("Task")
@@ -85,7 +95,7 @@ class TaskDuration(models.Model):
     month = models.PositiveIntegerField(verbose_name=_("month"), choices=MONTH_CHOICES)
 
     def __str__(self):
-        return f'{self.task} ({self.get_month_display()} {self.task.year})'
+        return f'{self.task.name} ({self.get_month_display()} {self.task.year})'
     
     class Meta:
         verbose_name = _("TaskDuration")
@@ -93,8 +103,11 @@ class TaskDuration(models.Model):
 
 class TaskExecution(LoggingModel):
     task = models.ForeignKey(Task, on_delete=models.CASCADE, verbose_name=_("task"), related_name='execution')
-    percentage = models.PositiveIntegerField(verbose_name=_("percentage"), validators=[MaxValueValidator(limit_value=100)])
+    year = models.PositiveIntegerField(_("year"), validators=[MinValueValidator(limit_value=2015),MaxValueValidator(limit_value=2100)])
+    month = models.PositiveIntegerField(verbose_name=_("month"), choices=MONTH_CHOICES)
+    percentage = models.PositiveIntegerField(verbose_name=_("percentage"), default=0, validators=[MaxValueValidator(limit_value=100)])
     problems = models.TextField(verbose_name=_("problems"), blank=True)
+    state = models.IntegerField(_("record_state"), choices=STATE_CHOICES, default=STATE_DRAFT)
 
     def __str__(self):
         return f'{self.task} ({self.percentage})'
