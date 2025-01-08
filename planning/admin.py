@@ -28,16 +28,23 @@ class TaskDurationInline(admin.TabularInline):
 class TaskAdmin(admin.ModelAdmin):
     model = Task
     inlines = [TaskDurationInline]
-    list_display = ["goal","year","name"]
+    list_display = ["main_goal","goal","year","name"]
     list_filter = ["year"]
+    search_fields = ('name', 'goal__parent__name','goal__name')
+
     formfield_overrides = {
         models.IntegerField: {"widget": TextInput},
     }    
+
+    @admin.display(description=_('main_goal'))
+    def main_goal(self, obj):
+        return f'{obj.goal.parent.name}'
 
 @admin.register(TaskExecution)
 class TaskExecutionAdmin(admin.ModelAdmin):
     model = TaskExecution
     list_display = ["main_goal","sub_goal","task","percentage"]
+    search_fields = ('task__goal__parent__name','task__goal__name','task__name', 'problems')
 
     @admin.display(description=_('main_goal'))
     def main_goal(self, obj):
