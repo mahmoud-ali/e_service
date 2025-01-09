@@ -18,6 +18,7 @@ def ProductionView(request):
                 'form_no':obj.form_no,
                 'alloy_khabath':obj.alloy_khabath,
                 'alloy_remaind':obj.alloy_remaind,
+                'moragib':obj.created_by.moragib_list.name,
                 'details':
                         map(
                             lambda detail: {
@@ -44,6 +45,7 @@ def ShippingView(request):
                 'company_id':obj.company_id,
                 'date':obj.date,
                 'form_no':obj.form_no,
+                'moragib':obj.created_by.moragib_list.name,
                 'details':
                         map(
                             lambda detail: {
