@@ -55,7 +55,7 @@ def ShippingView(request):
                 'company_id':obj.company_id,
                 'date':obj.date,
                 'form_no':obj.form_no,
-                'moragib':obj.created_by.moragib_list.name,
+                'moragib':moragib,
                 'details':
                         map(
                             lambda detail: {
