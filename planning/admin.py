@@ -1,3 +1,4 @@
+import sys
 from django.contrib import admin
 from django.db import models
 from django.forms import TextInput
@@ -5,33 +6,11 @@ from django.utils.translation import gettext_lazy as _
 
 from planning.forms import DepartmentForm
 
-from .models import STATE_DRAFT, Goal, Department, Task, TaskDuration, TaskExecution
+from .models import STATE_DRAFT, Goal, Department, MonthelyReport, Task, TaskAutomation, TaskDuration, TaskExecution
+
+from .admin_tasks_inline import *
 
 class LogAdminMixin:
-    def has_add_permission(self, request):
-        
-        return False
-
-    def has_change_permission(self, request, obj=None):
-        if obj and request.user.is_superuser:
-            if obj.state==STATE_DRAFT:
-                return True
-        
-        try:
-            if obj and request.user.planning_department==obj.task.responsible:
-                if obj.state==STATE_DRAFT:
-                    return super().has_change_permission(request,obj)
-        except Exception as e:
-            print("User not accepted",e)
-        
-        return False
-
-    def has_delete_permission(self, request, obj=None):
-        if request.user.is_superuser:
-            if obj and obj.state==STATE_DRAFT:
-                return True
-        return False
-
     def save_model(self, request, obj, form, change):
         if obj.pk:
             obj.updated_by = request.user
@@ -91,12 +70,32 @@ class TaskAdmin(admin.ModelAdmin):
     def main_goal(self, obj):
         return f'{obj.goal.parent.name}'
 
+@admin.register(TaskAutomation)
+class TaskAutomationAdmin(LogAdminMixin,admin.ModelAdmin):
+    model = TaskAutomation
+
+@admin.register(MonthelyReport)
+class MonthelyReportAdmin(LogAdminMixin,admin.ModelAdmin):
+    model = MonthelyReport
+    list_display = ["month","year",]
+    list_filter = ["year",]
+    search_fields = ('name', 'goal__parent__name','goal__name')
+    ordering = ('-year','-month',)
+
+    # inlines = [CompanyProductionTaskInline, TraditionalProductionTaskInline, TraditionalStateTaskInline, OtherMineralsTaskInline, ExportGoldTraditionalTaskInline, ExportGoldCompanyTaskInline, CompanyInfoTaskInline, CompanyLicenseInfoTaskInline]
+
+    formfield_overrides = {
+        models.IntegerField: {"widget": TextInput},
+    }    
+
 @admin.register(TaskExecution)
-class TaskExecutionAdmin(LogAdminMixin,admin.ModelAdmin):
+class TaskExecutionAdmin(admin.ModelAdmin):
     model = TaskExecution
-    fields = ["percentage","problems"]
+    fields = ["task","percentage","problems"]
     list_display = ["task_name","main_goal","sub_goal","percentage"]
-    readonly_fields = ["task"]
+    inlines = []
+
+    # readonly_fields = ["task"]
     search_fields = ('task__goal__parent__name','task__goal__name','task__name', 'problems')
     ordering = ('task__goal__code',)
 
@@ -118,7 +117,31 @@ class TaskExecutionAdmin(LogAdminMixin,admin.ModelAdmin):
             pass
 
         return qs.none()
-    
+
+    # def has_add_permission(self, request):
+        
+    #     return False
+
+    def has_change_permission(self, request, obj=None):
+        if obj and request.user.is_superuser:
+            if obj.state==STATE_DRAFT:
+                return True
+        
+        try:
+            if obj and request.user.planning_department==obj.task.responsible:
+                if obj.state==STATE_DRAFT:
+                    return super().has_change_permission(request,obj)
+        except Exception as e:
+            print("User not accepted",e)
+        
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        if request.user.is_superuser:
+            if obj and obj.state==STATE_DRAFT:
+                return True
+        return False
+
     @admin.display(description=_('main_goal'))
     def main_goal(self, obj):
         return f'{obj.task.goal.parent}'
@@ -130,3 +153,14 @@ class TaskExecutionAdmin(LogAdminMixin,admin.ModelAdmin):
     @admin.display(description=_('task'))
     def task_name(self, obj):
         return f'{obj.task.name}'
+
+    def get_inline_instances(self, request, obj=None):
+        try:
+            return [getattr(sys.modules[__name__],auto.view)(self.model, self.admin_site) for auto in obj.task.automation.all()]
+        except Exception as e:
+            return []
+
+    def get_formsets_with_inlines(self, request, obj=None):
+        for inline in self.get_inline_instances(request, obj):
+            formset = inline.get_formset(request, obj)
+            yield formset,inline
