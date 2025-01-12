@@ -17,8 +17,8 @@ from rest_framework.permissions import IsAuthenticated
 
 @api_view(['POST'])
 def Auth(request):
-    username = request.GET['username']
-    password = request.GET['password']
+    username = request.POST['username']
+    password = request.POST['password']
 
     status = 401
     token_key = ''
