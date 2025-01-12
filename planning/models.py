@@ -215,9 +215,9 @@ class CompanyLicenseInfoTask(TaskExecutionDetail):
     contract_status  = models.ForeignKey(LkpCompanyProductionLicenseStatus, on_delete=models.PROTECT,verbose_name=_("contract_status"))
 
 ############### Tahsil #####################
-# class TraditionalTahsilTask(TaskExecutionDetail):
-#     state = models.ForeignKey(LkpState, on_delete=models.PROTECT,verbose_name=_("state"))
-#     total_money = models.FloatField(_("total_money"))
+class TraditionalTahsilTask(TaskExecutionDetail):
+    state = models.ForeignKey(LkpState, on_delete=models.PROTECT, verbose_name=_("state"))
+    total_money = models.FloatField(_("total_money"))
 
 ############### Salama #####################
 

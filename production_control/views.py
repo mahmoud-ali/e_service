@@ -7,35 +7,40 @@ from django.http import JsonResponse,HttpResponse
 from django.contrib.auth import authenticate
 
 from .models import STATE_CONFIRMED, GoldProductionForm, GoldShippingForm
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.response import Response
 from rest_framework import permissions
 from rest_framework.authtoken.models import Token
 
-# @api_view(['GET'])
-# def auth(request):
-#     username = request.data.get('username','')
-#     password = request.data.get('password','')
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
 
-#     status = 403
-#     token_key = ''
+@api_view(['POST'])
+def Auth(request):
+    username = request.GET['username']
+    password = request.GET['password']
 
-#     user = authenticate(email=username, password=password)
+    status = 401
+    token_key = ''
 
-#     if user is not None and user.groups.filter(name__in=("pro_company_application_accept",)).exists():
-#         token,created = Token.objects.get_or_create(user=user)
-#         status = 200
-#         token_key = token
+    user = authenticate(email=username, password=password)
 
-#     return Response( 
-#         data={
-#             'status':200,
-#             'token':token_key,
-#         },
-#         status=status
-#     )
+    if user is not None and user.groups.filter(name__in=("production_control_api",)).exists(): 
+        token,created = Token.objects.get_or_create(user=user)
+        status = 200
+        token_key = token.key
+
+    return Response(
+        data={
+            'status':status,
+            'token':token_key,
+        },
+        status=status
+    )
 
 @api_view(['GET'])
+@authentication_classes([TokenAuthentication,])
+@permission_classes([IsAuthenticated])
 def ProductionView(request):
     def get_data(obj):
         try:
@@ -79,6 +84,8 @@ def ProductionView(request):
     return Response( qs_json)
 
 @api_view(['GET'])
+@authentication_classes([TokenAuthentication,])
+@permission_classes([IsAuthenticated])
 def ShippingView(request):
     def get_data(obj):
         try:
