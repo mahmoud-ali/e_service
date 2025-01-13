@@ -8,13 +8,6 @@ from company_profile.models import TblCompany, TblCompanyProduction
 
 STATE_DRAFT = 1
 STATE_CONFIRMED = 2
-STATE_EXPIRED = 3
-
-STATE_CHOICES = {
-    STATE_DRAFT: _('state_draft'),
-    STATE_CONFIRMED: _('state_confirmed'),
-    STATE_EXPIRED: _('state_expired'),
-}
 
 class LoggingModel(models.Model):
     created_at = models.DateTimeField(_("created_at"),auto_now_add=True,editable=False,)
@@ -44,6 +37,14 @@ class LkpMoragib(models.Model):
         verbose_name_plural = _("moragib_list")
 
 class GoldProductionUser(LoggingModel):
+    STATE_EXPIRED = 3
+
+    STATE_CHOICES = {
+        STATE_DRAFT: _('state_draft'),
+        STATE_CONFIRMED: _('state_confirmed'),
+        STATE_EXPIRED: _('state_expired'),
+    }
+
     # user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.PROTECT,related_name="gold_production_user",verbose_name=_("user"))
     # name = models.CharField(_("name"),max_length=100)
     moragib = models.OneToOneField(LkpMoragib, on_delete=models.PROTECT,related_name="moragib_distribution",verbose_name=_("moragib"))
@@ -68,6 +69,14 @@ class GoldProductionUserDetail(models.Model):
         verbose_name_plural = _("gold_production_user_details")
 
 class GoldProductionForm(LoggingModel):
+    STATE_APPROVED = 3
+
+    STATE_CHOICES = {
+        STATE_DRAFT: _('state_draft'),
+        STATE_CONFIRMED: _('state_confirmed'),
+        STATE_APPROVED: _('state_approved'),
+    }
+
     company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
     date = models.DateField(_("date"))
 
@@ -110,6 +119,14 @@ class GoldProductionFormAlloy(models.Model):
         verbose_name_plural = _("Gold Production Form - Alloy")
 
 class GoldShippingForm(LoggingModel):
+    STATE_APPROVED = 3
+
+    STATE_CHOICES = {
+        STATE_DRAFT: _('state_draft'),
+        STATE_CONFIRMED: _('state_confirmed'),
+        STATE_APPROVED: _('state_approved'),
+    }
+
     company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
     date = models.DateField(_("date"))
 

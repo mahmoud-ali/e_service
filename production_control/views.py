@@ -1,15 +1,11 @@
-import datetime
 from django.shortcuts import render
-from django.core import serializers
 from django.db.models import Prefetch
-from django.http import JsonResponse,HttpResponse
 
 from django.contrib.auth import authenticate
 
-from .models import STATE_CONFIRMED, GoldProductionForm, GoldShippingForm
+from .models import GoldProductionForm, GoldShippingForm
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.response import Response
-from rest_framework import permissions
 from rest_framework.authtoken.models import Token
 
 from rest_framework.authentication import TokenAuthentication
@@ -73,7 +69,7 @@ def ProductionView(request):
         from_dt = '1900-01-01'
         to_dt = '1900-01-01'
 
-    qs = GoldProductionForm.objects.filter(state=STATE_CONFIRMED,date__gte=from_dt,date__lte=to_dt).prefetch_related(Prefetch('goldproductionformalloy_set')) #.only('company_id','goldshippingformalloy__id') #updated_at
+    qs = GoldProductionForm.objects.filter(state=GoldProductionForm.STATE_APPROVED,date__gte=from_dt,date__lte=to_dt).prefetch_related(Prefetch('goldproductionformalloy_set')) #.only('company_id','goldshippingformalloy__id') #updated_at
     qs_json = {'contents': 
         map(
             get_data,
@@ -117,7 +113,7 @@ def ShippingView(request):
         from_dt = '1900-01-01'
         to_dt = '1900-01-01'
 
-    qs = GoldShippingForm.objects.filter(state=STATE_CONFIRMED,date__gte=from_dt,date__lte=to_dt).prefetch_related(Prefetch('goldshippingformalloy_set')) #.only('company_id','goldshippingformalloy__id') #updated_at
+    qs = GoldShippingForm.objects.filter(state=GoldShippingForm.STATE_APPROVED,date__gte=from_dt,date__lte=to_dt).prefetch_related(Prefetch('goldshippingformalloy_set')) #.only('company_id','goldshippingformalloy__id') #updated_at
     qs_json = {'contents': 
         map(
             get_data,

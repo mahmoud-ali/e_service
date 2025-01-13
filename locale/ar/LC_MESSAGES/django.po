@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-07 14:48+0200\n"
+"POT-Creation-Date: 2025-01-13 10:24+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -131,7 +131,7 @@ msgstr "بيانات العقد"
 
 #: company_profile/admin.py:353 company_profile/forms.py:29
 #: company_profile/models.py:114 pa/models.py:67
-#: production_control/admin.py:172 production_control/models.py:37
+#: production_control/admin.py:173 production_control/models.py:30
 msgid "company_type"
 msgstr "نوع الشركة"
 
@@ -186,21 +186,24 @@ msgstr ""
 #: executive_office/forms.py:37 executive_office/models.py:130
 #: pa/forms/commitment.py:80 pa/forms/daily.py:9 pa/models.py:93
 #: pa/models.py:129 pa/tables/payment.py:33 pa/tables/request.py:51
-#: pa/templates/pa/pa_daily.html:46 production_control/admin.py:179
-#: production_control/forms.py:50 production_control/forms.py:64
-#: production_control/forms.py:83 production_control/models.py:61
-#: production_control/models.py:71 production_control/models.py:113
+#: pa/templates/pa/pa_daily.html:46 planning/models.py:167
+#: planning/models.py:195 planning/models.py:201
+#: production_control/admin.py:180 production_control/forms.py:50
+#: production_control/forms.py:64 production_control/forms.py:83
+#: production_control/models.py:62 production_control/models.py:80
+#: production_control/models.py:130
 msgid "company"
 msgstr "شركة"
 
 #: company_profile/admin.py:364 company_profile/models.py:220
+#: planning/models.py:207
 msgid "License no"
 msgstr "رقم الاتفاقية/العقد"
 
 #: company_profile/admin.py:364 company_profile/forms.py:365
 #: company_profile/forms.py:419 company_profile/models.py:221
 #: company_profile/models.py:667 company_profile/models.py:775
-#: company_profile/models.py:904
+#: company_profile/models.py:904 planning/models.py:208
 msgid "license_type"
 msgstr "النوع"
 
@@ -223,8 +226,9 @@ msgstr "عدد الرخص"
 #: gold_travel/models.py:48 gold_travel/models.py:133 gold_travel/models.py:211
 #: gold_travel_traditional/models.py:18 gold_travel_traditional/models.py:29
 #: gold_travel_traditional/models.py:42 gold_travel_traditional/models.py:114
-#: pa/templates/pa/company_panel.html:21 traditional_api/models.py:30
-#: traditional_api/models.py:43
+#: pa/templates/pa/company_panel.html:21 planning/models.py:171
+#: planning/models.py:175 planning/models.py:210 planning/models.py:219
+#: traditional_api/models.py:30 traditional_api/models.py:43
 msgid "state"
 msgstr "الولاية"
 
@@ -234,7 +238,7 @@ msgid "sheet_no"
 msgstr "رقم المربع"
 
 #: company_profile/admin.py:365 company_profile/models.py:244
-#: pa/templates/pa/company_panel.html:35
+#: pa/templates/pa/company_panel.html:35 planning/models.py:215
 msgid "contract_status"
 msgstr "حالة الاتفاقية/العقد"
 
@@ -253,7 +257,7 @@ msgstr "الشركة المستلف منها"
 #: executive_office/models.py:27 gold_travel/models.py:12
 #: gold_travel_traditional/admin.py:340 gold_travel_traditional/models.py:8
 #: help_request/models.py:11 hr_portal/models.py:89 mokhalafat/models.py:6
-#: pa/models.py:46 planning/models.py:36 production_control/models.py:20
+#: pa/models.py:46 planning/models.py:49 production_control/models.py:13
 #: revenu_dist/models.py:53 traditional_api/models.py:10
 msgid "created_at"
 msgstr "تاريخ الانشاء"
@@ -262,7 +266,7 @@ msgstr "تاريخ الانشاء"
 #: gold_travel/models.py:13 gold_travel_traditional/admin.py:340
 #: gold_travel_traditional/models.py:9 help_request/models.py:13
 #: hr_portal/models.py:90 mokhalafat/models.py:7 pa/models.py:47
-#: planning/models.py:37 production_control/models.py:21
+#: planning/models.py:50 production_control/models.py:14
 #: revenu_dist/models.py:54 traditional_api/models.py:11
 msgid "created_by"
 msgstr "المستخدم المسئول عن الانشاء"
@@ -274,7 +278,7 @@ msgstr "المستخدم المسئول عن الانشاء"
 #: executive_office/models.py:30 gold_travel/models.py:15
 #: gold_travel_traditional/admin.py:340 gold_travel_traditional/models.py:11
 #: help_request/models.py:12 hr_portal/models.py:92 mokhalafat/models.py:9
-#: pa/models.py:49 planning/models.py:38 production_control/models.py:23
+#: pa/models.py:49 planning/models.py:51 production_control/models.py:16
 #: revenu_dist/models.py:56 traditional_api/models.py:13
 msgid "updated_at"
 msgstr "تاريخ اخر تعديل"
@@ -283,7 +287,7 @@ msgstr "تاريخ اخر تعديل"
 #: gold_travel/models.py:16 gold_travel_traditional/admin.py:340
 #: gold_travel_traditional/models.py:12 help_request/models.py:14
 #: hr_portal/models.py:93 mokhalafat/models.py:10 pa/models.py:50
-#: planning/models.py:39 production_control/models.py:24
+#: planning/models.py:52 production_control/models.py:17
 #: revenu_dist/models.py:57 traditional_api/models.py:14
 msgid "updated_by"
 msgstr "المستخدم المسئول عن التعديل"
@@ -309,9 +313,9 @@ msgstr ""
 #: executive_office/models.py:71 gold_travel/models.py:47
 #: gold_travel/models.py:63 gold_travel_traditional/models.py:19
 #: gold_travel_traditional/models.py:30 gold_travel_traditional/models.py:41
-#: hr_portal/models.py:405 planning/models.py:46 planning/models.py:58
-#: planning/models.py:74 production_control/models.py:35
-#: production_control/models.py:36 revenu_dist/models.py:63
+#: hr_portal/models.py:405 planning/models.py:59 planning/models.py:71
+#: planning/models.py:87 production_control/models.py:28
+#: production_control/models.py:29 revenu_dist/models.py:63
 #: revenu_dist/models.py:73 revenu_dist/models.py:96
 #: traditional_api/models.py:20 traditional_api/models.py:31
 #: traditional_api/models.py:42
@@ -369,7 +373,7 @@ msgstr "تعدين صغير"
 #: company_profile/models.py:115 gold_travel/admin.py:435
 #: gold_travel/models.py:23 gold_travel/models.py:116
 #: gold_travel_traditional/admin.py:338 gold_travel_traditional/models.py:94
-#: mokhalafat/models.py:16 planning/models.py:57
+#: mokhalafat/models.py:16 planning/models.py:70
 msgid "code"
 msgstr "الرمز"
 
@@ -382,6 +386,7 @@ msgid "name_en"
 msgstr "الاسم الانجليزي"
 
 #: company_profile/models.py:118 company_profile/models.py:270
+#: planning/models.py:202
 msgid "nationality"
 msgstr "الجنسية"
 
@@ -413,7 +418,7 @@ msgstr "تلفون ممثل الشركة"
 msgid "Official email"
 msgstr "البريد الالكتروني الرسمي"
 
-#: company_profile/models.py:146 hr_portal/models.py:298
+#: company_profile/models.py:146 hr_portal/models.py:298 planning/models.py:203
 msgid "status"
 msgstr "الحالة"
 
@@ -473,7 +478,7 @@ msgstr "عقد"
 msgid "license_type_rokh9a"
 msgstr "رخصة بحث مطلق"
 
-#: company_profile/models.py:223
+#: company_profile/models.py:223 planning/models.py:209
 msgid "Sign date"
 msgstr "تاريخ التوقيع"
 
@@ -490,19 +495,21 @@ msgid "cordinates"
 msgstr "الاحداثيات"
 
 #: company_profile/models.py:231 company_profile/models.py:666
-#: pa/templates/pa/company_panel.html:26
+#: pa/templates/pa/company_panel.html:26 planning/models.py:186
+#: planning/models.py:211
 msgid "mineral"
 msgstr "المعدن"
 
 #: company_profile/models.py:232 pa/templates/pa/company_panel.html:25
+#: planning/models.py:212
 msgid "Area in Kilometers"
 msgstr "المساحة الحالية بالكيلوميتر"
 
-#: company_profile/models.py:233
+#: company_profile/models.py:233 planning/models.py:213
 msgid "Initial area in Kilometers"
 msgstr "المساحة الاولية بالكيلوميتر"
 
-#: company_profile/models.py:234
+#: company_profile/models.py:234 planning/models.py:214
 msgid "Reserve in Tones"
 msgstr "الاحتياطي بالطن"
 
@@ -1769,12 +1776,12 @@ msgstr "طلب شهادة لمن يهمه الامر"
 msgid "Application: Whom may concern requests"
 msgstr "طلب شهادة لمن يهمه الامر"
 
-#: company_profile/models.py:1167 production_control/models.py:74
-#: production_control/models.py:116
+#: company_profile/models.py:1167 production_control/models.py:83
+#: production_control/models.py:133
 msgid "form_no"
 msgstr "رقم الاستمارة"
 
-#: company_profile/models.py:1168 production_control/models.py:80
+#: company_profile/models.py:1168 production_control/models.py:89
 msgid "gold_production_form_file"
 msgstr "مرفق استمارة الانتاج"
 
@@ -2461,8 +2468,10 @@ msgid "Wrong transition path."
 msgstr ""
 
 #: executive_office/admin.py:75 executive_office/admin.py:140
-#: gold_travel/models.py:202 production_control/admin.py:32
-#: production_control/models.py:15
+#: gold_travel/models.py:202 planning/models.py:44
+#: production_control/admin.py:32 production_control/admin.py:244
+#: production_control/admin.py:317 production_control/models.py:44
+#: production_control/models.py:76 production_control/models.py:126
 msgid "state_confirmed"
 msgstr "مؤكد"
 
@@ -2494,13 +2503,16 @@ msgstr "المكتب التنفيذي"
 #: executive_office/forms.py:15 executive_office/models.py:37
 #: gold_travel/forms.py:11 gold_travel/models.py:46
 #: gold_travel_traditional/forms.py:12 gold_travel_traditional/models.py:40
-#: planning/models.py:45 production_control/forms.py:22
-#: production_control/models.py:34
+#: planning/forms.py:12 planning/models.py:58 production_control/forms.py:22
+#: production_control/models.py:27
 msgid "user"
 msgstr "المستخدم"
 
 #: executive_office/models.py:13 gold_travel/models.py:89
-#: gold_travel/models.py:201 production_control/models.py:14
+#: gold_travel/models.py:201 planning/models.py:43
+#: production_control/admin.py:251 production_control/admin.py:324
+#: production_control/models.py:43 production_control/models.py:75
+#: production_control/models.py:125
 msgid "state_draft"
 msgstr "مسودة"
 
@@ -2579,8 +2591,9 @@ msgstr "ملاحظات"
 #: gold_travel/models.py:210 gold_travel_traditional/admin.py:339
 #: gold_travel_traditional/models.py:112 pa/models.py:95 pa/models.py:133
 #: pa/models.py:197 pa/models.py:307 pa/models.py:519 pa/tables/payment.py:34
-#: pa/tables/request.py:53 production_control/models.py:50
-#: production_control/models.py:75 production_control/models.py:117
+#: pa/tables/request.py:53 planning/models.py:143 planning/models.py:150
+#: production_control/models.py:51 production_control/models.py:84
+#: production_control/models.py:134
 msgid "record_state"
 msgstr "الحالة"
 
@@ -2625,6 +2638,7 @@ msgstr "قائمة المهام"
 #: executive_office/templates/admin/executive_office/submit_line.html:5
 #: gold_travel/templates/admin/gold_travel/appmovegold/pagination.html:17
 #: gold_travel_traditional/templates/admin/gold_travel_traditional/appmovegoldtraditional/sold_application.html:19
+#: production_control/templates/admin/production_control/goldproductionform/pagination.html:17
 #: production_control/templates/admin/production_control/submit_line.html:4
 msgid "Save"
 msgstr "حفظ"
@@ -2738,7 +2752,7 @@ msgstr "إرجاع إلى مسودة"
 
 #: gold_travel/admin.py:435 gold_travel/models.py:117 gold_travel/models.py:206
 #: mokhalafat/models.py:17 pa/templates/pa/pa_daily.html:75
-#: production_control/models.py:72 production_control/models.py:114
+#: production_control/models.py:81 production_control/models.py:131
 #: revenu_dist/models.py:108
 msgid "date"
 msgstr "التاريخ"
@@ -2746,11 +2760,13 @@ msgstr "التاريخ"
 #: gold_travel/admin.py:435 gold_travel/admin.py:460 gold_travel/models.py:208
 #: gold_travel/templates/admin/gold_travel/appmovegold/pagination.html:13
 #: gold_travel_traditional/admin.py:338 gold_travel_traditional/models.py:106
+#: production_control/templates/admin/production_control/goldproductionform/pagination.html:13
 msgid "gold_weight_in_gram"
 msgstr "اجمالي وزن الذهب بالجرام"
 
 #: gold_travel/admin.py:435 gold_travel/admin.py:465
 #: gold_travel/templates/admin/gold_travel/appmovegold/pagination.html:14
+#: production_control/templates/admin/production_control/goldproductionform/pagination.html:14
 msgid "gold_alloy_count"
 msgstr "عدد السبائك"
 
@@ -2929,6 +2945,7 @@ msgid "prepare gold"
 msgstr "استمارة شراء وسبك وتجهيز الذهب"
 
 #: gold_travel/templates/admin/gold_travel/appmovegold/pagination.html:16
+#: production_control/templates/admin/production_control/goldproductionform/pagination.html:16
 msgid "Show all"
 msgstr "عرض الكل"
 
@@ -3034,7 +3051,8 @@ msgstr "تفاصيل مستخدمي نظام نقل الذهب (تقليدي)"
 msgid "state_new"
 msgstr "جديد"
 
-#: gold_travel_traditional/models.py:72 production_control/models.py:16
+#: gold_travel_traditional/models.py:72 production_control/admin.py:171
+#: production_control/models.py:45
 msgid "state_expired"
 msgstr "انتهاء صلاحية"
 
@@ -3091,51 +3109,51 @@ msgstr "ارسال"
 msgid "help_link"
 msgstr "طلب مساعدة"
 
-#: hr_portal/models.py:22 planning/models.py:21 revenu_dist/models.py:22
+#: hr_portal/models.py:22 planning/models.py:24 revenu_dist/models.py:22
 msgid "MONTH_JAN"
 msgstr "يناير"
 
-#: hr_portal/models.py:23 planning/models.py:22 revenu_dist/models.py:23
+#: hr_portal/models.py:23 planning/models.py:25 revenu_dist/models.py:23
 msgid "MONTH_FEB"
 msgstr "فبراير"
 
-#: hr_portal/models.py:24 planning/models.py:23 revenu_dist/models.py:24
+#: hr_portal/models.py:24 planning/models.py:26 revenu_dist/models.py:24
 msgid "MONTH_MAR"
 msgstr "مارس"
 
-#: hr_portal/models.py:25 planning/models.py:24 revenu_dist/models.py:25
+#: hr_portal/models.py:25 planning/models.py:27 revenu_dist/models.py:25
 msgid "MONTH_APR"
 msgstr "ابريل"
 
-#: hr_portal/models.py:26 planning/models.py:25 revenu_dist/models.py:26
+#: hr_portal/models.py:26 planning/models.py:28 revenu_dist/models.py:26
 msgid "MONTH_MAY"
 msgstr "مايو"
 
-#: hr_portal/models.py:27 planning/models.py:26 revenu_dist/models.py:27
+#: hr_portal/models.py:27 planning/models.py:29 revenu_dist/models.py:27
 msgid "MONTH_JUN"
 msgstr "يونيو"
 
-#: hr_portal/models.py:28 planning/models.py:27 revenu_dist/models.py:28
+#: hr_portal/models.py:28 planning/models.py:30 revenu_dist/models.py:28
 msgid "MONTH_JLY"
 msgstr "يوليو"
 
-#: hr_portal/models.py:29 planning/models.py:28 revenu_dist/models.py:29
+#: hr_portal/models.py:29 planning/models.py:31 revenu_dist/models.py:29
 msgid "MONTH_AUG"
 msgstr "اغسطس"
 
-#: hr_portal/models.py:30 planning/models.py:29 revenu_dist/models.py:30
+#: hr_portal/models.py:30 planning/models.py:32 revenu_dist/models.py:30
 msgid "MONTH_SEP"
 msgstr "سبتمبر"
 
-#: hr_portal/models.py:31 planning/models.py:30 revenu_dist/models.py:31
+#: hr_portal/models.py:31 planning/models.py:33 revenu_dist/models.py:31
 msgid "MONTH_OCT"
 msgstr "اكتوبر"
 
-#: hr_portal/models.py:32 planning/models.py:31 revenu_dist/models.py:32
+#: hr_portal/models.py:32 planning/models.py:34 revenu_dist/models.py:32
 msgid "MONTH_NOV"
 msgstr "نوفمبر"
 
-#: hr_portal/models.py:33 planning/models.py:32 revenu_dist/models.py:33
+#: hr_portal/models.py:33 planning/models.py:35 revenu_dist/models.py:33
 msgid "MONTH_DEC"
 msgstr "ديسمبر"
 
@@ -3797,7 +3815,7 @@ msgstr "تفاصيل الارصدة الافتتاحية"
 msgid "item type should match company type"
 msgstr "اختر بند مناسب لنوع الشركة"
 
-#: pa/models.py:130
+#: pa/models.py:130 planning/models.py:206
 msgid "license"
 msgstr "الاتفاقية/العقد"
 
@@ -4149,188 +4167,328 @@ msgstr "تعديل مطالبة "
 msgid "Delete request"
 msgstr "حذف سجل مطالبة"
 
-#: planning/admin.py:42
+#: planning/admin.py:28 planning/admin.py:69 planning/admin.py:145
 msgid "main_goal"
 msgstr "الهدف الرئيسي"
 
-#: planning/admin.py:46
+#: planning/admin.py:149
 msgid "sub_goal"
 msgstr "الهدف الفرعي"
+
+#: planning/admin.py:153 planning/models.py:97 planning/models.py:116
+#: planning/models.py:147
+msgid "task"
+msgstr "مهمة"
 
 #: planning/apps.py:7
 msgid "Planning app"
 msgstr "نظام الخطط والتقارير"
 
-#: planning/models.py:52
+#: planning/models.py:65
 msgid "Department"
 msgstr "إدارة"
 
-#: planning/models.py:53
+#: planning/models.py:66
 msgid "Departments"
 msgstr "إدارات"
 
-#: planning/models.py:56
+#: planning/models.py:69
 msgid "parent_goal"
 msgstr "الهدف الرئيسي"
 
-#: planning/models.py:59
+#: planning/models.py:72
 msgid "outcome"
 msgstr "المخرجات"
 
-#: planning/models.py:60
+#: planning/models.py:73
 msgid "kpi"
 msgstr "مؤشرات الأداء"
 
-#: planning/models.py:61
-msgid "responsible"
-msgstr "المسئول عن التنفيذ"
-
-#: planning/models.py:67
+#: planning/models.py:79
 msgid "Goal"
 msgstr "هدف"
 
-#: planning/models.py:68
+#: planning/models.py:80
 msgid "Goals"
 msgstr "اهداف"
 
-#: planning/models.py:72
+#: planning/models.py:84
 msgid "goal"
 msgstr "هدف"
 
-#: planning/models.py:73
+#: planning/models.py:85 planning/models.py:141
 msgid "year"
 msgstr "العام"
 
-#: planning/models.py:80
+#: planning/models.py:86
+msgid "responsible"
+msgstr "المسئول عن التنفيذ"
+
+#: planning/models.py:93
 msgid "Task"
 msgstr "مهمة"
 
-#: planning/models.py:81
+#: planning/models.py:94
 msgid "Tasks"
 msgstr "مهام"
 
-#: planning/models.py:84 planning/models.py:95
-msgid "task"
-msgstr "مهمة"
-
-#: planning/models.py:85
+#: planning/models.py:98 planning/models.py:142
 msgid "month"
 msgstr "شهر"
 
-#: planning/models.py:91
+#: planning/models.py:104
 msgid "TaskDuration"
 msgstr "وقت التنفيذ"
 
-#: planning/models.py:92
+#: planning/models.py:105
 msgid "TaskDurations"
 msgstr "مواقيت التنفيذ"
 
-#: planning/models.py:96
+#: planning/models.py:112
+#, fuzzy
+#| msgid "manual"
+msgid "type_manual"
+msgstr "يدوي"
+
+#: planning/models.py:113
+#, fuzzy
+#| msgid "type"
+msgid "type_auto"
+msgstr "النوع"
+
+#: planning/models.py:117
+msgid "type"
+msgstr "النوع"
+
+#: planning/models.py:118
+#, fuzzy
+#| msgid "new_name"
+msgid "view_name"
+msgstr "الاسم الجديد"
+
+#: planning/models.py:119
+#, fuzzy
+#| msgid "calculation_method"
+msgid "percent_calculation_method"
+msgstr "طريقة الحساب"
+
+#: planning/models.py:127
+msgid "Enter inline view class"
+msgstr ""
+
+#: planning/models.py:132
+#, fuzzy
+#| msgid "calculation_method"
+msgid "Enter calculation method"
+msgstr "طريقة الحساب"
+
+#: planning/models.py:137
+#, fuzzy
+#| msgid "TaskDuration"
+msgid "TaskAutomation"
+msgstr "وقت التنفيذ"
+
+#: planning/models.py:138
+#, fuzzy
+#| msgid "TaskDurations"
+msgid "TaskAutomations"
+msgstr "مواقيت التنفيذ"
+
+#: planning/models.py:146
+#, fuzzy
+#| msgid "report_to"
+msgid "report"
+msgstr "نهاية التقرير"
+
+#: planning/models.py:148
 msgid "percentage"
 msgstr "نسبة التنفيذ"
 
-#: planning/models.py:97
+#: planning/models.py:149
 msgid "problems"
 msgstr "معوقات"
 
-#: planning/models.py:103
+#: planning/models.py:156
 msgid "TaskExecution"
 msgstr "اداء مهمة"
 
-#: planning/models.py:104
+#: planning/models.py:157
 msgid "TaskExecutions"
 msgstr "اداء مهام"
+
+#: planning/models.py:160
+#, fuzzy
+#| msgid "TaskExecution"
+msgid "task_execution"
+msgstr "اداء مهمة"
+
+#: planning/models.py:168 planning/models.py:172 planning/models.py:187
+#: production_control/admin.py:235
+msgid "total_weight"
+msgstr "إجمالي الوزن بالجرام"
+
+#: planning/models.py:176
+msgid "soug"
+msgstr ""
+
+#: planning/models.py:177
+msgid "grabeel"
+msgstr ""
+
+#: planning/models.py:178
+msgid "hofra_kabira"
+msgstr ""
+
+#: planning/models.py:179
+msgid "abar_khtot_intag"
+msgstr ""
+
+#: planning/models.py:180
+msgid "ajhizat_bahth"
+msgstr ""
+
+#: planning/models.py:181
+msgid "mo3dinin_sosal"
+msgstr ""
+
+#: planning/models.py:182
+msgid "toahin_ratiba"
+msgstr ""
+
+#: planning/models.py:183
+msgid "toahin_jafa"
+msgstr ""
+
+#: planning/models.py:186
+msgid "in ton"
+msgstr ""
+
+#: planning/models.py:190 planning/models.py:196
+#, fuzzy
+#| msgid "total_weight"
+msgid "raw_total_weight"
+msgstr "إجمالي الوزن بالجرام"
+
+#: planning/models.py:191 planning/models.py:197
+#, fuzzy
+#| msgid "total_weight"
+msgid "net_total_weight"
+msgstr "إجمالي الوزن بالجرام"
+
+#: planning/models.py:192
+#, fuzzy
+#| msgid "dollar"
+msgid "total_dollar"
+msgstr "دولار"
+
+#: planning/models.py:198
+#, fuzzy
+#| msgid "alloy_id"
+msgid "no_alloy"
+msgstr "رقم السبيكة"
+
+#: planning/models.py:220
+msgid "total_money"
+msgstr "إجمالي المبلغ"
 
 #: production_control/admin.py:166
 msgid "end distribution"
 msgstr "انهاء توزيع مشرف ميداني"
 
-#: production_control/admin.py:183 production_control/models.py:49
+#: production_control/admin.py:184 production_control/models.py:50
 msgid "moragib"
 msgstr "مشرف ميداني"
 
-#: production_control/admin.py:233
-msgid "total_weight"
-msgstr "إجمالي الوزن بالجرام"
+#: production_control/admin.py:239 production_control/admin.py:312
+msgid "approved_action"
+msgstr "تصديق الإستمارة المحددة"
+
+#: production_control/admin.py:246 production_control/admin.py:319
+msgid "draft_action"
+msgstr "إرجاع الإستمارة المحددة إلى مسودة"
 
 #: production_control/apps.py:8
 msgid "production_control"
 msgstr "نظام إنتاج وترحيل الذهب بالشركات"
 
-#: production_control/forms.py:65 production_control/models.py:79
+#: production_control/forms.py:65 production_control/models.py:88
 msgid "alloy_weight_expected"
 msgstr "الوزن المتوقع بالجرام"
 
-#: production_control/forms.py:101 production_control/models.py:97
-#: production_control/models.py:139
+#: production_control/forms.py:101 production_control/models.py:106
+#: production_control/models.py:156
 msgid "alloy_serial_no"
 msgstr "رقم السبيكة"
 
-#: production_control/models.py:43 production_control/models.py:44
+#: production_control/models.py:36 production_control/models.py:37
 msgid "moragib_list"
 msgstr "قائمة المشرفين الميدانيين"
 
-#: production_control/models.py:56 production_control/models.py:57
+#: production_control/models.py:57 production_control/models.py:58
 msgid "moragib_distribution"
 msgstr "توزيع المشرفين الميدانيين"
 
-#: production_control/models.py:67
+#: production_control/models.py:68
 msgid "gold_production_user_detail"
 msgstr "تفاصيل مشرف ميداني"
 
-#: production_control/models.py:68
+#: production_control/models.py:69
 msgid "gold_production_user_details"
 msgstr "تفاصيل المشرفين الميدانيين"
 
-#: production_control/models.py:76
+#: production_control/models.py:77 production_control/models.py:127
+msgid "state_approved"
+msgstr "مصدقة"
+
+#: production_control/models.py:85
 msgid "alloy_jaf"
 msgstr "وزن الركاز (المركز)"
 
-#: production_control/models.py:77
+#: production_control/models.py:86
 msgid "alloy_khabath"
 msgstr "وزن الخبث"
 
-#: production_control/models.py:78
+#: production_control/models.py:87
 msgid "alloy_remaind"
 msgstr "وزن الذهب المتبقي"
 
-#: production_control/models.py:81
+#: production_control/models.py:90
 msgid "gold_production_3hda_file"
 msgstr "مرفق استمارة العهدة"
 
-#: production_control/models.py:85 production_control/models.py:86
+#: production_control/models.py:94 production_control/models.py:95
 msgid "Gold Production Form"
 msgstr "استمارة انتاج"
 
-#: production_control/models.py:98
+#: production_control/models.py:107
 msgid "alloy_weight"
 msgstr "الوزن بالجرام"
 
-#: production_control/models.py:101
+#: production_control/models.py:110
 msgid "alloy_added_gold"
 msgstr "وزن الذهب المضاف للصهر"
 
-#: production_control/models.py:103
+#: production_control/models.py:112
 msgid "alloy_shipped"
 msgstr "سبيكة مرحلة"
 
-#: production_control/models.py:109 production_control/models.py:110
+#: production_control/models.py:118 production_control/models.py:119
 msgid "Gold Production Form - Alloy"
 msgstr "انتاج الذهب - السبائك"
 
-#: production_control/models.py:118
+#: production_control/models.py:135
 msgid "gold_shipping_form_file"
 msgstr "مرفق استمارة ترحيل"
 
-#: production_control/models.py:134 production_control/models.py:135
+#: production_control/models.py:151 production_control/models.py:152
 msgid "Gold Shipping Form"
 msgstr "استمارة ترحيل"
 
-#: production_control/models.py:146 production_control/models.py:147
+#: production_control/models.py:163 production_control/models.py:164
 msgid "Gold Shipping Form - Alloy"
 msgstr "ترحيل الذهب - السبائك"
 
-#: production_control/models.py:152
+#: production_control/models.py:169
 msgid "alloy should belong to same company!"
 msgstr "السبائك يجب ان تتبع لنفس الشركة!"
 
@@ -4550,9 +4708,6 @@ msgstr "تم حفظ السجل بنجاح."
 #~| msgid "Delete request"
 #~ msgid "help request: "
 #~ msgstr "حذف سجل مطالبة"
-
-#~ msgid "type"
-#~ msgstr "النوع"
 
 #~ msgid "confirm_btn"
 #~ msgstr "تأكيد"
