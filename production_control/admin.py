@@ -5,6 +5,8 @@ from django.forms import TextInput
 from django.urls import path
 from django.utils.translation import gettext_lazy as _
 
+from rest_framework.authtoken.admin import TokenAdmin
+
 from production_control.forms import GoldProductionFormForm, GoldProductionUserDetailForm, GoldProductionUserForm, GoldShippingFormAlloyForm, GoldShippingFormForm, MoragibForm, TblCompanyProductionAutocomplete
 from production_control.models import STATE_CONFIRMED, STATE_DRAFT, GoldProductionForm, GoldProductionFormAlloy, GoldProductionUser, GoldProductionUserDetail, GoldShippingForm, GoldShippingFormAlloy, LkpMoragib
 
@@ -94,6 +96,8 @@ class AuditorMixin:
             pass
 
         return False
+
+TokenAdmin.raw_id_fields = ['user']
 
 @admin.register(LkpMoragib)
 class LkpMoragibAdmin(admin.ModelAdmin):
