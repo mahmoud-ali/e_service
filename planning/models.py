@@ -167,29 +167,50 @@ class CompanyProductionTask(TaskExecutionDetail):
     company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
     total_weight = models.FloatField(_("total_weight"))
 
+    class Meta:
+        verbose_name = _("CompanyProductionTask")
+        verbose_name_plural = _("CompanyProductionTasks")
+
 class TraditionalProductionTask(TaskExecutionDetail):
     state = models.ForeignKey(LkpState, on_delete=models.PROTECT,verbose_name=_("state"))
     total_weight = models.FloatField(_("total_weight"))
 
+    class Meta:
+        verbose_name = _("TraditionalProductionTask")
+        verbose_name_plural = _("TraditionalProductionTasks")
+
 class TraditionalStateTask(TaskExecutionDetail):
     state = models.ForeignKey(LkpState, on_delete=models.PROTECT,verbose_name=_("state"))
-    soug = models.IntegerField(_("soug"))
-    grabeel = models.IntegerField(_("grabeel"))
-    hofra_kabira = models.IntegerField(_("hofra_kabira"))
-    abar_khtot_intag = models.IntegerField(_("abar_khtot_intag"))
-    ajhizat_bahth = models.IntegerField(_("ajhizat_bahth"))
-    mo3dinin_sosal = models.IntegerField(_("mo3dinin_sosal"))
-    toahin_ratiba = models.IntegerField(_("toahin_ratiba"))
-    toahin_jafa = models.IntegerField(_("toahin_jafa"))
+    soug = models.IntegerField(_("no_soug"))
+    grabeel = models.IntegerField(_("no_grabeel"))
+    hofra_kabira = models.IntegerField(_("no_hofra_kabira"))
+    abar_khtot_intag = models.IntegerField(_("no_abar_khtot_intag"))
+    ajhizat_bahth = models.IntegerField(_("no_ajhizat_bahth"))
+    mo3dinin_sosal = models.IntegerField(_("no_mo3dinin_sosal"))
+    toahin_ratiba = models.IntegerField(_("no_toahin_ratiba"))
+    toahin_jafa = models.IntegerField(_("no_toahin_jafa"))
+
+    class Meta:
+        verbose_name = _("TraditionalStateTask")
+        verbose_name_plural = _("TraditionalStateTasks")
 
 class OtherMineralsTask(TaskExecutionDetail):
-    mineral = models.ManyToManyField(LkpMineral,verbose_name=_("mineral"), help_text=_('in ton'))
+    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
+    mineral = models.ForeignKey(LkpMineral, on_delete=models.PROTECT,verbose_name=_("mineral"), help_text=_('in ton'))
     total_weight = models.FloatField(_("total_weight"))
+
+    class Meta:
+        verbose_name = _("OtherMineralsTask")
+        verbose_name_plural = _("OtherMineralsTasks")
 
 class ExportGoldTraditionalTask(TaskExecutionDetail):
     raw_total_weight = models.FloatField(_("raw_total_weight"))
     net_total_weight = models.FloatField(_("net_total_weight"))
     total_dollar = models.FloatField(_("total_dollar"))
+
+    class Meta:
+        verbose_name = _("ExportGoldTraditionalTask")
+        verbose_name_plural = _("ExportGoldTraditionalTasks")
 
 class ExportGoldCompanyTask(TaskExecutionDetail):
     company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
@@ -197,10 +218,18 @@ class ExportGoldCompanyTask(TaskExecutionDetail):
     net_total_weight = models.FloatField(_("net_total_weight"))
     no_alloy = models.IntegerField(_("no_alloy"))
 
+    class Meta:
+        verbose_name = _("ExportGoldCompanyTask")
+        verbose_name_plural = _("ExportGoldCompanyTasks")
+
 class CompanyInfoTask(TaskExecutionDetail):
     company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
     nationality = models.ManyToManyField(LkpNationality,verbose_name=_("nationality"),default=[1]) #, on_delete=models.PROTECT
     status = models.ForeignKey(LkpCompanyProductionStatus, on_delete=models.PROTECT,verbose_name=_("status"))
+
+    class Meta:
+        verbose_name = _("CompanyInfoTask")
+        verbose_name_plural = _("CompanyInfoTasks")
 
 class CompanyLicenseInfoTask(TaskExecutionDetail):
     license  = models.ForeignKey(TblCompanyProductionLicense, on_delete=models.PROTECT,verbose_name=_("license"))    
@@ -214,12 +243,160 @@ class CompanyLicenseInfoTask(TaskExecutionDetail):
     reserve = models.FloatField(_("Reserve in Tones"),blank=True,null=True)
     contract_status  = models.ForeignKey(LkpCompanyProductionLicenseStatus, on_delete=models.PROTECT,verbose_name=_("contract_status"))
 
+    class Meta:
+        verbose_name = _("CompanyLicenseInfoTask")
+        verbose_name_plural = _("CompanyLicenseInfoTasks")
+
 ############### Tahsil #####################
 class TraditionalTahsilTask(TaskExecutionDetail):
     state = models.ForeignKey(LkpState, on_delete=models.PROTECT, verbose_name=_("state"))
     total_money = models.FloatField(_("total_money"))
 
+    class Meta:
+        verbose_name = _("TraditionalTahsilTask")
+        verbose_name_plural = _("TraditionalTahsilTasks")
+
+class TraditionalTahsilByBandTask(TaskExecutionDetail):
+    BAND_1 = 1
+    BAND_2 = 2
+    BAND_3 = 3
+    BAND_4 = 4
+    BAND_5 = 5
+    BAND_6 = 6
+    BAND_7 = 7
+    BAND_8 = 8
+    BAND_9 = 9
+    BAND_10 = 10
+    BAND_11 = 11
+    BAND_12 = 12
+    BAND_13 = 13
+    BAND_14 = 14
+    BAND_15 = 15
+    BAND_16 = 16
+
+    BAND_CHOICES = {
+        BAND_1:_('band_1'),
+        BAND_2:_('band_2'),
+        BAND_3:_('band_3'),
+        BAND_4:_('band_4'),
+        BAND_5:_('band_5'),
+        BAND_6:_('band_6'),
+        BAND_7:_('band_7'),
+        BAND_8:_('band_8'),
+        BAND_9:_('band_9'),
+        BAND_10:_('band_10'),
+        BAND_11:_('band_11'),
+        BAND_12:_('band_12'),
+        BAND_13:_('band_13'),
+        BAND_14:_('band_14'),
+        BAND_15:_('band_15'),
+        BAND_16:_('band_16'),
+    }
+
+    band = models.IntegerField(_("band"),choices=BAND_CHOICES)
+    total_money = models.FloatField(_("total_money"))
+
+    class Meta:
+        verbose_name = _("TraditionalTahsilByBandTask")
+        verbose_name_plural = _("TraditionalTahsilByBandTasks")
+
+class TraditionalTahsilByJihaTask(TaskExecutionDetail):
+    JIHA_1 = 1
+    JIHA_2 = 2
+    JIHA_3 = 3
+    JIHA_4 = 4
+    JIHA_5 = 5
+
+    JIHA_CHOICES = {
+        JIHA_1:_('jiha_1'),
+        JIHA_2:_('jiha_2'),
+        JIHA_3:_('jiha_3'),
+        JIHA_4:_('jiha_4'),
+        JIHA_5:_('jiha_5'),
+    }
+
+    jiha = models.IntegerField(_("jiha"),choices=JIHA_CHOICES)
+    total_money = models.FloatField(_("total_money"))
+
+    class Meta:
+        verbose_name = _("TraditionalTahsilByJihaTask")
+        verbose_name_plural = _("TraditionalTahsilByJihaTasks")
+
 ############### Salama #####################
 
+class TraditionalSalamaMatlobatTask(TaskExecutionDetail):
+    state = models.ForeignKey(LkpState, on_delete=models.PROTECT, verbose_name=_("state"))
+    taswir_asag = models.FloatField(_("taswir_asag"))
+    trhil_karta = models.FloatField(_("trhil_karta"))
+    slamat_manajim = models.FloatField(_("slamat_manajim"))
+    no_3iadat = models.FloatField(_("no_3iadat"))
+    no_is3af = models.FloatField(_("no_is3af"))
+    t3mol_zi2bag = models.FloatField(_("t3mol_zi2bag"))
+
+    class Meta:
+        verbose_name = _("TraditionalSalamaMatlobatTask")
+        verbose_name_plural = _("TraditionalSalamaMatlobatTasks")
+
+class TraditionalSalamaRagabaTask(TaskExecutionDetail):
+    state = models.ForeignKey(LkpState, on_delete=models.PROTECT, verbose_name=_("state"))
+    m2moriat_taftishia = models.FloatField(_("m2moriat_taftishia"))
+    lig2at_2rshadia = models.FloatField(_("lig2at_2rshadia"))
+    taslim_tgarir = models.FloatField(_("taslim_tgarir"))
+
+    class Meta:
+        verbose_name = _("TraditionalSalamaRagabaTask")
+        verbose_name_plural = _("TraditionalSalamaRagabaTasks")
+
+class CompanySalamaMatlobatTask(TaskExecutionDetail):
+    NASHAT_1 = 1
+    NASHAT_2 = 2
+    NASHAT_3 = 3
+    NASHAT_4 = 4
+    NASHAT_5 = 5
+    NASHAT_6 = 6
+
+    NASHAT_CHOICES = {
+        NASHAT_1:_('nashat_1'),
+        NASHAT_2:_('nashat_2'),
+        NASHAT_3:_('nashat_3'),
+        NASHAT_4:_('nashat_4'),
+        NASHAT_5:_('nashat_5'),
+        NASHAT_6:_('nashat_6'),
+    }
+
+    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
+    nashat = models.IntegerField(_("nashat"),choices=NASHAT_CHOICES)
+    percent = models.FloatField(_("percent"))
+
+    class Meta:
+        verbose_name = _("CompanySalamaMatlobatTask")
+        verbose_name_plural = _("CompanySalamaMatlobatTasks")
+
+class Company7oadithTask(TaskExecutionDetail):
+    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
+    no_7oadith = models.IntegerField(_("no_7oadith"))
+
+    class Meta:
+        verbose_name = _("Company7oadithTask")
+        verbose_name_plural = _("Company7oadithTasks")
+
+class Traditional7oadthTask(TaskExecutionDetail):
+    state = models.ForeignKey(LkpState, on_delete=models.PROTECT, verbose_name=_("state"))
+    no_wafiat = models.IntegerField(_("no_wafiat"))
+    no_7oadith = models.IntegerField(_("no_7oadith"))
+    no_e9abat = models.IntegerField(_("no_e9abat"))
+
+    class Meta:
+        verbose_name = _("Traditional7oadthTask")
+        verbose_name_plural = _("Traditional7oadthTasks")
+
+class CompanyMokhalafatTask(TaskExecutionDetail):
+    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
+    no_mokhalafat = models.IntegerField(_("no_mokhalafat"))
+    no_mokhalafat_fixed = models.IntegerField(_("no_mokhalafat_fixed"))
+
+    class Meta:
+        verbose_name = _("CompanyMokhalafatTask")
+        verbose_name_plural = _("CompanyMokhalafatTasks")
 
 ############### Mojtam3ia #####################
