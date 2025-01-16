@@ -166,6 +166,7 @@ class TaskExecutionAdmin(admin.ModelAdmin):
     fields = ["task","percentage","problems"]
     list_display = ["task_name","main_goal","sub_goal","percentage"]
     inlines = []
+    readonly_fields = ["task"]
 
     # readonly_fields = ["task"]
     search_fields = ('task__goal__parent__name','task__goal__name','task__name', 'problems')
@@ -190,9 +191,9 @@ class TaskExecutionAdmin(admin.ModelAdmin):
 
         return qs.none()
 
-    # def has_add_permission(self, request):
+    def has_add_permission(self, request):
         
-    #     return False
+        return False
 
     def has_change_permission(self, request, obj=None):
         if obj and request.user.is_superuser:
