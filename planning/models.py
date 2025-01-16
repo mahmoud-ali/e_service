@@ -192,34 +192,34 @@ class YearlyPlanning(LoggingModel):
     year = models.PositiveIntegerField(_("year"), validators=[MinValueValidator(limit_value=2015),MaxValueValidator(limit_value=2100)])
     state = models.IntegerField(_("record_state"), choices=STATE_CHOICES, default=STATE_DRAFT)
 
-class CompanyProductionYearlyPlanning(models.Model):
+class CompanyProductionMonthlyPlanning(models.Model):
     plan = models.ForeignKey(YearlyPlanning, on_delete=models.CASCADE, verbose_name=_("plan"), related_name='+')
     month = models.PositiveIntegerField(verbose_name=_("month"), choices=MONTH_CHOICES)
     planed_weight = models.FloatField(_("planed_weight"))
 
-class TraditionaProductionYearlyPlanning(models.Model):
+class TraditionaProductionMonthlyPlanning(models.Model):
     plan = models.ForeignKey(YearlyPlanning, on_delete=models.CASCADE, verbose_name=_("plan"), related_name='+')
     month = models.PositiveIntegerField(verbose_name=_("month"), choices=MONTH_CHOICES)
     planed_weight = models.FloatField(_("planed_weight"))
 
-class OtherMineralsProductionYearlyPlanning(models.Model):
+class OtherMineralsProductionMonthlyPlanning(models.Model):
     plan = models.ForeignKey(YearlyPlanning, on_delete=models.CASCADE, verbose_name=_("plan"), related_name='+')
     month = models.PositiveIntegerField(verbose_name=_("month"), choices=MONTH_CHOICES)
     mineral = models.ForeignKey(LkpMineral, on_delete=models.PROTECT,verbose_name=_("mineral"), help_text=_('in ton'))
     planed_weight = models.FloatField(_("planed_weight"))
 
-class TraditionaTahsilYearlyPlanning(models.Model):
+class TraditionaTahsilMonthlyPlanning(models.Model):
     plan = models.ForeignKey(YearlyPlanning, on_delete=models.CASCADE, verbose_name=_("plan"), related_name='+')
     month = models.PositiveIntegerField(verbose_name=_("month"), choices=MONTH_CHOICES)
     planed_money = models.FloatField(_("planed_money"))
 
-class TraditionaTahsilByBandYearlyPlanning(models.Model):
+class TraditionaTahsilByBandMonthlyPlanning(models.Model):
     plan = models.ForeignKey(YearlyPlanning, on_delete=models.CASCADE, verbose_name=_("plan"), related_name='+')
     month = models.PositiveIntegerField(verbose_name=_("month"), choices=MONTH_CHOICES)
     band = models.IntegerField(_("band"),choices=BAND_CHOICES)
     planed_money = models.FloatField(_("planed_money"))
 
-class TraditionaTahsilByJihaYearlyPlanning(models.Model):
+class TraditionaTahsilByJihaMonthlyPlanning(models.Model):
     plan = models.ForeignKey(YearlyPlanning, on_delete=models.CASCADE, verbose_name=_("plan"), related_name='+')
     month = models.PositiveIntegerField(verbose_name=_("month"), choices=MONTH_CHOICES)
     jiha = models.IntegerField(_("jiha"),choices=JIHA_CHOICES)
