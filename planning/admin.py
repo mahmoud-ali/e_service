@@ -5,6 +5,7 @@ from django.forms import TextInput
 from django.utils.translation import gettext_lazy as _
 
 from planning.forms import DepartmentForm
+from planning.utils import get_company_types
 
 from .models import STATE_DRAFT, CompanyProductionMonthlyPlanning, ExportGoldCompanyMonthlyPlanning, ExportGoldTraditionalMonthlyPlanning, Goal, Department, MonthelyReport, OtherMineralsProductionMonthlyPlanning, Task, TaskAutomation, TaskDuration, TaskExecution, TraditionaProductionMonthlyPlanning, TraditionaTahsilByBandMonthlyPlanning, TraditionaTahsilByJihaMonthlyPlanning, TraditionaTahsilMonthlyPlanning, YearlyPlanning
 
@@ -234,4 +235,9 @@ class TaskExecutionAdmin(admin.ModelAdmin):
     def get_formsets_with_inlines(self, request, obj=None):
         for inline in self.get_inline_instances(request, obj):
             formset = inline.get_formset(request, obj)
+
+            if isinstance(inline,CompanyProductionTaskInline):
+                formset.form = CompanyProductionTaskForm
+                formset.form.company_types = get_company_types(request)
+
             yield formset,inline
