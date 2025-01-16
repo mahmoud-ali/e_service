@@ -45,6 +45,56 @@ STATE_CHOICES = {
     # STATE_EXPIRED: _('state_expired'),
 }
 
+BAND_1 = 1
+BAND_2 = 2
+BAND_3 = 3
+BAND_4 = 4
+BAND_5 = 5
+BAND_6 = 6
+BAND_7 = 7
+BAND_8 = 8
+BAND_9 = 9
+BAND_10 = 10
+BAND_11 = 11
+BAND_12 = 12
+BAND_13 = 13
+BAND_14 = 14
+BAND_15 = 15
+BAND_16 = 16
+
+BAND_CHOICES = {
+    BAND_1:_('band_1'),
+    BAND_2:_('band_2'),
+    BAND_3:_('band_3'),
+    BAND_4:_('band_4'),
+    BAND_5:_('band_5'),
+    BAND_6:_('band_6'),
+    BAND_7:_('band_7'),
+    BAND_8:_('band_8'),
+    BAND_9:_('band_9'),
+    BAND_10:_('band_10'),
+    BAND_11:_('band_11'),
+    BAND_12:_('band_12'),
+    BAND_13:_('band_13'),
+    BAND_14:_('band_14'),
+    BAND_15:_('band_15'),
+    BAND_16:_('band_16'),
+}
+
+JIHA_1 = 1
+JIHA_2 = 2
+JIHA_3 = 3
+JIHA_4 = 4
+JIHA_5 = 5
+
+JIHA_CHOICES = {
+    JIHA_1:_('jiha_1'),
+    JIHA_2:_('jiha_2'),
+    JIHA_3:_('jiha_3'),
+    JIHA_4:_('jiha_4'),
+    JIHA_5:_('jiha_5'),
+}
+
 class LoggingModel(models.Model):
     created_at = models.DateTimeField(_("created_at"),auto_now_add=True,editable=False,)
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT,related_name="+",editable=False,verbose_name=_("created_by")) 
@@ -137,6 +187,45 @@ class TaskAutomation(models.Model):
         verbose_name = _("TaskAutomation")
         verbose_name_plural = _("TaskAutomations")
 
+############### Planning ##################
+class YearlyPlanning(LoggingModel):
+    year = models.PositiveIntegerField(_("year"), validators=[MinValueValidator(limit_value=2015),MaxValueValidator(limit_value=2100)])
+    state = models.IntegerField(_("record_state"), choices=STATE_CHOICES, default=STATE_DRAFT)
+
+class CompanyProductionYearlyPlanning(models.Model):
+    plan = models.ForeignKey(YearlyPlanning, on_delete=models.CASCADE, verbose_name=_("plan"), related_name='+')
+    month = models.PositiveIntegerField(verbose_name=_("month"), choices=MONTH_CHOICES)
+    planed_weight = models.FloatField(_("planed_weight"))
+
+class TraditionaProductionYearlyPlanning(models.Model):
+    plan = models.ForeignKey(YearlyPlanning, on_delete=models.CASCADE, verbose_name=_("plan"), related_name='+')
+    month = models.PositiveIntegerField(verbose_name=_("month"), choices=MONTH_CHOICES)
+    planed_weight = models.FloatField(_("planed_weight"))
+
+class OtherMineralsProductionYearlyPlanning(models.Model):
+    plan = models.ForeignKey(YearlyPlanning, on_delete=models.CASCADE, verbose_name=_("plan"), related_name='+')
+    month = models.PositiveIntegerField(verbose_name=_("month"), choices=MONTH_CHOICES)
+    mineral = models.ForeignKey(LkpMineral, on_delete=models.PROTECT,verbose_name=_("mineral"), help_text=_('in ton'))
+    planed_weight = models.FloatField(_("planed_weight"))
+
+class TraditionaTahsilYearlyPlanning(models.Model):
+    plan = models.ForeignKey(YearlyPlanning, on_delete=models.CASCADE, verbose_name=_("plan"), related_name='+')
+    month = models.PositiveIntegerField(verbose_name=_("month"), choices=MONTH_CHOICES)
+    planed_money = models.FloatField(_("planed_money"))
+
+class TraditionaTahsilByBandYearlyPlanning(models.Model):
+    plan = models.ForeignKey(YearlyPlanning, on_delete=models.CASCADE, verbose_name=_("plan"), related_name='+')
+    month = models.PositiveIntegerField(verbose_name=_("month"), choices=MONTH_CHOICES)
+    band = models.IntegerField(_("band"),choices=BAND_CHOICES)
+    planed_money = models.FloatField(_("planed_money"))
+
+class TraditionaTahsilByJihaYearlyPlanning(models.Model):
+    plan = models.ForeignKey(YearlyPlanning, on_delete=models.CASCADE, verbose_name=_("plan"), related_name='+')
+    month = models.PositiveIntegerField(verbose_name=_("month"), choices=MONTH_CHOICES)
+    jiha = models.IntegerField(_("jiha"),choices=JIHA_CHOICES)
+    planed_money = models.FloatField(_("planed_money"))
+
+############ Monthly Report #############
 class MonthelyReport(LoggingModel):
     year = models.PositiveIntegerField(_("year"), validators=[MinValueValidator(limit_value=2015),MaxValueValidator(limit_value=2100)])
     month = models.PositiveIntegerField(verbose_name=_("month"), choices=MONTH_CHOICES)
@@ -257,42 +346,6 @@ class TraditionalTahsilTask(TaskExecutionDetail):
         verbose_name_plural = _("TraditionalTahsilTasks")
 
 class TraditionalTahsilByBandTask(TaskExecutionDetail):
-    BAND_1 = 1
-    BAND_2 = 2
-    BAND_3 = 3
-    BAND_4 = 4
-    BAND_5 = 5
-    BAND_6 = 6
-    BAND_7 = 7
-    BAND_8 = 8
-    BAND_9 = 9
-    BAND_10 = 10
-    BAND_11 = 11
-    BAND_12 = 12
-    BAND_13 = 13
-    BAND_14 = 14
-    BAND_15 = 15
-    BAND_16 = 16
-
-    BAND_CHOICES = {
-        BAND_1:_('band_1'),
-        BAND_2:_('band_2'),
-        BAND_3:_('band_3'),
-        BAND_4:_('band_4'),
-        BAND_5:_('band_5'),
-        BAND_6:_('band_6'),
-        BAND_7:_('band_7'),
-        BAND_8:_('band_8'),
-        BAND_9:_('band_9'),
-        BAND_10:_('band_10'),
-        BAND_11:_('band_11'),
-        BAND_12:_('band_12'),
-        BAND_13:_('band_13'),
-        BAND_14:_('band_14'),
-        BAND_15:_('band_15'),
-        BAND_16:_('band_16'),
-    }
-
     band = models.IntegerField(_("band"),choices=BAND_CHOICES)
     total_money = models.FloatField(_("total_money"))
 
@@ -301,22 +354,9 @@ class TraditionalTahsilByBandTask(TaskExecutionDetail):
         verbose_name_plural = _("TraditionalTahsilByBandTasks")
 
 class TraditionalTahsilByJihaTask(TaskExecutionDetail):
-    JIHA_1 = 1
-    JIHA_2 = 2
-    JIHA_3 = 3
-    JIHA_4 = 4
-    JIHA_5 = 5
-
-    JIHA_CHOICES = {
-        JIHA_1:_('jiha_1'),
-        JIHA_2:_('jiha_2'),
-        JIHA_3:_('jiha_3'),
-        JIHA_4:_('jiha_4'),
-        JIHA_5:_('jiha_5'),
-    }
-
     jiha = models.IntegerField(_("jiha"),choices=JIHA_CHOICES)
     total_money = models.FloatField(_("total_money"))
+    planed_money = models.FloatField(_("planed_money"))
 
     class Meta:
         verbose_name = _("TraditionalTahsilByJihaTask")
