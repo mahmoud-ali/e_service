@@ -277,7 +277,7 @@ class MonthelyReport(LoggingModel):
     month = models.PositiveIntegerField(verbose_name=_("month"), choices=MONTH_CHOICES)
     state = models.IntegerField(_("record_state"), choices=STATE_CHOICES, default=STATE_DRAFT)
 
-class TaskExecution(models.Model):
+class TaskExecution(LoggingModel):
     report = models.ForeignKey(MonthelyReport, on_delete=models.CASCADE, null=True, verbose_name=_("report"), related_name='monthly_tasks')
     task = models.ForeignKey(Task, on_delete=models.CASCADE, verbose_name=_("task"), related_name='execution')
     percentage = models.PositiveIntegerField(verbose_name=_("percentage"), default=0, validators=[MaxValueValidator(limit_value=100)])
