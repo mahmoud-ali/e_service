@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-16 11:13+0200\n"
+"POT-Creation-Date: 2025-01-16 13:47+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -4579,20 +4579,20 @@ msgid "TraditionalTahsilTasks"
 msgstr "إيرادات التعدين التقليدي"
 
 #: planning/models.py:399
-msgid "TraditionalTahsilByBandTask"
+msgid "TahsilByBandTask"
 msgstr "إيرادات التعدين التقليدي بالبنود"
 
 #: planning/models.py:400
-msgid "TraditionalTahsilByBandTasks"
+msgid "TahsilByBandTasks"
 msgstr "إيرادات التعدين التقليدي بالبنود"
 
 #: planning/models.py:408
-msgid "TraditionalTahsilByJihaTask"
-msgstr "توزيع الإيرادات"
+msgid "TahsilByJihaTask"
+msgstr "إيرادات التعدين التقليدي بالجهة"
 
 #: planning/models.py:409
-msgid "TraditionalTahsilByJihaTasks"
-msgstr "توزيع الإيرادات"
+msgid "TahsilByJihaTasks"
+msgstr "إيرادات التعدين التقليدي بالجهة"
 
 #: planning/models.py:415
 msgid "taswir_asag"
@@ -4933,9 +4933,29 @@ msgstr ""
 msgid "SMRC e-services"
 msgstr "بوابة الخدمات الالكترونية"
 
+#: templates/admin/app_list.html:8
+#, python-format
+msgid "Models in the %(name)s application"
+msgstr ""
+
+#: templates/admin/app_list.html:19
+#, fuzzy
+#| msgid "Add mda"
+msgid "Add"
+msgstr "اضافة طلب MDA"
+
+#: templates/admin/app_list.html:26
 #: templates/admin/company_profile/app_index.html:27
 msgid "View"
 msgstr "عرض"
+
+#: templates/admin/app_list.html:28
+msgid "Change"
+msgstr ""
+
+#: templates/admin/app_list.html:39
+msgid "You don’t have permission to view or edit anything."
+msgstr ""
 
 #: templates/admin/company_profile/app_index.html:60
 msgid "Breadcrumbs"

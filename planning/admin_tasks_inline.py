@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from planning.models import CompanyInfoTask, CompanyLicenseInfoTask, CompanyMokhalafatTask, CompanyProductionTask, CompanySalamaMatlobatTask, Company7oadithTask, ExportGoldCompanyTask, ExportGoldTraditionalTask, OtherMineralsTask, Traditional7oadthTask, TraditionalProductionTask, TraditionalSalamaMatlobatTask, TraditionalSalamaRagabaTask, TraditionalStateTask, TraditionalTahsilByBandTask, TraditionalTahsilByJihaTask, TraditionalTahsilTask
+from planning.models import CompanyInfoTask, CompanyLicenseInfoTask, CompanyMokhalafatTask, CompanyProductionTask, CompanySalamaMatlobatTask, Company7oadithTask, ExportGoldCompanyTask, ExportGoldTraditionalTask, OtherMineralsTask, Traditional7oadthTask, TraditionalProductionTask, TraditionalSalamaMatlobatTask, TraditionalSalamaRagabaTask, TraditionalStateTask, TahsilByBandTask, TahsilByJihaTask, TraditionalTahsilTask
 
 ############### Production #####################
 class CompanyProductionTaskInline(admin.TabularInline):
@@ -40,12 +40,12 @@ class TraditionalTahsilTaskInline(admin.TabularInline):
     model = TraditionalTahsilTask
     extra = 1
 
-class TraditionalTahsilByBandTaskInline(admin.TabularInline):
-    model = TraditionalTahsilByBandTask
+class TahsilByBandTaskInline(admin.TabularInline):
+    model = TahsilByBandTask
     extra = 1
 
-class TraditionalTahsilByJihaTaskInline(admin.TabularInline):
-    model = TraditionalTahsilByJihaTask
+class TahsilByJihaTaskInline(admin.TabularInline):
+    model = TahsilByJihaTask
     extra = 1
 
 ############### Salama #####################

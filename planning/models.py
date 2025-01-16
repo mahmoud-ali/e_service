@@ -391,22 +391,22 @@ class TraditionalTahsilTask(TaskExecutionDetail):
         verbose_name = _("TraditionalTahsilTask")
         verbose_name_plural = _("TraditionalTahsilTasks")
 
-class TraditionalTahsilByBandTask(TaskExecutionDetail):
+class TahsilByBandTask(TaskExecutionDetail):
     band = models.IntegerField(_("band"),choices=BAND_CHOICES)
     total_money = models.FloatField(_("total_money"))
 
     class Meta:
-        verbose_name = _("TraditionalTahsilByBandTask")
-        verbose_name_plural = _("TraditionalTahsilByBandTasks")
+        verbose_name = _("TahsilByBandTask")
+        verbose_name_plural = _("TahsilByBandTasks")
 
-class TraditionalTahsilByJihaTask(TaskExecutionDetail):
+class TahsilByJihaTask(TaskExecutionDetail):
     jiha = models.IntegerField(_("jiha"),choices=JIHA_CHOICES)
     total_money = models.FloatField(_("total_money"))
     planed_money = models.FloatField(_("planed_money"))
 
     class Meta:
-        verbose_name = _("TraditionalTahsilByJihaTask")
-        verbose_name_plural = _("TraditionalTahsilByJihaTasks")
+        verbose_name = _("TahsilByJihaTask")
+        verbose_name_plural = _("TahsilByJihaTasks")
 
 ############### Salama #####################
 
