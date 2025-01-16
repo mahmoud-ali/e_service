@@ -6,7 +6,7 @@ from django.utils.translation import gettext_lazy as _
 
 from planning.forms import DepartmentForm
 
-from .models import STATE_DRAFT, CompanyProductionMonthlyPlanning, Goal, Department, MonthelyReport, OtherMineralsProductionMonthlyPlanning, Task, TaskAutomation, TaskDuration, TaskExecution, TraditionaProductionMonthlyPlanning, TraditionaTahsilByBandMonthlyPlanning, TraditionaTahsilByJihaMonthlyPlanning, TraditionaTahsilMonthlyPlanning, YearlyPlanning
+from .models import STATE_DRAFT, CompanyProductionMonthlyPlanning, ExportGoldCompanyMonthlyPlanning, ExportGoldTraditionalMonthlyPlanning, Goal, Department, MonthelyReport, OtherMineralsProductionMonthlyPlanning, Task, TaskAutomation, TaskDuration, TaskExecution, TraditionaProductionMonthlyPlanning, TraditionaTahsilByBandMonthlyPlanning, TraditionaTahsilByJihaMonthlyPlanning, TraditionaTahsilMonthlyPlanning, YearlyPlanning
 
 from .admin_tasks_inline import *
 
@@ -122,12 +122,28 @@ class TraditionaTahsilByJihaMonthlyPlanningInline(admin.TabularInline):
         models.FloatField: {"widget": TextInput},
     }    
 
+class ExportGoldTraditionalMonthlyPlanningInline(admin.TabularInline):
+    model = ExportGoldTraditionalMonthlyPlanning
+    exclude = ["created_at","created_by","updated_at","updated_by"]
+    extra = 1
+    formfield_overrides = {
+        models.FloatField: {"widget": TextInput},
+    }    
+
+class ExportGoldCompanyMonthlyPlanningInline(admin.TabularInline):
+    model = ExportGoldCompanyMonthlyPlanning
+    exclude = ["created_at","created_by","updated_at","updated_by"]
+    extra = 1
+    formfield_overrides = {
+        models.FloatField: {"widget": TextInput},
+    }    
+
 @admin.register(YearlyPlanning)
 class YearlyPlanningAdmin(admin.ModelAdmin):
     model = YearlyPlanning
     list_display = ["year","state",]
     list_filter = ["year","state",]
-    inlines = [CompanyProductionMonthlyPlanningInline, TraditionaProductionMonthlyPlanningInline, OtherMineralsProductionMonthlyPlanningInline, TraditionaTahsilMonthlyPlanningInline, TraditionaTahsilByBandMonthlyPlanningInline, TraditionaTahsilByJihaMonthlyPlanningInline]
+    inlines = [CompanyProductionMonthlyPlanningInline, TraditionaProductionMonthlyPlanningInline, OtherMineralsProductionMonthlyPlanningInline, TraditionaTahsilMonthlyPlanningInline, TraditionaTahsilByBandMonthlyPlanningInline, TraditionaTahsilByJihaMonthlyPlanningInline, ExportGoldCompanyMonthlyPlanningInline, ExportGoldTraditionalMonthlyPlanningInline, ]
 
 @admin.register(MonthelyReport)
 class MonthelyReportAdmin(LogAdminMixin,admin.ModelAdmin):
