@@ -6,7 +6,7 @@ from django.utils.translation import gettext_lazy as _
 
 from planning.forms import DepartmentForm
 
-from .models import STATE_DRAFT, Goal, Department, MonthelyReport, Task, TaskAutomation, TaskDuration, TaskExecution
+from .models import STATE_DRAFT, CompanyProductionMonthlyPlanning, Goal, Department, MonthelyReport, OtherMineralsProductionMonthlyPlanning, Task, TaskAutomation, TaskDuration, TaskExecution, TraditionaProductionMonthlyPlanning, TraditionaTahsilByBandMonthlyPlanning, TraditionaTahsilByJihaMonthlyPlanning, TraditionaTahsilMonthlyPlanning, YearlyPlanning
 
 from .admin_tasks_inline import *
 
@@ -73,6 +73,61 @@ class TaskAdmin(admin.ModelAdmin):
 @admin.register(TaskAutomation)
 class TaskAutomationAdmin(LogAdminMixin,admin.ModelAdmin):
     model = TaskAutomation
+
+class CompanyProductionMonthlyPlanningInline(admin.TabularInline):
+    model = CompanyProductionMonthlyPlanning
+    exclude = ["created_at","created_by","updated_at","updated_by"]
+    extra = 1
+    formfield_overrides = {
+        models.FloatField: {"widget": TextInput},
+    }    
+
+class TraditionaProductionMonthlyPlanningInline(admin.TabularInline):
+    model = TraditionaProductionMonthlyPlanning
+    exclude = ["created_at","created_by","updated_at","updated_by"]
+    extra = 1
+    formfield_overrides = {
+        models.FloatField: {"widget": TextInput},
+    }    
+    
+class OtherMineralsProductionMonthlyPlanningInline(admin.TabularInline):
+    model = OtherMineralsProductionMonthlyPlanning
+    exclude = ["created_at","created_by","updated_at","updated_by"]
+    extra = 1
+    formfield_overrides = {
+        models.FloatField: {"widget": TextInput},
+    }    
+
+class TraditionaTahsilMonthlyPlanningInline(admin.TabularInline):
+    model = TraditionaTahsilMonthlyPlanning
+    exclude = ["created_at","created_by","updated_at","updated_by"]
+    extra = 1
+    formfield_overrides = {
+        models.FloatField: {"widget": TextInput},
+    }    
+
+class TraditionaTahsilByBandMonthlyPlanningInline(admin.TabularInline):
+    model = TraditionaTahsilByBandMonthlyPlanning
+    exclude = ["created_at","created_by","updated_at","updated_by"]
+    extra = 1
+    formfield_overrides = {
+        models.FloatField: {"widget": TextInput},
+    }    
+
+class TraditionaTahsilByJihaMonthlyPlanningInline(admin.TabularInline):
+    model = TraditionaTahsilByJihaMonthlyPlanning
+    exclude = ["created_at","created_by","updated_at","updated_by"]
+    extra = 1
+    formfield_overrides = {
+        models.FloatField: {"widget": TextInput},
+    }    
+
+@admin.register(YearlyPlanning)
+class YearlyPlanningAdmin(admin.ModelAdmin):
+    model = YearlyPlanning
+    list_display = ["year","state",]
+    list_filter = ["year","state",]
+    inlines = [CompanyProductionMonthlyPlanningInline, TraditionaProductionMonthlyPlanningInline, OtherMineralsProductionMonthlyPlanningInline, TraditionaTahsilMonthlyPlanningInline, TraditionaTahsilByBandMonthlyPlanningInline, TraditionaTahsilByJihaMonthlyPlanningInline]
 
 @admin.register(MonthelyReport)
 class MonthelyReportAdmin(LogAdminMixin,admin.ModelAdmin):
