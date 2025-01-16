@@ -11,7 +11,7 @@ def generate_tasks():
     qs = TaskDuration.objects.filter(month=current_month,task__year=current_year)
     
     for obj in qs:
-        month_rep = MonthelyReport.objects.get_or_create(
+        month_rep,_ = MonthelyReport.objects.get_or_create(
             year=obj.task.year,
             month=obj.month,
             created_by=admin_user,
