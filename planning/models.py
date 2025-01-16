@@ -253,6 +253,24 @@ class TraditionaTahsilByJihaMonthlyPlanning(models.Model):
         verbose_name = _("TraditionaTahsilByJihaMonthlyPlanning")
         verbose_name_plural = _("TraditionaTahsilByJihaMonthlyPlanning")
 
+class ExportGoldTraditionalMonthlyPlanning(models.Model):
+    plan = models.ForeignKey(YearlyPlanning, on_delete=models.CASCADE, verbose_name=_("plan"), related_name='+')
+    raw_total_weight = models.FloatField(_("raw_total_weight"))
+    net_total_weight = models.FloatField(_("net_total_weight"))
+
+    class Meta:
+        verbose_name = _("ExportGoldTraditionalMonthlyPlanning")
+        verbose_name_plural = _("ExportGoldTraditionalMonthlyPlanning")
+
+class ExportGoldCompanyMonthlyPlanning(models.Model):
+    plan = models.ForeignKey(YearlyPlanning, on_delete=models.CASCADE, verbose_name=_("plan"), related_name='+')
+    raw_total_weight = models.FloatField(_("raw_total_weight"))
+    net_total_weight = models.FloatField(_("net_total_weight"))
+
+    class Meta:
+        verbose_name = _("ExportGoldCompanyMonthlyPlanning")
+        verbose_name_plural = _("ExportGoldCompanyMonthlyPlanning")
+
 ############ Monthly Report #############
 class MonthelyReport(LoggingModel):
     year = models.PositiveIntegerField(_("year"), validators=[MinValueValidator(limit_value=2015),MaxValueValidator(limit_value=2100)])
