@@ -15,7 +15,7 @@ from django.contrib.sites.models import Site
 from django.contrib.messages import constants as message_constants
 from import_export.admin import ExportActionMixin
 from django.db.utils import IntegrityError
-from .models import AppCyanideCertificate, AppExplosivePermission, AppFuelPermission, AppFuelPermissionDetail, AppGoldProduction, AppGoldProductionDetail, AppHSEAccidentReport, AppHSEPerformanceReport, AppImportPermission, AppImportPermissionDetail, AppLocalPurchase, AppRenewalContract, AppRestartActivity, AppTemporaryExemption, AppWhomConcern, LkpAccidentType, LkpNationality,LkpState,LkpLocality,LkpMineral,LkpCompanyProductionStatus,LkpForeignerProcedureType,TblCompanyProduction, \
+from .models import AppCyanideCertificate, AppExplosivePermission, AppFuelPermission, AppFuelPermissionDetail, AppGoldProduction, AppGoldProductionDetail, AppHSEAccidentReport, AppHSEPerformanceReport, AppHSEPerformanceReportActivities, AppHSEPerformanceReportFireFighting, AppHSEPerformanceReportManPower, AppHSEPerformanceReportProactiveIndicators, AppHSEPerformanceReportWorkEnvironment, AppImportPermission, AppImportPermissionDetail, AppLocalPurchase, AppRenewalContract, AppRestartActivity, AppTemporaryExemption, AppWhomConcern, LkpAccidentType, LkpNationality,LkpState,LkpLocality,LkpMineral,LkpCompanyProductionStatus,LkpForeignerProcedureType,TblCompanyProduction, \
                                       LkpCompanyProductionFactoryType,TblCompanyProductionFactory,LkpCompanyProductionLicenseStatus, \
                                       TblCompanyProductionLicense,AppForignerMovement,TblCompanyProductionUserRole, \
                                       AppBorrowMaterial,AppBorrowMaterialDetail,AppWorkPlan,AppTechnicalFinancialReport, \
@@ -795,9 +795,40 @@ class AppHSEAccidentReportAdmin(WorkflowAdminMixin,admin.ModelAdmin):
 
 admin.site.register(AppHSEAccidentReport, AppHSEAccidentReportAdmin)
 
+class AppHSEInline(admin.TabularInline):
+    exclude = []
+    extra = 0    
+
+    # def has_add_permission(self, request, obj=None):
+    #     return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+class AppHSEPerformanceReportManPowerDetailInline(AppHSEInline):
+    model = AppHSEPerformanceReportManPower
+
+class AppHSEPerformanceReportFireFightingDetailInline(AppHSEInline):
+    model = AppHSEPerformanceReportFireFighting
+
+class AppHSEPerformanceReportWorkEnvironmentDetailInline(AppHSEInline):
+    model = AppHSEPerformanceReportWorkEnvironment
+
+class AppHSEPerformanceReportProactiveIndicatorsDetailInline(AppHSEInline):
+    model = AppHSEPerformanceReportProactiveIndicators
+
+class AppHSEPerformanceReportActivitiesDetailInline(AppHSEInline):
+    model = AppHSEPerformanceReportActivities
+
 class AppHSEPerformanceReportAdmin(WorkflowAdminMixin,admin.ModelAdmin):
     form = AppHSEPerformanceReportAdminForm
-    
+    inlines = [
+        AppHSEPerformanceReportManPowerDetailInline, 
+        AppHSEPerformanceReportFireFightingDetailInline,
+        AppHSEPerformanceReportWorkEnvironmentDetailInline,
+        AppHSEPerformanceReportProactiveIndicatorsDetailInline,
+    ]
+
     list_display = ["company", "created_at", "created_by","updated_at", "updated_by"]        
     list_filter = ["company"]
     view_on_site = False

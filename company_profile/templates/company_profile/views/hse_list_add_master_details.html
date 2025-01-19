@@ -1,0 +1,97 @@
+    {% extends 'company_profile/base.html' %}
+{% load i18n %}
+{% load static  %}
+{% load bootstrap3 %}
+{% load get_item_from_list %}
+
+{% block content %}
+<h1 class="page-header">{{title}}</h1>
+{% bootstrap_messages %}
+
+<form  method="post"  enctype="multipart/form-data" novalidate>
+{% csrf_token %}
+    {% bootstrap_form form %}
+{% for formset in detail_formset  %}
+	<h3>{% get_item_from_list detail_title forloop.counter0 %}:</h3>
+    {{ formset.management_form }}
+    <table id="detail_table{{forloop.counter0}}"  class="table table-bordered">
+        <tr>
+        {% for field in formset|first %}
+            {% if field.is_hidden is not True %}
+            <th>
+            {{ field.label }}
+            </th>
+            {% endif %}
+        {% endfor %}
+        </tr>
+    {% for form in formset %}
+        <tr>
+        {% for field in form.visible_fields %}
+            <td>
+                {% bootstrap_field field show_label=False%}
+            </td>
+        {% endfor %}
+        </tr>
+    {% endfor %}        	
+    </table>
+    <button id="add_row_btn{{forloop.counter0}}" style="float:{% if request.LANGUAGE_CODE == 'ar' %} left {% else %} right {% endif %}" type="button" class="btn btn-default">
+        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+        {% translate "add_more" %}
+    </button>
+    <br/>
+    <br/>
+	
+{% endfor %}        	
+
+    {% buttons %}
+        <button type="submit" class="btn btn-primary">{% translate "Submit" %}</button>
+    {% endbuttons %}
+</form>
+<script type="text/javascript" src="{% static 'company_profile/js/admin_jsi18n.js' %}"></script>
+<script type="text/javascript" src="{% static 'admin/js/core.js' %}"></script>
+{{ form.media }}
+
+<script type="text/javascript">
+
+$(document).ready(function(){
+    function add_new_row(formset_name,table_id){
+      var row_id = parseInt($("input[name="+formset_name+"-TOTAL_FORMS]").val())
+      var temp = $("#"+table_id+" tr").last().clone()
+
+      temp.find(":input").each(function(i,e){
+        x = $(e).attr("id");
+        x = x.replace(/[0-9]+/,row_id);
+        $(e).attr("id",x);
+
+        x = $(e).attr("name");
+        x = x.replace(/[0-9]+/,row_id);
+        $(e).attr("name",x);
+
+      });
+
+      $("#"+table_id).append('<tr>'+temp.html()+'</tr>');
+      var v = row_id+1
+      $("input[name="+formset_name+"-TOTAL_FORMS]").val(v);
+
+    }
+
+	$('tr').attr('class','form-group');
+	$('td :input').attr('class','form-control');
+
+{% for formset in detail_formset %}
+    $("#add_row_btn{{forloop.counter0}}").bind('click',function(e){
+        var formset_name = '{{ formset.prefix }}';
+        var table_id = 'detail_table{{forloop.counter0}}';
+
+        add_new_row(formset_name,table_id);
+        
+    });
+
+{% endfor %}
+
+    
+
+
+});
+</script>
+{% endblock content %}

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-16 13:47+0200\n"
+"POT-Creation-Date: 2025-01-19 15:12+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -37,6 +37,7 @@ msgstr "ادخل البيانات على صيغة (UTM meters)"
 
 #: check_cordinates/templates/check_cordinates/application_add_master_details.html:43
 #: company_profile/templates/company_profile/application_add_master_details.html:38
+#: company_profile/templates/company_profile/views/hse_list_add_master_details.html:39
 #: company_profile/templates/company_profile/views/requirements_list_add_master_details.html:39
 #: pa/templates/pa/application_add_master_details.html:52
 msgid "add_more"
@@ -45,6 +46,7 @@ msgstr "اضافة المزيد"
 #: check_cordinates/templates/check_cordinates/application_add_master_details.html:49
 #: company_profile/templates/company_profile/application_add.html:15
 #: company_profile/templates/company_profile/application_add_master_details.html:44
+#: company_profile/templates/company_profile/views/hse_list_add_master_details.html:47
 #: company_profile/templates/company_profile/views/requirements_list_add_master_details.html:47
 #: templates/account/password_reset.html:10
 msgid "Submit"
@@ -181,12 +183,12 @@ msgstr ""
 #: company_profile/models.py:1002 company_profile/models.py:1018
 #: company_profile/models.py:1034 company_profile/models.py:1059
 #: company_profile/models.py:1105 company_profile/models.py:1125
-#: company_profile/models.py:1141 company_profile/models.py:1165
+#: company_profile/models.py:1294 company_profile/models.py:1318
 #: executive_office/admin.py:114 executive_office/admin.py:173
 #: executive_office/forms.py:37 executive_office/models.py:130
 #: pa/forms/commitment.py:80 pa/forms/daily.py:9 pa/models.py:93
 #: pa/models.py:129 pa/tables/payment.py:33 pa/tables/request.py:51
-#: pa/templates/pa/pa_daily.html:46 planning/models.py:302
+#: pa/templates/pa/pa_daily.html:46 planning/forms.py:24 planning/models.py:302
 #: planning/models.py:333 planning/models.py:351 planning/models.py:361
 #: planning/models.py:453 planning/models.py:462 planning/models.py:480
 #: production_control/admin.py:187 production_control/forms.py:50
@@ -1522,8 +1524,7 @@ msgstr "تعليق مختصر عن الدراسة"
 
 #: company_profile/models.py:911 company_profile/models.py:937
 #: company_profile/models.py:1020 company_profile/models.py:1111
-#: company_profile/models.py:1127 gold_travel/models.py:132 pa/models.py:309
-#: pa/models.py:521 pa/models.py:637
+#: gold_travel/models.py:132 pa/models.py:309 pa/models.py:521 pa/models.py:637
 msgid "attachement_file"
 msgstr "المرفقات"
 
@@ -1749,15 +1750,245 @@ msgstr "تقرير البيئة والسلامة"
 msgid "Application: HSE Performance Report"
 msgstr "تقرير البيئة والسلامة"
 
-#: company_profile/models.py:1143
+#: company_profile/models.py:1145
+msgid "man_power_total"
+msgstr "Total Man Power In Site"
+
+#: company_profile/models.py:1146
+msgid "man_power_work_hours"
+msgstr "Total Man Hours"
+
+#: company_profile/models.py:1150
+msgid "hse_man_power"
+msgstr "القوى العاملة Manpower"
+
+#: company_profile/models.py:1151 company_profile/models.py:1249
+msgid "no_gov"
+msgstr "ممثلي الحكومة Government representatives"
+
+#: company_profile/models.py:1152 company_profile/models.py:1250
+#: company_profile/models.py:1286
+msgid "no_staff"
+msgstr "موظفي الشركة Company staff"
+
+#: company_profile/models.py:1153 company_profile/models.py:1251
+#: company_profile/models.py:1287
+msgid "no_contractor"
+msgstr "المتعاقدين Contractors"
+
+#: company_profile/models.py:1156 company_profile/models.py:1157
+msgid "HSE Man power"
+msgstr "القوى العاملة Manpower"
+
+#: company_profile/models.py:1164
+msgid "fire_fighting_1"
+msgstr ""
+
+#: company_profile/models.py:1165
+msgid "fire_fighting_2"
+msgstr ""
+
+#: company_profile/models.py:1172
+msgid "situation_ok"
+msgstr "جيد"
+
+#: company_profile/models.py:1173
+msgid "situation_bad"
+msgstr "غير جيد"
+
+#: company_profile/models.py:1177
+msgid "hse_fire_fighting"
+msgstr "معدات اطفاء الحرائق - Fire Fighting & extinguishing equipment"
+
+#: company_profile/models.py:1178
+msgid "size"
+msgstr "الحجم size"
+
+#: company_profile/models.py:1179
+msgid "count"
+msgstr "العدد number"
+
+#: company_profile/models.py:1180
+msgid "exam_dt"
+msgstr "تاريخ الفحص Date of examination"
+
+#: company_profile/models.py:1181
+msgid "situation"
+msgstr "الحالة Situation"
+
+#: company_profile/models.py:1184 company_profile/models.py:1185
+msgid "HSE fire fighting"
+msgstr "معدات اطفاء الحرائق - Fire Fighting & extinguishing equipment"
+
+#: company_profile/models.py:1198
+msgid "work_environment_factor1"
+msgstr "الإضاءة - Lighting"
+
+#: company_profile/models.py:1199
+msgid "work_environment_factor2"
+msgstr "التهوية  - Ventilation"
+
+#: company_profile/models.py:1200
+msgid "work_environment_factor3"
+msgstr "الممرات والطرق الداخلية Corridors and roads"
+
+#: company_profile/models.py:1201
+msgid "work_environment_factor4"
+msgstr "الارضيات   - Flooring"
+
+#: company_profile/models.py:1202
+msgid "work_environment_factor5"
+msgstr "مخارج الطوارئ Emergency Exits"
+
+#: company_profile/models.py:1203
+msgid "work_environment_factor6"
+msgstr "الضوضاء - Noise"
+
+#: company_profile/models.py:1204
+msgid "work_environment_factor7"
+msgstr "الحرارة - Heat"
+
+#: company_profile/models.py:1205
+msgid "work_environment_factor8"
+msgstr "علامات السلامة Safety signs"
+
+#: company_profile/models.py:1214
+msgid "ranking_excellent"
+msgstr "ممتاز"
+
+#: company_profile/models.py:1215
+msgid "ranking_very_good"
+msgstr "جيدجدا"
+
+#: company_profile/models.py:1216
+msgid "ranking_good"
+msgstr "جيد"
+
+#: company_profile/models.py:1217
+msgid "ranking_bad"
+msgstr "سيء"
+
+#: company_profile/models.py:1221
+msgid "hse_work_environment"
+msgstr "الغرض من الاحتياجات ومدى توافقها مع الخطة"
+
+#: company_profile/models.py:1222
+msgid "offices"
+msgstr "المكاتب Offices"
+
+#: company_profile/models.py:1223
+msgid "camp"
+msgstr "المعسكر Camp"
+
+#: company_profile/models.py:1224
+msgid "kitchen_dining"
+msgstr "المطبخ وصالة الطعام Kitchen and dining room"
+
+#: company_profile/models.py:1225
+msgid "factory"
+msgstr "المصنع The Factory"
+
+#: company_profile/models.py:1226
+msgid "Stores"
+msgstr "المخازن Stores"
+
+#: company_profile/models.py:1227
+msgid "lab"
+msgstr "المعمل The lab"
+
+#: company_profile/models.py:1228
+msgid "mines"
+msgstr "المناجم Mines"
+
+#: company_profile/models.py:1231 company_profile/models.py:1232
+msgid "HSE work environment"
+msgstr "الغرض من الاحتياجات ومدى توافقها مع الخطة"
+
+#: company_profile/models.py:1241
+msgid "proactive_indicators_type1"
+msgstr "عدد الحوادث وشيكة الوقوع - Near Miss (Near Accident)"
+
+#: company_profile/models.py:1242
+msgid "proactive_indicators_type2"
+msgstr "عدد الممارسات غير الآمنة - Unsafe Act"
+
+#: company_profile/models.py:1243
+msgid "proactive_indicators_type3"
+msgstr "عدد الاوضاع غير الآمنة - Unsafe Condition"
+
+#: company_profile/models.py:1244
+msgid "proactive_indicators_type4"
+msgstr "التدقيق - Audit"
+
+#: company_profile/models.py:1248
+msgid "hse_proactive_indicators"
+msgstr "مؤشرات استباقية - PROACTIVE INDICATORS"
+
+#: company_profile/models.py:1254 company_profile/models.py:1255
+msgid "HSE proactive indicators"
+msgstr "مؤشرات استباقية - PROACTIVE INDICATORS"
+
+#: company_profile/models.py:1271
+msgid "ACTIVITIES_type1"
+msgstr "Safety Inspection No.عدد عمليات التفتيش والفحص الخاص بالسلامة"
+
+#: company_profile/models.py:1272
+msgid "ACTIVITIES_type2"
+msgstr "Environmental Inspection No. - التفتيش والفحص الخاص بالبيئة"
+
+#: company_profile/models.py:1273
+msgid "ACTIVITIES_type3"
+msgstr "Health Hygiene inspection No. عدد عمليات التفتيش الصحي -"
+
+#: company_profile/models.py:1274
+msgid "ACTIVITIES_type4"
+msgstr "Corrective and Preventive Actions Closed out No. عدد الإجراءات التصحيحية والوقائية التي تم تنفيذها"
+
+#: company_profile/models.py:1275
+msgid "ACTIVITIES_type5"
+msgstr "HSE Training No. تحديد الدورات التدريبية الخاصة بالبيئة والسلامة"
+
+#: company_profile/models.py:1276
+msgid "ACTIVITIES_type6"
+msgstr "Training attendees No.عدد المتدربين -"
+
+#: company_profile/models.py:1277
+msgid "ACTIVITIES_type7"
+msgstr "Job Safety Analysis  ( JSA)"
+
+#: company_profile/models.py:1278
+msgid "ACTIVITIES_type8"
+msgstr "Permit to Work Issued No. عدد أذونات العمل المصدقة -"
+
+#: company_profile/models.py:1279
+msgid "ACTIVITIES_type9"
+msgstr "Tool Box Talk No – عدد إجتماعات السلامة اليومية"
+
+#: company_profile/models.py:1280
+msgid "ACTIVITIES_type10"
+msgstr "HSE Meeting No  - عدد إجتماعات السلامة الدورية"
+
+#: company_profile/models.py:1281
+msgid "ACTIVITIES_type11"
+msgstr "Lock out – tag out- نظام الحماية والقفل لمصادر الطاقة"
+
+#: company_profile/models.py:1285
+msgid "hse_activities"
+msgstr "أنشطة البيئة والسلامة والصحة المهنية - HSE ACTIVITY"
+
+#: company_profile/models.py:1290 company_profile/models.py:1291
+msgid "HSE activities"
+msgstr "أنشطة البيئة والسلامة والصحة المهنية - HSE ACTIVITY"
+
+#: company_profile/models.py:1296
 msgid "whom_reason"
 msgstr "الغرض من الشهادة"
 
-#: company_profile/models.py:1144
+#: company_profile/models.py:1297
 msgid "whom_subject"
 msgstr "الموضوع"
 
-#: company_profile/models.py:1145 company_profile/models.py:1156
+#: company_profile/models.py:1298 company_profile/models.py:1309
 #: company_profile/templates/company_profile/application_readonly.html:25
 #: company_profile/templates/company_profile/application_readonly_master_details2.html:61
 #: pa/templates/pa/application_readonly.html:40
@@ -1765,70 +1996,70 @@ msgstr "الموضوع"
 msgid "whom_attachement_file"
 msgstr "ملف شهادة لمن يهمه الامر"
 
-#: company_profile/models.py:1148
+#: company_profile/models.py:1301
 msgid "Whom may concern"
 msgstr "الى من يهمه الامر"
 
-#: company_profile/models.py:1161
+#: company_profile/models.py:1314
 msgid "Application: Whom may concern request"
 msgstr "طلب شهادة لمن يهمه الامر"
 
-#: company_profile/models.py:1162
+#: company_profile/models.py:1315
 #: company_profile/templates/company_profile/base.html:273
 msgid "Application: Whom may concern requests"
 msgstr "طلب شهادة لمن يهمه الامر"
 
-#: company_profile/models.py:1167 production_control/models.py:83
+#: company_profile/models.py:1320 production_control/models.py:83
 #: production_control/models.py:133
 msgid "form_no"
 msgstr "رقم الاستمارة"
 
-#: company_profile/models.py:1168 production_control/models.py:89
+#: company_profile/models.py:1321 production_control/models.py:89
 msgid "gold_production_form_file"
 msgstr "مرفق استمارة الانتاج"
 
-#: company_profile/models.py:1171
+#: company_profile/models.py:1324
 msgid "Gold Production"
 msgstr "انتاج الذهب"
 
-#: company_profile/models.py:1178 company_profile/models.py:1179
+#: company_profile/models.py:1331 company_profile/models.py:1332
 #: company_profile/templates/company_profile/base.html:139
 msgid "Application: Gold Production"
 msgstr "استمارة انتاج الذهب"
 
-#: company_profile/models.py:1183
+#: company_profile/models.py:1336
 msgid "melt_dt"
 msgstr "تاريخ الصهر"
 
-#: company_profile/models.py:1184
+#: company_profile/models.py:1337
 msgid "melt_bar_no"
 msgstr "رقم السبيكة"
 
-#: company_profile/models.py:1185
+#: company_profile/models.py:1338
 msgid "melt_bar_weight"
 msgstr "وزن السبيكة"
 
-#: company_profile/models.py:1186
+#: company_profile/models.py:1339
 msgid "melt_jaf"
 msgstr "وزن المركز الجاف"
 
-#: company_profile/models.py:1187
+#: company_profile/models.py:1340
 msgid "melt_khabath"
 msgstr "وزن الخبث"
 
-#: company_profile/models.py:1188
+#: company_profile/models.py:1341
 msgid "melt_added_gold"
 msgstr "وزن الذهب المضاف للصهر"
 
-#: company_profile/models.py:1189
+#: company_profile/models.py:1342
 msgid "melt_remaind"
 msgstr "وزن الذهب المتبقي"
 
-#: company_profile/models.py:1192
+#: company_profile/models.py:1345
 msgid "Gold Production Detail"
 msgstr "تفاصيل استمارة الانتاج"
 
-#: company_profile/models.py:1193
+#: company_profile/models.py:1346
 msgid "Gold Production Details"
 msgstr "تفاصيل استمارة الانتاج"
 
@@ -1956,7 +2187,7 @@ msgstr "اضافة طلب حركة اجنبي"
 #: company_profile/views/fuel_permission.py:70
 #: company_profile/views/gold_production.py:91
 #: company_profile/views/hse_accident.py:64
-#: company_profile/views/hse_performance.py:64
+#: company_profile/views/hse_performance.py:93
 #: company_profile/views/import_permission.py:70
 #: company_profile/views/local_purchase.py:64 company_profile/views/mda.py:64
 #: company_profile/views/reexport_equipments.py:71
@@ -2151,15 +2382,15 @@ msgstr "اضافة تقرير حادث"
 msgid "Show HSE Accident Report"
 msgstr "عرض تقرير حادث"
 
-#: company_profile/views/hse_performance.py:28
+#: company_profile/views/hse_performance.py:35
 msgid "List of HSE Performance Reports"
 msgstr "قائمة تقارير اداء البيئة والسلامة"
 
-#: company_profile/views/hse_performance.py:46
+#: company_profile/views/hse_performance.py:55
 msgid "Add new HSE Performance Report"
 msgstr "اضافة تقرير اداء البيئة والسلامة"
 
-#: company_profile/views/hse_performance.py:77
+#: company_profile/views/hse_performance.py:110
 msgid "Show HSE Performance Report"
 msgstr "عرض تقرير اداء البيئة والسلامة"
 
@@ -2505,7 +2736,7 @@ msgstr "المكتب التنفيذي"
 #: executive_office/forms.py:15 executive_office/models.py:37
 #: gold_travel/forms.py:11 gold_travel/models.py:46
 #: gold_travel_traditional/forms.py:12 gold_travel_traditional/models.py:40
-#: planning/forms.py:12 planning/models.py:108 production_control/forms.py:22
+#: planning/forms.py:17 planning/models.py:108 production_control/forms.py:22
 #: production_control/models.py:27
 msgid "user"
 msgstr "المستخدم"
@@ -4169,15 +4400,15 @@ msgstr "تعديل مطالبة "
 msgid "Delete request"
 msgstr "حذف سجل مطالبة"
 
-#: planning/admin.py:28 planning/admin.py:69 planning/admin.py:216
+#: planning/admin.py:29 planning/admin.py:70 planning/admin.py:218
 msgid "main_goal"
 msgstr "الهدف الرئيسي"
 
-#: planning/admin.py:220
+#: planning/admin.py:222
 msgid "sub_goal"
 msgstr "الهدف الفرعي"
 
-#: planning/admin.py:224 planning/models.py:147 planning/models.py:166
+#: planning/admin.py:226 planning/models.py:147 planning/models.py:166
 #: planning/models.py:282
 msgid "task"
 msgstr "مهمة"

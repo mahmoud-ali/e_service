@@ -1124,7 +1124,7 @@ class AppHSEAccidentReport(WorkflowModel):
 class AppHSEPerformanceReport(WorkflowModel):
     company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
 
-    attachement_file = models.FileField(_("attachement_file"),upload_to=company_applications_path)
+    # attachement_file = models.FileField(_("attachement_file"),upload_to=company_applications_path)
 
     def __str__(self):
         return _("HSE Performance Report") +" ("+str(self.id)+")"
@@ -1136,6 +1136,159 @@ class AppHSEPerformanceReport(WorkflowModel):
         ordering = ["-id"]
         verbose_name = _("Application: HSE Performance Report")
         verbose_name_plural = _("Application: HSE Performance Report")
+
+class AppHSEPerformanceReportManPower(models.Model):
+    MAN_POWER_TOTAL = 1
+    MAN_POWER_WORK_HOURS = 2
+
+    MAN_POWER_CHOICES = {
+        MAN_POWER_TOTAL: _("man_power_total"),
+        MAN_POWER_WORK_HOURS: _("man_power_work_hours"),
+    }
+
+    master = models.ForeignKey(AppHSEPerformanceReport, on_delete=models.PROTECT)    
+    factor = models.PositiveIntegerField(_("hse_man_power"), choices=MAN_POWER_CHOICES)
+    no_gov = models.PositiveIntegerField(_("no_gov"))
+    no_staff = models.PositiveIntegerField(_("no_staff"))
+    no_contractor = models.PositiveIntegerField(_("no_contractor"))
+
+    class Meta:
+        verbose_name = _("HSE Man power")
+        verbose_name_plural = _("HSE Man power")
+
+class AppHSEPerformanceReportFireFighting(models.Model):
+    FIRE_FIGHTING_TYPE1 = 1
+    FIRE_FIGHTING_TYPE2 = 2
+
+    FIRE_FIGHTING_CHOICES = {
+        FIRE_FIGHTING_TYPE1: _("fire_fighting_1"),
+        FIRE_FIGHTING_TYPE2: _("fire_fighting_2"),
+    }
+
+    SITUATION_TYPE1 = 1
+    SITUATION_TYPE2 = 2
+
+    SITUATION_CHOICES = {
+        SITUATION_TYPE1: _("situation_ok"),
+        SITUATION_TYPE2: _("situation_bad"),
+    }
+
+    master = models.ForeignKey(AppHSEPerformanceReport, on_delete=models.PROTECT)    
+    factor = models.PositiveIntegerField(_("hse_fire_fighting"), choices=FIRE_FIGHTING_CHOICES)
+    size = models.PositiveIntegerField(_("size"))
+    count = models.PositiveIntegerField(_("count"))
+    exam_dt = models.DateField(_("exam_dt"))
+    situation = models.PositiveIntegerField(_("situation"),choices=SITUATION_CHOICES)
+
+    class Meta:
+        verbose_name = _("HSE fire fighting")
+        verbose_name_plural = _("HSE fire fighting")
+
+class AppHSEPerformanceReportWorkEnvironment(models.Model):
+    WORK_ENVIRONMENT_FACTOR1 = 1
+    WORK_ENVIRONMENT_FACTOR2 = 2
+    WORK_ENVIRONMENT_FACTOR3 = 3
+    WORK_ENVIRONMENT_FACTOR4 = 4
+    WORK_ENVIRONMENT_FACTOR5 = 5
+    WORK_ENVIRONMENT_FACTOR6 = 6
+    WORK_ENVIRONMENT_FACTOR7 = 7
+    WORK_ENVIRONMENT_FACTOR8 = 8
+
+    WORK_ENVIRONMENT_CHOICES = {
+        WORK_ENVIRONMENT_FACTOR1: _("work_environment_factor1"),
+        WORK_ENVIRONMENT_FACTOR2: _("work_environment_factor2"),
+        WORK_ENVIRONMENT_FACTOR3: _("work_environment_factor3"),
+        WORK_ENVIRONMENT_FACTOR4: _("work_environment_factor4"),
+        WORK_ENVIRONMENT_FACTOR5: _("work_environment_factor5"),
+        WORK_ENVIRONMENT_FACTOR6: _("work_environment_factor6"),
+        WORK_ENVIRONMENT_FACTOR7: _("work_environment_factor7"),
+        WORK_ENVIRONMENT_FACTOR8: _("work_environment_factor8"),
+    }
+
+    RANKING_TYPE1 = 1
+    RANKING_TYPE2 = 2
+    RANKING_TYPE3 = 3
+    RANKING_TYPE4 = 4
+
+    RANKING_CHOICES = {
+        RANKING_TYPE1: _("ranking_excellent"),
+        RANKING_TYPE2: _("ranking_very_good"),
+        RANKING_TYPE3: _("ranking_good"),
+        RANKING_TYPE4: _("ranking_bad"),
+    }
+
+    master = models.ForeignKey(AppHSEPerformanceReport, on_delete=models.PROTECT)    
+    factor = models.PositiveIntegerField(_("hse_work_environment"), choices=WORK_ENVIRONMENT_CHOICES)
+    offices = models.PositiveIntegerField(_("offices"),choices=RANKING_CHOICES,default=RANKING_TYPE4)
+    camp = models.PositiveIntegerField(_("camp"),choices=RANKING_CHOICES,default=RANKING_TYPE4)
+    kitchen_dining = models.PositiveIntegerField(_("kitchen_dining"),choices=RANKING_CHOICES,default=RANKING_TYPE4)
+    factory = models.PositiveIntegerField(_("factory"),choices=RANKING_CHOICES,default=RANKING_TYPE4)
+    stores = models.PositiveIntegerField(_("Stores"),choices=RANKING_CHOICES,default=RANKING_TYPE4)
+    lab = models.PositiveIntegerField(_("lab"),choices=RANKING_CHOICES,default=RANKING_TYPE4)
+    mines = models.PositiveIntegerField(_("mines"),choices=RANKING_CHOICES,default=RANKING_TYPE4)
+
+    class Meta:
+        verbose_name = _("HSE work environment")
+        verbose_name_plural = _("HSE work environment")
+
+class AppHSEPerformanceReportProactiveIndicators(models.Model):
+    PROACTIVE_INDICATORS_TYPE1 = 1
+    PROACTIVE_INDICATORS_TYPE2 = 2
+    PROACTIVE_INDICATORS_TYPE3 = 3
+    PROACTIVE_INDICATORS_TYPE4 = 4
+
+    PROACTIVE_INDICATORS_CHOICES = {
+        PROACTIVE_INDICATORS_TYPE1: _("proactive_indicators_type1"),
+        PROACTIVE_INDICATORS_TYPE2: _("proactive_indicators_type2"),
+        PROACTIVE_INDICATORS_TYPE3: _("proactive_indicators_type3"),
+        PROACTIVE_INDICATORS_TYPE4: _("proactive_indicators_type4"),
+    }
+
+    master = models.ForeignKey(AppHSEPerformanceReport, on_delete=models.PROTECT)    
+    factor = models.PositiveIntegerField(_("hse_proactive_indicators"), choices=PROACTIVE_INDICATORS_CHOICES)
+    no_gov = models.PositiveIntegerField(_("no_gov"))
+    no_staff = models.PositiveIntegerField(_("no_staff"))
+    no_contractor = models.PositiveIntegerField(_("no_contractor"))
+
+    class Meta:
+        verbose_name = _("HSE proactive indicators")
+        verbose_name_plural = _("HSE proactive indicators")
+
+class AppHSEPerformanceReportActivities(models.Model):
+    ACTIVITIES_TYPE1 = 1
+    ACTIVITIES_TYPE2 = 2
+    ACTIVITIES_TYPE3 = 3
+    ACTIVITIES_TYPE4 = 4
+    ACTIVITIES_TYPE5 = 5
+    ACTIVITIES_TYPE6 = 6
+    ACTIVITIES_TYPE7 = 7
+    ACTIVITIES_TYPE8 = 8
+    ACTIVITIES_TYPE9 = 9
+    ACTIVITIES_TYPE10 = 10
+    ACTIVITIES_TYPE11 = 11
+
+    ACTIVITIES_CHOICES = {
+        ACTIVITIES_TYPE1: _("ACTIVITIES_type1"),
+        ACTIVITIES_TYPE2: _("ACTIVITIES_type2"),
+        ACTIVITIES_TYPE3: _("ACTIVITIES_type3"),
+        ACTIVITIES_TYPE4: _("ACTIVITIES_type4"),
+        ACTIVITIES_TYPE5: _("ACTIVITIES_type5"),
+        ACTIVITIES_TYPE6: _("ACTIVITIES_type6"),
+        ACTIVITIES_TYPE7: _("ACTIVITIES_type7"),
+        ACTIVITIES_TYPE8: _("ACTIVITIES_type8"),
+        ACTIVITIES_TYPE9: _("ACTIVITIES_type9"),
+        ACTIVITIES_TYPE10: _("ACTIVITIES_type10"),
+        ACTIVITIES_TYPE11: _("ACTIVITIES_type11"),
+    }
+
+    master = models.ForeignKey(AppHSEPerformanceReport, on_delete=models.PROTECT)    
+    factor = models.PositiveIntegerField(_("hse_activities"), choices=ACTIVITIES_CHOICES)
+    no_staff = models.PositiveIntegerField(_("no_staff"))
+    no_contractor = models.PositiveIntegerField(_("no_contractor"))
+
+    class Meta:
+        verbose_name = _("HSE activities")
+        verbose_name_plural = _("HSE activities")
 
 class AppWhomConcern(WorkflowModel):
     company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
