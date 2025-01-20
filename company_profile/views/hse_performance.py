@@ -63,14 +63,15 @@ class AppHSEPerformanceReportCreateView(LoginRequiredMixin,View):
     title = _("Add new HSE Performance Report")
     template_name = "company_profile/views/hse_list_add_master_details.html"
 
-    def dispatch(self, *args, **kwargs):         
-        global model_details_lst
-
-        if self.request.user.pro_company.company.company_type in [TblCompany.COMPANY_TYPE_ENTAJ, TblCompany.COMPANY_TYPE_SAGEER]:
-            model_details_lst += [
-                AppHSEPerformanceReportExplosivesUsed,
-                AppHSEPerformanceReportBillsOfQuantities,
-            ]
+    def dispatch(self, *args, **kwargs):   
+        explosive = [
+                    AppHSEPerformanceReportExplosivesUsed,
+                    AppHSEPerformanceReportBillsOfQuantities,
+                ]      
+        
+        if self.request.user.pro_company.company.company_type in [TblCompany.COMPANY_TYPE_ENTAJ, TblCompany.COMPANY_TYPE_SAGEER,TblCompany.COMPANY_TYPE_MOKHALFAT]:
+            if explosive[0] not in self.model_details:
+                self.model_details += explosive
 
         self.detail_formset = [inlineformset_factory(self.model, m, exclude=[],extra=0,can_delete=False,min_num=1, validate_min=True) for m in self.model_details]
             
