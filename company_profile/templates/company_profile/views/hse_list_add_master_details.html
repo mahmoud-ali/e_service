@@ -91,7 +91,7 @@ $(document).ready(function(){
             
         });
     }else{
-        function(){
+        ( () => {
             $("#add_row_btn{{forloop.counter0}}").hide();
             {% comment %} console.log('select#id_{{formset.prefix}}-0-factor',$('select#id_{{formset.prefix}}-0-factor option').length); {% endcomment %}
             for(var index=1;(index < ($('select#id_{{formset.prefix}}-0-factor option').length));index++) {
@@ -109,7 +109,7 @@ $(document).ready(function(){
                 {% comment %} console.log( 'select#id_{{formset.prefix}}-'+index+'-factor',index ); {% endcomment %}
 
             }
-        }();
+        })();
     }
 
 
