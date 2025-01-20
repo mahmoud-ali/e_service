@@ -56,7 +56,7 @@
 $(document).ready(function(){
     function add_new_row(formset_name,table_id){
       var row_id = parseInt($("input[name="+formset_name+"-TOTAL_FORMS]").val())
-      console.log('row id',row_id)
+      {% comment %} console.log('row id',row_id) {% endcomment %}
       var temp = $("#"+table_id+" tr").last().clone()
 
       temp.find(":input").each(function(i,e){
@@ -91,23 +91,25 @@ $(document).ready(function(){
             
         });
     }else{
-        $("#add_row_btn{{forloop.counter0}}").hide();
+        function(){
+            $("#add_row_btn{{forloop.counter0}}").hide();
+            {% comment %} console.log('select#id_{{formset.prefix}}-0-factor',$('select#id_{{formset.prefix}}-0-factor option').length); {% endcomment %}
+            for(var index=1;(index < ($('select#id_{{formset.prefix}}-0-factor option').length));index++) {
+                var formset_name = '{{ formset.prefix }}';
+                var table_id = 'detail_table{{ formset.prefix }}';
+                
+                var x;
+                if (index ==1){
+                    x = 0;
+                }else{
+                x = add_new_row(formset_name,table_id);
+                }
+                $('select#id_{{formset.prefix}}-'+x+'-factor').val(index.toString());
+                $('select#id_{{formset.prefix}}-'+x+'-factor').attr("style", "pointer-events: none;").attr("tabindex", "-1");
+                {% comment %} console.log( 'select#id_{{formset.prefix}}-'+index+'-factor',index ); {% endcomment %}
 
-        for(var index=1;(index < ($('select#id_{{formset.prefix}}-0-factor option').length));index++) {
-            var formset_name = '{{ formset.prefix }}';
-            var table_id = 'detail_table{{ formset.prefix }}';
-            
-            var x;
-            if (index ==1){
-                x = 0;
-            }else{
-              x = add_new_row(formset_name,table_id);
             }
-            $('select#id_{{formset.prefix}}-'+x+'-factor').val(index.toString());
-            $('select#id_{{formset.prefix}}-'+x+'-factor').attr("style", "pointer-events: none;").attr("tabindex", "-1");
-            console.log( 'select#id_{{formset.prefix}}-'+index+'-factor',index );
-
-        }
+        }();
     }
 
 
