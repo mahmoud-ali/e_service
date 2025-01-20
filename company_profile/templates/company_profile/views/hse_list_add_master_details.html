@@ -14,7 +14,7 @@
 {% for formset in detail_formset  %}
 	<h3>{% get_item_from_list detail_title forloop.counter0 %}:</h3>
     {{ formset.management_form }}
-    <table id="detail_table{{forloop.counter0}}"  class="table table-bordered">
+    <table id="detail_table{{ formset.prefix }}"  class="table table-bordered">
         <tr>
         {% for field in formset|first %}
             {% if field.is_hidden is not True %}
@@ -56,6 +56,7 @@
 $(document).ready(function(){
     function add_new_row(formset_name,table_id){
       var row_id = parseInt($("input[name="+formset_name+"-TOTAL_FORMS]").val())
+      console.log('row id',row_id)
       var temp = $("#"+table_id+" tr").last().clone()
 
       temp.find(":input").each(function(i,e){
@@ -73,19 +74,43 @@ $(document).ready(function(){
       var v = row_id+1
       $("input[name="+formset_name+"-TOTAL_FORMS]").val(v);
 
+      return row_id
     }
 
 	$('tr').attr('class','form-group');
 	$('td :input').attr('class','form-control');
 
 {% for formset in detail_formset %}
-    $("#add_row_btn{{forloop.counter0}}").bind('click',function(e){
-        var formset_name = '{{ formset.prefix }}';
-        var table_id = 'detail_table{{forloop.counter0}}';
+    {% comment %} console.log('#id_{{formset.prefix}}-0-factor',$('select#id_{{formset.prefix}}-0-factor option').length) {% endcomment %}
+    if ($('select#id_{{formset.prefix}}-0-factor option').length == 0){
+        $("#add_row_btn{{forloop.counter0}}").bind('click',function(e){
+            var formset_name = '{{ formset.prefix }}';
+            var table_id = 'detail_table{{ formset.prefix }}';
 
-        add_new_row(formset_name,table_id);
-        
-    });
+            add_new_row(formset_name,table_id);
+            
+        });
+    }else{
+        $("#add_row_btn{{forloop.counter0}}").hide();
+
+        for(var index=1;(index < ($('select#id_{{formset.prefix}}-0-factor option').length));index++) {
+            var formset_name = '{{ formset.prefix }}';
+            var table_id = 'detail_table{{ formset.prefix }}';
+            
+            var x;
+            if (index ==1){
+                x = 0;
+            }else{
+              x = add_new_row(formset_name,table_id);
+            }
+            $('select#id_{{formset.prefix}}-'+x+'-factor').val(index.toString());
+            $('select#id_{{formset.prefix}}-'+x+'-factor').attr("style", "pointer-events: none;").attr("tabindex", "-1");
+            console.log( 'select#id_{{formset.prefix}}-'+index+'-factor',index );
+
+        }
+    }
+
+
 
 {% endfor %}
 
