@@ -15,7 +15,7 @@ from django.contrib.sites.models import Site
 from django.contrib.messages import constants as message_constants
 from import_export.admin import ExportActionMixin
 from django.db.utils import IntegrityError
-from .models import AppCyanideCertificate, AppExplosivePermission, AppFuelPermission, AppFuelPermissionDetail, AppGoldProduction, AppGoldProductionDetail, AppHSEAccidentReport, AppHSEPerformanceReport, AppHSEPerformanceReportActivities, AppHSEPerformanceReportFireFighting, AppHSEPerformanceReportManPower, AppHSEPerformanceReportProactiveIndicators, AppHSEPerformanceReportWorkEnvironment, AppImportPermission, AppImportPermissionDetail, AppLocalPurchase, AppRenewalContract, AppRestartActivity, AppTemporaryExemption, AppWhomConcern, LkpAccidentType, LkpNationality,LkpState,LkpLocality,LkpMineral,LkpCompanyProductionStatus,LkpForeignerProcedureType,TblCompanyProduction, \
+from .models import AppCyanideCertificate, AppExplosivePermission, AppFuelPermission, AppFuelPermissionDetail, AppGoldProduction, AppGoldProductionDetail, AppHSEAccidentReport, AppHSEPerformanceReport, AppHSEPerformanceReportActivities, AppHSEPerformanceReportChemicalUsed, AppHSEPerformanceReportFireFighting, AppHSEPerformanceReportManPower, AppHSEPerformanceReportOilUsed, AppHSEPerformanceReportProactiveIndicators, AppHSEPerformanceReportWasteDisposal, AppHSEPerformanceReportWaterUsed, AppHSEPerformanceReportWorkEnvironment, AppImportPermission, AppImportPermissionDetail, AppLocalPurchase, AppRenewalContract, AppRestartActivity, AppTemporaryExemption, AppWhomConcern, LkpAccidentType, LkpNationality,LkpState,LkpLocality,LkpMineral,LkpCompanyProductionStatus,LkpForeignerProcedureType,TblCompanyProduction, \
                                       LkpCompanyProductionFactoryType,TblCompanyProductionFactory,LkpCompanyProductionLicenseStatus, \
                                       TblCompanyProductionLicense,AppForignerMovement,TblCompanyProductionUserRole, \
                                       AppBorrowMaterial,AppBorrowMaterialDetail,AppWorkPlan,AppTechnicalFinancialReport, \
@@ -820,6 +820,18 @@ class AppHSEPerformanceReportProactiveIndicatorsDetailInline(AppHSEInline):
 class AppHSEPerformanceReportActivitiesDetailInline(AppHSEInline):
     model = AppHSEPerformanceReportActivities
 
+class AppHSEPerformanceReportChemicalUsedDetailInline(AppHSEInline):
+    model = AppHSEPerformanceReportChemicalUsed
+
+class AppHSEPerformanceReportWaterUsedDetailInline(AppHSEInline):
+    model = AppHSEPerformanceReportWaterUsed
+
+class AppHSEPerformanceReportOilUsedDetailInline(AppHSEInline):
+    model = AppHSEPerformanceReportOilUsed
+
+class AppHSEPerformanceReportWasteDisposalDetailInline(AppHSEInline):
+    model = AppHSEPerformanceReportWasteDisposal
+
 class AppHSEPerformanceReportAdmin(WorkflowAdminMixin,admin.ModelAdmin):
     form = AppHSEPerformanceReportAdminForm
     inlines = [
@@ -827,6 +839,10 @@ class AppHSEPerformanceReportAdmin(WorkflowAdminMixin,admin.ModelAdmin):
         AppHSEPerformanceReportFireFightingDetailInline,
         AppHSEPerformanceReportWorkEnvironmentDetailInline,
         AppHSEPerformanceReportProactiveIndicatorsDetailInline,
+        AppHSEPerformanceReportChemicalUsedDetailInline,
+        AppHSEPerformanceReportWaterUsedDetailInline,
+        AppHSEPerformanceReportOilUsedDetailInline,
+        AppHSEPerformanceReportWasteDisposalDetailInline,
     ]
 
     list_display = ["company", "created_at", "created_by","updated_at", "updated_by"]        

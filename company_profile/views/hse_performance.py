@@ -12,7 +12,7 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.sites.models import Site
 
-from ..models import AppHSEPerformanceReport, AppHSEPerformanceReportActivities, AppHSEPerformanceReportFireFighting, AppHSEPerformanceReportManPower, AppHSEPerformanceReportProactiveIndicators, AppHSEPerformanceReportWorkEnvironment
+from ..models import AppHSEPerformanceReport, AppHSEPerformanceReportActivities, AppHSEPerformanceReportChemicalUsed, AppHSEPerformanceReportFireFighting, AppHSEPerformanceReportManPower, AppHSEPerformanceReportOilUsed, AppHSEPerformanceReportProactiveIndicators, AppHSEPerformanceReportWasteDisposal, AppHSEPerformanceReportWaterUsed, AppHSEPerformanceReportWorkEnvironment
 from ..forms import AppHSEPerformanceReportForm
 
 from ..workflow import STATE_CHOICES,SUBMITTED,ACCEPTED,APPROVED,REJECTED,send_transition_email,get_sumitted_responsible
@@ -26,6 +26,10 @@ model_details_lst = [
     AppHSEPerformanceReportWorkEnvironment,
     AppHSEPerformanceReportProactiveIndicators,
     AppHSEPerformanceReportActivities,
+    AppHSEPerformanceReportChemicalUsed,
+    AppHSEPerformanceReportWaterUsed,
+    AppHSEPerformanceReportOilUsed,
+    AppHSEPerformanceReportWasteDisposal,
 ]
 
 class AppHSEPerformanceReportListView(ApplicationListView):

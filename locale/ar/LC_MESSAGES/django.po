@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-19 15:12+0200\n"
+"POT-Creation-Date: 2025-01-20 08:45+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -183,7 +183,7 @@ msgstr ""
 #: company_profile/models.py:1002 company_profile/models.py:1018
 #: company_profile/models.py:1034 company_profile/models.py:1059
 #: company_profile/models.py:1105 company_profile/models.py:1125
-#: company_profile/models.py:1294 company_profile/models.py:1318
+#: company_profile/models.py:1430 company_profile/models.py:1454
 #: executive_office/admin.py:114 executive_office/admin.py:173
 #: executive_office/forms.py:37 executive_office/models.py:130
 #: pa/forms/commitment.py:80 pa/forms/daily.py:9 pa/models.py:93
@@ -1942,7 +1942,9 @@ msgstr "Health Hygiene inspection No. عدد عمليات التفتيش الص�
 
 #: company_profile/models.py:1274
 msgid "ACTIVITIES_type4"
-msgstr "Corrective and Preventive Actions Closed out No. عدد الإجراءات التصحيحية والوقائية التي تم تنفيذها"
+msgstr ""
+"Corrective and Preventive Actions Closed out No. عدد الإجراءات التصحيحية "
+"والوقائية التي تم تنفيذها"
 
 #: company_profile/models.py:1275
 msgid "ACTIVITIES_type5"
@@ -1980,15 +1982,184 @@ msgstr "أنشطة البيئة والسلامة والصحة المهنية - H
 msgid "HSE activities"
 msgstr "أنشطة البيئة والسلامة والصحة المهنية - HSE ACTIVITY"
 
-#: company_profile/models.py:1296
+#: company_profile/models.py:1302
+msgid "CHEMICAL_USED1"
+msgstr "سيانيد الصوديوم - Sodium cyanide"
+
+#: company_profile/models.py:1303
+msgid "CHEMICAL_USED2"
+msgstr "البوراكس  - Borax"
+
+#: company_profile/models.py:1304
+msgid "CHEMICAL_USED3"
+msgstr "السيلكا - Silica"
+
+#: company_profile/models.py:1305
+msgid "CHEMICAL_USED4"
+msgstr "الرصاص - Lead"
+
+#: company_profile/models.py:1306
+msgid "CHEMICAL_USED5"
+msgstr "نترات الامونيوم - Ammonium nitrate"
+
+#: company_profile/models.py:1307
+msgid "CHEMICAL_USED6"
+msgstr "أي مواد كميائية أخرى مستخدمة Any other chemicals used"
+
+#: company_profile/models.py:1311
+msgid "hse_chemical_used"
+msgstr "الموارد المستخدمة Resources used / Chemicals"
+
+#: company_profile/models.py:1312 company_profile/models.py:1356
+#: company_profile/models.py:1379 company_profile/models.py:1422
+msgid "qty_used"
+msgstr "الكمية المستخدمة Quantity used"
+
+#: company_profile/models.py:1313
+msgid "qty_in_store"
+msgstr "الكمية المخزنة Quantity in Storage"
+
+#: company_profile/models.py:1314
+msgid "expire_dt"
+msgstr "انتهاء صلاحية"
+
+#: company_profile/models.py:1317 company_profile/models.py:1318
+msgid "HSE CHEMICAL USED"
+msgstr "نوع وكمية المواد الكيميائية المستخدمة وطرق التخزين"
+
+#: company_profile/models.py:1348
+msgid "WATER_USED1"
+msgstr "المياه المستخدمة فى المعالجة – متر مكعب Water Consumed for Process – cubic meter"
+
+#: company_profile/models.py:1349
+msgid "WATER_USED2"
+msgstr "المياه المستخدمة فى المعسكر – متر مكعب Water Consumed in camp – cubic meter"
+
+#: company_profile/models.py:1350
+msgid "WATER_USED3"
+msgstr "المياه المعالجة  (مياه الصرف الصحي) – متر مكعب Sewage water – cubic meter"
+
+#: company_profile/models.py:1351
+msgid "WATER_USED4"
+msgstr "المياه المعاد استخدامها – متر مكعب Reused water – cubic meter"
+
+#: company_profile/models.py:1355
+msgid "hse_water_used"
+msgstr "الموارد المستخدمة Resources used / Water"
+
+#: company_profile/models.py:1357
+msgid "source_of_water"
+msgstr "مصدر المياه Source Of Water"
+
+#: company_profile/models.py:1358 company_profile/models.py:1381
+msgid "storage_method"
+msgstr "طريقة التخزين Storage Method"
+
+#: company_profile/models.py:1361 company_profile/models.py:1362
+msgid "HSE WATER USED"
+msgstr "نوع وكمية المواد المياه المستخدمة وطرق التخزين"
+
+#: company_profile/models.py:1371
+msgid "OIL_USED1"
+msgstr "الوقود المستخدم Consumed Fuel"
+
+#: company_profile/models.py:1372
+msgid "OIL_USED2"
+msgstr "الزيوت الراجعة Used oil"
+
+#: company_profile/models.py:1373
+msgid "OIL_USED3"
+msgstr "الزيوت المستخدمة للاليات Type of Fuel"
+
+#: company_profile/models.py:1374
+msgid "OIL_USED4"
+msgstr "أخرى Other"
+
+#: company_profile/models.py:1378
+msgid "hse_oil_used"
+msgstr "الموارد المستخدمة Resources used / Fuels"
+
+#: company_profile/models.py:1380 company_profile/models.py:1423
+msgid "disposal_method"
+msgstr "طريقة التخلص Disposal Method"
+
+#: company_profile/models.py:1384 company_profile/models.py:1385
+msgid "HSE OIL USED"
+msgstr "نوع وكمية المواد الزيوت المستخدمة وطرق التخزين"
+
+#: company_profile/models.py:1404
+msgid "WASTE_DISPOSAL1"
+msgstr "الصلبة/ نفايات الخام-طن Tailing Waste - Ton"
+
+#: company_profile/models.py:1405
+msgid "WASTE_DISPOSAL2"
+msgstr "الصلبة/ إسكراب - كيلوجرام Scrap - Kg"
+
+#: company_profile/models.py:1406
+msgid "WASTE_DISPOSAL3"
+msgstr "الصلبة/ أخرى  - Other"
+
+#: company_profile/models.py:1407
+msgid "WASTE_DISPOSAL4"
+msgstr "العبوات الفارغة/ عبوات السيانيد الفارغة (براميل – شكارات) Empty  Cyanide container (bags – barrel)"
+
+#: company_profile/models.py:1408
+msgid "WASTE_DISPOSAL5"
+msgstr "العبوات الفارغة/ عبوات المواد الكيميائية الفارغة Empty Chemical container"
+
+#: company_profile/models.py:1409
+msgid "WASTE_DISPOSAL6"
+msgstr "العبوات الفارغة/ عبوات الأحماض الفارغة Empty Acids container"
+
+#: company_profile/models.py:1410
+msgid "WASTE_DISPOSAL7"
+msgstr "العبوات الفارغة/ أخرى - Other"
+
+#: company_profile/models.py:1411
+msgid "WASTE_DISPOSAL8"
+msgstr "السائلة/ سوائل المعمل  - متر مكعب Lab liquid – cubic meter"
+
+#: company_profile/models.py:1412
+msgid "WASTE_DISPOSAL9"
+msgstr "السائلة/ مياه الصرف الصحي - متر مكعب Sewage - cubic meter"
+
+#: company_profile/models.py:1413
+msgid "WASTE_DISPOSAL10"
+msgstr "السائلة/ أخرى - Other"
+
+#: company_profile/models.py:1417
+msgid "WASTE_DISPOSAL12"
+msgstr "كمية الزئبق المجمع في غرفة الصهر (مكثف الزئبق) Quantity of Mercury Condensed in smelting Room (Mercury Condenser)"
+
+#: company_profile/models.py:1415
+msgid "WASTE_DISPOSAL13"
+msgstr "كمية الزئبق المجمع في الخلية (مكثف الزئبق) Quantity of Mercury Condensed in Electro winning (Mercury Condenser)"
+
+#: company_profile/models.py:1416
+msgid "WASTE_DISPOSAL14"
+msgstr "نسبة السيانيد في حوض النفاية Percentage of Cyanide in tailing dam"
+
+#: company_profile/models.py:1414
+msgid "WASTE_DISPOSAL11"
+msgstr "نفايات المطبخ Kitchen waste"
+
+#: company_profile/models.py:1421
+msgid "hse_WASTE_DISPOSAL"
+msgstr "المخلفات Waste"
+
+#: company_profile/models.py:1426 company_profile/models.py:1427
+msgid "HSE WASTE DISPOSAL"
+msgstr "طرق التخلص من النفايات بالموقع – on site waste disposal method"
+
+#: company_profile/models.py:1432
 msgid "whom_reason"
 msgstr "الغرض من الشهادة"
 
-#: company_profile/models.py:1297
+#: company_profile/models.py:1433
 msgid "whom_subject"
 msgstr "الموضوع"
 
-#: company_profile/models.py:1298 company_profile/models.py:1309
+#: company_profile/models.py:1434 company_profile/models.py:1445
 #: company_profile/templates/company_profile/application_readonly.html:25
 #: company_profile/templates/company_profile/application_readonly_master_details2.html:61
 #: pa/templates/pa/application_readonly.html:40
@@ -1996,70 +2167,70 @@ msgstr "الموضوع"
 msgid "whom_attachement_file"
 msgstr "ملف شهادة لمن يهمه الامر"
 
-#: company_profile/models.py:1301
+#: company_profile/models.py:1437
 msgid "Whom may concern"
 msgstr "الى من يهمه الامر"
 
-#: company_profile/models.py:1314
+#: company_profile/models.py:1450
 msgid "Application: Whom may concern request"
 msgstr "طلب شهادة لمن يهمه الامر"
 
-#: company_profile/models.py:1315
+#: company_profile/models.py:1451
 #: company_profile/templates/company_profile/base.html:273
 msgid "Application: Whom may concern requests"
 msgstr "طلب شهادة لمن يهمه الامر"
 
-#: company_profile/models.py:1320 production_control/models.py:83
+#: company_profile/models.py:1456 production_control/models.py:83
 #: production_control/models.py:133
 msgid "form_no"
 msgstr "رقم الاستمارة"
 
-#: company_profile/models.py:1321 production_control/models.py:89
+#: company_profile/models.py:1457 production_control/models.py:89
 msgid "gold_production_form_file"
 msgstr "مرفق استمارة الانتاج"
 
-#: company_profile/models.py:1324
+#: company_profile/models.py:1460
 msgid "Gold Production"
 msgstr "انتاج الذهب"
 
-#: company_profile/models.py:1331 company_profile/models.py:1332
+#: company_profile/models.py:1467 company_profile/models.py:1468
 #: company_profile/templates/company_profile/base.html:139
 msgid "Application: Gold Production"
 msgstr "استمارة انتاج الذهب"
 
-#: company_profile/models.py:1336
+#: company_profile/models.py:1472
 msgid "melt_dt"
 msgstr "تاريخ الصهر"
 
-#: company_profile/models.py:1337
+#: company_profile/models.py:1473
 msgid "melt_bar_no"
 msgstr "رقم السبيكة"
 
-#: company_profile/models.py:1338
+#: company_profile/models.py:1474
 msgid "melt_bar_weight"
 msgstr "وزن السبيكة"
 
-#: company_profile/models.py:1339
+#: company_profile/models.py:1475
 msgid "melt_jaf"
 msgstr "وزن المركز الجاف"
 
-#: company_profile/models.py:1340
+#: company_profile/models.py:1476
 msgid "melt_khabath"
 msgstr "وزن الخبث"
 
-#: company_profile/models.py:1341
+#: company_profile/models.py:1477
 msgid "melt_added_gold"
 msgstr "وزن الذهب المضاف للصهر"
 
-#: company_profile/models.py:1342
+#: company_profile/models.py:1478
 msgid "melt_remaind"
 msgstr "وزن الذهب المتبقي"
 
-#: company_profile/models.py:1345
+#: company_profile/models.py:1481
 msgid "Gold Production Detail"
 msgstr "تفاصيل استمارة الانتاج"
 
-#: company_profile/models.py:1346
+#: company_profile/models.py:1482
 msgid "Gold Production Details"
 msgstr "تفاصيل استمارة الانتاج"
 
@@ -2187,7 +2358,7 @@ msgstr "اضافة طلب حركة اجنبي"
 #: company_profile/views/fuel_permission.py:70
 #: company_profile/views/gold_production.py:91
 #: company_profile/views/hse_accident.py:64
-#: company_profile/views/hse_performance.py:93
+#: company_profile/views/hse_performance.py:97
 #: company_profile/views/import_permission.py:70
 #: company_profile/views/local_purchase.py:64 company_profile/views/mda.py:64
 #: company_profile/views/reexport_equipments.py:71
@@ -2382,15 +2553,15 @@ msgstr "اضافة تقرير حادث"
 msgid "Show HSE Accident Report"
 msgstr "عرض تقرير حادث"
 
-#: company_profile/views/hse_performance.py:35
+#: company_profile/views/hse_performance.py:39
 msgid "List of HSE Performance Reports"
 msgstr "قائمة تقارير اداء البيئة والسلامة"
 
-#: company_profile/views/hse_performance.py:55
+#: company_profile/views/hse_performance.py:59
 msgid "Add new HSE Performance Report"
 msgstr "اضافة تقرير اداء البيئة والسلامة"
 
-#: company_profile/views/hse_performance.py:110
+#: company_profile/views/hse_performance.py:114
 msgid "Show HSE Performance Report"
 msgstr "عرض تقرير اداء البيئة والسلامة"
 

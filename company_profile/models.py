@@ -1290,6 +1290,142 @@ class AppHSEPerformanceReportActivities(models.Model):
         verbose_name = _("HSE activities")
         verbose_name_plural = _("HSE activities")
 
+class AppHSEPerformanceReportChemicalUsed(models.Model):
+    CHEMICAL_USED1 = 1
+    CHEMICAL_USED2 = 2
+    CHEMICAL_USED3 = 3
+    CHEMICAL_USED4 = 4
+    CHEMICAL_USED5 = 5
+    CHEMICAL_USED6 = 6
+
+    CHEMICAL_USED_CHOICES = {
+        CHEMICAL_USED1: _("CHEMICAL_USED1"),
+        CHEMICAL_USED2: _("CHEMICAL_USED2"),
+        CHEMICAL_USED3: _("CHEMICAL_USED3"),
+        CHEMICAL_USED4: _("CHEMICAL_USED4"),
+        CHEMICAL_USED5: _("CHEMICAL_USED5"),
+        CHEMICAL_USED6: _("CHEMICAL_USED6"),
+    }
+
+    master = models.ForeignKey(AppHSEPerformanceReport, on_delete=models.PROTECT)    
+    factor = models.PositiveIntegerField(_("hse_chemical_used"), choices=CHEMICAL_USED_CHOICES)
+    qty_used = models.PositiveIntegerField(_("qty_used"))
+    qty_in_store = models.PositiveIntegerField(_("qty_in_store"))
+    expire_dt = models.DateField(_("expire_dt"))
+
+    class Meta:
+        verbose_name = _("HSE CHEMICAL USED")
+        verbose_name_plural = _("HSE CHEMICAL USED")
+
+# class AppHSEPerformanceReportCyanideTable(models.Model):
+#     CYANIDE_TABLE1 = 1
+#     CYANIDE_TABLE2 = 2
+#     CYANIDE_TABLE3 = 3
+#     CYANIDE_TABLE4 = 4
+
+#     CYANIDE_TABLE_CHOICES = {
+#         CYANIDE_TABLE1: _("CYANIDE_TABLE1"),
+#         CYANIDE_TABLE2: _("CYANIDE_TABLE2"),
+#         CYANIDE_TABLE3: _("CYANIDE_TABLE3"),
+#         CYANIDE_TABLE4: _("CYANIDE_TABLE4"),
+#     }
+
+#     master = models.ForeignKey(AppHSEPerformanceReport, on_delete=models.PROTECT)    
+#     factor = models.PositiveIntegerField(_("hse_cyanide_table"), choices=CYANIDE_TABLE_CHOICES)
+#     choices = models.PositiveIntegerField(_("cyanide_choices"))
+
+#     class Meta:
+#         verbose_name = _("HSE CYANIDE TABLE")
+#         verbose_name_plural = _("HSE CYANIDE TABLE")
+
+class AppHSEPerformanceReportWaterUsed(models.Model):
+    WATER_USED1 = 1
+    WATER_USED2 = 2
+    WATER_USED3 = 3
+    WATER_USED4 = 4
+
+    WATER_USED_CHOICES = {
+        WATER_USED1: _("WATER_USED1"),
+        WATER_USED2: _("WATER_USED2"),
+        WATER_USED3: _("WATER_USED3"),
+        WATER_USED4: _("WATER_USED4"),
+    }
+
+    master = models.ForeignKey(AppHSEPerformanceReport, on_delete=models.PROTECT)    
+    factor = models.PositiveIntegerField(_("hse_water_used"), choices=WATER_USED_CHOICES)
+    qty_used = models.FloatField(_("qty_used"))
+    source_of_water = models.CharField(_("source_of_water"))
+    storage_method = models.CharField(_("storage_method"))
+
+    class Meta:
+        verbose_name = _("HSE WATER USED")
+        verbose_name_plural = _("HSE WATER USED")
+
+class AppHSEPerformanceReportOilUsed(models.Model):
+    OIL_USED1 = 1
+    OIL_USED2 = 2
+    OIL_USED3 = 3
+    OIL_USED4 = 4
+
+    OIL_USED_CHOICES = {
+        OIL_USED1: _("OIL_USED1"),
+        OIL_USED2: _("OIL_USED2"),
+        OIL_USED3: _("OIL_USED3"),
+        OIL_USED4: _("OIL_USED4"),
+    }
+
+    master = models.ForeignKey(AppHSEPerformanceReport, on_delete=models.PROTECT)    
+    factor = models.PositiveIntegerField(_("hse_oil_used"), choices=OIL_USED_CHOICES)
+    qty_used = models.FloatField(_("qty_used"))
+    disposal_method = models.CharField(_("disposal_method"))
+    storage_method = models.CharField(_("storage_method"))
+
+    class Meta:
+        verbose_name = _("HSE OIL USED")
+        verbose_name_plural = _("HSE OIL USED")
+
+class AppHSEPerformanceReportWasteDisposal(models.Model):
+    WASTE_DISPOSAL1 = 1
+    WASTE_DISPOSAL2 = 2
+    WASTE_DISPOSAL3 = 3
+    WASTE_DISPOSAL4 = 4
+    WASTE_DISPOSAL5 = 5
+    WASTE_DISPOSAL6 = 6
+    WASTE_DISPOSAL7 = 7
+    WASTE_DISPOSAL8 = 8
+    WASTE_DISPOSAL9 = 9
+    WASTE_DISPOSAL10 = 10
+    WASTE_DISPOSAL11 = 11
+    WASTE_DISPOSAL12 = 12
+    WASTE_DISPOSAL13 = 13
+    WASTE_DISPOSAL14 = 14
+
+    WASTE_DISPOSAL_CHOICES = {
+        WASTE_DISPOSAL1: _("WASTE_DISPOSAL1"),
+        WASTE_DISPOSAL2: _("WASTE_DISPOSAL2"),
+        WASTE_DISPOSAL3: _("WASTE_DISPOSAL3"),
+        WASTE_DISPOSAL4: _("WASTE_DISPOSAL4"),
+        WASTE_DISPOSAL5: _("WASTE_DISPOSAL5"),
+        WASTE_DISPOSAL6: _("WASTE_DISPOSAL6"),
+        WASTE_DISPOSAL7: _("WASTE_DISPOSAL7"),
+        WASTE_DISPOSAL8: _("WASTE_DISPOSAL8"),
+        WASTE_DISPOSAL9: _("WASTE_DISPOSAL9"),
+        WASTE_DISPOSAL10: _("WASTE_DISPOSAL10"),
+        WASTE_DISPOSAL11: _("WASTE_DISPOSAL11"),
+        WASTE_DISPOSAL12: _("WASTE_DISPOSAL12"),
+        WASTE_DISPOSAL13: _("WASTE_DISPOSAL13"),
+        WASTE_DISPOSAL14: _("WASTE_DISPOSAL14"),
+    }
+
+    master = models.ForeignKey(AppHSEPerformanceReport, on_delete=models.PROTECT)    
+    factor = models.PositiveIntegerField(_("hse_WASTE_DISPOSAL"), choices=WASTE_DISPOSAL_CHOICES)
+    qty_used = models.FloatField(_("qty_used"))
+    disposal_method = models.CharField(_("disposal_method"))
+
+    class Meta:
+        verbose_name = _("HSE WASTE DISPOSAL")
+        verbose_name_plural = _("HSE WASTE DISPOSAL")
+
 class AppWhomConcern(WorkflowModel):
     company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
 
