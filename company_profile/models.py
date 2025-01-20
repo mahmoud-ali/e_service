@@ -220,9 +220,9 @@ class TblCompanyProductionLicense(LoggingModel):
     license_no = models.CharField(_("License no"),max_length=20)
     license_type = models.IntegerField(_("license_type"),choices=LICENSE_TYPE_CHOICES,blank=True,null=True)
     license_count = models.IntegerField(_("License count"),default=1)
-    date = models.DateField(_("Sign date"), help_text="Ex: 2025-01-01")
-    start_date = models.DateField(_("start_date"), help_text="Ex: 2025-01-01")
-    end_date = models.DateField(_("end_date"), help_text="Ex: 2025-01-01")
+    date = models.DateField(_("Sign date"), help_text="Ex: 2025-01-31")
+    start_date = models.DateField(_("start_date"), help_text="Ex: 2025-01-31")
+    end_date = models.DateField(_("end_date"), help_text="Ex: 2025-01-31")
     state = models.ForeignKey(LkpState, on_delete=models.PROTECT,verbose_name=_("state"))
     locality = models.ForeignKey(LkpLocality, on_delete=models.PROTECT,verbose_name=_("locality"))
     location = models.CharField(_("location"),max_length=100)
@@ -264,12 +264,12 @@ class AppForignerMovement(WorkflowModel):
     company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
     route_from = models.CharField(_("route_from"),max_length=200)
     route_to = models.CharField(_("route_to"),max_length=200)
-    period_from = models.DateField(_("period_from"), help_text="Ex: 2025-01-01")
-    period_to = models.DateField(_("period_to"), help_text="Ex: 2025-01-01")
+    period_from = models.DateField(_("period_from"), help_text="Ex: 2025-01-31")
+    period_to = models.DateField(_("period_to"), help_text="Ex: 2025-01-31")
     address_in_sudan = models.TextField(_("address_in_sudan"),max_length=256)
     nationality = models.ForeignKey(LkpNationality, on_delete=models.PROTECT,verbose_name=_("nationality"))
     passport_no = models.CharField(_("passport_no"),max_length=20)
-    passport_expiry_date = models.DateField(_("passport_expiry_date"), help_text="Ex: 2025-01-01")
+    passport_expiry_date = models.DateField(_("passport_expiry_date"), help_text="Ex: 2025-01-31")
     official_letter_file = models.FileField(_("official_letter_file"),upload_to=company_applications_path)    
     passport_copy_file = models.FileField(_("passport_copy_file"),upload_to=company_applications_path)    
     cv_file = models.FileField(_("cv_file"),upload_to=company_applications_path)    
@@ -290,7 +290,7 @@ class AppBorrowMaterial(WorkflowModel):
     company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,related_name="borrow_to",verbose_name=_("company"))    
     company_from  = models.ForeignKey(TblCompanyProduction,null=True,blank=True, on_delete=models.PROTECT,related_name="borrow_from",verbose_name=_("company_borrow_from"))    
     company_from_str = models.CharField(_("company_borrow_from_str"),max_length=200,default="-")
-    borrow_date = models.DateField(_("borrow_date"), help_text="Ex: 2025-01-01")
+    borrow_date = models.DateField(_("borrow_date"), help_text="Ex: 2025-01-31")
     borrow_materials_list_file = models.FileField(_("borrow_materials_list_file"),blank=True,upload_to=company_applications_path)    
     borrow_from_approval_file = models.FileField(_("borrow_from_approval_file"),upload_to=company_applications_path)        
     
@@ -317,8 +317,8 @@ class AppBorrowMaterialDetail(models.Model):
 
 class AppWorkPlan(WorkflowModel):
     company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
-    plan_from = models.DateField(_("plan_from"), help_text="Ex: 2025-01-01")
-    plan_to = models.DateField(_("plan_to"), help_text="Ex: 2025-01-01")
+    plan_from = models.DateField(_("plan_from"), help_text="Ex: 2025-01-31")
+    plan_to = models.DateField(_("plan_to"), help_text="Ex: 2025-01-31")
     plan_comments = models.TextField(_("plan_comments"),max_length=256)
     official_letter_file = models.FileField(_("official_letter_file"),upload_to=company_applications_path)
     work_plan_file = models.FileField(_("work_plan_file"),upload_to=company_applications_path)
@@ -344,7 +344,7 @@ class AppTechnicalFinancialReport(WorkflowModel):
     }
             
     company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
-    report_from = models.DateField(_("report_from"), help_text="Ex: 2025-01-01")
+    report_from = models.DateField(_("report_from"), help_text="Ex: 2025-01-31")
     report_to = models.DateField(_("report_to"))
     report_type = models.CharField(_("report_type"),max_length=15, choices=REPORT_TYPE_CHOICES)
     report_comments = models.TextField(_("report_comments"),max_length=256)
@@ -387,8 +387,8 @@ class AppChangeCompanyName(WorkflowModel):
 
 class AppExplorationTime(WorkflowModel):
     company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
-    expo_from = models.DateField(_("expo_from"), help_text="Ex: 2025-01-01")
-    expo_to = models.DateField(_("expo_to"), help_text="Ex: 2025-01-01")
+    expo_from = models.DateField(_("expo_from"), help_text="Ex: 2025-01-31")
+    expo_to = models.DateField(_("expo_to"), help_text="Ex: 2025-01-31")
     expo_cause_for_timing = models.TextField(_("expo_cause_for_timing"),max_length=1000)
 
     expo_cause_for_change_file = models.FileField(_("expo_cause_for_change_file"),upload_to=company_applications_path)
@@ -517,8 +517,8 @@ class AppTajeelTnazol(WorkflowModel):
 
 class AppTajmeed(WorkflowModel):
     company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
-    tajmeed_from = models.DateField(_("tajmeed_from"), help_text="Ex: 2025-01-01")
-    tajmeed_to = models.DateField(_("tajmeed_to"), help_text="Ex: 2025-01-01")
+    tajmeed_from = models.DateField(_("tajmeed_from"), help_text="Ex: 2025-01-31")
+    tajmeed_to = models.DateField(_("tajmeed_to"), help_text="Ex: 2025-01-31")
     cause_for_tajmeed = models.TextField(_("cause_for_tajmeed"),max_length=1000)
 
     cause_for_uncontrolled_force_file = models.FileField(_("cause_for_uncontrolled_force_file"),upload_to=company_applications_path)
@@ -537,7 +537,7 @@ class AppTajmeed(WorkflowModel):
 
 class AppTakhali(WorkflowModel):
     company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
-    technical_presentation_date = models.DateField(_("technical_presentation_date"), help_text="Ex: 2025-01-01")
+    technical_presentation_date = models.DateField(_("technical_presentation_date"), help_text="Ex: 2025-01-31")
     cause_for_takhali = models.TextField(_("cause_for_takhali"),max_length=1000)
 
     technical_report_file = models.FileField(_("technical_report_file"),upload_to=company_applications_path)
@@ -555,8 +555,8 @@ class AppTakhali(WorkflowModel):
 
 class AppTamdeed(WorkflowModel):
     company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
-    tamdeed_from = models.DateField(_("tamdeed_from"), help_text="Ex: 2025-01-01")
-    tamdeed_to = models.DateField(_("tamdeed_to"), help_text="Ex: 2025-01-01")
+    tamdeed_from = models.DateField(_("tamdeed_from"), help_text="Ex: 2025-01-31")
+    tamdeed_to = models.DateField(_("tamdeed_to"), help_text="Ex: 2025-01-31")
     cause_for_tamdeed = models.TextField(_("cause_for_tamdeed"),max_length=1000)
 
     approved_work_plan_file = models.FileField(_("approved_work_plan_file"),upload_to=company_applications_path)
@@ -575,8 +575,8 @@ class AppTamdeed(WorkflowModel):
 
 class AppTaaweed(WorkflowModel):
     company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
-    taaweed_from = models.DateField(_("taaweed_from"), help_text="Ex: 2025-01-01")
-    taaweed_to = models.DateField(_("taaweed_to"), help_text="Ex: 2025-01-01")
+    taaweed_from = models.DateField(_("taaweed_from"), help_text="Ex: 2025-01-31")
+    taaweed_to = models.DateField(_("taaweed_to"), help_text="Ex: 2025-01-31")
     cause_for_taaweed = models.TextField(_("cause_for_taaweed"),max_length=1000)
 
     def __str__(self):
@@ -592,8 +592,8 @@ class AppTaaweed(WorkflowModel):
 
 class AppMda(WorkflowModel):
     company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
-    mda_from = models.DateField(_("mda_from"), help_text="Ex: 2025-01-01")
-    mda_to = models.DateField(_("mda_to"), help_text="Ex: 2025-01-01")
+    mda_from = models.DateField(_("mda_from"), help_text="Ex: 2025-01-31")
+    mda_to = models.DateField(_("mda_to"), help_text="Ex: 2025-01-31")
     cause_for_mda = models.TextField(_("cause_for_mda"),max_length=1000)
 
     approved_work_plan_file = models.FileField(_("approved_work_plan_file"),upload_to=company_applications_path)
@@ -739,8 +739,8 @@ class LkpForeignerProcedureType(models.Model):
 class AppForeignerProcedure(WorkflowModel):
     company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
     procedure_type = models.ForeignKey(LkpForeignerProcedureType, on_delete=models.PROTECT,verbose_name=_("procedure_type"))    
-    procedure_from = models.DateField(_("procedure_from"), help_text="Ex: 2025-01-01")
-    procedure_to = models.DateField(_("procedure_to"), help_text="Ex: 2025-01-01")
+    procedure_from = models.DateField(_("procedure_from"), help_text="Ex: 2025-01-31")
+    procedure_to = models.DateField(_("procedure_to"), help_text="Ex: 2025-01-31")
     procedure_cause = models.TextField(_("procedure_cause"),max_length=1000)
 
     official_letter_file = models.FileField(_("official_letter_file"),upload_to=company_applications_path)
@@ -1104,7 +1104,7 @@ class AppHSEAccidentReport(WorkflowModel):
 
     company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
     accident_place = models.CharField(_("accident_place"),max_length=100)
-    accident_dt = models.DateTimeField(_("accident_dt"), help_text="Ex: 2025-01-01")
+    accident_dt = models.DateTimeField(_("accident_dt"), help_text="Ex: 2025-01-31")
     accident_type  = models.ForeignKey(LkpAccidentType, on_delete=models.PROTECT,verbose_name=_("accident_type"))    
     accident_class = models.CharField(_("accident_class"),max_length=10, choices=ACCIDENT_CLASS_CHOICES)
 
@@ -1177,7 +1177,7 @@ class AppHSEPerformanceReportFireFighting(models.Model):
     factor = models.PositiveIntegerField(_("hse_fire_fighting"), choices=FIRE_FIGHTING_CHOICES)
     size = models.PositiveIntegerField(_("size"))
     count = models.PositiveIntegerField(_("count"))
-    exam_dt = models.DateField(_("exam_dt"), help_text="Ex: 2025-01-01")
+    exam_dt = models.DateField(_("exam_dt"), help_text="Ex: 2025-01-31")
     situation = models.PositiveIntegerField(_("situation"),choices=SITUATION_CHOICES)
 
     class Meta:
@@ -1311,7 +1311,7 @@ class AppHSEPerformanceReportChemicalUsed(models.Model):
     factor = models.PositiveIntegerField(_("hse_chemical_used"), choices=CHEMICAL_USED_CHOICES)
     qty_used = models.PositiveIntegerField(_("qty_used"))
     qty_in_store = models.PositiveIntegerField(_("qty_in_store"))
-    expire_dt = models.DateField(_("expire_dt"), help_text="Ex: 2025-01-01")
+    expire_dt = models.DateField(_("expire_dt"), help_text="Ex: 2025-01-31")
 
     class Meta:
         verbose_name = _("HSE CHEMICAL USED")
@@ -1458,7 +1458,7 @@ class AppHSEPerformanceReportTherapeuticUnit(models.Model):
 
 class AppHSEPerformanceReportDiseasesForWorkers(models.Model):
     master = models.ForeignKey(AppHSEPerformanceReport, on_delete=models.PROTECT)    
-    disease_dt = models.DateField(_("disease_dt"), help_text="Ex: 2025-01-01")
+    disease_dt = models.DateField(_("disease_dt"), help_text="Ex: 2025-01-31")
     disease_type = models.CharField(_("disease_type"), max_length=100)
     no_patients = models.PositiveIntegerField(_("no_patients"))
     patients_career = models.CharField(_("patients_career"), max_length=100)
@@ -1529,7 +1529,7 @@ class AppHSEPerformanceReportExplosivesUsed(models.Model):
     factor = models.PositiveIntegerField(_("hse_explosives_used"), choices=EXPLOSIVES_USED_CHOICES)
     qty_used = models.PositiveIntegerField(_("qty_used"))
     qty_remain = models.PositiveIntegerField(_("qty_remain"))
-    expire_dt = models.DateField(_("expire_dt"), help_text="Ex: 2025-01-01")
+    expire_dt = models.DateField(_("expire_dt"), help_text="Ex: 2025-01-31")
 
     class Meta:
         verbose_name = _("HSE EXPLOSIVES USED")
@@ -1609,7 +1609,7 @@ class AppGoldProduction(WorkflowModel):
 
 class AppGoldProductionDetail(models.Model):
     melt_master = models.ForeignKey(AppGoldProduction, on_delete=models.PROTECT)    
-    melt_dt = models.DateField(_("melt_dt"), help_text="Ex: 2025-01-01")
+    melt_dt = models.DateField(_("melt_dt"), help_text="Ex: 2025-01-31")
     melt_bar_no = models.CharField(_("melt_bar_no"),max_length=30)
     melt_bar_weight = models.FloatField(_("melt_bar_weight"))
     melt_jaf = models.FloatField(_("melt_jaf"))
