@@ -572,7 +572,7 @@ class AppHSEPerformanceReportAdminForm(WorkflowFormMixin,ModelForm):
 
     class Meta:
         model = AppHSEPerformanceReport
-        fields = ["company","state","reject_comments"] #,"attachement_file"
+        fields = ["company","year","month","state","reject_comments"] #,"attachement_file"
         
 class AppHSEPerformanceReportForm(AppHSEPerformanceReportAdminForm):
     company = None
