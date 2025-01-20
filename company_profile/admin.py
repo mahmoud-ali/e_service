@@ -15,7 +15,7 @@ from django.contrib.sites.models import Site
 from django.contrib.messages import constants as message_constants
 from import_export.admin import ExportActionMixin
 from django.db.utils import IntegrityError
-from .models import AppCyanideCertificate, AppExplosivePermission, AppFuelPermission, AppFuelPermissionDetail, AppGoldProduction, AppGoldProductionDetail, AppHSEAccidentReport, AppHSEPerformanceReport, AppHSEPerformanceReportActivities, AppHSEPerformanceReportCatering, AppHSEPerformanceReportChemicalUsed, AppHSEPerformanceReportDiseasesForWorkers, AppHSEPerformanceReportFireFighting, AppHSEPerformanceReportManPower, AppHSEPerformanceReportOilUsed, AppHSEPerformanceReportProactiveIndicators, AppHSEPerformanceReportStatisticalData, AppHSEPerformanceReportTherapeuticUnit, AppHSEPerformanceReportWasteDisposal, AppHSEPerformanceReportWaterUsed, AppHSEPerformanceReportWorkEnvironment, AppImportPermission, AppImportPermissionDetail, AppLocalPurchase, AppRenewalContract, AppRestartActivity, AppTemporaryExemption, AppWhomConcern, LkpAccidentType, LkpNationality,LkpState,LkpLocality,LkpMineral,LkpCompanyProductionStatus,LkpForeignerProcedureType,TblCompanyProduction, \
+from .models import AppCyanideCertificate, AppExplosivePermission, AppFuelPermission, AppFuelPermissionDetail, AppGoldProduction, AppGoldProductionDetail, AppHSEAccidentReport, AppHSEPerformanceReport, AppHSEPerformanceReportActivities, AppHSEPerformanceReportBillsOfQuantities, AppHSEPerformanceReportCatering, AppHSEPerformanceReportChemicalUsed, AppHSEPerformanceReportDiseasesForWorkers, AppHSEPerformanceReportExplosivesUsed, AppHSEPerformanceReportFireFighting, AppHSEPerformanceReportManPower, AppHSEPerformanceReportOilUsed, AppHSEPerformanceReportProactiveIndicators, AppHSEPerformanceReportStatisticalData, AppHSEPerformanceReportTherapeuticUnit, AppHSEPerformanceReportWasteDisposal, AppHSEPerformanceReportWaterUsed, AppHSEPerformanceReportWorkEnvironment, AppImportPermission, AppImportPermissionDetail, AppLocalPurchase, AppRenewalContract, AppRestartActivity, AppTemporaryExemption, AppWhomConcern, LkpAccidentType, LkpNationality,LkpState,LkpLocality,LkpMineral,LkpCompanyProductionStatus,LkpForeignerProcedureType,TblCompanyProduction, \
                                       LkpCompanyProductionFactoryType,TblCompanyProductionFactory,LkpCompanyProductionLicenseStatus, \
                                       TblCompanyProductionLicense,AppForignerMovement,TblCompanyProductionUserRole, \
                                       AppBorrowMaterial,AppBorrowMaterialDetail,AppWorkPlan,AppTechnicalFinancialReport, \
@@ -844,6 +844,12 @@ class AppHSEPerformanceReportStatisticalDataDetailInline(AppHSEInline):
 class AppHSEPerformanceReportCateringDetailInline(AppHSEInline):
     model = AppHSEPerformanceReportCatering
 
+class AppHSEPerformanceReportExplosivesUsedDetailInline(AppHSEInline):
+    model = AppHSEPerformanceReportExplosivesUsed
+
+class AppHSEPerformanceReportBillsOfQuantitiesDetailInline(AppHSEInline):
+    model = AppHSEPerformanceReportBillsOfQuantities
+
 class AppHSEPerformanceReportAdmin(WorkflowAdminMixin,admin.ModelAdmin):
     form = AppHSEPerformanceReportAdminForm
     inlines = [
@@ -859,6 +865,8 @@ class AppHSEPerformanceReportAdmin(WorkflowAdminMixin,admin.ModelAdmin):
         AppHSEPerformanceReportDiseasesForWorkersDetailInline,
         AppHSEPerformanceReportStatisticalDataDetailInline,
         AppHSEPerformanceReportCateringDetailInline,
+        AppHSEPerformanceReportExplosivesUsedDetailInline,
+        AppHSEPerformanceReportBillsOfQuantitiesDetailInline,
     ]
 
     list_display = ["company", "created_at", "created_by","updated_at", "updated_by"]        
