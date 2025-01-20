@@ -1426,6 +1426,82 @@ class AppHSEPerformanceReportWasteDisposal(models.Model):
         verbose_name = _("HSE WASTE DISPOSAL")
         verbose_name_plural = _("HSE WASTE DISPOSAL")
 
+class AppHSEPerformanceReportTherapeuticUnit(models.Model):
+    QUALIFICATION1 = 1
+    QUALIFICATION2 = 2
+
+    QUALIFICATION_CHOICES = {
+        QUALIFICATION1: _("QUALIFICATION1"),
+        QUALIFICATION2: _("QUALIFICATION2"),
+    }
+
+    YES = 1
+    NO = 2
+
+    YES_NO_CHOICES = {
+        YES: _("YES"),
+        NO: _("NO"),
+    }
+
+    master = models.ForeignKey(AppHSEPerformanceReport, on_delete=models.PROTECT)    
+    unit_manager = models.CharField(_("unit_manager"), max_length=100)
+    unit_phone = models.CharField(_("unit_phone"), max_length=100)
+    unit_qualification = models.PositiveIntegerField(_("unit_qualification"), choices=QUALIFICATION_CHOICES)
+    aid_qty_used = models.PositiveIntegerField(_("aid_qty_used"))
+    ambulance_used = models.PositiveIntegerField(_("ambulance_used"), choices=YES_NO_CHOICES)
+    periodic_medical_examination  = models.PositiveIntegerField(_("periodic_medical_examination"), choices=YES_NO_CHOICES)
+    primary_medical_examination = models.PositiveIntegerField(_("primary_medical_examination"), choices=YES_NO_CHOICES)
+
+    class Meta:
+        verbose_name = _("HSE Therapeutic unit")
+        verbose_name_plural = _("HSE Therapeutic unit")
+
+class AppHSEPerformanceReportDiseasesForWorkers(models.Model):
+    master = models.ForeignKey(AppHSEPerformanceReport, on_delete=models.PROTECT)    
+    disease_dt = models.DateField(_("disease_dt"))
+    disease_type = models.CharField(_("disease_type"), max_length=100)
+    no_patients = models.PositiveIntegerField(_("no_patients"))
+    patients_career = models.CharField(_("patients_career"), max_length=100)
+    patients_worksite = models.CharField(_("patients_worksite"), max_length=100)
+
+    class Meta:
+        verbose_name = _("HSE Diseases For Workers")
+        verbose_name_plural = _("HSE Diseases For Workers")
+
+class AppHSEPerformanceReportStatisticalData(models.Model):
+    STATISTICAL_DATA1 = 1
+    STATISTICAL_DATA2 = 2
+    STATISTICAL_DATA3 = 3
+    STATISTICAL_DATA4 = 4
+
+    STATISTICAL_DATA_CHOICES = {
+        STATISTICAL_DATA1: _(" STATISTICAL_DATA1"),
+        STATISTICAL_DATA2: _(" STATISTICAL_DATA2"),
+        STATISTICAL_DATA3: _(" STATISTICAL_DATA3"),
+        STATISTICAL_DATA4: _(" STATISTICAL_DATA4"),
+    }
+
+    master = models.ForeignKey(AppHSEPerformanceReport, on_delete=models.PROTECT)    
+    factor = models.PositiveIntegerField(_("hse_statistical_data"), choices=STATISTICAL_DATA_CHOICES)
+    no_staff = models.PositiveIntegerField(_("no_staff"))
+    no_contractor = models.PositiveIntegerField(_("no_contractor"))
+
+    class Meta:
+        verbose_name = _("HSE STATISTICAL DATA")
+        verbose_name_plural = _("HSE STATISTICAL DATA")
+
+class AppHSEPerformanceReportCatering(models.Model):
+    master = models.ForeignKey(AppHSEPerformanceReport, on_delete=models.PROTECT)    
+    meal_served_type = models.CharField(_("meal_served"), max_length=100)
+    food_sources = models.CharField(_("food_sources"), max_length=100)
+    food_transportation = models.CharField(_("food_transportation"), max_length=100)
+    food_storage = models.TextField(_("food_storage"))
+    kitchen_cleaning = models.TextField(_("kitchen_cleaning"))
+
+    class Meta:
+        verbose_name = _("HSE Catering")
+        verbose_name_plural = _("HSE Catering")
+
 class AppWhomConcern(WorkflowModel):
     company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
 
