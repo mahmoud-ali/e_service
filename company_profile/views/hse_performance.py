@@ -12,7 +12,7 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.sites.models import Site
 
-from ..models import AppHSEPerformanceReport, AppHSEPerformanceReportActivities, AppHSEPerformanceReportBillsOfQuantities, AppHSEPerformanceReportCatering, AppHSEPerformanceReportChemicalUsed, AppHSEPerformanceReportDiseasesForWorkers, AppHSEPerformanceReportExplosivesUsed, AppHSEPerformanceReportFireFighting, AppHSEPerformanceReportManPower, AppHSEPerformanceReportOilUsed, AppHSEPerformanceReportProactiveIndicators, AppHSEPerformanceReportStatisticalData, AppHSEPerformanceReportTherapeuticUnit, AppHSEPerformanceReportWasteDisposal, AppHSEPerformanceReportWaterUsed, AppHSEPerformanceReportWorkEnvironment
+from ..models import AppHSEPerformanceReport, AppHSEPerformanceReportActivities, AppHSEPerformanceReportBillsOfQuantities, AppHSEPerformanceReportCatering, AppHSEPerformanceReportChemicalUsed, AppHSEPerformanceReportDiseasesForWorkers, AppHSEPerformanceReportExplosivesUsed, AppHSEPerformanceReportFireFighting, AppHSEPerformanceReportManPower, AppHSEPerformanceReportOilUsed, AppHSEPerformanceReportProactiveIndicators, AppHSEPerformanceReportStatisticalData, AppHSEPerformanceReportTherapeuticUnit, AppHSEPerformanceReportWasteDisposal, AppHSEPerformanceReportWaterUsed, AppHSEPerformanceReportWorkEnvironment, TblCompany
 from ..forms import AppHSEPerformanceReportForm
 
 from ..workflow import STATE_CHOICES,SUBMITTED,ACCEPTED,APPROVED,REJECTED,send_transition_email,get_sumitted_responsible
@@ -34,8 +34,6 @@ model_details_lst = [
     AppHSEPerformanceReportDiseasesForWorkers,
     AppHSEPerformanceReportStatisticalData,
     AppHSEPerformanceReportCatering,
-    AppHSEPerformanceReportExplosivesUsed,
-    AppHSEPerformanceReportBillsOfQuantities,
 ]
 
 class AppHSEPerformanceReportListView(ApplicationListView):
@@ -66,6 +64,14 @@ class AppHSEPerformanceReportCreateView(LoginRequiredMixin,View):
     template_name = "company_profile/views/hse_list_add_master_details.html"
 
     def dispatch(self, *args, **kwargs):         
+        global model_details_lst
+
+        if self.request.user.pro_company.company.company_type in [TblCompany.COMPANY_TYPE_ENTAJ, TblCompany.COMPANY_TYPE_SAGEER]:
+            model_details_lst += [
+                AppHSEPerformanceReportExplosivesUsed,
+                AppHSEPerformanceReportBillsOfQuantities,
+            ]
+
         self.detail_formset = [inlineformset_factory(self.model, m, exclude=[],extra=0,can_delete=False,min_num=1, validate_min=True) for m in self.model_details]
             
         self.success_url = reverse_lazy(self.menu_name)    
