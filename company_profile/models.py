@@ -9,6 +9,34 @@ from django_fsm import FSMField, transition
 
 from .workflow import *
 
+MONTH_JAN = 1
+MONTH_FEB = 2
+MONTH_MAR = 3
+MONTH_APR = 4
+MONTH_MAY = 5
+MONTH_JUN = 6
+MONTH_JLY = 7
+MONTH_AUG = 8
+MONTH_SEP = 9
+MONTH_OCT = 10
+MONTH_NOV = 11
+MONTH_DEC = 12
+
+MONTH_CHOICES = {
+    MONTH_JAN: _('MONTH_JAN'),
+    MONTH_FEB: _('MONTH_FEB'),
+    MONTH_MAR: _('MONTH_MAR'),
+    MONTH_APR: _('MONTH_APR'),
+    MONTH_MAY: _('MONTH_MAY'),
+    MONTH_JUN: _('MONTH_JUN'),
+    MONTH_JLY: _('MONTH_JLY'),
+    MONTH_AUG: _('MONTH_AUG'),
+    MONTH_SEP: _('MONTH_SEP'),
+    MONTH_OCT: _('MONTH_OCT'),
+    MONTH_NOV: _('MONTH_NOV'),
+    MONTH_DEC: _('MONTH_DEC'),
+}
+
 class LoggingModel(models.Model):
     """
     An abstract base class model that provides self-
@@ -1123,6 +1151,8 @@ class AppHSEAccidentReport(WorkflowModel):
 
 class AppHSEPerformanceReport(WorkflowModel):
     company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
+    year = models.PositiveIntegerField(_("year"), validators=[MinValueValidator(limit_value=2015),MaxValueValidator(limit_value=2100)])
+    month = models.PositiveIntegerField(verbose_name=_("month"), choices=MONTH_CHOICES)
 
     # attachement_file = models.FileField(_("attachement_file"),upload_to=company_applications_path)
 

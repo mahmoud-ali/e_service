@@ -461,7 +461,7 @@ class AppHSEPerformanceReportTable(AppTable):
     class Meta:
         model = AppHSEPerformanceReport
         template_name = "django_tables2/bootstrap.html"
-        fields = ("id","created_at")
+        fields = ("id","month","year",)
         empty_text = _("No records.")
 
     def render_id(self,value):

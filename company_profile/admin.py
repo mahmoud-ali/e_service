@@ -869,8 +869,8 @@ class AppHSEPerformanceReportAdmin(WorkflowAdminMixin,admin.ModelAdmin):
         AppHSEPerformanceReportBillsOfQuantitiesDetailInline,
     ]
 
-    list_display = ["company", "created_at", "created_by","updated_at", "updated_by"]        
-    list_filter = ["company"]
+    list_display = ["company", "year", "month",]        
+    list_filter = ["company", "year", "month",]
     view_on_site = False
 
 admin.site.register(AppHSEPerformanceReport, AppHSEPerformanceReportAdmin)
