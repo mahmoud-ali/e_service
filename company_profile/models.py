@@ -1261,7 +1261,7 @@ class AppHSEPerformanceReportWorkEnvironment(models.Model):
     factory = models.PositiveIntegerField(_("factory"),choices=RANKING_CHOICES,default=RANKING_TYPE4)
     stores = models.PositiveIntegerField(_("Stores"),choices=RANKING_CHOICES,default=RANKING_TYPE4)
     lab = models.PositiveIntegerField(_("lab"),choices=RANKING_CHOICES,default=RANKING_TYPE4)
-    mines = models.PositiveIntegerField(_("mines"),choices=RANKING_CHOICES,default=RANKING_TYPE4)
+    mines = models.PositiveIntegerField(_("mines"),choices=RANKING_CHOICES,null=True,blank=True)
 
     class Meta:
         verbose_name = _("HSE work environment")
@@ -1282,9 +1282,10 @@ class AppHSEPerformanceReportProactiveIndicators(models.Model):
 
     master = models.ForeignKey(AppHSEPerformanceReport, on_delete=models.PROTECT)    
     factor = models.PositiveIntegerField(_("hse_proactive_indicators"), choices=PROACTIVE_INDICATORS_CHOICES)
-    no_gov = models.PositiveIntegerField(_("no_gov"))
+    # no_gov = models.PositiveIntegerField(_("no_gov"))
     no_staff = models.PositiveIntegerField(_("no_staff"))
     no_contractor = models.PositiveIntegerField(_("no_contractor"))
+    action = models.CharField(_("action"), max_length=100)
     description = models.CharField(_("description"), max_length=100, blank=True, null=True)
 
     class Meta:
@@ -1333,7 +1334,6 @@ class AppHSEPerformanceReportChemicalUsed(models.Model):
     CHEMICAL_USED3 = 3
     CHEMICAL_USED4 = 4
     CHEMICAL_USED5 = 5
-    CHEMICAL_USED6 = 6
 
     CHEMICAL_USED_CHOICES = {
         CHEMICAL_USED1: _("CHEMICAL_USED1"),
@@ -1341,7 +1341,6 @@ class AppHSEPerformanceReportChemicalUsed(models.Model):
         CHEMICAL_USED3: _("CHEMICAL_USED3"),
         CHEMICAL_USED4: _("CHEMICAL_USED4"),
         CHEMICAL_USED5: _("CHEMICAL_USED5"),
-        CHEMICAL_USED6: _("CHEMICAL_USED6"),
     }
 
     master = models.ForeignKey(AppHSEPerformanceReport, on_delete=models.PROTECT)    
@@ -1354,26 +1353,81 @@ class AppHSEPerformanceReportChemicalUsed(models.Model):
         verbose_name = _("HSE CHEMICAL USED")
         verbose_name_plural = _("HSE CHEMICAL USED")
 
-# class AppHSEPerformanceReportCyanideTable(models.Model):
-#     CYANIDE_TABLE1 = 1
-#     CYANIDE_TABLE2 = 2
-#     CYANIDE_TABLE3 = 3
-#     CYANIDE_TABLE4 = 4
+class AppHSEPerformanceReportOtherChemicalUsed(models.Model):
+    master = models.ForeignKey(AppHSEPerformanceReport, on_delete=models.PROTECT)    
+    name = models.CharField(_("hse_chemical_used"), max_length=100,default=_("not exists"))
+    qty_used = models.PositiveIntegerField(_("qty_used"),null=True, blank=True)
+    qty_in_store = models.PositiveIntegerField(_("qty_in_store"),null=True, blank=True)
+    expire_dt = models.DateField(_("expire_dt"), help_text="Ex: 2025-01-31",null=True, blank=True)
 
-#     CYANIDE_TABLE_CHOICES = {
-#         CYANIDE_TABLE1: _("CYANIDE_TABLE1"),
-#         CYANIDE_TABLE2: _("CYANIDE_TABLE2"),
-#         CYANIDE_TABLE3: _("CYANIDE_TABLE3"),
-#         CYANIDE_TABLE4: _("CYANIDE_TABLE4"),
-#     }
+    class Meta:
+        verbose_name = _("HSE OTHER CHEMICAL USED")
+        verbose_name_plural = _("HSE OTHER CHEMICAL USED")
 
-#     master = models.ForeignKey(AppHSEPerformanceReport, on_delete=models.PROTECT)    
-#     factor = models.PositiveIntegerField(_("hse_cyanide_table"), choices=CYANIDE_TABLE_CHOICES)
-#     choices = models.PositiveIntegerField(_("cyanide_choices"))
+class AppHSEPerformanceReportCyanideTable(models.Model):
+    STORAGE_METHOD1 = 1
+    STORAGE_METHOD2 = 2
 
-#     class Meta:
-#         verbose_name = _("HSE CYANIDE TABLE")
-#         verbose_name_plural = _("HSE CYANIDE TABLE")
+    STORAGE_METHOD_CHOICES = {
+        STORAGE_METHOD1: _("STORAGE_METHOD1"),
+        STORAGE_METHOD2: _("STORAGE_METHOD2"),
+    }
+
+    HANDLING_METHOD1 = 1
+    HANDLING_METHOD2 = 2
+    HANDLING_METHOD3 = 3
+
+    HANDLING_METHOD_CHOICES = {
+        HANDLING_METHOD1: _("HANDLING_METHOD1"),
+        HANDLING_METHOD2: _("HANDLING_METHOD2"),
+        HANDLING_METHOD3: _("HANDLING_METHOD3"),
+    }
+
+    YES = 1
+    NO = 2
+
+    YES_NO_CHOICES = {
+        YES: _("YES"),
+        NO: _("NO"),
+    }
+
+    master = models.ForeignKey(AppHSEPerformanceReport, on_delete=models.PROTECT)    
+    storage_method = models.PositiveIntegerField(_("storage_method"), choices=STORAGE_METHOD_CHOICES)
+    handling_method = models.PositiveIntegerField(_("handling_method"), choices=HANDLING_METHOD_CHOICES)
+    hcn_detector = models.PositiveIntegerField(_("hcn_detector"), choices=YES_NO_CHOICES)
+    
+    class Meta:
+        verbose_name = _("HSE CYANIDE TABLE")
+        verbose_name_plural = _("HSE CYANIDE TABLE")
+
+class AppHSEPerformanceReportCyanideCNStorageSpecification(models.Model):
+    SPECIFICATION1 = 1
+    SPECIFICATION2 = 2
+    SPECIFICATION3 = 3
+    SPECIFICATION4 = 4
+
+    SPECIFICATION_CHOICES = {
+        SPECIFICATION1: _("SPECIFICATION1"),
+        SPECIFICATION2: _("SPECIFICATION2"),
+        SPECIFICATION3: _("SPECIFICATION3"),
+        SPECIFICATION4: _("SPECIFICATION4"),
+    }
+
+    YES = 1
+    NO = 2
+
+    YES_NO_CHOICES = {
+        YES: _("YES"),
+        NO: _("NO"),
+    }
+
+    master = models.ForeignKey(AppHSEPerformanceReport, on_delete=models.PROTECT)    
+    factor = models.PositiveIntegerField(_("Specification"), choices=SPECIFICATION_CHOICES)
+    choice = models.PositiveIntegerField(_("is_exists"), choices=YES_NO_CHOICES)
+    
+    class Meta:
+        verbose_name = _("HSE CYANIDE CN Storage Specification")
+        verbose_name_plural = _("HSE CYANIDE CN Storage Specification")
 
 class AppHSEPerformanceReportWaterUsed(models.Model):
     WATER_USED1 = 1
@@ -1402,13 +1456,11 @@ class AppHSEPerformanceReportOilUsed(models.Model):
     OIL_USED1 = 1
     OIL_USED2 = 2
     OIL_USED3 = 3
-    OIL_USED4 = 4
 
     OIL_USED_CHOICES = {
         OIL_USED1: _("OIL_USED1"),
         OIL_USED2: _("OIL_USED2"),
         OIL_USED3: _("OIL_USED3"),
-        OIL_USED4: _("OIL_USED4"),
     }
 
     master = models.ForeignKey(AppHSEPerformanceReport, on_delete=models.PROTECT)    
@@ -1436,6 +1488,7 @@ class AppHSEPerformanceReportWasteDisposal(models.Model):
     WASTE_DISPOSAL12 = 12
     WASTE_DISPOSAL13 = 13
     WASTE_DISPOSAL14 = 14
+    WASTE_DISPOSAL15 = 15
 
     WASTE_DISPOSAL_CHOICES = {
         WASTE_DISPOSAL1: _("WASTE_DISPOSAL1"),
@@ -1452,6 +1505,7 @@ class AppHSEPerformanceReportWasteDisposal(models.Model):
         WASTE_DISPOSAL12: _("WASTE_DISPOSAL12"),
         WASTE_DISPOSAL13: _("WASTE_DISPOSAL13"),
         WASTE_DISPOSAL14: _("WASTE_DISPOSAL14"),
+        WASTE_DISPOSAL15: _("WASTE_DISPOSAL15"),
     }
 
     master = models.ForeignKey(AppHSEPerformanceReport, on_delete=models.PROTECT)    
@@ -1472,6 +1526,16 @@ class AppHSEPerformanceReportTherapeuticUnit(models.Model):
         QUALIFICATION2: _("QUALIFICATION2"),
     }
 
+    AMBULANCE_USED1 = 1
+    AMBULANCE_USED2 = 2
+    AMBULANCE_USED3 = 3
+
+    AMBULANCE_CHOICES = {
+        AMBULANCE_USED1: _("AMBULANCE_USED1"),
+        AMBULANCE_USED2: _("AMBULANCE_USED2"),
+        AMBULANCE_USED3: _("AMBULANCE_USED3"),
+    }
+
     YES = 1
     NO = 2
 
@@ -1485,7 +1549,7 @@ class AppHSEPerformanceReportTherapeuticUnit(models.Model):
     unit_phone = models.CharField(_("unit_phone"), max_length=100)
     unit_qualification = models.PositiveIntegerField(_("unit_qualification"), choices=QUALIFICATION_CHOICES)
     aid_qty_used = models.PositiveIntegerField(_("aid_qty_used"))
-    ambulance_used = models.PositiveIntegerField(_("ambulance_used"), choices=YES_NO_CHOICES)
+    ambulance_used = models.PositiveIntegerField(_("ambulance_used"), choices=AMBULANCE_CHOICES)
     periodic_medical_examination  = models.PositiveIntegerField(_("periodic_medical_examination"), choices=YES_NO_CHOICES)
     primary_medical_examination = models.PositiveIntegerField(_("primary_medical_examination"), choices=YES_NO_CHOICES)
 
@@ -1539,6 +1603,15 @@ class AppHSEPerformanceReportCatering(models.Model):
         verbose_name = _("HSE Catering")
         verbose_name_plural = _("HSE Catering")
 
+class AppHSEPerformanceReportPhotoAlbum(models.Model):
+    master = models.ForeignKey(AppHSEPerformanceReport, on_delete=models.PROTECT)    
+    photo = models.ImageField(_('photo'),upload_to=company_applications_path)
+    description = models.TextField(_("description"))
+
+    class Meta:
+        verbose_name = _("HSE PHOTO ALBUM")
+        verbose_name_plural = _("HSE PHOTO ALBUM")
+
 class AppHSEPerformanceReportExplosivesUsed(models.Model):
     EXPLOSIVES_USED1 = 1
     EXPLOSIVES_USED2 = 2
@@ -1572,6 +1645,37 @@ class AppHSEPerformanceReportExplosivesUsed(models.Model):
         verbose_name = _("HSE EXPLOSIVES USED")
         verbose_name_plural = _("HSE EXPLOSIVES USED")
 
+class AppHSEPerformanceReportExplosivesUsedSpecification(models.Model):
+    SPECIFICATION1 = 1
+    SPECIFICATION2 = 2
+    SPECIFICATION3 = 3
+    SPECIFICATION4 = 4
+    SPECIFICATION5 = 5
+
+    SPECIFICATION_CHOICES = {
+        SPECIFICATION1: _("EXP_SPECIFICATION1"),
+        SPECIFICATION2: _("EXP_SPECIFICATION2"),
+        SPECIFICATION3: _("EXP_SPECIFICATION3"),
+        SPECIFICATION4: _("EXP_SPECIFICATION4"),
+        SPECIFICATION5: _("EXP_SPECIFICATION5"),
+    }
+
+    YES = 1
+    NO = 2
+
+    YES_NO_CHOICES = {
+        YES: _("YES"),
+        NO: _("NO"),
+    }
+
+    master = models.ForeignKey(AppHSEPerformanceReport, on_delete=models.PROTECT)    
+    factor = models.PositiveIntegerField(_("Specification"), choices=SPECIFICATION_CHOICES)
+    choice = models.PositiveIntegerField(_("is_exists"), choices=YES_NO_CHOICES)
+    
+    class Meta:
+        verbose_name = _("HSE Explosive Storage Specification")
+        verbose_name_plural = _("HSE Explosive Storage Specification")
+
 class AppHSEPerformanceReportBillsOfQuantities(models.Model):
     BILLS_OF_QUANTITIES1 = 1
     BILLS_OF_QUANTITIES2 = 2
@@ -1596,12 +1700,71 @@ class AppHSEPerformanceReportBillsOfQuantities(models.Model):
     }
 
     master = models.ForeignKey(AppHSEPerformanceReport, on_delete=models.PROTECT)    
-    factor = models.PositiveIntegerField(_("hse_explosives_used"), choices=BILLS_OF_QUANTITIES_CHOICES)
+    factor = models.PositiveIntegerField(_("hse_bills_of_quantities"), choices=BILLS_OF_QUANTITIES_CHOICES)
     qty_used = models.PositiveIntegerField(_("qty_used"))
 
     class Meta:
         verbose_name = _("HSE BILLS OF QUANTITIES")
         verbose_name_plural = _("HSE BILLS OF QUANTITIES")
+
+class AppHSEPerformanceReportCadastralOperations(models.Model):
+    SPECIFICATION1 = 1
+    SPECIFICATION2 = 2
+    SPECIFICATION3 = 3
+    SPECIFICATION4 = 4
+    SPECIFICATION5 = 5
+    SPECIFICATION6 = 6
+    SPECIFICATION7 = 7
+    SPECIFICATION8 = 8
+    SPECIFICATION9 = 9
+
+    SPECIFICATION_CHOICES = {
+        SPECIFICATION1: _("CADASTRAL_SPECIFICATION1"),
+        SPECIFICATION2: _("CADASTRAL_SPECIFICATION2"),
+        SPECIFICATION3: _("CADASTRAL_SPECIFICATION3"),
+        SPECIFICATION4: _("CADASTRAL_SPECIFICATION4"),
+        SPECIFICATION5: _("CADASTRAL_SPECIFICATION5"),
+        SPECIFICATION6: _("CADASTRAL_SPECIFICATION6"),
+        SPECIFICATION7: _("CADASTRAL_SPECIFICATION7"),
+        SPECIFICATION8: _("CADASTRAL_SPECIFICATION8"),
+        SPECIFICATION9: _("CADASTRAL_SPECIFICATION9"),
+    }
+
+    master = models.ForeignKey(AppHSEPerformanceReport, on_delete=models.PROTECT)    
+    factor = models.PositiveIntegerField(_("Specification"), choices=SPECIFICATION_CHOICES)
+    value = models.CharField(_("value"), max_length=100)
+    
+    class Meta:
+        verbose_name = _("HSE cadastral operations")
+        verbose_name_plural = _("HSE cadastral operations")
+
+class AppHSEPerformanceReportCadastralOperationsTwo(models.Model):
+    SPECIFICATION1 = 1
+    SPECIFICATION2 = 2
+    SPECIFICATION3 = 3
+    SPECIFICATION4 = 4
+    SPECIFICATION5 = 5
+    SPECIFICATION6 = 6
+    SPECIFICATION7 = 7
+
+    SPECIFICATION_CHOICES = {
+        SPECIFICATION1: _("CADASTRAL2_SPECIFICATION1"),
+        SPECIFICATION2: _("CADASTRAL2_SPECIFICATION2"),
+        SPECIFICATION3: _("CADASTRAL2_SPECIFICATION3"),
+        SPECIFICATION4: _("CADASTRAL2_SPECIFICATION4"),
+        SPECIFICATION5: _("CADASTRAL2_SPECIFICATION5"),
+        SPECIFICATION6: _("CADASTRAL2_SPECIFICATION6"),
+        SPECIFICATION7: _("CADASTRAL2_SPECIFICATION7"),
+    }
+
+    master = models.ForeignKey(AppHSEPerformanceReport, on_delete=models.PROTECT)    
+    factor = models.PositiveIntegerField(_("Specification"), choices=SPECIFICATION_CHOICES)
+    observation = models.CharField(_("observation"), max_length=100)
+    result = models.CharField(_("result"), max_length=100)
+    
+    class Meta:
+        verbose_name = _("HSE cadastral operations2")
+        verbose_name_plural = _("HSE cadastral operations2")
 
 class AppWhomConcern(WorkflowModel):
     company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    

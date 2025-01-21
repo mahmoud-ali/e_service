@@ -15,7 +15,7 @@ from django.contrib.sites.models import Site
 from django.contrib.messages import constants as message_constants
 from import_export.admin import ExportActionMixin
 from django.db.utils import IntegrityError
-from .models import AppCyanideCertificate, AppExplosivePermission, AppFuelPermission, AppFuelPermissionDetail, AppGoldProduction, AppGoldProductionDetail, AppHSEAccidentReport, AppHSEPerformanceReport, AppHSEPerformanceReportActivities, AppHSEPerformanceReportBillsOfQuantities, AppHSEPerformanceReportCatering, AppHSEPerformanceReportChemicalUsed, AppHSEPerformanceReportDiseasesForWorkers, AppHSEPerformanceReportExplosivesUsed, AppHSEPerformanceReportFireFighting, AppHSEPerformanceReportManPower, AppHSEPerformanceReportOilUsed, AppHSEPerformanceReportProactiveIndicators, AppHSEPerformanceReportStatisticalData, AppHSEPerformanceReportTherapeuticUnit, AppHSEPerformanceReportWasteDisposal, AppHSEPerformanceReportWaterUsed, AppHSEPerformanceReportWorkEnvironment, AppImportPermission, AppImportPermissionDetail, AppLocalPurchase, AppRenewalContract, AppRestartActivity, AppTemporaryExemption, AppWhomConcern, LkpAccidentType, LkpNationality,LkpState,LkpLocality,LkpMineral,LkpCompanyProductionStatus,LkpForeignerProcedureType,TblCompanyProduction, \
+from .models import AppCyanideCertificate, AppExplosivePermission, AppFuelPermission, AppFuelPermissionDetail, AppGoldProduction, AppGoldProductionDetail, AppHSEAccidentReport, AppHSEPerformanceReport, AppHSEPerformanceReportActivities, AppHSEPerformanceReportBillsOfQuantities, AppHSEPerformanceReportCadastralOperations, AppHSEPerformanceReportCadastralOperationsTwo, AppHSEPerformanceReportCatering, AppHSEPerformanceReportChemicalUsed, AppHSEPerformanceReportCyanideCNStorageSpecification, AppHSEPerformanceReportCyanideTable, AppHSEPerformanceReportDiseasesForWorkers, AppHSEPerformanceReportExplosivesUsed, AppHSEPerformanceReportExplosivesUsedSpecification, AppHSEPerformanceReportFireFighting, AppHSEPerformanceReportManPower, AppHSEPerformanceReportOilUsed, AppHSEPerformanceReportOtherChemicalUsed, AppHSEPerformanceReportPhotoAlbum, AppHSEPerformanceReportProactiveIndicators, AppHSEPerformanceReportStatisticalData, AppHSEPerformanceReportTherapeuticUnit, AppHSEPerformanceReportWasteDisposal, AppHSEPerformanceReportWaterUsed, AppHSEPerformanceReportWorkEnvironment, AppImportPermission, AppImportPermissionDetail, AppLocalPurchase, AppRenewalContract, AppRestartActivity, AppTemporaryExemption, AppWhomConcern, LkpAccidentType, LkpNationality,LkpState,LkpLocality,LkpMineral,LkpCompanyProductionStatus,LkpForeignerProcedureType,TblCompanyProduction, \
                                       LkpCompanyProductionFactoryType,TblCompanyProductionFactory,LkpCompanyProductionLicenseStatus, \
                                       TblCompanyProductionLicense,AppForignerMovement,TblCompanyProductionUserRole, \
                                       AppBorrowMaterial,AppBorrowMaterialDetail,AppWorkPlan,AppTechnicalFinancialReport, \
@@ -795,7 +795,7 @@ class AppHSEAccidentReportAdmin(WorkflowAdminMixin,admin.ModelAdmin):
 
 admin.site.register(AppHSEAccidentReport, AppHSEAccidentReportAdmin)
 
-class AppHSEInline(admin.TabularInline):
+class AppHSEInline():
     exclude = []
     extra = 0    
 
@@ -805,59 +805,86 @@ class AppHSEInline(admin.TabularInline):
     def has_delete_permission(self, request, obj=None):
         return False
 
-class AppHSEPerformanceReportManPowerDetailInline(AppHSEInline):
+class AppHSEPerformanceReportManPowerDetailInline(AppHSEInline,admin.TabularInline):
     model = AppHSEPerformanceReportManPower
 
-class AppHSEPerformanceReportFireFightingDetailInline(AppHSEInline):
+class AppHSEPerformanceReportFireFightingDetailInline(AppHSEInline,admin.TabularInline):
     model = AppHSEPerformanceReportFireFighting
 
-class AppHSEPerformanceReportWorkEnvironmentDetailInline(AppHSEInline):
+class AppHSEPerformanceReportWorkEnvironmentDetailInline(AppHSEInline,admin.TabularInline):
     model = AppHSEPerformanceReportWorkEnvironment
 
-class AppHSEPerformanceReportProactiveIndicatorsDetailInline(AppHSEInline):
+class AppHSEPerformanceReportProactiveIndicatorsDetailInline(AppHSEInline,admin.TabularInline):
     model = AppHSEPerformanceReportProactiveIndicators
 
-class AppHSEPerformanceReportActivitiesDetailInline(AppHSEInline):
+class AppHSEPerformanceReportActivitiesDetailInline(AppHSEInline,admin.TabularInline):
     model = AppHSEPerformanceReportActivities
 
-class AppHSEPerformanceReportChemicalUsedDetailInline(AppHSEInline):
+class AppHSEPerformanceReportChemicalUsedDetailInline(AppHSEInline,admin.TabularInline):
     model = AppHSEPerformanceReportChemicalUsed
 
-class AppHSEPerformanceReportWaterUsedDetailInline(AppHSEInline):
+class AppHSEPerformanceReportOtherChemicalUsedDetailInline(AppHSEInline,admin.TabularInline):
+    model = AppHSEPerformanceReportOtherChemicalUsed
+
+class AppHSEPerformanceReportCyanideTableDetailInline(AppHSEInline,admin.StackedInline):
+    model = AppHSEPerformanceReportCyanideTable
+
+class AppHSEPerformanceReportCyanideCNStorageSpecificationDetailInline(AppHSEInline,admin.StackedInline):
+    model = AppHSEPerformanceReportCyanideCNStorageSpecification
+
+class AppHSEPerformanceReportCyanideCNStorageSpecificationDetailInline(AppHSEInline,admin.TabularInline):
+    model = AppHSEPerformanceReportCyanideCNStorageSpecification
+
+class AppHSEPerformanceReportWaterUsedDetailInline(AppHSEInline,admin.TabularInline):
     model = AppHSEPerformanceReportWaterUsed
 
-class AppHSEPerformanceReportOilUsedDetailInline(AppHSEInline):
+class AppHSEPerformanceReportOilUsedDetailInline(AppHSEInline,admin.TabularInline):
     model = AppHSEPerformanceReportOilUsed
 
-class AppHSEPerformanceReportWasteDisposalDetailInline(AppHSEInline):
+class AppHSEPerformanceReportWasteDisposalDetailInline(AppHSEInline,admin.TabularInline):
     model = AppHSEPerformanceReportWasteDisposal
 
-class AppHSEPerformanceReportTherapeuticUnitDetailInline(AppHSEInline):
+class AppHSEPerformanceReportTherapeuticUnitDetailInline(AppHSEInline,admin.StackedInline):
     model = AppHSEPerformanceReportTherapeuticUnit
 
-class AppHSEPerformanceReportDiseasesForWorkersDetailInline(AppHSEInline):
+class AppHSEPerformanceReportDiseasesForWorkersDetailInline(AppHSEInline,admin.TabularInline):
     model = AppHSEPerformanceReportDiseasesForWorkers
 
-class AppHSEPerformanceReportStatisticalDataDetailInline(AppHSEInline):
+class AppHSEPerformanceReportStatisticalDataDetailInline(AppHSEInline,admin.TabularInline):
     model = AppHSEPerformanceReportStatisticalData
 
-class AppHSEPerformanceReportCateringDetailInline(AppHSEInline):
+class AppHSEPerformanceReportCateringDetailInline(AppHSEInline,admin.TabularInline):
     model = AppHSEPerformanceReportCatering
 
-class AppHSEPerformanceReportExplosivesUsedDetailInline(AppHSEInline):
+class AppHSEPerformanceReportExplosivesUsedDetailInline(AppHSEInline,admin.TabularInline):
     model = AppHSEPerformanceReportExplosivesUsed
 
-class AppHSEPerformanceReportBillsOfQuantitiesDetailInline(AppHSEInline):
+class AppHSEPerformanceReportExplosivesUsedSpecificationDetailInline(AppHSEInline,admin.TabularInline):
+    model = AppHSEPerformanceReportExplosivesUsedSpecification
+
+class AppHSEPerformanceReportBillsOfQuantitiesDetailInline(AppHSEInline,admin.TabularInline):
     model = AppHSEPerformanceReportBillsOfQuantities
+
+class AppHSEPerformanceReportCadastralOperationsDetailInline(AppHSEInline,admin.TabularInline):
+    model = AppHSEPerformanceReportCadastralOperations
+
+class AppHSEPerformanceReportCadastralOperations2DetailInline(AppHSEInline,admin.TabularInline):
+    model = AppHSEPerformanceReportCadastralOperationsTwo
+
+class AppHSEPerformanceReportPhotoAlbumDetailInline(AppHSEInline,admin.TabularInline):
+    model = AppHSEPerformanceReportPhotoAlbum
 
 class AppHSEPerformanceReportAdmin(WorkflowAdminMixin,admin.ModelAdmin):
     form = AppHSEPerformanceReportAdminForm
     inlines = [
+        AppHSEPerformanceReportPhotoAlbumDetailInline,
         AppHSEPerformanceReportManPowerDetailInline, 
         AppHSEPerformanceReportFireFightingDetailInline,
         AppHSEPerformanceReportWorkEnvironmentDetailInline,
         AppHSEPerformanceReportProactiveIndicatorsDetailInline,
         AppHSEPerformanceReportChemicalUsedDetailInline,
+        AppHSEPerformanceReportCyanideTableDetailInline,
+        AppHSEPerformanceReportCyanideCNStorageSpecificationDetailInline,
         AppHSEPerformanceReportWaterUsedDetailInline,
         AppHSEPerformanceReportOilUsedDetailInline,
         AppHSEPerformanceReportWasteDisposalDetailInline,
@@ -866,7 +893,10 @@ class AppHSEPerformanceReportAdmin(WorkflowAdminMixin,admin.ModelAdmin):
         AppHSEPerformanceReportStatisticalDataDetailInline,
         AppHSEPerformanceReportCateringDetailInline,
         AppHSEPerformanceReportExplosivesUsedDetailInline,
+        AppHSEPerformanceReportExplosivesUsedSpecificationDetailInline,
         AppHSEPerformanceReportBillsOfQuantitiesDetailInline,
+        AppHSEPerformanceReportCadastralOperationsDetailInline,
+        AppHSEPerformanceReportCadastralOperations2DetailInline,
     ]
 
     list_display = ["company", "year", "month",]        

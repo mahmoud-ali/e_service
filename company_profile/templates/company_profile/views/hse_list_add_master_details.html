@@ -34,7 +34,7 @@
         </tr>
     {% endfor %}        	
     </table>
-    <button id="add_row_btn{{forloop.counter0}}" style="float:{% if request.LANGUAGE_CODE == 'ar' %} left {% else %} right {% endif %}" type="button" class="btn btn-default">
+    <button id="add_row_btn{{ formset.prefix }}" style="float:{% if request.LANGUAGE_CODE == 'ar' %} left {% else %} right {% endif %}" type="button" class="btn btn-default">
         <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
         {% translate "add_more" %}
     </button>
@@ -88,9 +88,12 @@ $(document).ready(function(){
 	$('tr').attr('class','form-group');
 	$('td :input').attr('class','form-control');
 
+    $("#add_row_btnapphseperformancereportcyanidetable_set").hide();
+    $("#add_row_btnapphseperformancereporttherapeuticunit_set").hide();
+
 {% for formset in detail_formset %}
     if ($('select#id_{{formset.prefix}}-0-factor option').length == 0){
-        $("#add_row_btn{{forloop.counter0}}").bind('click',function(e){
+        $("#add_row_btn{{ formset.prefix }}").bind('click',function(e){
             var formset_name = '{{ formset.prefix }}';
             var table_id = 'detail_table{{ formset.prefix }}';
 
@@ -99,7 +102,7 @@ $(document).ready(function(){
         });
     }else{
         ( () => {
-            $("#add_row_btn{{forloop.counter0}}").hide();
+            $("#add_row_btn{{ formset.prefix }}").hide();
             for(var index=1;(index < ($('select#id_{{formset.prefix}}-0-factor option').length));index++) {
                 var formset_name = '{{ formset.prefix }}';
                 var table_id = 'detail_table{{ formset.prefix }}';

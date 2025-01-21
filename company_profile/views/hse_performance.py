@@ -12,7 +12,7 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.sites.models import Site
 
-from ..models import AppHSEPerformanceReport, AppHSEPerformanceReportActivities, AppHSEPerformanceReportBillsOfQuantities, AppHSEPerformanceReportCatering, AppHSEPerformanceReportChemicalUsed, AppHSEPerformanceReportDiseasesForWorkers, AppHSEPerformanceReportExplosivesUsed, AppHSEPerformanceReportFireFighting, AppHSEPerformanceReportManPower, AppHSEPerformanceReportOilUsed, AppHSEPerformanceReportProactiveIndicators, AppHSEPerformanceReportStatisticalData, AppHSEPerformanceReportTherapeuticUnit, AppHSEPerformanceReportWasteDisposal, AppHSEPerformanceReportWaterUsed, AppHSEPerformanceReportWorkEnvironment, TblCompany
+from ..models import AppHSEPerformanceReport, AppHSEPerformanceReportActivities, AppHSEPerformanceReportBillsOfQuantities, AppHSEPerformanceReportCadastralOperations, AppHSEPerformanceReportCadastralOperationsTwo, AppHSEPerformanceReportCatering, AppHSEPerformanceReportChemicalUsed, AppHSEPerformanceReportCyanideCNStorageSpecification, AppHSEPerformanceReportCyanideTable, AppHSEPerformanceReportDiseasesForWorkers, AppHSEPerformanceReportExplosivesUsed, AppHSEPerformanceReportExplosivesUsedSpecification, AppHSEPerformanceReportFireFighting, AppHSEPerformanceReportManPower, AppHSEPerformanceReportOilUsed, AppHSEPerformanceReportOtherChemicalUsed, AppHSEPerformanceReportPhotoAlbum, AppHSEPerformanceReportProactiveIndicators, AppHSEPerformanceReportStatisticalData, AppHSEPerformanceReportTherapeuticUnit, AppHSEPerformanceReportWasteDisposal, AppHSEPerformanceReportWaterUsed, AppHSEPerformanceReportWorkEnvironment, TblCompany
 from ..forms import AppHSEPerformanceReportForm
 
 from ..workflow import STATE_CHOICES,SUBMITTED,ACCEPTED,APPROVED,REJECTED,send_transition_email,get_sumitted_responsible
@@ -21,12 +21,16 @@ from ..tables import AppHSEPerformanceReportTable
 from .application import ApplicationListView
 
 model_details_lst = [
+    AppHSEPerformanceReportPhotoAlbum,
     AppHSEPerformanceReportManPower,
     AppHSEPerformanceReportFireFighting,
     AppHSEPerformanceReportWorkEnvironment,
     AppHSEPerformanceReportProactiveIndicators,
     AppHSEPerformanceReportActivities,
     AppHSEPerformanceReportChemicalUsed,
+    AppHSEPerformanceReportOtherChemicalUsed,
+    AppHSEPerformanceReportCyanideTable,
+    AppHSEPerformanceReportCyanideCNStorageSpecification,
     AppHSEPerformanceReportWaterUsed,
     AppHSEPerformanceReportOilUsed,
     AppHSEPerformanceReportWasteDisposal,
@@ -34,6 +38,7 @@ model_details_lst = [
     AppHSEPerformanceReportDiseasesForWorkers,
     AppHSEPerformanceReportStatisticalData,
     AppHSEPerformanceReportCatering,
+
 ]
 
 class AppHSEPerformanceReportListView(ApplicationListView):
@@ -66,7 +71,10 @@ class AppHSEPerformanceReportCreateView(LoginRequiredMixin,View):
     def dispatch(self, *args, **kwargs):   
         explosive = [
                     AppHSEPerformanceReportExplosivesUsed,
+                    AppHSEPerformanceReportExplosivesUsedSpecification,
                     AppHSEPerformanceReportBillsOfQuantities,
+                    AppHSEPerformanceReportCadastralOperations,
+                    AppHSEPerformanceReportCadastralOperationsTwo,
                 ]      
         
         if self.request.user.pro_company.company.company_type in [TblCompany.COMPANY_TYPE_ENTAJ, TblCompany.COMPANY_TYPE_SAGEER,TblCompany.COMPANY_TYPE_MOKHALFAT]:
