@@ -1189,10 +1189,16 @@ class AppHSEPerformanceReportManPower(models.Model):
 class AppHSEPerformanceReportFireFighting(models.Model):
     FIRE_FIGHTING_TYPE1 = 1
     FIRE_FIGHTING_TYPE2 = 2
+    FIRE_FIGHTING_TYPE3 = 3
+    FIRE_FIGHTING_TYPE4 = 4
+    FIRE_FIGHTING_TYPE5 = 5
 
     FIRE_FIGHTING_CHOICES = {
         FIRE_FIGHTING_TYPE1: _("fire_fighting_1"),
         FIRE_FIGHTING_TYPE2: _("fire_fighting_2"),
+        FIRE_FIGHTING_TYPE3: _("fire_fighting_3"),
+        FIRE_FIGHTING_TYPE4: _("fire_fighting_4"),
+        FIRE_FIGHTING_TYPE5: _("fire_fighting_5"),
     }
 
     SITUATION_TYPE1 = 1
@@ -1279,6 +1285,7 @@ class AppHSEPerformanceReportProactiveIndicators(models.Model):
     no_gov = models.PositiveIntegerField(_("no_gov"))
     no_staff = models.PositiveIntegerField(_("no_staff"))
     no_contractor = models.PositiveIntegerField(_("no_contractor"))
+    description = models.CharField(_("description"), max_length=100, blank=True, null=True)
 
     class Meta:
         verbose_name = _("HSE proactive indicators")

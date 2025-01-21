@@ -53,19 +53,12 @@
 
 <script type="text/javascript">
 
-$(document).ready(function(){
-    const today = new Date();
-    const month = today.getMonth()+1;
-    
-    $("#id_year").val(today.getFullYear());
-    $("#id_month").val(month);
+function add_new_row(formset_name,table_id){
+    var row_id = parseInt($("input[name="+formset_name+"-TOTAL_FORMS]").val())
+    {% comment %} console.log('row id',row_id) {% endcomment %}
+    var temp = $("#"+table_id+" tr").last().clone()
 
-    function add_new_row(formset_name,table_id){
-      var row_id = parseInt($("input[name="+formset_name+"-TOTAL_FORMS]").val())
-      {% comment %} console.log('row id',row_id) {% endcomment %}
-      var temp = $("#"+table_id+" tr").last().clone()
-
-      temp.find(":input").each(function(i,e){
+    temp.find(":input").each(function(i,e){
         x = $(e).attr("id");
         x = x.replace(/[0-9]+/,row_id);
         $(e).attr("id",x);
@@ -74,20 +67,28 @@ $(document).ready(function(){
         x = x.replace(/[0-9]+/,row_id);
         $(e).attr("name",x);
 
-      });
+    });
 
-      $("#"+table_id).append('<tr>'+temp.html()+'</tr>');
-      var v = row_id+1
-      $("input[name="+formset_name+"-TOTAL_FORMS]").val(v);
+    $("#"+table_id).append('<tr>'+temp.html()+'</tr>');
+    var v = row_id+1
+    $("input[name="+formset_name+"-TOTAL_FORMS]").val(v);
 
-      return row_id
+    return row_id
     }
+  
+$(document).ready(function(){
+    {% if request.method == "GET" %}
+    const today = new Date();
+    const month = today.getMonth()+1;
+
+    $("#id_year").val(today.getFullYear());
+    $("#id_month").val(month);
+    {% endif %}
 
 	$('tr').attr('class','form-group');
 	$('td :input').attr('class','form-control');
 
 {% for formset in detail_formset %}
-    {% comment %} console.log('#id_{{formset.prefix}}-0-factor',$('select#id_{{formset.prefix}}-0-factor option').length) {% endcomment %}
     if ($('select#id_{{formset.prefix}}-0-factor option').length == 0){
         $("#add_row_btn{{forloop.counter0}}").bind('click',function(e){
             var formset_name = '{{ formset.prefix }}';
@@ -99,7 +100,6 @@ $(document).ready(function(){
     }else{
         ( () => {
             $("#add_row_btn{{forloop.counter0}}").hide();
-            {% comment %} console.log('select#id_{{formset.prefix}}-0-factor',$('select#id_{{formset.prefix}}-0-factor option').length); {% endcomment %}
             for(var index=1;(index < ($('select#id_{{formset.prefix}}-0-factor option').length));index++) {
                 var formset_name = '{{ formset.prefix }}';
                 var table_id = 'detail_table{{ formset.prefix }}';
@@ -108,22 +108,23 @@ $(document).ready(function(){
                 if (index ==1){
                     x = 0;
                 }else{
-                x = add_new_row(formset_name,table_id);
+                {% if request.method == "GET" %}
+                    x = add_new_row(formset_name,table_id);
+                {% else %}
+                    x = index-1;
+                {% endif %}
+
                 }
-                $('select#id_{{formset.prefix}}-'+x+'-factor').val(index.toString());
-                $('select#id_{{formset.prefix}}-'+x+'-factor').attr("style", "pointer-events: none;").attr("tabindex", "-1");
-                {% comment %} console.log( 'select#id_{{formset.prefix}}-'+index+'-factor',index ); {% endcomment %}
+                $('select#id_{{formset.prefix}}-'+x+'-factor')
+                    .val(index.toString())
+                    .attr("style", "pointer-events: none;")
+                    .attr("tabindex", "-1");
 
             }
         })();
     }
 
-
-
 {% endfor %}
-
-    
-
 
 });
 </script>
