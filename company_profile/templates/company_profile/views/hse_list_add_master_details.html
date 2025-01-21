@@ -54,6 +54,12 @@
 <script type="text/javascript">
 
 $(document).ready(function(){
+    const today = new Date();
+    const month = today.getMonth()+1;
+    
+    $("#id_year").val(today.getFullYear());
+    $("#id_month").val(month);
+
     function add_new_row(formset_name,table_id){
       var row_id = parseInt($("input[name="+formset_name+"-TOTAL_FORMS]").val())
       {% comment %} console.log('row id',row_id) {% endcomment %}
