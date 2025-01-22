@@ -35,6 +35,15 @@ class PermissionMixin:
 class FlowMixin:
     actions = ['accept','reject']
 
+    def save_model(self, request, obj, form, change):
+        if obj.pk:
+            obj.updated_by = request.user
+        else:
+            obj.created_by = obj.updated_by = request.user
+
+        obj.employee = EmployeeTelegram.objects.get(email=request.user.email).employee
+        super().save_model(request, obj, form, change)    
+
     def get_queryset(self, request):
         qs = super().get_queryset(request)
         if request.user.is_superuser or request.user.groups.filter(name__in=["hr_manager","hr_manpower"]).exists():
@@ -156,13 +165,6 @@ class EmployeeTelegramFamilyAdmin(PermissionMixin,FlowMixin,admin.ModelAdmin):
         models.FloatField: {"widget": TextInput},
     }    
 
-    def save_model(self, request, obj, form, change):
-        if obj.pk:
-            obj.updated_by = request.user
-        else:
-            obj.created_by = obj.updated_by = request.user
-        super().save_model(request, obj, form, change)    
-
     @admin.action(description=_('Accept'))
     def accept(self, request, queryset):
         for obj in queryset:
@@ -195,13 +197,6 @@ class EmployeeTelegramMoahilAdmin(PermissionMixin,FlowMixin,admin.ModelAdmin):
     # formfield_overrides = {
     #     models.FloatField: {"widget": TextInput},
     # }    
-
-    def save_model(self, request, obj, form, change):
-        if obj.pk:
-            obj.updated_by = request.user
-        else:
-            obj.created_by = obj.updated_by = request.user
-        super().save_model(request, obj, form, change)    
 
     @admin.action(description=_('Accept'))
     def accept(self, request, queryset):
@@ -237,13 +232,6 @@ class EmployeeTelegramBankAccountAdmin(PermissionMixin,FlowMixin,admin.ModelAdmi
     # formfield_overrides = {
     #     models.FloatField: {"widget": TextInput},
     # }    
-
-    def save_model(self, request, obj, form, change):
-        if obj.pk:
-            obj.updated_by = request.user
-        else:
-            obj.created_by = obj.updated_by = request.user
-        super().save_model(request, obj, form, change)    
 
     @admin.action(description=_('Accept'))
     def accept(self, request, queryset):
