@@ -391,7 +391,7 @@ class EmployeeMajlisEl2daraInline(admin.TabularInline):
     extra = 1
 
 class EmployeeBasicAdmin(admin.ModelAdmin):
-    fields = ["code","name", "draja_wazifia","alawa_sanawia","hikal_wazifi", "edara_3ama_tmp","edara_far3ia_tmp", "mosama_wazifi","sex","tarikh_milad","tarikh_ta3in","tarikh_akhir_targia","phone","no3_2lertibat","sanoat_2lkhibra","moahil","gasima","atfal","aadoa","m3ash","status"]        
+    fields = ["code","name", "draja_wazifia","alawa_sanawia","hikal_wazifi", "edara_3ama_tmp","edara_far3ia_tmp", "mosama_wazifi","sex","tarikh_milad","tarikh_ta3in","tarikh_akhir_targia","phone","email","no3_2lertibat","sanoat_2lkhibra","moahil","gasima","atfal","aadoa","m3ash","status"]        
     inlines = [EmployeeFamilyInline,EmployeeMoahilInline,EmployeeBankAccountInline,SalafiatInline,JazaatInline,EmployeeMobashraInline,EmployeeVacationInline,EmployeeM2moriaInline]
     list_display = ["code","name", "draja_wazifia","alawa_sanawia", "edara_3ama","edara_far3ia","gisim", "mosama_wazifi","tarikh_ta3in","tarikh_akhir_targia","sex","moahil","gasima","atfal","aadoa","m3ash","status"]    
     list_display_links = ["code","name"]
