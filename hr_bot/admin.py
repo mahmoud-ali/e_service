@@ -74,7 +74,7 @@ class EmployeeTelegramRegistrationAdmin(PermissionMixin,FlowMixin,admin.ModelAdm
             obj.state = STATE_ACCEPTED
             obj.save()
 
-            EmployeeTelegram.objects.create(
+            EmployeeTelegram.objects.update_or_create(
                 employee=obj.employee,
                 user_id=obj.user_id,
                 phone=obj.phone,
