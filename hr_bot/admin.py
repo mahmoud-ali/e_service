@@ -50,9 +50,9 @@ class FlowMixin:
     
     def get_readonly_fields(self,request, obj=None):
         if not obj:
-            return []
+            return ["employee",]
 
-        return ["employee",]
+        return []
 
     @admin.action(description=_('Accept'))
     def accept(self, request, queryset):
