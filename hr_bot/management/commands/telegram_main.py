@@ -129,11 +129,14 @@ async def add_employee_child(emp,name,attachment_file):
     
     return None
     
+MENU_CHOICE1 =  'Get children data'
+MENU_CHOICE2 =  'Add a child'
+
 def menu():
     keyboard = [
                 [
-                    'Get children data',
-                    'Add a child',
+                    MENU_CHOICE1,
+                    MENU_CHOICE2,
                 ],
             ]
     return ReplyKeyboardMarkup(keyboard,one_time_keyboard=True,resize_keyboard=True)
@@ -143,11 +146,14 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     chat_id = update.effective_chat.id
     if await check_registration(update,context):
         emp = await get_employee_info(user_id)
-        
-        await update.message.reply_text(f'Hello {emp.name}, You can explore your can do the following:', reply_markup=menu())
-        return CHOOSING
+        url = 'https://hr1.mineralsgate.com/app/managers/'
+        await update.message.reply_text(f'مرحباً {emp.name}, يمكنك الدخول لبوابة الموارد البشرية عبر الرابط: {url}', reply_markup=menu())
+        return ConversationHandler.END
+
+        # await update.message.reply_text(f'مرحباً {emp.name}, يمكنك القيام بالعمليات التالية:', reply_markup=menu())
+        # return CHOOSING
     else:
-        await update.message.reply_text(f'You are not registered, please enter your name:') #, reply_markup=reply_markup
+        await update.message.reply_text(f'عفواً انت غير مسجل مسبقاً، ادخل اسمك الرباعي:') #, reply_markup=reply_markup
 
     return GET_NAME
 
@@ -161,7 +167,7 @@ async def get_name(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         'phone': None,
     })
 
-    await update.message.reply_text(f'ok, now enter your code:')
+    await update.message.reply_text(f'حسناً، ادخل الكود الخاص بك :')
     return GET_CODE
 
 async def get_code(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -173,15 +179,15 @@ async def get_code(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
         keyboard = [
             [
-                KeyboardButton("Share your contact", request_contact=True)
+                KeyboardButton("شارك رقم التلفون", request_contact=True)
             ]
         ]
         reply_markup = ReplyKeyboardMarkup(keyboard,one_time_keyboard=True,resize_keyboard=True)
 
-        await update.message.reply_text(f'Now share your contact', reply_markup=reply_markup)
+        await update.message.reply_text(f'الآن شارك رقم التلفون', reply_markup=reply_markup)
         return GET_CONTACT
     else:
-        await update.message.reply_text(f'Invalid code!', reply_markup=ReplyKeyboardRemove())
+        await update.message.reply_text(f'الرقم غير صحيح، يمكنك مراجع ادارة الموارد البشرية للتأكد منه', reply_markup=ReplyKeyboardRemove())
         return ConversationHandler.END
 
 async def get_contact(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -199,73 +205,73 @@ async def get_contact(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
 
         context.user_data.clear()
 
-        await update.message.reply_text(f'Thank you. HR staf will contact with you to confirm your data.', reply_markup=ReplyKeyboardRemove())
+        await update.message.reply_text(f'شكراً جزيلاً، سيتم التأكد من البيانات من قبل ادارة الموارد البشرية', reply_markup=ReplyKeyboardRemove())
 
         return ConversationHandler.END
     else:
         keyboard = [
             [
-                KeyboardButton("Share your contact", request_contact=True)
+                KeyboardButton("شارك رقم التلفون", request_contact=True)
             ]
         ]
         reply_markup = ReplyKeyboardMarkup(keyboard,one_time_keyboard=True,resize_keyboard=True)
 
-        await update.message.reply_text(f'Please share your contact', reply_markup=reply_markup)
+        await update.message.reply_text(f'الآن شارك رقم التلفون', reply_markup=reply_markup)
         return GET_CONTACT
 
-async def get_children(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    user_id = update.effective_user.id
-    children = [x async for x in await get_employee_children(user_id)]
-    if children:
-        await update.message.reply_html("<b>You have: </b> \n - {0}".format('\n - '.join(children)))
-    else:
-        await update.message.reply_html("No children assigned to you!")
+# async def get_children(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+#     user_id = update.effective_user.id
+#     children = [x async for x in await get_employee_children(user_id)]
+#     if children:
+#         await update.message.reply_html("<b>You have: </b> \n - {0}".format('\n - '.join(children)))
+#     else:
+#         await update.message.reply_html("No children assigned to you!")
 
-    await update.message.reply_html("Do you want to make a new choise or /cancel?",reply_markup=menu())
-    return CHOOSING
+#     await update.message.reply_html("Do you want to make a new choise or /cancel?",reply_markup=menu())
+#     return CHOOSING
 
-async def add_child(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    user_id = update.effective_user.id
-    await update.message.reply_text(f'Enter your child name:',reply_markup=ReplyKeyboardRemove())
-    return ADD_CHILD_NAME
+# async def add_child(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+#     user_id = update.effective_user.id
+#     await update.message.reply_text(f'Enter your child name:',reply_markup=ReplyKeyboardRemove())
+#     return ADD_CHILD_NAME
 
-async def add_child_name(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    user_id = update.effective_user.id
-    name = update.effective_message.text
-    context.user_data.update({
-        'name': name,
-    })
+# async def add_child_name(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+#     user_id = update.effective_user.id
+#     name = update.effective_message.text
+#     context.user_data.update({
+#         'name': name,
+#     })
 
-    await update.message.reply_text(f'Upload child document:',reply_markup=ReplyKeyboardRemove())
-    return ADD_CHILD_DOCUMENT
+#     await update.message.reply_text(f'Upload child document:',reply_markup=ReplyKeyboardRemove())
+#     return ADD_CHILD_DOCUMENT
 
-async def add_child_document(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    user_id = update.effective_user.id
-    document = update.message.effective_attachment
-    if hasattr(document,'file_id'):
-        file = await document.get_file()
-    else:
-        file = await document[-1].get_file() 
+# async def add_child_document(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+#     user_id = update.effective_user.id
+#     document = update.message.effective_attachment
+#     if hasattr(document,'file_id'):
+#         file = await document.get_file()
+#     else:
+#         file = await document[-1].get_file() 
     
-    # file = await context.bot.get_file(file_id) #await document.get_file()
-    _, file_extension = os.path.splitext(file.file_path)
-    file_name = "/tmp/"+file.file_unique_id+file_extension
-    f = await file.download_to_drive(file_name)
-    name = context.user_data['name']
-    emp = await get_employee_info(user_id)
-    await add_employee_child(emp,name,f)
+#     # file = await context.bot.get_file(file_id) #await document.get_file()
+#     _, file_extension = os.path.splitext(file.file_path)
+#     file_name = "/tmp/"+file.file_unique_id+file_extension
+#     f = await file.download_to_drive(file_name)
+#     name = context.user_data['name']
+#     emp = await get_employee_info(user_id)
+#     await add_employee_child(emp,name,f)
 
-    await update.message.reply_text(f'Thank you.', reply_markup=ReplyKeyboardRemove())
+#     await update.message.reply_text(f'Thank you.', reply_markup=ReplyKeyboardRemove())
 
-    await update.message.reply_text("Do you want to make a new choise or /cancel?",reply_markup=menu())
-    return CHOOSING
+#     await update.message.reply_text("Do you want to make a new choise or /cancel?",reply_markup=menu())
+#     return CHOOSING
 
-async def get_choise(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
-    message = update.message.text
-    if message == 'Get children data':
-        return await get_children(update,context)
-    elif message == 'Add a child':
-        return await add_child(update,context)
+# async def get_choise(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+#     message = update.message.text
+#     if message == 'Get children data':
+#         return await get_children(update,context)
+#     elif message == 'Add a child':
+#         return await add_child(update,context)
 
 async def cancel(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Cancels and ends the conversation."""
@@ -351,11 +357,11 @@ def main():
             GET_NAME:[MessageHandler(filters.TEXT, get_name)],
             GET_CODE: [MessageHandler(filters.Regex("\d+"), get_code)],
             GET_CONTACT: [MessageHandler(filters.CONTACT, get_contact)],
-            CHOOSING: [MessageHandler(filters.Regex("^(Get children data|Add a child)$"), get_choise)],
-            GET_CHILDREN:[MessageHandler(filters.TEXT, get_children)],
-            ADD_CHILD:[MessageHandler(filters.TEXT, add_child)],
-            ADD_CHILD_NAME:[MessageHandler(filters.TEXT, add_child_name)],
-            ADD_CHILD_DOCUMENT:[MessageHandler(filters.ATTACHMENT, add_child_document)],
+            CHOOSING: [MessageHandler(filters.Regex("^("+MENU_CHOICE1+"|"+MENU_CHOICE2+")$"), get_choise)],
+            # GET_CHILDREN:[MessageHandler(filters.TEXT, get_children)],
+            # ADD_CHILD:[MessageHandler(filters.TEXT, add_child)],
+            # ADD_CHILD_NAME:[MessageHandler(filters.TEXT, add_child_name)],
+            # ADD_CHILD_DOCUMENT:[MessageHandler(filters.ATTACHMENT, add_child_document)],
         },
         fallbacks=[CommandHandler("start", start), CommandHandler("cancel", cancel)],
     )
