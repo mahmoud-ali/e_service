@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from hr import models as hr_models
-from hr.models import MOAHIL_CHOICES, EmployeeBasic, LoggingModel,EmployeeFamily
+from hr.models import MOAHIL_CHOICES, EmployeeBankAccount, EmployeeBasic, LoggingModel,EmployeeFamily
 
 STATE_DRAFT = 1
 STATE_ACCEPTED = 2
@@ -115,3 +115,31 @@ class EmployeeTelegramMoahil(LoggingModel):
 
     def __str__(self) -> str:
         return f'{self.employee.name} ({self.get_moahil_display()})'
+
+class EmployeeTelegramBankAccount(LoggingModel):
+    """
+    Model representing bank account information for employees using the Telegram system.
+    
+    This model stores banking details for employees, including their bank selection,
+    account number, and active status. Each bank account record requires approval
+    through a state system.
+
+    Attributes:
+        employee (ForeignKey): Reference to the EmployeeBasic model
+        bank (CharField): Selected bank from predefined choices in EmployeeBankAccount model
+        account_no (CharField): Employee's bank account number
+        active (BooleanField): Indicates if this is the currently active bank account
+        state (IntegerField): Current state of the record (draft, accepted, or rejected)
+    """
+    employee = models.ForeignKey(EmployeeBasic, on_delete=models.PROTECT,verbose_name=_("employee_name"))
+    bank = models.CharField(_("bank"), choices=EmployeeBankAccount.BANK_CHOICES,max_length=10)
+    account_no = models.CharField(_("account_no"),max_length=20)
+    active = models.BooleanField(_("active"),default=False)
+    state = models.IntegerField(_("record_state"), choices=STATE_CHOICES, default=STATE_DRAFT)
+
+    class Meta:
+        verbose_name = _("Bank Account")
+        verbose_name_plural = _("Bank Accounts")
+
+    def __str__(self) -> str:
+        return f'{self.employee.name} ({self.BANK_CHOICES[self.bank]})'# / {self.edara_3ama.name}'
