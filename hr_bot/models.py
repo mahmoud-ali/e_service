@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from hr import models as hr_models
-from hr.models import EmployeeBasic, LoggingModel,EmployeeFamily
+from hr.models import MOAHIL_CHOICES, EmployeeBasic, LoggingModel,EmployeeFamily
 
 STATE_DRAFT = 1
 STATE_ACCEPTED = 2
@@ -81,3 +81,37 @@ class EmployeeTelegramFamily(LoggingModel):
 
     def __str__(self) -> str:
         return f'{self.employee.name} ({self.get_relation_display()})'
+
+class EmployeeTelegramMoahil(LoggingModel):
+    """
+    Model representing educational qualifications for employees using the Telegram system.
+    
+    This model stores information about an employee's educational background and qualifications,
+    including their degree type, university, specialization, graduation date, and supporting
+    documentation. Each qualification record requires approval through a state system.
+
+    Attributes:
+        employee (ForeignKey): Reference to the EmployeeBasic model
+        moahil (CharField): Type of educational qualification/degree
+        university (CharField): Name of the university or educational institution
+        takhasos (CharField): Field of specialization or major
+        graduate_dt (DateField): Date of graduation
+        tarikh_el2dafa (DateField): Date when the qualification was added (optional)
+        attachement_file (FileField): Supporting documentation for the qualification (optional)
+        state (IntegerField): Current state of the record (draft, accepted, or rejected)
+    """
+    employee = models.ForeignKey(EmployeeBasic, on_delete=models.PROTECT,verbose_name=_("employee_name"))
+    moahil = models.CharField(_("moahil"), choices=MOAHIL_CHOICES,max_length=20)
+    university = models.CharField(_("university"),max_length=150)
+    takhasos = models.CharField(_("takhasos"),max_length=100)
+    graduate_dt = models.DateField(_("graduate_dt"))
+    tarikh_el2dafa = models.DateField(_("tarikh_el2dafa"),blank=True,null=True)
+    attachement_file = models.FileField(_("attachement"),upload_to=hr_models.attachement_path,blank=True,null=True)
+    state = models.IntegerField(_("record_state"), choices=STATE_CHOICES, default=STATE_DRAFT)
+    
+    class Meta:
+        verbose_name = _("Employee Moahil")
+        verbose_name_plural = _("Employee Moahil")
+
+    def __str__(self) -> str:
+        return f'{self.employee.name} ({self.get_moahil_display()})'
