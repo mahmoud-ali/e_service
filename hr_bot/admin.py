@@ -10,9 +10,9 @@ from django.contrib.auth.models import  Group
 from django.contrib.auth import get_user_model
 
 from hr.admin import SalafiatForm
-from hr.models import EmployeeBankAccount, EmployeeFamily, EmployeeJazaat, EmployeeMoahil, EmployeeSalafiat
+from hr.models import EmployeeBankAccount, EmployeeFamily, EmployeeMoahil
 from hr_bot.management.commands.telegram_main import TOKEN_ID
-from hr_bot.models import STATE_ACCEPTED, STATE_DRAFT, STATE_REJECTED, EmployeeBasicProxy, EmployeeTelegram, EmployeeTelegramBankAccount, EmployeeTelegramFamily, EmployeeTelegramMoahil, EmployeeTelegramRegistration
+from hr_bot.models import STATE_ACCEPTED, STATE_DRAFT, STATE_REJECTED, EmployeeBankAccountProxy, EmployeeBasicProxy, EmployeeFamilyProxy, EmployeeMoahilProxy, EmployeeTelegram, EmployeeTelegramBankAccount, EmployeeTelegramFamily, EmployeeTelegramMoahil, EmployeeTelegramRegistration, JazaatProxy, SalafiatProxy
 
 User = get_user_model()
 
@@ -240,22 +240,22 @@ class EmployeeTelegramBankAccountAdmin(PermissionMixin,FlowMixin,admin.ModelAdmi
             self.message_user(request,_('application accepted!'))
 
 class EmployeeBankAccountInline(admin.TabularInline):
-    model = EmployeeBankAccount
+    model = EmployeeBankAccountProxy
     exclude = ["created_at","created_by","updated_at","updated_by"]
     extra = 0   
 
 class EmployeeFamilyInline(admin.TabularInline):
-    model = EmployeeFamily
+    model = EmployeeFamilyProxy
     exclude = ["created_at","created_by","updated_at","updated_by"]
     extra = 0
 
 class EmployeeMoahilInline(admin.TabularInline):
-    model = EmployeeMoahil
+    model = EmployeeMoahilProxy
     exclude = ["created_at","created_by","updated_at","updated_by"]
     extra = 0
 
 class SalafiatInline(admin.TabularInline):
-    model = EmployeeSalafiat
+    model = SalafiatProxy
     form = SalafiatForm
     formfield_overrides = {
         models.FloatField: {"widget": TextInput},
@@ -264,7 +264,7 @@ class SalafiatInline(admin.TabularInline):
     extra = 0
 
 class JazaatInline(admin.TabularInline):
-    model = EmployeeJazaat
+    model = JazaatProxy
     exclude = ["created_at","created_by","updated_at","updated_by"]
     formfield_overrides = {
         models.FloatField: {"widget": TextInput},
