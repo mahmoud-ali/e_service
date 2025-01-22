@@ -154,8 +154,8 @@ class EmployeeTelegramRegistrationAdmin(FlowMixin,admin.ModelAdmin):
 @admin.register(EmployeeTelegramFamily)
 class EmployeeTelegramFamilyAdmin(PermissionMixin,FlowMixin,admin.ModelAdmin):
     model = EmployeeTelegramFamily
-    exclude = ["created_at","created_by","updated_at","updated_by","tarikh_el2dafa"] #,"user_id"
-    list_display = ["name","relation"]        
+    exclude = ["created_at","created_by","updated_at","updated_by","state","tarikh_el2dafa"] #,"user_id"
+    list_display = ["name","relation","state"]        
     # list_filter = ["category"]
     autocomplete_fields = ["employee"]
     view_on_site = False
@@ -187,8 +187,8 @@ class EmployeeTelegramFamilyAdmin(PermissionMixin,FlowMixin,admin.ModelAdmin):
 @admin.register(EmployeeTelegramMoahil)
 class EmployeeTelegramMoahilAdmin(PermissionMixin,FlowMixin,admin.ModelAdmin):
     model = EmployeeTelegramMoahil
-    exclude = ["created_at","created_by","updated_at","updated_by","tarikh_el2dafa"] #,"user_id"
-    list_display = ["employee","moahil","university","graduate_dt"]        
+    exclude = ["created_at","created_by","updated_at","updated_by","state","tarikh_el2dafa"] #,"user_id"
+    list_display = ["employee","moahil","university","graduate_dt","state"]        
     list_filter = ["moahil","university"]
     autocomplete_fields = ["employee"]
     view_on_site = False
@@ -222,8 +222,8 @@ class EmployeeTelegramMoahilAdmin(PermissionMixin,FlowMixin,admin.ModelAdmin):
 @admin.register(EmployeeTelegramBankAccount)
 class EmployeeTelegramBankAccountAdmin(PermissionMixin,FlowMixin,admin.ModelAdmin):
     model = EmployeeTelegramBankAccount
-    exclude = ["created_at","created_by","updated_at","updated_by"] #,"user_id"
-    list_display = ["employee","bank","account_no","active"]        
+    exclude = ["created_at","created_by","updated_at","updated_by","state"] #,"user_id"
+    list_display = ["employee","bank","account_no","active","state"]        
     list_filter = ["bank",]
     autocomplete_fields = ["employee"]
     view_on_site = False
