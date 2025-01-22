@@ -16,7 +16,7 @@ from asgiref.sync import sync_to_async
 from django.contrib.auth import get_user_model
 from django.core.files import File
 from hr.models import EmployeeBasic, EmployeeFamily
-from hr_bot.models import EmployeeTelegram, EmployeeTelegramFamily, EmployeeTelegramRegistration
+from hr_bot.models import STATE_DRAFT, EmployeeTelegram, EmployeeTelegramFamily, EmployeeTelegramRegistration
 
 GET_NAME, GET_CODE, GET_CONTACT, CHOOSING, ADD_CHILD, GET_CHILDREN, ADD_CHILD_NAME, ADD_CHILD_DOCUMENT = range(8)
 
@@ -58,6 +58,9 @@ async def register(code,user_id,phone,name):
 # @sync_to_async
 async def get_employee(user_id):
     return await EmployeeTelegram.objects.filter(user_id=user_id).afirst()
+
+async def get_employee_registeration(user_id):
+    return await EmployeeTelegramRegistration.objects.filter(state=STATE_DRAFT).filter(user_id=user_id).afirst()
 
 # @sync_to_async
 async def get_employee_info(user_id):
@@ -153,6 +156,11 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         # await update.message.reply_text(f'مرحباً {emp.name}, يمكنك القيام بالعمليات التالية:', reply_markup=menu())
         # return CHOOSING
     else:
+        emp = await get_employee_registeration(user_id)
+        if emp:
+            await update.message.reply_text(f'عفواً لقد قمت بالتسجيل مسبقاً، سيتم التأكد من البيانات من قبل ادارة الموارد البشرية:') 
+            return ConversationHandler.END
+        
         await update.message.reply_text(f'عفواً انت غير مسجل مسبقاً، ادخل اسمك الرباعي:') #, reply_markup=reply_markup
 
     return GET_NAME

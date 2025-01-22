@@ -4,9 +4,11 @@ from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
 
 from django.contrib import admin
+import requests
 
 from hr.admin import SalafiatForm
 from hr.models import EmployeeBankAccount, EmployeeFamily, EmployeeJazaat, EmployeeMoahil, EmployeeSalafiat
+from hr_bot.management.commands.telegram_main import TOKEN_ID
 from hr_bot.models import STATE_ACCEPTED, STATE_DRAFT, STATE_REJECTED, EmployeeBasicProxy, EmployeeTelegram, EmployeeTelegramBankAccount, EmployeeTelegramFamily, EmployeeTelegramMoahil, EmployeeTelegramRegistration
 
 class PermissionMixin:
@@ -91,6 +93,13 @@ class EmployeeTelegramRegistrationAdmin(PermissionMixin,FlowMixin,admin.ModelAdm
             )
             self.message_user(request,_('application accepted!'))
 
+        portal_url = "https://hr1.mineralsgate.com/app/managers/"
+        username = "-"
+        password = "-"
+
+        message = f"الآن يمكنك الدخول لبوابة الموارد البشرية عبر الرابط التالي {portal_url} \n باسم المستخدم {username} \n وكلمة المرور{password}"
+        telegram_url = f"https://api.telegram.org/bot{TOKEN_ID}/sendMessage?chat_id={int(obj.user_id)}&text={message}"
+        requests.get(telegram_url)
 
 @admin.register(EmployeeTelegramFamily)
 class EmployeeTelegramFamilyAdmin(PermissionMixin,FlowMixin,admin.ModelAdmin):
