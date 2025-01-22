@@ -142,4 +142,4 @@ class EmployeeTelegramBankAccount(LoggingModel):
         verbose_name_plural = _("Bank Accounts")
 
     def __str__(self) -> str:
-        return f'{self.employee.name} ({self.BANK_CHOICES[self.bank]})'# / {self.edara_3ama.name}'
+        return f'{self.employee.name} ({EmployeeBankAccount.BANK_CHOICES[self.bank]})'# / {self.edara_3ama.name}'
