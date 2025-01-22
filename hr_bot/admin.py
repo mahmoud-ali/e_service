@@ -41,6 +41,18 @@ class FlowMixin:
             return qs.filter(state=STATE_DRAFT)
 
         return qs.filter(employee__email=request.user.email)
+    
+    def get_exclude(self,request, obj=None):
+        if not obj:
+            return self.exclude+['employee']
+
+        return self.exclude
+    
+    def get_readonly_fields(self,request, obj=None):
+        if not obj:
+            return []
+
+        return ["employee",]
 
     @admin.action(description=_('Accept'))
     def accept(self, request, queryset):
@@ -134,7 +146,7 @@ class EmployeeTelegramRegistrationAdmin(FlowMixin,admin.ModelAdmin):
 class EmployeeTelegramFamilyAdmin(PermissionMixin,FlowMixin,admin.ModelAdmin):
     model = EmployeeTelegramFamily
     exclude = ["created_at","created_by","updated_at","updated_by","state","tarikh_el2dafa"] #,"user_id"
-    list_display = ["employee","name","relation"]        
+    list_display = ["name","relation"]        
     # list_filter = ["category"]
     autocomplete_fields = ["employee"]
     view_on_site = False
