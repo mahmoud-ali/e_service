@@ -1,3 +1,4 @@
+import random
 from django.db import models
 from django.forms.widgets import TextInput
 from django.utils.translation import gettext_lazy as _
@@ -5,6 +6,7 @@ from django.utils import timezone
 
 from django.contrib import admin
 import requests
+from django.contrib.auth.models import User, Group
 
 from hr.admin import SalafiatForm
 from hr.models import EmployeeBankAccount, EmployeeFamily, EmployeeJazaat, EmployeeMoahil, EmployeeSalafiat
@@ -94,10 +96,22 @@ class EmployeeTelegramRegistrationAdmin(PermissionMixin,FlowMixin,admin.ModelAdm
             self.message_user(request,_('application accepted!'))
 
         portal_url = "https://hr1.mineralsgate.com/app/managers/"
-        username = "-"
-        password = "-"
+        username = obj.employee.email
 
-        message = f"الآن يمكنك الدخول لبوابة الموارد البشرية عبر الرابط التالي {portal_url} \n باسم المستخدم {username} \n وكلمة المرور{password}"
+        if User.objects.filter(username=username).exists():
+            # user = User.objects.get(username=username)
+            message = f"الآن يمكنك الدخول لبوابة الموارد البشرية عبر الرابط التالي {portal_url} \n باسم المستخدم {username}"
+
+        else:
+            password = f"{username}{int(random.random()*10000)}"
+
+            user = User.objects.create_user(username, username, password)
+
+            employee_group = Group.objects.get(name='hr_employee') 
+            employee_group.user_set.add(user)
+
+            message = f"الآن يمكنك الدخول لبوابة الموارد البشرية عبر الرابط التالي {portal_url} \n باسم المستخدم {username} \n وكلمة المرور{password}"
+
         telegram_url = f"https://api.telegram.org/bot{TOKEN_ID}/sendMessage?chat_id={int(obj.user_id)}&text={message}"
         requests.get(telegram_url)
 
