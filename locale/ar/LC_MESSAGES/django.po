@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-22 10:13+0200\n"
+"POT-Creation-Date: 2025-01-22 10:45+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -3676,14 +3676,23 @@ msgstr "ايام الاجازة"
 msgid "ayam_2ltaklif"
 msgstr "ايام التكليف"
 
-#: hr_bot/admin.py:32 hr_bot/admin.py:75 hr_bot/admin.py:111
-#: hr_bot/admin.py:150 hr_bot/admin.py:191
+#: hr_bot/admin.py:32 hr_bot/admin.py:76 hr_bot/admin.py:113
+#: hr_bot/admin.py:153 hr_bot/admin.py:195
 msgid "Accept"
 msgstr "قبول الطلب"
 
 #: hr_bot/admin.py:36
 msgid "Reject"
 msgstr "رفض الطلب"
+
+#: hr_bot/admin.py:41
+msgid "application rejected!"
+msgstr "تم رفض الطلب"
+
+#: hr_bot/admin.py:89 hr_bot/admin.py:130 hr_bot/admin.py:172
+#: hr_bot/admin.py:211
+msgid "application accepted!"
+msgstr "تم قبول الطلب"
 
 #: hr_bot/apps.py:7
 msgid "HR portal"
