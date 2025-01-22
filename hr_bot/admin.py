@@ -52,16 +52,16 @@ class FlowMixin:
         return qs.filter(employee__email=request.user.email)
     
     def get_exclude(self,request, obj=None):
-        if not obj:
+        if request.user.groups.filter(name__in=["hr_employee",]).exists():
             return self.exclude+['employee']
 
         return self.exclude
     
     def get_readonly_fields(self,request, obj=None):
-        if not obj:
-            return ["employee",]
+        if request.user.groups.filter(name__in=["hr_employee",]).exists():
+            return []
 
-        return []
+        return ["employee",]
 
     @admin.action(description=_('Accept'))
     def accept(self, request, queryset):
