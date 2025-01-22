@@ -482,6 +482,7 @@ class EmployeeBasic(LoggingModel):
     tarikh_akhir_targia = models.DateField(_("tarikh_akhir_targia"),blank=True,null=True)
     sex = models.CharField(_("sex"),max_length=7, choices=SEX_CHOICES)
     phone = models.CharField(_("phone"),max_length=30,blank=True,null=True)
+    email = models.EmailField(_("email"),max_length=30,blank=True,null=True)
     no3_2lertibat = models.CharField(_("no3_2lertibat"),max_length=15, choices=NO3_2LERTIBAT_CHOICES)
     sanoat_2lkhibra = models.FloatField(_("sanoat_2lkhibra"),default=0)
     gasima = models.BooleanField(_("gasima"),default=False)
