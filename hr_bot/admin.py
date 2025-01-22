@@ -27,7 +27,10 @@ class FlowMixin:
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
-        return qs.filter(state=STATE_DRAFT)
+        if request.user.is_superuser or request.user.groups.filter(name__in=["hr_manager","hr_emp"]).exists():
+            return qs.filter(state=STATE_DRAFT)
+
+        return qs.filter(email=request.user.email)
 
     @admin.action(description=_('Accept'))
     def accept(self, request, queryset):
