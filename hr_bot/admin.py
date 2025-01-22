@@ -108,7 +108,7 @@ class EmployeeTelegramRegistrationAdmin(PermissionMixin,FlowMixin,admin.ModelAdm
         else:
             password = f"{username}{int(random.random()*10000)}"
 
-            user = User.objects.create_user(username, username, password)
+            user = User.objects.create_user(username, username, password, is_staff=True)
 
             employee_group = Group.objects.get(name='hr_employee') 
             employee_group.user_set.add(user)
