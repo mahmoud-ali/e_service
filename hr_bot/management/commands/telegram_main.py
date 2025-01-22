@@ -158,7 +158,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     else:
         emp = await get_employee_registeration(user_id)
         if emp:
-            await update.message.reply_text(f'عفواً لقد قمت بالتسجيل مسبقاً، سيتم التأكد من البيانات من قبل ادارة الموارد البشرية:') 
+            await update.message.reply_text(f'عفواً لقد قمت بالتسجيل مسبقاً، سيتم التأكد من البيانات من قبل ادارة الموارد البشرية') 
             return ConversationHandler.END
         
         await update.message.reply_text(f'عفواً انت غير مسجل مسبقاً، ادخل اسمك الرباعي:') #, reply_markup=reply_markup
