@@ -38,27 +38,28 @@ class FlowMixin:
         for obj in queryset:
             obj.state = STATE_REJECTED
             obj.save()
+            self.message_user(request,_('application rejected!'))
 
-@admin.register(EmployeeTelegram)
-class EmployeeTelegramAdmin(admin.ModelAdmin):
-    model = EmployeeTelegram
-    exclude = ["created_at","created_by","updated_at","updated_by"] #,"user_id"
-    list_display = ["employee","phone"]        
-    # list_filter = ["category"]
-    autocomplete_fields = ["employee"]
-    view_on_site = False
-    search_fields = ["employee__name","phone"]
+# @admin.register(EmployeeTelegram)
+# class EmployeeTelegramAdmin(admin.ModelAdmin):
+#     model = EmployeeTelegram
+#     exclude = ["created_at","created_by","updated_at","updated_by"] #,"user_id"
+#     list_display = ["employee","phone"]        
+#     # list_filter = ["category"]
+#     autocomplete_fields = ["employee"]
+#     view_on_site = False
+#     search_fields = ["employee__name","phone"]
 
-    formfield_overrides = {
-        models.FloatField: {"widget": TextInput},
-    }    
+#     formfield_overrides = {
+#         models.FloatField: {"widget": TextInput},
+#     }    
 
-    def save_model(self, request, obj, form, change):
-        if obj.pk:
-            obj.updated_by = request.user
-        else:
-            obj.created_by = obj.updated_by = request.user
-        super().save_model(request, obj, form, change)    
+#     def save_model(self, request, obj, form, change):
+#         if obj.pk:
+#             obj.updated_by = request.user
+#         else:
+#             obj.created_by = obj.updated_by = request.user
+#         super().save_model(request, obj, form, change)    
 
 @admin.register(EmployeeTelegramRegistration)
 class EmployeeTelegramRegistrationAdmin(PermissionMixin,FlowMixin,admin.ModelAdmin):
@@ -85,6 +86,7 @@ class EmployeeTelegramRegistrationAdmin(PermissionMixin,FlowMixin,admin.ModelAdm
                 created_by=request.user,
                 updated_by=request.user,
             )
+            self.message_user(request,_('application accepted!'))
 
 
 @admin.register(EmployeeTelegramFamily)
@@ -125,6 +127,7 @@ class EmployeeTelegramFamilyAdmin(PermissionMixin,FlowMixin,admin.ModelAdmin):
                 created_by=request.user,
                 updated_by=request.user,
             )
+            self.message_user(request,_('application accepted!'))
 
 @admin.register(EmployeeTelegramMoahil)
 class EmployeeTelegramMoahilAdmin(PermissionMixin,FlowMixin,admin.ModelAdmin):
@@ -166,6 +169,7 @@ class EmployeeTelegramMoahilAdmin(PermissionMixin,FlowMixin,admin.ModelAdmin):
                 created_by=request.user,
                 updated_by=request.user,
             )
+            self.message_user(request,_('application accepted!'))
 
 @admin.register(EmployeeTelegramBankAccount)
 class EmployeeTelegramBankAccountAdmin(PermissionMixin,FlowMixin,admin.ModelAdmin):
@@ -204,6 +208,7 @@ class EmployeeTelegramBankAccountAdmin(PermissionMixin,FlowMixin,admin.ModelAdmi
                 created_by=request.user,
                 updated_by=request.user,
             )
+            self.message_user(request,_('application accepted!'))
 
 class EmployeeBankAccountInline(admin.TabularInline):
     model = EmployeeBankAccount
