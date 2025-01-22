@@ -18,6 +18,9 @@ User = get_user_model()
 
 class PermissionMixin:
     def has_add_permission(self, request):
+        if request.user.is_superuser or request.user.groups.filter(name__in=["hr_employee",]).exists():
+            return True
+        
         return False
 
     # def has_change_permission(self, request, obj=None):
