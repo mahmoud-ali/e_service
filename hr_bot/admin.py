@@ -6,12 +6,15 @@ from django.utils import timezone
 
 from django.contrib import admin
 import requests
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import  Group
+from django.contrib.auth import get_user_model
 
 from hr.admin import SalafiatForm
 from hr.models import EmployeeBankAccount, EmployeeFamily, EmployeeJazaat, EmployeeMoahil, EmployeeSalafiat
 from hr_bot.management.commands.telegram_main import TOKEN_ID
 from hr_bot.models import STATE_ACCEPTED, STATE_DRAFT, STATE_REJECTED, EmployeeBasicProxy, EmployeeTelegram, EmployeeTelegramBankAccount, EmployeeTelegramFamily, EmployeeTelegramMoahil, EmployeeTelegramRegistration
+
+User = get_user_model()
 
 class PermissionMixin:
     def has_add_permission(self, request):
