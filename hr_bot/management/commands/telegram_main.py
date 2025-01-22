@@ -68,15 +68,15 @@ async def get_employee_info(user_id):
     return None
 
 # @sync_to_async
-async def get_employee_children(user_id):
-    emp = await EmployeeTelegram.objects.filter(user_id=user_id).prefetch_related('employee').afirst()
+# async def get_employee_children(user_id):
+#     emp = await EmployeeTelegram.objects.filter(user_id=user_id).prefetch_related('employee').afirst()
     
-    if emp:
-        ch = EmployeeFamily.objects.filter(employee=emp.employee,relation=EmployeeFamily.FAMILY_RELATION_CHILD).values_list('name',flat=True).aiterator()
-        #await emp.employee.employeefamily_set.filter(relation=EmployeeFamily.FAMILY_RELATION_CHILD).values_list('name',flat=True)
-        return ch
+#     if emp:
+#         ch = EmployeeFamily.objects.filter(employee=emp.employee,relation=EmployeeFamily.FAMILY_RELATION_CHILD).values_list('name',flat=True).aiterator()
+#         #await emp.employee.employeefamily_set.filter(relation=EmployeeFamily.FAMILY_RELATION_CHILD).values_list('name',flat=True)
+#         return ch
     
-    return None
+#     return None
 
 # @sync_to_async
 async def get_employee_by_code(code):
@@ -102,8 +102,8 @@ async def register_employee(code,user_id,phone):
 
 #register_employee
 # @sync_to_async
-async def get_employees_count():
-    return await EmployeeBasic.objects.all().acount()
+# async def get_employees_count():
+#     return await EmployeeBasic.objects.all().acount()
 
 async def check_registration(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     user_id = update.effective_user.id
@@ -112,22 +112,22 @@ async def check_registration(update: Update, context: ContextTypes.DEFAULT_TYPE)
     
     return True if is_registered else False
 
-async def add_employee_child(emp,name,attachment_file):
-    admin_user = await get_user_model().objects.aget(id=1)
+# async def add_employee_child(emp,name,attachment_file):
+#     admin_user = await get_user_model().objects.aget(id=1)
 
-    with open(attachment_file, 'rb') as f:
-        return await EmployeeTelegramFamily.objects.acreate(
-            employee=emp,
-            relation=EmployeeFamily.FAMILY_RELATION_CHILD,
-            name=name,
-            tarikh_el2dafa=datetime.datetime.now(),
-            attachement_file=File(f),
-            # state=1,
-            created_by=admin_user,
-            updated_by=admin_user,
-        )
+#     with open(attachment_file, 'rb') as f:
+#         return await EmployeeTelegramFamily.objects.acreate(
+#             employee=emp,
+#             relation=EmployeeFamily.FAMILY_RELATION_CHILD,
+#             name=name,
+#             tarikh_el2dafa=datetime.datetime.now(),
+#             attachement_file=File(f),
+#             # state=1,
+#             created_by=admin_user,
+#             updated_by=admin_user,
+#         )
     
-    return None
+#     return None
     
 MENU_CHOICE1 =  'Get children data'
 MENU_CHOICE2 =  'Add a child'
@@ -357,7 +357,7 @@ def main():
             GET_NAME:[MessageHandler(filters.TEXT, get_name)],
             GET_CODE: [MessageHandler(filters.Regex("\d+"), get_code)],
             GET_CONTACT: [MessageHandler(filters.CONTACT, get_contact)],
-            CHOOSING: [MessageHandler(filters.Regex("^("+MENU_CHOICE1+"|"+MENU_CHOICE2+")$"), get_choise)],
+            # CHOOSING: [MessageHandler(filters.Regex("^("+MENU_CHOICE1+"|"+MENU_CHOICE2+")$"), get_choise)],
             # GET_CHILDREN:[MessageHandler(filters.TEXT, get_children)],
             # ADD_CHILD:[MessageHandler(filters.TEXT, add_child)],
             # ADD_CHILD_NAME:[MessageHandler(filters.TEXT, add_child_name)],
