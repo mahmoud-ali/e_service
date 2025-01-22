@@ -154,7 +154,7 @@ class EmployeeTelegramRegistrationAdmin(FlowMixin,admin.ModelAdmin):
 @admin.register(EmployeeTelegramFamily)
 class EmployeeTelegramFamilyAdmin(PermissionMixin,FlowMixin,admin.ModelAdmin):
     model = EmployeeTelegramFamily
-    exclude = ["created_at","created_by","updated_at","updated_by","state","tarikh_el2dafa"] #,"user_id"
+    exclude = ["created_at","created_by","updated_at","updated_by","tarikh_el2dafa"] #,"user_id"
     list_display = ["name","relation"]        
     # list_filter = ["category"]
     autocomplete_fields = ["employee"]
@@ -187,7 +187,7 @@ class EmployeeTelegramFamilyAdmin(PermissionMixin,FlowMixin,admin.ModelAdmin):
 @admin.register(EmployeeTelegramMoahil)
 class EmployeeTelegramMoahilAdmin(PermissionMixin,FlowMixin,admin.ModelAdmin):
     model = EmployeeTelegramMoahil
-    exclude = ["created_at","created_by","updated_at","updated_by","state","tarikh_el2dafa"] #,"user_id"
+    exclude = ["created_at","created_by","updated_at","updated_by","tarikh_el2dafa"] #,"user_id"
     list_display = ["employee","moahil","university","graduate_dt"]        
     list_filter = ["moahil","university"]
     autocomplete_fields = ["employee"]
@@ -222,7 +222,7 @@ class EmployeeTelegramMoahilAdmin(PermissionMixin,FlowMixin,admin.ModelAdmin):
 @admin.register(EmployeeTelegramBankAccount)
 class EmployeeTelegramBankAccountAdmin(PermissionMixin,FlowMixin,admin.ModelAdmin):
     model = EmployeeTelegramBankAccount
-    exclude = ["created_at","created_by","updated_at","updated_by","state"] #,"user_id"
+    exclude = ["created_at","created_by","updated_at","updated_by"] #,"user_id"
     list_display = ["employee","bank","account_no","active"]        
     list_filter = ["bank",]
     autocomplete_fields = ["employee"]
