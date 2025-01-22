@@ -293,6 +293,22 @@ def import_bank_accounts():
             except Exception as e:
                 print('not imported',e)
 
+def import_email():    
+    with open(f'./hr/data/email.csv', newline='') as csvfile:
+        reader = csv.reader(csvfile, delimiter=',')
+        next(reader, None)  # skip the headers
+        for row in reader:
+            try:
+                code = int(row[0])
+                email = row[2]
+                if code:
+                    emp = EmployeeBasic.objects.get(code=code)
+                    emp.email = email
+                    emp.save()
+                    print('imported',emp.code,emp.email)
+            except Exception as e:
+                print('not imported',e)
+
 def correct_bank_accounts():    
     for obj in EmployeeBankAccount.objects.filter(bank='bok'):
         n = 16 - len(obj.account_no)
