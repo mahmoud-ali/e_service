@@ -31,6 +31,10 @@ class EmployeeTelegram(LoggingModel):
     phone = models.CharField(_("phone"),max_length=30,unique=True)
     # state = models.IntegerField(_("record_state"), choices=STATE_CHOICES, default=STATE_DRAFT)
 
+    class Meta:
+        verbose_name = _("Employee Telegram")
+        verbose_name_plural = _("Employee Telegram")
+
 class EmployeeTelegramRegistration(LoggingModel):
     """
     Model representing a pending registration request for an employee's Telegram account.
@@ -51,6 +55,10 @@ class EmployeeTelegramRegistration(LoggingModel):
     name = models.CharField(_("employee_name"),max_length=150)
     phone = models.CharField(_("phone"),max_length=30,unique=True)
     state = models.IntegerField(_("record_state"), choices=STATE_CHOICES, default=STATE_DRAFT)
+
+    class Meta:
+        verbose_name = _("Employee Registration")
+        verbose_name_plural = _("Employee Registration")
 
 class EmployeeTelegramFamily(LoggingModel):
     """
@@ -76,8 +84,8 @@ class EmployeeTelegramFamily(LoggingModel):
     state = models.IntegerField(_("record_state"), choices=STATE_CHOICES, default=STATE_DRAFT)
 
     class Meta:
-        verbose_name = _("Employee Family")
-        verbose_name_plural = _("Employee Family")
+        verbose_name = _("Employee Family Application")
+        verbose_name_plural = _("Employee Family Application")
 
     def __str__(self) -> str:
         return f'{self.employee.name} ({self.get_relation_display()})'
@@ -110,8 +118,8 @@ class EmployeeTelegramMoahil(LoggingModel):
     state = models.IntegerField(_("record_state"), choices=STATE_CHOICES, default=STATE_DRAFT)
     
     class Meta:
-        verbose_name = _("Employee Moahil")
-        verbose_name_plural = _("Employee Moahil")
+        verbose_name = _("Employee Moahil Application")
+        verbose_name_plural = _("Employee Moahil Application")
 
     def __str__(self) -> str:
         return f'{self.employee.name} ({self.get_moahil_display()})'
@@ -138,8 +146,14 @@ class EmployeeTelegramBankAccount(LoggingModel):
     state = models.IntegerField(_("record_state"), choices=STATE_CHOICES, default=STATE_DRAFT)
 
     class Meta:
-        verbose_name = _("Bank Account")
-        verbose_name_plural = _("Bank Accounts")
+        verbose_name = _("Bank Account Application")
+        verbose_name_plural = _("Bank Account Application")
 
     def __str__(self) -> str:
         return f'{self.employee.name} ({EmployeeBankAccount.BANK_CHOICES[self.bank]})'# / {self.edara_3ama.name}'
+
+class EmployeeBasicProxy(hr_models.EmployeeBasic):
+    class Meta:
+        proxy = True
+        verbose_name = _("Employee data")
+        verbose_name_plural = _("Employee data")

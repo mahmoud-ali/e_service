@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-22 09:26+0200\n"
+"POT-Creation-Date: 2025-01-22 10:13+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -192,7 +192,7 @@ msgstr ""
 #: company_profile/models.py:134 company_profile/models.py:166
 #: company_profile/models.py:188 company_profile/models.py:701
 #: company_profile/models.py:799 company_profile/models.py:1055 hr/admin.py:434
-#: hr/admin.py:551 hr/models.py:653 hr_bot/models.py:73
+#: hr/admin.py:551 hr/models.py:653 hr_bot/models.py:81
 msgid "name"
 msgstr "الاسم"
 
@@ -1193,8 +1193,8 @@ msgstr ""
 #: hr/models.py:598 hr/models.py:617 hr/models.py:651 hr/models.py:677
 #: hr/models.py:717 hr/models.py:749 hr/models.py:778 hr/models.py:801
 #: hr/models.py:867 hr/models.py:892 hr/models.py:931 hr/models.py:943
-#: hr_bot/models.py:29 hr_bot/models.py:49 hr_bot/models.py:51
-#: hr_bot/models.py:71 hr_bot/models.py:103 hr_bot/models.py:134
+#: hr_bot/models.py:29 hr_bot/models.py:53 hr_bot/models.py:55
+#: hr_bot/models.py:79 hr_bot/models.py:111 hr_bot/models.py:142
 msgid "employee_name"
 msgstr "الاسم"
 
@@ -2541,7 +2541,7 @@ msgid "atfal"
 msgstr "العلاوة الاجتماعية-اطفال"
 
 #: hr/admin.py:436 hr/models.py:247 hr/models.py:490 hr/models.py:678
-#: hr/models.py:980 hr/models.py:1024 hr/models.py:1045 hr_bot/models.py:104
+#: hr/models.py:980 hr/models.py:1024 hr/models.py:1045 hr_bot/models.py:112
 msgid "moahil"
 msgstr "المؤهل"
 
@@ -2557,7 +2557,7 @@ msgstr "عدوى"
 msgid "no3_2lertibat"
 msgstr "نوع الارتباط"
 
-#: hr/admin.py:436 hr/models.py:484 hr_bot/models.py:31 hr_bot/models.py:52
+#: hr/admin.py:436 hr/models.py:484 hr_bot/models.py:31 hr_bot/models.py:56
 msgid "phone"
 msgstr "التلفون"
 
@@ -2565,11 +2565,11 @@ msgstr "التلفون"
 msgid "sanoat_2lkhibra"
 msgstr "سنوات الخبرة السابقة"
 
-#: hr/admin.py:436 hr/models.py:618 hr/models.py:955 hr_bot/models.py:135
+#: hr/admin.py:436 hr/models.py:618 hr/models.py:955 hr_bot/models.py:143
 msgid "bank"
 msgstr "البنك"
 
-#: hr/admin.py:436 hr/models.py:619 hr/models.py:956 hr_bot/models.py:136
+#: hr/admin.py:436 hr/models.py:619 hr/models.py:956 hr_bot/models.py:144
 msgid "account_no"
 msgstr "رقم الحساب"
 
@@ -3183,7 +3183,7 @@ msgstr "إيقاف المرتب مؤقتاً"
 msgid "employee_code"
 msgstr "الرمز"
 
-#: hr/models.py:472 hr/models.py:653
+#: hr/models.py:472
 msgid "2dkhil al2sm roba3i"
 msgstr "ادخل الاسم رباعي"
 
@@ -3195,7 +3195,7 @@ msgstr "البريد الإلكتروني"
 msgid "3dad_atfal"
 msgstr "العلاوة الاجتماعية-اطفال"
 
-#: hr/models.py:517 hr/models.py:518
+#: hr/models.py:517 hr/models.py:518 hr_bot/models.py:158 hr_bot/models.py:159
 msgid "Employee data"
 msgstr "بيانات الموظفين"
 
@@ -3243,15 +3243,15 @@ msgstr "بنك الخرطوم"
 msgid "BANK_OMDURMAN"
 msgstr "بنك امدرمان الوطني"
 
-#: hr/models.py:620 hr_bot/models.py:137
+#: hr/models.py:620 hr_bot/models.py:145
 msgid "active"
 msgstr "نشط"
 
-#: hr/models.py:630 hr_bot/models.py:141
+#: hr/models.py:630
 msgid "Bank Account"
 msgstr "الحساب البنكي"
 
-#: hr/models.py:631 hr_bot/models.py:142
+#: hr/models.py:631
 msgid "Bank Accounts"
 msgstr "الحسابات البنكية"
 
@@ -3267,36 +3267,36 @@ msgstr "ابن/ابنة"
 msgid "FAMILY_RELATION_CONSORT"
 msgstr "زوج/زوجة"
 
-#: hr/models.py:652 hr_bot/models.py:72
+#: hr/models.py:652 hr_bot/models.py:80
 msgid "relation"
 msgstr "صلة القرابة"
 
-#: hr/models.py:654 hr/models.py:682 hr_bot/models.py:74 hr_bot/models.py:108
+#: hr/models.py:654 hr/models.py:682 hr_bot/models.py:82 hr_bot/models.py:116
 msgid "tarikh_el2dafa"
 msgstr "تاريخ الاضافة"
 
 #: hr/models.py:655 hr/models.py:683 hr/models.py:755 hr/models.py:872
-#: hr/models.py:896 hr_bot/models.py:75 hr_bot/models.py:109
+#: hr/models.py:896 hr_bot/models.py:83 hr_bot/models.py:117
 msgid "attachement"
 msgstr "المرفقات"
 
-#: hr/models.py:658 hr/models.py:659 hr_bot/models.py:79 hr_bot/models.py:80
+#: hr/models.py:658 hr/models.py:659
 msgid "Employee Family"
 msgstr "بيانات الاسرة"
 
-#: hr/models.py:679 hr_bot/models.py:105
+#: hr/models.py:679 hr_bot/models.py:113
 msgid "university"
 msgstr "الجامعة"
 
-#: hr/models.py:680 hr_bot/models.py:106
+#: hr/models.py:680 hr_bot/models.py:114
 msgid "takhasos"
 msgstr "التخصص"
 
-#: hr/models.py:681 hr_bot/models.py:107
+#: hr/models.py:681 hr_bot/models.py:115
 msgid "graduate_dt"
 msgstr "تاريخ التخرج"
 
-#: hr/models.py:686 hr/models.py:687 hr_bot/models.py:113 hr_bot/models.py:114
+#: hr/models.py:686 hr/models.py:687
 msgid "Employee Moahil"
 msgstr "بيانات المؤهل"
 
@@ -3676,45 +3676,61 @@ msgstr "ايام الاجازة"
 msgid "ayam_2ltaklif"
 msgstr "ايام التكليف"
 
-#: hr_bot/admin.py:31 hr_bot/admin.py:75 hr_bot/admin.py:111
+#: hr_bot/admin.py:32 hr_bot/admin.py:75 hr_bot/admin.py:111
 #: hr_bot/admin.py:150 hr_bot/admin.py:191
-#, fuzzy
-#| msgid "Accepted state"
 msgid "Accept"
-msgstr "تم قبول الطلب"
+msgstr "قبول الطلب"
 
-#: hr_bot/admin.py:35
-#, fuzzy
-#| msgid "Rejected"
+#: hr_bot/admin.py:36
 msgid "Reject"
-msgstr "تم الرفض"
+msgstr "رفض الطلب"
+
+#: hr_bot/apps.py:7
+msgid "HR portal"
+msgstr "بوابة الموارد البشرية"
 
 #: hr_bot/models.py:11
-#, fuzzy
-#| msgid "state"
 msgid "state_draft"
-msgstr "الولاية"
+msgstr "مسودة"
 
 #: hr_bot/models.py:12
 msgid "state_accepted"
-msgstr ""
+msgstr "تم قبول الطلب"
 
 #: hr_bot/models.py:13
-#, fuzzy
-#| msgid "Rejected"
 msgid "state_rejected"
 msgstr "تم الرفض"
 
-#: hr_bot/models.py:30 hr_bot/models.py:50
+#: hr_bot/models.py:30 hr_bot/models.py:54
 msgid "user_id"
 msgstr ""
 
-#: hr_bot/models.py:53 hr_bot/models.py:76 hr_bot/models.py:110
-#: hr_bot/models.py:138 pa/models.py:95 pa/models.py:132 pa/models.py:193
+#: hr_bot/models.py:35 hr_bot/models.py:36
+msgid "Employee Telegram"
+msgstr "حساب الموظف على Telegram"
+
+#: hr_bot/models.py:57 hr_bot/models.py:84 hr_bot/models.py:118
+#: hr_bot/models.py:146 pa/models.py:95 pa/models.py:132 pa/models.py:193
 #: pa/models.py:298 pa/models.py:495 pa/tables/payment.py:34
 #: pa/tables/request.py:53
 msgid "record_state"
 msgstr "الحالة"
+
+#: hr_bot/models.py:60 hr_bot/models.py:61
+msgid "Employee Registration"
+msgstr "طلب تسجيل موظف"
+
+#: hr_bot/models.py:87 hr_bot/models.py:88
+msgid "Employee Family Application"
+msgstr "طلب اضافة بيانات الاسرة"
+
+#: hr_bot/models.py:121 hr_bot/models.py:122
+msgid "Employee Moahil Application"
+msgstr "طلب اضافة بيانات المؤهل"
+
+#: hr_bot/models.py:149 hr_bot/models.py:150
+msgid "Bank Account Application"
+msgstr "طلب اضافة حساب بنكي"
 
 #: pa/apps.py:8
 msgid "Production Accounting"
