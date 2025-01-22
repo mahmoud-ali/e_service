@@ -75,7 +75,7 @@ class FlowMixin:
 #         super().save_model(request, obj, form, change)    
 
 @admin.register(EmployeeTelegramRegistration)
-class EmployeeTelegramRegistrationAdmin(PermissionMixin,FlowMixin,admin.ModelAdmin):
+class EmployeeTelegramRegistrationAdmin(FlowMixin,admin.ModelAdmin):
     model = EmployeeTelegramRegistration
     exclude = ["created_at","created_by","updated_at","updated_by","state"] #,"user_id"
     list_display = ["employee","name","phone"]        
@@ -85,6 +85,15 @@ class EmployeeTelegramRegistrationAdmin(PermissionMixin,FlowMixin,admin.ModelAdm
     formfield_overrides = {
         models.FloatField: {"widget": TextInput},
     }    
+
+    def has_add_permission(self, request):
+        return False
+
+    # def has_change_permission(self, request, obj=None):
+    #     return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
 
     @admin.action(description=_('Accept'))
     def accept(self, request, queryset):
