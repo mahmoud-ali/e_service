@@ -3197,7 +3197,7 @@ msgstr "العلاوة الاجتماعية-اطفال"
 
 #: hr/models.py:517 hr/models.py:518 hr_bot/models.py:158 hr_bot/models.py:159
 msgid "Employee data"
-msgstr "بيانات الموظفين"
+msgstr "بيانات الموظف"
 
 #: hr/models.py:567
 msgid "akhtar 3lawat t3akod"
