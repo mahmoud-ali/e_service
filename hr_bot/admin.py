@@ -155,7 +155,7 @@ class EmployeeTelegramRegistrationAdmin(FlowMixin,admin.ModelAdmin):
 class EmployeeTelegramFamilyAdmin(PermissionMixin,FlowMixin,admin.ModelAdmin):
     model = EmployeeTelegramFamily
     exclude = ["created_at","created_by","updated_at","updated_by","state","tarikh_el2dafa"] #,"user_id"
-    list_display = ["name","relation","state"]        
+    list_display = ["name","relation","attachement_file","state"]        
     # list_filter = ["category"]
     autocomplete_fields = ["employee"]
     view_on_site = False
@@ -189,7 +189,7 @@ class EmployeeTelegramMoahilAdmin(PermissionMixin,FlowMixin,admin.ModelAdmin):
     model = EmployeeTelegramMoahil
     exclude = ["created_at","created_by","updated_at","updated_by","state","tarikh_el2dafa"] #,"user_id"
     list_display = ["employee","moahil","university","graduate_dt","state"]        
-    list_filter = ["moahil","university"]
+    list_filter = ["moahil","university","takhasos","graduate_dt","attachement_file"]
     autocomplete_fields = ["employee"]
     view_on_site = False
     search_fields = ["employee__name","employee__code"]
