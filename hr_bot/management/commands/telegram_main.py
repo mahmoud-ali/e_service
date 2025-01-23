@@ -36,7 +36,7 @@ logger = logging.getLogger(__name__)
 
 DEVELOPER_CHAT_ID = 5624823325
 
-TOKEN_ID = "7654221372:AAFpmuPgA0F9pN35QHMeedz3wPVXTVkoa7k"
+TOKEN_ID = "7872004783:AAGtyQS8FB2ARgEU_fY32YlSHsnMJ4kXm5w"
 
 def compare_phone(phone1,phone2):
     return (re.sub(r'\D', '', phone1) == re.sub(r'\D', '', phone2))
@@ -150,7 +150,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     if await check_registration(update,context):
         emp = await get_employee_info(user_id)
         url = 'https://hr1.mineralsgate.com/app/managers/'
-        await update.message.reply_text(f'مرحباً {emp.name}, يمكنك الدخول لبوابة الموارد البشرية عبر الرابط: {url}', reply_markup=menu())
+        await update.message.reply_text(f'مرحباً {emp.name}, يمكنك الدخول لبوابة الموارد البشرية عبر الرابط: {url}', reply_markup=ReplyKeyboardRemove())
         return ConversationHandler.END
 
         # await update.message.reply_text(f'مرحباً {emp.name}, يمكنك القيام بالعمليات التالية:', reply_markup=menu())
