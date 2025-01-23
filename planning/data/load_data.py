@@ -64,10 +64,10 @@ def import_quantity_tasks(year=2025,file_name='quantity.csv'):
                 main_goal_txt = row[0].strip()
                 sub_goal_txt = row[1].strip()
                 sub_goal_code_txt = row[4].strip()
-                resp_txt = row[2].strip()
-                task_txt = row[3].strip()
+                resp_txt = row[3].strip()
+                task_txt = row[2].strip()
 
-                department, _ = Department.objects.get_or_create(
+                department = Department.objects.get(
                     # user=admin_user,
                     name=resp_txt,
                 )
