@@ -23,8 +23,15 @@ class PermissionMixin:
         
         return False
 
-    # def has_change_permission(self, request, obj=None):
-    #     return False
+    def has_change_permission(self, request, obj=None):
+        if request.user.groups.filter(name__in=["hr_employee",]).exists():
+            return False
+        
+        if obj and obj.state == STATE_DRAFT:
+            return True
+        
+        return False
+
 
     def has_delete_permission(self, request, obj=None):
         if obj and obj.state == STATE_DRAFT:
