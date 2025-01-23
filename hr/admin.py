@@ -410,6 +410,9 @@ class EmployeeBasicAdmin(admin.ModelAdmin):
         if request.user.groups.filter(name="hr_payroll").exists():
             return self.fields
         
+        if obj:
+            return self.readonly_fields + ["code"]
+        
         return self.readonly_fields
 
     def has_delete_permission(self, request, obj=None):
