@@ -407,7 +407,7 @@ class AppRequirementsListAdminForm(WorkflowFormMixin,ModelForm):
         fields = ["company","state","reject_comments", "approved_work_plan_file", "initial_voucher_file","specifications_file", "mshobat_jamarik_file"] 
         
 class AppRequirementsListForm(AppRequirementsListAdminForm):
-    layout = [["approved_work_plan_file", "initial_voucher_file"],["specifications_file", "mshobat_jamarik_file"]]
+    layout = [["approved_work_plan_file", "initial_voucher_file"],["specifications_file", "mshobat_jamarik_file"],["other_file", ]]
     company = None
     class Meta:
         model = AppRequirementsList

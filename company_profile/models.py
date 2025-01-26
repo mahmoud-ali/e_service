@@ -871,6 +871,7 @@ class AppRequirementsList(WorkflowModel):
     initial_voucher_file = models.FileField(_("initial_voucher_file"),upload_to=company_applications_path)
     specifications_file = models.FileField(_("specifications_file"),upload_to=company_applications_path)
     mshobat_jamarik_file = models.FileField(_("mshobat_jamarik_file"),upload_to=company_applications_path,blank=True)
+    other_file = models.FileField(_("other_file"),upload_to=company_applications_path,blank=True)
 
     def __str__(self):
         return _("Requirements List") +" ("+str(self.id)+")"

@@ -55,7 +55,7 @@ class AppRequirementsListCreateView(LoginRequiredMixin,View):
     template_name = "company_profile/views/requirements_list_add_master_details.html"
 
     def dispatch(self, *args, **kwargs):         
-        self.detail_formset = [inlineformset_factory(self.model, m, fields=self.model_details_fields,extra=0,can_delete=False,min_num=1, validate_min=True) for m in self.model_details]
+        self.detail_formset = [inlineformset_factory(self.model, m, fields=self.model_details_fields,extra=0,can_delete=False,min_num=0, validate_min=True) for m in self.model_details]
             
         self.success_url = reverse_lazy(self.menu_name)    
         self.extra_context = {
@@ -80,6 +80,12 @@ class AppRequirementsListCreateView(LoginRequiredMixin,View):
             self.object.company = request.user.pro_company.company
             self.object.created_by = self.object.updated_by = request.user
             
+            self.object.approved_work_plan_file = self.request.FILES["approved_work_plan_file"]
+            self.object.initial_voucher_file = self.request.FILES["initial_voucher_file"]
+            self.object.specifications_file = self.request.FILES["specifications_file"]
+            self.object.mshobat_jamarik_file = self.request.FILES.get("mshobat_jamarik_file")
+            self.object.other_file = self.request.FILES.get("other_file")
+
             self.extra_context["detail_formset"] = [formset(request.POST,instance=self.object) for formset in self.detail_formset]
             for formset in self.extra_context["detail_formset"]:
                 if not formset.is_valid():
