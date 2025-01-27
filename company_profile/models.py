@@ -1687,6 +1687,7 @@ class AppHSEPerformanceReportBillsOfQuantities(models.Model):
     BILLS_OF_QUANTITIES7 = 7
     BILLS_OF_QUANTITIES8 = 8
     BILLS_OF_QUANTITIES9 = 9
+    BILLS_OF_QUANTITIES10 = 10
 
     BILLS_OF_QUANTITIES_CHOICES = {
         BILLS_OF_QUANTITIES1: _("BILLS_OF_QUANTITIES1"),
@@ -1698,6 +1699,7 @@ class AppHSEPerformanceReportBillsOfQuantities(models.Model):
         BILLS_OF_QUANTITIES7: _("BILLS_OF_QUANTITIES7"),
         BILLS_OF_QUANTITIES8: _("BILLS_OF_QUANTITIES8"),
         BILLS_OF_QUANTITIES9: _("BILLS_OF_QUANTITIES9"),
+        BILLS_OF_QUANTITIES10: _("BILLS_OF_QUANTITIES10"),
     }
 
     master = models.ForeignKey(AppHSEPerformanceReport, on_delete=models.PROTECT)    
