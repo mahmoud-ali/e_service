@@ -36,7 +36,7 @@ class TblCompanyRequestCompanyTable(BaseTable):
     menu_name = "profile:pa_request_show"
     relation_fields = ["commitment","commitment__company"]
     total = tables.Column(verbose_name= _('request_total'))
-    sum_of_confirmed_payment = tables.Column(verbose_name= _('payments total'))
+    sum_of_confirmed_payment = tables.Column(verbose_name= _('payments total'),orderable=False)
 
     class Meta:
         model = TblCompanyRequestMaster
