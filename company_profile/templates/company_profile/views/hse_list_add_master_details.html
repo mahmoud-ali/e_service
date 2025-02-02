@@ -92,7 +92,8 @@ $(document).ready(function(){
     $("#add_row_btnapphseperformancereporttherapeuticunit_set").hide();
 
 {% for formset in detail_formset %}
-    if ($('select#id_{{formset.prefix}}-0-factor option').length == 0){
+    arr = ['apphseperformancereportfirefighting_set']
+    if ($('select#id_{{formset.prefix}}-0-factor option').length == 0 || arr.includes('{{formset.prefix}}')){
         $("#add_row_btn{{ formset.prefix }}").bind('click',function(e){
             var formset_name = '{{ formset.prefix }}';
             var table_id = 'detail_table{{ formset.prefix }}';
