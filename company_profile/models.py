@@ -1350,7 +1350,7 @@ class AppHSEPerformanceReportChemicalUsed(models.Model):
     factor = models.PositiveIntegerField(_("hse_chemical_used"), choices=CHEMICAL_USED_CHOICES)
     qty_used = models.PositiveIntegerField(_("qty_used"))
     qty_in_store = models.PositiveIntegerField(_("qty_in_store"))
-    expire_dt = models.DateField(_("expire_dt"), help_text="Ex: 2025-01-31")
+    expire_dt = models.DateField(_("expire_dt"), default='',null=True,blank=True, help_text="Ex: 2025-01-31")
 
     class Meta:
         verbose_name = _("HSE CHEMICAL USED")
