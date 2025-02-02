@@ -1154,6 +1154,7 @@ class AppHSEPerformanceReport(WorkflowModel):
     company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
     year = models.PositiveIntegerField(_("year"), validators=[MinValueValidator(limit_value=2015),MaxValueValidator(limit_value=2100)])
     month = models.PositiveIntegerField(verbose_name=_("month"), choices=MONTH_CHOICES)
+    album = models.FileField(_('album'),upload_to=company_applications_path,blank=True,null=True)
     note = models.TextField(verbose_name=_("comment"),blank=True,null=True)
 
     # attachement_file = models.FileField(_("attachement_file"),upload_to=company_applications_path)
@@ -1605,14 +1606,14 @@ class AppHSEPerformanceReportCatering(models.Model):
         verbose_name = _("HSE Catering")
         verbose_name_plural = _("HSE Catering")
 
-class AppHSEPerformanceReportPhotoAlbum(models.Model):
-    master = models.ForeignKey(AppHSEPerformanceReport, on_delete=models.PROTECT)    
-    photo = models.ImageField(_('photo'),upload_to=company_applications_path)
-    description = models.TextField(_("description"))
+# class AppHSEPerformanceReportPhotoAlbum(models.Model):
+    # master = models.ForeignKey(AppHSEPerformanceReport, on_delete=models.PROTECT)    
+    # photo = models.ImageField(_('photo'),upload_to=company_applications_path)
+    # description = models.TextField(_("description"))
 
-    class Meta:
-        verbose_name = _("HSE PHOTO ALBUM")
-        verbose_name_plural = _("HSE PHOTO ALBUM")
+    # class Meta:
+    #     verbose_name = _("HSE PHOTO ALBUM")
+    #     verbose_name_plural = _("HSE PHOTO ALBUM")
 
 class AppHSEPerformanceReportExplosivesUsed(models.Model):
     EXPLOSIVES_USED1 = 1

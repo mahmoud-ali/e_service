@@ -15,7 +15,7 @@ from django.contrib.sites.models import Site
 from django.contrib.messages import constants as message_constants
 from import_export.admin import ExportActionMixin
 from django.db.utils import IntegrityError
-from .models import AppCyanideCertificate, AppExplosivePermission, AppFuelPermission, AppFuelPermissionDetail, AppGoldProduction, AppGoldProductionDetail, AppHSEAccidentReport, AppHSEPerformanceReport, AppHSEPerformanceReportActivities, AppHSEPerformanceReportBillsOfQuantities, AppHSEPerformanceReportCadastralOperations, AppHSEPerformanceReportCadastralOperationsTwo, AppHSEPerformanceReportCatering, AppHSEPerformanceReportChemicalUsed, AppHSEPerformanceReportCyanideCNStorageSpecification, AppHSEPerformanceReportCyanideTable, AppHSEPerformanceReportDiseasesForWorkers, AppHSEPerformanceReportExplosivesUsed, AppHSEPerformanceReportExplosivesUsedSpecification, AppHSEPerformanceReportFireFighting, AppHSEPerformanceReportManPower, AppHSEPerformanceReportOilUsed, AppHSEPerformanceReportOtherChemicalUsed, AppHSEPerformanceReportPhotoAlbum, AppHSEPerformanceReportProactiveIndicators, AppHSEPerformanceReportStatisticalData, AppHSEPerformanceReportTherapeuticUnit, AppHSEPerformanceReportWasteDisposal, AppHSEPerformanceReportWaterUsed, AppHSEPerformanceReportWorkEnvironment, AppImportPermission, AppImportPermissionDetail, AppLocalPurchase, AppRenewalContract, AppRestartActivity, AppTemporaryExemption, AppWhomConcern, LkpAccidentType, LkpNationality,LkpState,LkpLocality,LkpMineral,LkpCompanyProductionStatus,LkpForeignerProcedureType,TblCompanyProduction, \
+from .models import AppCyanideCertificate, AppExplosivePermission, AppFuelPermission, AppFuelPermissionDetail, AppGoldProduction, AppGoldProductionDetail, AppHSEAccidentReport, AppHSEPerformanceReport, AppHSEPerformanceReportActivities, AppHSEPerformanceReportBillsOfQuantities, AppHSEPerformanceReportCadastralOperations, AppHSEPerformanceReportCadastralOperationsTwo, AppHSEPerformanceReportCatering, AppHSEPerformanceReportChemicalUsed, AppHSEPerformanceReportCyanideCNStorageSpecification, AppHSEPerformanceReportCyanideTable, AppHSEPerformanceReportDiseasesForWorkers, AppHSEPerformanceReportExplosivesUsed, AppHSEPerformanceReportExplosivesUsedSpecification, AppHSEPerformanceReportFireFighting, AppHSEPerformanceReportManPower, AppHSEPerformanceReportOilUsed, AppHSEPerformanceReportOtherChemicalUsed, AppHSEPerformanceReportProactiveIndicators, AppHSEPerformanceReportStatisticalData, AppHSEPerformanceReportTherapeuticUnit, AppHSEPerformanceReportWasteDisposal, AppHSEPerformanceReportWaterUsed, AppHSEPerformanceReportWorkEnvironment, AppImportPermission, AppImportPermissionDetail, AppLocalPurchase, AppRenewalContract, AppRestartActivity, AppTemporaryExemption, AppWhomConcern, LkpAccidentType, LkpNationality,LkpState,LkpLocality,LkpMineral,LkpCompanyProductionStatus,LkpForeignerProcedureType,TblCompanyProduction, \
                                       LkpCompanyProductionFactoryType,TblCompanyProductionFactory,LkpCompanyProductionLicenseStatus, \
                                       TblCompanyProductionLicense,AppForignerMovement,TblCompanyProductionUserRole, \
                                       AppBorrowMaterial,AppBorrowMaterialDetail,AppWorkPlan,AppTechnicalFinancialReport, \
@@ -871,13 +871,9 @@ class AppHSEPerformanceReportCadastralOperationsDetailInline(AppHSEInline,admin.
 class AppHSEPerformanceReportCadastralOperations2DetailInline(AppHSEInline,admin.TabularInline):
     model = AppHSEPerformanceReportCadastralOperationsTwo
 
-class AppHSEPerformanceReportPhotoAlbumDetailInline(AppHSEInline,admin.TabularInline):
-    model = AppHSEPerformanceReportPhotoAlbum
-
 class AppHSEPerformanceReportAdmin(WorkflowAdminMixin,admin.ModelAdmin):
     form = AppHSEPerformanceReportAdminForm
     inlines = [
-        AppHSEPerformanceReportPhotoAlbumDetailInline,
         AppHSEPerformanceReportManPowerDetailInline, 
         AppHSEPerformanceReportFireFightingDetailInline,
         AppHSEPerformanceReportWorkEnvironmentDetailInline,
@@ -899,7 +895,7 @@ class AppHSEPerformanceReportAdmin(WorkflowAdminMixin,admin.ModelAdmin):
         AppHSEPerformanceReportCadastralOperations2DetailInline,
     ]
 
-    list_display = ["company", "year", "month",]        
+    list_display = ["company", "year", "month","album"]
     list_filter = ["company", "year", "month",]
     view_on_site = False
 
