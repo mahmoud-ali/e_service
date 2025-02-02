@@ -77,7 +77,7 @@ class AppHSEPerformanceReportCreateView(LoginRequiredMixin,View):
                     AppHSEPerformanceReportCadastralOperationsTwo,
                 ]      
         
-        if self.request.user.pro_company.company.company_type in [TblCompany.COMPANY_TYPE_ENTAJ, TblCompany.COMPANY_TYPE_SAGEER]:
+        if self.request.user.pro_company.company.company_type in [TblCompany.COMPANY_TYPE_ENTAJ, TblCompany.COMPANY_TYPE_SAGEER, TblCompany.COMPANY_TYPE_EMTIAZ]:
             if explosive[0] not in self.model_details:
                 self.model_details += explosive
 
