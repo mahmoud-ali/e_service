@@ -2272,7 +2272,7 @@ msgstr "الصلبة/ إسكراب - كيلوجرام Scrap - Kg"
 
 #: company_profile/models.py:1497
 msgid "WASTE_DISPOSAL3"
-msgstr "الصلبة/ أخرى  - Other"
+msgstr "الصلبة/ أخرى كيلوجرام  - Other Kg"
 
 #: company_profile/models.py:1498
 msgid "WASTE_DISPOSAL4"
@@ -2303,7 +2303,7 @@ msgstr "السائلة/ مياه الصرف الصحي - متر مكعب Sewage 
 
 #: company_profile/models.py:1504
 msgid "WASTE_DISPOSAL10"
-msgstr "السائلة/ أخرى - Other"
+msgstr "السائلة/ أخرى متر مكعب - Other - cubic meter"
 
 #: company_profile/models.py:1505
 msgid "WASTE_DISPOSAL11"
