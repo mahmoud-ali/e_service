@@ -2088,23 +2088,23 @@ msgstr "أنشطة البيئة والسلامة والصحة المهنية - H
 
 #: company_profile/models.py:1342
 msgid "CHEMICAL_USED1"
-msgstr "سيانيد الصوديوم - Sodium cyanide"
+msgstr "سيانيد الصوديوم - Sodium cyanide in Kg"
 
 #: company_profile/models.py:1343
 msgid "CHEMICAL_USED2"
-msgstr "البوراكس  - Borax"
+msgstr "البوراكس  - Borax in Kg"
 
 #: company_profile/models.py:1344
 msgid "CHEMICAL_USED3"
-msgstr "السيلكا - Silica"
+msgstr "السيلكا - Silica in Kg"
 
 #: company_profile/models.py:1345
 msgid "CHEMICAL_USED4"
-msgstr "الرصاص - Lead"
+msgstr "الرصاص - Lead in Kg"
 
 #: company_profile/models.py:1346
 msgid "CHEMICAL_USED5"
-msgstr "نترات الامونيوم - Ammonium nitrate"
+msgstr "نترات الامونيوم - Ammonium nitrate in Kg"
 
 #: company_profile/models.py:1350 company_profile/models.py:1361
 msgid "hse_chemical_used"
@@ -2248,15 +2248,15 @@ msgstr "نوع وكمية المواد المياه المستخدمة وطرق 
 
 #: company_profile/models.py:1464
 msgid "OIL_USED1"
-msgstr "الوقود المستخدم Consumed Fuel"
+msgstr "الوقود المستخدم Consumed Fuel/Liter"
 
 #: company_profile/models.py:1465
 msgid "OIL_USED2"
-msgstr "الزيوت الراجعة Used oil"
+msgstr "الزيوت الراجعة Used oil/Liter"
 
 #: company_profile/models.py:1466
 msgid "OIL_USED3"
-msgstr "الزيوت المستخدمة للاليات Type of Fuel"
+msgstr "الزيوت المستخدمة للاليات Type of Fuel/Liter"
 
 #: company_profile/models.py:1470
 msgid "hse_oil_used"
