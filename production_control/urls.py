@@ -16,7 +16,7 @@ urlpatterns = [
         path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
         path('token/verify/', TokenVerifyView.as_view(), name='token_verify'),
     ])),
-    path('production/', ProductionView, name='production_production'),
-    path('shipping/', ShippingView, name='production_shipping'),
+    path('production/<str:from_dt>/<str:to_dt>/', ProductionView, name='production_production'),
+    path('shipping/<str:from_dt>/<str:to_dt>/', ShippingView, name='production_shipping'),
 
 ]

@@ -37,7 +37,7 @@ def Auth(request):
 @api_view(['GET'])
 # @authentication_classes([TokenAuthentication,])
 # @permission_classes([IsAuthenticated])
-def ProductionView(request):
+def ProductionView(request,from_dt,to_dt):
     def get_data(obj):
         try:
             moragib = obj.created_by.moragib_list.name
@@ -62,12 +62,12 @@ def ProductionView(request):
                     )
             }
 
-    try:
-        from_dt = request.query_params.get('from') # datetime.datetime.strptime(request.GET['from'] ,'%Y/%m/%d')
-        to_dt =  request.query_params.get('to') #datetime.datetime.strptime(request.GET['to'],'%Y/%m/%d')
-    except:
-        from_dt = '1900-01-01'
-        to_dt = '1900-01-01'
+    # try:
+    #     from_dt = request.query_params.get('from') # datetime.datetime.strptime(request.GET['from'] ,'%Y/%m/%d')
+    #     to_dt =  request.query_params.get('to') #datetime.datetime.strptime(request.GET['to'],'%Y/%m/%d')
+    # except:
+    #     from_dt = '1900-01-01'
+    #     to_dt = '1900-01-01'
 
     qs = GoldProductionForm.objects.filter(state=GoldProductionForm.STATE_APPROVED,date__gte=from_dt,date__lte=to_dt).prefetch_related(Prefetch('goldproductionformalloy_set')) #.only('company_id','goldshippingformalloy__id') #updated_at
     qs_json = {'contents': 
@@ -82,7 +82,7 @@ def ProductionView(request):
 @api_view(['GET'])
 # @authentication_classes([TokenAuthentication,])
 # @permission_classes([IsAuthenticated])
-def ShippingView(request):
+def ShippingView(request,from_dt,to_dt):
     def get_data(obj):
         try:
             moragib = obj.created_by.moragib_list.name
@@ -106,12 +106,12 @@ def ShippingView(request):
                         )
             }
 
-    try:
-        from_dt = request.GET['from'] # datetime.datetime.strptime(request.GET['from'] ,'%Y/%m/%d')
-        to_dt =  request.GET['to'] #datetime.datetime.strptime(request.GET['to'],'%Y/%m/%d')
-    except:
-        from_dt = '1900-01-01'
-        to_dt = '1900-01-01'
+    # try:
+    #     from_dt = request.GET['from'] # datetime.datetime.strptime(request.GET['from'] ,'%Y/%m/%d')
+    #     to_dt =  request.GET['to'] #datetime.datetime.strptime(request.GET['to'],'%Y/%m/%d')
+    # except:
+    #     from_dt = '1900-01-01'
+    #     to_dt = '1900-01-01'
 
     qs = GoldShippingForm.objects.filter(state=GoldShippingForm.STATE_APPROVED,date__gte=from_dt,date__lte=to_dt).prefetch_related(Prefetch('goldshippingformalloy_set')) #.only('company_id','goldshippingformalloy__id') #updated_at
     qs_json = {'contents': 
