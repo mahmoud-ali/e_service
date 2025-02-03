@@ -11,28 +11,28 @@ from rest_framework.authtoken.models import Token
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 
-@api_view(['POST'])
-def Auth(request):
-    username = request.POST['username']
-    password = request.POST['password']
+# @api_view(['POST'])
+# def Auth(request):
+#     username = request.POST['username']
+#     password = request.POST['password']
 
-    status = 401
-    token_key = ''
+#     status = 401
+#     token_key = ''
 
-    user = authenticate(email=username, password=password)
+#     user = authenticate(email=username, password=password)
 
-    if user is not None and user.groups.filter(name__in=("production_control_api",)).exists(): 
-        token,created = Token.objects.get_or_create(user=user)
-        status = 200
-        token_key = token.key
+#     if user is not None and user.groups.filter(name__in=("production_control_api",)).exists(): 
+#         token,created = Token.objects.get_or_create(user=user)
+#         status = 200
+#         token_key = token.key
 
-    return Response(
-        data={
-            'status':status,
-            'token':token_key,
-        },
-        status=status
-    )
+#     return Response(
+#         data={
+#             'status':status,
+#             'token':token_key,
+#         },
+#         status=status
+#     )
 
 @api_view(['GET'])
 # @authentication_classes([TokenAuthentication,])
