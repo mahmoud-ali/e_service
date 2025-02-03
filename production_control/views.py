@@ -63,8 +63,8 @@ def ProductionView(request):
             }
 
     try:
-        from_dt = request.GET['from'] # datetime.datetime.strptime(request.GET['from'] ,'%Y/%m/%d')
-        to_dt =  request.GET['to'] #datetime.datetime.strptime(request.GET['to'],'%Y/%m/%d')
+        from_dt = request.query_params.get('from') # datetime.datetime.strptime(request.GET['from'] ,'%Y/%m/%d')
+        to_dt =  request.query_params.get('to') #datetime.datetime.strptime(request.GET['to'],'%Y/%m/%d')
     except:
         from_dt = '1900-01-01'
         to_dt = '1900-01-01'
