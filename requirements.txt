@@ -17,6 +17,7 @@ Pillow
 django-bootstrap-datepicker-plus
 # django-pwa
 djangorestframework
+djangorestframework-simplejwt
 #djoser
 # gunicorn
 django-user-sessions
