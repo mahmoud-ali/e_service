@@ -36,7 +36,7 @@ def Auth(request):
 
 @api_view(['GET'])
 # @authentication_classes([TokenAuthentication,])
-@permission_classes([IsAuthenticated])
+# @permission_classes([IsAuthenticated])
 def ProductionView(request):
     def get_data(obj):
         try:
