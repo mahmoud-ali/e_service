@@ -3799,7 +3799,7 @@ msgstr "الممثلين بالولاية"
 
 #: gold_travel/models.py:76
 msgid "ssmo_name"
-msgstr "الهيئة السودانية للمواصفات والمقاييس / بورتسودان"
+msgstr "النافذة السودانية الموحدة لصادر الذهب"
 
 #: gold_travel/models.py:91
 msgid "state_2mn_2lm3adin"
