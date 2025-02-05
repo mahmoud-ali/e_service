@@ -878,6 +878,7 @@ class AppHSEPerformanceReportAdmin(WorkflowAdminMixin,admin.ModelAdmin):
         AppHSEPerformanceReportFireFightingDetailInline,
         AppHSEPerformanceReportWorkEnvironmentDetailInline,
         AppHSEPerformanceReportProactiveIndicatorsDetailInline,
+        AppHSEPerformanceReportActivitiesDetailInline,
         AppHSEPerformanceReportChemicalUsedDetailInline,
         AppHSEPerformanceReportCyanideTableDetailInline,
         AppHSEPerformanceReportCyanideCNStorageSpecificationDetailInline,
