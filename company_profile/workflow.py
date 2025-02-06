@@ -1,3 +1,4 @@
+import sys
 from django.utils.translation import gettext_lazy as _
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
@@ -56,14 +57,17 @@ def send_transition_email(state,email,url,lang):
         subject = _("Application rejected")
         message = render_to_string('company_profile/email/rejected_email_{0}.html'.format(lang),{'url':url,'logo':logo_url}) 
         
-    send_mail(
-        subject,
-        strip_tags(message),
-        None,
-        [email],
-        html_message=message,
-        fail_silently=False,
-    )        
+    try:
+        send_mail(
+            subject,
+            strip_tags(message),
+            None,
+            [email],
+            html_message=message,
+            fail_silently=False,
+        )        
+    except:
+        print("Error sending email",sys.stderr)
         
 def get_sumitted_responsible(app,company_type):
     User = get_user_model()
