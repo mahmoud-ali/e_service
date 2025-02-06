@@ -173,9 +173,12 @@ class GoldProductionUserAdmin(StateMixin,LogAdminMixin,admin.ModelAdmin):
     @admin.action(description=_('end distribution'))
     def end_distribution(self, request, queryset):
         for obj in queryset:
-            obj.state = GoldProductionUser.STATE_EXPIRED
-            obj.save()
-            self.log_change(request,obj,_('state_expired'))
+            # obj.state = GoldProductionUser.STATE_EXPIRED
+            # obj.save()
+            # self.log_change(request,obj,_('state_expired'))
+
+            obj.goldproductionuserdetail_set.all().delete()
+            obj.delete()
 
     @admin.display(description=_('company_type'))
     def company_type(self, obj):
