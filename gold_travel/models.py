@@ -76,6 +76,15 @@ class AppMoveGold(LoggingModel):
         DESTINATION_SSMO: _('ssmo_name'),
     }
 
+    FORM_TYPE_GOLD_EXPORT = 1
+    FORM_TYPE_GOLD_REEXPORT = 2
+    FORM_TYPE_SILVER_EXPORT = 3
+    FORM_TYPE_CHOICES = {
+        FORM_TYPE_GOLD_EXPORT: _('form_type_gold_export'),
+        FORM_TYPE_GOLD_REEXPORT: _('form_type_gold_reexport'),
+        FORM_TYPE_SILVER_EXPORT: _('form_type_silver_export'),
+    }
+
     STATE_DRAFT = 1
     STATE_SMRC = 2
     STATE_2MN_2LM3ADIN = 3
@@ -112,7 +121,8 @@ class AppMoveGold(LoggingModel):
         company = self.owner_name
         date = self.created_at.date()
         return "company_{0}/travel/{1}/{2}".format(company,date, filename)    
-    
+
+    form_type = models.IntegerField(_("form_type"), choices=FORM_TYPE_CHOICES, default=FORM_TYPE_GOLD_EXPORT)
     code = models.CharField(_("code"),max_length=20, default='')
     date = models.DateField(_("date"))
     destination = models.IntegerField(_("destination"), choices=DESTINATION_CHOICES, default=DESTINATION_SSMO)
