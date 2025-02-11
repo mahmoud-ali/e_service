@@ -314,3 +314,17 @@ def correct_bank_accounts():
         n = 16 - len(obj.account_no)
         obj.account_no='0'*n + obj.account_no
         obj.save()
+
+def swap_emps(id1,id2):
+    tmp=3000
+    obj1 = EmployeeBasic.objects.get(code=id1)
+    obj1.code = tmp
+    obj1.save()
+
+    obj2 = EmployeeBasic.objects.get(code=id2)
+    obj2.code = id1
+    obj2.save()
+
+    obj1 = EmployeeBasic.objects.get(code=tmp)
+    obj1.code = id2
+    obj1.save()
