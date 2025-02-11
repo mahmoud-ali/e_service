@@ -3842,10 +3842,8 @@ msgid "identity_driving_license"
 msgstr "رخصة قيادة"
 
 #: gold_travel/models.py:125
-#, fuzzy
-#| msgid "factory_type"
 msgid "form_type"
-msgstr "نوع المصنع"
+msgstr "نوع الاستمارة"
 
 #: gold_travel/models.py:178 gold_travel/models.py:179
 msgid "Move Gold"
