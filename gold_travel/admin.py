@@ -253,7 +253,7 @@ class AppMoveGoldAdmin(LogAdminMixin,admin.ModelAdmin):
         (
             None,
             {
-                'fields': ["date","destination"]
+                'fields': ["date","form_type","destination"]
             },
         ),
         (
@@ -281,7 +281,7 @@ class AppMoveGoldAdmin(LogAdminMixin,admin.ModelAdmin):
             },
         ),
     ]
-    list_filter = [("date",DateFieldListFilterWithLast30days),("state",ChoicesFieldListFilterNotEmpty),("source_state",RelatedOnlyFieldListFilterNotEmpty),("owner_name_lst",RelatedOnlyFieldListFilterNotEmpty)]
+    list_filter = [("date",("form_type",ChoicesFieldListFilterNotEmpty),DateFieldListFilterWithLast30days),("state",ChoicesFieldListFilterNotEmpty),("source_state",RelatedOnlyFieldListFilterNotEmpty),("owner_name_lst",RelatedOnlyFieldListFilterNotEmpty)]
     search_fields = ["code","owner_name_lst__name","owner_address","repr_name","repr_phone","repr_identity"]
     actions = ['confirm_app','arrived_to_ssmo_app','waived_app','cancel_app','return_to_draft','export_as_csv']
     autocomplete_fields = ["owner_name_lst"]
