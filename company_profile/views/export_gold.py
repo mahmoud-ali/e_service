@@ -58,15 +58,15 @@ class AppExportGoldCreateView(ApplicationCreateView):
         self.object.company = self.request.user.pro_company.company
         self.object.created_by = self.object.updated_by = self.request.user
 
-        self.object.f1 = self.request.FILES["f1"]
-        self.object.f2 = self.request.FILES["f2"]
-        self.object.f3 = self.request.FILES["f3"]
-        self.object.f4 = self.request.FILES["f4"]
-        self.object.f5 = self.request.FILES["f5"]
-        self.object.f6 = self.request.FILES["f6"]
-        self.object.f7 = self.request.FILES["f7"]
-        self.object.f8 = self.request.FILES["f8"]
-        self.object.f9 = self.request.FILES["f9"]
+        self.object.f1 = self.request.FILES.get("f1",'')
+        self.object.f2 = self.request.FILES.get("f2",'')
+        self.object.f3 = self.request.FILES.get("f3",'')
+        self.object.f4 = self.request.FILES.get("f4",'')
+        self.object.f5 = self.request.FILES.get("f5",'')
+        self.object.f6 = self.request.FILES.get("f6",'')
+        self.object.f7 = self.request.FILES.get("f7",'')
+        self.object.f8 = self.request.FILES.get("f8",'')
+        self.object.f9 = self.request.FILES.get("f9",'')
         self.object.save()
         
         messages.add_message(self.request,messages.SUCCESS,_("Application sent successfully."))
