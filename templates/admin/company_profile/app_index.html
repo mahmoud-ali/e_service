@@ -68,7 +68,7 @@
 {% endif %}
 
 {% block sidebar %}
-{% if in_progress_apps %}
+{% comment %} {% if in_progress_apps %}
 <div id="content-related">
   <h3>ملخص قيد الاجراء:</h3>
   <h5>تصنيف الطلبات بالشركة:</h5>
@@ -113,5 +113,5 @@
   });
 
 </script>
-{% endif %}
+{% endif %} {% endcomment %}
 {% endblock %}
