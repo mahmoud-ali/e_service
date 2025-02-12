@@ -538,7 +538,7 @@ class AppMoveExportSilverAdmin(AppMoveAdmin):
                 serial_no = state_representative.state.state_gold_travel.silver_next_serial_no
                 state_code = state_representative.state.state_gold_travel.code
                 obj.form_type = AppMoveGold.FORM_TYPE_SILVER_EXPORT
-                obj.code = f"{state_code}/Silver/{serial_no:03d}"
+                obj.code = f"{state_code}/SV/{serial_no:03d}"
                 state_representative.state.state_gold_travel.silver_next_serial_no = serial_no+1
                 state_representative.state.state_gold_travel.save()
         except Exception as e:
