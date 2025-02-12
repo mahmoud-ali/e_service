@@ -8,10 +8,22 @@
   <div style="text-align:left">{{object.code}}</div>
   <center>
     <h3 style="font-weight: bold !important;text-decoration: underline !important;">
-إستمارة ترحيل ونقل لأغراض الصادر
-{%if object.state == 1 %}
-&nbsp;(مسودة)
-  {%endif%}
+{%if object.form_type == 1 %}
+    إستمارة ترحيل ونقل لأغراض صادر الذهب
+    {%if object.state == 1 %}
+        &nbsp;(مسودة)
+    {%endif%}
+{% elif object.form_type == 2 %}
+    إستمارة تصدير ذهب بغرض التصنيع والإعادة
+    {%if object.state == 1 %}
+        &nbsp;(مسودة)
+    {%endif%}
+{% elif object.form_type == 3 %}
+    إستمارة ترحيل ونقل لأغراض صادر الفضة
+    {%if object.state == 1 %}
+        &nbsp;(مسودة)
+    {%endif%}
+{%endif%}
     </h3>
   </center>
   
@@ -105,7 +117,13 @@
         <li>مدة سريان الإستمارة ثلاثة أيام عمل رسمية.</li>
         <li>أي تعديل أو كشط يلغي الإستمارة.</li>
         <li>يسلم إيصال الإيداع الصادر من المواصفات والمقاييس إلى الشركة السودانية للموارد المعدنية المحدودة خلال المدة اعلاه.</li>
+        {%if object.form_type == 1 %}
         <li>هذه الإستمارة صادرة لأغراض ترحيل الذهب ولأغراض الصادر فقط.</li>
+        {%elif object.form_type == 2 %}
+        <li>هذه الإستمارة صادرة لأغراض ترحيل الذهب ولأغراض الصادر فقط.</li>
+        {%elif object.form_type == 3 %}
+        <li>هذه الإستمارة صادرة لأغراض ترحيل الفضة ولأغراض الصادر فقط.</li>
+        {%endif %}
         <li>هذه الإستمارة مجانية.</li>
     </ol>
 

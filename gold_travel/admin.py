@@ -10,7 +10,7 @@ from django.utils.html import format_html
 from django.db import models
 from django.forms.widgets import TextInput
 from gold_travel.forms import TblStateRepresentativeForm
-from gold_travel.models import AppPrepareGold, LkpOwner, LkpStateDetails, TblStateRepresentative,AppMoveGold, AppMoveGoldDetails
+from gold_travel.models import AppMoveGoldExportGold, AppMoveGoldExportSilver, AppMoveGoldREExportGold, AppPrepareGold, LkpOwner, LkpStateDetails, TblStateRepresentative,AppMoveGold, AppMoveGoldDetails
 
 class LogAdminMixin:
     def has_add_permission(self, request):
@@ -54,7 +54,7 @@ class LogAdminMixin:
 
 class LkpStateDetailsAdmin(admin.ModelAdmin):
     model = LkpStateDetails
-    list_display = ["state","code","next_serial_no","has_2lestikhbarat_2l3askria"]
+    list_display = ["state","code","next_serial_no","reexport_next_serial_no","silver_next_serial_no","has_2lestikhbarat_2l3askria"]
     list_filter = ["state","has_2lestikhbarat_2l3askria"]
 
 admin.site.register(LkpStateDetails, LkpStateDetailsAdmin)
@@ -245,15 +245,14 @@ class RelatedOnlyFieldListFilterNotEmpty(admin.RelatedOnlyFieldListFilter):
                 "display": empty_title,
             }
 
-class AppMoveGoldAdmin(LogAdminMixin,admin.ModelAdmin):
-    model = AppMoveGold
+class AppMoveAdmin(LogAdminMixin,admin.ModelAdmin):
     inlines = [AppMoveGoldDetailInline]     
 
     fieldsets = [
         (
             None,
             {
-                'fields': ["date","form_type","destination"]
+                'fields': ["date","destination"]
             },
         ),
         (
@@ -281,11 +280,11 @@ class AppMoveGoldAdmin(LogAdminMixin,admin.ModelAdmin):
             },
         ),
     ]
-    list_filter = [("date",DateFieldListFilterWithLast30days),("form_type",ChoicesFieldListFilterNotEmpty),("state",ChoicesFieldListFilterNotEmpty),("source_state",RelatedOnlyFieldListFilterNotEmpty),("owner_name_lst",RelatedOnlyFieldListFilterNotEmpty)]
+    list_filter = [("date",DateFieldListFilterWithLast30days),("state",ChoicesFieldListFilterNotEmpty),("source_state",RelatedOnlyFieldListFilterNotEmpty),("owner_name_lst",RelatedOnlyFieldListFilterNotEmpty)]
     search_fields = ["code","owner_name_lst__name","owner_address","repr_name","repr_phone","repr_identity"]
     actions = ['confirm_app','arrived_to_ssmo_app','waived_app','cancel_app','return_to_draft','export_as_csv']
     autocomplete_fields = ["owner_name_lst"]
-    list_display = ["form_type","code","date","owner_name_lst","gold_weight_in_gram","gold_alloy_count","state_str","source_state","repr_name"]
+    list_display = ["code","date","owner_name_lst","gold_weight_in_gram","gold_alloy_count","state_str","source_state","repr_name"]
     # list_editable = ['owner_name_lst']
 
     view_on_site = False
@@ -303,6 +302,7 @@ class AppMoveGoldAdmin(LogAdminMixin,admin.ModelAdmin):
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
+        print(qs.model)
         qs = qs.prefetch_related('source_state').prefetch_related(models.Prefetch("appmovegolddetails_set"))
 
         if request.user.is_superuser or request.user.groups.filter(name__in=["gold_travel_manager","gold_travel_show"]).exists():
@@ -321,25 +321,6 @@ class AppMoveGoldAdmin(LogAdminMixin,admin.ModelAdmin):
             qs = qs.none()
 
         return qs
-
-    def save_model(self, request, obj, form, change):
-        try:
-            state_representative = request.user.state_representative
-            obj.source_state = state_representative.state
-            if not obj.code:
-                serial_no = state_representative.state.state_gold_travel.next_serial_no
-                state_code = state_representative.state.state_gold_travel.code
-                obj.code = f"{state_code}/{serial_no:03d}"
-                state_representative.state.state_gold_travel.next_serial_no = serial_no+1
-                state_representative.state.state_gold_travel.save()
-        except Exception as e:
-            pass
-
-        if obj.pk:
-            obj.updated_by = request.user
-        else:
-            obj.created_by = obj.updated_by = request.user
-        super().save_model(request, obj, form, change)                
 
     def get_actions(self, request):
         actions = super().get_actions(request)
@@ -481,7 +462,95 @@ class AppMoveGoldAdmin(LogAdminMixin,admin.ModelAdmin):
         
         return obj.get_state_display()
 
-admin.site.register(AppMoveGold, AppMoveGoldAdmin)
+class AppMoveGoldAdmin(AppMoveAdmin):
+    model = AppMoveGoldExportGold
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+
+        return qs.filter(form_type=AppMoveGold.FORM_TYPE_GOLD_EXPORT)
+    
+    def save_model(self, request, obj, form, change):
+        try:
+            state_representative = request.user.state_representative
+            obj.source_state = state_representative.state
+            if not obj.code:
+                serial_no = state_representative.state.state_gold_travel.next_serial_no
+                state_code = state_representative.state.state_gold_travel.code
+                obj.form_type = AppMoveGold.FORM_TYPE_GOLD_EXPORT
+                obj.code = f"{state_code}/{serial_no:03d}"
+                state_representative.state.state_gold_travel.next_serial_no = serial_no+1
+                state_representative.state.state_gold_travel.save()
+        except Exception as e:
+            pass
+
+        if obj.pk:
+            obj.updated_by = request.user
+        else:
+            obj.created_by = obj.updated_by = request.user
+        super().save_model(request, obj, form, change)                
+
+admin.site.register(AppMoveGold, AppMoveGoldAdmin) 
+
+class AppMoveRexportGoldAdmin(AppMoveAdmin):
+    model = AppMoveGoldREExportGold
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+
+        return qs.filter(form_type=AppMoveGold.FORM_TYPE_GOLD_REEXPORT)
+
+    def save_model(self, request, obj, form, change):
+        try:
+            state_representative = request.user.state_representative
+            obj.source_state = state_representative.state
+            if not obj.code:
+                serial_no = state_representative.state.state_gold_travel.reexport_next_serial_no
+                state_code = state_representative.state.state_gold_travel.code
+                obj.form_type = AppMoveGold.FORM_TYPE_GOLD_REEXPORT
+                obj.code = f"{state_code}/RE/{serial_no:03d}"
+                state_representative.state.state_gold_travel.reexport_next_serial_no = serial_no+1
+                state_representative.state.state_gold_travel.save()
+        except Exception as e:
+            pass
+
+        if obj.pk:
+            obj.updated_by = request.user
+        else:
+            obj.created_by = obj.updated_by = request.user
+        super().save_model(request, obj, form, change)                
+
+admin.site.register(AppMoveGoldREExportGold, AppMoveRexportGoldAdmin) 
+
+class AppMoveExportSilverAdmin(AppMoveAdmin):
+    model = AppMoveGoldExportSilver
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+
+        return qs.filter(form_type=AppMoveGold.FORM_TYPE_SILVER_EXPORT)
+
+    def save_model(self, request, obj, form, change):
+        try:
+            state_representative = request.user.state_representative
+            obj.source_state = state_representative.state
+            if not obj.code:
+                serial_no = state_representative.state.state_gold_travel.silver_next_serial_no
+                state_code = state_representative.state.state_gold_travel.code
+                obj.form_type = AppMoveGold.FORM_TYPE_SILVER_EXPORT
+                obj.code = f"{state_code}/Silver/{serial_no:03d}"
+                state_representative.state.state_gold_travel.silver_next_serial_no = serial_no+1
+                state_representative.state.state_gold_travel.save()
+        except Exception as e:
+            pass
+
+        if obj.pk:
+            obj.updated_by = request.user
+        else:
+            obj.created_by = obj.updated_by = request.user
+        super().save_model(request, obj, form, change)                
+
+admin.site.register(AppMoveGoldExportSilver, AppMoveExportSilverAdmin) 
 
 class AppPrepareGoldAdmin(LogAdminMixin,admin.ModelAdmin):
     model = AppPrepareGold

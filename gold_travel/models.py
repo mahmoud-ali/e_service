@@ -21,7 +21,9 @@ class LoggingModel(models.Model):
 class LkpStateDetails(models.Model):
     state = models.OneToOneField(LkpState, on_delete=models.PROTECT,related_name="state_gold_travel",verbose_name=_("state"))
     code = models.CharField(_("code"),max_length=4)
-    next_serial_no = models.IntegerField(_("next_serial_no"))
+    next_serial_no = models.IntegerField(_("export_next_serial_no"))
+    reexport_next_serial_no = models.IntegerField(_("reexport_next_serial_no"), default=1)
+    silver_next_serial_no = models.IntegerField(_("silver_next_serial_no"), default=1)
     has_2lestikhbarat_2l3askria = models.BooleanField(_("has_2lestikhbarat_2l3askria"))
     
     class Meta:
@@ -181,6 +183,45 @@ class AppMoveGold(LoggingModel):
             models.Index(fields=["code"]),
             # models.Index(fields=["owner_name"]),
         ]
+
+class AppMoveGoldExportGoldManager(models.Manager):
+    def get_queryset(self):
+       return super().get_queryset().filter(form_type=AppMoveGold.FORM_TYPE_GOLD_EXPORT)
+
+class AppMoveGoldExportGold(AppMoveGold):
+    objects = AppMoveGoldExportGoldManager()
+    default_manager = objects
+
+    class Meta:
+        proxy = True
+        verbose_name = _("Export Gold")
+        verbose_name_plural = _("Export Gold")
+
+class AppMoveGoldREExportGoldManager(models.Manager):
+    def get_queryset(self):
+       return super().get_queryset().filter(form_type=AppMoveGold.FORM_TYPE_GOLD_REEXPORT)
+
+class AppMoveGoldREExportGold(AppMoveGold):
+    objects = AppMoveGoldREExportGoldManager()
+    default_manager = objects
+
+    class Meta:
+        proxy = True
+        verbose_name = _("Re-export Gold")
+        verbose_name_plural = _("Re-export Gold")
+
+class AppMoveGoldExportSilverManager(models.Manager):
+    def get_queryset(self):
+       return super().get_queryset().filter(form_type=AppMoveGold.FORM_TYPE_SILVER_EXPORT)
+
+class AppMoveGoldExportSilver(AppMoveGold):
+    objects = AppMoveGoldExportSilverManager()
+    default_manager = objects
+
+    class Meta:
+        proxy = True
+        verbose_name = _("Export Silver")
+        verbose_name_plural = _("Export Silver")
 
 class AppMoveGoldDetails(models.Model):
     ALLOY_SHAPE_RECTANGULAR = 1
