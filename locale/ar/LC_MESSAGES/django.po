@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-12 12:03+0200\n"
+"POT-Creation-Date: 2025-02-13 12:00+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -137,8 +137,8 @@ msgstr "بيانات العقد"
 msgid "company_type"
 msgstr "نوع الشركة"
 
-#: company_profile/admin.py:357 gold_travel/admin.py:409
-#: gold_travel_traditional/admin.py:331
+#: company_profile/admin.py:357 dabtiaat_altaedin/admin.py:282
+#: gold_travel/admin.py:409 gold_travel_traditional/admin.py:331
 msgid "Export data"
 msgstr "تصدير البيانات"
 
@@ -225,7 +225,8 @@ msgid "License count"
 msgstr "عدد الرخص"
 
 #: company_profile/admin.py:365 company_profile/models.py:109
-#: company_profile/models.py:254 gold_travel/models.py:22
+#: company_profile/models.py:254 dabtiaat_altaedin/models.py:47
+#: dabtiaat_altaedin/models.py:93 gold_travel/models.py:22
 #: gold_travel/models.py:50 gold_travel/models.py:145 gold_travel/models.py:262
 #: gold_travel_traditional/models.py:18 gold_travel_traditional/models.py:29
 #: gold_travel_traditional/models.py:42 gold_travel_traditional/models.py:114
@@ -318,19 +319,20 @@ msgstr "ديسمبر"
 #: company_profile/templates/company_profile/home.html:17
 #: company_profile/templates/company_profile/home.html:41
 #: company_profile/templates/company_profile/home.html:64
-#: executive_office/models.py:27 gold_travel/models.py:12
-#: gold_travel_traditional/admin.py:340 gold_travel_traditional/models.py:8
-#: help_request/models.py:11 hr_portal/models.py:89 mokhalafat/models.py:6
-#: pa/models.py:46 planning/models.py:99 production_control/models.py:13
+#: dabtiaat_altaedin/models.py:12 executive_office/models.py:27
+#: gold_travel/models.py:12 gold_travel_traditional/admin.py:340
+#: gold_travel_traditional/models.py:8 help_request/models.py:11
+#: hr_portal/models.py:89 mokhalafat/models.py:6 pa/models.py:46
+#: planning/models.py:99 production_control/models.py:13
 #: revenu_dist/models.py:53 traditional_api/models.py:10
 msgid "created_at"
 msgstr "تاريخ الانشاء"
 
-#: company_profile/models.py:46 executive_office/models.py:28
-#: gold_travel/models.py:13 gold_travel_traditional/admin.py:340
-#: gold_travel_traditional/models.py:9 help_request/models.py:13
-#: hr_portal/models.py:90 mokhalafat/models.py:7 pa/models.py:47
-#: planning/models.py:100 production_control/models.py:14
+#: company_profile/models.py:46 dabtiaat_altaedin/models.py:13
+#: executive_office/models.py:28 gold_travel/models.py:13
+#: gold_travel_traditional/admin.py:340 gold_travel_traditional/models.py:9
+#: help_request/models.py:13 hr_portal/models.py:90 mokhalafat/models.py:7
+#: pa/models.py:47 planning/models.py:100 production_control/models.py:14
 #: revenu_dist/models.py:54 traditional_api/models.py:11
 msgid "created_by"
 msgstr "المستخدم المسئول عن الانشاء"
@@ -339,19 +341,20 @@ msgstr "المستخدم المسئول عن الانشاء"
 #: company_profile/templates/company_profile/home.html:18
 #: company_profile/templates/company_profile/home.html:42
 #: company_profile/templates/company_profile/home.html:65
-#: executive_office/models.py:30 gold_travel/models.py:15
-#: gold_travel_traditional/admin.py:340 gold_travel_traditional/models.py:11
-#: help_request/models.py:12 hr_portal/models.py:92 mokhalafat/models.py:9
-#: pa/models.py:49 planning/models.py:101 production_control/models.py:16
+#: dabtiaat_altaedin/models.py:15 executive_office/models.py:30
+#: gold_travel/models.py:15 gold_travel_traditional/admin.py:340
+#: gold_travel_traditional/models.py:11 help_request/models.py:12
+#: hr_portal/models.py:92 mokhalafat/models.py:9 pa/models.py:49
+#: planning/models.py:101 production_control/models.py:16
 #: revenu_dist/models.py:56 traditional_api/models.py:13
 msgid "updated_at"
 msgstr "تاريخ اخر تعديل"
 
-#: company_profile/models.py:49 executive_office/models.py:31
-#: gold_travel/models.py:16 gold_travel_traditional/admin.py:340
-#: gold_travel_traditional/models.py:12 help_request/models.py:14
-#: hr_portal/models.py:93 mokhalafat/models.py:10 pa/models.py:50
-#: planning/models.py:102 production_control/models.py:17
+#: company_profile/models.py:49 dabtiaat_altaedin/models.py:16
+#: executive_office/models.py:31 gold_travel/models.py:16
+#: gold_travel_traditional/admin.py:340 gold_travel_traditional/models.py:12
+#: help_request/models.py:14 hr_portal/models.py:93 mokhalafat/models.py:10
+#: pa/models.py:50 planning/models.py:102 production_control/models.py:17
 #: revenu_dist/models.py:57 traditional_api/models.py:14
 msgid "updated_by"
 msgstr "المستخدم المسئول عن التعديل"
@@ -373,14 +376,14 @@ msgstr ""
 #: company_profile/models.py:163 company_profile/models.py:201
 #: company_profile/models.py:223 company_profile/models.py:758
 #: company_profile/models.py:856 company_profile/models.py:1113
-#: executive_office/models.py:38 executive_office/models.py:48
-#: executive_office/models.py:71 gold_travel/models.py:49
-#: gold_travel/models.py:65 gold_travel_traditional/models.py:19
-#: gold_travel_traditional/models.py:30 gold_travel_traditional/models.py:41
-#: hr_portal/models.py:405 planning/models.py:109 planning/models.py:121
-#: planning/models.py:137 production_control/models.py:28
-#: production_control/models.py:29 revenu_dist/models.py:63
-#: revenu_dist/models.py:73 revenu_dist/models.py:96
+#: dabtiaat_altaedin/models.py:46 executive_office/models.py:38
+#: executive_office/models.py:48 executive_office/models.py:71
+#: gold_travel/models.py:49 gold_travel/models.py:65
+#: gold_travel_traditional/models.py:19 gold_travel_traditional/models.py:30
+#: gold_travel_traditional/models.py:41 hr_portal/models.py:405
+#: planning/models.py:109 planning/models.py:121 planning/models.py:137
+#: production_control/models.py:28 production_control/models.py:29
+#: revenu_dist/models.py:63 revenu_dist/models.py:73 revenu_dist/models.py:96
 #: traditional_api/models.py:20 traditional_api/models.py:31
 #: traditional_api/models.py:42
 msgid "name"
@@ -1591,7 +1594,8 @@ msgstr "تعليق مختصر عن الدراسة"
 
 #: company_profile/models.py:940 company_profile/models.py:966
 #: company_profile/models.py:1049 company_profile/models.py:1140
-#: gold_travel/models.py:144 pa/models.py:309 pa/models.py:521 pa/models.py:637
+#: dabtiaat_altaedin/models.py:92 gold_travel/models.py:144 pa/models.py:309
+#: pa/models.py:521 pa/models.py:637
 msgid "attachement_file"
 msgstr "المرفقات"
 
@@ -3401,6 +3405,179 @@ msgstr ""
 msgid "Wrong transition path."
 msgstr ""
 
+#: dabtiaat_altaedin/admin.py:93 gold_travel/admin.py:119
+msgid "Any date"
+msgstr "أي تاريخ"
+
+#: dabtiaat_altaedin/admin.py:95 gold_travel/admin.py:121
+msgid "Today"
+msgstr "اليوم"
+
+#: dabtiaat_altaedin/admin.py:102 gold_travel/admin.py:128
+msgid "Past 7 days"
+msgstr "الايام السبعة الاخيرة"
+
+#: dabtiaat_altaedin/admin.py:109 gold_travel/admin.py:135
+msgid "Past 30 days"
+msgstr "الايام الثلاثين الاخيرة"
+
+#: dabtiaat_altaedin/admin.py:116 gold_travel/admin.py:142
+msgid "This month"
+msgstr "هذا الشهر"
+
+#: dabtiaat_altaedin/admin.py:123 gold_travel/admin.py:149
+msgid "Last month"
+msgstr "الشهر السابق"
+
+#: dabtiaat_altaedin/admin.py:130 gold_travel/admin.py:156
+msgid "This year"
+msgstr "هذا العام"
+
+#: dabtiaat_altaedin/admin.py:137 gold_travel/admin.py:163
+msgid "Last year"
+msgstr "العام السابق"
+
+#: dabtiaat_altaedin/admin.py:154 dabtiaat_altaedin/admin.py:192
+#: gold_travel/admin.py:180 gold_travel/admin.py:218
+msgid "All"
+msgstr "الكل"
+
+#: dabtiaat_altaedin/admin.py:247 gold_travel/admin.py:356
+#: gold_travel/admin.py:634 gold_travel/admin.py:644
+msgid "Confirm application"
+msgstr "اعتماد الطلب"
+
+#: dabtiaat_altaedin/admin.py:256 dabtiaat_altaedin/models.py:74
+#: gold_travel/admin.py:365 gold_travel/models.py:101
+msgid "state_smrc"
+msgstr "اعتماد ممثل الشركة السودانية بالولاية"
+
+#: dabtiaat_altaedin/admin.py:260 gold_travel/admin.py:369
+#: gold_travel/admin.py:648
+msgid "application confirmed successfully!"
+msgstr "تم إعتماد الطلب بنجاح."
+
+#: dabtiaat_altaedin/admin.py:289 dabtiaat_altaedin/models.py:88
+#: gold_travel/admin.py:416 gold_travel/models.py:129 gold_travel/models.py:257
+#: mokhalafat/models.py:17 pa/templates/pa/pa_daily.html:75
+#: production_control/models.py:81 production_control/models.py:131
+#: revenu_dist/models.py:108
+msgid "date"
+msgstr "التاريخ"
+
+#: dabtiaat_altaedin/admin.py:289 dabtiaat_altaedin/admin.py:314
+#: dabtiaat_altaedin/models.py:89 gold_travel/admin.py:416
+#: gold_travel/admin.py:441 gold_travel/models.py:259
+#: gold_travel/templates/admin/gold_travel/appmovegold/pagination.html:13
+#: gold_travel_traditional/admin.py:338 gold_travel_traditional/models.py:106
+#: production_control/templates/admin/production_control/goldproductionform/pagination.html:13
+msgid "gold_weight_in_gram"
+msgstr "وزن الذهب بالجرام"
+
+#: dabtiaat_altaedin/admin.py:289 dabtiaat_altaedin/admin.py:310
+#: dabtiaat_altaedin/models.py:90
+msgid "gold_price"
+msgstr "سعر الجرام"
+
+#: dabtiaat_altaedin/admin.py:289 dabtiaat_altaedin/models.py:91
+#: executive_office/models.py:88 executive_office/models.py:149
+#: gold_travel/admin.py:417 gold_travel/admin.py:458 gold_travel/models.py:143
+#: gold_travel/models.py:261 gold_travel_traditional/admin.py:339
+#: gold_travel_traditional/models.py:112 pa/models.py:95 pa/models.py:133
+#: pa/models.py:197 pa/models.py:307 pa/models.py:519 pa/tables/payment.py:34
+#: pa/tables/request.py:53 planning/models.py:193 planning/models.py:278
+#: planning/models.py:285 production_control/models.py:51
+#: production_control/models.py:84 production_control/models.py:134
+msgid "record_state"
+msgstr "الحالة"
+
+#: dabtiaat_altaedin/admin.py:289 gold_travel/admin.py:417
+#: gold_travel_traditional/admin.py:339
+msgid "source_state"
+msgstr "الولاية المصدر"
+
+#: dabtiaat_altaedin/admin.py:289 dabtiaat_altaedin/admin.py:318
+msgid "al3wayid_aljalila_amount"
+msgstr "العوائد الجليلة"
+
+#: dabtiaat_altaedin/admin.py:290 dabtiaat_altaedin/admin.py:322
+msgid "alhafiz_amount"
+msgstr "الحافز"
+
+#: dabtiaat_altaedin/admin.py:290 dabtiaat_altaedin/admin.py:326
+msgid "alniyaba_amount"
+msgstr "النيابة"
+
+#: dabtiaat_altaedin/admin.py:290 dabtiaat_altaedin/admin.py:330
+msgid "smrc_amount"
+msgstr "الشركة السودانية"
+
+#: dabtiaat_altaedin/admin.py:290 dabtiaat_altaedin/admin.py:334
+msgid "state_amount"
+msgstr "الولاية"
+
+#: dabtiaat_altaedin/admin.py:290 dabtiaat_altaedin/admin.py:338
+msgid "police_amount"
+msgstr "شرطة التعدين"
+
+#: dabtiaat_altaedin/admin.py:290 dabtiaat_altaedin/admin.py:342
+msgid "amn_amount"
+msgstr "امن التعدين"
+
+#: dabtiaat_altaedin/admin.py:290 dabtiaat_altaedin/admin.py:346
+msgid "riasat_alquat_aldaabita_amount"
+msgstr "رئاسة القوة الضابطة"
+
+#: dabtiaat_altaedin/admin.py:290 dabtiaat_altaedin/admin.py:350
+msgid "alquat_aldaabita_amount"
+msgstr "القوة الضابطة"
+
+#: dabtiaat_altaedin/apps.py:7
+msgid "dabtiaat_altaedin_app"
+msgstr "نظام ضبطيات التعدين"
+
+#: dabtiaat_altaedin/forms.py:11 dabtiaat_altaedin/models.py:45
+#: executive_office/forms.py:15 executive_office/models.py:37
+#: gold_travel/forms.py:11 gold_travel/models.py:48
+#: gold_travel_traditional/forms.py:12 gold_travel_traditional/models.py:40
+#: planning/forms.py:17 planning/models.py:108 production_control/forms.py:22
+#: production_control/models.py:27
+msgid "user"
+msgstr "المستخدم"
+
+#: dabtiaat_altaedin/models.py:38 gold_travel/models.py:41
+msgid "authority_smrc"
+msgstr "الشركة السودانية - الولايات"
+
+#: dabtiaat_altaedin/models.py:48 gold_travel/models.py:51
+msgid "authority"
+msgstr "الجهة"
+
+#: dabtiaat_altaedin/models.py:58 gold_travel/models.py:61
+msgid "state representative"
+msgstr "الممثل بالولاية"
+
+#: dabtiaat_altaedin/models.py:59 gold_travel/models.py:62
+msgid "state representatives"
+msgstr "الممثلين بالولاية"
+
+#: dabtiaat_altaedin/models.py:73 executive_office/models.py:13
+#: gold_travel/models.py:100 gold_travel/models.py:252 planning/models.py:43
+#: production_control/admin.py:275 production_control/admin.py:360
+#: production_control/models.py:43 production_control/models.py:75
+#: production_control/models.py:125
+msgid "state_draft"
+msgstr "مسودة"
+
+#: dabtiaat_altaedin/models.py:80 gold_travel/admin.py:391
+#: gold_travel/admin.py:397 gold_travel/models.py:107
+msgid "state_canceled"
+msgstr "تم الإلغاء"
+
+#: dabtiaat_altaedin/models.py:145 dabtiaat_altaedin/models.py:146
+msgid "dabtiaat app"
+msgstr "استمارة ضبطية"
+
 #: executive_office/admin.py:75 executive_office/admin.py:140
 #: gold_travel/models.py:253 planning/models.py:44
 #: production_control/admin.py:34 production_control/admin.py:267
@@ -3433,22 +3610,6 @@ msgstr "تم حفظ السجل بنجاح."
 #: executive_office/apps.py:8
 msgid "Executive Office"
 msgstr "المكتب التنفيذي"
-
-#: executive_office/forms.py:15 executive_office/models.py:37
-#: gold_travel/forms.py:11 gold_travel/models.py:48
-#: gold_travel_traditional/forms.py:12 gold_travel_traditional/models.py:40
-#: planning/forms.py:17 planning/models.py:108 production_control/forms.py:22
-#: production_control/models.py:27
-msgid "user"
-msgstr "المستخدم"
-
-#: executive_office/models.py:13 gold_travel/models.py:100
-#: gold_travel/models.py:252 planning/models.py:43
-#: production_control/admin.py:275 production_control/admin.py:360
-#: production_control/models.py:43 production_control/models.py:75
-#: production_control/models.py:125
-msgid "state_draft"
-msgstr "مسودة"
 
 #: executive_office/models.py:14
 msgid "state_processing"
@@ -3516,17 +3677,6 @@ msgstr "الجهات المرسلة"
 msgid "finish_date"
 msgstr "تاريخ النهاية"
 
-#: executive_office/models.py:88 executive_office/models.py:149
-#: gold_travel/admin.py:417 gold_travel/admin.py:458 gold_travel/models.py:143
-#: gold_travel/models.py:261 gold_travel_traditional/admin.py:339
-#: gold_travel_traditional/models.py:112 pa/models.py:95 pa/models.py:133
-#: pa/models.py:197 pa/models.py:307 pa/models.py:519 pa/tables/payment.py:34
-#: pa/tables/request.py:53 planning/models.py:193 planning/models.py:278
-#: planning/models.py:285 production_control/models.py:51
-#: production_control/models.py:84 production_control/models.py:134
-msgid "record_state"
-msgstr "الحالة"
-
 #: executive_office/models.py:94 executive_office/models.py:95
 #: executive_office/models.py:121 executive_office/models.py:129
 #: executive_office/models.py:143
@@ -3593,42 +3743,6 @@ msgstr "إغلاق"
 msgid "Delete"
 msgstr "حذف السجل"
 
-#: gold_travel/admin.py:119
-msgid "Any date"
-msgstr "أي تاريخ"
-
-#: gold_travel/admin.py:121
-msgid "Today"
-msgstr "اليوم"
-
-#: gold_travel/admin.py:128
-msgid "Past 7 days"
-msgstr "الايام السبعة الاخيرة"
-
-#: gold_travel/admin.py:135
-msgid "Past 30 days"
-msgstr "الايام الثلاثين الاخيرة"
-
-#: gold_travel/admin.py:142
-msgid "This month"
-msgstr "هذا الشهر"
-
-#: gold_travel/admin.py:149
-msgid "Last month"
-msgstr "الشهر السابق"
-
-#: gold_travel/admin.py:156
-msgid "This year"
-msgstr "هذا العام"
-
-#: gold_travel/admin.py:163
-msgid "Last year"
-msgstr "العام السابق"
-
-#: gold_travel/admin.py:180 gold_travel/admin.py:218
-msgid "All"
-msgstr "الكل"
-
 #: gold_travel/admin.py:259
 msgid "owner data"
 msgstr "بيانات المالك"
@@ -3640,18 +3754,6 @@ msgstr "بيانات الناقل"
 #: gold_travel/admin.py:277
 msgid "attachments"
 msgstr "المرفقات"
-
-#: gold_travel/admin.py:356 gold_travel/admin.py:634 gold_travel/admin.py:644
-msgid "Confirm application"
-msgstr "اعتماد الطلب"
-
-#: gold_travel/admin.py:365 gold_travel/models.py:101
-msgid "state_smrc"
-msgstr "اعتماد ممثل الشركة السودانية بالولاية"
-
-#: gold_travel/admin.py:369 gold_travel/admin.py:648
-msgid "application confirmed successfully!"
-msgstr "تم إعتماد الطلب بنجاح."
 
 #: gold_travel/admin.py:373
 msgid "Arrived to SSMO"
@@ -3671,28 +3773,10 @@ msgstr "تم تعديل الطلب بنجاح."
 msgid "state_waived"
 msgstr "تم التنازل"
 
-#: gold_travel/admin.py:391 gold_travel/admin.py:397 gold_travel/models.py:107
-msgid "state_canceled"
-msgstr "تم الإلغاء"
-
 #: gold_travel/admin.py:400 gold_travel/admin.py:406 gold_travel/admin.py:652
 #: gold_travel/admin.py:658
 msgid "return_to_draft"
 msgstr "إرجاع إلى مسودة"
-
-#: gold_travel/admin.py:416 gold_travel/models.py:129 gold_travel/models.py:257
-#: mokhalafat/models.py:17 pa/templates/pa/pa_daily.html:75
-#: production_control/models.py:81 production_control/models.py:131
-#: revenu_dist/models.py:108
-msgid "date"
-msgstr "التاريخ"
-
-#: gold_travel/admin.py:416 gold_travel/admin.py:441 gold_travel/models.py:259
-#: gold_travel/templates/admin/gold_travel/appmovegold/pagination.html:13
-#: gold_travel_traditional/admin.py:338 gold_travel_traditional/models.py:106
-#: production_control/templates/admin/production_control/goldproductionform/pagination.html:13
-msgid "gold_weight_in_gram"
-msgstr "اجمالي وزن الذهب بالجرام"
 
 #: gold_travel/admin.py:416 gold_travel/admin.py:446
 #: gold_travel/templates/admin/gold_travel/appmovegold/pagination.html:14
@@ -3737,10 +3821,6 @@ msgstr "اثبات هوية الناقل"
 msgid "repr_identity_issue_date"
 msgstr "تاريخ اصدار هوية الناقل"
 
-#: gold_travel/admin.py:417 gold_travel_traditional/admin.py:339
-msgid "source_state"
-msgstr "الولاية المصدر"
-
 #: gold_travel/admin.py:451 gold_travel/admin.py:454 gold_travel/admin.py:605
 #: gold_travel/admin.py:608
 msgid "Show certificate"
@@ -3774,10 +3854,6 @@ msgstr "تفاصيل الولاية"
 msgid "gold travel state details"
 msgstr "تفاصيل الولايات"
 
-#: gold_travel/models.py:41
-msgid "authority_smrc"
-msgstr "الشركة السودانية - الولايات"
-
 #: gold_travel/models.py:42
 msgid "authority_2mn_2lm3adin"
 msgstr "أمن واقتصاديات المعادن"
@@ -3793,18 +3869,6 @@ msgstr "هيئة الإستخبارات العسكرية"
 #: gold_travel/models.py:45
 msgid "authority_smrc_nafiza"
 msgstr "الشركة السودانية - النافذة"
-
-#: gold_travel/models.py:51
-msgid "authority"
-msgstr "الجهة"
-
-#: gold_travel/models.py:61
-msgid "state representative"
-msgstr "الممثل بالولاية"
-
-#: gold_travel/models.py:62
-msgid "state representatives"
-msgstr "الممثلين بالولاية"
 
 #: gold_travel/models.py:78
 msgid "ssmo_name"
@@ -5913,6 +5977,12 @@ msgstr "تم تسجيل الدخول بنجاح."
 #: traditional_api/views.py:125
 msgid "Record added sucessfully."
 msgstr "تم حفظ السجل بنجاح."
+
+#~ msgid "dabtiaat state detail"
+#~ msgstr "تفاصيل الولاية"
+
+#~ msgid "dabtiaat state details"
+#~ msgstr "تفاصيل الولايات"
 
 #~ msgid "photo"
 #~ msgstr "الصورة"

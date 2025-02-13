@@ -103,6 +103,7 @@ INSTALLED_APPS = [
     'gold_travel_traditional',
     'executive_office',
     'planning',
+    'dabtiaat_altaedin',
 
     # Debug
     'debug_toolbar',
