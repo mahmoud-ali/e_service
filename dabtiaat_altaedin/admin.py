@@ -231,6 +231,22 @@ class AppDabtiaatAdmin(LogAdminMixin,admin.ModelAdmin):
         models.FloatField: {"widget": TextInput},
     }    
 
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        print(qs.model)
+        qs = qs.prefetch_related('source_state')
+
+        if request.user.is_superuser or request.user.groups.filter(name__in=["dabtiaat_altaedin_manager"]).exists():
+            return qs
+
+        try:
+            state_representative = request.user.state_representative2
+            qs = qs.filter(source_state=state_representative.state)
+        except:
+            qs = qs.none()
+
+        return qs
+
     def save_model(self, request, obj, form, change):
         try:
             state_representative = request.user.state_representative2
