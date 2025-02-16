@@ -93,6 +93,14 @@ class AppDabtiaat(LoggingModel):
     source_state = models.ForeignKey(LkpState, on_delete=models.PROTECT,verbose_name=_("state"))
 
     @property
+    def koli_amount(self):
+        qty = self.gold_weight_in_gram
+        price = self.gold_price
+
+        return qty*price
+
+
+    @property
     def al3wayid_aljalila_amount(self):
         qty = self.gold_weight_in_gram
         price = self.gold_price

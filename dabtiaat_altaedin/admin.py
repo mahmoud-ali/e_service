@@ -222,7 +222,7 @@ class RelatedOnlyFieldListFilterNotEmpty(admin.RelatedOnlyFieldListFilter):
 class AppDabtiaatAdmin(LogAdminMixin,admin.ModelAdmin):
     model = AppDabtiaat
     exclude = ["created_at","created_by","updated_at","updated_by","state","source_state"]
-    list_display = ["date","gold_weight_in_gram","gold_price","state","source_state","al3wayid_aljalila_amount","alhafiz_amount","alniyaba_amount","smrc_amount","state_amount","police_amount","amn_amount","riasat_alquat_aldaabita_amount","alquat_aldaabita_amount"]        
+    list_display = ["date","gold_weight_in_gram","gold_price","koli_amount","state","source_state","al3wayid_aljalila_amount","alhafiz_amount","alniyaba_amount","smrc_amount","state_amount","police_amount","amn_amount","riasat_alquat_aldaabita_amount","alquat_aldaabita_amount"]        
     list_filter = [("date",DateFieldListFilterWithLast30days),("state",ChoicesFieldListFilterNotEmpty),("source_state",RelatedOnlyFieldListFilterNotEmpty)]
     actions = ['confirm_app','export_as_csv']
 
@@ -286,7 +286,7 @@ class AppDabtiaatAdmin(LogAdminMixin,admin.ModelAdmin):
             headers={"Content-Disposition": f'attachment; filename="dabtiaat_form.csv"'},
         )
         header = [
-                    _("date"),_('gold_weight_in_gram'),_('gold_price'),_("record_state"),_("source_state"),_( "al3wayid_aljalila_amount"),\
+                    _("date"),_('gold_weight_in_gram'),_('gold_price'),_('koli_amount'),_("record_state"),_("source_state"),_( "al3wayid_aljalila_amount"),\
                     _("alhafiz_amount"),_("alniyaba_amount"),_("smrc_amount"),_("state_amount"),_("police_amount"),_("amn_amount"),_("riasat_alquat_aldaabita_amount"),_("alquat_aldaabita_amount")
         ]
 
@@ -299,13 +299,17 @@ class AppDabtiaatAdmin(LogAdminMixin,admin.ModelAdmin):
         for obj in queryset.order_by("source_state","-date"):
 
             row = [
-                    obj.date,obj.gold_weight_in_gram,obj.gold_price,obj.get_state_display(),obj.source_state,\
+                    obj.date,obj.gold_weight_in_gram,obj.gold_price,obj.get_state_display(),obj.koli_amount,obj.source_state,\
                     obj.al3wayid_aljalila_amount,obj.alhafiz_amount,obj.alniyaba_amount,obj.smrc_amount,obj.state_amount,\
                     obj.police_amount,obj.amn_amount,obj.riasat_alquat_aldaabita_amount,obj.alquat_aldaabita_amount
             ]
             writer.writerow(row)
 
         return response
+
+    @admin.display(description=_('koli_amount'))
+    def koli_amount(self, obj):
+        return f'{round(obj.koli_amount):,}'
 
     @admin.display(description=_('gold_price'))
     def gold_price(self, obj):

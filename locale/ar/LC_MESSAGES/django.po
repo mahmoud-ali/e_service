@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-13 12:00+0200\n"
+"POT-Creation-Date: 2025-02-16 08:43+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -3465,7 +3465,7 @@ msgstr "تم إعتماد الطلب بنجاح."
 msgid "date"
 msgstr "التاريخ"
 
-#: dabtiaat_altaedin/admin.py:289 dabtiaat_altaedin/admin.py:314
+#: dabtiaat_altaedin/admin.py:289 dabtiaat_altaedin/admin.py:318
 #: dabtiaat_altaedin/models.py:89 gold_travel/admin.py:416
 #: gold_travel/admin.py:441 gold_travel/models.py:259
 #: gold_travel/templates/admin/gold_travel/appmovegold/pagination.html:13
@@ -3474,10 +3474,14 @@ msgstr "التاريخ"
 msgid "gold_weight_in_gram"
 msgstr "وزن الذهب بالجرام"
 
-#: dabtiaat_altaedin/admin.py:289 dabtiaat_altaedin/admin.py:310
+#: dabtiaat_altaedin/admin.py:289 dabtiaat_altaedin/admin.py:314
 #: dabtiaat_altaedin/models.py:90
 msgid "gold_price"
 msgstr "سعر الجرام"
+
+#: dabtiaat_altaedin/admin.py:289 dabtiaat_altaedin/admin.py:310
+msgid "koli_amount"
+msgstr "المبلغ الكلي"
 
 #: dabtiaat_altaedin/admin.py:289 dabtiaat_altaedin/models.py:91
 #: executive_office/models.py:88 executive_office/models.py:149
@@ -3496,39 +3500,39 @@ msgstr "الحالة"
 msgid "source_state"
 msgstr "الولاية المصدر"
 
-#: dabtiaat_altaedin/admin.py:289 dabtiaat_altaedin/admin.py:318
+#: dabtiaat_altaedin/admin.py:289 dabtiaat_altaedin/admin.py:322
 msgid "al3wayid_aljalila_amount"
 msgstr "العوائد الجليلة"
 
-#: dabtiaat_altaedin/admin.py:290 dabtiaat_altaedin/admin.py:322
+#: dabtiaat_altaedin/admin.py:290 dabtiaat_altaedin/admin.py:326
 msgid "alhafiz_amount"
 msgstr "الحافز"
 
-#: dabtiaat_altaedin/admin.py:290 dabtiaat_altaedin/admin.py:326
+#: dabtiaat_altaedin/admin.py:290 dabtiaat_altaedin/admin.py:330
 msgid "alniyaba_amount"
 msgstr "النيابة"
 
-#: dabtiaat_altaedin/admin.py:290 dabtiaat_altaedin/admin.py:330
+#: dabtiaat_altaedin/admin.py:290 dabtiaat_altaedin/admin.py:334
 msgid "smrc_amount"
 msgstr "الشركة السودانية"
 
-#: dabtiaat_altaedin/admin.py:290 dabtiaat_altaedin/admin.py:334
+#: dabtiaat_altaedin/admin.py:290 dabtiaat_altaedin/admin.py:338
 msgid "state_amount"
 msgstr "الولاية"
 
-#: dabtiaat_altaedin/admin.py:290 dabtiaat_altaedin/admin.py:338
+#: dabtiaat_altaedin/admin.py:290 dabtiaat_altaedin/admin.py:342
 msgid "police_amount"
 msgstr "شرطة التعدين"
 
-#: dabtiaat_altaedin/admin.py:290 dabtiaat_altaedin/admin.py:342
+#: dabtiaat_altaedin/admin.py:290 dabtiaat_altaedin/admin.py:346
 msgid "amn_amount"
 msgstr "امن التعدين"
 
-#: dabtiaat_altaedin/admin.py:290 dabtiaat_altaedin/admin.py:346
+#: dabtiaat_altaedin/admin.py:290 dabtiaat_altaedin/admin.py:350
 msgid "riasat_alquat_aldaabita_amount"
 msgstr "رئاسة القوة الضابطة"
 
-#: dabtiaat_altaedin/admin.py:290 dabtiaat_altaedin/admin.py:350
+#: dabtiaat_altaedin/admin.py:290 dabtiaat_altaedin/admin.py:354
 msgid "alquat_aldaabita_amount"
 msgstr "القوة الضابطة"
 
@@ -3574,7 +3578,7 @@ msgstr "مسودة"
 msgid "state_canceled"
 msgstr "تم الإلغاء"
 
-#: dabtiaat_altaedin/models.py:145 dabtiaat_altaedin/models.py:146
+#: dabtiaat_altaedin/models.py:153 dabtiaat_altaedin/models.py:154
 msgid "dabtiaat app"
 msgstr "استمارة ضبطية"
 
