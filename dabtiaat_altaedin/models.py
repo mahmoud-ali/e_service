@@ -97,7 +97,7 @@ class AppDabtiaat(LoggingModel):
         qty = self.gold_weight_in_gram
         price = self.gold_price
 
-        return qty*price
+        return qty*price*0.22
 
 
     @property
