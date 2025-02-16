@@ -299,7 +299,7 @@ class AppDabtiaatAdmin(LogAdminMixin,admin.ModelAdmin):
         for obj in queryset.order_by("source_state","-date"):
 
             row = [
-                    obj.date,obj.gold_weight_in_gram,obj.gold_price,obj.get_state_display(),obj.koli_amount,obj.source_state,\
+                    obj.date,obj.gold_weight_in_gram,obj.gold_price,obj.koli_amount,obj.get_state_display(),obj.source_state,\
                     obj.al3wayid_aljalila_amount,obj.alhafiz_amount,obj.alniyaba_amount,obj.smrc_amount,obj.state_amount,\
                     obj.police_amount,obj.amn_amount,obj.riasat_alquat_aldaabita_amount,obj.alquat_aldaabita_amount
             ]
