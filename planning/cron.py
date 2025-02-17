@@ -18,7 +18,9 @@ def generate_tasks():
             updated_by=admin_user,
         )
 
-        TaskExecution.objects.get_or_create(
+        TaskExecution.objects.filter(report=month_rep).delete()
+
+        TaskExecution.objects.create(
             report=month_rep,
             task=obj.task,
             percentage=0,
