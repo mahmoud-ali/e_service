@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 from planning.forms import CompanyProductionTaskForm
-from planning.models import CompanyInfoTask, CompanyLicenseInfoTask, CompanyMokhalafatTask, CompanyProductionTask, CompanySalamaMatlobatTask, Company7oadithTask, ExportGoldCompanyTask, ExportGoldTraditionalTask, OtherMineralsTask, Traditional7oadthTask, TraditionalProductionTask, TraditionalSalamaMatlobatTask, TraditionalSalamaRagabaTask, TraditionalStateTask, TahsilByBandTask, TahsilByJihaTask, TraditionalTahsilTask
+from planning.models import CompanyInfoTask, CompanyLicenseInfoTask, CompanyMokhalafatTask, CompanyProductionTask, CompanySalamaMatlobatTask, Company7oadithTask, ExplorationMapTask, ExportGoldCompanyTask, ExportGoldTraditionalTask, GMTask, Mas2oliaMojtama3iaTask, MediaDiscoveryTask, MediaF2atMostakhdmaTask, MediaITSupportTask, MediaRasdBathTask, OtherMineralsTask, Traditional7oadthTask, TraditionalProductionTask, TraditionalSalamaMatlobatTask, TraditionalSalamaRagabaTask, TraditionalStateTask, TahsilByBandTask, TahsilByJihaTask, TraditionalTahsilTask
 
 ############### Production #####################
 class CompanyProductionTaskInline(admin.TabularInline):
@@ -35,6 +35,10 @@ class CompanyInfoTaskInline(admin.TabularInline):
 
 class CompanyLicenseInfoTaskInline(admin.TabularInline):
     model = CompanyLicenseInfoTask
+    extra = 1
+
+class ExplorationMapTaskInline(admin.TabularInline):
+    model = ExplorationMapTask
     extra = 1
 
 ############### Tahsil #####################
@@ -73,4 +77,32 @@ class Traditional7oadthTaskInline(admin.TabularInline):
 
 class CompanyMokhalafatTaskInline(admin.TabularInline):
     model = CompanyMokhalafatTask
+    extra = 1
+
+############### Mojtam3ia #####################
+class Mas2oliaMojtama3iaTaskInline(admin.TabularInline):
+    model = Mas2oliaMojtama3iaTask
+    extra = 1
+
+############## Media #######################
+class MediaRasdBathTaskInline(admin.TabularInline):
+    model = MediaRasdBathTask
+    extra = 1
+
+class MediaF2atMostakhdmaTaskInline(admin.TabularInline):
+    model = MediaF2atMostakhdmaTask
+    extra = 1
+
+class MediaDiscoveryTaskInline(admin.TabularInline):
+    model = MediaDiscoveryTask
+    extra = 1
+
+############## IT #######################
+class MediaITSupportTaskInline(admin.TabularInline):
+    model = MediaITSupportTask
+    extra = 1
+
+################ GM #########################
+class GMTaskInline(admin.TabularInline):
+    model = GMTask
     extra = 1

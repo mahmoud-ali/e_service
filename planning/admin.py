@@ -158,15 +158,15 @@ class MonthelyReportAdmin(LogAdminMixin,admin.ModelAdmin):
 
     formfield_overrides = {
         models.IntegerField: {"widget": TextInput},
-    }    
+    }
 
 @admin.register(TaskExecution)
 class TaskExecutionAdmin(admin.ModelAdmin):
     model = TaskExecution
-    fields = ["task","percentage","problems"]
+    fields = ["report","task","percentage","problems",]
     list_display = ["task_name","main_goal","sub_goal","percentage"]
     inlines = []
-    readonly_fields = ["task"]
+    readonly_fields = ["task","report"]
 
     # readonly_fields = ["task"]
     search_fields = ('task__goal__parent__name','task__goal__name','task__name', 'problems')

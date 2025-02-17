@@ -277,6 +277,13 @@ class MonthelyReport(LoggingModel):
     month = models.PositiveIntegerField(verbose_name=_("month"), choices=MONTH_CHOICES)
     state = models.IntegerField(_("record_state"), choices=STATE_CHOICES, default=STATE_DRAFT)
 
+    def __str__(self):
+        state = ''
+        # if self.state == STATE_DRAFT:
+        #     state = f' ({self.get_state_display()})'
+
+        return f'{self.get_month_display()} {self.year}'+state
+
 class TaskExecution(LoggingModel):
     report = models.ForeignKey(MonthelyReport, on_delete=models.CASCADE, null=True, verbose_name=_("report"), related_name='monthly_tasks')
     task = models.ForeignKey(Task, on_delete=models.CASCADE, verbose_name=_("task"), related_name='execution')
@@ -382,6 +389,34 @@ class CompanyLicenseInfoTask(TaskExecutionDetail):
         verbose_name = _("CompanyLicenseInfoTask")
         verbose_name_plural = _("CompanyLicenseInfoTasks")
 
+class ExplorationMapTask(TaskExecutionDetail):
+    def attachement_path(self, filename):
+        year = self.task_execution.report.year
+        month = self.task_execution.report.month
+        return "planning/{0}/{1}/{2}".format(year,month, filename)    
+
+    is_new_map = models.BooleanField(_("is_new_map_exists"))
+    map = models.ImageField(_("exploration_map"),upload_to=attachement_path,null=True,blank=True)
+    map_description = models.TextField(_("map_description"),blank=True,null=True)
+
+    class Meta:
+        verbose_name = _("ExplorationMapTask")
+        verbose_name_plural = _("ExplorationMapTasks")
+
+    def clean(self):
+        if self.is_new_map:
+            if not self.map:
+                raise ValidationError(
+                    {"map":_('Field required')}
+                )
+
+            if not self.map_description:
+                raise ValidationError(
+                    {"map_description":_('Field required')}
+                )
+
+        return super().clean()
+
 ############### Tahsil #####################
 class TraditionalTahsilTask(TaskExecutionDetail):
     state = models.ForeignKey(LkpState, on_delete=models.PROTECT, verbose_name=_("state"))
@@ -486,3 +521,142 @@ class CompanyMokhalafatTask(TaskExecutionDetail):
         verbose_name_plural = _("CompanyMokhalafatTasks")
 
 ############### Mojtam3ia #####################
+class Mas2oliaMojtama3iaTask(TaskExecutionDetail):
+    state = models.ForeignKey(LkpState, on_delete=models.PROTECT, verbose_name=_("state"))
+    locality = models.CharField(_("locality"), max_length=50)
+    amount = models.FloatField(_("amount"))
+
+    class Meta:
+        verbose_name = _("Mas2oliaMojtama3iaTask")
+        verbose_name_plural = _("Mas2oliaMojtama3iaTasks")
+
+############## Media #######################
+class MediaRasdBathTask(TaskExecutionDetail):
+    TYPE_1 = 1
+    TYPE_2 = 2
+    TYPE_3 = 3
+
+    NO3_BATH_CHOICES = {
+        TYPE_1:_('no3_bath_1'),
+        TYPE_2:_('no3_bath_2'),
+        TYPE_3:_('no3_bath_3'),
+    }
+
+    no3_bath = models.IntegerField(_("no3_bath"), choices=NO3_BATH_CHOICES)
+
+    count  =models.IntegerField(_("count"))    
+    count_positive  =models.IntegerField(_("count_positive"))    
+    
+    class Meta:
+        verbose_name = _("MediaRasdBathTask")
+        verbose_name_plural = _("MediaRasdBathTasks")
+
+class MediaF2atMostakhdmaTask(TaskExecutionDetail):
+    TYPE_1 = 1
+    TYPE_2 = 2
+    TYPE_3 = 3
+    TYPE_4 = 4
+    TYPE_5 = 5
+
+    NO3_BATH_CHOICES = {
+        TYPE_1:_('no3_media_mostathmir_1'),
+        TYPE_2:_('no3_media_mostathmir_2'),
+        TYPE_3:_('no3_media_mostathmir_3'),
+        TYPE_4:_('no3_media_mostathmir_4'),
+        TYPE_5:_('no3_media_mostathmir_5'),
+    }
+
+    type = models.IntegerField(_("type"), choices=NO3_BATH_CHOICES)
+
+    count  =models.IntegerField(_("count"))    
+    
+    class Meta:
+        verbose_name = _("MediaF2atMostakhdmaTask")
+        verbose_name_plural = _("MediaF2atMostakhdmaTasks")
+
+class MediaDiscoveryTask(TaskExecutionDetail):
+    TYPE_1 = 1
+    TYPE_2 = 2
+    TYPE_3 = 3
+    TYPE_4 = 4
+    TYPE_5 = 5
+
+    NO3_BATH_CHOICES = {
+        TYPE_1:_('no3_discovery_1'),
+        TYPE_2:_('no3_discovery_2'),
+        TYPE_3:_('no3_discovery_3'),
+        TYPE_4:_('no3_discovery_4'),
+        TYPE_5:_('no3_discovery_5'),
+    }
+
+    type = models.IntegerField(_("type"), choices=NO3_BATH_CHOICES)
+
+    count  =models.IntegerField(_("count"))    
+    
+    class Meta:
+        verbose_name = _("MediaDiscoveryTask")
+        verbose_name_plural = _("MediaDiscoveryTasks")
+
+############## IT #######################
+class MediaITSupportTask(TaskExecutionDetail):
+    TYPE_1 = 1
+    TYPE_2 = 2
+    TYPE_3 = 3
+    TYPE_4 = 4
+    TYPE_5 = 5
+    TYPE_6 = 6
+    TYPE_7 = 7
+    TYPE_8 = 8
+    TYPE_9 = 9
+    TYPE_10 = 10
+
+    NO3_BATH_CHOICES = {
+        TYPE_1:_('no3_it_support_1'),
+        TYPE_2:_('no3_it_support_2'),
+        TYPE_3:_('no3_it_support_3'),
+        TYPE_4:_('no3_it_support_4'),
+        TYPE_5:_('no3_it_support_5'),
+        TYPE_6:_('no3_it_support_6'),
+        TYPE_7:_('no3_it_support_7'),
+        TYPE_8:_('no3_it_support_8'),
+        TYPE_9:_('no3_it_support_9'),
+        TYPE_10:_('no3_it_support_10'),
+    }
+
+    type = models.IntegerField(_("type"), choices=NO3_BATH_CHOICES)
+
+    count  =models.IntegerField(_("count"))    
+    
+    class Meta:
+        verbose_name = _("MediaITSupportTask")
+        verbose_name_plural = _("MediaITSupportTasks")
+
+
+################ GM #########################
+class GMTask(TaskExecutionDetail):
+    TYPE_1 = 1
+    TYPE_2 = 2
+    TYPE_3 = 3
+    TYPE_4 = 4
+    TYPE_5 = 5
+    TYPE_6 = 6
+    TYPE_7 = 7
+
+    NO3_BATH_CHOICES = {
+        TYPE_1:_('gm_task_1'),
+        TYPE_2:_('gm_task_2'),
+        TYPE_3:_('gm_task_3'),
+        TYPE_4:_('gm_task_4'),
+        TYPE_5:_('gm_task_5'),
+        TYPE_6:_('gm_task_6'),
+        TYPE_7:_('gm_task_7'),
+    }
+
+    type = models.IntegerField(_("type"), choices=NO3_BATH_CHOICES)
+    count  =models.IntegerField(_("count"))    
+    comments = models.TextField(_("comments"))
+
+    class Meta:
+        verbose_name = _("GMTask")
+        verbose_name_plural = _("GMTasks")
+
