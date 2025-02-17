@@ -1,12 +1,17 @@
 from django.contrib import admin
 
-from planning.forms import CompanyProductionTaskForm
+from planning.forms import CompanyProductionEntagTaskForm,CompanyProductionSageerTaskForm
 from planning.models import CompanyInfoTask, CompanyLicenseInfoTask, CompanyMokhalafatTask, CompanyProductionTask, CompanySalamaMatlobatTask, Company7oadithTask, ExplorationMapTask, ExportGoldCompanyTask, ExportGoldTraditionalTask, GMTask, Mas2oliaMojtama3iaTask, MediaDiscoveryTask, MediaF2atMostakhdmaTask, MediaITSupportTask, MediaRasdBathTask, OtherMineralsTask, Traditional7oadthTask, TraditionalProductionTask, TraditionalSalamaMatlobatTask, TraditionalSalamaRagabaTask, TraditionalStateTask, TahsilByBandTask, TahsilByJihaTask, TraditionalTahsilTask
 
 ############### Production #####################
-class CompanyProductionTaskInline(admin.TabularInline):
+class CompanyProductionEntagTaskInline(admin.TabularInline):
     model = CompanyProductionTask
-    form = CompanyProductionTaskForm
+    form = CompanyProductionEntagTaskForm
+    extra = 1
+
+class CompanyProductionSageerTaskInline(admin.TabularInline):
+    model = CompanyProductionTask
+    form = CompanyProductionSageerTaskForm
     extra = 1
 
 class TraditionalProductionTaskInline(admin.TabularInline):

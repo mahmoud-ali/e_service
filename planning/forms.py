@@ -4,7 +4,7 @@ from django.contrib import admin
 from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
 
-from company_profile.models import TblCompanyProduction
+from company_profile.models import TblCompanyProduction,TblCompany
 
 from .models import CompanyProductionTask, Department
 
@@ -20,9 +20,23 @@ class DepartmentForm(forms.ModelForm):
         model = Department    
         fields = ["user","name"] 
 
-class CompanyProductionTaskForm(forms.ModelForm):
+class CompanyProductionEntagTaskForm(forms.ModelForm):
     company = forms.ModelChoiceField(queryset=company_none,disabled=True, label=_("company"))
-    company_types = []
+    company_types = [TblCompany.COMPANY_TYPE_ENTAJ,TblCompany.COMPANY_TYPE_MOKHALFAT]
+    def __init__(self, *args, **kwargs):        
+        super().__init__(*args, **kwargs)
+
+        self.fields["company"].queryset = company_all_qs.filter(company_type__in=self.company_types)
+            
+        self.fields["company"].disabled = False
+    class Meta:
+        model = CompanyProductionTask
+        fields = ["company","total_weight",]
+        widgets = {}
+
+class CompanyProductionSageerTaskForm(forms.ModelForm):
+    company = forms.ModelChoiceField(queryset=company_none,disabled=True, label=_("company"))
+    company_types = [TblCompany.COMPANY_TYPE_SAGEER]
     def __init__(self, *args, **kwargs):        
         super().__init__(*args, **kwargs)
 
