@@ -137,7 +137,7 @@ class Task(models.Model):
     name = models.CharField(_("name"), max_length=255)
 
     def __str__(self):
-        return f'{self.goal.parent} / {self.goal} / {self.name} ({self.responsible})'
+        return f'{self.goal.parent} / {self.goal} / {self.name} ({self.responsible.name})'
     
     class Meta:
         verbose_name = _("Task")
