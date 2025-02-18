@@ -670,9 +670,9 @@ class EmployeeFamily(LoggingModel):
 
     def update_gasima_status(self):
         count = self.employee.employeefamily_set.filter(relation=self.FAMILY_RELATION_CONSORT).count()
-        # if count > 0:
-        self.employee.gasima = True
-        self.employee.save()
+        if count > 0:
+            self.employee.gasima = True
+            self.employee.save()
 
 class EmployeeMoahil(LoggingModel):
     employee = models.ForeignKey(EmployeeBasic, on_delete=models.PROTECT,verbose_name=_("employee_name"))
