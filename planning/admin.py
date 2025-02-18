@@ -237,8 +237,8 @@ class TaskExecutionAdmin(admin.ModelAdmin):
         for inline in self.get_inline_instances(request, obj):
             formset = inline.get_formset(request, obj)
 
-            if isinstance(inline,CompanyProductionTaskInline):
-                formset.form = CompanyProductionTaskForm
-                formset.form.company_types = get_company_types(request)
+            # if isinstance(inline,CompanyProductionTaskInline):
+            #     formset.form = CompanyProductionTaskForm
+            #     formset.form.company_types = get_company_types(request)
 
             yield formset,inline
