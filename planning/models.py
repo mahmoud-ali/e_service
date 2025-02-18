@@ -660,3 +660,31 @@ class GMTask(TaskExecutionDetail):
         verbose_name = _("GMTask")
         verbose_name_plural = _("GMTasks")
 
+################ Ganonia ####################
+class GanoniaTask(TaskExecutionDetail):
+    TYPE_1 = 1
+    TYPE_2 = 2
+    TYPE_3 = 3
+    TYPE_4 = 4
+    TYPE_5 = 5
+    TYPE_6 = 6
+    TYPE_7 = 7
+
+    NO3_BATH_CHOICES = {
+        TYPE_1:_('ganonia_task_1'),
+        TYPE_2:_('ganonia_task_2'),
+        TYPE_3:_('ganonia_task_3'),
+        TYPE_4:_('ganonia_task_4'),
+        TYPE_5:_('ganonia_task_5'),
+        TYPE_6:_('ganonia_task_6'),
+        TYPE_7:_('ganonia_task_7'),
+    }
+
+    type = models.IntegerField(_("type"), choices=NO3_BATH_CHOICES)
+
+    count  =models.IntegerField(_("count"))    
+    
+    class Meta:
+        verbose_name = _("GanoniaTask")
+        verbose_name_plural = _("GanoniaTasks")
+

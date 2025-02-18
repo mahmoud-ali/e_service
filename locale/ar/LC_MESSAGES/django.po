@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-17 11:23+0200\n"
+"POT-Creation-Date: 2025-02-18 12:17+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -188,13 +188,13 @@ msgstr ""
 #: executive_office/forms.py:37 executive_office/models.py:130
 #: pa/forms/commitment.py:80 pa/forms/daily.py:9 pa/models.py:93
 #: pa/models.py:129 pa/tables/payment.py:33 pa/tables/request.py:51
-#: pa/templates/pa/pa_daily.html:46 planning/forms.py:24 planning/models.py:309
-#: planning/models.py:340 planning/models.py:358 planning/models.py:368
-#: planning/models.py:488 planning/models.py:497 planning/models.py:515
-#: production_control/admin.py:190 production_control/forms.py:50
-#: production_control/forms.py:64 production_control/forms.py:83
-#: production_control/models.py:62 production_control/models.py:80
-#: production_control/models.py:130
+#: pa/templates/pa/pa_daily.html:46 planning/forms.py:24 planning/forms.py:38
+#: planning/models.py:309 planning/models.py:340 planning/models.py:358
+#: planning/models.py:368 planning/models.py:488 planning/models.py:497
+#: planning/models.py:515 production_control/admin.py:190
+#: production_control/forms.py:50 production_control/forms.py:64
+#: production_control/forms.py:83 production_control/models.py:62
+#: production_control/models.py:80 production_control/models.py:130
 msgid "company"
 msgstr "شركة"
 
@@ -1910,6 +1910,7 @@ msgstr "الحجم size"
 
 #: company_profile/models.py:1218 planning/models.py:547 planning/models.py:571
 #: planning/models.py:594 planning/models.py:628 planning/models.py:656
+#: planning/models.py:685
 msgid "count"
 msgstr "العدد number"
 
@@ -5312,7 +5313,7 @@ msgid "type_auto"
 msgstr "آلي"
 
 #: planning/models.py:167 planning/models.py:569 planning/models.py:592
-#: planning/models.py:626 planning/models.py:655
+#: planning/models.py:626 planning/models.py:655 planning/models.py:683
 msgid "type"
 msgstr "النوع"
 
@@ -5427,15 +5428,15 @@ msgstr "معوقات"
 
 #: planning/models.py:298
 msgid "TaskExecution"
-msgstr "اداء مهمة"
+msgstr "موقف تنفيذ الخطة"
 
 #: planning/models.py:299
 msgid "TaskExecutions"
-msgstr "اداء مهام"
+msgstr "موقف تنفيذ الخطة"
 
 #: planning/models.py:302
 msgid "task_execution"
-msgstr "اداء مهمة"
+msgstr "تنفيذ الخطة"
 
 #: planning/models.py:310 planning/models.py:318 planning/models.py:342
 #: production_control/admin.py:245
@@ -5544,7 +5545,7 @@ msgstr "هل تم تحديث الخريطة الجيولوجية"
 
 #: planning/models.py:399
 msgid "exploration_map"
-msgstr "الخريطة الجيولوجية"
+msgstr "الخارطة الجيولوجية"
 
 #: planning/models.py:400
 msgid "map_description"
@@ -5552,11 +5553,11 @@ msgstr "وصف التحديث"
 
 #: planning/models.py:403
 msgid "ExplorationMapTask"
-msgstr "تحديث الخريطة الجيولوجية"
+msgstr "تحديث الخارطة الجيولوجية"
 
 #: planning/models.py:404
 msgid "ExplorationMapTasks"
-msgstr "تحديث الخريطة الجيولوجية"
+msgstr "تحديث الخارطة الجيولوجية"
 
 #: planning/models.py:410 planning/models.py:415
 msgid "Field required"
@@ -5576,19 +5577,19 @@ msgstr "إيرادات التعدين التقليدي"
 
 #: planning/models.py:434
 msgid "TahsilByBandTask"
-msgstr "إيرادات التعدين التقليدي بالبنود"
+msgstr "إيرادات بالبنود"
 
 #: planning/models.py:435
 msgid "TahsilByBandTasks"
-msgstr "إيرادات التعدين التقليدي بالبنود"
+msgstr "إيرادات بالبنود"
 
 #: planning/models.py:443
 msgid "TahsilByJihaTask"
-msgstr "إيرادات التعدين التقليدي بالجهة"
+msgstr "إيرادات بالجهة"
 
 #: planning/models.py:444
 msgid "TahsilByJihaTasks"
-msgstr "إيرادات التعدين التقليدي بالجهة"
+msgstr "إيرادات بالجهة"
 
 #: planning/models.py:450
 msgid "taswir_asag"
@@ -5720,11 +5721,11 @@ msgstr "عدد المخالفات التي تم علاجها"
 
 #: planning/models.py:520
 msgid "CompanyMokhalafatTask"
-msgstr "المخالفات والتي تم إصدار إجراءات تصحيحية لمعالجتها"
+msgstr "المخالفات التي تم إصدار إجراءات تصحيحية لمعالجتها"
 
 #: planning/models.py:521
 msgid "CompanyMokhalafatTasks"
-msgstr "المخالفات والتي تم إصدار إجراءات تصحيحية لمعالجتها"
+msgstr "المخالفات التي تم إصدار إجراءات تصحيحية لمعالجتها"
 
 #: planning/models.py:530
 msgid "Mas2oliaMojtama3iaTask"
@@ -5901,6 +5902,42 @@ msgstr "أنشطة المدير العام (تراكمي)"
 #: planning/models.py:661
 msgid "GMTasks"
 msgstr "أنشطة المدير العام (تراكمي)"
+
+#: planning/models.py:674
+msgid "ganonia_task_1"
+msgstr "الفتاوي والراي القانوني"
+
+#: planning/models.py:675
+msgid "ganonia_task_2"
+msgstr "“عدد العقودات"
+
+#: planning/models.py:676
+msgid "ganonia_task_3"
+msgstr "الانذارات والمخالفات"
+
+#: planning/models.py:677
+msgid "ganonia_task_4"
+msgstr "عدد اللجان"
+
+#: planning/models.py:678
+msgid "ganonia_task_5"
+msgstr "الإستشارات الواردة"
+
+#: planning/models.py:679
+msgid "ganonia_task_6"
+msgstr "دعاوي امام المحاكم"
+
+#: planning/models.py:680
+msgid "ganonia_task_7"
+msgstr "بلاغات امام النيابة"
+
+#: planning/models.py:688
+msgid "GanoniaTask"
+msgstr "النشاط القانوني"
+
+#: planning/models.py:689
+msgid "GanoniaTasks"
+msgstr "النشاط القانوني"
 
 #: production_control/admin.py:173
 msgid "end distribution"
