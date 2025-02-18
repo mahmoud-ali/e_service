@@ -235,11 +235,5 @@ class TaskExecutionAdmin(admin.ModelAdmin):
 
     def get_formsets_with_inlines(self, request, obj=None):
         for inline in self.get_inline_instances(request, obj):
-
-            # if isinstance(inline,CompanyProductionTaskInline):
-            #     formset.form = CompanyProductionTaskForm
-            #     formset.form.company_types = get_company_types(request)
-
-            if obj is not None:
-                formset = inline.get_formset(request, obj)
-                yield formset,inline
+            formset = inline.get_formset(request, obj)
+            yield formset,inline
