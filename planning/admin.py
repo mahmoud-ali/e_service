@@ -229,16 +229,17 @@ class TaskExecutionAdmin(admin.ModelAdmin):
 
     def get_inline_instances(self, request, obj=None):
         try:
-            return [getattr(sys.modules[__name__],auto.view)(self.model, self.admin_site) for auto in obj.task.automation.all()]
+            return [getattr(sys.modules[__name__],auto.view)(self.model, self.admin_site) for auto in obj.task.automation.filter(type=TaskAutomation.TYPE_MANUAL)]
         except Exception as e:
             return []
 
     def get_formsets_with_inlines(self, request, obj=None):
         for inline in self.get_inline_instances(request, obj):
-            formset = inline.get_formset(request, obj)
 
             # if isinstance(inline,CompanyProductionTaskInline):
             #     formset.form = CompanyProductionTaskForm
             #     formset.form.company_types = get_company_types(request)
 
-            yield formset,inline
+            if obj is not None:
+                formset = inline.get_formset(request, obj)
+                yield formset,inline
