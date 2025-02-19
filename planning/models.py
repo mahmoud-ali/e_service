@@ -54,6 +54,7 @@ MONTH_OCT = 10
 MONTH_NOV = 11
 MONTH_DEC = 12
 
+# Month choices with Arabic translations (يناير=January, فبراير=February etc.)
 MONTH_CHOICES = {
     MONTH_JAN: _('MONTH_JAN'),
     MONTH_FEB: _('MONTH_FEB'),
@@ -73,6 +74,7 @@ STATE_DRAFT = 1
 STATE_CONFIRMED = 2
 STATE_EXPIRED = 3
 
+# Record states (مسودة=Draft, مؤكد=Confirmed)
 STATE_CHOICES = {
     STATE_DRAFT: _('state_draft'),
     STATE_CONFIRMED: _('state_confirmed'),
@@ -96,6 +98,8 @@ BAND_14 = 14
 BAND_15 = 15
 BAND_16 = 16
 
+# Financial bands (بنود مالية) for revenue categorization:
+# 1: العوائد الجليلة (Major returns -特许协议), 2: العوائد الجليلة من التعدين الصغير (Small-scale mining returns) etc.
 BAND_CHOICES = {
     BAND_1:_('band_1'),
     BAND_2:_('band_2'),
@@ -121,6 +125,8 @@ JIHA_3 = 3
 JIHA_4 = 4
 JIHA_5 = 5
 
+# Distribution directions (جهات التوزيع):
+# 1: وزارة المالية (Ministry of Finance), 2: الهيئة العامة للابحاث الجيولوجية (Geological Research Authority) etc.
 JIHA_CHOICES = {
     JIHA_1:_('jiha_1'),
     JIHA_2:_('jiha_2'),
