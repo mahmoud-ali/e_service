@@ -54,10 +54,13 @@ MONTH_OCT = 10
 MONTH_NOV = 11
 MONTH_DEC = 12
 
-# Month choices with Arabic translations (يناير=January, فبراير=February etc.)
+# Month choices with Arabic translations:
+# 1 - يناير (January), 2 - فبراير (February), 3 - مارس (March), 4 - أبريل (April)
+# 5 - مايو (May), 6 - يونيو (June), 7 - يوليو (July), 8 - أغسطس (August)
+# 9 - سبتمبر (September), 10 - أكتوبر (October), 11 - نوفمبر (November), 12 - ديسمبر (December)
 MONTH_CHOICES = {
-    MONTH_JAN: _('MONTH_JAN'),
-    MONTH_FEB: _('MONTH_FEB'),
+    MONTH_JAN: _('MONTH_JAN'),  # يناير
+    MONTH_FEB: _('MONTH_FEB'),  # فبراير
     MONTH_MAR: _('MONTH_MAR'),
     MONTH_APR: _('MONTH_APR'),
     MONTH_MAY: _('MONTH_MAY'),
@@ -74,10 +77,11 @@ STATE_DRAFT = 1
 STATE_CONFIRMED = 2
 STATE_EXPIRED = 3
 
-# Record states (مسودة=Draft, مؤكد=Confirmed)
+# Record states:
+# 1 - مسودة (Draft), 2 - مؤكد (Confirmed), 3 - منتهي الصلاحية (Expired)
 STATE_CHOICES = {
-    STATE_DRAFT: _('state_draft'),
-    STATE_CONFIRMED: _('state_confirmed'),
+    STATE_DRAFT: _('state_draft'),      # مسودة
+    STATE_CONFIRMED: _('state_confirmed'),  # مؤكد
     # STATE_EXPIRED: _('state_expired'),
 }
 
@@ -98,11 +102,17 @@ BAND_14 = 14
 BAND_15 = 15
 BAND_16 = 16
 
-# Financial bands (بنود مالية) for revenue categorization:
-# 1: العوائد الجليلة (Major returns -特许协议), 2: العوائد الجليلة من التعدين الصغير (Small-scale mining returns) etc.
+# Financial bands (بنود مالية):
+# 1 - العوائد الجليلة, 2 - العوائد الجليلة من التعدين الصغير 
+# 3 - نصيب الحكومة من أرباح الأعمال, 4 - نصيب الحكومة من أرباح الأعمال إمتياز
+# 5 - عوائد جليلة للتعدين التقليدي, 6 - أخرى, 7 - إيجار أرض شركات إمتياز
+# 8 - دعم فني لشركات الإمتياز, 9 - بونص توقيع إتفاقيات الإمتياز
+# 10 - ممثل الحكومة لشركات الإمتياز, 11 - رسوم تجديد عقد المخلفات
+# 12 - رسوم بونص توقيع عقد معالجة المخلفات, 13 - رسوم إيجار عقود التعدين للإمتياز المنتج
+# 14 - رسوم إيجار عقود التعدين الصغير, 15 - نصيب المجتمع المحلي من الايرادات, 16 - الزكاة
 BAND_CHOICES = {
-    BAND_1:_('band_1'),
-    BAND_2:_('band_2'),
+    BAND_1:_('band_1'),  # العوائد الجليلة
+    BAND_2:_('band_2'),  # العوائد الجليلة من التعدين الصغير 
     BAND_3:_('band_3'),
     BAND_4:_('band_4'),
     BAND_5:_('band_5'),
@@ -126,10 +136,11 @@ JIHA_4 = 4
 JIHA_5 = 5
 
 # Distribution directions (جهات التوزيع):
-# 1: وزارة المالية (Ministry of Finance), 2: الهيئة العامة للابحاث الجيولوجية (Geological Research Authority) etc.
+# 1 - وزارة المالية والتخطيط الاقتصادي, 2 - الهيئة العامة للأبحاث الجيولوجية
+# 3 - نصيب الولايات, 4 - الشركة السودانية للموارد المعدنية, 5 - المجتمع المحلي
 JIHA_CHOICES = {
-    JIHA_1:_('jiha_1'),
-    JIHA_2:_('jiha_2'),
+    JIHA_1:_('jiha_1'),  # وزارة المالية والتخطيط الاقتصادي
+    JIHA_2:_('jiha_2'),  # الهيئة العامة للأبحاث الجيولوجية
     JIHA_3:_('jiha_3'),
     JIHA_4:_('jiha_4'),
     JIHA_5:_('jiha_5'),
