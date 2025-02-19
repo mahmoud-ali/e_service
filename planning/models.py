@@ -628,6 +628,14 @@ class CompanySalamaMatlobatTask(TaskExecutionDetail):
         verbose_name_plural = _("CompanySalamaMatlobatTasks")
 
 class Company7oadithTask(TaskExecutionDetail):
+    """Tracks company accident reports (7oadith = حوادث = accidents)
+    
+    Fields:
+        company - Company reference (FK to TblCompanyProduction)
+        no_7oadith - Number of accidents reported
+        
+    Part of safety reporting system for company operations
+    """
     company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
     no_7oadith = models.IntegerField(_("no_7oadith"))
 
@@ -636,6 +644,16 @@ class Company7oadithTask(TaskExecutionDetail):
         verbose_name_plural = _("Company7oadithTasks")
 
 class Traditional7oadthTask(TaskExecutionDetail):
+    """Tracks traditional mining sector incidents (7oadth = حوادث = incidents)
+    
+    Fields:
+        state - State/province reference (FK to LkpState)
+        no_wafiat - Number of fatalities (wafiat = وفيات)
+        no_7oadith - Number of incidents
+        no_e9abat - Number of injuries (e9abat = إصابات)
+        
+    Part of safety reporting for traditional mining operations
+    """
     state = models.ForeignKey(LkpState, on_delete=models.PROTECT, verbose_name=_("state"))
     no_wafiat = models.IntegerField(_("no_wafiat"))
     no_7oadith = models.IntegerField(_("no_7oadith"))
@@ -646,6 +664,15 @@ class Traditional7oadthTask(TaskExecutionDetail):
         verbose_name_plural = _("Traditional7oadthTasks")
 
 class CompanyMokhalafatTask(TaskExecutionDetail):
+    """Tracks company violations and resolutions (Mokhalafat = مخالفات = violations)
+    
+    Fields:
+        company - Company reference (FK to TblCompanyProduction)
+        no_mokhalafat - Number of violations identified
+        no_mokhalafat_fixed - Number of violations resolved
+        
+    Part of compliance monitoring system
+    """
     company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
     no_mokhalafat = models.IntegerField(_("no_mokhalafat"))
     no_mokhalafat_fixed = models.IntegerField(_("no_mokhalafat_fixed"))
@@ -656,6 +683,15 @@ class CompanyMokhalafatTask(TaskExecutionDetail):
 
 ############### Mojtam3ia #####################
 class Mas2oliaMojtama3iaTask(TaskExecutionDetail):
+    """Tracks community obligation fulfillment (Mas2olia Mojtama3ia = مسؤولية مجتمعية = social responsibility)
+    
+    Fields:
+        state - State/province reference (FK to LkpState)
+        locality - Local community name
+        amount - Financial amount allocated
+        
+    Monitors company commitments to local communities
+    """
     state = models.ForeignKey(LkpState, on_delete=models.PROTECT, verbose_name=_("state"))
     locality = models.CharField(_("locality"), max_length=50)
     amount = models.FloatField(_("amount"))
@@ -666,6 +702,15 @@ class Mas2oliaMojtama3iaTask(TaskExecutionDetail):
 
 ############## Media #######################
 class MediaRasdBathTask(TaskExecutionDetail):
+    """Media monitoring task (Rasd Bath = رصد باث = broadcast monitoring)
+    
+    Fields:
+        no3_bath - Type of media broadcast (1: TV, 2: Radio, 3: Online)
+        count - Total media mentions
+        count_positive - Positive/neutral mentions
+        
+    Tracks company presence in media outlets
+    """
     TYPE_1 = 1
     TYPE_2 = 2
     TYPE_3 = 3
@@ -686,6 +731,14 @@ class MediaRasdBathTask(TaskExecutionDetail):
         verbose_name_plural = _("MediaRasdBathTasks")
 
 class MediaF2atMostakhdmaTask(TaskExecutionDetail):
+    """Media segment analysis task (F2at Mostakhdma = فقعات مستخدمة = used segments)
+    
+    Fields:
+        type - Media type (1: News, 2: Opinion, 3: Advertisement, 4: Social, 5: Other)
+        count - Number of media segments
+        
+    Tracks company-related media content analysis
+    """
     TYPE_1 = 1
     TYPE_2 = 2
     TYPE_3 = 3
@@ -709,6 +762,14 @@ class MediaF2atMostakhdmaTask(TaskExecutionDetail):
         verbose_name_plural = _("MediaF2atMostakhdmaTasks")
 
 class MediaDiscoveryTask(TaskExecutionDetail):
+    """Media discovery monitoring task (Discovery = اكتشاف = discovery)
+    
+    Fields:
+        type - Discovery type (1: New sites, 2: Exploration, 3: Research, 4: Tech, 5: Other)
+        count - Number of discoveries
+        
+    Tracks mineral exploration and geological discoveries
+    """
     TYPE_1 = 1
     TYPE_2 = 2
     TYPE_3 = 3
@@ -733,6 +794,17 @@ class MediaDiscoveryTask(TaskExecutionDetail):
 
 ############## IT #######################
 class MediaITSupportTask(TaskExecutionDetail):
+    """IT support request tracking task
+    
+    Fields:
+        type - Support type:
+            1: Network, 2: Hardware, 3: Software, 4: Security,
+            5: Data, 6: Training, 7: Reporting, 8: Integration,
+            9: Maintenance, 10: Other
+        count - Number of support requests
+        
+    Tracks IT department service requests and issues
+    """
     TYPE_1 = 1
     TYPE_2 = 2
     TYPE_3 = 3
@@ -768,6 +840,17 @@ class MediaITSupportTask(TaskExecutionDetail):
 
 ################ GM #########################
 class GMTask(TaskExecutionDetail):
+    """General Management task tracking
+    
+    Fields:
+        type - Task type:
+            1: Strategy, 2: Budgeting, 3: Reporting,
+            4: Compliance, 5: Audit, 6: HR, 7: Other
+        count - Number of tasks completed
+        comments - Additional notes
+        
+    Tracks high-level management activities and initiatives
+    """
     TYPE_1 = 1
     TYPE_2 = 2
     TYPE_3 = 3
@@ -796,6 +879,16 @@ class GMTask(TaskExecutionDetail):
 
 ################ Ganonia ####################
 class GanoniaTask(TaskExecutionDetail):
+    """Legal matters tracking (Ganonia = جنائية = criminal/legal)
+    
+    Fields:
+        type - Legal case type:
+            1: Contract, 2: Labor, 3: Environmental,
+            4: Safety, 5: Tax, 6: Compliance, 7: Other
+        count - Number of legal cases/matters
+        
+    Monitors legal issues and regulatory compliance cases
+    """
     TYPE_1 = 1
     TYPE_2 = 2
     TYPE_3 = 3
