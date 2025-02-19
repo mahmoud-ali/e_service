@@ -889,6 +889,12 @@ class MediaDiscoveryTask(TaskExecutionDetail):
     TYPE_4 = 4
     TYPE_5 = 5
 
+    # Discovery type choices (from django.po translations):
+    # 1 - صحف (Newspapers)
+    # 2 - بث تلفزيوني (TV Broadcast)
+    # 3 - بث إذاعي (Radio Broadcast)
+    # 4 - إلكتروني (Digital/Online)
+    # 5 - ملصقات (Posters)
     NO3_BATH_CHOICES = {
         TYPE_1:_('no3_discovery_1'),
         TYPE_2:_('no3_discovery_2'),
