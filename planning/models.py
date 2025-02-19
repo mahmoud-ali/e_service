@@ -691,13 +691,13 @@ class CompanySalamaMatlobatTask(TaskExecutionDetail):
         nashat - Activity type (1-6 safety activities)
         percent - Completion percentage
         
-    NASHAT_CHOICES:
-        1: Safety training
-        2: Equipment maintenance
-        3: Emergency drills
-        4: Risk assessments
-        5: Safety audits
-        6: Incident reporting
+    NASHAT_CHOICES (from django.po translations):
+        1 - وجود مسؤول بيئة وسلامة (Presence of environmental and safety officer)
+        2 - توفر خطة بيئة وسلامة (Availability of HSE plan)
+        3 - سياسة بيئة وسلامة (HSE policies)
+        4 - متطلبات السلامة (Safety requirements)
+        5 - متطلبات البيئة (Environmental requirements)
+        6 - التقارير (Reports)
     """
     NASHAT_1 = 1
     NASHAT_2 = 2
@@ -706,6 +706,13 @@ class CompanySalamaMatlobatTask(TaskExecutionDetail):
     NASHAT_5 = 5
     NASHAT_6 = 6
 
+    # Using actual Arabic translations from locale files:
+    # msgid "nashat_1" -> "وجود مسؤول بيئة وسلامة"
+    # msgid "nashat_2" -> "توفر خطة بيئة وسلامة"
+    # msgid "nashat_3" -> "سياسة بيئة وسلامة"
+    # msgid "nashat_4" -> "متطلبات السلامة"
+    # msgid "nashat_5" -> "متطلبات البيئة"
+    # msgid "nashat_6" -> "التقارير"
     NASHAT_CHOICES = {
         NASHAT_1:_('nashat_1'),
         NASHAT_2:_('nashat_2'),
