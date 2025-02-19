@@ -1,3 +1,37 @@
+"""
+Planning and Reporting System Models
+
+This module defines a comprehensive system for managing annual planning and monthly 
+execution tracking across multiple operational domains. The system includes:
+
+Core Components:
+- LoggingModel: Abstract base model with audit fields (created/updated timestamps and users)
+- Goal/Task hierarchy: Tree-structured objectives with annual department assignments
+- YearlyPlanning: Master container for annual plans with monthly breakdowns
+- MonthelyReport: Execution tracking with detailed task completion records
+
+Main Model Groups:
+1. Planning Models (YearlyPlanning & Related):
+   - Production planning (company, traditional, minerals)
+   - Financial collection planning (tahsil)
+   - Gold export projections
+
+2. Reporting Models (MonthelyReport & Related):
+   - 25+ specialized TaskExecutionDetail subtypes covering:
+     * Production metrics       * Safety reports (salama)
+     * Incident tracking        * Community obligations
+     * Media monitoring         * IT support
+     * General management       * Legal matters
+
+Key Features:
+- Hierarchical goal system with parent/child relationships
+- Polymorphic reporting through TaskExecutionDetail subclasses
+- Automated task tracking rules (TaskAutomation)
+- Localization support with Arabic translations
+- Validation rules for data integrity (year ranges, percentages, required fields)
+- Audit trails for all changes through LoggingModel inheritance
+"""
+
 from django.db import models
 from django.conf import settings
 from django.forms import ValidationError
