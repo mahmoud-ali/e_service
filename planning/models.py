@@ -935,6 +935,17 @@ class MediaITSupportTask(TaskExecutionDetail):
     TYPE_9 = 9
     TYPE_10 = 10
 
+    # IT support types (from django.po translations):
+    # 1 - إجراء نسخ احتياطي (Backup procedure)
+    # 2 - إعادة تهيئة (Reconfiguration)
+    # 3 - تركيب جهاز جديد (New device installation)
+    # 4 - تركيب طابعة جديدة (New printer installation)
+    # 5 - تعريف طابعة (Printer configuration)
+    # 6 - ربط جهاز بالشبكة (Network connection)
+    # 7 - تنزيل برامج (Software installation)
+    # 8 - بلاغات خدمة انترنت (Internet service reports)
+    # 9 - تعريف ماسح ضوئي (Scanner configuration)
+    # 10 - بلاغات اعطال اجهزة + طابعات (Hardware/printer故障报告)
     NO3_BATH_CHOICES = {
         TYPE_1:_('no3_it_support_1'),
         TYPE_2:_('no3_it_support_2'),
@@ -978,6 +989,14 @@ class GMTask(TaskExecutionDetail):
     TYPE_6 = 6
     TYPE_7 = 7
 
+    # General Management task types (from django.po translations):
+    # 1 - المشاركات الخارجية (External participations)
+    # 2 - المأموريات (Official missions)
+    # 3 - مقابلات ولقاءات (Meetings and interviews)
+    # 4 - اجتماعات مع جهات خارجية (External meetings)
+    # 5 - اجتماعات داخلية (Internal meetings)
+    # 6 - لجان (Committees)
+    # 7 - أخرى (Other)
     NO3_BATH_CHOICES = {
         TYPE_1:_('gm_task_1'),
         TYPE_2:_('gm_task_2'),
@@ -1016,6 +1035,14 @@ class GanoniaTask(TaskExecutionDetail):
     TYPE_6 = 6
     TYPE_7 = 7
 
+    # Legal case types (from django.po translations):
+    # 1 - الفتاوي والراي القانوني (Legal opinions and advice)
+    # 2 - عدد العقودات (Contract counts)
+    # 3 - الانذارات والمخالفات (Warnings and violations)
+    # 4 - عدد اللجان (Committee counts)
+    # 5 - الإستشارات الواردة (Incoming consultations)
+    # 6 - دعاوي امام المحاكم (Court cases)
+    # 7 - بلاغات امام النيابة (Public prosecutor reports)
     NO3_BATH_CHOICES = {
         TYPE_1:_('ganonia_task_1'),
         TYPE_2:_('ganonia_task_2'),
