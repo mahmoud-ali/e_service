@@ -818,10 +818,14 @@ class MediaRasdBathTask(TaskExecutionDetail):
     TYPE_2 = 2
     TYPE_3 = 3
 
+    # Broadcast type choices from django.po translations:
+    # 1 - إذاعي (Radio)
+    # 2 - تلفزيوني (TV)
+    # 3 - إلكتروني (Online/Digital)
     NO3_BATH_CHOICES = {
-        TYPE_1:_('no3_bath_1'),
-        TYPE_2:_('no3_bath_2'),
-        TYPE_3:_('no3_bath_3'),
+        TYPE_1:_('no3_bath_1'),  # إذاعي
+        TYPE_2:_('no3_bath_2'),  # تلفزيوني
+        TYPE_3:_('no3_bath_3'),  # إلكتروني
     }
 
     no3_bath = models.IntegerField(_("no3_bath"), choices=NO3_BATH_CHOICES)
