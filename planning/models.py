@@ -130,6 +130,16 @@ JIHA_CHOICES = {
 }
 
 class LoggingModel(models.Model):
+    """Abstract base model providing audit trail fields for creation and modification tracking.
+    
+    Fields:
+        created_at - Auto-set DateTime when record was created
+        created_by - User who created the record (protected FK)
+        updated_at - Auto-updated DateTime when record was last modified
+        updated_by - User who last modified the record (protected FK)
+        
+    Inherited by all planning/reporting models to maintain audit history.
+    """
     created_at = models.DateTimeField(_("created_at"),auto_now_add=True,editable=False,)
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT,related_name="+",editable=False,verbose_name=_("created_by")) 
     updated_at = models.DateTimeField(_("updated_at"),auto_now=True,editable=False)
@@ -139,6 +149,14 @@ class LoggingModel(models.Model):
         abstract = True
 
 class Department(models.Model):
+    """Represents organizational departments and their user associations.
+    
+    Fields:
+        user - OneToOne relationship mapping users to departments (optional)
+        name - Department name (max 255 chars)
+        
+    Used to assign responsibilities in planning and reporting workflows.
+    """
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.PROTECT,related_name="planning_department",verbose_name=_("user"),blank=True,null=True)
     name = models.CharField(_("name"),max_length=255)
 
@@ -150,6 +168,17 @@ class Department(models.Model):
         verbose_name_plural = _("Departments")
 
 class Goal(models.Model):
+    """Hierarchical organizational objectives with parent-child relationships.
+    
+    Fields:
+        parent - Optional parent goal (self-referential FK)
+        code - Short identifier code (max 10 chars)
+        name - Goal name (max 255 chars)
+        outcome - Description of desired outcomes
+        kpi - Key Performance Indicators for tracking
+        
+    Forms a tree structure of organizational goals and sub-goals.
+    """
     parent = models.ForeignKey('self', on_delete=models.CASCADE, related_name='children',verbose_name=_("parent_goal"),blank=True,null=True)
     code = models.CharField(_("code"),max_length=10)
     name = models.CharField(_("name"),max_length=255)
@@ -165,6 +194,17 @@ class Goal(models.Model):
         ordering = ['code']
 
 class Task(models.Model):
+    """Annual departmental task linked to specific goals.
+    
+    Fields:
+        goal - Parent goal this task supports (FK to Goal)
+        year - Validated year range 2015-2100
+        responsible - Department accountable for completion (FK to Department)
+        name - Task description (max 255 chars)
+        
+    Related:
+        duration - Monthly breakdowns via TaskDuration
+    """
     goal = models.ForeignKey(Goal, on_delete=models.CASCADE, verbose_name=_("goal"), related_name='tasks')
     year = models.PositiveIntegerField(_("year"), validators=[MinValueValidator(limit_value=2015),MaxValueValidator(limit_value=2100)])
     responsible = models.ForeignKey(Department, on_delete=models.CASCADE, verbose_name=_("responsible"), related_name='departments')
@@ -178,6 +218,14 @@ class Task(models.Model):
         verbose_name_plural = _("Tasks")
 
 class TaskDuration(models.Model):
+    """Monthly duration tracking for annual tasks.
+    
+    Fields:
+        task - Parent task (FK to Task)
+        month - Month number (1-12) with translated display names
+        
+    Provides monthly breakdown of task execution timelines.
+    """
     task = models.ForeignKey(Task, on_delete=models.CASCADE, verbose_name=_("task"), related_name='duration')
     month = models.PositiveIntegerField(verbose_name=_("month"), choices=MONTH_CHOICES)
 
@@ -189,6 +237,16 @@ class TaskDuration(models.Model):
         verbose_name_plural = _("TaskDurations")
 
 class TaskAutomation(models.Model):
+    """Defines automation rules for task tracking and progress calculation.
+    
+    Fields:
+        task - Task to automate (FK to Task)
+        type - Automation type: Manual (1) or Auto (2)
+        view - Admin inline view name (required for manual)
+        percent_calculation_method - Calculation logic (required for auto)
+        
+    Validation ensures required fields based on automation type.
+    """
     TYPE_MANUAL = 1
     TYPE_AUTO = 2
 
@@ -223,6 +281,14 @@ class TaskAutomation(models.Model):
 
 ############### Planning ##################
 class YearlyPlanning(LoggingModel):
+    """Master record for annual planning data and status.
+    
+    Fields:
+        year - Validated year range 2015-2100
+        state - Planning state: Draft (1) or Confirmed (2)
+        
+    Serves as container for all monthly planning breakdowns.
+    """
     year = models.PositiveIntegerField(_("year"), validators=[MinValueValidator(limit_value=2015),MaxValueValidator(limit_value=2100)])
     state = models.IntegerField(_("record_state"), choices=STATE_CHOICES, default=STATE_DRAFT)
 
@@ -231,6 +297,15 @@ class YearlyPlanning(LoggingModel):
         verbose_name_plural = _("YearlyPlanning")
 
 class CompanyProductionMonthlyPlanning(models.Model):
+    """Monthly planned production targets for company operations.
+    
+    Fields:
+        plan - Parent yearly plan (FK to YearlyPlanning)
+        month - Month number (1-12)
+        planed_weight - Planned production weight
+        
+    Part of yearly planning breakdown for company production.
+    """
     plan = models.ForeignKey(YearlyPlanning, on_delete=models.CASCADE, verbose_name=_("plan"), related_name='+')
     month = models.PositiveIntegerField(verbose_name=_("month"), choices=MONTH_CHOICES)
     planed_weight = models.FloatField(_("planed_weight"))
@@ -307,6 +382,15 @@ class ExportGoldCompanyMonthlyPlanning(models.Model):
 
 ############ Monthly Report #############
 class MonthelyReport(LoggingModel):
+    """Monthly execution tracking and reporting container.
+    
+    Fields:
+        year - Validated year range 2015-2100
+        month - Month number (1-12)
+        state - Report state: Draft (1) or Confirmed (2)
+        
+    Contains task execution details and progress tracking.
+    """
     year = models.PositiveIntegerField(_("year"), validators=[MinValueValidator(limit_value=2015),MaxValueValidator(limit_value=2100)])
     month = models.PositiveIntegerField(verbose_name=_("month"), choices=MONTH_CHOICES)
     state = models.IntegerField(_("record_state"), choices=STATE_CHOICES, default=STATE_DRAFT)
@@ -319,6 +403,15 @@ class MonthelyReport(LoggingModel):
         return f'{self.get_month_display()} {self.year}'+state
 
 class TaskExecution(LoggingModel):
+    """Tracks progress and status of task completion for monthly reports.
+    
+    Fields:
+        report - Parent monthly report (FK to MonthelyReport)
+        task - Reference task (FK to Task)
+        percentage - Completion percentage (0-100)
+        problems - Description of any issues encountered
+        state - Execution state: Draft (1) or Confirmed (2)
+    """
     report = models.ForeignKey(MonthelyReport, on_delete=models.CASCADE, null=True, verbose_name=_("report"), related_name='monthly_tasks')
     task = models.ForeignKey(Task, on_delete=models.CASCADE, verbose_name=_("task"), related_name='execution')
     percentage = models.PositiveIntegerField(verbose_name=_("percentage"), default=0, validators=[MaxValueValidator(limit_value=100)])
@@ -333,6 +426,13 @@ class TaskExecution(LoggingModel):
         verbose_name_plural = _("TaskExecutions")
 
 class TaskExecutionDetail(models.Model):
+    """Abstract base model for detailed task execution tracking.
+    
+    Fields:
+        task_execution - Parent task execution record (FK to TaskExecution)
+        
+    Inherited by specialized execution detail models covering different domains.
+    """
     task_execution = models.ForeignKey(TaskExecution, on_delete=models.CASCADE, verbose_name=_("task_execution"), related_name='+')
 
     class Meta:
