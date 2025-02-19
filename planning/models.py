@@ -54,10 +54,19 @@ MONTH_OCT = 10
 MONTH_NOV = 11
 MONTH_DEC = 12
 
-# Month choices with Arabic translations:
-# 1 - يناير (January), 2 - فبراير (February), 3 - مارس (March), 4 - أبريل (April)
-# 5 - مايو (May), 6 - يونيو (June), 7 - يوليو (July), 8 - أغسطس (August)
-# 9 - سبتمبر (September), 10 - أكتوبر (October), 11 - نوفمبر (November), 12 - ديسمبر (December)
+# Month choices (from django.po translations):
+# 1 - يناير (January)
+# 2 - فبراير (February) 
+# 3 - مارس (March)
+# 4 - أبريل (April)
+# 5 - مايو (May)
+# 6 - يونيو (June)
+# 7 - يوليو (July)
+# 8 - أغسطس (August)
+# 9 - سبتمبر (September)
+# 10 - أكتوبر (October)
+# 11 - نوفمبر (November)
+# 12 - ديسمبر (December)
 MONTH_CHOICES = {
     MONTH_JAN: _('MONTH_JAN'),  # يناير
     MONTH_FEB: _('MONTH_FEB'),  # فبراير
@@ -77,8 +86,10 @@ STATE_DRAFT = 1
 STATE_CONFIRMED = 2
 STATE_EXPIRED = 3
 
-# Record states:
-# 1 - مسودة (Draft), 2 - مؤكد (Confirmed), 3 - منتهي الصلاحية (Expired)
+# Record states (from django.po translations):
+# 1 - مسودة (Draft)
+# 2 - مؤكد (Confirmed) 
+# 3 - منتهي الصلاحية (Expired) - commented out but available
 STATE_CHOICES = {
     STATE_DRAFT: _('state_draft'),      # مسودة
     STATE_CONFIRMED: _('state_confirmed'),  # مؤكد
@@ -102,14 +113,23 @@ BAND_14 = 14
 BAND_15 = 15
 BAND_16 = 16
 
-# Financial bands (بنود مالية):
-# 1 - العوائد الجليلة, 2 - العوائد الجليلة من التعدين الصغير 
-# 3 - نصيب الحكومة من أرباح الأعمال, 4 - نصيب الحكومة من أرباح الأعمال إمتياز
-# 5 - عوائد جليلة للتعدين التقليدي, 6 - أخرى, 7 - إيجار أرض شركات إمتياز
-# 8 - دعم فني لشركات الإمتياز, 9 - بونص توقيع إتفاقيات الإمتياز
-# 10 - ممثل الحكومة لشركات الإمتياز, 11 - رسوم تجديد عقد المخلفات
-# 12 - رسوم بونص توقيع عقد معالجة المخلفات, 13 - رسوم إيجار عقود التعدين للإمتياز المنتج
-# 14 - رسوم إيجار عقود التعدين الصغير, 15 - نصيب المجتمع المحلي من الايرادات, 16 - الزكاة
+# Financial bands (from django.po translations):
+# 1 - العوائد الجليلة (Major returns -特许协议)
+# 2 - العوائد الجليلة من التعدين الصغير (Small-scale mining returns)
+# 3 - نصيب الحكومة من أرباح الأعمال (Government share of business profits)
+# 4 - نصيب الحكومة من أرباح الأعمال إمتياز (Government share of concession profits)
+# 5 - عوائد جليلة للتعدين التقليدي (Traditional mining royalties)
+# 6 - أخرى (Other)
+# 7 - إيجار أرض شركات إمتياز (Concession company land rent)
+# 8 - دعم فني لشركات الإمتياز (Technical support for concession companies)
+# 9 - بونص توقيع إتفاقيات الإمتياز (Concession agreement signing bonus)
+# 10 - ممثل الحكومة لشركات الإمتياز (Government representative for concession companies)
+# 11 - رسوم تجديد عقد المخلفات (Waste contract renewal fees)
+# 12 - رسوم بونص توقيع عقد معالجة المخلفات (Waste processing contract signing bonus)
+# 13 - رسوم إيجار عقود التعدين للإمتياز المنتج (Producing concession mining contract rent)
+# 14 - رسوم إيجار عقود التعدين الصغير (Small-scale mining contract rent)
+# 15 - نصيب المجتمع المحلي من الايرادات (Local community revenue share)
+# 16 - الزكاة (Zakat)
 BAND_CHOICES = {
     BAND_1:_('band_1'),  # العوائد الجليلة
     BAND_2:_('band_2'),  # العوائد الجليلة من التعدين الصغير 
@@ -135,9 +155,12 @@ JIHA_3 = 3
 JIHA_4 = 4
 JIHA_5 = 5
 
-# Distribution directions (جهات التوزيع):
-# 1 - وزارة المالية والتخطيط الاقتصادي, 2 - الهيئة العامة للأبحاث الجيولوجية
-# 3 - نصيب الولايات, 4 - الشركة السودانية للموارد المعدنية, 5 - المجتمع المحلي
+# Distribution directions (from django.po translations):
+# 1 - وزارة المالية والتخطيط الاقتصادي (Ministry of Finance and Economic Planning)
+# 2 - الهيئة العامة للأبحاث الجيولوجية (Geological Research Authority)
+# 3 - نصيب الولايات (State share)
+# 4 - الشركة السودانية للموارد المعدنية (Sudanese Mineral Resources Company)
+# 5 - المجتمع المحلي (Local community)
 JIHA_CHOICES = {
     JIHA_1:_('jiha_1'),  # وزارة المالية والتخطيط الاقتصادي
     JIHA_2:_('jiha_2'),  # الهيئة العامة للأبحاث الجيولوجية
