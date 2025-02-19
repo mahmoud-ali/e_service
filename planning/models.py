@@ -852,6 +852,12 @@ class MediaF2atMostakhdmaTask(TaskExecutionDetail):
     TYPE_4 = 4
     TYPE_5 = 5
 
+    # Media segment types from django.po translations:
+    # 1 - المستثمرون (Investors)
+    # 2 - المعدنين (Miners)
+    # 3 - المجتمعات المحلية (Local communities)
+    # 4 - الرأي العام (Public opinion)
+    # 5 - الشركات (Companies)
     NO3_BATH_CHOICES = {
         TYPE_1:_('no3_media_mostathmir_1'),
         TYPE_2:_('no3_media_mostathmir_2'),
