@@ -573,10 +573,10 @@ class TraditionalTahsilTask(TaskExecutionDetail):
         verbose_name_plural = _("TraditionalTahsilTasks")
 
 class TahsilByBandTask(TaskExecutionDetail):
-    """Tracks financial collections by band (Tahsil = تحصيل = collection, Band = مناطق)
+    """Tracks financial collections by band (Tahsil = تحصيل = collection, Band = بند)
     
     Fields:
-        band - Geographic band/region (1-16)
+        band - accountung issue (integer) from choices
         total_money - Collected amount
     """
     band = models.IntegerField(_("band"),choices=BAND_CHOICES)
@@ -590,7 +590,7 @@ class TahsilByJihaTask(TaskExecutionDetail):
     """Tracks financial collections by direction (Jiha = جهة = direction/affiliation)
     
     Fields:
-        jiha - Collection category (1-5)
+        jiha - Organization
         total_money - Collected amount
         planed_money - Planned amount
     """
@@ -758,7 +758,7 @@ class Mas2oliaMojtama3iaTask(TaskExecutionDetail):
 
 ############## Media #######################
 class MediaRasdBathTask(TaskExecutionDetail):
-    """Media monitoring task (Rasd Bath = رصد باث = broadcast monitoring)
+    """Media monitoring task (Rasd Bath = رصد بث = broadcast monitoring)
     
     Fields:
         no3_bath - Type of media broadcast (1: TV, 2: Radio, 3: Online)
