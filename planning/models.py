@@ -456,6 +456,18 @@ class TraditionalProductionTask(TaskExecutionDetail):
         verbose_name_plural = _("TraditionalProductionTasks")
 
 class TraditionalStateTask(TaskExecutionDetail):
+    """Tracks traditional mining state-level statistics (Soug = سوق, Grabeel = جرابيل)
+    
+    Fields:
+        soug - Number of traditional markets
+        grabeel - Number of screening sites
+        hofra_kabira - Large excavation sites
+        abar_khtot_intag - Production line wells
+        ajhizat_bahth - Exploration equipment
+        mo3dinin_sosal - Social miners
+        toahin_ratiba - Regular mills
+        toahin_jafa - Dry mills
+    """
     state = models.ForeignKey(LkpState, on_delete=models.PROTECT,verbose_name=_("state"))
     soug = models.IntegerField(_("no_soug"))
     grabeel = models.IntegerField(_("no_grabeel"))
@@ -561,6 +573,12 @@ class TraditionalTahsilTask(TaskExecutionDetail):
         verbose_name_plural = _("TraditionalTahsilTasks")
 
 class TahsilByBandTask(TaskExecutionDetail):
+    """Tracks financial collections by band (Tahsil = تحصيل = collection, Band = مناطق)
+    
+    Fields:
+        band - Geographic band/region (1-16)
+        total_money - Collected amount
+    """
     band = models.IntegerField(_("band"),choices=BAND_CHOICES)
     total_money = models.FloatField(_("total_money"))
 
@@ -569,6 +587,13 @@ class TahsilByBandTask(TaskExecutionDetail):
         verbose_name_plural = _("TahsilByBandTasks")
 
 class TahsilByJihaTask(TaskExecutionDetail):
+    """Tracks financial collections by direction (Jiha = جهة = direction/affiliation)
+    
+    Fields:
+        jiha - Collection category (1-5)
+        total_money - Collected amount
+        planed_money - Planned amount
+    """
     jiha = models.IntegerField(_("jiha"),choices=JIHA_CHOICES)
     total_money = models.FloatField(_("total_money"))
     planed_money = models.FloatField(_("planed_money"))
@@ -580,6 +605,16 @@ class TahsilByJihaTask(TaskExecutionDetail):
 ############### Salama #####################
 
 class TraditionalSalamaMatlobatTask(TaskExecutionDetail):
+    """Tracks traditional mining safety requirements (Salama = سلامة = safety, Matlobat = متطلبات = requirements)
+    
+    Fields:
+        taswir_asag - Safety plan imaging
+        trhil_karta - Site mapping
+        slamat_manajim - Mine safety status
+        no_3iadat - Number of renewals
+        no_is3af - Rescue operations
+        t3mol_zi2bag - Bag sealing operations
+    """
     state = models.ForeignKey(LkpState, on_delete=models.PROTECT, verbose_name=_("state"))
     taswir_asag = models.FloatField(_("taswir_asag"))
     trhil_karta = models.FloatField(_("trhil_karta"))
@@ -593,6 +628,13 @@ class TraditionalSalamaMatlobatTask(TaskExecutionDetail):
         verbose_name_plural = _("TraditionalSalamaMatlobatTasks")
 
 class TraditionalSalamaRagabaTask(TaskExecutionDetail):
+    """Tracks traditional mining oversight activities (Ragaba = رقابة = oversight)
+    
+    Fields:
+        m2moriat_taftishia - Inspection tours
+        lig2at_2rshadia - Detection of violations
+        taslim_tgarir - Report submissions
+    """
     state = models.ForeignKey(LkpState, on_delete=models.PROTECT, verbose_name=_("state"))
     m2moriat_taftishia = models.FloatField(_("m2moriat_taftishia"))
     lig2at_2rshadia = models.FloatField(_("lig2at_2rshadia"))
@@ -603,6 +645,20 @@ class TraditionalSalamaRagabaTask(TaskExecutionDetail):
         verbose_name_plural = _("TraditionalSalamaRagabaTasks")
 
 class CompanySalamaMatlobatTask(TaskExecutionDetail):
+    """Tracks company safety requirements fulfillment (Salama = سلامة = safety, Matlobat = متطلبات = requirements)
+    
+    Fields:
+        nashat - Activity type (1-6 safety activities)
+        percent - Completion percentage
+        
+    NASHAT_CHOICES:
+        1: Safety training
+        2: Equipment maintenance
+        3: Emergency drills
+        4: Risk assessments
+        5: Safety audits
+        6: Incident reporting
+    """
     NASHAT_1 = 1
     NASHAT_2 = 2
     NASHAT_3 = 3
