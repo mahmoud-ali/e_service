@@ -1,26 +1,29 @@
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.utils.translation import gettext_lazy as _
+from django.conf import settings
 
-class CompanyDetails(models.Model):
-    """Stores company and surrogate information"""
-    ID_TYPE_PASSPORT = 1
-    ID_TYPE_NATIONAL_ID = 2
-    ID_TYPE_DRIVING_LICENSE = 3
-    ID_TYPE_BUSINESS_REG = 4
-    ID_TYPE_OTHER = 5
+from gold_travel.models import LkpOwner,AppMoveGold
+
+class LoggingModel(models.Model):
+    """
+    An abstract base class model that provides self-
+    updating ``created_at`` and ``updated_at`` fields for responsable user.
+    """
+    created_at = models.DateTimeField(_("created_at"),auto_now_add=True,editable=False,)
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT,related_name="+",editable=False,verbose_name=_("created_by")) 
     
-    ID_TYPE_CHOICES = (
-        (ID_TYPE_PASSPORT, _('Passport')),
-        (ID_TYPE_NATIONAL_ID, _('National ID')),
-        (ID_TYPE_DRIVING_LICENSE, _('Driving License')),
-        (ID_TYPE_BUSINESS_REG, _('Business Registration')),
-        (ID_TYPE_OTHER, _('Other')),
-    )
+    updated_at = models.DateTimeField(_("updated_at"),auto_now=True,editable=False)
+    updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT,related_name="+",editable=False,verbose_name=_("updated_by"))
+    
+    class Meta:
+        abstract = True
 
-    name = models.CharField(_("Company Name"), max_length=255)
+class CompanyDetails(LoggingModel):
+    """Stores company and surrogate information"""
+    name = models.ForeignKey(LkpOwner, on_delete=models.PROTECT,verbose_name=_("Company Name"))
     surrogate_name = models.CharField(_("Surrogate Name"), max_length=255)
-    surrogate_id_type = models.IntegerField(_("ID Type"), choices=ID_TYPE_CHOICES)
+    surrogate_id_type = models.IntegerField(_("ID Type"), choices=AppMoveGold.IDENTITY_CHOICES)
     surrogate_id_val = models.CharField(_("ID Value"), max_length=20)
     surrogate_id_phone = models.CharField(_("Contact Phone"), max_length=20)
     basic_form = models.OneToOneField(
@@ -34,8 +37,17 @@ class CompanyDetails(models.Model):
     def __str__(self):
         return f"{self.name} - {self.surrogate_name}"
 
-class SMRCData(models.Model):
+class SMRCData(LoggingModel):
     """Stores SMRC-related measurements"""
+    def attachement_path(self, filename):
+        company = self.form.id
+        date = self.created_at.date()
+        return "company_{0}/sswg/{1}/{2}".format(company,date, filename)    
+
+
+    # form_type = models.IntegerField(_("form_type"), choices=AppMoveGold.FORM_TYPE_CHOICES, default=AppMoveGold.FORM_TYPE_GOLD_EXPORT)
+    form = models.ForeignKey(AppMoveGold, on_delete=models.PROTECT,verbose_name=_("Move Gold"))
+
     raw_weight = models.FloatField(_("Raw Weight"), validators=[MinValueValidator(0.0)])
     allow_count = models.PositiveIntegerField(_("Allow Count"))
     basic_form = models.OneToOneField(
@@ -46,10 +58,12 @@ class SMRCData(models.Model):
         blank=True
     )
 
-    def __str__(self):
-        return f"SMRC-{self.raw_weight}kg/{self.allow_count}"
+    attachement_file = models.FileField(_("attachement_file"),upload_to=attachement_path) #,null=True,blank=True
 
-class SSMOData(models.Model):
+    def __str__(self):
+        return f"{self.form}"
+
+class SSMOData(LoggingModel):
     """Stores SSMO-related measurements and certificate"""
     raw_weight = models.FloatField(_("Raw Weight"), validators=[MinValueValidator(0.0)])
     net_weight = models.FloatField(_("Net Weight"), validators=[MinValueValidator(0.0)])
@@ -66,7 +80,7 @@ class SSMOData(models.Model):
     def __str__(self):
         return f"SSMO-{self.certificate_id}"
 
-class MOCSData(models.Model):
+class MOCSData(LoggingModel):
     """Stores Ministry of Commerce and Supply related data"""
     contract_number = models.CharField(_("Contract Number"), max_length=20)
     exporters_importers_registry_number = models.CharField(_("Exporters/Importers Registry Number"), max_length=20)
@@ -88,7 +102,7 @@ class MOCSData(models.Model):
     def __str__(self):
         return f"MOCS-{self.contract_number}"
 
-class CBSData(models.Model):
+class CBSData(LoggingModel):
     """Stores Central Bank of Sudan related data"""
     PAYMENT_METHOD_CHOICES = (
         ('cash', _('Cash')),
@@ -111,7 +125,7 @@ class CBSData(models.Model):
     def __str__(self):
         return f"CBS-{self.customer_account_number}"
 
-class BasicForm(models.Model):
+class BasicForm(LoggingModel):
     """Main form storing all related data"""
     date = models.DateField(_("Form Date"))
     sn_no = models.CharField(_("Serial Number"), max_length=15, unique=True)
@@ -120,6 +134,47 @@ class BasicForm(models.Model):
         return f"{self.sn_no} - {self.date}"
 
     class Meta:
-        verbose_name = _("Basic Form")
-        verbose_name_plural = _("Basic Forms")
+        verbose_name = _("SSWG Basic Form")
+        verbose_name_plural = _("SSWG Basic Forms")
         ordering = ['-date']
+
+from django.db.models.signals import post_save, pre_save
+from django.dispatch import receiver
+
+@receiver(pre_save, sender=SMRCData)
+def update_smrc_data(sender, instance, **kwargs):
+    if instance.form:
+        instance.raw_weight = instance.form.gold_weight_in_gram
+        instance.allow_count = instance.form.gold_alloy_count
+
+@receiver(post_save, sender=SMRCData)
+def create_company_details(sender, instance, **kwargs):
+    """Automatically create CompanyDetails when SMRCData is created"""
+    if instance.form:
+        # Get the owner name from the related AppMoveGold instance
+        owner_name = instance.form.owner_name_lst
+
+        obj = CompanyDetails.objects.get(
+            name=owner_name,
+            basic_form=instance.basic_form,
+        )
+
+        if obj.name != owner_name \
+            or obj.basic_form != instance.basic_form \
+            or obj.surrogate_name != instance.form.repr_name \
+            or obj.surrogate_id_type != instance.form.repr_identity_type \
+            or obj.surrogate_id_val != instance.form.repr_identity \
+            or obj.surrogate_id_phone != instance.form.repr_phone:
+
+            obj.delete()
+
+            CompanyDetails.objects.create(
+                name=owner_name,
+                basic_form=instance.basic_form,
+                surrogate_name=instance.form.repr_name,
+                surrogate_id_type=instance.form.repr_identity_type,
+                surrogate_id_val=instance.form.repr_identity,
+                surrogate_id_phone=instance.form.repr_phone,
+                created_by=instance.created_by,
+                updated_by=instance.updated_by,
+            )
