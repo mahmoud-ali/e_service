@@ -5,11 +5,19 @@ from .models import CompanyDetails, SMRCData, SSMOData, BasicForm, MOCSData, CBS
 
 class LogMixin:
     def save_model(self, request, obj, form, change):
-        if obj.pk:
-            obj.updated_by = request.user
-        else:
-            obj.created_by = obj.updated_by = request.user
-        super().save_model(request, obj, form, change)                
+        if not obj.pk:  # New object
+            obj.created_by = request.user
+        obj.updated_by = request.user
+        super().save_model(request, obj, form, change)
+
+    def save_formset(self, request, form, formset, change):
+        instances = formset.save(commit=False)
+        for instance in instances:
+            if not instance.pk:  # New inline object
+                instance.created_by = request.user
+            instance.updated_by = request.user
+            instance.save()
+        formset.save_m2m()
 
 class SMRCDataInline(LogMixin,admin.StackedInline):
     model = SMRCData
@@ -49,7 +57,7 @@ class BasicFormAdmin(LogMixin,admin.ModelAdmin):
         for formset in formsets:
             for f in formset:
                 obj = f.save(commit=False)
-                if obj.pk:
+                if obj and hasattr(obj ,'pk'):
                     obj.updated_by = request.user
                 else:
                     obj.created_by = obj.updated_by = request.user

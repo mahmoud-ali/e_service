@@ -6,7 +6,7 @@ from .models import SMRCData
 class SMRCDataForm(forms.ModelForm):
     class Meta:
         model = SMRCData
-        fields = ['form', 'raw_weight', 'allow_count','attachement_file']
+        fields = ['form', 'raw_weight', 'allow_count','smrc_file'] #,'attachement_file'
     
     form = forms.ModelChoiceField(
         queryset=AppMoveGold.objects.filter(state=AppMoveGold.STATE_SMRC),

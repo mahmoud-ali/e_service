@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-20 20:58+0200\n"
+"POT-Creation-Date: 2025-02-21 01:15+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -325,7 +325,7 @@ msgstr "ديسمبر"
 #: gold_travel_traditional/models.py:8 help_request/models.py:11
 #: hr_portal/models.py:89 mokhalafat/models.py:6 pa/models.py:46
 #: planning/models.py:183 production_control/models.py:13
-#: revenu_dist/models.py:53 traditional_api/models.py:10
+#: revenu_dist/models.py:53 sswg/models.py:13 traditional_api/models.py:10
 msgid "created_at"
 msgstr "تاريخ الانشاء"
 
@@ -334,7 +334,7 @@ msgstr "تاريخ الانشاء"
 #: gold_travel_traditional/admin.py:340 gold_travel_traditional/models.py:9
 #: help_request/models.py:13 hr_portal/models.py:90 mokhalafat/models.py:7
 #: pa/models.py:47 planning/models.py:184 production_control/models.py:14
-#: revenu_dist/models.py:54 traditional_api/models.py:11
+#: revenu_dist/models.py:54 sswg/models.py:14 traditional_api/models.py:11
 msgid "created_by"
 msgstr "المستخدم المسئول عن الانشاء"
 
@@ -347,7 +347,7 @@ msgstr "المستخدم المسئول عن الانشاء"
 #: gold_travel_traditional/models.py:11 help_request/models.py:12
 #: hr_portal/models.py:92 mokhalafat/models.py:9 pa/models.py:49
 #: planning/models.py:185 production_control/models.py:16
-#: revenu_dist/models.py:56 traditional_api/models.py:13
+#: revenu_dist/models.py:56 sswg/models.py:16 traditional_api/models.py:13
 msgid "updated_at"
 msgstr "تاريخ اخر تعديل"
 
@@ -356,7 +356,7 @@ msgstr "تاريخ اخر تعديل"
 #: gold_travel_traditional/admin.py:340 gold_travel_traditional/models.py:12
 #: help_request/models.py:14 hr_portal/models.py:93 mokhalafat/models.py:10
 #: pa/models.py:50 planning/models.py:186 production_control/models.py:17
-#: revenu_dist/models.py:57 traditional_api/models.py:14
+#: revenu_dist/models.py:57 sswg/models.py:17 traditional_api/models.py:14
 msgid "updated_by"
 msgstr "المستخدم المسئول عن التعديل"
 
@@ -3925,7 +3925,8 @@ msgstr "رخصة قيادة"
 msgid "form_type"
 msgstr "نوع الاستمارة"
 
-#: gold_travel/models.py:180 gold_travel/models.py:181
+#: gold_travel/models.py:180 gold_travel/models.py:181 sswg/forms.py:13
+#: sswg/models.py:53
 msgid "Move Gold"
 msgstr "استمارة ترحيل ذهب صادر"
 
@@ -6101,139 +6102,163 @@ msgstr "تفاصيل توزيع الايرادات"
 msgid "SSWG App"
 msgstr "النافذة السودانية الموحدة لصادر الذهب"
 
-#: sswg/models.py:14
-msgid "Passport"
-msgstr "جواز سفر"
+#: sswg/forms.py:14
+msgid "Select SMRC Code"
+msgstr ""
 
-#: sswg/models.py:15
-msgid "National ID"
-msgstr "بطاقة وطنية"
-
-#: sswg/models.py:16
-msgid "Driving License"
-msgstr "رخصة قيادة"
-
-#: sswg/models.py:17
-msgid "Business Registration"
-msgstr "سجل تجاري"
-
-#: sswg/models.py:18
-msgid "Other"
-msgstr "أخرى"
-
-#: sswg/models.py:21
+#: sswg/models.py:24
 msgid "Company Name"
 msgstr "اسم الشركة"
 
-#: sswg/models.py:22
+#: sswg/models.py:25
 msgid "Surrogate Name"
 msgstr "اسم المندوب"
 
-#: sswg/models.py:23
+#: sswg/models.py:26
 msgid "ID Type"
 msgstr "نوع الهوية"
 
-#: sswg/models.py:24
+#: sswg/models.py:27
 msgid "ID Value"
 msgstr "رقم الهوية"
 
-#: sswg/models.py:25
+#: sswg/models.py:28
 msgid "Contact Phone"
 msgstr "هاتف التواصل"
 
-#: sswg/models.py:39 sswg/models.py:54
+#: sswg/models.py:41 sswg/models.py:42
+msgid "SSWG CompanyDetails"
+msgstr "بيانات الشركة المصدرة"
+
+#: sswg/models.py:55 sswg/models.py:81
 msgid "Raw Weight"
 msgstr "الوزن الخام"
 
-#: sswg/models.py:40 sswg/models.py:56
+#: sswg/models.py:56 sswg/models.py:83
 msgid "Allow Count"
 msgstr "عدد السبائك"
 
-#: sswg/models.py:55
+#: sswg/models.py:65
+msgid "smrc_file"
+msgstr "مرفق استمارة ترحيل الذهب بغرض الصادر"
+
+#: sswg/models.py:71 sswg/models.py:72
+msgid "SSWG SMRCData"
+msgstr "استمارة ترحيل الذهب بغرض الصادر"
+
+#: sswg/models.py:82
 msgid "Net Weight"
 msgstr "الوزن الصافي"
 
-#: sswg/models.py:57
+#: sswg/models.py:84
 msgid "Certificate ID"
 msgstr "رقم الشهادة"
 
-#: sswg/models.py:71
+#: sswg/models.py:92
+msgid "ssmo_file"
+msgstr "شهادة التحليل"
+
+#: sswg/models.py:98 sswg/models.py:99
+msgid "SSWG SSMOData"
+msgstr "الهيئة السودانية للمواصفات والمقاييس - شهادة تحليل"
+
+#: sswg/models.py:108
 msgid "Contract Number"
 msgstr "رقم العقد"
 
-#: sswg/models.py:72
+#: sswg/models.py:109
 msgid "Exporters/Importers Registry Number"
 msgstr "رقم سجل المصدرين/المستوردين"
 
-#: sswg/models.py:73
+#: sswg/models.py:110
 msgid "Unit Price (grams)"
 msgstr "سعر الجرام"
 
-#: sswg/models.py:74
+#: sswg/models.py:111
 msgid "Total Contract Value"
 msgstr "القيمة الإجمالية للعقد"
 
-#: sswg/models.py:75
+#: sswg/models.py:112
 msgid "Port of Shipment"
 msgstr "ميناء الشحن"
 
-#: sswg/models.py:76
+#: sswg/models.py:113
 msgid "Port of Arrival"
 msgstr "ميناء الوصول"
 
-#: sswg/models.py:77
+#: sswg/models.py:114
 msgid "Main Bank Name"
 msgstr "البنك الرئيسي"
 
-#: sswg/models.py:78
+#: sswg/models.py:115
 msgid "Subsidiary Bank Name"
 msgstr "البنك الفرعي"
 
-#: sswg/models.py:79
+#: sswg/models.py:116
 msgid "Contract Expiration Date"
 msgstr "تاريخ انتهاء العقد"
 
-#: sswg/models.py:94
+#: sswg/models.py:124
+msgid "mocs1_file"
+msgstr "عقد الصادر"
+
+#: sswg/models.py:125
+msgid "mocs2_file"
+msgstr "شهادة المنشأ"
+
+#: sswg/models.py:131 sswg/models.py:132
+msgid "SSWG MOCSData"
+msgstr "وزارة التجارة والتموين"
+
+#: sswg/models.py:142
 msgid "Cash"
 msgstr "نقدي"
 
-#: sswg/models.py:95
+#: sswg/models.py:143
 msgid "Bank Transfer"
 msgstr "تحويل بنكي"
 
-#: sswg/models.py:96
+#: sswg/models.py:144
 msgid "Cheque"
 msgstr "شيك"
 
-#: sswg/models.py:99
+#: sswg/models.py:147
 msgid "Customer Account Number"
 msgstr "رقم حساب العميل"
 
-#: sswg/models.py:100
+#: sswg/models.py:148
 msgid "Commercial Bank Name"
 msgstr "اسم البنك التجاري"
 
-#: sswg/models.py:101
+#: sswg/models.py:149
 msgid "Issued Amount Date"
 msgstr "تاريخ الإصدار"
 
-#: sswg/models.py:102
+#: sswg/models.py:150
 msgid "Payment Method"
 msgstr "طريقة الدفع"
 
-#: sswg/models.py:116
+#: sswg/models.py:159
+msgid "cbs_file"
+msgstr "استمارة الصادر EX-Form"
+
+#: sswg/models.py:165 sswg/models.py:166
+msgid "SSWG CBS"
+msgstr "ابنك السودان المركزي - شهادة صادر"
+
+#: sswg/models.py:170
 msgid "Form Date"
 msgstr "تاريخ النموذج"
 
-#: sswg/models.py:117
+#: sswg/models.py:171
 msgid "Serial Number"
 msgstr "الرقم التسلسلي"
 
-#: sswg/models.py:123
+#: sswg/models.py:177
 msgid "SSWG Basic Form"
 msgstr "الإستمارة الموحدة لحركة الذهب داخل النافذة"
 
-#: sswg/models.py:124
+#: sswg/models.py:178
 msgid "SSWG Basic Forms"
 msgstr "الإستمارات الموحدة لحركة الذهب داخل النافذة"
 
@@ -6361,6 +6386,21 @@ msgstr "تم تسجيل الدخول بنجاح."
 #: traditional_api/views.py:125
 msgid "Record added sucessfully."
 msgstr "تم حفظ السجل بنجاح."
+
+#~ msgid "Passport"
+#~ msgstr "جواز سفر"
+
+#~ msgid "National ID"
+#~ msgstr "بطاقة وطنية"
+
+#~ msgid "Driving License"
+#~ msgstr "رخصة قيادة"
+
+#~ msgid "Business Registration"
+#~ msgstr "سجل تجاري"
+
+#~ msgid "Other"
+#~ msgstr "أخرى"
 
 #~ msgid "dabtiaat state detail"
 #~ msgstr "تفاصيل الولاية"

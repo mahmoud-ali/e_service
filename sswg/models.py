@@ -37,13 +37,17 @@ class CompanyDetails(LoggingModel):
     def __str__(self):
         return f"{self.name} - {self.surrogate_name}"
 
+    class Meta:
+        verbose_name = _("SSWG CompanyDetails")
+        verbose_name_plural = _("SSWG CompanyDetails")
+
+
 class SMRCData(LoggingModel):
     """Stores SMRC-related measurements"""
-    def attachement_path(self, filename):
+    def attachment_path(self, filename):
         company = self.form.id
         date = self.created_at.date()
         return "company_{0}/sswg/{1}/{2}".format(company,date, filename)    
-
 
     # form_type = models.IntegerField(_("form_type"), choices=AppMoveGold.FORM_TYPE_CHOICES, default=AppMoveGold.FORM_TYPE_GOLD_EXPORT)
     form = models.ForeignKey(AppMoveGold, on_delete=models.PROTECT,verbose_name=_("Move Gold"))
@@ -58,13 +62,22 @@ class SMRCData(LoggingModel):
         blank=True
     )
 
-    attachement_file = models.FileField(_("attachement_file"),upload_to=attachement_path) #,null=True,blank=True
+    smrc_file = models.FileField(_("smrc_file"), upload_to=attachment_path)  #,null=True,blank=True
 
     def __str__(self):
         return f"{self.form}"
 
+    class Meta:
+        verbose_name = _("SSWG SMRCData")
+        verbose_name_plural = _("SSWG SMRCData")
+
 class SSMOData(LoggingModel):
     """Stores SSMO-related measurements and certificate"""
+    def attachment_path(self, filename):
+        company = self.form.id
+        date = self.created_at.date()
+        return "company_{0}/sswg/{1}/{2}".format(company,date, filename)    
+
     raw_weight = models.FloatField(_("Raw Weight"), validators=[MinValueValidator(0.0)])
     net_weight = models.FloatField(_("Net Weight"), validators=[MinValueValidator(0.0)])
     allow_count = models.PositiveIntegerField(_("Allow Count"))
@@ -76,12 +89,22 @@ class SSMOData(LoggingModel):
         null=True,
         blank=True
     )
+    ssmo_file = models.FileField(_("ssmo_file"), upload_to=attachment_path)  #,null=True,blank=True
 
     def __str__(self):
         return f"SSMO-{self.certificate_id}"
 
+    class Meta:
+        verbose_name = _("SSWG SSMOData")
+        verbose_name_plural = _("SSWG SSMOData")
+
 class MOCSData(LoggingModel):
     """Stores Ministry of Commerce and Supply related data"""
+    def attachment_path(self, filename):
+        company = self.form.id
+        date = self.created_at.date()
+        return "company_{0}/sswg/{1}/{2}".format(company,date, filename)    
+
     contract_number = models.CharField(_("Contract Number"), max_length=20)
     exporters_importers_registry_number = models.CharField(_("Exporters/Importers Registry Number"), max_length=20)
     unit_price_in_grams = models.FloatField(_("Unit Price (grams)"), validators=[MinValueValidator(0.0)])
@@ -98,12 +121,23 @@ class MOCSData(LoggingModel):
         null=True,
         blank=True
     )
+    mocs1_file = models.FileField(_("mocs1_file"), upload_to=attachment_path)  #,null=True,blank=True
+    mocs2_file = models.FileField(_("mocs2_file"), upload_to=attachment_path)  #,null=True,blank=True
 
     def __str__(self):
         return f"MOCS-{self.contract_number}"
 
+    class Meta:
+        verbose_name = _("SSWG MOCSData")
+        verbose_name_plural = _("SSWG MOCSData")
+
 class CBSData(LoggingModel):
     """Stores Central Bank of Sudan related data"""
+    def attachment_path(self, filename):
+        company = self.form.id
+        date = self.created_at.date()
+        return "company_{0}/sswg/{1}/{2}".format(company,date, filename)    
+
     PAYMENT_METHOD_CHOICES = (
         ('cash', _('Cash')),
         ('transfer', _('Bank Transfer')),
@@ -122,8 +156,14 @@ class CBSData(LoggingModel):
         blank=True
     )
 
+    cbs_file = models.FileField(_("cbs_file"), upload_to=attachment_path)  #,null=True,blank=True
+
     def __str__(self):
         return f"CBS-{self.customer_account_number}"
+    
+    class Meta:
+        verbose_name = _("SSWG CBS")
+        verbose_name_plural = _("SSWG CBS")
 
 class BasicForm(LoggingModel):
     """Main form storing all related data"""
@@ -154,19 +194,24 @@ def create_company_details(sender, instance, **kwargs):
         # Get the owner name from the related AppMoveGold instance
         owner_name = instance.form.owner_name_lst
 
-        obj = CompanyDetails.objects.get(
-            name=owner_name,
-            basic_form=instance.basic_form,
-        )
+        obj = None
+        try:
+            obj = CompanyDetails.objects.get(
+                name=owner_name,
+                basic_form=instance.basic_form,
+            )
+        except:
+            pass
 
-        if obj.name != owner_name \
+        if not obj or obj.name != owner_name \
             or obj.basic_form != instance.basic_form \
             or obj.surrogate_name != instance.form.repr_name \
             or obj.surrogate_id_type != instance.form.repr_identity_type \
             or obj.surrogate_id_val != instance.form.repr_identity \
             or obj.surrogate_id_phone != instance.form.repr_phone:
 
-            obj.delete()
+            if obj:
+                obj.delete()
 
             CompanyDetails.objects.create(
                 name=owner_name,
