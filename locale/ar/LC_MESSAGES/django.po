@@ -2696,6 +2696,134 @@ msgstr "الغرض من الشهادة"
 msgid "whom_subject"
 msgstr "الموضوع"
 
+#: sswg/models.py:21
+msgid "Company Name"
+msgstr "اسم الشركة"
+
+#: sswg/models.py:22
+msgid "Surrogate Name"
+msgstr "اسم النائب"
+
+#: sswg/models.py:23
+msgid "ID Type"
+msgstr "نوع الهوية"
+
+#: sswg/models.py:24
+msgid "ID Value"
+msgstr "رقم الهوية"
+
+#: sswg/models.py:25
+msgid "Contact Phone"
+msgstr "هاتف التواصل"
+
+#: sswg/models.py:31
+msgid "Passport"
+msgstr "جواز سفر"
+
+#: sswg/models.py:32
+msgid "National ID"
+msgstr "بطاقة وطنية"
+
+#: sswg/models.py:33
+msgid "Driving License"
+msgstr "رخصة قيادة"
+
+#: sswg/models.py:34
+msgid "Business Registration"
+msgstr "سجل تجاري"
+
+#: sswg/models.py:35
+msgid "Other"
+msgstr "أخرى"
+
+#: sswg/models.py:43
+msgid "Raw Weight"
+msgstr "الوزن الخام"
+
+#: sswg/models.py:44
+msgid "Allow Count"
+msgstr "عدد السبائك"
+
+#: sswg/models.py:52
+msgid "Net Weight"
+msgstr "الوزن الصافي"
+
+#: sswg/models.py:53
+msgid "Certificate ID"
+msgstr "رقم الشهادة"
+
+#: sswg/models.py:62
+msgid "Contract Number"
+msgstr "رقم العقد"
+
+#: sswg/models.py:63
+msgid "Exporters/Importers Registry Number"
+msgstr "رقم سجل المصدرين/المستوردين"
+
+#: sswg/models.py:64
+msgid "Unit Price (grams)"
+msgstr "سعر الجرام"
+
+#: sswg/models.py:65
+msgid "Total Contract Value"
+msgstr "القيمة الإجمالية للعقد"
+
+#: sswg/models.py:66
+msgid "Port of Shipment"
+msgstr "ميناء الشحن"
+
+#: sswg/models.py:67
+msgid "Port of Arrival"
+msgstr "ميناء الوصول"
+
+#: sswg/models.py:68
+msgid "Main Bank Name"
+msgstr "البنك الرئيسي"
+
+#: sswg/models.py:69
+msgid "Subsidiary Bank Name"
+msgstr "البنك الفرعي"
+
+#: sswg/models.py:70
+msgid "Contract Expiration Date"
+msgstr "تاريخ انتهاء العقد"
+
+#: sswg/models.py:80
+msgid "Cash"
+msgstr "نقدي"
+
+#: sswg/models.py:81
+msgid "Bank Transfer"
+msgstr "تحويل بنكي"
+
+#: sswg/models.py:82
+msgid "Cheque"
+msgstr "شيك"
+
+#: sswg/models.py:86
+msgid "Customer Account Number"
+msgstr "رقم حساب العميل"
+
+#: sswg/models.py:87
+msgid "Commercial Bank Name"
+msgstr "اسم البنك التجاري"
+
+#: sswg/models.py:88
+msgid "Issued Amount Date"
+msgstr "تاريخ الإصدار"
+
+#: sswg/models.py:89
+msgid "Payment Method"
+msgstr "طريقة الدفع"
+
+#: sswg/models.py:98
+msgid "Form Date"
+msgstr "تاريخ النموذج"
+
+#: sswg/models.py:99
+msgid "Serial Number"
+msgstr "الرقم التسلسلي"
+
 #: company_profile/models.py:1779 company_profile/models.py:1790
 #: company_profile/templates/company_profile/application_readonly.html:25
 #: company_profile/templates/company_profile/application_readonly_master_details2.html:61

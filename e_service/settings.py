@@ -104,6 +104,7 @@ INSTALLED_APPS = [
     'executive_office',
     'planning',
     'dabtiaat_altaedin',
+    'sswg',
 
     # Debug
     'debug_toolbar',
