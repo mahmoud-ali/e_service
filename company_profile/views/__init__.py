@@ -126,7 +126,7 @@ class HomePageView(LoginRequiredMixin,TranslationMixin,TemplateView):
 
     def dispatch(self, *args, **kwargs): 
         is_admin = self.request.user.is_superuser
-        data_length = 100 if is_admin else 10
+        data_length = 1000 if is_admin else 10
         if is_admin or hasattr(self.request.user,'pro_company'):
             in_progress_qs = get_app_metrics( \
                 ['id','company','created_at','updated_at'], #fields
