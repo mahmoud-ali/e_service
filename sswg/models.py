@@ -218,7 +218,7 @@ class CBSData(LoggingModel):
 class BasicForm(LoggingModel):
     """Main form storing all related data"""
 
-    STATE_1 = 1 #get translation from locale/ar. AI!
+    STATE_1 = 1 
     STATE_2 = 2
     STATE_3 = 3
     STATE_4 = 4
@@ -230,7 +230,7 @@ class BasicForm(LoggingModel):
     STATE_10 = 10
 
     STATE_CHOICES = {
-        STATE_1:_("SSWG State 1"), #write translation msg_str as a comments to this state and the rest of states. AI!
+        STATE_1:_("SSWG State 1"), 
         STATE_2:_("SSWG State 2"), 
         STATE_3:_("SSWG State 3"),
         STATE_4:_("SSWG State 4"),
@@ -259,6 +259,7 @@ from django.dispatch import receiver
 
 @receiver(pre_save, sender=SMRCData)
 def update_smrc_data(sender, instance, **kwargs):
+    # write documentation to this function. AI!
     if instance.form:
         instance.raw_weight = instance.form.gold_weight_in_gram
         instance.allow_count = instance.form.gold_alloy_count
