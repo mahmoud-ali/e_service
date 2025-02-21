@@ -41,7 +41,7 @@ class CompanyDetails(LoggingModel):
         verbose_name_plural = _("SSWG CompanyDetails")
 
 
-class SMRCData(LoggingModel):
+class TransferRelocationFormData(LoggingModel):
     """Stores SMRC-related measurements"""
     def attachment_path(self, filename):
         company = self.form.id
@@ -257,7 +257,7 @@ class BasicForm(LoggingModel):
 from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 
-@receiver(pre_save, sender=SMRCData)
+@receiver(pre_save, sender=TransferRelocationFormData)
 def update_smrc_data(sender, instance, **kwargs):
     """Automatically update SMRCData with values from related AppMoveGold form before saving.
     
@@ -270,7 +270,7 @@ def update_smrc_data(sender, instance, **kwargs):
         instance.raw_weight = instance.form.gold_weight_in_gram
         instance.allow_count = instance.form.gold_alloy_count
 
-@receiver(post_save, sender=SMRCData)
+@receiver(post_save, sender=TransferRelocationFormData)
 def create_company_details(sender, instance, **kwargs):
     """Automatically create CompanyDetails when SMRCData is created"""
     if instance.form:

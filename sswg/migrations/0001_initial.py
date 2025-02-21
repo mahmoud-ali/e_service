@@ -107,7 +107,7 @@ class Migration(migrations.Migration):
                 ('updated_at', models.DateTimeField(auto_now=True, verbose_name='updated_at')),
                 ('raw_weight', models.FloatField(validators=[django.core.validators.MinValueValidator(0.0)], verbose_name='Raw Weight')),
                 ('allow_count', models.PositiveIntegerField(verbose_name='Allow Count')),
-                ('smrc_file', models.FileField(upload_to=sswg.models.SMRCData.attachment_path, verbose_name='attachment_file')),
+                ('smrc_file', models.FileField(upload_to=sswg.models.TransferRelocationFormData.attachment_path, verbose_name='attachment_file')),
                 ('basic_form', models.OneToOneField(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='smrc_data', to='sswg.basicform')),
                 ('created_by', models.ForeignKey(editable=False, on_delete=django.db.models.deletion.PROTECT, related_name='+', to=settings.AUTH_USER_MODEL, verbose_name='created_by')),
                 ('form', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='gold_travel.appmovegold', verbose_name='Move Gold')),

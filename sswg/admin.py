@@ -1,7 +1,7 @@
 from django.contrib import admin
 
-from sswg.forms import SMRCDataForm
-from .models import CompanyDetails, MmAceptanceData, SMRCData, SSMOData, BasicForm, MOCSData, CBSData, SmrcNoObjectionData
+from sswg.forms import TransferRelocationFormDataForm
+from .models import CompanyDetails, MmAceptanceData, TransferRelocationFormData, SSMOData, BasicForm, MOCSData, CBSData, SmrcNoObjectionData
 
 class LogMixin:
     def save_model(self, request, obj, form, change):
@@ -19,9 +19,9 @@ class LogMixin:
             instance.save()
         formset.save_m2m()
 
-class SMRCDataInline(LogMixin,admin.StackedInline):
-    model = SMRCData
-    form=SMRCDataForm
+class TransferRelocationFormDataInline(LogMixin,admin.StackedInline):
+    model = TransferRelocationFormData
+    form=TransferRelocationFormDataForm
     fk_name = 'basic_form'
     readonly_fields = ['raw_weight','allow_count']
     extra = 1
@@ -61,7 +61,7 @@ class CBSDataInline(LogMixin,admin.StackedInline):
 class BasicFormAdmin(LogMixin,admin.ModelAdmin):
     list_display = ('sn_no', 'date')
     search_fields = ('sn_no', 'date')
-    inlines = [SMRCDataInline, CompanyDetailsInline, SSMODataInline, SmrcNoObjectionDataInline, MmAceptanceDataInline, MOCSDataInline, CBSDataInline]
+    inlines = [TransferRelocationFormDataInline, CompanyDetailsInline, SSMODataInline, SmrcNoObjectionDataInline, MmAceptanceDataInline, MOCSDataInline, CBSDataInline]
 
     def save_related(self,request, form, formsets, change):
         for formset in formsets:

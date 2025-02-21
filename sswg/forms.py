@@ -1,11 +1,11 @@
 from django import forms
 from django.utils.translation import gettext_lazy as _
 from gold_travel.models import AppMoveGold
-from .models import SMRCData
+from .models import TransferRelocationFormData
 
-class SMRCDataForm(forms.ModelForm):
+class TransferRelocationFormDataForm(forms.ModelForm):
     class Meta:
-        model = SMRCData
+        model = TransferRelocationFormData
         fields = ['form', 'raw_weight', 'allow_count','smrc_file'] #,'attachement_file'
     
     form = forms.ModelChoiceField(

@@ -30,6 +30,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='smrcdata',
             name='smrc_file',
-            field=models.FileField(upload_to=sswg.models.SMRCData.attachment_path, verbose_name='smrc_file'),
+            field=models.FileField(upload_to=sswg.models.TransferRelocationFormData.attachment_path, verbose_name='smrc_file'),
         ),
     ]
