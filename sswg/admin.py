@@ -63,6 +63,7 @@ class BasicFormAdmin(LogMixin,admin.ModelAdmin):
     search_fields = ('sn_no', 'date')
     inlines = [TransferRelocationFormDataInline, CompanyDetailsInline, SSMODataInline, SmrcNoObjectionDataInline, MmAceptanceDataInline, MOCSDataInline, CBSDataInline]
 
+    # define getqueryset function to show only the records created by the state field value of the logged in user. and allow superuser to show all. AI!
     def save_related(self,request, form, formsets, change):
         for formset in formsets:
             for f in formset:
