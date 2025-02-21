@@ -19,6 +19,12 @@ class LogMixin:
             instance.save()
         formset.save_m2m()
 
+    def has_delete_permission(self, request, obj=None):
+        if obj and obj.state == BasicForm.STATE_1:
+            return True
+        
+        return False
+
 class TransferRelocationFormDataInline(LogMixin,admin.StackedInline):
     model = TransferRelocationFormData
     form=TransferRelocationFormDataForm
@@ -49,25 +55,55 @@ class SSMODataInline(LogMixin,admin.StackedInline):
     fk_name = 'basic_form'
     extra = 1
 
-class MOCSDataInline(LogMixin,admin.StackedInline):
-    model = MOCSData
-    fk_name = 'basic_form'
-    extra = 1
+    def has_change_permission(self, request, obj=None):
+        if obj and obj.state == BasicForm.STATE_3:
+            return True
+        
+        return False
 
 class SmrcNoObjectionDataInline(LogMixin,admin.StackedInline):
     model = SmrcNoObjectionData
     fk_name = 'basic_form'
     extra = 1
 
+    def has_change_permission(self, request, obj=None):
+        if obj and obj.state == BasicForm.STATE_4:
+            return True
+        
+        return False
+
 class MmAceptanceDataInline(LogMixin,admin.StackedInline):
     model = MmAceptanceData
     fk_name = 'basic_form'
     extra = 1
 
+    def has_change_permission(self, request, obj=None):
+        if obj and obj.state == BasicForm.STATE_5:
+            return True
+        
+        return False
+
+class MOCSDataInline(LogMixin,admin.StackedInline):
+    model = MOCSData
+    fk_name = 'basic_form'
+    extra = 1
+
+    def has_change_permission(self, request, obj=None):
+        if obj and obj.state == BasicForm.STATE_7:
+            return True
+        
+        return False
+
 class CBSDataInline(LogMixin,admin.StackedInline):
     model = CBSData
     fk_name = 'basic_form'
     extra = 1
+
+    def has_change_permission(self, request, obj=None):
+        if obj and obj.state == BasicForm.STATE_8:
+            return True
+        
+        return False
 
 @admin.register(BasicForm)
 class BasicFormAdmin(LogMixin,admin.ModelAdmin):
@@ -98,6 +134,12 @@ class BasicFormAdmin(LogMixin,admin.ModelAdmin):
         if obj and obj.state > BasicForm.STATE_1:
             return ('sn_no', 'date')
         return super().get_readonly_fields(request, obj)
+
+    def has_delete_permission(self, request, obj=None):
+        if obj and obj.state == BasicForm.STATE_1:
+            return True
+        
+        return False
 
     # def has_change_permission(self, request, obj=None):
     #     if obj and obj.state == BasicForm.STATE_1:
