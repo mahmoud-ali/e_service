@@ -1,7 +1,8 @@
 from django.test import TestCase
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.contrib.auth import get_user_model
-from sswg.models import BasicForm, CompanyDetails, SMRCData, SSMOData, SmrcNoObjectionData, MOCSData
+from company_profile.models import LkpState
+from sswg.models import BasicForm, CompanyDetails, TransferRelocationFormData, SSMOData, SmrcNoObjectionData, MOCSData
 from gold_travel.models import LkpOwner, AppMoveGold
 import datetime
 
@@ -13,14 +14,24 @@ class SSWGModelTests(TestCase):
             username='testuser', 
             password='testpass123'
         )
+
+        self.state = LkpState.objects.create(
+            name="Khartoum"
+        )
         self.owner = LkpOwner.objects.create(
             name='Test Owner',
-            address='Test Address'
         )
         self.move_gold = AppMoveGold.objects.create(
+            date = datetime.date.today(),
             owner_name_lst=self.owner,
-            gold_weight_in_gram=100.0,
-            gold_alloy_count=5,
+            owner_address='company address',
+            repr_name='Hassan Omer',
+            repr_address='Hassan address',
+            repr_phone='09355555555',
+            repr_identity_type=1,
+            repr_identity='p123123',
+            repr_identity_issue_date= datetime.date.today(),
+            source_state=self.state,
             created_by=self.user,
             updated_by=self.user
         )
@@ -66,7 +77,7 @@ class SSWGModelTests(TestCase):
             updated_by=self.user
         )
         
-        SMRCData.objects.create(
+        TransferRelocationFormData.objects.create(
             form=self.move_gold,
             basic_form=basic_form,
             smrc_file=SimpleUploadedFile('test.pdf', b'content'),
@@ -89,7 +100,7 @@ class SSWGModelTests(TestCase):
         )
         
         # Create all related records
-        SMRCData.objects.create(
+        TransferRelocationFormData.objects.create(
             form=self.move_gold,
             basic_form=basic_form,
             smrc_file=SimpleUploadedFile('smrc.pdf', b'content'),
