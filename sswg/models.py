@@ -230,7 +230,7 @@ class BasicForm(LoggingModel):
     STATE_10 = 10
 
     STATE_CHOICES = {
-        STATE_1:_("SSWG State 1"),
+        STATE_1:_("SSWG State 1"), #write translation msg_str as a comments to this state and the rest of states. AI!
         STATE_2:_("SSWG State 2"), 
         STATE_3:_("SSWG State 3"),
         STATE_4:_("SSWG State 4"),
