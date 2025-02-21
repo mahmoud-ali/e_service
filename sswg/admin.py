@@ -26,11 +26,23 @@ class TransferRelocationFormDataInline(LogMixin,admin.StackedInline):
     readonly_fields = ['raw_weight','allow_count']
     extra = 1
 
+    def has_change_permission(self, request, obj=None):
+        if obj and obj.state == BasicForm.STATE_1:
+            return True
+        
+        return False
+
 class CompanyDetailsInline(LogMixin,admin.StackedInline):
     model = CompanyDetails
     fk_name = 'basic_form'
     extra = 1
     readonly_fields = ['name','surrogate_name','surrogate_id_type','surrogate_id_val','surrogate_id_phone',]
+
+    def has_change_permission(self, request, obj=None):
+        if obj and obj.state == BasicForm.STATE_1:
+            return True
+        
+        return False
 
 class SSMODataInline(LogMixin,admin.StackedInline):
     model = SSMOData
@@ -81,20 +93,10 @@ class BasicFormAdmin(LogMixin,admin.ModelAdmin):
 
         super().save_related(request, form, formsets, change)
 
-# @admin.register(CompanyDetails)
-# class CompanyDetailsAdmin(LogMixin,admin.ModelAdmin):
-#     list_display = ('name', 'surrogate_name', 'surrogate_id_type')
-#     search_fields = ('name', 'surrogate_name')
-#     list_filter = ('surrogate_id_type',)
+        #if  and obj.state > BasicForm.STATE_1 then make obj.sn_no and obj.date readonly. AI!
 
-# @admin.register(SMRCData)
-# class SMRCDataAdmin(LogMixin,admin.ModelAdmin):
-#     form=SMRCDataForm
-#     list_display = ('raw_weight', 'allow_count')
-#     search_fields = ('raw_weight', 'allow_count')
-
-# @admin.register(SSMOData)
-# class SSMODataAdmin(LogMixin,admin.ModelAdmin):
-#     list_display = ('certificate_id', 'raw_weight', 'net_weight', 'allow_count')
-#     search_fields = ('certificate_id',)
-#     list_filter = ('allow_count',)
+    # def has_change_permission(self, request, obj=None):
+    #     if obj and obj.state == BasicForm.STATE_1:
+    #         return True
+        
+    #     return False
