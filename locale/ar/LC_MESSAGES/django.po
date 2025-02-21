@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-21 14:49+0200\n"
+"POT-Creation-Date: 2025-02-21 19:57+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -3495,6 +3495,7 @@ msgstr "المبلغ الكلي"
 #: pa/tables/request.py:53 planning/models.py:333 planning/models.py:436
 #: planning/models.py:459 production_control/models.py:51
 #: production_control/models.py:84 production_control/models.py:134
+#: sswg/models.py:247
 msgid "record_state"
 msgstr "الحالة"
 
@@ -3926,7 +3927,7 @@ msgid "form_type"
 msgstr "نوع الاستمارة"
 
 #: gold_travel/models.py:180 gold_travel/models.py:181 sswg/forms.py:13
-#: sswg/models.py:53
+#: sswg/models.py:52
 msgid "Move Gold"
 msgstr "استمارة ترحيل ذهب صادر"
 
@@ -6126,15 +6127,20 @@ msgstr "رقم الهوية"
 msgid "Contact Phone"
 msgstr "هاتف التواصل"
 
-#: sswg/models.py:41 sswg/models.py:42
+#: sswg/models.py:33 sswg/models.py:62 sswg/models.py:89 sswg/models.py:111
+#: sswg/models.py:137 sswg/models.py:172 sswg/models.py:206 sswg/models.py:253
+msgid "SSWG Basic Form"
+msgstr "الإستمارة الموحدة لحركة الذهب داخل النافذة"
+
+#: sswg/models.py:40 sswg/models.py:41
 msgid "SSWG CompanyDetails"
 msgstr "بيانات الشركة المصدرة"
 
-#: sswg/models.py:55 sswg/models.py:81
+#: sswg/models.py:54 sswg/models.py:81
 msgid "Raw Weight"
 msgstr "وزن السبائك الكلي"
 
-#: sswg/models.py:56 sswg/models.py:83
+#: sswg/models.py:55 sswg/models.py:83
 msgid "Allow Count"
 msgstr "عدد السبائك"
 
@@ -6154,115 +6160,167 @@ msgstr "كمية صادر الذهب الصافي"
 msgid "Certificate ID"
 msgstr "رقم شهادة التحليل"
 
-#: sswg/models.py:92
+#: sswg/models.py:91
 msgid "ssmo_file"
 msgstr "شهادة التحليل"
 
-#: sswg/models.py:98 sswg/models.py:99
+#: sswg/models.py:97 sswg/models.py:98
 msgid "SSWG SSMOData"
 msgstr "الهيئة السودانية للمواصفات والمقاييس - شهادة تحليل"
 
-#: sswg/models.py:108
+#: sswg/models.py:115
+msgid "SMRC No Objection File"
+msgstr "مرفق شهادة عدم الممانعة"
+
+#: sswg/models.py:123 sswg/models.py:124
+msgid "SSWG SmrcNoObjectionData"
+msgstr "شهادة عدم الممانعة من الشركة السودانية للموارد المعدنية"
+
+#: sswg/models.py:141
+msgid "Ministry of Minerals Acceptance File"
+msgstr "مرفق تصديق وزارة المعادن"
+
+#: sswg/models.py:149 sswg/models.py:150
+msgid "SSWG MmAceptanceData"
+msgstr "تصديق وزارة المعادن"
+
+#: sswg/models.py:159
 msgid "Contract Number"
 msgstr "رقم عقد الصادر"
 
-#: sswg/models.py:109
+#: sswg/models.py:160
 msgid "Exporters/Importers Registry Number"
 msgstr "رقم سجل المصدرين/المستوردين"
 
-#: sswg/models.py:110
+#: sswg/models.py:161
 msgid "Unit Price (grams)"
 msgstr "سعر الوحدة بالجرام"
 
-#: sswg/models.py:111
+#: sswg/models.py:162
 msgid "Total Contract Value"
 msgstr "القيمة الإجمالية للعقد"
 
-#: sswg/models.py:112
+#: sswg/models.py:163
 msgid "Port of Shipment"
 msgstr "ميناء الشحن"
 
-#: sswg/models.py:113
+#: sswg/models.py:164
 msgid "Port of Arrival"
 msgstr "ميناء الوصول"
 
-#: sswg/models.py:114
+#: sswg/models.py:165
 msgid "Main Bank Name"
 msgstr "البنك الرئيسي"
 
-#: sswg/models.py:115
+#: sswg/models.py:166
 msgid "Subsidiary Bank Name"
 msgstr "البنك الفرعي"
 
-#: sswg/models.py:116
+#: sswg/models.py:167
 msgid "Contract Expiration Date"
 msgstr "تاريخ انتهاء العقد"
 
-#: sswg/models.py:124
+#: sswg/models.py:174
 msgid "mocs1_file"
 msgstr "عقد الصادر"
 
-#: sswg/models.py:125
+#: sswg/models.py:175
 msgid "mocs2_file"
 msgstr "شهادة المنشأ"
 
-#: sswg/models.py:131 sswg/models.py:132
+#: sswg/models.py:181 sswg/models.py:182
 msgid "SSWG MOCSData"
 msgstr "وزارة التجارة والتموين"
 
-#: sswg/models.py:142
+#: sswg/models.py:192
 msgid "Cash"
 msgstr "نقدي"
 
-#: sswg/models.py:143
+#: sswg/models.py:193
 msgid "Bank Transfer"
 msgstr "تحويل بنكي"
 
-#: sswg/models.py:144
+#: sswg/models.py:194
 msgid "Cheque"
 msgstr "شيك"
 
-#: sswg/models.py:147
+#: sswg/models.py:197
 msgid "Customer Account Number"
 msgstr "رقم حساب العميل"
 
-#: sswg/models.py:148
+#: sswg/models.py:198
 msgid "EX-Form Number"
 msgstr "رقم استمارة الصادر (Ex-Form)"
 
-#: sswg/models.py:149
+#: sswg/models.py:199
 msgid "Commercial Bank Name"
 msgstr "اسم البنك التجاري"
 
-#: sswg/models.py:150
+#: sswg/models.py:200
 msgid "Issued Amount Date"
 msgstr "تاريخ الإصدار"
 
-#: sswg/models.py:151
+#: sswg/models.py:201
 msgid "Payment Method"
 msgstr "طريقة الدفع"
 
-#: sswg/models.py:160
+#: sswg/models.py:209
 msgid "cbs_file"
 msgstr "استمارة الصادر EX-Form"
 
-#: sswg/models.py:166 sswg/models.py:167
+#: sswg/models.py:215 sswg/models.py:216
 msgid "SSWG CBS"
 msgstr "بنك السودان المركزي - شهادة صادر"
 
-#: sswg/models.py:171
+#: sswg/models.py:233
+msgid "SSWG State 1"
+msgstr "مسودة"
+
+#: sswg/models.py:234
+msgid "SSWG State 2"
+msgstr "إعتماد سكرتارية النافذة"
+
+#: sswg/models.py:235
+msgid "SSWG State 3"
+msgstr "إعتماد الأمن الاقتصادي"
+
+#: sswg/models.py:236
+msgid "SSWG State 4"
+msgstr "إعتماد الهيئة السودانية للمواصفات والمقاييس"
+
+#: sswg/models.py:237
+msgid "SSWG State 5"
+msgstr "إعتماد الشركة السودانية للموارد المعدنية"
+
+#: sswg/models.py:238
+msgid "SSWG State 6"
+msgstr "إعتماد وزارة المعادن"
+
+#: sswg/models.py:239
+msgid "SSWG State 7"
+msgstr "إعتماد الاستخبارات العسكرية"
+
+#: sswg/models.py:240
+msgid "SSWG State 8"
+msgstr "إعتماد وزارة التجارة والتموين"
+
+#: sswg/models.py:241
+msgid "SSWG State 9"
+msgstr "إعتماد بنك السودان المركزي"
+
+#: sswg/models.py:242
+msgid "SSWG State 10"
+msgstr "إعتماد قوات الجمارك"
+
+#: sswg/models.py:245
 msgid "Form Date"
 msgstr "تاريخ النموذج"
 
-#: sswg/models.py:172
+#: sswg/models.py:246
 msgid "Serial Number"
 msgstr "الرقم التسلسلي"
 
-#: sswg/models.py:178
-msgid "SSWG Basic Form"
-msgstr "الإستمارة الموحدة لحركة الذهب داخل النافذة"
-
-#: sswg/models.py:179
+#: sswg/models.py:254
 msgid "SSWG Basic Forms"
 msgstr "الإستمارات الموحدة لحركة الذهب داخل النافذة"
 

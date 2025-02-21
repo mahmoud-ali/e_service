@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 from sswg.forms import SMRCDataForm
-from .models import CompanyDetails, SMRCData, SSMOData, BasicForm, MOCSData, CBSData
+from .models import CompanyDetails, MmAceptanceData, SMRCData, SSMOData, BasicForm, MOCSData, CBSData, SmrcNoObjectionData
 
 class LogMixin:
     def save_model(self, request, obj, form, change):
@@ -42,6 +42,16 @@ class MOCSDataInline(LogMixin,admin.StackedInline):
     fk_name = 'basic_form'
     extra = 1
 
+class SmrcNoObjectionDataInline(LogMixin,admin.StackedInline):
+    model = SmrcNoObjectionData
+    fk_name = 'basic_form'
+    extra = 1
+
+class MmAceptanceDataInline(LogMixin,admin.StackedInline):
+    model = MmAceptanceData
+    fk_name = 'basic_form'
+    extra = 1
+
 class CBSDataInline(LogMixin,admin.StackedInline):
     model = CBSData
     fk_name = 'basic_form'
@@ -51,7 +61,7 @@ class CBSDataInline(LogMixin,admin.StackedInline):
 class BasicFormAdmin(LogMixin,admin.ModelAdmin):
     list_display = ('sn_no', 'date')
     search_fields = ('sn_no', 'date')
-    inlines = [SMRCDataInline, CompanyDetailsInline, SSMODataInline, MOCSDataInline, CBSDataInline]
+    inlines = [SMRCDataInline, CompanyDetailsInline, SSMODataInline, SmrcNoObjectionDataInline, MmAceptanceDataInline, MOCSDataInline, CBSDataInline]
 
     def save_related(self,request, form, formsets, change):
         for formset in formsets:
@@ -70,14 +80,14 @@ class BasicFormAdmin(LogMixin,admin.ModelAdmin):
 #     search_fields = ('name', 'surrogate_name')
 #     list_filter = ('surrogate_id_type',)
 
-@admin.register(SMRCData)
-class SMRCDataAdmin(LogMixin,admin.ModelAdmin):
-    form=SMRCDataForm
-    list_display = ('raw_weight', 'allow_count')
-    search_fields = ('raw_weight', 'allow_count')
+# @admin.register(SMRCData)
+# class SMRCDataAdmin(LogMixin,admin.ModelAdmin):
+#     form=SMRCDataForm
+#     list_display = ('raw_weight', 'allow_count')
+#     search_fields = ('raw_weight', 'allow_count')
 
-@admin.register(SSMOData)
-class SSMODataAdmin(LogMixin,admin.ModelAdmin):
-    list_display = ('certificate_id', 'raw_weight', 'net_weight', 'allow_count')
-    search_fields = ('certificate_id',)
-    list_filter = ('allow_count',)
+# @admin.register(SSMOData)
+# class SSMODataAdmin(LogMixin,admin.ModelAdmin):
+#     list_display = ('certificate_id', 'raw_weight', 'net_weight', 'allow_count')
+#     search_fields = ('certificate_id',)
+#     list_filter = ('allow_count',)

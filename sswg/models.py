@@ -28,7 +28,7 @@ class CompanyDetails(LoggingModel):
     surrogate_id_phone = models.CharField(_("Contact Phone"), max_length=20)
     basic_form = models.OneToOneField(
         'BasicForm',
-        on_delete=models.CASCADE,
+        on_delete=models.PROTECT,
         related_name='company_details',
         verbose_name=_("SSWG Basic Form"),
     )
@@ -55,7 +55,7 @@ class SMRCData(LoggingModel):
     allow_count = models.PositiveIntegerField(_("Allow Count"))
     basic_form = models.OneToOneField(
         'BasicForm',
-        on_delete=models.CASCADE,
+        on_delete=models.PROTECT,
         related_name='smrc_data',
         null=True,
         blank=True,
@@ -84,7 +84,7 @@ class SSMOData(LoggingModel):
     certificate_id = models.CharField(_("Certificate ID"), max_length=20) 
     basic_form = models.OneToOneField(
         'BasicForm',
-        on_delete=models.CASCADE,
+        on_delete=models.PROTECT,
         related_name='ssmo_data',
         verbose_name=_("SSWG Basic Form"),
     )
@@ -96,6 +96,58 @@ class SSMOData(LoggingModel):
     class Meta:
         verbose_name = _("SSWG SSMOData")
         verbose_name_plural = _("SSWG SSMOData")
+
+class SmrcNoObjectionData(LoggingModel):
+    """Stores SSMO-related measurements and certificate"""
+    def attachment_path(self, filename):
+        company = self.form.id
+        date = self.created_at.date()
+        return "company_{0}/sswg/{1}/{2}".format(company,date, filename)    
+
+    basic_form = models.OneToOneField(
+        'BasicForm',
+        on_delete=models.PROTECT,
+        related_name='smrc_no_objection_data',
+        verbose_name=_("SSWG Basic Form"),
+    )
+
+    smrc_no_objection_file = models.FileField(
+        _("SMRC No Objection File"), 
+        upload_to=attachment_path,
+    )
+
+    def __str__(self):
+        return self.id
+
+    class Meta:
+        verbose_name = _("SSWG SmrcNoObjectionData")
+        verbose_name_plural = _("SSWG SmrcNoObjectionData")
+
+class MmAceptanceData(LoggingModel):
+    """Stores SSMO-related measurements and certificate"""
+    def attachment_path(self, filename):
+        company = self.form.id
+        date = self.created_at.date()
+        return "company_{0}/sswg/{1}/{2}".format(company,date, filename)    
+
+    basic_form = models.OneToOneField(
+        'BasicForm',
+        on_delete=models.PROTECT,
+        related_name='mm_aceptance_data',
+        verbose_name=_("SSWG Basic Form"),
+    )
+
+    mm_aceptance_file = models.FileField(
+        _("Ministry of Minerals Acceptance File"), 
+        upload_to=attachment_path,
+    )
+
+    def __str__(self):
+        return self.id
+
+    class Meta:
+        verbose_name = _("SSWG MmAceptanceData")
+        verbose_name_plural = _("SSWG MmAceptanceData")
 
 class MOCSData(LoggingModel):
     """Stores Ministry of Commerce and Supply related data"""
@@ -115,7 +167,7 @@ class MOCSData(LoggingModel):
     contract_expiration_date = models.DateField(_("Contract Expiration Date"))
     basic_form = models.OneToOneField(
         'BasicForm',
-        on_delete=models.CASCADE,
+        on_delete=models.PROTECT,
         related_name='mocs_data',
         verbose_name=_("SSWG Basic Form"),
     )
@@ -149,7 +201,7 @@ class CBSData(LoggingModel):
     payment_method = models.CharField(_("Payment Method"), max_length=20, choices=PAYMENT_METHOD_CHOICES)
     basic_form = models.OneToOneField(
         'BasicForm',
-        on_delete=models.CASCADE,
+        on_delete=models.PROTECT,
         related_name='cbs_data',
         verbose_name=_("SSWG Basic Form"),
     )
@@ -190,30 +242,10 @@ class BasicForm(LoggingModel):
         STATE_10:_("SSWG State 10"),
     }
 
-    def attachment_path(self, filename):
-        company = self.id
-        date = self.created_at.date()
-        return f"company_{company}/sswg/{date}/{filename}"
-
     date = models.DateField(_("Form Date"))
     sn_no = models.CharField(_("Serial Number"), max_length=15, unique=True)
     state = models.IntegerField(_("record_state"), choices=STATE_CHOICES, default=STATE_1)
     
-    # New file fields
-    smrc_no_objection_file = models.FileField(
-        _("SMRC No Objection File"), 
-        upload_to=attachment_path,
-        null=True,
-        blank=True
-    )
-    
-    mm_aceptance_file = models.FileField(
-        _("Ministry of Minerals Acceptance File"), 
-        upload_to=attachment_path,
-        null=True,
-        blank=True
-    )
-
     def __str__(self):
         return f"{self.sn_no} - {self.date}"
 
