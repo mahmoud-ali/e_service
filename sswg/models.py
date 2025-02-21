@@ -98,6 +98,7 @@ class SSMOData(LoggingModel):
         verbose_name_plural = _("SSWG SSMOData")
 
 class SmrcNoObjectionData(LoggingModel):
+    #create tests to this class. ai!
     """Stores SSMO-related measurements and certificate"""
     def attachment_path(self, filename):
         company = self.basic_form.id
@@ -124,6 +125,7 @@ class SmrcNoObjectionData(LoggingModel):
         verbose_name_plural = _("SSWG SmrcNoObjectionData")
 
 class MmAceptanceData(LoggingModel):
+    #create tests to this class. ai!
     """Stores SSMO-related measurements and certificate"""
     def attachment_path(self, filename):
         company = self.basic_form.id
@@ -150,6 +152,7 @@ class MmAceptanceData(LoggingModel):
         verbose_name_plural = _("SSWG MmAceptanceData")
 
 class MOCSData(LoggingModel):
+    #create tests to this class. ai!
     """Stores Ministry of Commerce and Supply related data"""
     def attachment_path(self, filename):
         company = self.basic_form.id
