@@ -218,7 +218,7 @@ class CBSData(LoggingModel):
 class BasicForm(LoggingModel):
     """Main form storing all related data"""
 
-    STATE_1 = 1
+    STATE_1 = 1 #get translation from locale/ar. AI!
     STATE_2 = 2
     STATE_3 = 3
     STATE_4 = 4
