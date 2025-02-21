@@ -117,7 +117,7 @@ class SmrcNoObjectionData(LoggingModel):
     )
 
     def __str__(self):
-        return self.id
+        return str(self.id)
 
     class Meta:
         verbose_name = _("SSWG SmrcNoObjectionData")
@@ -143,7 +143,7 @@ class MmAceptanceData(LoggingModel):
     )
 
     def __str__(self):
-        return self.id
+        return str(self.id)
 
     class Meta:
         verbose_name = _("SSWG MmAceptanceData")
