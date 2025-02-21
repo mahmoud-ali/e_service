@@ -178,16 +178,16 @@ class BasicForm(LoggingModel):
     STATE_10 = 10
 
     STATE_CHOICES = {
-        STATE_1:_("ssng_state1"), # Add translation keys for each state
-        STATE_2:_("ssng_state2"),
-        STATE_3:_("ssng_state3"),
-        STATE_4:_("ssng_state4"),
-        STATE_5:_("ssng_state5"),
-        STATE_6:_("ssng_state6"),
-        STATE_7:_("ssng_state7"),
-        STATE_8:_("ssng_state8"),
-        STATE_9:_("ssng_state9"),
-        STATE_10:_("ssng_state10"),
+        STATE_1:_("SSWG State 1"),
+        STATE_2:_("SSWG State 2"), 
+        STATE_3:_("SSWG State 3"),
+        STATE_4:_("SSWG State 4"),
+        STATE_5:_("SSWG State 5"),
+        STATE_6:_("SSWG State 6"),
+        STATE_7:_("SSWG State 7"),
+        STATE_8:_("SSWG State 8"),
+        STATE_9:_("SSWG State 9"),
+        STATE_10:_("SSWG State 10"),
     }
 
     date = models.DateField(_("Form Date"))
