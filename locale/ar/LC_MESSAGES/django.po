@@ -6170,7 +6170,7 @@ msgstr "الهيئة السودانية للمواصفات والمقاييس - 
 
 #: sswg/models.py:115
 msgid "SMRC No Objection File"
-msgstr "مرفق شهادة عدم الممانعة"
+msgstr "شهادة عدم الممانعة"
 
 #: sswg/models.py:123 sswg/models.py:124
 msgid "SSWG SmrcNoObjectionData"
@@ -6178,7 +6178,7 @@ msgstr "شهادة عدم الممانعة من الشركة السودانية 
 
 #: sswg/models.py:141
 msgid "Ministry of Minerals Acceptance File"
-msgstr "مرفق تصديق وزارة المعادن"
+msgstr "تصديق وزارة المعادن"
 
 #: sswg/models.py:149 sswg/models.py:150
 msgid "SSWG MmAceptanceData"
