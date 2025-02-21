@@ -93,7 +93,11 @@ class BasicFormAdmin(LogMixin,admin.ModelAdmin):
 
         super().save_related(request, form, formsets, change)
 
-        #if  and obj.state > BasicForm.STATE_1 then make obj.sn_no and obj.date readonly. AI!
+    def get_readonly_fields(self, request, obj=None):
+        """Make sn_no and date readonly when state progresses beyond initial state"""
+        if obj and obj.state > BasicForm.STATE_1:
+            return ('sn_no', 'date')
+        return super().get_readonly_fields(request, obj)
 
     # def has_change_permission(self, request, obj=None):
     #     if obj and obj.state == BasicForm.STATE_1:
