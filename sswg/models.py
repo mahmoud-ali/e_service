@@ -259,7 +259,13 @@ from django.dispatch import receiver
 
 @receiver(pre_save, sender=SMRCData)
 def update_smrc_data(sender, instance, **kwargs):
-    # write documentation to this function. AI!
+    """Automatically update SMRCData with values from related AppMoveGold form before saving.
+    
+    Triggers when SMRCData is saved:
+    - Copies gold_weight_in_gram from AppMoveGold to raw_weight
+    - Copies gold_alloy_count from AppMoveGold to allow_count
+    - Only operates when form relation is set
+    """
     if instance.form:
         instance.raw_weight = instance.form.gold_weight_in_gram
         instance.allow_count = instance.form.gold_alloy_count
