@@ -30,8 +30,7 @@ class CompanyDetails(LoggingModel):
         'BasicForm',
         on_delete=models.CASCADE,
         related_name='company_details',
-        null=True,
-        blank=True
+        verbose_name=_("SSWG Basic Form"),
     )
 
     def __str__(self):
@@ -59,7 +58,8 @@ class SMRCData(LoggingModel):
         on_delete=models.CASCADE,
         related_name='smrc_data',
         null=True,
-        blank=True
+        blank=True,
+        verbose_name=_("SSWG Basic Form"),
     )
 
     smrc_file = models.FileField(_("smrc_file"), upload_to=attachment_path)  #,null=True,blank=True
@@ -86,8 +86,7 @@ class SSMOData(LoggingModel):
         'BasicForm',
         on_delete=models.CASCADE,
         related_name='ssmo_data',
-        null=True,
-        blank=True
+        verbose_name=_("SSWG Basic Form"),
     )
     ssmo_file = models.FileField(_("ssmo_file"), upload_to=attachment_path)  #,null=True,blank=True
 
@@ -118,8 +117,7 @@ class MOCSData(LoggingModel):
         'BasicForm',
         on_delete=models.CASCADE,
         related_name='mocs_data',
-        null=True,
-        blank=True
+        verbose_name=_("SSWG Basic Form"),
     )
     mocs1_file = models.FileField(_("mocs1_file"), upload_to=attachment_path)  #,null=True,blank=True
     mocs2_file = models.FileField(_("mocs2_file"), upload_to=attachment_path)  #,null=True,blank=True
@@ -145,6 +143,7 @@ class CBSData(LoggingModel):
     )
 
     customer_account_number = models.CharField(_("Customer Account Number"), max_length=20)
+    ex_form_number = models.CharField(_("EX-Form Number"), max_length=20)
     commercial_bank_name = models.CharField(_("Commercial Bank Name"), max_length=150)
     issued_amount = models.DateField(_("Issued Amount Date"))
     payment_method = models.CharField(_("Payment Method"), max_length=20, choices=PAYMENT_METHOD_CHOICES)
@@ -152,8 +151,7 @@ class CBSData(LoggingModel):
         'BasicForm',
         on_delete=models.CASCADE,
         related_name='cbs_data',
-        null=True,
-        blank=True
+        verbose_name=_("SSWG Basic Form"),
     )
 
     cbs_file = models.FileField(_("cbs_file"), upload_to=attachment_path)  #,null=True,blank=True
@@ -167,8 +165,34 @@ class CBSData(LoggingModel):
 
 class BasicForm(LoggingModel):
     """Main form storing all related data"""
+
+    STATE_1 = 1
+    STATE_2 = 2
+    STATE_3 = 3
+    STATE_4 = 4
+    STATE_5 = 5
+    STATE_6 = 6
+    STATE_7 = 7
+    STATE_8 = 8
+    STATE_9 = 9
+    STATE_10 = 10
+
+    STATE_CHOICES = {
+        STATE_1:_("ssng_state1"), # Add translation keys for each state
+        STATE_2:_("ssng_state2"),
+        STATE_3:_("ssng_state3"),
+        STATE_4:_("ssng_state4"),
+        STATE_5:_("ssng_state5"),
+        STATE_6:_("ssng_state6"),
+        STATE_7:_("ssng_state7"),
+        STATE_8:_("ssng_state8"),
+        STATE_9:_("ssng_state9"),
+        STATE_10:_("ssng_state10"),
+    }
+
     date = models.DateField(_("Form Date"))
     sn_no = models.CharField(_("Serial Number"), max_length=15, unique=True)
+    state = models.IntegerField(_("record_state"), choices=STATE_CHOICES, default=STATE_1)
 
     def __str__(self):
         return f"{self.sn_no} - {self.date}"

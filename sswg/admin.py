@@ -64,11 +64,11 @@ class BasicFormAdmin(LogMixin,admin.ModelAdmin):
 
         super().save_related(request, form, formsets, change)
 
-@admin.register(CompanyDetails)
-class CompanyDetailsAdmin(LogMixin,admin.ModelAdmin):
-    list_display = ('name', 'surrogate_name', 'surrogate_id_type')
-    search_fields = ('name', 'surrogate_name')
-    list_filter = ('surrogate_id_type',)
+# @admin.register(CompanyDetails)
+# class CompanyDetailsAdmin(LogMixin,admin.ModelAdmin):
+#     list_display = ('name', 'surrogate_name', 'surrogate_id_type')
+#     search_fields = ('name', 'surrogate_name')
+#     list_filter = ('surrogate_id_type',)
 
 @admin.register(SMRCData)
 class SMRCDataAdmin(LogMixin,admin.ModelAdmin):

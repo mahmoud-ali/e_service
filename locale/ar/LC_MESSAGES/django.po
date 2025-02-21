@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-21 01:15+0200\n"
+"POT-Creation-Date: 2025-02-21 14:49+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -6132,7 +6132,7 @@ msgstr "بيانات الشركة المصدرة"
 
 #: sswg/models.py:55 sswg/models.py:81
 msgid "Raw Weight"
-msgstr "الوزن الخام"
+msgstr "وزن السبائك الكلي"
 
 #: sswg/models.py:56 sswg/models.py:83
 msgid "Allow Count"
@@ -6148,11 +6148,11 @@ msgstr "استمارة ترحيل الذهب بغرض الصادر"
 
 #: sswg/models.py:82
 msgid "Net Weight"
-msgstr "الوزن الصافي"
+msgstr "كمية صادر الذهب الصافي"
 
 #: sswg/models.py:84
 msgid "Certificate ID"
-msgstr "رقم الشهادة"
+msgstr "رقم شهادة التحليل"
 
 #: sswg/models.py:92
 msgid "ssmo_file"
@@ -6164,7 +6164,7 @@ msgstr "الهيئة السودانية للمواصفات والمقاييس - 
 
 #: sswg/models.py:108
 msgid "Contract Number"
-msgstr "رقم العقد"
+msgstr "رقم عقد الصادر"
 
 #: sswg/models.py:109
 msgid "Exporters/Importers Registry Number"
@@ -6172,7 +6172,7 @@ msgstr "رقم سجل المصدرين/المستوردين"
 
 #: sswg/models.py:110
 msgid "Unit Price (grams)"
-msgstr "سعر الجرام"
+msgstr "سعر الوحدة بالجرام"
 
 #: sswg/models.py:111
 msgid "Total Contract Value"
@@ -6227,38 +6227,42 @@ msgid "Customer Account Number"
 msgstr "رقم حساب العميل"
 
 #: sswg/models.py:148
+msgid "EX-Form Number"
+msgstr "رقم استمارة الصادر (Ex-Form)"
+
+#: sswg/models.py:149
 msgid "Commercial Bank Name"
 msgstr "اسم البنك التجاري"
 
-#: sswg/models.py:149
+#: sswg/models.py:150
 msgid "Issued Amount Date"
 msgstr "تاريخ الإصدار"
 
-#: sswg/models.py:150
+#: sswg/models.py:151
 msgid "Payment Method"
 msgstr "طريقة الدفع"
 
-#: sswg/models.py:159
+#: sswg/models.py:160
 msgid "cbs_file"
 msgstr "استمارة الصادر EX-Form"
 
-#: sswg/models.py:165 sswg/models.py:166
+#: sswg/models.py:166 sswg/models.py:167
 msgid "SSWG CBS"
-msgstr "ابنك السودان المركزي - شهادة صادر"
+msgstr "بنك السودان المركزي - شهادة صادر"
 
-#: sswg/models.py:170
+#: sswg/models.py:171
 msgid "Form Date"
 msgstr "تاريخ النموذج"
 
-#: sswg/models.py:171
+#: sswg/models.py:172
 msgid "Serial Number"
 msgstr "الرقم التسلسلي"
 
-#: sswg/models.py:177
+#: sswg/models.py:178
 msgid "SSWG Basic Form"
 msgstr "الإستمارة الموحدة لحركة الذهب داخل النافذة"
 
-#: sswg/models.py:178
+#: sswg/models.py:179
 msgid "SSWG Basic Forms"
 msgstr "الإستمارات الموحدة لحركة الذهب داخل النافذة"
 
