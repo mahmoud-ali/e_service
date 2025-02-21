@@ -14,8 +14,8 @@ class SSWGModelTests(TestCase):
             password='testpass123'
         )
         self.owner = LkpOwner.objects.create(
-            owner_name='Test Owner',
-            owner_address='Test Address'
+            name='Test Owner',
+            address='Test Address'
         )
         self.move_gold = AppMoveGold.objects.create(
             owner_name_lst=self.owner,
