@@ -63,8 +63,14 @@ class BasicFormAdmin(LogMixin,admin.ModelAdmin):
     search_fields = ('sn_no', 'date')
     inlines = [TransferRelocationFormDataInline, CompanyDetailsInline, SSMODataInline, SmrcNoObjectionDataInline, MmAceptanceDataInline, MOCSDataInline, CBSDataInline]
 
-    # define getqueryset function to show only the records created by the state field value of the logged in user. and allow superuser to show all. AI!
-    def save_related(self,request, form, formsets, change):
+    def get_queryset(self, request):
+        """Filter records by user's state, with full access for superusers"""
+        qs = super().get_queryset(request)
+        if request.user.is_superuser:
+            return qs
+        return qs.filter(state=request.user.state)
+
+    def save_related(self, request, form, formsets, change):
         for formset in formsets:
             for f in formset:
                 obj = f.save(commit=False)
