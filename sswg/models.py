@@ -44,7 +44,7 @@ class CompanyDetails(LoggingModel):
 class TransferRelocationFormData(LoggingModel):
     """Stores SMRC-related measurements"""
     def attachment_path(self, filename):
-        company = self.form.id
+        company = self.basic_form.id
         date = self.created_at.date()
         return "company_{0}/sswg/{1}/{2}".format(company,date, filename)    
 
@@ -74,7 +74,7 @@ class TransferRelocationFormData(LoggingModel):
 class SSMOData(LoggingModel):
     """Stores SSMO-related measurements and certificate"""
     def attachment_path(self, filename):
-        company = self.form.id
+        company = self.basic_form.id
         date = self.created_at.date()
         return "company_{0}/sswg/{1}/{2}".format(company,date, filename)    
 
@@ -100,7 +100,7 @@ class SSMOData(LoggingModel):
 class SmrcNoObjectionData(LoggingModel):
     """Stores SSMO-related measurements and certificate"""
     def attachment_path(self, filename):
-        company = self.form.id
+        company = self.basic_form.id
         date = self.created_at.date()
         return "company_{0}/sswg/{1}/{2}".format(company,date, filename)    
 
@@ -126,7 +126,7 @@ class SmrcNoObjectionData(LoggingModel):
 class MmAceptanceData(LoggingModel):
     """Stores SSMO-related measurements and certificate"""
     def attachment_path(self, filename):
-        company = self.form.id
+        company = self.basic_form.id
         date = self.created_at.date()
         return "company_{0}/sswg/{1}/{2}".format(company,date, filename)    
 
@@ -152,7 +152,7 @@ class MmAceptanceData(LoggingModel):
 class MOCSData(LoggingModel):
     """Stores Ministry of Commerce and Supply related data"""
     def attachment_path(self, filename):
-        company = self.form.id
+        company = self.basic_form.id
         date = self.created_at.date()
         return "company_{0}/sswg/{1}/{2}".format(company,date, filename)    
 
@@ -184,7 +184,7 @@ class MOCSData(LoggingModel):
 class CBSData(LoggingModel):
     """Stores Central Bank of Sudan related data"""
     def attachment_path(self, filename):
-        company = self.form.id
+        company = self.basic_form.id
         date = self.created_at.date()
         return "company_{0}/sswg/{1}/{2}".format(company,date, filename)    
 
