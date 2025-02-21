@@ -190,9 +190,29 @@ class BasicForm(LoggingModel):
         STATE_10:_("SSWG State 10"),
     }
 
+    def attachment_path(self, filename):
+        company = self.id
+        date = self.created_at.date()
+        return f"company_{company}/sswg/{date}/{filename}"
+
     date = models.DateField(_("Form Date"))
     sn_no = models.CharField(_("Serial Number"), max_length=15, unique=True)
     state = models.IntegerField(_("record_state"), choices=STATE_CHOICES, default=STATE_1)
+    
+    # New file fields
+    smrc_no_objection_file = models.FileField(
+        _("SMRC No Objection File"), 
+        upload_to=attachment_path,
+        null=True,
+        blank=True
+    )
+    
+    mm_aceptance_file = models.FileField(
+        _("Ministry of Minerals Acceptance File"), 
+        upload_to=attachment_path,
+        null=True,
+        blank=True
+    )
 
     def __str__(self):
         return f"{self.sn_no} - {self.date}"
