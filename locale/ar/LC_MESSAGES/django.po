@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-21 19:57+0200\n"
+"POT-Creation-Date: 2025-02-22 23:05+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -3456,7 +3456,7 @@ msgid "state_smrc"
 msgstr "اعتماد ممثل الشركة السودانية بالولاية"
 
 #: dabtiaat_altaedin/admin.py:276 gold_travel/admin.py:369
-#: gold_travel/admin.py:648
+#: gold_travel/admin.py:648 sswg/admin.py:237
 msgid "application confirmed successfully!"
 msgstr "تم إعتماد الطلب بنجاح."
 
@@ -3728,6 +3728,7 @@ msgstr "قائمة المهام"
 #: gold_travel_traditional/templates/admin/gold_travel_traditional/appmovegoldtraditional/sold_application.html:19
 #: production_control/templates/admin/production_control/goldproductionform/pagination.html:17
 #: production_control/templates/admin/production_control/submit_line.html:4
+#: sswg/templates/admin/sswg/basicform/submit_line.html:4
 msgid "Save"
 msgstr "حفظ"
 
@@ -3742,12 +3743,14 @@ msgstr "حفظ وتأكيد"
 #: executive_office/templates/admin/executive_office/submit_line.html:13
 #: pa/templates/admin/pa/submit_line.html:8
 #: production_control/templates/admin/production_control/submit_line.html:8
+#: sswg/templates/admin/sswg/basicform/submit_line.html:8
 msgid "Close"
 msgstr "إغلاق"
 
 #: executive_office/templates/admin/executive_office/submit_line.html:17
 #: pa/templates/admin/pa/submit_line.html:12
 #: production_control/templates/admin/production_control/submit_line.html:12
+#: sswg/templates/admin/sswg/basicform/submit_line.html:12
 msgid "Delete"
 msgstr "حذف السجل"
 
@@ -6099,6 +6102,16 @@ msgstr "تفاصيل توزيع الايرادات"
 msgid "Revenu distribution details"
 msgstr "تفاصيل توزيع الايرادات"
 
+#: sswg/admin.py:236
+#, fuzzy
+#| msgid "SSWG State 1"
+msgid "SSWG State "
+msgstr "مسودة"
+
+#: sswg/admin.py:271
+msgid "application not confirmed!"
+msgstr "لم يتم إعتماد الطلب، الرجاء التأكد من اكتمال البيانات."
+
 #: sswg/apps.py:7
 msgid "SSWG App"
 msgstr "النافذة السودانية الموحدة لصادر الذهب"
@@ -6172,7 +6185,8 @@ msgstr "الهيئة السودانية للمواصفات والمقاييس - 
 msgid "SMRC No Objection File"
 msgstr "شهادة عدم الممانعة"
 
-#: sswg/models.py:123 sswg/models.py:124
+#: sswg/models.py:123 sswg/models.py:124 sswg/tests/test_models.py:205
+#: sswg/tests/test_models.py:209
 msgid "SSWG SmrcNoObjectionData"
 msgstr "شهادة عدم الممانعة من الشركة السودانية للموارد المعدنية"
 
@@ -6180,7 +6194,8 @@ msgstr "شهادة عدم الممانعة من الشركة السودانية 
 msgid "Ministry of Minerals Acceptance File"
 msgstr "تصديق وزارة المعادن"
 
-#: sswg/models.py:149 sswg/models.py:150
+#: sswg/models.py:149 sswg/models.py:150 sswg/tests/test_models.py:245
+#: sswg/tests/test_models.py:249
 msgid "SSWG MmAceptanceData"
 msgstr "تصديق وزارة المعادن"
 
@@ -6257,8 +6272,8 @@ msgid "Commercial Bank Name"
 msgstr "اسم البنك التجاري"
 
 #: sswg/models.py:200
-msgid "Issued Amount Date"
-msgstr "تاريخ الإصدار"
+msgid "Issued Amount"
+msgstr "مبلغ حصيلة الصادر"
 
 #: sswg/models.py:201
 msgid "Payment Method"

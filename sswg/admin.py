@@ -2,7 +2,12 @@ from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
 from django.contrib import messages
 from django.template.response import TemplateResponse
-
+from django.contrib.admin.utils import (
+    flatten_fieldsets,
+    unquote,
+)
+from django.contrib.admin import helpers
+from django.contrib.admin.options import TO_FIELD_VAR
 from sswg.forms import TransferRelocationFormDataForm
 from .models import CompanyDetails, MmAceptanceData, TransferRelocationFormData, SSMOData, BasicForm, MOCSData, CBSData, SmrcNoObjectionData
 
@@ -112,7 +117,7 @@ class CBSDataInline(LogMixin,admin.StackedInline):
 class BasicFormAdmin(LogMixin,admin.ModelAdmin):
     list_display = ('sn_no', 'date')
     search_fields = ('sn_no', 'date')
-    # exclude = ('state',)
+    exclude = ('state',)
     save_as_continue = False
 
     def get_queryset(self, request):
@@ -216,8 +221,14 @@ class BasicFormAdmin(LogMixin,admin.ModelAdmin):
 
     def change_view(self,request,object_id, form_url='', extra_context=None):
         if request.POST.get('_save_confirm',None):
-            obj = self.get_queryset(request).get(id=object_id)
-            new_state = obj.state+1
+            to_field = request.POST.get(TO_FIELD_VAR, request.GET.get(TO_FIELD_VAR))
+
+            obj = self.get_object(request, unquote(object_id), to_field) #self.get_queryset(request).get(id=object_id)
+            if obj.state < len(BasicForm.STATE_CHOICES) - 1:
+                new_state = obj.state+1
+            else:
+                new_state = obj.state
+                
             if self._check_data_exist(object_id,new_state):
                 response = super().change_view(request,object_id, form_url, extra_context)
                 obj.state = new_state
@@ -225,10 +236,43 @@ class BasicFormAdmin(LogMixin,admin.ModelAdmin):
                 self.log_change(request,obj,_("SSWG State "+str(obj.state)))
                 self.message_user(request,_('application confirmed successfully!'))
             else:
-                extra_context = extra_context or {}
-                extra_context["object"] = obj
-                response = TemplateResponse(request,"sswg/not_confirmed.html",extra_context)
+                fieldsets = self.get_fieldsets(request, obj)
+                ModelForm = self.get_form(
+                    request, obj, change=False, fields=flatten_fieldsets(fieldsets)
+                )                
+                form = ModelForm(instance=obj)
+                formsets, inline_instances = self._create_formsets(
+                    request, obj, change=True
+                )                
+                inline_formsets = self.get_inline_formsets(
+                    request, formsets, inline_instances, obj
+                )
+                readonly_fields = flatten_fieldsets(fieldsets)
+
+                admin_form = helpers.AdminForm(
+                    form,
+                    list(fieldsets),
+                    # Clear prepopulated fields on a view-only form to avoid a crash.
+                    (
+                        self.get_prepopulated_fields(request, obj)
+                        if False or self.has_change_permission(request, obj)
+                        else {}
+                    ),
+                    readonly_fields,
+                    model_admin=self,
+                )
+                context = self.admin_site.each_context(request)
+                context['obj'] = obj
+                context['obj'] = obj
+                context['original'] = obj
+                context["inline_admin_formsets"] = inline_formsets
+                context["adminform"] = admin_form
+
                 self.message_user(request,_('application not confirmed!'),level=messages.ERROR)
+
+                return self.render_change_form(
+                    request, context, add=False, change=True, obj=obj, form_url=form_url
+                )
         else:
             response = super().change_view(request,object_id, form_url, extra_context)
 

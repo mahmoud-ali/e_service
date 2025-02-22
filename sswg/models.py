@@ -197,7 +197,7 @@ class CBSData(LoggingModel):
     customer_account_number = models.CharField(_("Customer Account Number"), max_length=20)
     ex_form_number = models.CharField(_("EX-Form Number"), max_length=20)
     commercial_bank_name = models.CharField(_("Commercial Bank Name"), max_length=150)
-    issued_amount = models.DateField(_("Issued Amount Date"))
+    issued_amount = models.FloatField(_("Issued Amount"))
     payment_method = models.CharField(_("Payment Method"), max_length=20, choices=PAYMENT_METHOD_CHOICES)
     basic_form = models.OneToOneField(
         'BasicForm',
@@ -254,6 +254,11 @@ class BasicForm(LoggingModel):
         verbose_name_plural = _("SSWG Basic Forms")
         ordering = ['-date']
 
+    def get_next_state_display(self):
+        curr_index = self.state
+        next_state = self.STATE_CHOICES[curr_index + 1] if curr_index < len(self.STATE_CHOICES) - 1 else None
+        return next_state
+    
 from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 
