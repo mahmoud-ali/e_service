@@ -262,7 +262,6 @@ class BasicFormAdmin(LogMixin,admin.ModelAdmin):
                     model_admin=self,
                 )
                 context = self.admin_site.each_context(request)
-                # context['obj'] = obj
                 context['original'] = obj
                 context["inline_admin_formsets"] = inline_formsets
                 context["adminform"] = admin_form
