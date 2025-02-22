@@ -1,4 +1,7 @@
 from django.contrib import admin
+from django.utils.translation import gettext_lazy as _
+from django.contrib import messages
+from django.template.response import TemplateResponse
 
 from sswg.forms import TransferRelocationFormDataForm
 from .models import CompanyDetails, MmAceptanceData, TransferRelocationFormData, SSMOData, BasicForm, MOCSData, CBSData, SmrcNoObjectionData
@@ -20,8 +23,8 @@ class LogMixin:
         formset.save_m2m()
 
     def has_delete_permission(self, request, obj=None):
-        if obj and obj.state == BasicForm.STATE_1:
-            return True
+        # if obj and obj.state == BasicForm.STATE_1:
+        #     return True
         
         return False
 
@@ -109,14 +112,39 @@ class CBSDataInline(LogMixin,admin.StackedInline):
 class BasicFormAdmin(LogMixin,admin.ModelAdmin):
     list_display = ('sn_no', 'date')
     search_fields = ('sn_no', 'date')
-    inlines = [TransferRelocationFormDataInline, CompanyDetailsInline, SSMODataInline, SmrcNoObjectionDataInline, MmAceptanceDataInline, MOCSDataInline, CBSDataInline]
+    # exclude = ('state',)
+    save_as_continue = False
 
     def get_queryset(self, request):
         """Filter records by user's state, with full access for superusers"""
         qs = super().get_queryset(request)
-        if request.user.is_superuser:
+        if request.user.is_superuser or request.user.groups.filter(name='sswg_manager').exists():
             return qs
-        return qs.filter(state=request.user.state)
+        
+        states = []
+        user_groups = request.user.groups.values_list('name', flat=True)
+
+        group_state_mapping = {
+            "sswg_manager": (range(BasicForm.STATE_1, BasicForm.STATE_10)),  # All states for sswg_manager from 1-9
+            "sswg_secretary": (BasicForm.STATE_1,),
+            "sswg_economic_security": (BasicForm.STATE_2,),
+            "sswg_ssmo": (BasicForm.STATE_3,),
+            "sswg_smrc": (BasicForm.STATE_4,),
+            "sswg_mm": (BasicForm.STATE_5,),
+            "sswg_military_intelligence": (BasicForm.STATE_6,),
+            "sswg_mocs": (BasicForm.STATE_7,),
+            "sswg_cbs": (BasicForm.STATE_8,),
+            "sswg_custom_force": (BasicForm.STATE_9,),
+        }
+
+        for group, state_lst in group_state_mapping.items():
+            if group in user_groups:
+                for state in state_lst:
+                    states.append(state)
+
+        print("states",states)
+
+        return qs.filter(state__in=states)
 
     def save_related(self, request, form, formsets, change):
         for formset in formsets:
@@ -140,9 +168,68 @@ class BasicFormAdmin(LogMixin,admin.ModelAdmin):
             return True
         
         return False
-
-    # def has_change_permission(self, request, obj=None):
-    #     if obj and obj.state == BasicForm.STATE_1:
-    #         return True
+    
+    def get_inlines(self, request, obj):
+        if request.user.is_superuser or request.user.groups.filter(name='sswg_manager').exists():
+            return [TransferRelocationFormDataInline, CompanyDetailsInline, SSMODataInline, SmrcNoObjectionDataInline, MmAceptanceDataInline, MOCSDataInline, CBSDataInline]
         
-    #     return False
+        inlines = []
+        user_groups = request.user.groups.values_list('name', flat=True)
+
+        group_inline_mapping = {
+            "sswg_secretary": [TransferRelocationFormDataInline, CompanyDetailsInline, ],
+            "sswg_economic_security": [TransferRelocationFormDataInline, CompanyDetailsInline, ],
+            "sswg_ssmo": [TransferRelocationFormDataInline, CompanyDetailsInline, SSMODataInline,],
+            "sswg_smrc": [TransferRelocationFormDataInline, CompanyDetailsInline, SSMODataInline, SmrcNoObjectionDataInline,],
+            "sswg_mm": [TransferRelocationFormDataInline, CompanyDetailsInline, SSMODataInline, SmrcNoObjectionDataInline, MmAceptanceDataInline,],
+            "sswg_military_intelligence": [TransferRelocationFormDataInline, CompanyDetailsInline, SSMODataInline, SmrcNoObjectionDataInline, MmAceptanceDataInline, MOCSDataInline,],
+            "sswg_mocs": [TransferRelocationFormDataInline, CompanyDetailsInline, SSMODataInline, SmrcNoObjectionDataInline, MmAceptanceDataInline, MOCSDataInline, ],
+            "sswg_cbs": [TransferRelocationFormDataInline, CompanyDetailsInline, SSMODataInline, SmrcNoObjectionDataInline, MmAceptanceDataInline, MOCSDataInline, CBSDataInline],
+            "sswg_custom_force": [TransferRelocationFormDataInline, CompanyDetailsInline, SSMODataInline, SmrcNoObjectionDataInline, MmAceptanceDataInline, MOCSDataInline, CBSDataInline],
+        }
+
+        for group, inline_lst in group_inline_mapping.items():
+            if group in user_groups:
+                for inline in inline_lst:
+                    inlines.append(inline)
+
+        return inlines
+    
+    def _check_data_exist(self,object_id,state):
+        state_inline_mapping = {
+            BasicForm.STATE_2: [TransferRelocationFormDataInline, ],
+            BasicForm.STATE_4: [SSMODataInline,],
+            BasicForm.STATE_5: [SmrcNoObjectionDataInline,],
+            BasicForm.STATE_6: [MmAceptanceDataInline,],
+            BasicForm.STATE_8: [MOCSDataInline,],
+            BasicForm.STATE_9: [CBSDataInline,],
+        }
+
+        if state_inline_mapping.get(state,None):
+            for inline in state_inline_mapping[state]:
+                if inline.model.objects.filter(basic_form=object_id).exists():
+                    return True
+        else:
+            return True
+
+        return False
+
+    def change_view(self,request,object_id, form_url='', extra_context=None):
+        if request.POST.get('_save_confirm',None):
+            obj = self.get_queryset(request).get(id=object_id)
+            new_state = obj.state+1
+            if self._check_data_exist(object_id,new_state):
+                response = super().change_view(request,object_id, form_url, extra_context)
+                obj.state = new_state
+                obj.save()
+                self.log_change(request,obj,_("SSWG State "+str(obj.state)))
+                self.message_user(request,_('application confirmed successfully!'))
+            else:
+                extra_context = extra_context or {}
+                extra_context["object"] = obj
+                response = TemplateResponse(request,"sswg/not_confirmed.html",extra_context)
+                self.message_user(request,_('application not confirmed!'),level=messages.ERROR)
+        else:
+            response = super().change_view(request,object_id, form_url, extra_context)
+
+        return response
