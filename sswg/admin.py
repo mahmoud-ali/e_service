@@ -220,29 +220,29 @@ class BasicFormAdmin(LogMixin,admin.ModelAdmin):
         return False
 
     def change_view(self,request,object_id, form_url='', extra_context=None):
+        add = object_id is None
+
         if request.POST.get('_save_confirm',None):
             to_field = request.POST.get(TO_FIELD_VAR, request.GET.get(TO_FIELD_VAR))
 
-            obj = self.get_object(request, unquote(object_id), to_field) #self.get_queryset(request).get(id=object_id)
-            if obj.state < len(BasicForm.STATE_CHOICES) - 1:
-                new_state = obj.state+1
-            else:
-                new_state = obj.state
+            obj = self.get_object(request, unquote(object_id), to_field)
 
-            if self._check_data_exist(object_id,new_state):
+            if self._check_data_exist(object_id,obj.get_next_state()):
                 response = super().change_view(request,object_id, form_url, extra_context)
                 obj.state = obj.get_next_state()
                 obj.save()
                 self.log_change(request,obj,_("SSWG State "+str(obj.state)))
                 self.message_user(request,_('application confirmed successfully!'))
+
+                return response
             else:
                 fieldsets = self.get_fieldsets(request, obj)
                 ModelForm = self.get_form(
-                    request, obj, change=False, fields=flatten_fieldsets(fieldsets)
+                    request, obj, change=not add, fields=flatten_fieldsets(fieldsets)
                 )                
                 form = ModelForm(instance=obj)
                 formsets, inline_instances = self._create_formsets(
-                    request, obj, change=True
+                    request, obj, change=not add
                 )                
                 inline_formsets = self.get_inline_formsets(
                     request, formsets, inline_instances, obj
@@ -255,15 +255,14 @@ class BasicFormAdmin(LogMixin,admin.ModelAdmin):
                     # Clear prepopulated fields on a view-only form to avoid a crash.
                     (
                         self.get_prepopulated_fields(request, obj)
-                        if False or self.has_change_permission(request, obj)
+                        if add or self.has_change_permission(request, obj)
                         else {}
                     ),
                     readonly_fields,
                     model_admin=self,
                 )
                 context = self.admin_site.each_context(request)
-                context['obj'] = obj
-                context['obj'] = obj
+                # context['obj'] = obj
                 context['original'] = obj
                 context["inline_admin_formsets"] = inline_formsets
                 context["adminform"] = admin_form
@@ -271,9 +270,8 @@ class BasicFormAdmin(LogMixin,admin.ModelAdmin):
                 self.message_user(request,_('application not confirmed!'),level=messages.ERROR)
 
                 return self.render_change_form(
-                    request, context, add=False, change=True, obj=obj, form_url=form_url
+                    request, context, add=add, change=not add, obj=obj, form_url=form_url
                 )
         else:
             response = super().change_view(request,object_id, form_url, extra_context)
-
-        return response
+            return response
