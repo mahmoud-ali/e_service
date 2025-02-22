@@ -228,10 +228,10 @@ class BasicFormAdmin(LogMixin,admin.ModelAdmin):
                 new_state = obj.state+1
             else:
                 new_state = obj.state
-                
+
             if self._check_data_exist(object_id,new_state):
                 response = super().change_view(request,object_id, form_url, extra_context)
-                obj.state = new_state
+                obj.state = obj.get_next_state()
                 obj.save()
                 self.log_change(request,obj,_("SSWG State "+str(obj.state)))
                 self.message_user(request,_('application confirmed successfully!'))

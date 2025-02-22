@@ -253,12 +253,17 @@ class BasicForm(LoggingModel):
         verbose_name = _("SSWG Basic Form")
         verbose_name_plural = _("SSWG Basic Forms")
         ordering = ['-date']
-
-    def get_next_state_display(self):
-        curr_index = self.state
-        next_state = self.STATE_CHOICES[curr_index + 1] if curr_index < len(self.STATE_CHOICES) - 1 else None
-        return next_state
     
+    def get_next_state(self):
+        if self.state < len(self.STATE_CHOICES) - 1:
+            return self.state + 1
+        
+        return self.state
+    
+    def get_next_state_display(self):
+        curr_index = self.get_next_state()
+        return self.STATE_CHOICES[curr_index]
+
 from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 
