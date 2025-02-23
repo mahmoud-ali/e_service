@@ -19,7 +19,24 @@ class SSWGAdminTests(TestCase):
                                                                                                                                                                                     
         self.basic_form = BasicForm.objects.create(                                                                                                                                 
             date='2025-01-01',                                                                                                                                                      
-            sn_no='SSWG-ADMIN',                                                                                                                                                     
+            sn_no='SSWG-ADMIN1',                                                                                                                                                     
+            state=BasicForm.STATE_1,                                                                                                                                                     
+            created_by=self.admin_user,                                                                                                                                             
+            updated_by=self.admin_user                                                                                                                                              
+        )
+        
+        BasicForm.objects.create(                                                                                                                                 
+            date='2025-01-02',                                                                                                                                                      
+            sn_no='SSWG-ADMIN2',                    
+            state=BasicForm.STATE_2,                                                                                                                                                     
+            created_by=self.admin_user,                                                                                                                                             
+            updated_by=self.admin_user                                                                                                                                              
+        )
+        
+        BasicForm.objects.create(                                                                                                                                 
+            date='2025-01-03',                                                                                                                                                      
+            sn_no='SSWG-ADMIN3',        
+            state=BasicForm.STATE_3,                                                                                                                                                     
             created_by=self.admin_user,                                                                                                                                             
             updated_by=self.admin_user                                                                                                                                              
         )
@@ -81,8 +98,12 @@ class SSWGAdminTests(TestCase):
                                                                                                                                                                                     
         # Test manager access                                                                                                                                                       
         admin = BasicFormAdmin(model=BasicForm, admin_site=None)                                                                                                                    
-        request = self.client.get('/').wsgi_request                                                                                                                                 
+        request = self.client.get('/').wsgi_request    
+
         request.user = manager_user                                                                                                                                                 
         qs = admin.get_queryset(request)                                                                                                                                            
-        self.assertEqual(qs.count(), 1)  # Manager should see all forms                                      
-                                                                                                
+        self.assertEqual(qs.count(), 3)  # manager_user should see all forms                                      
+
+        request.user = secretary_user                                                                                                                                                 
+        qs = admin.get_queryset(request)                                                                                                                                            
+        self.assertEqual(qs.count(), 1)  # secretary_user should see secretary forms                                      
