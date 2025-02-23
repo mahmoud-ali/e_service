@@ -4,16 +4,16 @@
 The Production Control application is a Django-based system designed to manage and track gold production and shipping processes. It provides a structured approach to handling production forms, alloy tracking, and shipping documentation.
 
 ## Features
-- Gold production form management
-- Alloy tracking and weight calculations
-- Gold shipping form management
-- Role-based access control for different user groups
-- Comprehensive admin interface for managing records
-- Audit logging with creation and update tracking
-- File attachment handling for supporting documents
-- State-based workflow transitions
-- Automatic form numbering and state code generation
-- CSV export functionality for transaction data
+1. Gold production form management
+2. Alloy tracking and weight calculations
+3. Gold shipping form management
+4. Role-based access control for different user groups
+5. Comprehensive admin interface for managing records
+6. Audit logging with creation and update tracking
+7. File attachment handling for supporting documents
+8. State-based workflow transitions
+9. Automatic form numbering and state code generation
+10. CSV export functionality for transaction data
 
 ## Usage
 To use the Production Control application:
@@ -63,26 +63,26 @@ The application implements the following workflows through the admin interface:
 4. Export data to CSV for reporting
 
 ### Key Admin Features
-- State-based form locking and permissions
-- Automatic form numbering with state codes
-- File attachment handling for supporting documents
-- Audit trail tracking for all changes
-- Custom admin views for each user group
-- Date-based filtering with custom date ranges
-- Company-specific form filtering
+1. State-based form locking and permissions
+2. Automatic form numbering with state codes
+3. File attachment handling for supporting documents
+4. Audit trail tracking for all changes
+5. Custom admin views for each user group
+6. Date-based filtering with custom date ranges
+7. Company-specific form filtering
 
 ### State Transitions
 The system manages state transitions through the admin interface:
-- Forms start in DRAFT state
-- Can be moved through approval states
-- Previous states are locked for editing
-- Required data must be present before state transition
-- Notifications and logging for state changes
+1. Forms start in DRAFT state
+2. Can be moved through approval states
+3. Previous states are locked for editing
+4. Required data must be present before state transition
+5. Notifications and logging for state changes
 
 ### Security Features
-- Role-based access control
-- Company-specific data isolation
-- File upload restrictions
-- Audit logging of all changes
-- State-based permission enforcement
-- Unique constraints on critical records
+1. Role-based access control
+2. Company-specific data isolation
+3. File upload restrictions
+4. Audit logging of all changes
+5. State-based permission enforcement
+6. Unique constraints on critical records
