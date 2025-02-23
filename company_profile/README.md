@@ -4,14 +4,14 @@
 The Company Profile application is a comprehensive Django-based system designed to manage and track company-related information, licenses, and various application workflows. It provides a structured approach to handling company data, production details, and application processes.
 
 ## Features
-- Company profile management with detailed information
-- License tracking and management system
-- Workflow management for various application types
-- Role-based access control for different user groups
-- Comprehensive admin interface for managing records
-- Audit logging with creation and update tracking
-- File attachment handling for supporting documents
-- State-based workflow transitions
+1. Company profile management with detailed information
+2. License tracking and management system
+3. Workflow management for various application types
+4. Role-based access control for different user groups
+5. Comprehensive admin interface for managing records
+6. Audit logging with creation and update tracking
+7. File attachment handling for supporting documents
+8. State-based workflow transitions
 
 ## Usage
 To use the Company Profile application:
@@ -53,28 +53,28 @@ The application implements the following workflows through the admin interface:
 4. Manage notifications and email alerts
 
 ### Key Admin Features
-- State-based application locking and permissions
-- Automatic company details creation from related forms
-- File attachment handling for supporting documents
-- Audit trail tracking for all changes
-- Custom admin views for each user group
-- CSV export functionality for license data
-- Company type-based filtering
+1. State-based application locking and permissions
+2. Automatic company details creation from related forms
+3. File attachment handling for supporting documents
+4. Audit trail tracking for all changes
+5. Custom admin views for each user group
+6. CSV export functionality for license data
+7. Company type-based filtering
 
 ### State Transitions
 The system manages state transitions through the admin interface:
-- Applications start in SUBMITTED state
-- Can be moved to ACCEPTED state
-- Can be approved to APPROVED state
-- Can be rejected to REJECTED state
-- Previous states are locked for editing
-- Required data must be present before state transition
-- Automatic email notifications for state changes
+1. Applications start in SUBMITTED state
+2. Can be moved to ACCEPTED state
+3. Can be approved to APPROVED state
+4. Can be rejected to REJECTED state
+5. Previous states are locked for editing
+6. Required data must be present before state transition
+7. Automatic email notifications for state changes
 
 ### Security Features
-- Role-based access control
-- Company type-based data isolation
-- File upload restrictions
-- Audit logging of all changes
-- State-based permission enforcement
-- Unique constraints on company codes and licenses
+1. Role-based access control
+2. Company type-based data isolation
+3. File upload restrictions
+4. Audit logging of all changes
+5. State-based permission enforcement
+6. Unique constraints on company codes and licenses
