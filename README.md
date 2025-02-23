@@ -42,11 +42,6 @@ python manage.py migrate
 
 3. Access the admin interface at `/admin/` to manage records.
 
-4. Use the following main user groups to control access:
-   - production_manager
-   - financial_controller
-   - safety_officer
-   - company_admin
 
 ## User Workflows
 The application implements the following workflows through the admin interface:
