@@ -33,7 +33,7 @@ class LogMixin:
         
         return False
 
-class TransferRelocationFormDataInline(LogMixin,admin.StackedInline):
+class TransferRelocationFormDataInline(LogMixin,admin.TabularInline):
     model = TransferRelocationFormData
     form=TransferRelocationFormDataForm
     fk_name = 'basic_form'
