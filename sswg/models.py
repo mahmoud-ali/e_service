@@ -53,7 +53,7 @@ class TransferRelocationFormData(LoggingModel):
 
     raw_weight = models.FloatField(_("Raw Weight"), validators=[MinValueValidator(0.0)])
     allow_count = models.PositiveIntegerField(_("Allow Count"))
-    basic_form = models.OneToOneField(
+    basic_form = models.ForeignKey(
         'BasicForm',
         on_delete=models.PROTECT,
         related_name='smrc_data',
