@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-22 23:05+0200\n"
+"POT-Creation-Date: 2025-02-24 09:28+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -226,7 +226,7 @@ msgstr "عدد الرخص"
 
 #: company_profile/admin.py:365 company_profile/models.py:109
 #: company_profile/models.py:254 dabtiaat_altaedin/models.py:47
-#: dabtiaat_altaedin/models.py:93 gold_travel/models.py:22
+#: dabtiaat_altaedin/models.py:94 gold_travel/models.py:22
 #: gold_travel/models.py:50 gold_travel/models.py:145 gold_travel/models.py:262
 #: gold_travel_traditional/models.py:18 gold_travel_traditional/models.py:29
 #: gold_travel_traditional/models.py:42 gold_travel_traditional/models.py:114
@@ -1595,7 +1595,7 @@ msgstr "تعليق مختصر عن الدراسة"
 
 #: company_profile/models.py:940 company_profile/models.py:966
 #: company_profile/models.py:1049 company_profile/models.py:1140
-#: dabtiaat_altaedin/models.py:92 gold_travel/models.py:144 pa/models.py:309
+#: dabtiaat_altaedin/models.py:93 gold_travel/models.py:144 pa/models.py:309
 #: pa/models.py:521 pa/models.py:637
 msgid "attachement_file"
 msgstr "المرفقات"
@@ -3456,7 +3456,7 @@ msgid "state_smrc"
 msgstr "اعتماد ممثل الشركة السودانية بالولاية"
 
 #: dabtiaat_altaedin/admin.py:276 gold_travel/admin.py:369
-#: gold_travel/admin.py:648 sswg/admin.py:237
+#: gold_travel/admin.py:648 sswg/admin.py:216
 msgid "application confirmed successfully!"
 msgstr "تم إعتماد الطلب بنجاح."
 
@@ -3469,7 +3469,7 @@ msgid "date"
 msgstr "التاريخ"
 
 #: dabtiaat_altaedin/admin.py:305 dabtiaat_altaedin/admin.py:334
-#: dabtiaat_altaedin/models.py:89 gold_travel/admin.py:416
+#: dabtiaat_altaedin/models.py:90 gold_travel/admin.py:416
 #: gold_travel/admin.py:441 gold_travel/models.py:259
 #: gold_travel/templates/admin/gold_travel/appmovegold/pagination.html:13
 #: gold_travel_traditional/admin.py:338 gold_travel_traditional/models.py:106
@@ -3478,7 +3478,7 @@ msgid "gold_weight_in_gram"
 msgstr "وزن الذهب بالجرام"
 
 #: dabtiaat_altaedin/admin.py:305 dabtiaat_altaedin/admin.py:330
-#: dabtiaat_altaedin/models.py:90
+#: dabtiaat_altaedin/models.py:91
 msgid "gold_price"
 msgstr "سعر الجرام"
 
@@ -3486,7 +3486,7 @@ msgstr "سعر الجرام"
 msgid "koli_amount"
 msgstr "المبلغ الكلي"
 
-#: dabtiaat_altaedin/admin.py:305 dabtiaat_altaedin/models.py:91
+#: dabtiaat_altaedin/admin.py:305 dabtiaat_altaedin/models.py:92
 #: executive_office/models.py:88 executive_office/models.py:149
 #: gold_travel/admin.py:417 gold_travel/admin.py:458 gold_travel/models.py:143
 #: gold_travel/models.py:261 gold_travel_traditional/admin.py:339
@@ -3582,7 +3582,11 @@ msgstr "مسودة"
 msgid "state_canceled"
 msgstr "تم الإلغاء"
 
-#: dabtiaat_altaedin/models.py:153 dabtiaat_altaedin/models.py:154
+#: dabtiaat_altaedin/models.py:89
+msgid "Report number"
+msgstr "رقم البلاغ"
+
+#: dabtiaat_altaedin/models.py:154 dabtiaat_altaedin/models.py:155
 msgid "dabtiaat app"
 msgstr "استمارة ضبطية"
 
@@ -6102,13 +6106,13 @@ msgstr "تفاصيل توزيع الايرادات"
 msgid "Revenu distribution details"
 msgstr "تفاصيل توزيع الايرادات"
 
-#: sswg/admin.py:236
+#: sswg/admin.py:215
 #, fuzzy
 #| msgid "SSWG State 1"
 msgid "SSWG State "
 msgstr "مسودة"
 
-#: sswg/admin.py:271
+#: sswg/admin.py:250
 msgid "application not confirmed!"
 msgstr "لم يتم إعتماد الطلب، الرجاء التأكد من اكتمال البيانات."
 

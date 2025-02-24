@@ -86,6 +86,7 @@ class AppDabtiaat(LoggingModel):
         return "company_{0}/travel/{1}/{2}".format(company,date, filename)    
 
     date = models.DateField(_("date"))
+    report_number = models.CharField(_("Report number"), max_length=20)
     gold_weight_in_gram = models.FloatField(_("gold_weight_in_gram"))
     gold_price = models.FloatField(_("gold_price"))
     state = models.IntegerField(_("record_state"), choices=STATE_CHOICES, default=STATE_DRAFT)
