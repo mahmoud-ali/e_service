@@ -572,9 +572,12 @@ class TblCompanyPaymentDetail(models.Model):
         if not hasattr(self.payment_master,"request"):
             return -1
         
-        return self.payment_master.exchange_rate * (self.payment_master.request.tblcompanyrequestdetail_set \
-               .filter(item=self.item) \
-               .aggregate(total=Sum('amount'))['total'] or 0)
+        try:
+            return self.payment_master.exchange_rate * (self.payment_master.request.tblcompanyrequestdetail_set \
+                .filter(item=self.item) \
+                .aggregate(total=Sum('amount'))['total'] or 0)
+        except:
+            return -1
     
     def get_payment_item_total(self,exclude=0):
         if not hasattr(self.payment_master,"request"):
