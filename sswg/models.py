@@ -189,9 +189,9 @@ class CBSData(LoggingModel):
         return "company_{0}/sswg/{1}/{2}".format(company,date, filename)    
 
     PAYMENT_METHOD_CHOICES = (
-        ('cash', _('Cash')),
-        ('transfer', _('Bank Transfer')),
-        ('cheque', _('Cheque')),
+        ('cash', _('دفع مقدم')),
+        ('transfer', _('تحويل انصبة')),
+        # ('cheque', _('Cheque')),
     )
 
     customer_account_number = models.CharField(_("Customer Account Number"), max_length=20)
