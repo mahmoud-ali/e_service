@@ -224,7 +224,7 @@ class AppDabtiaatAdmin(LogAdminMixin,admin.ModelAdmin):
     exclude = ["created_at","created_by","updated_at","updated_by","state","source_state"]
     list_display = ["date","gold_weight_in_gram","gold_price","koli_amount","state","source_state","al3wayid_aljalila_amount","alhafiz_amount","alniyaba_amount","smrc_amount","state_amount","police_amount","amn_amount","riasat_alquat_aldaabita_amount","alquat_aldaabita_amount"]        
     list_filter = [("date",DateFieldListFilterWithLast30days),("state",ChoicesFieldListFilterNotEmpty),("source_state",RelatedOnlyFieldListFilterNotEmpty)]
-    actions = ['confirm_app','export_as_csv']
+    actions = ['confirm_app','return_to_draft','export_as_csv']
 
     extra = 1    
     formfield_overrides = {
@@ -286,14 +286,14 @@ class AppDabtiaatAdmin(LogAdminMixin,admin.ModelAdmin):
     #             self.log_change(request,obj,_('state_canceled'))
     #             self.message_user(request,_('application changed successfully!'))
 
-    # @admin.action(description=_('return_to_draft'))
-    # def return_to_draft(self, request, queryset):
-    #     for obj in queryset:
-    #         if obj.state == AppDabtiaat.STATE_SMRC:
-    #             obj.state = AppDabtiaat.STATE_DRAFT
-    #             obj.save()
-    #             self.log_change(request,obj,_('return_to_draft'))
-    #             self.message_user(request,_('application changed successfully!'))
+    @admin.action(description=_('return_to_draft'))
+    def return_to_draft(self, request, queryset):
+        for obj in queryset:
+            if obj.state == AppDabtiaat.STATE_SMRC:
+                obj.state = AppDabtiaat.STATE_DRAFT
+                obj.save()
+                self.log_change(request,obj,_('return_to_draft'))
+                self.message_user(request,_('application changed successfully!'))
 
     @admin.action(description=_('Export data'))
     def export_as_csv(self, request, queryset):
