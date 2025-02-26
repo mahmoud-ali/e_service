@@ -255,7 +255,7 @@ class BasicForm(LoggingModel):
         ordering = ['-date']
     
     def get_next_state(self):
-        if self.state < len(self.STATE_CHOICES) - 1:
+        if self.state < len(self.STATE_CHOICES):
             return self.state + 1
         
         return self.state
