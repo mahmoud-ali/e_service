@@ -105,6 +105,7 @@ INSTALLED_APPS = [
     'planning',
     'dabtiaat_altaedin',
     'sswg',
+    'workflow',
 
     # Debug
     'debug_toolbar',
