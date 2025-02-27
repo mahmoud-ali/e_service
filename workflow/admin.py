@@ -234,4 +234,4 @@ inline_classes = {
 
 model_admin, inlines = create_main_form(main_class,inline_classes,main_mixins)
 
-admin.site.register(model_admin.model,model_admin)
+# admin.site.register(model_admin.model,model_admin)
