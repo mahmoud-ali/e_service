@@ -73,8 +73,7 @@ def get_workflow_mixin(main_class,inline_classes={},inlines_dict={}):
         def get_queryset(self, request):
             """Filter records by user's state, with full access for superusers"""
             qs = super().get_queryset(request)
-            user_groups = list(request.user.groups.values_list('name', flat=True))
-
+            user_groups = list(request.user.groups.values_list('name', flat=True))            
             states = view_model_states(main_class,user_groups)
 
             return qs.filter(state__in=states)
@@ -92,4 +91,71 @@ def get_workflow_mixin(main_class,inline_classes={},inlines_dict={}):
 
             return inlines
 
+        def rerender_change_form(self,request,object_id, form_url='', extra_context=None):
+            add = object_id is None
+            to_field = request.POST.get(TO_FIELD_VAR, request.GET.get(TO_FIELD_VAR))
+
+            obj = self.get_object(request, unquote(object_id), to_field)
+            fieldsets = self.get_fieldsets(request, obj)
+            ModelForm = self.get_form(
+                request, obj, change=not add, fields=flatten_fieldsets(fieldsets)
+            )                
+            form = ModelForm(instance=obj)
+            formsets, inline_instances = self._create_formsets(
+                request, obj, change=not add
+            )                
+            inline_formsets = self.get_inline_formsets(
+                request, formsets, inline_instances, obj
+            )
+            readonly_fields = flatten_fieldsets(fieldsets)
+
+            admin_form = admin.helpers.AdminForm(
+                form,
+                list(fieldsets),
+                # Clear prepopulated fields on a view-only form to avoid a crash.
+                (
+                    self.get_prepopulated_fields(request, obj)
+                    if add or self.has_change_permission(request, obj)
+                    else {}
+                ),
+                readonly_fields,
+                model_admin=self,
+            )
+            context = self.admin_site.each_context(request)
+            context['original'] = obj
+            context["inline_admin_formsets"] = inline_formsets
+            context["adminform"] = admin_form
+
+            self.message_user(request,_('application not confirmed!'),level=messages.ERROR)
+
+            return self.render_change_form(
+                request, context, add=add, change=not add, obj=obj, form_url=form_url
+            )
+
+        def change_view(self,request,object_id, form_url='', extra_context=None):
+            to_field = request.POST.get(TO_FIELD_VAR, request.GET.get(TO_FIELD_VAR))
+            obj = self.get_object(request, unquote(object_id), to_field)
+
+            if not obj:
+                # normal save
+                response = super().change_view(request,object_id, form_url, extra_context)
+                return response
+            
+            for next_state in obj.get_next_states(request.user):
+                if request.POST.get('_save_state_'+str(next_state[0]),None):
+                    if obj.can_transition_to_next_state(request.user, next_state):
+                        try:
+                            response = super().change_view(request,object_id, form_url, extra_context)
+                            obj.transition_to_next_state(request.user, next_state)
+                            self.log_change(request,obj,_("Transition to")+" "+next_state[1])
+                            self.message_user(request,_('application confirmed successfully!'))
+                            return response
+                        except:
+                            return self.rerender_change_form(request,object_id, form_url, extra_context)
+                    
+            # normal save
+            response = super().change_view(request,object_id, form_url, extra_context)
+            return response
+            
     return WorkflowAdminLogMixin
+

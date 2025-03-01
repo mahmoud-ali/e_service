@@ -1,3 +1,4 @@
+from importlib import import_module
 from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
 from django.contrib import messages
@@ -7,8 +8,7 @@ from django.contrib.admin.utils import (
 )
 from django.contrib.admin import helpers
 from django.contrib.admin.options import TO_FIELD_VAR
-from sswg.forms import TransferRelocationFormDataForm
-from sswg.models import CompanyDetails, MmAceptanceData, TransferRelocationFormData, SSMOData, BasicForm, MOCSData, CBSData, SmrcNoObjectionData
+# from it.models import DevelopmentRequestForm
 from workflow.admin_utils import create_main_form
 
 class LogMixin:
@@ -27,33 +27,28 @@ class LogMixin:
             instance.save()
         formset.save_m2m()
 
-    def has_delete_permission(self, request, obj=None):        
-        return False
+    # def has_delete_permission(self, request, obj=None):        
+    #     return False
 
 ####global run##########
 
 main_mixins = [LogMixin]
+models = import_module('it.models')
+DevelopmentRequestForm = models.__getattribute__('DevelopmentRequestForm')
 main_class = {
-    'model': BasicForm,
+    'model': DevelopmentRequestForm,
     'mixins': [],
     'kwargs': {
-        'list_display': ('sn_no', 'date'),
-        'search_fields': ('sn_no', 'date'),
+        'list_display': ('date', 'department','responsible'),
+        'search_fields': ('department','responsible'),
+        'list_filter': ('date', 'department', 'responsible'),
         'exclude': ('state',),
         'save_as_continue': False,
     },
     'groups': (
         {
-            'name': 'sswg_manager',
-            'states': (BasicForm.STATE_1,BasicForm.STATE_2,BasicForm.STATE_3,BasicForm.STATE_4,BasicForm.STATE_5,BasicForm.STATE_6,BasicForm.STATE_7,BasicForm.STATE_8,BasicForm.STATE_9,BasicForm.STATE_10,),
-            'add':1,
-            'change':1, 
-            'delete':1, 
-            'view':1,
-        },
-        {
-            'name': 'sswg_secretary',
-            'states': (BasicForm.STATE_1,),
+            'name': 'department_manager',
+            'states': (DevelopmentRequestForm.STATE_DRAFT,DevelopmentRequestForm.STATE_CONFIRMED,DevelopmentRequestForm.STATE_APPROVED,DevelopmentRequestForm.STATE_IT_MANAGER_RECOMMENDATION,DevelopmentRequestForm.STATE_PCI_MANAGER_APPROVAL),
             'add':1,
             'change':1, 
             'delete':1, 
@@ -62,173 +57,40 @@ main_class = {
     ),
 }
 
-inline_mixins = [LogMixin]
-inline_classes = {
-    'TransferRelocationFormData': {
-        'model': TransferRelocationFormData,
-        'kwargs': {
-            'form': TransferRelocationFormDataForm,
-            'mixins': [admin.TabularInline],
-            'fk_name': 'basic_form',
-            'readonly_fields': ['raw_weight', 'allow_count'],
-            'extra': 1,
-        },
-        'groups': (
-            {
-                'name': 'sswg_manager',
-                'states': (BasicForm.STATE_1,BasicForm.STATE_2,BasicForm.STATE_3,BasicForm.STATE_4,BasicForm.STATE_5,BasicForm.STATE_6,BasicForm.STATE_7,BasicForm.STATE_8,BasicForm.STATE_9,BasicForm.STATE_10,),
-                'add':1,
-                'change':1, 
-                'delete':1, 
-                'view':1,
-            },
-            {
-                'name': 'sswg_secretary',
-                'states': (BasicForm.STATE_1,BasicForm.STATE_2,BasicForm.STATE_3,BasicForm.STATE_4,BasicForm.STATE_5,BasicForm.STATE_6,BasicForm.STATE_7,BasicForm.STATE_8,BasicForm.STATE_9,BasicForm.STATE_10,),
-                'add':1,
-                'change':1, 
-                'delete':0, 
-                'view':1,
-            },
-        ),
-    },
-    'CompanyDetails': {
-        'model': CompanyDetails,
-        'kwargs': {
-            'fk_name': 'basic_form',
-            'extra': 1,
-            'readonly_fields': ['name', 'surrogate_name', 'surrogate_id_type', 'surrogate_id_val', 'surrogate_id_phone'],
-        },
-        'groups': (
-            {
-                'name': 'sswg_manager',
-                'states': (BasicForm.STATE_1,BasicForm.STATE_2,BasicForm.STATE_3,BasicForm.STATE_4,BasicForm.STATE_5,BasicForm.STATE_6,BasicForm.STATE_7,BasicForm.STATE_8,BasicForm.STATE_9,BasicForm.STATE_10,),
-                'add':1,
-                'change':1, 
-                'delete':1, 
-                'view':1,
-            },
-            {
-                'name': 'sswg_secretary',
-                'states': (BasicForm.STATE_1,BasicForm.STATE_2,BasicForm.STATE_3,BasicForm.STATE_4,BasicForm.STATE_5,BasicForm.STATE_6,BasicForm.STATE_7,BasicForm.STATE_8,BasicForm.STATE_9,BasicForm.STATE_10,),
-                'add':1,
-                'change':1, 
-                'delete':0, 
-                'view':1,
-            },
-        ),
-    },
-    'SSMOData': {
-        'model': SSMOData,
-        'kwargs': {
-            'fk_name': 'basic_form',
-            'extra': 1,
-        },
-        'groups': (
-            {
-                'name': 'sswg_manager',
-                'states': (BasicForm.STATE_3,BasicForm.STATE_4,BasicForm.STATE_5,BasicForm.STATE_6,BasicForm.STATE_7,BasicForm.STATE_8,BasicForm.STATE_9,BasicForm.STATE_10,),
-                'add':1,
-                'change':1, 
-                'delete':1, 
-                'view':1,
-            },
-        ),
-    },
-    'SmrcNoObjectionData': {
-        'model': SmrcNoObjectionData,
-        'kwargs': {
-            'fk_name': 'basic_form',
-            'extra': 1,
-        },
-        'groups': (
-            {
-                'name': 'sswg_manager',
-                'states': (BasicForm.STATE_4,BasicForm.STATE_5,BasicForm.STATE_6,BasicForm.STATE_7,BasicForm.STATE_8,BasicForm.STATE_9,BasicForm.STATE_10,),
-                'add':1,
-                'change':1, 
-                'delete':1, 
-                'view':1,
-            },
-        ),
-    },
-    'MmAceptanceData': {
-        'model': MmAceptanceData,
-        'kwargs': {
-            'fk_name': 'basic_form',
-            'extra': 1,
-        },
-        'groups': (
-            {
-                'name': 'sswg_manager',
-                'states': (BasicForm.STATE_5,),
-                'add':1,
-                'change':1, 
-                'delete':1, 
-                'view':1,
-            },
-            {
-                'name': 'sswg_manager',
-                'states': (BasicForm.STATE_1,),
-                'add':1,
-                'change':1, 
-                'delete':0, 
-                'view':0,
-            },
-        ),
-    },
-    'MOCSData': {
-        'model': MOCSData,
-        'kwargs': {
-            'fk_name': 'basic_form',
-            'extra': 1,
-        },
-        'groups': (
-            {
-                'name': 'sswg_manager',
-                'states': (BasicForm.STATE_1,),
-                'add':1,
-                'change':1, 
-                'delete':1, 
-                'view':1,
-            },
-            {
-                'name': 'sswg_manager',
-                'states': (BasicForm.STATE_1,),
-                'add':1,
-                'change':1, 
-                'delete':0, 
-                'view':0,
-            },
-        ),
-    },
-    'CBSData': {
-        'model': CBSData,
-        'kwargs': {
-            'fk_name': 'basic_form',
-            'extra': 1,
-        },
-        'groups': (
-            {
-                'name': 'sswg_manager',
-                'states': (BasicForm.STATE_1,),
-                'add':1,
-                'change':1, 
-                'delete':1, 
-                'view':1,
-            },
-            {
-                'name': 'sswg_manager',
-                'states': (BasicForm.STATE_1,),
-                'add':1,
-                'change':1, 
-                'delete':0, 
-                'view':0,
-            },
-        ),
-    },
-}
+# inline_mixins = [LogMixin]
+# inline_classes = {
+#     'TransferRelocationFormData': {
+#         'model': TransferRelocationFormData,
+#         'mixins': [admin.TabularInline],
+#         'kwargs': {
+#             'form': TransferRelocationFormDataForm,
+#             'fk_name': 'basic_form',
+#             'readonly_fields': ['raw_weight', 'allow_count'],
+#             'extra': 1,
+#         },
+#         'groups': (
+#             {
+#                 'name': 'sswg_manager',
+#                 'states': (BasicForm.STATE_1,BasicForm.STATE_2,BasicForm.STATE_3,BasicForm.STATE_4,BasicForm.STATE_5,BasicForm.STATE_6,BasicForm.STATE_7,BasicForm.STATE_8,BasicForm.STATE_9,BasicForm.STATE_10,),
+#                 'add':1,
+#                 'change':1, 
+#                 'delete':1, 
+#                 'view':1,
+#             },
+#             {
+#                 'name': 'sswg_secretary',
+#                 'states': (BasicForm.STATE_1,BasicForm.STATE_2,BasicForm.STATE_3,BasicForm.STATE_4,BasicForm.STATE_5,BasicForm.STATE_6,BasicForm.STATE_7,BasicForm.STATE_8,BasicForm.STATE_9,BasicForm.STATE_10,),
+#                 'add':1,
+#                 'change':1, 
+#                 'delete':0, 
+#                 'view':1,
+#             },
+#         ),
+#     },
+# }
+
+inline_classes = {}
 
 model_admin, inlines = create_main_form(main_class,inline_classes,main_mixins)
 
-# admin.site.register(model_admin.model,model_admin)
+admin.site.register(model_admin.model,model_admin)

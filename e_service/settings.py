@@ -106,6 +106,7 @@ INSTALLED_APPS = [
     'dabtiaat_altaedin',
     'sswg',
     'workflow',
+    'it',
 
     # Debug
     'debug_toolbar',
