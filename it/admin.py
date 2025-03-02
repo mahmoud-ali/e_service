@@ -8,7 +8,7 @@ from django.contrib.admin.utils import (
 )
 from django.contrib.admin import helpers
 from django.contrib.admin.options import TO_FIELD_VAR
-# from it.models import DevelopmentRequestForm
+# from it.models import ItRecommendationForm
 from workflow.admin_utils import create_main_form
 
 class LogMixin:
@@ -45,51 +45,46 @@ main_class = {
         'exclude': ('state',),
         'save_as_continue': False,
     },
-    'groups': (
-        {
-            'name': 'department_manager',
-            'states': (DevelopmentRequestForm.STATE_DRAFT,DevelopmentRequestForm.STATE_CONFIRMED,DevelopmentRequestForm.STATE_APPROVED,DevelopmentRequestForm.STATE_IT_MANAGER_RECOMMENDATION,DevelopmentRequestForm.STATE_PCI_MANAGER_APPROVAL),
-            'add':1,
-            'change':1, 
-            'delete':1, 
-            'view':1,
+    'groups': {
+        'department_manager':{
+            'permissions': {
+                DevelopmentRequestForm.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
+                DevelopmentRequestForm.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                DevelopmentRequestForm.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                DevelopmentRequestForm.STATE_IT_MANAGER_RECOMMENDATION: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                DevelopmentRequestForm.STATE_PQI_MANAGER_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+            },
+        }
+
+    },
+}
+inline_mixins = [LogMixin]
+ItRecommendationForm = models.__getattribute__('ItRecommendationForm')
+
+inline_classes = {
+    'ItRecommendationForm': {
+        'model': ItRecommendationForm,
+        'mixins': [admin.TabularInline],
+        'kwargs': {
+            'extra': 1,
         },
-    ),
+        'groups': {
+            'department_manager':{
+                'permissions': {
+                    DevelopmentRequestForm.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 0},
+                    DevelopmentRequestForm.STATE_CONFIRMED: {'add': 1, 'change': 1, 'delete': 0, 'view': 1},
+                    DevelopmentRequestForm.STATE_APPROVED: {'add': 0, 'change': 1, 'delete': 0, 'view': 1},
+                    DevelopmentRequestForm.STATE_IT_MANAGER_RECOMMENDATION: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    DevelopmentRequestForm.STATE_PQI_MANAGER_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            }
+
+        },
+    },
+
 }
 
-# inline_mixins = [LogMixin]
-# inline_classes = {
-#     'TransferRelocationFormData': {
-#         'model': TransferRelocationFormData,
-#         'mixins': [admin.TabularInline],
-#         'kwargs': {
-#             'form': TransferRelocationFormDataForm,
-#             'fk_name': 'basic_form',
-#             'readonly_fields': ['raw_weight', 'allow_count'],
-#             'extra': 1,
-#         },
-#         'groups': (
-#             {
-#                 'name': 'sswg_manager',
-#                 'states': (BasicForm.STATE_1,BasicForm.STATE_2,BasicForm.STATE_3,BasicForm.STATE_4,BasicForm.STATE_5,BasicForm.STATE_6,BasicForm.STATE_7,BasicForm.STATE_8,BasicForm.STATE_9,BasicForm.STATE_10,),
-#                 'add':1,
-#                 'change':1, 
-#                 'delete':1, 
-#                 'view':1,
-#             },
-#             {
-#                 'name': 'sswg_secretary',
-#                 'states': (BasicForm.STATE_1,BasicForm.STATE_2,BasicForm.STATE_3,BasicForm.STATE_4,BasicForm.STATE_5,BasicForm.STATE_6,BasicForm.STATE_7,BasicForm.STATE_8,BasicForm.STATE_9,BasicForm.STATE_10,),
-#                 'add':1,
-#                 'change':1, 
-#                 'delete':0, 
-#                 'view':1,
-#             },
-#         ),
-#     },
-# }
-
-inline_classes = {}
+# inline_classes = {}
 
 model_admin, inlines = create_main_form(main_class,inline_classes,main_mixins)
 

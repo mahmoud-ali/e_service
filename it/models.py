@@ -1,21 +1,21 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-from workflow.model_utils import WorkFlowModel
+from workflow.model_utils import LoggingModel, WorkFlowModel
 
 class DevelopmentRequestForm(WorkFlowModel):
     STATE_DRAFT = 1 
     STATE_CONFIRMED = 2
     STATE_APPROVED = 3
     STATE_IT_MANAGER_RECOMMENDATION = 4
-    STATE_PCI_MANAGER_APPROVAL = 5
+    STATE_PQI_MANAGER_APPROVAL = 5
 
     STATE_CHOICES = {
         STATE_DRAFT:_("IT State 1"), 
         STATE_CONFIRMED:_("IT State 2"), 
         STATE_APPROVED:_("IT State 3"),
         STATE_IT_MANAGER_RECOMMENDATION:_("IT State 4"),
-        STATE_PCI_MANAGER_APPROVAL:_("IT State 5"),
+        STATE_PQI_MANAGER_APPROVAL:_("IT State 5"),
     }
 
     date = models.DateField()
@@ -36,17 +36,17 @@ class DevelopmentRequestForm(WorkFlowModel):
         # user = self.updated_by
         user_groups = list(user.groups.values_list('name', flat=True))
 
-        next_states = []
+        states = []
         if 'department_manager' in user_groups and self.state == self.STATE_DRAFT:
-            next_states.append((self.STATE_CONFIRMED, self.STATE_CHOICES[self.STATE_CONFIRMED]))
+            states.append((self.STATE_CONFIRMED, self.STATE_CHOICES[self.STATE_CONFIRMED]))
         if 'department_manager' in user_groups and self.state == self.STATE_CONFIRMED:
-            next_states.append((self.STATE_APPROVED, self.STATE_CHOICES[self.STATE_APPROVED]))
+            states.append((self.STATE_APPROVED, self.STATE_CHOICES[self.STATE_APPROVED]))
         if 'department_manager' in user_groups and self.state == self.STATE_APPROVED:
-            next_states.append((self.STATE_IT_MANAGER_RECOMMENDATION, self.STATE_CHOICES[self.STATE_IT_MANAGER_RECOMMENDATION]))
+            states.append((self.STATE_IT_MANAGER_RECOMMENDATION, self.STATE_CHOICES[self.STATE_IT_MANAGER_RECOMMENDATION]))
         if '' in user_groups and self.state == self.STATE_IT_MANAGER_RECOMMENDATION:
-            next_states.append((self.STATE_PCI_MANAGER_APPROVAL, self.STATE_CHOICES[self.STATE_PCI_MANAGER_APPROVAL]))
+            states.append((self.STATE_PQI_MANAGER_APPROVAL, self.STATE_CHOICES[self.STATE_PQI_MANAGER_APPROVAL]))
         
-        return next_states
+        return states
 
     def can_transition_to_next_state(self, user, state):
         """
@@ -54,6 +54,7 @@ class DevelopmentRequestForm(WorkFlowModel):
         """
         if state[0] in map(lambda x: x[0], self.get_next_states(user)):
             return True
+        
         return False
 
     def transition_to_next_state(self, user, state):
@@ -66,3 +67,16 @@ class DevelopmentRequestForm(WorkFlowModel):
             self.save()
         else:
             raise Exception(f"User {user.username} cannot transition to state {state} from state {self.state}")
+        
+        return self
+    
+
+class ItRecommendationForm(LoggingModel):
+    form = models.OneToOneField(
+        'DevelopmentRequestForm',
+        on_delete=models.PROTECT,
+        related_name='it_recommendation_form',
+        verbose_name=_("DevelopmentRequestForm"),
+    )
+
+    recommandation = models.TextField()
