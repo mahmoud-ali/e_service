@@ -37,17 +37,32 @@ def create_model_groups(app,model_name,model_attrs):
         }
         create_model_groups('my_app', 'MyModel', model_attrs)
     """
-    for group_attrs in model_attrs['groups']:
-        group, created = Group.objects.get_or_create(name=group_attrs['name'])
-        for perm_type in ['add', 'change', 'delete', 'view']:
-            is_enabled = group_attrs[perm_type]
-            if not is_enabled:
-                continue
-            model_name = model_name.lower()
-            content_type = ContentType.objects.get(app_label=app, model=model_name)
-            permission = Permission.objects.get(codename=perm_type+'_'+model_name, content_type=content_type)
-            group.permissions.add(permission)
+    # for group_attrs in model_attrs['groups']:
+    #     group, created = Group.objects.get_or_create(name=group_attrs['name'])
+    #     for perm_type in ['add', 'change', 'delete', 'view']:
+    #         is_enabled = group_attrs[perm_type]
+    #         if not is_enabled:
+    #             continue
+    #         model_name = model_name.lower()
+    #         content_type = ContentType.objects.get(app_label=app, model=model_name)
+    #         permission = Permission.objects.get(codename=perm_type+'_'+model_name, content_type=content_type)
+    #         group.permissions.add(permission)
 
+    for group,group_dict in model_attrs.get("groups").items():
+        state_permissions = group_dict.get("permissions",{})
+        user_perm = {'add': 0, 'change': 0, 'delete': 0, 'view': 0}
+        for _,permissions in state_permissions.items():
+            for perm in ['add', 'change', 'delete', 'view']:
+                if perm in permissions and permissions[perm]:
+                    user_perm[perm] = 1
+                    continue
+
+        for perm_type in user_perm.keys():
+            if user_perm[perm_type]:
+                model_name = model_name.lower()
+                content_type = ContentType.objects.get(app_label=app, model=model_name)
+                permission = Permission.objects.get(codename=perm_type+'_'+model_name, content_type=content_type)
+                group.permissions.add(permission)
 
 def create_master_details_groups(app,main_model_name,main_model_attrs,inline_classes):
     """
