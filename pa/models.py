@@ -423,17 +423,17 @@ class TblCompanyRequestMaster(LoggingModel):
                     {"to_dt":_("to_dt should be great or equal than from_dt")}
                 )
         
-            if qs.filter(from_dt__lte=self.from_dt, to_dt__gte=self.from_dt).count() > 0:
+            if qs.filter(from_dt__lte=self.from_dt, to_dt__gte=self.from_dt,currency=self.currency).count() > 0:
                 raise ValidationError(
                     {"from_dt":_("conflicted date")}
                 )
             
-            if qs.filter(from_dt__lte=self.to_dt, to_dt__gte=self.to_dt).count() > 0:
+            if qs.filter(from_dt__lte=self.to_dt, to_dt__gte=self.to_dt,currency=self.currency).count() > 0:
                 raise ValidationError(
                     {"to_dt":_("conflicted date")}
                 )
             
-            if qs.filter(from_dt__gte=self.from_dt, to_dt__lte=self.to_dt).count() > 0:
+            if qs.filter(from_dt__gte=self.from_dt, to_dt__lte=self.to_dt,currency=self.currency).count() > 0:
                 raise ValidationError(
                     {
                         "from_dt":_("conflicted date"),
