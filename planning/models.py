@@ -534,7 +534,7 @@ class OtherMineralsTask(TaskExecutionDetail):
 class ExportGoldTraditionalTask(TaskExecutionDetail):
     raw_total_weight = models.FloatField(_("raw_total_weight"))
     net_total_weight = models.FloatField(_("net_total_weight"))
-    # total_dollar = models.FloatField(_("total_dollar"))
+    total_hasila_dollar = models.FloatField(_("total_hasila_dollar"))
 
     class Meta:
         verbose_name = _("ExportGoldTraditionalTask")

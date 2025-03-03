@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-24 09:28+0200\n"
+"POT-Creation-Date: 2025-03-03 12:24+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -326,6 +326,7 @@ msgstr "ديسمبر"
 #: hr_portal/models.py:89 mokhalafat/models.py:6 pa/models.py:46
 #: planning/models.py:183 production_control/models.py:13
 #: revenu_dist/models.py:53 sswg/models.py:13 traditional_api/models.py:10
+#: workflow/model_utils.py:9 workflow/model_utils.py:71
 msgid "created_at"
 msgstr "تاريخ الانشاء"
 
@@ -335,6 +336,7 @@ msgstr "تاريخ الانشاء"
 #: help_request/models.py:13 hr_portal/models.py:90 mokhalafat/models.py:7
 #: pa/models.py:47 planning/models.py:184 production_control/models.py:14
 #: revenu_dist/models.py:54 sswg/models.py:14 traditional_api/models.py:11
+#: workflow/model_utils.py:10 workflow/model_utils.py:72
 msgid "created_by"
 msgstr "المستخدم المسئول عن الانشاء"
 
@@ -348,6 +350,7 @@ msgstr "المستخدم المسئول عن الانشاء"
 #: hr_portal/models.py:92 mokhalafat/models.py:9 pa/models.py:49
 #: planning/models.py:185 production_control/models.py:16
 #: revenu_dist/models.py:56 sswg/models.py:16 traditional_api/models.py:13
+#: workflow/model_utils.py:12 workflow/model_utils.py:74
 msgid "updated_at"
 msgstr "تاريخ اخر تعديل"
 
@@ -357,6 +360,7 @@ msgstr "تاريخ اخر تعديل"
 #: help_request/models.py:14 hr_portal/models.py:93 mokhalafat/models.py:10
 #: pa/models.py:50 planning/models.py:186 production_control/models.py:17
 #: revenu_dist/models.py:57 sswg/models.py:17 traditional_api/models.py:14
+#: workflow/model_utils.py:13 workflow/model_utils.py:75
 msgid "updated_by"
 msgstr "المستخدم المسئول عن التعديل"
 
@@ -1596,7 +1600,7 @@ msgstr "تعليق مختصر عن الدراسة"
 #: company_profile/models.py:940 company_profile/models.py:966
 #: company_profile/models.py:1049 company_profile/models.py:1140
 #: dabtiaat_altaedin/models.py:93 gold_travel/models.py:144 pa/models.py:309
-#: pa/models.py:521 pa/models.py:637
+#: pa/models.py:521 pa/models.py:640
 msgid "attachement_file"
 msgstr "المرفقات"
 
@@ -3456,9 +3460,22 @@ msgid "state_smrc"
 msgstr "اعتماد ممثل الشركة السودانية بالولاية"
 
 #: dabtiaat_altaedin/admin.py:276 gold_travel/admin.py:369
-#: gold_travel/admin.py:648 sswg/admin.py:216
+#: gold_travel/admin.py:648 sswg/admin.py:235 workflow/admin_utils.py:210
 msgid "application confirmed successfully!"
 msgstr "تم إعتماد الطلب بنجاح."
+
+#: dabtiaat_altaedin/admin.py:289 dabtiaat_altaedin/admin.py:295
+#: gold_travel/admin.py:400 gold_travel/admin.py:406 gold_travel/admin.py:652
+#: gold_travel/admin.py:658
+msgid "return_to_draft"
+msgstr "إرجاع إلى مسودة"
+
+#: dabtiaat_altaedin/admin.py:296 gold_travel/admin.py:380
+#: gold_travel/admin.py:389 gold_travel/admin.py:398 gold_travel/admin.py:407
+#: gold_travel/admin.py:659 gold_travel/admin.py:668
+#: gold_travel_traditional/admin.py:200 gold_travel_traditional/admin.py:237
+msgid "application changed successfully!"
+msgstr "تم تعديل الطلب بنجاح."
 
 #: dabtiaat_altaedin/admin.py:305 dabtiaat_altaedin/models.py:88
 #: gold_travel/admin.py:416 gold_travel/models.py:129 gold_travel/models.py:257
@@ -3490,12 +3507,12 @@ msgstr "المبلغ الكلي"
 #: executive_office/models.py:88 executive_office/models.py:149
 #: gold_travel/admin.py:417 gold_travel/admin.py:458 gold_travel/models.py:143
 #: gold_travel/models.py:261 gold_travel_traditional/admin.py:339
-#: gold_travel_traditional/models.py:112 pa/models.py:95 pa/models.py:133
-#: pa/models.py:197 pa/models.py:307 pa/models.py:519 pa/tables/payment.py:34
-#: pa/tables/request.py:53 planning/models.py:333 planning/models.py:436
-#: planning/models.py:459 production_control/models.py:51
-#: production_control/models.py:84 production_control/models.py:134
-#: sswg/models.py:247
+#: gold_travel_traditional/models.py:112 it/models.py:27 pa/models.py:95
+#: pa/models.py:133 pa/models.py:197 pa/models.py:307 pa/models.py:519
+#: pa/tables/payment.py:34 pa/tables/request.py:53 planning/models.py:333
+#: planning/models.py:436 planning/models.py:459
+#: production_control/models.py:51 production_control/models.py:84
+#: production_control/models.py:134 sswg/models.py:247
 msgid "record_state"
 msgstr "الحالة"
 
@@ -3730,6 +3747,7 @@ msgstr "قائمة المهام"
 #: executive_office/templates/admin/executive_office/submit_line.html:5
 #: gold_travel/templates/admin/gold_travel/appmovegold/pagination.html:17
 #: gold_travel_traditional/templates/admin/gold_travel_traditional/appmovegoldtraditional/sold_application.html:19
+#: it/templates/admin/it/developmentrequestform/submit_line.html:5
 #: production_control/templates/admin/production_control/goldproductionform/pagination.html:17
 #: production_control/templates/admin/production_control/submit_line.html:4
 #: sswg/templates/admin/sswg/basicform/submit_line.html:4
@@ -3745,6 +3763,7 @@ msgid "Save & Confirm"
 msgstr "حفظ وتأكيد"
 
 #: executive_office/templates/admin/executive_office/submit_line.html:13
+#: it/templates/admin/it/developmentrequestform/submit_line.html:15
 #: pa/templates/admin/pa/submit_line.html:8
 #: production_control/templates/admin/production_control/submit_line.html:8
 #: sswg/templates/admin/sswg/basicform/submit_line.html:8
@@ -3752,6 +3771,7 @@ msgid "Close"
 msgstr "إغلاق"
 
 #: executive_office/templates/admin/executive_office/submit_line.html:17
+#: it/templates/admin/it/developmentrequestform/submit_line.html:19
 #: pa/templates/admin/pa/submit_line.html:12
 #: production_control/templates/admin/production_control/submit_line.html:12
 #: sswg/templates/admin/sswg/basicform/submit_line.html:12
@@ -3778,20 +3798,9 @@ msgstr "وصل للمواصفات والمقاييس"
 msgid "state_ssmo"
 msgstr "وصلت الاستمارة للمواصفات والمقاييس"
 
-#: gold_travel/admin.py:380 gold_travel/admin.py:389 gold_travel/admin.py:398
-#: gold_travel/admin.py:407 gold_travel/admin.py:659 gold_travel/admin.py:668
-#: gold_travel_traditional/admin.py:200 gold_travel_traditional/admin.py:237
-msgid "application changed successfully!"
-msgstr "تم تعديل الطلب بنجاح."
-
 #: gold_travel/admin.py:382 gold_travel/admin.py:388 gold_travel/models.py:106
 msgid "state_waived"
 msgstr "تم التنازل"
-
-#: gold_travel/admin.py:400 gold_travel/admin.py:406 gold_travel/admin.py:652
-#: gold_travel/admin.py:658
-msgid "return_to_draft"
-msgstr "إرجاع إلى مسودة"
 
 #: gold_travel/admin.py:416 gold_travel/admin.py:446
 #: gold_travel/templates/admin/gold_travel/appmovegold/pagination.html:14
@@ -4632,6 +4641,42 @@ msgstr ""
 msgid "Employee Moahil"
 msgstr ""
 
+#: it/models.py:14
+#, fuzzy
+#| msgid "SSWG State 1"
+msgid "IT State 1"
+msgstr "مسودة"
+
+#: it/models.py:15
+#, fuzzy
+#| msgid "SSWG State 2"
+msgid "IT State 2"
+msgstr "إعتماد سكرتارية النافذة"
+
+#: it/models.py:16
+#, fuzzy
+#| msgid "SSWG State 3"
+msgid "IT State 3"
+msgstr "إعتماد الأمن الاقتصادي"
+
+#: it/models.py:17
+#, fuzzy
+#| msgid "SSWG State 4"
+msgid "IT State 4"
+msgstr "إعتماد الهيئة السودانية للمواصفات والمقاييس"
+
+#: it/models.py:18
+#, fuzzy
+#| msgid "SSWG State 5"
+msgid "IT State 5"
+msgstr "إعتماد الشركة السودانية للموارد المعدنية"
+
+#: it/models.py:79
+#, fuzzy
+#| msgid "Delete request"
+msgid "DevelopmentRequestForm"
+msgstr "حذف سجل مطالبة"
+
 #: mokhalafat/apps.py:7
 msgid "mokhalafat app"
 msgstr "رصد وتحليل المخالفات"
@@ -4790,7 +4835,7 @@ msgstr "الارصدة الافتتاحية"
 msgid "financial item"
 msgstr "البند"
 
-#: pa/models.py:114 pa/models.py:460 pa/models.py:569 pa/models.py:634
+#: pa/models.py:114 pa/models.py:460 pa/models.py:569 pa/models.py:637
 #: planning/models.py:800 revenu_dist/models.py:111 revenu_dist/models.py:149
 #: traditional_api/models.py:57
 msgid "amount"
@@ -4957,27 +5002,27 @@ msgstr "ملف المرفقات"
 msgid "Financial payments"
 msgstr "السداد"
 
-#: pa/models.py:599
+#: pa/models.py:602
 msgid "payment already confirmed!"
 msgstr "لايمكن تعديل مطالبة مؤكدة"
 
-#: pa/models.py:609
+#: pa/models.py:612
 msgid "item not exists in request"
 msgstr "البند غير موجود في المطالبة"
 
-#: pa/models.py:613
+#: pa/models.py:616
 msgid "sum of payments more than request amount: "
 msgstr "مجموع قيم السداد اكبر من قيمة المطالبة"
 
-#: pa/models.py:617
+#: pa/models.py:620
 msgid "payment_method_name"
 msgstr "طريقة السداد"
 
-#: pa/models.py:621 pa/models.py:622 pa/models.py:635
+#: pa/models.py:624 pa/models.py:625 pa/models.py:638
 msgid "Payment method"
 msgstr "طريقة السداد"
 
-#: pa/models.py:636
+#: pa/models.py:639
 msgid "reference_key"
 msgstr "الرقم المرجعي"
 
@@ -5515,6 +5560,10 @@ msgstr "المعادن الاخرى"
 #: planning/models.py:532
 msgid "OtherMineralsTasks"
 msgstr "المعادن الاخرى"
+
+#: planning/models.py:537
+msgid "total_hasila_dollar"
+msgstr "الحصيلة بالدولار"
 
 #: planning/models.py:540
 msgid "ExportGoldTraditionalTask"
@@ -6106,13 +6155,13 @@ msgstr "تفاصيل توزيع الايرادات"
 msgid "Revenu distribution details"
 msgstr "تفاصيل توزيع الايرادات"
 
-#: sswg/admin.py:215
+#: sswg/admin.py:234
 #, fuzzy
 #| msgid "SSWG State 1"
 msgid "SSWG State "
 msgstr "مسودة"
 
-#: sswg/admin.py:250
+#: sswg/admin.py:269 workflow/admin_utils.py:183
 msgid "application not confirmed!"
 msgstr "لم يتم إعتماد الطلب، الرجاء التأكد من اكتمال البيانات."
 
@@ -6252,16 +6301,12 @@ msgid "SSWG MOCSData"
 msgstr "وزارة التجارة والتموين"
 
 #: sswg/models.py:192
-msgid "Cash"
-msgstr "نقدي"
+msgid "دفع مقدم"
+msgstr ""
 
 #: sswg/models.py:193
-msgid "Bank Transfer"
-msgstr "تحويل بنكي"
-
-#: sswg/models.py:194
-msgid "Cheque"
-msgstr "شيك"
+msgid "تحويل انصبة"
+msgstr ""
 
 #: sswg/models.py:197
 msgid "Customer Account Number"
@@ -6468,6 +6513,19 @@ msgstr "تم تسجيل الدخول بنجاح."
 msgid "Record added sucessfully."
 msgstr "تم حفظ السجل بنجاح."
 
+#: workflow/admin_utils.py:209
+msgid "Transition to"
+msgstr ""
+
+#~ msgid "Cash"
+#~ msgstr "نقدي"
+
+#~ msgid "Bank Transfer"
+#~ msgstr "تحويل بنكي"
+
+#~ msgid "Cheque"
+#~ msgstr "شيك"
+
 #~ msgid "Passport"
 #~ msgstr "جواز سفر"
 
@@ -6503,9 +6561,6 @@ msgstr "تم حفظ السجل بنجاح."
 
 #~ msgid "OIL_USED4"
 #~ msgstr "أخرى Other"
-
-#~ msgid "total_dollar"
-#~ msgstr "الحصيلة بالدولار"
 
 #~ msgid "no_alloy"
 #~ msgstr "عدد السبائك"
