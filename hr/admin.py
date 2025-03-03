@@ -400,7 +400,7 @@ class EmployeeBasicAdmin(admin.ModelAdmin):
     autocomplete_fields = ["mosama_wazifi"] #,"hikal_wazifi"
     search_fields = ["name","code"]
     readonly_fields = ["moahil","gasima","atfal","edara_3ama_tmp","edara_far3ia_tmp"]
-    actions = ['export_as_csv']
+    actions = ['export_as_csv','export_as_contacts']
 
     formfield_overrides = {
         models.FloatField: {"widget": TextInput},
@@ -466,6 +466,45 @@ class EmployeeBasicAdmin(admin.ModelAdmin):
                     emp.edara_3ama,emp.edara_far3ia,emp.gisim,emp.wi7da,emp.mosama_wazifi.name,emp.tarikh_milad,emp.tarikh_ta3in,emp.tarikh_akhir_targia,\
                     emp.get_sex_display(),gasima,emp.atfal,emp.get_moahil_display(),emp.m3ash,aadoa,emp.get_no3_2lertibat_display(),\
                     emp.phone,str(emp.email).lower(),emp.sanoat_2lkhibra,bank_name,account_no,emp.get_status_display()
+            ]
+            writer.writerow(row)
+
+        return response
+
+    @admin.action(description=_('Export contact'))
+    def export_as_contacts(self, request, queryset):
+        response = HttpResponse(
+            content_type="text/csv",
+            headers={"Content-Disposition": f'attachment; filename="contacts.csv"'},
+        )
+        header = [
+                    "First Name","E-mail Address","Business Phone","Job Title","Department"
+        ]
+
+        # BOM
+        response.write(codecs.BOM_UTF8)
+
+        writer = csv.writer(response)
+        writer.writerow(header)
+
+        for emp in queryset.order_by("draja_wazifia","alawa_sanawia"):
+            gasima = _('no')
+            if emp.gasima:
+                gasima = _('yes')
+
+            aadoa = _('no')
+            if emp.aadoa:
+                aadoa = _('yes')
+
+            account = emp.employeebankaccount_set.filter(active=True).first()
+            bank_name = ''
+            account_no = ''
+            if account:
+                bank_name = account.get_bank_display()
+                account_no = account.account_no
+
+            row = [
+                    emp.name,str(emp.email).lower(),emp.phone,emp.mosama_wazifi.name,emp.edara_3ama
             ]
             writer.writerow(row)
 
