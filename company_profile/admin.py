@@ -871,7 +871,7 @@ class AppHSEPerformanceReportCadastralOperationsDetailInline(AppHSEInline,admin.
 class AppHSEPerformanceReportCadastralOperations2DetailInline(AppHSEInline,admin.TabularInline):
     model = AppHSEPerformanceReportCadastralOperationsTwo
 
-class AppHSEPerformanceReportAdmin(WorkflowAdminMixin,admin.ModelAdmin):
+class AppHSEPerformanceReportAdmin(admin.ModelAdmin):
     form = AppHSEPerformanceReportAdminForm
     inlines = [
         AppHSEPerformanceReportManPowerDetailInline, 
@@ -900,6 +900,23 @@ class AppHSEPerformanceReportAdmin(WorkflowAdminMixin,admin.ModelAdmin):
     list_filter = ["company", "year", "month",]
     view_on_site = False
 
+    def get_queryset(self, request):
+        qs = super().get_queryset(request) #AppHSEPerformanceReport.objects.all() #
+        filter = []
+        company_types = []
+
+        if request.user.groups.filter(name__in=["hse_accept"]).exists():
+            filter += ["submitted"]
+        if request.user.groups.filter(name__in=["hse_approve"]).exists():
+            filter += ["accepted","approved","rejected"]
+
+        # company_types = [TblCompany.COMPANY_TYPE_ENTAJ, TblCompany.COMPANY_TYPE_MOKHALFAT, TblCompany.COMPANY_TYPE_EMTIAZ, TblCompany.COMPANY_TYPE_SAGEER]
+
+        qs = qs.filter(state__in=filter)
+        # qs = qs.filter(company__company_type__in=company_types)
+
+        return qs
+    
 admin.site.register(AppHSEPerformanceReport, AppHSEPerformanceReportAdmin)
 
 class AppWhomConcernAdmin(WorkflowAdminMixin,admin.ModelAdmin):

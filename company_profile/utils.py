@@ -15,8 +15,8 @@ def get_app_metrics(fields={},filter={},related=[],order=[]):
         AppChangeCompanyName, AppExplorationTime, AppAddArea,AppRemoveArea, AppTnazolShraka, 
         AppTajeelTnazol, AppTajmeed,AppTakhali,AppTamdeed,AppTaaweed,AppMda,AppChangeWorkProcedure, 
         AppExportGold,AppExportGoldRaw,AppSendSamplesForAnalysis,AppForeignerProcedure,AppAifaaJomrki,
-        AppVisibityStudy,AppReexportEquipments,AppRequirementsList,AppWhomConcern,AppHSEAccidentReport, AppHSEPerformanceReport, AppLocalPurchase
-    ]
+        AppVisibityStudy,AppReexportEquipments,AppRequirementsList,AppWhomConcern, AppLocalPurchase
+    ] # ,AppHSEAccidentReport, AppHSEPerformanceReport
 
     profile_show_urls = {
         "appcyanidecertificate":"app_cyanide_certificate_show",
@@ -47,8 +47,8 @@ def get_app_metrics(fields={},filter={},related=[],order=[]):
         "appreexportequipments":"app_reexport_equipments_show",
         "apprequirementslist":"app_requirements_list_show",
         "appwhomconcern":"app_whom_concern_show",
-        "apphseaccidentreport":"app_hse_accident_show",
-        "apphseperformancereport":"app_hse_performance_show",
+        # "apphseaccidentreport":"app_hse_accident_show",
+        # "apphseperformancereport":"app_hse_performance_show",
         "applocalpurchase":"app_local_purchase_show",
     }
 
