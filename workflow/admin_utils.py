@@ -25,6 +25,15 @@ def view_model_states(inline_val={},user_groups=[],check_permission=['view']):
     
 def get_inline_mixin(inline_class):
     class InlineMixin:
+        def has_add_permission(self, request,kwargs):
+            user_groups = list(request.user.groups.values_list('name', flat=True))       
+            states = view_model_states(inline_class,user_groups,['add'])
+
+            if len(states) > 0:
+                return True
+            
+            return False
+        
         def has_change_permission(self, request, obj=None):
             user_groups = list(request.user.groups.values_list('name', flat=True))       
             states = view_model_states(inline_class,user_groups,['change'])

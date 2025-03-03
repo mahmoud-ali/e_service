@@ -27,12 +27,15 @@ class LogMixin:
             instance.save()
         formset.save_m2m()
 
-    # def has_delete_permission(self, request, obj=None):        
-    #     return False
+class ReadonlyMixin:
+    def get_readonly_fields(self, request, obj=None):
+        if obj and obj.state  > self.model.STATE_CONFIRMED:
+            return ['date','name','department','responsible','requirements_description','product_description']
+        return []
 
 ####global run##########
 
-main_mixins = [LogMixin]
+main_mixins = [LogMixin,ReadonlyMixin]
 models = import_module('it.models')
 DevelopmentRequestForm = models.__getattribute__('DevelopmentRequestForm')
 main_class = {
@@ -51,33 +54,141 @@ main_class = {
                 DevelopmentRequestForm.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
                 DevelopmentRequestForm.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 DevelopmentRequestForm.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                DevelopmentRequestForm.STATE_IT_MANAGER_STUDING_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                DevelopmentRequestForm.STATE_IT_MANAGER_STUDING_REJECTION: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 DevelopmentRequestForm.STATE_IT_MANAGER_RECOMMENDATION: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                DevelopmentRequestForm.STATE_PQI_MANAGER_CHANGE_REQUEST: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 DevelopmentRequestForm.STATE_PQI_MANAGER_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
             },
-        }
+        },
+
+        'general_manager':{
+            'permissions': {
+                # DevelopmentRequestForm.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
+                DevelopmentRequestForm.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                DevelopmentRequestForm.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                DevelopmentRequestForm.STATE_IT_MANAGER_STUDING_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                DevelopmentRequestForm.STATE_IT_MANAGER_STUDING_REJECTION: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                DevelopmentRequestForm.STATE_IT_MANAGER_RECOMMENDATION: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                DevelopmentRequestForm.STATE_PQI_MANAGER_CHANGE_REQUEST: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                DevelopmentRequestForm.STATE_PQI_MANAGER_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+            },
+        },
+
+        'it_manager':{
+            'permissions': {
+                # DevelopmentRequestForm.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
+                # DevelopmentRequestForm.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                DevelopmentRequestForm.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                DevelopmentRequestForm.STATE_IT_MANAGER_STUDING_APPROVAL: {'add': 0, 'change': 1, 'delete': 0, 'view': 1},
+                DevelopmentRequestForm.STATE_IT_MANAGER_STUDING_REJECTION: {'add': 0, 'change': 1, 'delete': 0, 'view': 1},
+                DevelopmentRequestForm.STATE_IT_MANAGER_RECOMMENDATION: {'add': 0, 'change': 1, 'delete': 0, 'view': 1},
+                DevelopmentRequestForm.STATE_PQI_MANAGER_CHANGE_REQUEST: {'add': 0, 'change': 1, 'delete': 0, 'view': 1},
+                DevelopmentRequestForm.STATE_PQI_MANAGER_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+            },
+        },
+
+        'pqi_manager':{
+            'permissions': {
+                # DevelopmentRequestForm.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
+                # DevelopmentRequestForm.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                # DevelopmentRequestForm.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                # DevelopmentRequestForm.STATE_IT_MANAGER_STUDING_APPROVAL: {'add': 0, 'change': 1, 'delete': 0, 'view': 1},
+                # DevelopmentRequestForm.STATE_IT_MANAGER_STUDING_REJECTION: {'add': 0, 'change': 1, 'delete': 0, 'view': 1},
+                DevelopmentRequestForm.STATE_IT_MANAGER_RECOMMENDATION: {'add': 0, 'change': 1, 'delete': 0, 'view': 1},
+                DevelopmentRequestForm.STATE_PQI_MANAGER_CHANGE_REQUEST: {'add': 0, 'change': 1, 'delete': 0, 'view': 1},
+                DevelopmentRequestForm.STATE_PQI_MANAGER_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+            },
+        },
 
     },
 }
 inline_mixins = [LogMixin]
 ItRecommendationForm = models.__getattribute__('ItRecommendationForm')
+ItRejectionForm = models.__getattribute__('ItRejectionForm')
 
 inline_classes = {
     'ItRecommendationForm': {
         'model': ItRecommendationForm,
-        'mixins': [admin.TabularInline],
+        'mixins': [admin.StackedInline],
         'kwargs': {
             'extra': 1,
         },
         'groups': {
             'department_manager':{
                 'permissions': {
-                    DevelopmentRequestForm.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 0},
-                    DevelopmentRequestForm.STATE_CONFIRMED: {'add': 1, 'change': 1, 'delete': 0, 'view': 1},
-                    DevelopmentRequestForm.STATE_APPROVED: {'add': 0, 'change': 1, 'delete': 0, 'view': 1},
+                    DevelopmentRequestForm.STATE_IT_MANAGER_STUDING_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     DevelopmentRequestForm.STATE_IT_MANAGER_RECOMMENDATION: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    DevelopmentRequestForm.STATE_PQI_MANAGER_CHANGE_REQUEST: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     DevelopmentRequestForm.STATE_PQI_MANAGER_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
-            }
+            },
+            'general_manager':{
+                'permissions': {
+                    DevelopmentRequestForm.STATE_IT_MANAGER_STUDING_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    DevelopmentRequestForm.STATE_IT_MANAGER_RECOMMENDATION: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    DevelopmentRequestForm.STATE_PQI_MANAGER_CHANGE_REQUEST: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    DevelopmentRequestForm.STATE_PQI_MANAGER_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
+            'it_manager':{
+                'permissions': {
+                    DevelopmentRequestForm.STATE_IT_MANAGER_STUDING_APPROVAL: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
+                    DevelopmentRequestForm.STATE_IT_MANAGER_RECOMMENDATION: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    DevelopmentRequestForm.STATE_PQI_MANAGER_CHANGE_REQUEST: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    DevelopmentRequestForm.STATE_PQI_MANAGER_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
+            'pqi_manager':{
+                'permissions': {
+                    DevelopmentRequestForm.STATE_IT_MANAGER_STUDING_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    DevelopmentRequestForm.STATE_IT_MANAGER_RECOMMENDATION: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    DevelopmentRequestForm.STATE_PQI_MANAGER_CHANGE_REQUEST: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    DevelopmentRequestForm.STATE_PQI_MANAGER_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
+
+        },
+    },
+    'ItRejectionForm': {
+        'model': ItRejectionForm,
+        'mixins': [admin.StackedInline],
+        'kwargs': {
+            'extra': 1,
+        },
+        'groups': {
+            'department_manager':{
+                'permissions': {
+                    DevelopmentRequestForm.STATE_IT_MANAGER_STUDING_REJECTION: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    DevelopmentRequestForm.STATE_IT_MANAGER_RECOMMENDATION: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    DevelopmentRequestForm.STATE_PQI_MANAGER_CHANGE_REQUEST: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    DevelopmentRequestForm.STATE_PQI_MANAGER_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
+            'general_manager':{
+                'permissions': {
+                    DevelopmentRequestForm.STATE_IT_MANAGER_STUDING_REJECTION: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    DevelopmentRequestForm.STATE_IT_MANAGER_RECOMMENDATION: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    DevelopmentRequestForm.STATE_PQI_MANAGER_CHANGE_REQUEST: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    DevelopmentRequestForm.STATE_PQI_MANAGER_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
+            'it_manager':{
+                'permissions': {
+                    DevelopmentRequestForm.STATE_IT_MANAGER_STUDING_REJECTION: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
+                    DevelopmentRequestForm.STATE_IT_MANAGER_RECOMMENDATION: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    DevelopmentRequestForm.STATE_PQI_MANAGER_CHANGE_REQUEST: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    DevelopmentRequestForm.STATE_PQI_MANAGER_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
+            'pqi_manager':{
+                'permissions': {
+                    DevelopmentRequestForm.STATE_IT_MANAGER_STUDING_REJECTION: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    DevelopmentRequestForm.STATE_IT_MANAGER_RECOMMENDATION: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    DevelopmentRequestForm.STATE_PQI_MANAGER_CHANGE_REQUEST: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    DevelopmentRequestForm.STATE_PQI_MANAGER_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
 
         },
     },

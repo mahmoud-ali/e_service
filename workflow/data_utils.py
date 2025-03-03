@@ -48,7 +48,8 @@ def create_model_groups(app,model_name,model_attrs):
     #         permission = Permission.objects.get(codename=perm_type+'_'+model_name, content_type=content_type)
     #         group.permissions.add(permission)
 
-    for group,group_dict in model_attrs.get("groups").items():
+    for group_name,group_dict in model_attrs.get("groups").items():
+        group, created = Group.objects.get_or_create(name=group_name)
         state_permissions = group_dict.get("permissions",{})
         user_perm = {'add': 0, 'change': 0, 'delete': 0, 'view': 0}
         for _,permissions in state_permissions.items():
