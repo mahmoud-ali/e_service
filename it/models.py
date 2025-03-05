@@ -28,12 +28,12 @@ class DevelopmentRequestForm(WorkFlowModel):
         STATE_FINAL_REJECTION:_("IT_STATE_FINAL_REJECTION"),
     }
 
-    date = models.DateField()
-    name = models.CharField(max_length=255)
-    department = models.CharField(max_length=255)
-    responsible = models.CharField(max_length=255)
-    requirements_description = models.TextField()
-    product_description = models.TextField()
+    date = models.DateField(_("date"))
+    name = models.CharField(_("name"), max_length=255)
+    department = models.CharField(_("department"), max_length=255)
+    responsible = models.CharField(_("responsible"), max_length=255)
+    requirements_description = models.TextField(_("requirements_description"))
+    product_description = models.TextField(_("product_description"))
     state = models.IntegerField(_("record_state"), choices=STATE_CHOICES.items(), default=STATE_DRAFT)
 
     class Meta:
@@ -117,7 +117,11 @@ class ItRecommendationForm(LoggingModel):
         validators=[MinValueValidator(1), MaxValueValidator(10)],
         help_text="A small integer between 1 and 10"
     )
-    recommendation = models.TextField()
+    recommendation = models.TextField(_("recommendation"))
+
+    class Meta:
+        verbose_name = _("ItRecommendationForm") 
+        verbose_name_plural = _("ItRecommendationForms") 
 
 class ItRejectionForm(LoggingModel):
     form = models.OneToOneField(
@@ -127,7 +131,7 @@ class ItRejectionForm(LoggingModel):
         verbose_name=_("DevelopmentRequestForm"),
     )
 
-    reason = models.TextField()
+    reason = models.TextField(_("reason"))
 
     class Meta:
         verbose_name = _("ItRejectionForm")
