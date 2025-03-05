@@ -9,6 +9,7 @@ from django.contrib.admin.utils import (
 from django.contrib.admin import helpers
 from django.contrib.admin.options import TO_FIELD_VAR
 # from it.models import ItRecommendationForm
+from it.models import ITService, ITServiceModification, ITServiceOperation, ITServiceResponsibility, ITServiceSLAAgreement, ITServiceScope
 from workflow.admin_utils import create_main_form
 
 class LogMixin:
@@ -33,7 +34,7 @@ class ReadonlyMixin:
             return ['date','name','department','responsible','requirements_description','product_description']
         return []
 
-####global run##########
+#######DevelopmentRequestForm##########
 
 main_mixins = [LogMixin,ReadonlyMixin]
 models = import_module('it.models')
@@ -187,6 +188,170 @@ inline_classes = {
                     DevelopmentRequestForm.STATE_IT_MANAGER_RECOMMENDATION: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     DevelopmentRequestForm.STATE_PQI_MANAGER_CHANGE_REQUEST: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     DevelopmentRequestForm.STATE_PQI_MANAGER_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
+
+        },
+    },
+
+}
+
+# inline_classes = {}
+
+model_admin, inlines = create_main_form(main_class,inline_classes,main_mixins)
+
+admin.site.register(model_admin.model,model_admin)
+
+
+#######ITService##########
+
+main_mixins = [LogMixin]
+main_class = {
+    'model': ITService,
+    'mixins': [],
+    'kwargs': {
+        # 'list_display': ('date', 'department','responsible'),
+        # 'search_fields': ('department','responsible'),
+        # 'list_filter': ('date', 'department', 'responsible'),
+        'exclude': ('state',),
+        'save_as_continue': False,
+    },
+    'groups': {
+        'it_manager':{
+            'permissions': {
+                ITService.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
+                ITService.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                ITService.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+            },
+        },
+
+        'pqi_manager':{
+            'permissions': {
+                DevelopmentRequestForm.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                DevelopmentRequestForm.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+            },
+        },
+
+    },
+}
+inline_mixins = [LogMixin]
+
+inline_classes = {
+    'ITServiceScope': {
+        'model': ITServiceScope,
+        'mixins': [admin.StackedInline],
+        'kwargs': {
+            'extra': 1,
+        },
+        'groups': {
+            'it_manager':{
+                'permissions': {
+                    ITService.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
+                    ITService.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    ITService.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
+            'pqi_manager':{
+                'permissions': {
+                    ITService.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
+                    ITService.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    ITService.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
+
+        },
+    },
+    'ITServiceOperation': {
+        'model': ITServiceOperation,
+        'mixins': [admin.StackedInline],
+        'kwargs': {
+            'extra': 1,
+        },
+        'groups': {
+            'it_manager':{
+                'permissions': {
+                    ITService.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
+                    ITService.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    ITService.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
+            'pqi_manager':{
+                'permissions': {
+                    ITService.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
+                    ITService.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    ITService.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
+
+        },
+    },
+    'ITServiceSLAAgreement': {
+        'model': ITServiceSLAAgreement,
+        'mixins': [admin.StackedInline],
+        'kwargs': {
+            'extra': 1,
+        },
+        'groups': {
+            'it_manager':{
+                'permissions': {
+                    ITService.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
+                    ITService.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    ITService.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
+            'pqi_manager':{
+                'permissions': {
+                    ITService.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
+                    ITService.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    ITService.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
+
+        },
+    },
+    'ITServiceResponsibility': {
+        'model': ITServiceResponsibility,
+        'mixins': [admin.StackedInline],
+        'kwargs': {
+            'extra': 1,
+        },
+        'groups': {
+            'it_manager':{
+                'permissions': {
+                    ITService.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
+                    ITService.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    ITService.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
+            'pqi_manager':{
+                'permissions': {
+                    ITService.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
+                    ITService.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    ITService.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
+
+        },
+    },
+    'ITServiceModification': {
+        'model': ITServiceModification,
+        'mixins': [admin.StackedInline],
+        'kwargs': {
+            'extra': 1,
+        },
+        'groups': {
+            'it_manager':{
+                'permissions': {
+                    ITService.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
+                    ITService.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    ITService.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
+            'pqi_manager':{
+                'permissions': {
+                    ITService.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
+                    ITService.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    ITService.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
 
