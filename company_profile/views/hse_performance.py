@@ -20,7 +20,7 @@ from ..tables import AppHSEPerformanceReportTable
 
 from .application import ApplicationListView
 
-model_details_lst = [
+model_details_lst = (
     AppHSEPerformanceReportManPower,
     AppHSEPerformanceReportFireFighting,
     AppHSEPerformanceReportWorkEnvironment,
@@ -37,8 +37,16 @@ model_details_lst = [
     AppHSEPerformanceReportDiseasesForWorkers,
     AppHSEPerformanceReportStatisticalData,
     AppHSEPerformanceReportCatering,
+)
 
-]
+explosive = (
+    AppHSEPerformanceReportExplosivesUsed,
+    AppHSEPerformanceReportExplosivesUsedSpecification,
+    AppHSEPerformanceReportBillsOfQuantities,
+    AppHSEPerformanceReportCadastralOperations,
+    AppHSEPerformanceReportCadastralOperationsTwo,
+)    
+
 
 class AppHSEPerformanceReportListView(ApplicationListView):
     model = AppHSEPerformanceReport
@@ -67,18 +75,10 @@ class AppHSEPerformanceReportCreateView(LoginRequiredMixin,View):
     title = _("Add new HSE Performance Report")
     template_name = "company_profile/views/hse_list_add_master_details.html"
 
-    def dispatch(self, *args, **kwargs):   
-        explosive = [
-                    AppHSEPerformanceReportExplosivesUsed,
-                    AppHSEPerformanceReportExplosivesUsedSpecification,
-                    AppHSEPerformanceReportBillsOfQuantities,
-                    AppHSEPerformanceReportCadastralOperations,
-                    AppHSEPerformanceReportCadastralOperationsTwo,
-                ]      
-        
+    def dispatch(self, *args, **kwargs):           
         if self.request.user.pro_company.company.company_type in [TblCompany.COMPANY_TYPE_ENTAJ, TblCompany.COMPANY_TYPE_SAGEER, TblCompany.COMPANY_TYPE_EMTIAZ]:
             if explosive[0] not in self.model_details:
-                self.model_details += explosive
+                self.model_details = self.model_details + explosive
 
         self.detail_formset = [inlineformset_factory(self.model, m, exclude=[],extra=0,can_delete=False,min_num=1, validate_min=True) for m in self.model_details]
             
@@ -135,6 +135,10 @@ class AppHSEPerformanceReportReadonlyView(LoginRequiredMixin,DetailView):
     template_name = "company_profile/views/requirements_list_readonly_master_details.html"
 
     def dispatch(self, *args, **kwargs):
+        if self.request.user.pro_company.company.company_type in [TblCompany.COMPANY_TYPE_ENTAJ, TblCompany.COMPANY_TYPE_SAGEER, TblCompany.COMPANY_TYPE_EMTIAZ]:
+            if explosive[0] not in self.model_details:
+                self.model_details = self.model_details + explosive
+
         self.detail_formset = [inlineformset_factory(self.model, m, exclude=[],extra=0,can_delete=False,min_num=1, validate_min=True) for m in self.model_details]
             
         self.success_url = reverse_lazy(self.menu_name)    
