@@ -376,7 +376,7 @@ admin.site.register(AppDabtiaat, AppDabtiaatAdmin)
 class RevenueSettlementAdmin(LogAdminMixin,admin.ModelAdmin):
     model = RevenueSettlement
     exclude = ["created_at","created_by","updated_at","updated_by","state","source_state"]
-    # list_display = ["date","gold_weight_in_gram","gold_price","koli_amount","state","source_state","al3wayid_aljalila_amount","alhafiz_amount","alniyaba_amount","smrc_amount","state_amount","police_amount","amn_amount","riasat_alquat_aldaabita_amount","alquat_aldaabita_amount"]        
+    list_display = ["date","settlement_type","amount"]        
     list_filter = [("date",DateFieldListFilterWithLast30days),("state",ChoicesFieldListFilterNotEmpty),("source_state",RelatedOnlyFieldListFilterNotEmpty)]
 
 admin.site.register(SettlementType)
