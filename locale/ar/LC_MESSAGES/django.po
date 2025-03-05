@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-05 13:35+0200\n"
+"POT-Creation-Date: 2025-03-05 14:42+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -211,7 +211,8 @@ msgid "license_type"
 msgstr "النوع"
 
 #: company_profile/admin.py:364 company_profile/models.py:252
-#: executive_office/models.py:84 pa/templates/pa/company_panel.html:23
+#: executive_office/models.py:84 it/models.py:162
+#: pa/templates/pa/company_panel.html:23
 msgid "start_date"
 msgstr "تاريح البداية"
 
@@ -323,8 +324,8 @@ msgstr "ديسمبر"
 #: dabtiaat_altaedin/models.py:12 executive_office/models.py:27
 #: gold_travel/models.py:12 gold_travel_traditional/admin.py:340
 #: gold_travel_traditional/models.py:8 help_request/models.py:11
-#: hr_portal/models.py:89 mokhalafat/models.py:6 pa/models.py:46
-#: planning/models.py:183 production_control/models.py:13
+#: hr_portal/models.py:89 hse_traditional/models.py:10 mokhalafat/models.py:6
+#: pa/models.py:46 planning/models.py:183 production_control/models.py:13
 #: revenu_dist/models.py:53 sswg/models.py:13 traditional_api/models.py:10
 #: workflow/model_utils.py:9 workflow/model_utils.py:71
 msgid "created_at"
@@ -333,8 +334,9 @@ msgstr "تاريخ الانشاء"
 #: company_profile/models.py:46 dabtiaat_altaedin/models.py:13
 #: executive_office/models.py:28 gold_travel/models.py:13
 #: gold_travel_traditional/admin.py:340 gold_travel_traditional/models.py:9
-#: help_request/models.py:13 hr_portal/models.py:90 mokhalafat/models.py:7
-#: pa/models.py:47 planning/models.py:184 production_control/models.py:14
+#: help_request/models.py:13 hr_portal/models.py:90
+#: hse_traditional/models.py:11 mokhalafat/models.py:7 pa/models.py:47
+#: planning/models.py:184 production_control/models.py:14
 #: revenu_dist/models.py:54 sswg/models.py:14 traditional_api/models.py:11
 #: workflow/model_utils.py:10 workflow/model_utils.py:72
 msgid "created_by"
@@ -347,8 +349,8 @@ msgstr "المستخدم المسئول عن الانشاء"
 #: dabtiaat_altaedin/models.py:15 executive_office/models.py:30
 #: gold_travel/models.py:15 gold_travel_traditional/admin.py:340
 #: gold_travel_traditional/models.py:11 help_request/models.py:12
-#: hr_portal/models.py:92 mokhalafat/models.py:9 pa/models.py:49
-#: planning/models.py:185 production_control/models.py:16
+#: hr_portal/models.py:92 hse_traditional/models.py:13 mokhalafat/models.py:9
+#: pa/models.py:49 planning/models.py:185 production_control/models.py:16
 #: revenu_dist/models.py:56 sswg/models.py:16 traditional_api/models.py:13
 #: workflow/model_utils.py:12 workflow/model_utils.py:74
 msgid "updated_at"
@@ -357,8 +359,9 @@ msgstr "تاريخ اخر تعديل"
 #: company_profile/models.py:49 dabtiaat_altaedin/models.py:16
 #: executive_office/models.py:31 gold_travel/models.py:16
 #: gold_travel_traditional/admin.py:340 gold_travel_traditional/models.py:12
-#: help_request/models.py:14 hr_portal/models.py:93 mokhalafat/models.py:10
-#: pa/models.py:50 planning/models.py:186 production_control/models.py:17
+#: help_request/models.py:14 hr_portal/models.py:93
+#: hse_traditional/models.py:14 mokhalafat/models.py:10 pa/models.py:50
+#: planning/models.py:186 production_control/models.py:17
 #: revenu_dist/models.py:57 sswg/models.py:17 traditional_api/models.py:14
 #: workflow/model_utils.py:13 workflow/model_utils.py:75
 msgid "updated_by"
@@ -386,8 +389,8 @@ msgstr ""
 #: executive_office/models.py:71 gold_travel/models.py:49
 #: gold_travel/models.py:65 gold_travel_traditional/models.py:19
 #: gold_travel_traditional/models.py:30 gold_travel_traditional/models.py:41
-#: hr_portal/models.py:405 it/models.py:32 planning/models.py:201
-#: planning/models.py:224 planning/models.py:251
+#: hr_portal/models.py:405 it/models.py:32 it/models.py:161
+#: planning/models.py:201 planning/models.py:224 planning/models.py:251
 #: production_control/models.py:28 production_control/models.py:29
 #: revenu_dist/models.py:63 revenu_dist/models.py:73 revenu_dist/models.py:96
 #: traditional_api/models.py:20 traditional_api/models.py:31
@@ -1551,6 +1554,7 @@ msgid "item"
 msgstr "البند"
 
 #: company_profile/models.py:890 company_profile/models.py:1292
+#: it/models.py:164 it/models.py:182 it/models.py:199
 msgid "description"
 msgstr "الوصف"
 
@@ -3513,8 +3517,8 @@ msgstr "المبلغ الكلي"
 #: executive_office/models.py:149 gold_travel/admin.py:417
 #: gold_travel/admin.py:458 gold_travel/models.py:143 gold_travel/models.py:261
 #: gold_travel_traditional/admin.py:339 gold_travel_traditional/models.py:112
-#: it/models.py:37 pa/models.py:95 pa/models.py:133 pa/models.py:197
-#: pa/models.py:307 pa/models.py:519 pa/tables/payment.py:34
+#: it/models.py:37 it/models.py:165 pa/models.py:95 pa/models.py:133
+#: pa/models.py:197 pa/models.py:307 pa/models.py:519 pa/tables/payment.py:34
 #: pa/tables/request.py:53 planning/models.py:333 planning/models.py:436
 #: planning/models.py:459 production_control/models.py:51
 #: production_control/models.py:84 production_control/models.py:134
@@ -3611,10 +3615,8 @@ msgid "Report number"
 msgstr "رقم البلاغ"
 
 #: dabtiaat_altaedin/models.py:92
-#, fuzzy
-#| msgid "gold_travel_user"
 msgid "gold_caliber"
-msgstr "مستخدم نظام نقل الذهب (تقليدي)"
+msgstr "العيار"
 
 #: dabtiaat_altaedin/models.py:155 dabtiaat_altaedin/models.py:156
 msgid "dabtiaat app"
@@ -4609,7 +4611,7 @@ msgstr ""
 msgid "account_no"
 msgstr "حسابات المستخدمين"
 
-#: hr_portal/models.py:372
+#: hr_portal/models.py:372 it/models.py:158
 msgid "active"
 msgstr ""
 
@@ -4721,7 +4723,7 @@ msgstr "رفض نهائي"
 msgid "department"
 msgstr "إدارة"
 
-#: it/models.py:34 planning/models.py:250
+#: it/models.py:34 it/models.py:237 planning/models.py:250
 msgid "responsible"
 msgstr "المسئول عن التنفيذ"
 
@@ -4772,6 +4774,131 @@ msgstr "رفض مدير تقنية المعلومات"
 #: it/models.py:138
 msgid "ItRejectionForms"
 msgstr "رفض مدير تقنية المعلومات"
+
+#: it/models.py:147 pa/models.py:33
+msgid "draft"
+msgstr "مسودة"
+
+#: it/models.py:148
+#, fuzzy
+#| msgid "confirm"
+msgid "confirmed"
+msgstr "مؤكد"
+
+#: it/models.py:159
+msgid "inactive"
+msgstr ""
+
+#: it/models.py:163
+#, fuzzy
+#| msgid "source_state"
+msgid "service_status"
+msgstr "الولاية المصدر"
+
+#: it/models.py:168 it/models.py:179 it/models.py:196 it/models.py:213
+#: it/models.py:234
+msgid "IT Service"
+msgstr ""
+
+#: it/models.py:169
+#, fuzzy
+#| msgid "E-Services App"
+msgid "IT Services"
+msgstr "بوابة الخدمات الإلكترونية"
+
+#: it/models.py:185
+#, fuzzy
+#| msgid "E-Services App"
+msgid "IT Service Scope"
+msgstr "بوابة الخدمات الإلكترونية"
+
+#: it/models.py:186
+msgid "IT Service Scopes"
+msgstr ""
+
+#: it/models.py:202
+msgid "IT Service Operation"
+msgstr ""
+
+#: it/models.py:203
+msgid "IT Service Operations"
+msgstr ""
+
+#: it/models.py:216
+msgid "اسم الاتفاقية"
+msgstr ""
+
+#: it/models.py:218
+msgid "مستوى التوفر"
+msgstr ""
+
+#: it/models.py:223
+msgid "زمن الاستجابة العاجلة (ساعة)"
+msgstr ""
+
+#: it/models.py:226
+msgid "زمن حل المشكلات الحرجة (ساعات)"
+msgstr ""
+
+#: it/models.py:236
+#, fuzzy
+#| msgid "owner data"
+msgid "owner"
+msgstr "بيانات المالك"
+
+#: it/models.py:238
+#, fuzzy
+#| msgid "Passport"
+msgid "support"
+msgstr "جواز سفر"
+
+#: it/models.py:241
+#, fuzzy
+#| msgid "Social responsibility"
+msgid "Responsibility"
+msgstr "مسئولية مجتمعية (مخلفات)"
+
+#: it/models.py:242
+#, fuzzy
+#| msgid "responsible"
+msgid "Responsibilities"
+msgstr "المسئول عن التنفيذ"
+
+#: it/models.py:249
+msgid "تحديث"
+msgstr ""
+
+#: it/models.py:250
+msgid "إصلاح"
+msgstr ""
+
+#: it/models.py:251
+msgid "صيانة"
+msgstr ""
+
+#: it/models.py:252
+msgid "أخرى"
+msgstr ""
+
+#: it/models.py:254
+msgid "وصف التعديل"
+msgstr ""
+
+#: it/models.py:256
+msgid "نوع الحدث"
+msgstr ""
+
+#: it/models.py:261
+msgid "تاريخ التعديل"
+msgstr ""
+
+#: it/models.py:264
+msgid "تعديل"
+msgstr ""
+
+#: it/models.py:265
+msgid "التعديلات"
+msgstr ""
 
 #: mokhalafat/apps.py:7
 msgid "mokhalafat app"
@@ -4877,10 +5004,6 @@ msgstr "يورو"
 #: pa/models.py:26 revenu_dist/models.py:45
 msgid "dollar"
 msgstr "دولار"
-
-#: pa/models.py:33
-msgid "draft"
-msgstr "مسودة"
 
 #: pa/models.py:34
 msgid "confirm"
@@ -6636,9 +6759,6 @@ msgstr ""
 
 #~ msgid "Cheque"
 #~ msgstr "شيك"
-
-#~ msgid "Passport"
-#~ msgstr "جواز سفر"
 
 #~ msgid "National ID"
 #~ msgstr "بطاقة وطنية"
