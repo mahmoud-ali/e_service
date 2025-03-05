@@ -89,6 +89,7 @@ class AppDabtiaat(LoggingModel):
     report_number = models.CharField(_("Report number"), max_length=20)
     gold_weight_in_gram = models.FloatField(_("gold_weight_in_gram"))
     gold_price = models.FloatField(_("gold_price"))
+    gold_caliber = models.FloatField(_("gold_caliber"))
     state = models.IntegerField(_("record_state"), choices=STATE_CHOICES, default=STATE_DRAFT)
     attachement_file = models.FileField(_("attachement_file"),upload_to=attachement_path,null=True,blank=True)
     source_state = models.ForeignKey(LkpState, on_delete=models.PROTECT,verbose_name=_("state"))
@@ -153,3 +154,37 @@ class AppDabtiaat(LoggingModel):
         ordering = ["-date","-id"]
         verbose_name = _("dabtiaat app")
         verbose_name_plural = _("dabtiaat app")
+
+class SettlementType(models.Model):
+    name = models.CharField(_("name"),max_length=100)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = _("settlement type")
+        verbose_name_plural = _("settlement types")
+
+class RevenueSettlement(LoggingModel):
+    STATE_DRAFT = 1
+    STATE_CONFIRMED = 2
+
+    STATE_CHOICES = {
+        STATE_DRAFT: _('state_draft'),
+        STATE_CONFIRMED: _('state_smrc'),
+
+    }
+
+    settlement_type = models.ForeignKey(SettlementType, on_delete=models.PROTECT,verbose_name=_("settlement_type"))
+    date = models.DateField(_("date"))
+    amount = models.FloatField(_("amount"))
+    source_state = models.ForeignKey(LkpState, on_delete=models.PROTECT,verbose_name=_("state"))
+    state = models.IntegerField(_("record_state"), choices=STATE_CHOICES, default=STATE_DRAFT)
+
+    def __str__(self):
+        return f"{self.settlement_type.name} ({self.date})"
+
+    class Meta:
+        ordering = ["-date",]
+        verbose_name = _("Revenue Settlement")
+        verbose_name_plural = _("Revenue Settlement")

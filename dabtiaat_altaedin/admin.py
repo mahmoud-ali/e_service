@@ -10,9 +10,37 @@ from django.utils.html import format_html
 from django.db import models
 from django.forms.widgets import TextInput
 from dabtiaat_altaedin.forms import TblStateRepresentativeForm
-from dabtiaat_altaedin.models import AppDabtiaat, TblStateRepresentative2
+from dabtiaat_altaedin.models import AppDabtiaat, RevenueSettlement, SettlementType, TblStateRepresentative2
 
 class LogAdminMixin:
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        qs = qs.prefetch_related('source_state')
+
+        if request.user.is_superuser or request.user.groups.filter(name__in=["dabtiaat_altaedin_manager"]).exists():
+            return qs
+
+        try:
+            state_representative = request.user.state_representative2
+            qs = qs.filter(source_state=state_representative.state)
+        except:
+            qs = qs.none()
+
+        return qs
+
+    def save_model(self, request, obj, form, change):
+        try:
+            state_representative = request.user.state_representative2
+            obj.source_state = state_representative.state
+
+            if obj.pk:
+                obj.updated_by = request.user
+            else:
+                obj.created_by = obj.updated_by = request.user
+            super().save_model(request, obj, form, change)                
+        except:
+            pass
+
     def has_add_permission(self, request):
         try:
             if request.user.state_representative2.authority==TblStateRepresentative2.AUTHORITY_SMRC:
@@ -42,12 +70,12 @@ class LogAdminMixin:
      
         return False
 
-    def save_model(self, request, obj, form, change):
-        if obj.pk:
-            obj.updated_by = request.user
-        else:
-            obj.created_by = obj.updated_by = request.user
-        super().save_model(request, obj, form, change)                
+    # def save_model(self, request, obj, form, change):
+    #     if obj.pk:
+    #         obj.updated_by = request.user
+    #     else:
+    #         obj.created_by = obj.updated_by = request.user
+    #     super().save_model(request, obj, form, change)                
 
 class TblStateRepresentativeAdmin(admin.ModelAdmin):
     model = TblStateRepresentative2
@@ -231,35 +259,6 @@ class AppDabtiaatAdmin(LogAdminMixin,admin.ModelAdmin):
         models.FloatField: {"widget": TextInput},
     }    
 
-    def get_queryset(self, request):
-        qs = super().get_queryset(request)
-        print(qs.model)
-        qs = qs.prefetch_related('source_state')
-
-        if request.user.is_superuser or request.user.groups.filter(name__in=["dabtiaat_altaedin_manager"]).exists():
-            return qs
-
-        try:
-            state_representative = request.user.state_representative2
-            qs = qs.filter(source_state=state_representative.state)
-        except:
-            qs = qs.none()
-
-        return qs
-
-    def save_model(self, request, obj, form, change):
-        try:
-            state_representative = request.user.state_representative2
-            obj.source_state = state_representative.state
-        except Exception as e:
-            pass
-
-        if obj.pk:
-            obj.updated_by = request.user
-        else:
-            obj.created_by = obj.updated_by = request.user
-        super().save_model(request, obj, form, change)                
-
     @admin.action(description=_('Confirm application'))
     def confirm_app(self, request, queryset):
         try:
@@ -372,3 +371,13 @@ class AppDabtiaatAdmin(LogAdminMixin,admin.ModelAdmin):
         return f'{round(obj.alquat_aldaabita_amount):,}'
 
 admin.site.register(AppDabtiaat, AppDabtiaatAdmin)
+
+
+class RevenueSettlementAdmin(LogAdminMixin,admin.ModelAdmin):
+    model = RevenueSettlement
+    exclude = ["created_at","created_by","updated_at","updated_by","state","source_state"]
+    # list_display = ["date","gold_weight_in_gram","gold_price","koli_amount","state","source_state","al3wayid_aljalila_amount","alhafiz_amount","alniyaba_amount","smrc_amount","state_amount","police_amount","amn_amount","riasat_alquat_aldaabita_amount","alquat_aldaabita_amount"]        
+    list_filter = [("date",DateFieldListFilterWithLast30days),("state",ChoicesFieldListFilterNotEmpty),("source_state",RelatedOnlyFieldListFilterNotEmpty)]
+
+admin.site.register(SettlementType)
+admin.site.register(RevenueSettlement, RevenueSettlementAdmin)
