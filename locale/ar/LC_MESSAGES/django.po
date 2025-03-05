@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-03 14:22+0200\n"
+"POT-Creation-Date: 2025-03-04 10:31+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -385,7 +385,7 @@ msgstr ""
 #: executive_office/models.py:48 executive_office/models.py:71
 #: gold_travel/models.py:49 gold_travel/models.py:65
 #: gold_travel_traditional/models.py:19 gold_travel_traditional/models.py:30
-#: gold_travel_traditional/models.py:41 hr_portal/models.py:405
+#: gold_travel_traditional/models.py:41 hr_portal/models.py:405 it/models.py:32
 #: planning/models.py:201 planning/models.py:224 planning/models.py:251
 #: production_control/models.py:28 production_control/models.py:29
 #: revenu_dist/models.py:63 revenu_dist/models.py:73 revenu_dist/models.py:96
@@ -3460,7 +3460,7 @@ msgid "state_smrc"
 msgstr "اعتماد ممثل الشركة السودانية بالولاية"
 
 #: dabtiaat_altaedin/admin.py:276 gold_travel/admin.py:369
-#: gold_travel/admin.py:648 sswg/admin.py:235 workflow/admin_utils.py:210
+#: gold_travel/admin.py:648 sswg/admin.py:235 workflow/admin_utils.py:219
 msgid "application confirmed successfully!"
 msgstr "تم إعتماد الطلب بنجاح."
 
@@ -3479,7 +3479,7 @@ msgstr "تم تعديل الطلب بنجاح."
 
 #: dabtiaat_altaedin/admin.py:305 dabtiaat_altaedin/models.py:88
 #: gold_travel/admin.py:416 gold_travel/models.py:129 gold_travel/models.py:257
-#: mokhalafat/models.py:17 pa/templates/pa/pa_daily.html:75
+#: it/models.py:31 mokhalafat/models.py:17 pa/templates/pa/pa_daily.html:75
 #: production_control/models.py:81 production_control/models.py:131
 #: revenu_dist/models.py:108
 msgid "date"
@@ -4677,7 +4677,29 @@ msgstr "اعتماد مدير الادارة العامة للتخطيط وال�
 msgid "IT_STATE_FINAL_REJECTION"
 msgstr "رفض نهائي"
 
-#: it/models.py:40 it/models.py:109 it/models.py:124
+#: it/models.py:33
+#, fuzzy
+#| msgid "Department"
+msgid "department"
+msgstr "إدارة"
+
+#: it/models.py:34 planning/models.py:250
+msgid "responsible"
+msgstr "المسئول عن التنفيذ"
+
+#: it/models.py:35
+#, fuzzy
+#| msgid "map_description"
+msgid "requirements_description"
+msgstr "وصف التحديث"
+
+#: it/models.py:36
+#, fuzzy
+#| msgid "gold_description"
+msgid "product_description"
+msgstr "وصف المنقول"
+
+#: it/models.py:40 it/models.py:112 it/models.py:131
 msgid "DevelopmentRequestForm"
 msgstr "استمارة طلب برنامج"
 
@@ -4685,13 +4707,33 @@ msgstr "استمارة طلب برنامج"
 msgid "DevelopmentRequestForms"
 msgstr "استمارات طلب برنامج"
 
-#: it/models.py:130
-msgid "ItRejectionForm"
-msgstr ""
+#: it/models.py:120
+#, fuzzy
+#| msgid "recommendation_name"
+msgid "recommendation"
+msgstr "التوصية"
 
-#: it/models.py:131
+#: it/models.py:123
+msgid "ItRecommendationForm"
+msgstr "توصية مدير تقنية المعلومات"
+
+#: it/models.py:124
+msgid "ItRecommendationForms"
+msgstr "توصية مدير تقنية المعلومات"
+
+#: it/models.py:134
+#, fuzzy
+#| msgid "whom_reason"
+msgid "reason"
+msgstr "الغرض من الشهادة"
+
+#: it/models.py:137
+msgid "ItRejectionForm"
+msgstr "رفض مدير تقنية المعلومات"
+
+#: it/models.py:138
 msgid "ItRejectionForms"
-msgstr ""
+msgstr "رفض مدير تقنية المعلومات"
 
 #: mokhalafat/apps.py:7
 msgid "mokhalafat app"
@@ -5353,10 +5395,6 @@ msgstr "اهداف"
 #: planning/models.py:248
 msgid "goal"
 msgstr "هدف"
-
-#: planning/models.py:250
-msgid "responsible"
-msgstr "المسئول عن التنفيذ"
 
 #: planning/models.py:257
 msgid "Task"
@@ -6177,7 +6215,7 @@ msgstr "تفاصيل توزيع الايرادات"
 msgid "SSWG State "
 msgstr "مسودة"
 
-#: sswg/admin.py:269 workflow/admin_utils.py:183
+#: sswg/admin.py:269 workflow/admin_utils.py:192
 msgid "application not confirmed!"
 msgstr "لم يتم إعتماد الطلب، الرجاء التأكد من اكتمال البيانات."
 
@@ -6529,7 +6567,7 @@ msgstr "تم تسجيل الدخول بنجاح."
 msgid "Record added sucessfully."
 msgstr "تم حفظ السجل بنجاح."
 
-#: workflow/admin_utils.py:209
+#: workflow/admin_utils.py:218
 msgid "Transition to"
 msgstr ""
 
@@ -6624,9 +6662,6 @@ msgstr ""
 
 #~ msgid "gold data"
 #~ msgstr "بيانات الذهب المنقول"
-
-#~ msgid "gold_description"
-#~ msgstr "وصف المنقول"
 
 #~ msgid "alloy_count"
 #~ msgstr "عدد السبائك"
