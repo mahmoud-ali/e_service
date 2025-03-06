@@ -122,7 +122,9 @@ def get_workflow_mixin(main_class,inline_classes={},inlines_dict={}):
                 states = view_model_states(inline_attrs,user_groups,['add', 'change', 'delete', 'view'])
 
                 if obj and (obj.state in states):
-                    inlines.append(inlines_dict[model_name])
+                    inline = inlines_dict[model_name]
+                    inline.extra = 0
+                    inlines.append(inline)                
 
             return inlines
 
