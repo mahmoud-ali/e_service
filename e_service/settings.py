@@ -108,6 +108,7 @@ INSTALLED_APPS = [
     'sswg',
     'workflow',
     'it',
+    'hse_traditional',
 
     # Debug
     'debug_toolbar',

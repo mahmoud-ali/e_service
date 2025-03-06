@@ -227,8 +227,8 @@ main_class = {
 
         'pqi_manager':{
             'permissions': {
-                DevelopmentRequestForm.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                DevelopmentRequestForm.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                ITService.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                ITService.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
             },
         },
 
