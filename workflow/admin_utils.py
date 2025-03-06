@@ -123,7 +123,6 @@ def get_workflow_mixin(main_class,inline_classes={},inlines_dict={}):
 
                 if obj and (obj.state in states):
                     inline = inlines_dict[model_name]
-                    inline.extra = 0
                     inlines.append(inline)                
 
             return inlines
