@@ -35,6 +35,24 @@ class ReadonlyMixin:
         return []
 
 #######DevelopmentRequestForm##########
+def get_my_inlines(self, request, obj): 
+    inlines = super(self.__class__, self).get_inlines(request, obj)
+    if obj and obj.state  >= DevelopmentRequestForm.STATE_IT_MANAGER_RECOMMENDATION:
+        try:
+            obj.it_recommendation_form
+        except:
+            for l in inlines:
+                if l.model == ItRecommendationForm:
+                    inlines.remove(l)
+
+        try:
+            obj.it_rejection_form
+        except:
+            for l in inlines:
+                if l.model == ItRejectionForm:
+                    inlines.remove(l)
+
+    return inlines
 
 main_mixins = [LogMixin,ReadonlyMixin]
 models = import_module('it.models')
@@ -48,6 +66,7 @@ main_class = {
         'list_filter': ('date', 'department', 'responsible'),
         'exclude': ('state',),
         'save_as_continue': False,
+        'get_inlines': get_my_inlines
     },
     'groups': {
         'department_manager':{
@@ -108,12 +127,19 @@ inline_mixins = [LogMixin]
 ItRecommendationForm = models.__getattribute__('ItRecommendationForm')
 ItRejectionForm = models.__getattribute__('ItRejectionForm')
 
+def get_reject_min_num(self, request,obj=None, **kwargs):
+    print(obj)
+    if obj and obj.state  == DevelopmentRequestForm.STATE_IT_MANAGER_STUDING_REJECTION:
+        return 1
+    return 0
+
 inline_classes = {
     'ItRecommendationForm': {
         'model': ItRecommendationForm,
         'mixins': [admin.StackedInline],
         'kwargs': {
-            'extra': 1,
+            'extra': 0,
+            'min_num': 1,
         },
         'groups': {
             'department_manager':{
@@ -155,7 +181,8 @@ inline_classes = {
         'model': ItRejectionForm,
         'mixins': [admin.StackedInline],
         'kwargs': {
-            'extra': 1,
+            'extra': 0,
+            'get_min_num': get_reject_min_num,
         },
         'groups': {
             'department_manager':{
@@ -241,7 +268,8 @@ inline_classes = {
         'model': ITServiceScope,
         'mixins': [admin.StackedInline],
         'kwargs': {
-            'extra': 1,
+            'extra': 0,
+            'min_num': 1,
         },
         'groups': {
             'it_manager':{
@@ -265,7 +293,8 @@ inline_classes = {
         'model': ITServiceOperation,
         'mixins': [admin.StackedInline],
         'kwargs': {
-            'extra': 1,
+            'extra': 0,
+            'min_num': 1,
         },
         'groups': {
             'it_manager':{
@@ -289,7 +318,8 @@ inline_classes = {
         'model': ITServiceSLAAgreement,
         'mixins': [admin.StackedInline],
         'kwargs': {
-            'extra': 1,
+            'extra': 0,
+            'min_num': 1,
         },
         'groups': {
             'it_manager':{
@@ -313,7 +343,8 @@ inline_classes = {
         'model': ITServiceResponsibility,
         'mixins': [admin.StackedInline],
         'kwargs': {
-            'extra': 1,
+            'extra': 0,
+            'min_num': 1,
         },
         'groups': {
             'it_manager':{
@@ -337,7 +368,8 @@ inline_classes = {
         'model': ITServiceModification,
         'mixins': [admin.StackedInline],
         'kwargs': {
-            'extra': 1,
+            'extra': 0,
+
         },
         'groups': {
             'it_manager':{
