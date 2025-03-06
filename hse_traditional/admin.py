@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
 
-from hse_traditional.models import Achievement, ArrangementOfMarkets, EnvironmentalInspection, EnvironmentalRequirements, HseTraditionalAccident, HseTraditionalAccidentDamage, HseTraditionalAccidentInjury, HseTraditionalAccidentWho, HseTraditionalAccidentWhy, HseTraditionalCorrectiveAction, HseTraditionalNearMiss, HseTraditionalNearMissWho, HseTraditionalNearMissWhy, HseTraditionalReport, QuickEmergencyTeam, TrainingAwareness, WasteManagement
+from hse_traditional.models import Achievement, ArrangementOfMarkets, EnvironmentalInspection, EnvironmentalRequirements, HseTraditionalAccident, HseTraditionalAccidentDamage, HseTraditionalAccidentInjury, HseTraditionalAccidentWho, HseTraditionalAccidentWhy, HseTraditionalCorrectiveAction, HseTraditionalCorrectiveActionFinalDecision, HseTraditionalCorrectiveActionReccomendation, HseTraditionalNearMiss, HseTraditionalNearMissWho, HseTraditionalNearMissWhy, HseTraditionalReport, QuickEmergencyTeam, TrainingAwareness, WasteManagement
 from workflow.admin_utils import create_main_form
 
 class LogMixin:
@@ -466,7 +466,57 @@ main_class = {
 }
 
 inline_mixins = []
-inline_classes = {}
+inline_classes = {
+    'HseTraditionalCorrectiveActionReccomendation': {
+        'model': HseTraditionalCorrectiveActionReccomendation,
+        'mixins': [admin.StackedInline],
+        'kwargs': {
+            'extra': 1,
+        },
+        'groups': {
+            'it_manager':{
+                'permissions': {
+                    HseTraditionalReport.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
+                    HseTraditionalReport.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    HseTraditionalReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
+            'pqi_manager':{
+                'permissions': {
+                    HseTraditionalReport.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
+                    HseTraditionalReport.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    HseTraditionalReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
+
+        },
+    },
+    'HseTraditionalCorrectiveActionFinalDecision': {
+        'model': HseTraditionalCorrectiveActionFinalDecision,
+        'mixins': [admin.StackedInline],
+        'kwargs': {
+            'extra': 1,
+        },
+        'groups': {
+            'it_manager':{
+                'permissions': {
+                    HseTraditionalReport.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
+                    HseTraditionalReport.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    HseTraditionalReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
+            'pqi_manager':{
+                'permissions': {
+                    HseTraditionalReport.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
+                    HseTraditionalReport.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    HseTraditionalReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
+
+        },
+    },
+
+}
 model_admin, inlines = create_main_form(main_class, inline_classes, main_mixins)
 
 admin.site.register(model_admin.model, model_admin)
