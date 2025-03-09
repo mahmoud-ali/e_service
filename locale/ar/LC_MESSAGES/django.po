@@ -4879,10 +4879,8 @@ msgstr "تقييم بيئة العمل Work environment"
 
 #: hse_traditional/models.py:227 hse_traditional/models.py:341
 #: hse_traditional/models.py:425
-#, fuzzy
-#| msgid "Approved"
 msgid "approved"
-msgstr "تم التصديق"
+msgstr "Approved - تم التصديق"
 
 #: hse_traditional/models.py:233
 msgid "what - ماذا"
