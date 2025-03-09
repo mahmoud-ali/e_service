@@ -32,17 +32,21 @@ main_class = {
         'save_as_continue': False,
     },
     'groups': {
-        'it_manager':{
+        'hse_tra_state_employee':{
             'permissions': {
                 HseTraditionalReport.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
                 HseTraditionalReport.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 HseTraditionalReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
             },
         },
-
-        'pqi_manager':{
+        'hse_tra_manager':{
             'permissions': {
                 HseTraditionalReport.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                HseTraditionalReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+            },
+        },
+        'hse_tra_gm':{
+            'permissions': {
                 HseTraditionalReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
             },
         },
@@ -56,17 +60,25 @@ inline_classes = {
         'model': EnvironmentalInspection,
         'mixins': [admin.StackedInline],
         'kwargs': {
-            'extra': 1,
+            'extra': 0,
+            'min_num': 1,
         },
         'groups': {
-            'it_manager':{
+            'hse_tra_state_employee':{
                 'permissions': {
                     HseTraditionalReport.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
                     HseTraditionalReport.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     HseTraditionalReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
-            'pqi_manager':{
+            'hse_tra_manager':{
+                'permissions': {
+                    HseTraditionalReport.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
+                    HseTraditionalReport.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    HseTraditionalReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
+            'hse_tra_gm':{
                 'permissions': {
                     HseTraditionalReport.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
                     HseTraditionalReport.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -80,17 +92,25 @@ inline_classes = {
         'model': WasteManagement,
         'mixins': [admin.StackedInline],
         'kwargs': {
-            'extra': 1,
+            'extra': 0,
+            'min_num': 1,
         },
         'groups': {
-            'it_manager':{
+            'hse_tra_state_employee':{
                 'permissions': {
                     HseTraditionalReport.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
                     HseTraditionalReport.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     HseTraditionalReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
-            'pqi_manager':{
+            'hse_tra_manager':{
+                'permissions': {
+                    HseTraditionalReport.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
+                    HseTraditionalReport.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    HseTraditionalReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
+            'hse_tra_gm':{
                 'permissions': {
                     HseTraditionalReport.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
                     HseTraditionalReport.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -104,17 +124,25 @@ inline_classes = {
         'model': TrainingAwareness,
         'mixins': [admin.StackedInline],
         'kwargs': {
-            'extra': 1,
+            'extra': 0,
+            'min_num': 1,
         },
         'groups': {
-            'it_manager':{
+            'hse_tra_state_employee':{
                 'permissions': {
                     HseTraditionalReport.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
                     HseTraditionalReport.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     HseTraditionalReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
-            'pqi_manager':{
+            'hse_tra_manager':{
+                'permissions': {
+                    HseTraditionalReport.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
+                    HseTraditionalReport.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    HseTraditionalReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
+            'hse_tra_gm':{
                 'permissions': {
                     HseTraditionalReport.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
                     HseTraditionalReport.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -128,17 +156,25 @@ inline_classes = {
         'model': ArrangementOfMarkets,
         'mixins': [admin.StackedInline],
         'kwargs': {
-            'extra': 1,
+            'extra': 0,
+            'min_num': 1,
         },
         'groups': {
-            'it_manager':{
+            'hse_tra_state_employee':{
                 'permissions': {
                     HseTraditionalReport.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
                     HseTraditionalReport.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     HseTraditionalReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
-            'pqi_manager':{
+            'hse_tra_manager':{
+                'permissions': {
+                    HseTraditionalReport.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
+                    HseTraditionalReport.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    HseTraditionalReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
+            'hse_tra_gm':{
                 'permissions': {
                     HseTraditionalReport.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
                     HseTraditionalReport.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -152,17 +188,25 @@ inline_classes = {
         'model': EnvironmentalRequirements,
         'mixins': [admin.StackedInline],
         'kwargs': {
-            'extra': 1,
+            'extra': 0,
+            'min_num': 1,
         },
         'groups': {
-            'it_manager':{
+            'hse_tra_state_employee':{
                 'permissions': {
                     HseTraditionalReport.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
                     HseTraditionalReport.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     HseTraditionalReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
-            'pqi_manager':{
+            'hse_tra_manager':{
+                'permissions': {
+                    HseTraditionalReport.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
+                    HseTraditionalReport.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    HseTraditionalReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
+            'hse_tra_gm':{
                 'permissions': {
                     HseTraditionalReport.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
                     HseTraditionalReport.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -177,16 +221,24 @@ inline_classes = {
         'mixins': [admin.StackedInline],
         'kwargs': {
             'extra': 1,
+            'min_num': 0,
         },
         'groups': {
-            'it_manager':{
+            'hse_tra_state_employee':{
                 'permissions': {
                     HseTraditionalReport.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
                     HseTraditionalReport.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     HseTraditionalReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
-            'pqi_manager':{
+            'hse_tra_manager':{
+                'permissions': {
+                    HseTraditionalReport.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
+                    HseTraditionalReport.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    HseTraditionalReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
+            'hse_tra_gm':{
                 'permissions': {
                     HseTraditionalReport.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
                     HseTraditionalReport.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -201,16 +253,24 @@ inline_classes = {
         'mixins': [admin.StackedInline],
         'kwargs': {
             'extra': 1,
+            'min_num': 0,
         },
         'groups': {
-            'it_manager':{
+            'hse_tra_state_employee':{
                 'permissions': {
                     HseTraditionalReport.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
                     HseTraditionalReport.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     HseTraditionalReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
-            'pqi_manager':{
+            'hse_tra_manager':{
+                'permissions': {
+                    HseTraditionalReport.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
+                    HseTraditionalReport.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    HseTraditionalReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
+            'hse_tra_gm':{
                 'permissions': {
                     HseTraditionalReport.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
                     HseTraditionalReport.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -222,8 +282,6 @@ inline_classes = {
     },
 
 }
-
-# inline_classes = {}
 
 model_admin, inlines = create_main_form(main_class,inline_classes,main_mixins)
 
@@ -240,16 +298,21 @@ main_class = {
         'save_as_continue': False,
     },
     'groups': {
-        'it_manager':{
+        'hse_tra_state_employee':{
             'permissions': {
                 HseTraditionalAccident.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
                 HseTraditionalAccident.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 HseTraditionalAccident.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
             },
         },
-        'pqi_manager':{
+        'hse_tra_manager':{
             'permissions': {
                 HseTraditionalAccident.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                HseTraditionalAccident.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+            },
+        },
+        'hse_tra_gm':{
+            'permissions': {
                 HseTraditionalAccident.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
             },
         },
@@ -263,17 +326,25 @@ inline_classes = {
         'model': HseTraditionalAccidentWho,
         'mixins': [admin.StackedInline],
         'kwargs': {
-            'extra': 1,
+            'extra': 0,
+            'min_num': 1,
         },
         'groups': {
-            'it_manager':{
+            'hse_tra_state_employee':{
                 'permissions': {
                     HseTraditionalAccident.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
                     HseTraditionalAccident.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     HseTraditionalAccident.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
-            'pqi_manager':{
+            'hse_tra_manager':{
+                'permissions': {
+                    HseTraditionalAccident.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
+                    HseTraditionalAccident.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    HseTraditionalAccident.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
+            'hse_tra_gm':{
                 'permissions': {
                     HseTraditionalAccident.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
                     HseTraditionalAccident.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -286,17 +357,25 @@ inline_classes = {
         'model': HseTraditionalAccidentWhy,
         'mixins': [admin.StackedInline],
         'kwargs': {
-            'extra': 1,
+            'extra': 0,
+            'min_num': 1,
         },
         'groups': {
-            'it_manager':{
+            'hse_tra_state_employee':{
                 'permissions': {
                     HseTraditionalAccident.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
                     HseTraditionalAccident.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     HseTraditionalAccident.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
-            'pqi_manager':{
+            'hse_tra_manager':{
+                'permissions': {
+                    HseTraditionalAccident.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
+                    HseTraditionalAccident.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    HseTraditionalAccident.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
+            'hse_tra_gm':{
                 'permissions': {
                     HseTraditionalAccident.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
                     HseTraditionalAccident.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -310,16 +389,24 @@ inline_classes = {
         'mixins': [admin.StackedInline],
         'kwargs': {
             'extra': 1,
+            'min_num': 0,
         },
         'groups': {
-            'it_manager':{
+            'hse_tra_state_employee':{
                 'permissions': {
                     HseTraditionalAccident.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
                     HseTraditionalAccident.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     HseTraditionalAccident.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
-            'pqi_manager':{
+            'hse_tra_manager':{
+                'permissions': {
+                    HseTraditionalAccident.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
+                    HseTraditionalAccident.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    HseTraditionalAccident.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
+            'hse_tra_gm':{
                 'permissions': {
                     HseTraditionalAccident.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
                     HseTraditionalAccident.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -333,16 +420,24 @@ inline_classes = {
         'mixins': [admin.StackedInline],
         'kwargs': {
             'extra': 1,
+            'min_num': 0,
         },
         'groups': {
-            'it_manager':{
+            'hse_tra_state_employee':{
                 'permissions': {
                     HseTraditionalAccident.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
                     HseTraditionalAccident.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     HseTraditionalAccident.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
-            'pqi_manager':{
+            'hse_tra_manager':{
+                'permissions': {
+                    HseTraditionalAccident.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
+                    HseTraditionalAccident.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    HseTraditionalAccident.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
+            'hse_tra_gm':{
                 'permissions': {
                     HseTraditionalAccident.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
                     HseTraditionalAccident.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -355,17 +450,25 @@ inline_classes = {
         'model': ImmediateAction,
         'mixins': [admin.StackedInline],
         'kwargs': {
-            'extra': 1,
+            'extra': 0,
+            'min_num': 1,
         },
         'groups': {
-            'it_manager':{
+            'hse_tra_state_employee':{
                 'permissions': {
                     HseTraditionalAccident.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
                     HseTraditionalAccident.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     HseTraditionalAccident.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
-            'pqi_manager':{
+            'hse_tra_manager':{
+                'permissions': {
+                    HseTraditionalAccident.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
+                    HseTraditionalAccident.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    HseTraditionalAccident.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
+            'hse_tra_gm':{
                 'permissions': {
                     HseTraditionalAccident.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
                     HseTraditionalAccident.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -390,16 +493,21 @@ main_class = {
         'save_as_continue': False,
     },
     'groups': {
-        'it_manager':{
+        'hse_tra_state_employee':{
             'permissions': {
                 HseTraditionalNearMiss.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
                 HseTraditionalNearMiss.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 HseTraditionalNearMiss.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
             },
         },
-        'pqi_manager':{
+        'hse_tra_manager':{
             'permissions': {
                 HseTraditionalNearMiss.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                HseTraditionalNearMiss.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+            },
+        },
+        'hse_tra_gm':{
+            'permissions': {
                 HseTraditionalNearMiss.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
             },
         },
@@ -413,17 +521,25 @@ inline_classes = {
         'model': HseTraditionalNearMissWho,
         'mixins': [admin.StackedInline],
         'kwargs': {
-            'extra': 1,
+            'extra': 0,
+            'min_num': 1,
         },
         'groups': {
-            'it_manager':{
+            'hse_tra_state_employee':{
                 'permissions': {
                     HseTraditionalNearMiss.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
                     HseTraditionalNearMiss.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     HseTraditionalNearMiss.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
-            'pqi_manager':{
+            'hse_tra_manager':{
+                'permissions': {
+                    HseTraditionalNearMiss.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
+                    HseTraditionalNearMiss.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    HseTraditionalNearMiss.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
+            'hse_tra_gm':{
                 'permissions': {
                     HseTraditionalNearMiss.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
                     HseTraditionalNearMiss.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -436,17 +552,25 @@ inline_classes = {
         'model': HseTraditionalNearMissWhy,
         'mixins': [admin.StackedInline],
         'kwargs': {
-            'extra': 1,
+            'extra': 0,
+            'min_num': 1,
         },
         'groups': {
-            'it_manager':{
+            'hse_tra_state_employee':{
                 'permissions': {
                     HseTraditionalNearMiss.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
                     HseTraditionalNearMiss.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     HseTraditionalNearMiss.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
-            'pqi_manager':{
+            'hse_tra_manager':{
+                'permissions': {
+                    HseTraditionalNearMiss.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
+                    HseTraditionalNearMiss.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    HseTraditionalNearMiss.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
+            'hse_tra_gm':{
                 'permissions': {
                     HseTraditionalNearMiss.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
                     HseTraditionalNearMiss.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -472,16 +596,21 @@ main_class = {
         'save_as_continue': False,
     },
     'groups': {
-        'it_manager':{
+        'hse_tra_state_employee':{
             'permissions': {
                 HseTraditionalCorrectiveAction.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
                 HseTraditionalCorrectiveAction.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 HseTraditionalCorrectiveAction.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
             },
         },
-        'pqi_manager':{
+        'hse_tra_manager':{
             'permissions': {
                 HseTraditionalCorrectiveAction.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                HseTraditionalCorrectiveAction.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+            },
+        },
+        'hse_tra_gm':{
+            'permissions': {
                 HseTraditionalCorrectiveAction.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
             },
         },
@@ -494,17 +623,25 @@ inline_classes = {
         'model': HseTraditionalCorrectiveActionReccomendation,
         'mixins': [admin.StackedInline],
         'kwargs': {
-            'extra': 1,
+            'extra': 0,
+            'min_num': 1,
         },
         'groups': {
-            'it_manager':{
+            'hse_tra_state_employee':{
                 'permissions': {
                     HseTraditionalReport.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
                     HseTraditionalReport.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     HseTraditionalReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
-            'pqi_manager':{
+            'hse_tra_manager':{
+                'permissions': {
+                    HseTraditionalReport.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
+                    HseTraditionalReport.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    HseTraditionalReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
+            'hse_tra_gm':{
                 'permissions': {
                     HseTraditionalReport.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
                     HseTraditionalReport.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -518,17 +655,25 @@ inline_classes = {
         'model': HseTraditionalCorrectiveActionFinalDecision,
         'mixins': [admin.StackedInline],
         'kwargs': {
-            'extra': 1,
+            'extra': 0,
+            'min_num': 1,
         },
         'groups': {
-            'it_manager':{
+            'hse_tra_state_employee':{
                 'permissions': {
                     HseTraditionalReport.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
                     HseTraditionalReport.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     HseTraditionalReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
-            'pqi_manager':{
+            'hse_tra_manager':{
+                'permissions': {
+                    HseTraditionalReport.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
+                    HseTraditionalReport.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    HseTraditionalReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
+            'hse_tra_gm':{
                 'permissions': {
                     HseTraditionalReport.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
                     HseTraditionalReport.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
