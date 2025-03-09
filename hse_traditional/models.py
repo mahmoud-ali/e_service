@@ -298,6 +298,14 @@ class HseTraditionalAccidentDamage(models.Model):
         verbose_name = _("Hse Traditional Accident damage")
         verbose_name_plural = _("Hse Traditional Accident damages")
 
+class ImmediateAction(models.Model):
+    report = models.ForeignKey(HseTraditionalReport, on_delete=models.PROTECT, related_name="immediate_actions")
+    description = models.TextField(_("description"))
+
+    class Meta:
+        verbose_name = _("Immediate Action")
+        verbose_name_plural = _("Immediate Actions")
+
 class HseTraditionalNearMiss(LoggingModel):
     ACCIDENT_TYPE_SAFTY = 'safty'
     ACCIDENT_TYPE_ENVIRONMENTAL = 'enviromental'

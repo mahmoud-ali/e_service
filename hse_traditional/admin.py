@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
 
-from hse_traditional.models import Achievement, ArrangementOfMarkets, EnvironmentalInspection, EnvironmentalRequirements, HseTraditionalAccident, HseTraditionalAccidentDamage, HseTraditionalAccidentInjury, HseTraditionalAccidentWho, HseTraditionalAccidentWhy, HseTraditionalCorrectiveAction, HseTraditionalCorrectiveActionFinalDecision, HseTraditionalCorrectiveActionReccomendation, HseTraditionalNearMiss, HseTraditionalNearMissWho, HseTraditionalNearMissWhy, HseTraditionalReport, QuickEmergencyTeam, TrainingAwareness, WasteManagement
+from hse_traditional.models import Achievement, ArrangementOfMarkets, EnvironmentalInspection, EnvironmentalRequirements, HseTraditionalAccident, HseTraditionalAccidentDamage, HseTraditionalAccidentInjury, HseTraditionalAccidentWho, HseTraditionalAccidentWhy, HseTraditionalCorrectiveAction, HseTraditionalCorrectiveActionFinalDecision, HseTraditionalCorrectiveActionReccomendation, HseTraditionalNearMiss, HseTraditionalNearMissWho, HseTraditionalNearMissWhy, HseTraditionalReport, ImmediateAction, QuickEmergencyTeam, TrainingAwareness, WasteManagement
 from workflow.admin_utils import create_main_form
 
 class LogMixin:
@@ -330,6 +330,29 @@ inline_classes = {
     },
     'HseTraditionalAccidentDamage': {
         'model': HseTraditionalAccidentDamage,
+        'mixins': [admin.StackedInline],
+        'kwargs': {
+            'extra': 1,
+        },
+        'groups': {
+            'it_manager':{
+                'permissions': {
+                    HseTraditionalAccident.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
+                    HseTraditionalAccident.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    HseTraditionalAccident.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
+            'pqi_manager':{
+                'permissions': {
+                    HseTraditionalAccident.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
+                    HseTraditionalAccident.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    HseTraditionalAccident.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
+        },
+    },
+    'ImmediateAction': {
+        'model': ImmediateAction,
         'mixins': [admin.StackedInline],
         'kwargs': {
             'extra': 1,
