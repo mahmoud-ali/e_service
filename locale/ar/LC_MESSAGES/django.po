@@ -4717,15 +4717,15 @@ msgstr "اعتماد الطلب بواسطة مدير الادارة العام�
 
 #: hse_traditional/models.py:82
 msgid "Hse Traditional Monthly Report"
-msgstr "تقرير البيئة والسلامة"
+msgstr "Hse Monthly Report - تقرير البيئة والسلامة"
 
 #: hse_traditional/models.py:83
 msgid "Hse Traditional Monthly Reports"
-msgstr "تقارير البيئة والسلامة"
+msgstr "Hse Monthly Reports - تقارير البيئة والسلامة"
 
 #: hse_traditional/models.py:131
 msgid "market_name"
-msgstr "اسم اوقلس"
+msgstr "اسم السوق"
 
 #: hse_traditional/models.py:132
 msgid "What ماذا"
