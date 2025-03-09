@@ -1,13 +1,19 @@
 from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
 
-from hse_traditional.models import Achievement, ArrangementOfMarkets, EnvironmentalInspection, EnvironmentalRequirements, HseTraditionalAccident, HseTraditionalAccidentDamage, HseTraditionalAccidentInjury, HseTraditionalAccidentWho, HseTraditionalAccidentWhy, HseTraditionalCorrectiveAction, HseTraditionalCorrectiveActionFinalDecision, HseTraditionalCorrectiveActionReccomendation, HseTraditionalNearMiss, HseTraditionalNearMissWho, HseTraditionalNearMissWhy, HseTraditionalReport, ImmediateAction, QuickEmergencyTeam, TrainingAwareness, WasteManagement
+from hse_traditional.forms import TblStateRepresentativeForm
+from hse_traditional.models import Achievement, ArrangementOfMarkets, EnvironmentalInspection, EnvironmentalRequirements, HseTraditionalAccident, HseTraditionalAccidentDamage, HseTraditionalAccidentInjury, HseTraditionalAccidentWho, HseTraditionalAccidentWhy, HseTraditionalCorrectiveAction, HseTraditionalCorrectiveActionFinalDecision, HseTraditionalCorrectiveActionReccomendation, HseTraditionalNearMiss, HseTraditionalNearMissWho, HseTraditionalNearMissWhy, HseTraditionalReport, ImmediateAction, QuickEmergencyTeam, TblStateRepresentative, TrainingAwareness, WasteManagement
 from workflow.admin_utils import create_main_form
 
 class LogMixin:
     def save_model(self, request, obj, form, change):
         if not obj.pk:  # New object
             obj.created_by = request.user
+            try:
+                obj.source_state = request.user.hse_tra_state.state
+            except:
+                pass
+
         obj.updated_by = request.user
         super().save_model(request, obj, form, change)
 
@@ -20,15 +26,20 @@ class LogMixin:
             instance.save()
         formset.save_m2m()
 
+class TblStateRepresentativeAdmin(admin.ModelAdmin):
+    model = TblStateRepresentative
+    form = TblStateRepresentativeForm
+    
+admin.site.register(TblStateRepresentative,TblStateRepresentativeAdmin)
+
 report_main_mixins = [LogMixin]
 report_main_class = {
     'model': HseTraditionalReport,
     'mixins': [],
     'kwargs': {
-        # 'list_display': ('date', 'department','responsible'),
-        # 'search_fields': ('department','responsible'),
-        # 'list_filter': ('date', 'department', 'responsible'),
-        'exclude': ('state',),
+        'list_display': ('year', 'month','source_state','state'),
+        'list_filter': ('year', 'month','source_state','state'),
+        'exclude': ('state','source_state'),
         'save_as_continue': False,
     },
     'groups': {
@@ -295,7 +306,9 @@ accident_main_class = {
     'model': HseTraditionalAccident,
     'mixins': [],
     'kwargs': {
-        'exclude': ('state',),
+        'list_display': ('type', 'what','source_state','state'),
+        'list_filter': ('type', 'source_state','state'),
+        'exclude': ('state','source_state'),
         'save_as_continue': False,
     },
     'groups': {
@@ -491,7 +504,9 @@ near_miss_main_class = {
     'model': HseTraditionalNearMiss,
     'mixins': [],
     'kwargs': {
-        'exclude': ('state',),
+        'list_display': ('type', 'what','source_state','state'),
+        'list_filter': ('type', 'source_state','state'),
+        'exclude': ('state','source_state'),
         'save_as_continue': False,
     },
     'groups': {
@@ -595,7 +610,9 @@ corrective_action_main_class = {
     'model': HseTraditionalCorrectiveAction,
     'mixins': [],
     'kwargs': {
-        'exclude': ('state',),
+        'list_display': ('source_accident','source_near_miss','source_state','state'),
+        'list_filter': ('source_accident','source_near_miss','source_state','state'),
+        'exclude': ('state','source_state'),
         'save_as_continue': False,
     },
     'groups': {

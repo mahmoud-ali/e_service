@@ -46,6 +46,22 @@ class LoggingModel(models.Model):
     class Meta:
         abstract = True
 
+class TblStateRepresentative(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.PROTECT,related_name="hse_tra_state",verbose_name=_("user"))
+    name = models.CharField(_("name"),max_length=100)
+    state = models.ForeignKey(LkpState, on_delete=models.PROTECT, related_name="hse_tra_state",verbose_name=_("state"))
+
+    def __str__(self):
+        return f'{self.user} ({self.state.name})'
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['user', 'state'], name='unique_user_state')
+        ]
+
+        verbose_name = _("state representative")
+        verbose_name_plural = _("state representatives")
+
 class HseTraditionalReport(LoggingModel):
     STATE_DRAFT = 1
     STATE_CONFIRMED = 2
@@ -413,8 +429,8 @@ class HseTraditionalCorrectiveAction(LoggingModel):
     state = models.IntegerField(_("record_state"), choices=STATE_CHOICES.items(), default=STATE_DRAFT)
     source_accident = models.ForeignKey(HseTraditionalAccident, on_delete=models.PROTECT, null=True, blank=True, related_name="corrective_actions", verbose_name=_("source_accident"))
     source_near_miss = models.ForeignKey(HseTraditionalNearMiss, on_delete=models.PROTECT, null=True, blank=True, related_name="corrective_actions", verbose_name=_("source_near_miss"))
-    what = models.TextField(_("what"))
-    where = models.TextField(_("where"))
+    # what = models.TextField(_("what"))
+    # where = models.TextField(_("where"))
     corrective_action = models.TextField(_("corrective_action"))
 
     class Meta:
@@ -422,7 +438,7 @@ class HseTraditionalCorrectiveAction(LoggingModel):
         verbose_name_plural = _("Hse Traditional Corrective Action")
 
     def __str__(self):
-        return f"{self.what}/{self.where}"
+        return f"{self.corrective_action}"
 
     def get_next_states(self, user):
         """
