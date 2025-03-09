@@ -77,11 +77,11 @@ class HseTraditionalReport(LoggingModel):
         user_groups = list(user.groups.values_list('name', flat=True))
 
         states = []
-        if 'it_manager' in user_groups:
+        if 'hse_tra_state_employee' in user_groups:
             if self.state == self.STATE_DRAFT:
                 states.append((self.STATE_CONFIRMED, self.STATE_CHOICES[self.STATE_CONFIRMED]))
 
-        if 'pqi_manager' in user_groups:
+        if 'hse_tra_manager' in user_groups:
             if self.state == self.STATE_CONFIRMED:
                 states.append((self.STATE_APPROVED, self.STATE_CHOICES[self.STATE_APPROVED]))
                 states.append((self.STATE_DRAFT, self.STATE_CHOICES[self.STATE_DRAFT]))
@@ -233,11 +233,11 @@ class HseTraditionalAccident(LoggingModel):
         user_groups = list(user.groups.values_list('name', flat=True))
 
         states = []
-        if 'it_manager' in user_groups:
+        if 'hse_tra_state_employee' in user_groups:
             if self.state == self.STATE_DRAFT:
                 states.append((self.STATE_CONFIRMED, self.STATE_CHOICES[self.STATE_CONFIRMED]))
 
-        if 'pqi_manager' in user_groups:
+        if 'hse_tra_manager' in user_groups:
             if self.state == self.STATE_CONFIRMED:
                 states.append((self.STATE_APPROVED, self.STATE_CHOICES[self.STATE_APPROVED]))
                 states.append((self.STATE_DRAFT, self.STATE_CHOICES[self.STATE_DRAFT]))
@@ -347,11 +347,11 @@ class HseTraditionalNearMiss(LoggingModel):
         user_groups = list(user.groups.values_list('name', flat=True))
 
         states = []
-        if 'it_manager' in user_groups:
+        if 'hse_tra_state_employee' in user_groups:
             if self.state == self.STATE_DRAFT:
                 states.append((self.STATE_CONFIRMED, self.STATE_CHOICES[self.STATE_CONFIRMED]))
 
-        if 'pqi_manager' in user_groups:
+        if 'hse_tra_manager' in user_groups:
             if self.state == self.STATE_CONFIRMED:
                 states.append((self.STATE_APPROVED, self.STATE_CHOICES[self.STATE_APPROVED]))
                 states.append((self.STATE_DRAFT, self.STATE_CHOICES[self.STATE_DRAFT]))
@@ -398,12 +398,14 @@ class HseTraditionalNearMissWhy(models.Model):
 
 class HseTraditionalCorrectiveAction(LoggingModel):
     STATE_DRAFT = 1
-    STATE_CONFIRMED = 2
+    STATE_CONFIRMED1 = 12
+    STATE_CONFIRMED2 = 22
     STATE_APPROVED = 3
 
     STATE_CHOICES = {
         STATE_DRAFT: _("draft"),
-        STATE_CONFIRMED: _("confirmed"),
+        STATE_CONFIRMED1: _("confirmed_emp"),
+        STATE_CONFIRMED2: _("confirmed_mngr"),
         STATE_APPROVED: _("approved"),
     }
 
@@ -430,14 +432,19 @@ class HseTraditionalCorrectiveAction(LoggingModel):
         user_groups = list(user.groups.values_list('name', flat=True))
 
         states = []
-        if 'it_manager' in user_groups:
+        if 'hse_tra_state_employee' in user_groups:
             if self.state == self.STATE_DRAFT:
-                states.append((self.STATE_CONFIRMED, self.STATE_CHOICES[self.STATE_CONFIRMED]))
+                states.append((self.STATE_CONFIRMED1, self.STATE_CHOICES[self.STATE_CONFIRMED]))
 
-        if 'pqi_manager' in user_groups:
-            if self.state == self.STATE_CONFIRMED:
-                states.append((self.STATE_APPROVED, self.STATE_CHOICES[self.STATE_APPROVED]))
+        if 'hse_tra_manager' in user_groups:
+            if self.state == self.STATE_CONFIRMED1:
+                states.append((self.STATE_CONFIRMED2, self.STATE_CHOICES[self.STATE_CONFIRMED2]))
                 states.append((self.STATE_DRAFT, self.STATE_CHOICES[self.STATE_DRAFT]))
+
+        if 'hse_tra_gm' in user_groups:
+            if self.state == self.STATE_CONFIRMED2:
+                states.append((self.STATE_APPROVED, self.STATE_CHOICES[self.STATE_APPROVED]))
+                states.append((self.STATE_CONFIRMED1, self.STATE_CHOICES[self.STATE_CONFIRMED1]))
 
         return states
 

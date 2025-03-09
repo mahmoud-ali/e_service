@@ -20,8 +20,8 @@ class LogMixin:
             instance.save()
         formset.save_m2m()
 
-main_mixins = [LogMixin]
-main_class = {
+report_main_mixins = [LogMixin]
+report_main_class = {
     'model': HseTraditionalReport,
     'mixins': [],
     'kwargs': {
@@ -36,7 +36,7 @@ main_class = {
             'permissions': {
                 HseTraditionalReport.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
                 HseTraditionalReport.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                HseTraditionalReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                # HseTraditionalReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
             },
         },
         'hse_tra_manager':{
@@ -47,15 +47,16 @@ main_class = {
         },
         'hse_tra_gm':{
             'permissions': {
+                HseTraditionalReport.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 HseTraditionalReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
             },
         },
 
     },
 }
-inline_mixins = [LogMixin]
+# inline_mixins = [LogMixin]
 
-inline_classes = {
+report_inline_classes = {
     'EnvironmentalInspection': {
         'model': EnvironmentalInspection,
         'mixins': [admin.StackedInline],
@@ -283,14 +284,14 @@ inline_classes = {
 
 }
 
-model_admin, inlines = create_main_form(main_class,inline_classes,main_mixins)
+model_admin, inlines = create_main_form(report_main_class,report_inline_classes,report_main_mixins)
 
 admin.site.register(model_admin.model,model_admin)
 
 
 ##########Accidents################
-main_mixins = [LogMixin]
-main_class = {
+accident_main_mixins = [LogMixin]
+accident_main_class = {
     'model': HseTraditionalAccident,
     'mixins': [],
     'kwargs': {
@@ -302,7 +303,7 @@ main_class = {
             'permissions': {
                 HseTraditionalAccident.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
                 HseTraditionalAccident.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                HseTraditionalAccident.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                # HseTraditionalAccident.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
             },
         },
         'hse_tra_manager':{
@@ -313,15 +314,16 @@ main_class = {
         },
         'hse_tra_gm':{
             'permissions': {
+                HseTraditionalAccident.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 HseTraditionalAccident.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
             },
         },
     },
 }
 
-inline_mixins = [LogMixin]
+# inline_mixins = [LogMixin]
 
-inline_classes = {
+accident_inline_classes = {
     'HseTraditionalAccidentWho': {
         'model': HseTraditionalAccidentWho,
         'mixins': [admin.StackedInline],
@@ -479,13 +481,13 @@ inline_classes = {
     },
 }
 
-model_admin, inlines = create_main_form(main_class, inline_classes, main_mixins)
+model_admin, inlines = create_main_form(accident_main_class, accident_inline_classes, accident_main_mixins)
 
 admin.site.register(model_admin.model, model_admin)
 
 ##########Near misses################
-main_mixins = [LogMixin]
-main_class = {
+near_miss_main_mixins = [LogMixin]
+near_miss_main_class = {
     'model': HseTraditionalNearMiss,
     'mixins': [],
     'kwargs': {
@@ -497,7 +499,7 @@ main_class = {
             'permissions': {
                 HseTraditionalNearMiss.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
                 HseTraditionalNearMiss.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                HseTraditionalNearMiss.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                # HseTraditionalNearMiss.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
             },
         },
         'hse_tra_manager':{
@@ -508,15 +510,16 @@ main_class = {
         },
         'hse_tra_gm':{
             'permissions': {
+                HseTraditionalNearMiss.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 HseTraditionalNearMiss.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
             },
         },
     },
 }
 
-inline_mixins = [LogMixin]
+# inline_mixins = [LogMixin]
 
-inline_classes = {
+near_miss_inline_classes = {
     'HseTraditionalNearMissWho': {
         'model': HseTraditionalNearMissWho,
         'mixins': [admin.StackedInline],
@@ -581,14 +584,14 @@ inline_classes = {
     },
 }
 
-model_admin, inlines = create_main_form(main_class, inline_classes, main_mixins)
+model_admin, inlines = create_main_form(near_miss_main_class, near_miss_inline_classes, near_miss_main_mixins)
 
 admin.site.register(model_admin.model, model_admin)
 
 
 ##########Corrective action################
-main_mixins = [LogMixin]
-main_class = {
+corrective_action_main_mixins = [LogMixin]
+corrective_action_main_class = {
     'model': HseTraditionalCorrectiveAction,
     'mixins': [],
     'kwargs': {
@@ -599,26 +602,29 @@ main_class = {
         'hse_tra_state_employee':{
             'permissions': {
                 HseTraditionalCorrectiveAction.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
-                HseTraditionalCorrectiveAction.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                HseTraditionalCorrectiveAction.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                HseTraditionalCorrectiveAction.STATE_CONFIRMED1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                # HseTraditionalCorrectiveAction.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
             },
         },
         'hse_tra_manager':{
             'permissions': {
-                HseTraditionalCorrectiveAction.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                HseTraditionalCorrectiveAction.STATE_CONFIRMED1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                HseTraditionalCorrectiveAction.STATE_CONFIRMED2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 HseTraditionalCorrectiveAction.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
             },
         },
         'hse_tra_gm':{
             'permissions': {
+                HseTraditionalCorrectiveAction.STATE_CONFIRMED1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                HseTraditionalCorrectiveAction.STATE_CONFIRMED2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 HseTraditionalCorrectiveAction.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
             },
         },
     },
 }
 
-inline_mixins = []
-inline_classes = {
+# inline_mixins = []
+corrective_action_inline_classes = {
     'HseTraditionalCorrectiveActionReccomendation': {
         'model': HseTraditionalCorrectiveActionReccomendation,
         'mixins': [admin.StackedInline],
@@ -627,25 +633,26 @@ inline_classes = {
             'min_num': 1,
         },
         'groups': {
-            'hse_tra_state_employee':{
-                'permissions': {
-                    HseTraditionalReport.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
-                    HseTraditionalReport.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    HseTraditionalReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                },
-            },
+            # 'hse_tra_state_employee':{
+            #     'permissions': {
+            #         HseTraditionalCorrectiveAction.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
+            #         HseTraditionalCorrectiveAction.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+            #         HseTraditionalCorrectiveAction.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+            #     },
+            # },
             'hse_tra_manager':{
                 'permissions': {
-                    HseTraditionalReport.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
-                    HseTraditionalReport.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    HseTraditionalReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # HseTraditionalCorrectiveAction.STATE_DRAFT: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    HseTraditionalCorrectiveAction.STATE_CONFIRMED1: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
+                    HseTraditionalCorrectiveAction.STATE_CONFIRMED2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    HseTraditionalCorrectiveAction.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
             'hse_tra_gm':{
                 'permissions': {
-                    HseTraditionalReport.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
-                    HseTraditionalReport.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    HseTraditionalReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # HseTraditionalCorrectiveAction.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
+                    HseTraditionalCorrectiveAction.STATE_CONFIRMED2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    HseTraditionalCorrectiveAction.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
 
@@ -659,25 +666,26 @@ inline_classes = {
             'min_num': 1,
         },
         'groups': {
-            'hse_tra_state_employee':{
-                'permissions': {
-                    HseTraditionalReport.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
-                    HseTraditionalReport.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    HseTraditionalReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                },
-            },
+            # 'hse_tra_state_employee':{
+            #     'permissions': {
+            #         HseTraditionalCorrectiveAction.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
+            #         HseTraditionalCorrectiveAction.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+            #         HseTraditionalCorrectiveAction.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+            #     },
+            # },
             'hse_tra_manager':{
                 'permissions': {
-                    HseTraditionalReport.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
-                    HseTraditionalReport.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    HseTraditionalReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # HseTraditionalCorrectiveAction.STATE_DRAFT: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    HseTraditionalCorrectiveAction.STATE_CONFIRMED2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    HseTraditionalCorrectiveAction.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
             'hse_tra_gm':{
                 'permissions': {
-                    HseTraditionalReport.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
-                    HseTraditionalReport.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    HseTraditionalReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # HseTraditionalCorrectiveAction.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
+                    # HseTraditionalCorrectiveAction.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    HseTraditionalCorrectiveAction.STATE_CONFIRMED2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    HseTraditionalCorrectiveAction.STATE_APPROVED: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
                 },
             },
 
@@ -685,6 +693,6 @@ inline_classes = {
     },
 
 }
-model_admin, inlines = create_main_form(main_class, inline_classes, main_mixins)
+model_admin, inlines = create_main_form(corrective_action_main_class, corrective_action_inline_classes, corrective_action_main_mixins)
 
 admin.site.register(model_admin.model, model_admin)
