@@ -54,10 +54,10 @@ def get_my_inlines(self, request, obj):
 
     return inlines
 
-main_mixins = [LogMixin,ReadonlyMixin]
+development_request_main_mixins = [LogMixin,ReadonlyMixin]
 models = import_module('it.models')
 DevelopmentRequestForm = models.__getattribute__('DevelopmentRequestForm')
-main_class = {
+development_request_main_class = {
     'model': DevelopmentRequestForm,
     'mixins': [],
     'kwargs': {
@@ -123,7 +123,7 @@ main_class = {
 
     },
 }
-inline_mixins = [LogMixin]
+# inline_mixins = [LogMixin]
 ItRecommendationForm = models.__getattribute__('ItRecommendationForm')
 ItRejectionForm = models.__getattribute__('ItRejectionForm')
 
@@ -133,7 +133,7 @@ def get_reject_min_num(self, request,obj=None, **kwargs):
         return 1
     return 0
 
-inline_classes = {
+development_request_inline_classes = {
     'ItRecommendationForm': {
         'model': ItRecommendationForm,
         'mixins': [admin.StackedInline],
@@ -225,15 +225,15 @@ inline_classes = {
 
 # inline_classes = {}
 
-model_admin, inlines = create_main_form(main_class,inline_classes,main_mixins)
+model_admin, inlines = create_main_form(development_request_main_class,development_request_inline_classes,development_request_main_mixins)
 
 admin.site.register(model_admin.model,model_admin)
 
 
 #######ITService##########
 
-main_mixins = [LogMixin]
-main_class = {
+it_service_main_mixins = [LogMixin]
+it_service_main_class = {
     'model': ITService,
     'mixins': [],
     'kwargs': {
@@ -261,9 +261,9 @@ main_class = {
 
     },
 }
-inline_mixins = [LogMixin]
+# inline_mixins = [LogMixin]
 
-inline_classes = {
+it_service_inline_classes = {
     'ITServiceScope': {
         'model': ITServiceScope,
         'mixins': [admin.StackedInline],
@@ -392,8 +392,6 @@ inline_classes = {
 
 }
 
-# inline_classes = {}
-
-model_admin, inlines = create_main_form(main_class,inline_classes,main_mixins)
+model_admin, inlines = create_main_form(it_service_main_class,it_service_inline_classes,it_service_main_mixins)
 
 admin.site.register(model_admin.model,model_admin)
