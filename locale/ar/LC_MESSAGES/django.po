@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-09 16:33+0200\n"
+"POT-Creation-Date: 2025-03-09 16:37+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -4695,6 +4695,10 @@ msgstr ""
 #: hr_portal/models.py:426 hr_portal/models.py:427
 msgid "Employee Moahil"
 msgstr ""
+
+#: hse_traditional/apps.py:7
+msgid "hse traditional"
+msgstr "البيئة والسلامة بالتعدين التقليدي"
 
 #: hse_traditional/models.py:71 hse_traditional/models.py:225
 #: hse_traditional/models.py:339 hse_traditional/models.py:422 it/models.py:148
