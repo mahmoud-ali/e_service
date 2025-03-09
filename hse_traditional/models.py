@@ -299,7 +299,7 @@ class HseTraditionalAccidentDamage(models.Model):
         verbose_name_plural = _("Hse Traditional Accident damages")
 
 class ImmediateAction(models.Model):
-    report = models.ForeignKey(HseTraditionalReport, on_delete=models.PROTECT, related_name="immediate_actions")
+    accident = models.ForeignKey(HseTraditionalAccident, on_delete=models.PROTECT, related_name="immediate_actions")
     description = models.TextField(_("description"))
 
     class Meta:
