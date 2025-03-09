@@ -129,10 +129,10 @@ class HseTraditionalReport(LoggingModel):
 class EnvironmentalInspection(models.Model):
     report = models.ForeignKey(HseTraditionalReport, on_delete=models.PROTECT, related_name="environmental_inspections")
     market_name = models.CharField(_("market_name"), max_length=255)
-    what = models.TextField(_("what"))
-    who = models.CharField(_("who"), max_length=255)
-    hazard_identified = models.TextField(_("hazard_identified"))
-    closed_date = models.DateField(_("closed_date"))
+    what = models.TextField(_("What ماذا"))
+    who = models.CharField(_("Who من"), max_length=255)
+    hazard_identified = models.TextField(_("Hazard identified تحديد المخاطر"))
+    closed_date = models.DateField(_("Closed date الاغلاق"))
 
     class Meta:
         verbose_name = _("Environmental Inspection")
@@ -140,10 +140,10 @@ class EnvironmentalInspection(models.Model):
 
 class WasteManagement(models.Model):
     report = models.ForeignKey(HseTraditionalReport, on_delete=models.PROTECT, related_name="waste_managements")
-    market_name = models.CharField(_("market_name"), max_length=255)
-    item_description = models.TextField(_("item_description"))
-    material_by_ton = models.FloatField(_("material_by_ton"))
-    comment = models.TextField(_("comment"))
+    market_name = models.CharField(_("Market name / اسم السوق"), max_length=255)
+    item_description = models.TextField(_("Item description وصف"))
+    material_by_ton = models.FloatField(_("Material by ton الخام بالطن"))
+    comment = models.TextField(_("Comment تعليق"))
 
     class Meta:
         verbose_name = _("Waste Management")
@@ -154,17 +154,17 @@ class TrainingAwareness(models.Model):
     TRAINING_TYPE2 = 2
 
     TRAINING_CHOICES = {
-        TRAINING_TYPE1: _("Training"),
-        TRAINING_TYPE2: _("Awareness"),
+        TRAINING_TYPE1: _("Training - تدريب"),
+        TRAINING_TYPE2: _("Awareness - إرشاد"),
     }
 
     report = models.ForeignKey(HseTraditionalReport, on_delete=models.PROTECT, related_name="training_awarenesses")
-    market_name = models.CharField(_("market_name"), max_length=255)
-    traning_type = models.IntegerField(_("training_type"), choices=TRAINING_CHOICES.items())
+    market_name = models.CharField(_("Market name / اسم السوق"), max_length=255)
+    traning_type = models.IntegerField(_("نوع التدريب -  type of training"), choices=TRAINING_CHOICES.items())
     training_id = models.CharField(_("training_id"), max_length=255)
-    subject = models.TextField(_("subject"))
-    attendees = models.IntegerField(_("attendees"))
-    notes = models.TextField(_("notes"))
+    subject = models.TextField(_("Subject الموضوع"))
+    attendees = models.IntegerField(_("Attendees الحضور"))
+    notes = models.TextField(_("Notes ملاحظات"))
 
     class Meta:
         verbose_name = _("Training Awareness")
@@ -172,9 +172,9 @@ class TrainingAwareness(models.Model):
 
 class ArrangementOfMarkets(models.Model):
     report = models.ForeignKey(HseTraditionalReport, on_delete=models.PROTECT, related_name="arrangement_of_markets")
-    market_name = models.CharField(_("market_name"), max_length=255)
-    percent = models.IntegerField(_("percent"))
-    notes = models.TextField(_("notes"))
+    market_name = models.CharField(_("Market name / اسم السوق"), max_length=255)
+    percent = models.IntegerField(_("Percent % النسبة"))
+    notes = models.TextField(_("Notes ملاحظات"))
 
     class Meta:
         verbose_name = _("Arrangement Of Market")
@@ -182,8 +182,8 @@ class ArrangementOfMarkets(models.Model):
 
 class EnvironmentalRequirements(models.Model):
     report = models.ForeignKey(HseTraditionalReport, on_delete=models.PROTECT, related_name="environmental_requirements")
-    market_name = models.CharField(_("market_name"), max_length=255)
-    percent = models.FloatField(_("percent"))
+    market_name = models.CharField(_("Market name / اسم السوق"), max_length=255)
+    percent = models.FloatField(_("Percent % النسبة"))
 
     class Meta:
         verbose_name = _("Environmental Requirement")
@@ -192,8 +192,8 @@ class EnvironmentalRequirements(models.Model):
 class QuickEmergencyTeam(models.Model):
     report = models.ForeignKey(HseTraditionalReport, on_delete=models.PROTECT, related_name="quick_emergency_teams")
     issue = models.TextField(_("issue"))
-    communication_factors = models.TextField(_("communication_factors"))
-    notes = models.TextField(_("notes"))
+    communication_factors = models.TextField(_("Communication factors"))
+    notes = models.TextField(_("Notes ملاحظات"))
 
     class Meta:
         verbose_name = _("Quick Emergency Team")
@@ -201,8 +201,8 @@ class QuickEmergencyTeam(models.Model):
 
 class Achievement(models.Model):
     report = models.ForeignKey(HseTraditionalReport, on_delete=models.PROTECT, related_name="achievements")
-    name = models.CharField(_("name"), max_length=255)
-    brief = models.TextField(_("brief"))
+    name = models.CharField(_("Achievements   الإنجازات"), max_length=255)
+    brief = models.TextField(_("Describe briefly , وصف مختصر"))
 
     class Meta:
         verbose_name = _("Achievement")
@@ -213,8 +213,8 @@ class HseTraditionalAccident(LoggingModel):
     ACCIDENT_TYPE_ENVIRONMENTAL = 'enviromental'
 
     ACCIDENT_TYPE_CHOICES = {
-        ACCIDENT_TYPE_SAFTY: _("Safty"),
-        ACCIDENT_TYPE_ENVIRONMENTAL: _("Environmental"),
+        ACCIDENT_TYPE_SAFTY: _("Safty - سلامة"),
+        ACCIDENT_TYPE_ENVIRONMENTAL: _("Environmental - بيئي"),
     }
 
     STATE_DRAFT = 1
@@ -230,9 +230,9 @@ class HseTraditionalAccident(LoggingModel):
     type = models.CharField(_("accident_type"), max_length=20, choices=ACCIDENT_TYPE_CHOICES.items())
     source_state = models.ForeignKey(LkpState, on_delete=models.PROTECT, verbose_name=_("source_state"))
     state = models.IntegerField(_("record_state"), choices=STATE_CHOICES.items(), default=STATE_DRAFT)
-    what = models.TextField(_("what"))
-    when = models.DateTimeField(_("when"))
-    where = models.TextField(_("where"))
+    what = models.TextField(_("what - ماذا"))
+    when = models.DateTimeField(_("when - متى"))
+    where = models.TextField(_("where - اين"))
 
     class Meta:
         verbose_name = _("Hse Traditional Accident")

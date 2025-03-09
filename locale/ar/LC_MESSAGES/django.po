@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-05 15:22+0200\n"
+"POT-Creation-Date: 2025-03-09 16:33+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -231,7 +231,8 @@ msgstr "عدد الرخص"
 #: gold_travel/models.py:22 gold_travel/models.py:50 gold_travel/models.py:145
 #: gold_travel/models.py:262 gold_travel_traditional/models.py:18
 #: gold_travel_traditional/models.py:29 gold_travel_traditional/models.py:42
-#: gold_travel_traditional/models.py:114 pa/templates/pa/company_panel.html:21
+#: gold_travel_traditional/models.py:114 hse_traditional/models.py:52
+#: hse_traditional/models.py:78 pa/templates/pa/company_panel.html:21
 #: planning/models.py:491 planning/models.py:511 planning/models.py:567
 #: planning/models.py:608 planning/models.py:658 planning/models.py:678
 #: planning/models.py:760 planning/models.py:798 traditional_api/models.py:30
@@ -257,63 +258,63 @@ msgstr "ملف الشركة"
 msgid "company_borrow_from"
 msgstr "الشركة المستلف منها"
 
-#: company_profile/models.py:26 hr_portal/models.py:22 planning/models.py:71
-#: revenu_dist/models.py:22
+#: company_profile/models.py:26 hr_portal/models.py:22
+#: hse_traditional/models.py:21 planning/models.py:71 revenu_dist/models.py:22
 msgid "MONTH_JAN"
 msgstr "يناير"
 
-#: company_profile/models.py:27 hr_portal/models.py:23 planning/models.py:72
-#: revenu_dist/models.py:23
+#: company_profile/models.py:27 hr_portal/models.py:23
+#: hse_traditional/models.py:22 planning/models.py:72 revenu_dist/models.py:23
 msgid "MONTH_FEB"
 msgstr "فبراير"
 
-#: company_profile/models.py:28 hr_portal/models.py:24 planning/models.py:73
-#: revenu_dist/models.py:24
+#: company_profile/models.py:28 hr_portal/models.py:24
+#: hse_traditional/models.py:23 planning/models.py:73 revenu_dist/models.py:24
 msgid "MONTH_MAR"
 msgstr "مارس"
 
-#: company_profile/models.py:29 hr_portal/models.py:25 planning/models.py:74
-#: revenu_dist/models.py:25
+#: company_profile/models.py:29 hr_portal/models.py:25
+#: hse_traditional/models.py:24 planning/models.py:74 revenu_dist/models.py:25
 msgid "MONTH_APR"
 msgstr "ابريل"
 
-#: company_profile/models.py:30 hr_portal/models.py:26 planning/models.py:75
-#: revenu_dist/models.py:26
+#: company_profile/models.py:30 hr_portal/models.py:26
+#: hse_traditional/models.py:25 planning/models.py:75 revenu_dist/models.py:26
 msgid "MONTH_MAY"
 msgstr "مايو"
 
-#: company_profile/models.py:31 hr_portal/models.py:27 planning/models.py:76
-#: revenu_dist/models.py:27
+#: company_profile/models.py:31 hr_portal/models.py:27
+#: hse_traditional/models.py:26 planning/models.py:76 revenu_dist/models.py:27
 msgid "MONTH_JUN"
 msgstr "يونيو"
 
-#: company_profile/models.py:32 hr_portal/models.py:28 planning/models.py:77
-#: revenu_dist/models.py:28
+#: company_profile/models.py:32 hr_portal/models.py:28
+#: hse_traditional/models.py:27 planning/models.py:77 revenu_dist/models.py:28
 msgid "MONTH_JLY"
 msgstr "يوليو"
 
-#: company_profile/models.py:33 hr_portal/models.py:29 planning/models.py:78
-#: revenu_dist/models.py:29
+#: company_profile/models.py:33 hr_portal/models.py:29
+#: hse_traditional/models.py:28 planning/models.py:78 revenu_dist/models.py:29
 msgid "MONTH_AUG"
 msgstr "اغسطس"
 
-#: company_profile/models.py:34 hr_portal/models.py:30 planning/models.py:79
-#: revenu_dist/models.py:30
+#: company_profile/models.py:34 hr_portal/models.py:30
+#: hse_traditional/models.py:29 planning/models.py:79 revenu_dist/models.py:30
 msgid "MONTH_SEP"
 msgstr "سبتمبر"
 
-#: company_profile/models.py:35 hr_portal/models.py:31 planning/models.py:80
-#: revenu_dist/models.py:31
+#: company_profile/models.py:35 hr_portal/models.py:31
+#: hse_traditional/models.py:30 planning/models.py:80 revenu_dist/models.py:31
 msgid "MONTH_OCT"
 msgstr "اكتوبر"
 
-#: company_profile/models.py:36 hr_portal/models.py:32 planning/models.py:81
-#: revenu_dist/models.py:32
+#: company_profile/models.py:36 hr_portal/models.py:32
+#: hse_traditional/models.py:31 planning/models.py:81 revenu_dist/models.py:32
 msgid "MONTH_NOV"
 msgstr "نوفمبر"
 
-#: company_profile/models.py:37 hr_portal/models.py:33 planning/models.py:82
-#: revenu_dist/models.py:33
+#: company_profile/models.py:37 hr_portal/models.py:33
+#: hse_traditional/models.py:32 planning/models.py:82 revenu_dist/models.py:33
 msgid "MONTH_DEC"
 msgstr "ديسمبر"
 
@@ -324,7 +325,7 @@ msgstr "ديسمبر"
 #: dabtiaat_altaedin/models.py:12 executive_office/models.py:27
 #: gold_travel/models.py:12 gold_travel_traditional/admin.py:340
 #: gold_travel_traditional/models.py:8 help_request/models.py:11
-#: hr_portal/models.py:89 hse_traditional/models.py:10 mokhalafat/models.py:6
+#: hr_portal/models.py:89 hse_traditional/models.py:40 mokhalafat/models.py:6
 #: pa/models.py:46 planning/models.py:183 production_control/models.py:13
 #: revenu_dist/models.py:53 sswg/models.py:13 traditional_api/models.py:10
 #: workflow/model_utils.py:9 workflow/model_utils.py:71
@@ -335,7 +336,7 @@ msgstr "تاريخ الانشاء"
 #: executive_office/models.py:28 gold_travel/models.py:13
 #: gold_travel_traditional/admin.py:340 gold_travel_traditional/models.py:9
 #: help_request/models.py:13 hr_portal/models.py:90
-#: hse_traditional/models.py:11 mokhalafat/models.py:7 pa/models.py:47
+#: hse_traditional/models.py:41 mokhalafat/models.py:7 pa/models.py:47
 #: planning/models.py:184 production_control/models.py:14
 #: revenu_dist/models.py:54 sswg/models.py:14 traditional_api/models.py:11
 #: workflow/model_utils.py:10 workflow/model_utils.py:72
@@ -349,7 +350,7 @@ msgstr "المستخدم المسئول عن الانشاء"
 #: dabtiaat_altaedin/models.py:15 executive_office/models.py:30
 #: gold_travel/models.py:15 gold_travel_traditional/admin.py:340
 #: gold_travel_traditional/models.py:11 help_request/models.py:12
-#: hr_portal/models.py:92 hse_traditional/models.py:13 mokhalafat/models.py:9
+#: hr_portal/models.py:92 hse_traditional/models.py:43 mokhalafat/models.py:9
 #: pa/models.py:49 planning/models.py:185 production_control/models.py:16
 #: revenu_dist/models.py:56 sswg/models.py:16 traditional_api/models.py:13
 #: workflow/model_utils.py:12 workflow/model_utils.py:74
@@ -360,7 +361,7 @@ msgstr "تاريخ اخر تعديل"
 #: executive_office/models.py:31 gold_travel/models.py:16
 #: gold_travel_traditional/admin.py:340 gold_travel_traditional/models.py:12
 #: help_request/models.py:14 hr_portal/models.py:93
-#: hse_traditional/models.py:14 mokhalafat/models.py:10 pa/models.py:50
+#: hse_traditional/models.py:44 mokhalafat/models.py:10 pa/models.py:50
 #: planning/models.py:186 production_control/models.py:17
 #: revenu_dist/models.py:57 sswg/models.py:17 traditional_api/models.py:14
 #: workflow/model_utils.py:13 workflow/model_utils.py:75
@@ -389,10 +390,11 @@ msgstr ""
 #: executive_office/models.py:71 gold_travel/models.py:49
 #: gold_travel/models.py:65 gold_travel_traditional/models.py:19
 #: gold_travel_traditional/models.py:30 gold_travel_traditional/models.py:41
-#: hr_portal/models.py:405 it/models.py:32 it/models.py:164
-#: planning/models.py:201 planning/models.py:224 planning/models.py:251
-#: production_control/models.py:28 production_control/models.py:29
-#: revenu_dist/models.py:63 revenu_dist/models.py:73 revenu_dist/models.py:96
+#: hr_portal/models.py:405 hse_traditional/models.py:51 it/models.py:32
+#: it/models.py:164 planning/models.py:201 planning/models.py:224
+#: planning/models.py:251 production_control/models.py:28
+#: production_control/models.py:29 revenu_dist/models.py:63
+#: revenu_dist/models.py:73 revenu_dist/models.py:96
 #: traditional_api/models.py:20 traditional_api/models.py:31
 #: traditional_api/models.py:42
 msgid "name"
@@ -1554,7 +1556,9 @@ msgid "item"
 msgstr "البند"
 
 #: company_profile/models.py:890 company_profile/models.py:1292
-#: it/models.py:167 it/models.py:226 it/models.py:243
+#: hse_traditional/models.py:319 hse_traditional/models.py:491
+#: hse_traditional/models.py:499 it/models.py:167 it/models.py:226
+#: it/models.py:243
 msgid "description"
 msgstr "الوصف"
 
@@ -1805,7 +1809,8 @@ msgstr "مكان الحادث"
 msgid "accident_dt"
 msgstr "تاريخ الحادث"
 
-#: company_profile/models.py:1137
+#: company_profile/models.py:1137 hse_traditional/models.py:230
+#: hse_traditional/models.py:344
 msgid "accident_type"
 msgstr "نوع الحادث"
 
@@ -1822,14 +1827,15 @@ msgstr "تقرير التحقيق عن حادث"
 msgid "Application: HSE Accident Report"
 msgstr "تقرير التحقيق عن حادث"
 
-#: company_profile/models.py:1155 planning/models.py:249 planning/models.py:332
-#: planning/models.py:434
+#: company_profile/models.py:1155 hse_traditional/models.py:76
+#: planning/models.py:249 planning/models.py:332 planning/models.py:434
 msgid "year"
 msgstr "العام"
 
-#: company_profile/models.py:1156 planning/models.py:270 planning/models.py:350
-#: planning/models.py:359 planning/models.py:368 planning/models.py:378
-#: planning/models.py:387 planning/models.py:397 planning/models.py:435
+#: company_profile/models.py:1156 hse_traditional/models.py:77
+#: planning/models.py:270 planning/models.py:350 planning/models.py:359
+#: planning/models.py:368 planning/models.py:378 planning/models.py:387
+#: planning/models.py:397 planning/models.py:435
 msgid "month"
 msgstr "شهر"
 
@@ -3466,7 +3472,7 @@ msgid "state_smrc"
 msgstr "اعتماد ممثل الشركة السودانية بالولاية"
 
 #: dabtiaat_altaedin/admin.py:275 gold_travel/admin.py:369
-#: gold_travel/admin.py:648 sswg/admin.py:235 workflow/admin_utils.py:219
+#: gold_travel/admin.py:648 sswg/admin.py:235 workflow/admin_utils.py:220
 msgid "application confirmed successfully!"
 msgstr "تم إعتماد الطلب بنجاح."
 
@@ -3517,8 +3523,10 @@ msgstr "المبلغ الكلي"
 #: executive_office/models.py:149 gold_travel/admin.py:417
 #: gold_travel/admin.py:458 gold_travel/models.py:143 gold_travel/models.py:261
 #: gold_travel_traditional/admin.py:339 gold_travel_traditional/models.py:112
-#: it/models.py:37 it/models.py:168 pa/models.py:95 pa/models.py:133
-#: pa/models.py:197 pa/models.py:307 pa/models.py:519 pa/tables/payment.py:34
+#: hse_traditional/models.py:79 hse_traditional/models.py:232
+#: hse_traditional/models.py:346 hse_traditional/models.py:429 it/models.py:37
+#: it/models.py:168 pa/models.py:95 pa/models.py:133 pa/models.py:197
+#: pa/models.py:307 pa/models.py:519 pa/tables/payment.py:34
 #: pa/tables/request.py:53 planning/models.py:333 planning/models.py:436
 #: planning/models.py:459 production_control/models.py:51
 #: production_control/models.py:84 production_control/models.py:134
@@ -3527,7 +3535,8 @@ msgid "record_state"
 msgstr "الحالة"
 
 #: dabtiaat_altaedin/admin.py:304 gold_travel/admin.py:417
-#: gold_travel_traditional/admin.py:339
+#: gold_travel_traditional/admin.py:339 hse_traditional/models.py:231
+#: hse_traditional/models.py:345 hse_traditional/models.py:428
 msgid "source_state"
 msgstr "الولاية المصدر"
 
@@ -3575,6 +3584,7 @@ msgstr "نظام ضبطيات التعدين"
 #: executive_office/forms.py:15 executive_office/models.py:37
 #: gold_travel/forms.py:11 gold_travel/models.py:48
 #: gold_travel_traditional/forms.py:12 gold_travel_traditional/models.py:40
+#: hse_traditional/forms.py:10 hse_traditional/models.py:50
 #: planning/forms.py:17 planning/models.py:200 production_control/forms.py:22
 #: production_control/models.py:27
 msgid "user"
@@ -3589,10 +3599,12 @@ msgid "authority"
 msgstr "الجهة"
 
 #: dabtiaat_altaedin/models.py:58 gold_travel/models.py:61
+#: hse_traditional/models.py:62
 msgid "state representative"
 msgstr "الممثل بالولاية"
 
 #: dabtiaat_altaedin/models.py:59 gold_travel/models.py:62
+#: hse_traditional/models.py:63
 msgid "state representatives"
 msgstr "الممثلين بالولاية"
 
@@ -3655,6 +3667,7 @@ msgstr "عرض الكل"
 #: executive_office/templates/admin/executive_office/submit_line.html:5
 #: gold_travel/templates/admin/gold_travel/appmovegold/pagination.html:17
 #: gold_travel_traditional/templates/admin/gold_travel_traditional/appmovegoldtraditional/sold_application.html:19
+#: hse_traditional/templates/admin/hse_traditional/submit_line.html:5
 #: it/templates/admin/it/submit_line.html:5
 #: production_control/templates/admin/production_control/goldproductionform/pagination.html:17
 #: production_control/templates/admin/production_control/submit_line.html:4
@@ -3808,6 +3821,7 @@ msgid "Save & Confirm"
 msgstr "حفظ وتأكيد"
 
 #: executive_office/templates/admin/executive_office/submit_line.html:13
+#: hse_traditional/templates/admin/hse_traditional/submit_line.html:15
 #: it/templates/admin/it/submit_line.html:15
 #: pa/templates/admin/pa/submit_line.html:8
 #: production_control/templates/admin/production_control/submit_line.html:8
@@ -3816,6 +3830,7 @@ msgid "Close"
 msgstr "إغلاق"
 
 #: executive_office/templates/admin/executive_office/submit_line.html:17
+#: hse_traditional/templates/admin/hse_traditional/submit_line.html:19
 #: it/templates/admin/it/submit_line.html:19
 #: pa/templates/admin/pa/submit_line.html:12
 #: production_control/templates/admin/production_control/submit_line.html:12
@@ -4681,6 +4696,348 @@ msgstr ""
 msgid "Employee Moahil"
 msgstr ""
 
+#: hse_traditional/models.py:71 hse_traditional/models.py:225
+#: hse_traditional/models.py:339 hse_traditional/models.py:422 it/models.py:148
+#: pa/models.py:33
+msgid "draft"
+msgstr "مسودة"
+
+#: hse_traditional/models.py:72 hse_traditional/models.py:226
+#: hse_traditional/models.py:340 it/models.py:149
+msgid "confirmed"
+msgstr "مؤكد"
+
+#: hse_traditional/models.py:73 it/models.py:22 it/models.py:150
+msgid "IT_STATE_APPROVED"
+msgstr "اعتماد الطلب بواسطة مدير الادارة العامة"
+
+#: hse_traditional/models.py:82
+msgid "Hse Traditional Monthly Report"
+msgstr "تقرير البيئة والسلامة"
+
+#: hse_traditional/models.py:83
+msgid "Hse Traditional Monthly Reports"
+msgstr "تقارير البيئة والسلامة"
+
+#: hse_traditional/models.py:131
+msgid "market_name"
+msgstr "اسم اوقلس"
+
+#: hse_traditional/models.py:132
+msgid "What ماذا"
+msgstr ""
+
+#: hse_traditional/models.py:133
+msgid "Who من"
+msgstr ""
+
+#: hse_traditional/models.py:134
+msgid "Hazard identified تحديد المخاطر"
+msgstr ""
+
+#: hse_traditional/models.py:135
+msgid "Closed date الاغلاق"
+msgstr ""
+
+#: hse_traditional/models.py:138
+msgid "Environmental Inspection"
+msgstr "التفتيش البيئي لسوق تعدين"
+
+#: hse_traditional/models.py:139
+msgid "Environmental Inspections"
+msgstr "التفتيش البيئي لأسواق التعدين"
+
+#: hse_traditional/models.py:143 hse_traditional/models.py:162
+#: hse_traditional/models.py:175 hse_traditional/models.py:185
+msgid "Market name / اسم السوق"
+msgstr ""
+
+#: hse_traditional/models.py:144
+#, fuzzy
+#| msgid "item_description"
+msgid "Item description وصف"
+msgstr "وصف التحديث"
+
+#: hse_traditional/models.py:145
+msgid "Material by ton الخام بالطن"
+msgstr ""
+
+#: hse_traditional/models.py:146
+msgid "Comment تعليق"
+msgstr ""
+
+#: hse_traditional/models.py:149
+msgid "Waste Management"
+msgstr "إدارة نفايات التعدين"
+
+#: hse_traditional/models.py:150
+msgid "Waste Managements"
+msgstr "إدارة نفايات التعدين"
+
+#: hse_traditional/models.py:157
+msgid "Training - تدريب"
+msgstr ""
+
+#: hse_traditional/models.py:158
+msgid "Awareness - إرشاد"
+msgstr ""
+
+#: hse_traditional/models.py:163
+msgid "نوع التدريب -  type of training"
+msgstr ""
+
+#: hse_traditional/models.py:164
+msgid "training_id"
+msgstr "سيء"
+
+#: hse_traditional/models.py:165
+msgid "Subject الموضوع"
+msgstr ""
+
+#: hse_traditional/models.py:166
+msgid "Attendees الحضور"
+msgstr ""
+
+#: hse_traditional/models.py:167 hse_traditional/models.py:177
+#: hse_traditional/models.py:196
+msgid "Notes ملاحظات"
+msgstr ""
+
+#: hse_traditional/models.py:170 hse_traditional/models.py:171
+msgid "Training Awareness"
+msgstr "Trainings / Awareness"
+
+#: hse_traditional/models.py:176 hse_traditional/models.py:186
+msgid "Percent % النسبة"
+msgstr ""
+
+#: hse_traditional/models.py:180
+msgid "Arrangement Of Market"
+msgstr "تنظيم أسواق التعدين"
+
+#: hse_traditional/models.py:181
+msgid "Arrangement Of Markets"
+msgstr "تنظيم أسواق التعدين"
+
+#: hse_traditional/models.py:189
+msgid "Environmental Requirement"
+msgstr "توزيع اشتراطات البيئة والسلامة"
+
+#: hse_traditional/models.py:190
+msgid "Environmental Requirements"
+msgstr "توزيع اشتراطات البيئة والسلامة"
+
+#: hse_traditional/models.py:194
+#, fuzzy
+#| msgid "issuer"
+msgid "issue"
+msgstr "مصدر الطلب"
+
+#: hse_traditional/models.py:195
+#, fuzzy
+#| msgid "amount_factor"
+msgid "Communication factors"
+msgstr "معامل حساب القيمة"
+
+#: hse_traditional/models.py:199
+msgid "Quick Emergency Team"
+msgstr "فريق استجابة الطوارئ السريعة"
+
+#: hse_traditional/models.py:200
+msgid "Quick Emergency Teams"
+msgstr "فريق استجابة الطوارئ السريعة"
+
+#: hse_traditional/models.py:204
+msgid "Achievements   الإنجازات"
+msgstr ""
+
+#: hse_traditional/models.py:205
+msgid "Describe briefly , وصف مختصر"
+msgstr ""
+
+#: hse_traditional/models.py:208
+msgid "Achievement"
+msgstr "الانجازات خلال فترة التقرير"
+
+#: hse_traditional/models.py:209
+msgid "Achievements"
+msgstr "الانجازات خلال فترة التقرير"
+
+#: hse_traditional/models.py:216
+msgid "Safty - سلامة"
+msgstr ""
+
+#: hse_traditional/models.py:217
+#, fuzzy
+#| msgid "HSE work environment"
+msgid "Environmental - بيئي"
+msgstr "تقييم بيئة العمل Work environment"
+
+#: hse_traditional/models.py:227 hse_traditional/models.py:341
+#: hse_traditional/models.py:425
+#, fuzzy
+#| msgid "Approved"
+msgid "approved"
+msgstr "تم التصديق"
+
+#: hse_traditional/models.py:233
+msgid "what - ماذا"
+msgstr ""
+
+#: hse_traditional/models.py:234
+msgid "when - متى"
+msgstr ""
+
+#: hse_traditional/models.py:235
+msgid "where - اين"
+msgstr ""
+
+#: hse_traditional/models.py:238
+msgid "Hse Traditional Accident"
+msgstr "Hse Accident Report - تقرير حادث"
+
+#: hse_traditional/models.py:239
+msgid "Hse Traditional Accidents"
+msgstr "Hse Accident Reports - تقارير حادث"
+
+#: hse_traditional/models.py:287 hse_traditional/models.py:401
+msgid "who"
+msgstr "Who - من"
+
+#: hse_traditional/models.py:290
+msgid "Hse Traditional Accident Who"
+msgstr "Who - من"
+
+#: hse_traditional/models.py:291
+msgid "Hse Traditional Accident Whos"
+msgstr "Who - من"
+
+#: hse_traditional/models.py:295 hse_traditional/models.py:409
+msgid "why"
+msgstr "Why - لماذا"
+
+#: hse_traditional/models.py:298
+msgid "Hse Traditional Accident Why"
+msgstr "Why - لماذا"
+
+#: hse_traditional/models.py:299
+msgid "Hse Traditional Accident Whys"
+msgstr "Why - لماذا"
+
+#: hse_traditional/models.py:303
+msgid "injuries"
+msgstr ""
+
+#: hse_traditional/models.py:306
+msgid "Hse Traditional Accident injury"
+msgstr ""
+
+#: hse_traditional/models.py:307
+msgid "Hse Traditional Accident injuries"
+msgstr ""
+
+#: hse_traditional/models.py:311
+msgid "damage"
+msgstr ""
+
+#: hse_traditional/models.py:314
+msgid "Hse Traditional Accident damage"
+msgstr ""
+
+#: hse_traditional/models.py:315
+msgid "Hse Traditional Accident damages"
+msgstr ""
+
+#: hse_traditional/models.py:322
+msgid "Immediate Action"
+msgstr "Immediate Action"
+
+#: hse_traditional/models.py:323
+msgid "Immediate Actions"
+msgstr "Immediate Actions"
+
+#: hse_traditional/models.py:330
+msgid "Safty"
+msgstr ""
+
+#: hse_traditional/models.py:331
+#, fuzzy
+#| msgid "HSE work environment"
+msgid "Environmental"
+msgstr "تقييم بيئة العمل Work environment"
+
+#: hse_traditional/models.py:347
+msgid "what"
+msgstr "What - "
+
+#: hse_traditional/models.py:348
+msgid "when"
+msgstr "When - "
+
+#: hse_traditional/models.py:349
+msgid "where"
+msgstr "Where - "
+
+#: hse_traditional/models.py:352 hse_traditional/models.py:353
+msgid "Hse Traditional Near Miss"
+msgstr "Hse Traditional Near Miss - حوادث وشيكة الوقوع"
+
+#: hse_traditional/models.py:404
+msgid "Hse Traditional Near Miss Who"
+msgstr "Who - من"
+
+#: hse_traditional/models.py:405
+msgid "Hse Traditional Near Miss Whos"
+msgstr "Who - من"
+
+#: hse_traditional/models.py:412
+msgid "Hse Traditional Near Miss why"
+msgstr "موقف أسواق التعدين التقليدي"
+
+#: hse_traditional/models.py:413
+msgid "Hse Traditional Near Miss whys"
+msgstr "Why - لماذا"
+
+#: hse_traditional/models.py:423
+msgid "confirmed_emp"
+msgstr "تأكيد مشرف الولاية"
+
+#: hse_traditional/models.py:424
+msgid "confirmed_mngr"
+msgstr "تأكيد مدير الادارة"
+
+#: hse_traditional/models.py:430
+msgid "source_accident"
+msgstr "الحادث"
+
+#: hse_traditional/models.py:431
+msgid "source_near_miss"
+msgstr "حادث وشيك الوقوع"
+
+#: hse_traditional/models.py:434
+msgid "corrective_action"
+msgstr "Corrective action - اجراء تصحيحي"
+
+#: hse_traditional/models.py:437 hse_traditional/models.py:438
+msgid "Hse Traditional Corrective Action"
+msgstr "Corrective action - اجراء تصحيحي"
+
+#: hse_traditional/models.py:494
+msgid "Hse Traditional Corrective Action Reccomendation"
+msgstr "Reccomendation - التوصية"
+
+#: hse_traditional/models.py:495
+msgid "Hse Traditional Corrective Action Reccomendations"
+msgstr "Reccomendations - التوصيات"
+
+#: hse_traditional/models.py:502
+msgid "Hse Traditional Corrective Action Final Decision"
+msgstr "Final Decision - القرار النهائي"
+
+#: hse_traditional/models.py:503
+msgid "Hse Traditional Corrective Action Final Decisions"
+msgstr "Final Decisions - القرار النهائي"
+
 #: it/models.py:20
 msgid "IT_STATE_DRAFT"
 msgstr "مسودة"
@@ -4688,10 +5045,6 @@ msgstr "مسودة"
 #: it/models.py:21
 msgid "IT_STATE_CONFIRMED"
 msgstr "تأكيد الطلب بواسطة مدير الادارة الفرعية"
-
-#: it/models.py:22 it/models.py:150
-msgid "IT_STATE_APPROVED"
-msgstr "اعتماد الطلب بواسطة مدير الادارة العامة"
 
 #: it/models.py:23
 msgid "IT_STATE_IT_MANAGER_STUDING_APPROVAL"
@@ -4774,14 +5127,6 @@ msgstr "رفض مدير تقنية المعلومات"
 #: it/models.py:138
 msgid "ItRejectionForms"
 msgstr "رفض مدير تقنية المعلومات"
-
-#: it/models.py:148 pa/models.py:33
-msgid "draft"
-msgstr "مسودة"
-
-#: it/models.py:149
-msgid "confirmed"
-msgstr "مؤكد"
 
 #: it/models.py:159
 msgid "under_development"
@@ -6362,7 +6707,7 @@ msgstr "تفاصيل توزيع الايرادات"
 msgid "SSWG State "
 msgstr "مسودة"
 
-#: sswg/admin.py:269 workflow/admin_utils.py:192
+#: sswg/admin.py:269 workflow/admin_utils.py:193
 msgid "application not confirmed!"
 msgstr "لم يتم إعتماد الطلب، الرجاء التأكد من اكتمال البيانات."
 
@@ -6714,9 +7059,18 @@ msgstr "تم تسجيل الدخول بنجاح."
 msgid "Record added sucessfully."
 msgstr "تم حفظ السجل بنجاح."
 
-#: workflow/admin_utils.py:218
+#: workflow/admin_utils.py:219
 msgid "Transition to"
 msgstr ""
+
+#~ msgid "material_by_ton"
+#~ msgstr "المواد المطلوبة"
+
+#~ msgid "training_type"
+#~ msgstr "نوع الحادث"
+
+#~ msgid "notes"
+#~ msgstr "البيان"
 
 #, fuzzy
 #~| msgid "SSWG State 1"
