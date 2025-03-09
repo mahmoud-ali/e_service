@@ -7,15 +7,15 @@ from workflow.admin_utils import create_main_form
 
 class LogMixin:
     def save_model(self, request, obj, form, change):
-        if not obj.pk:  # New object
-            obj.created_by = request.user
-            try:
+        try:
+            if not obj.pk:  # New object
+                obj.created_by = request.user
                 obj.source_state = request.user.hse_tra_state.state
-            except:
-                pass
 
-        obj.updated_by = request.user
-        super().save_model(request, obj, form, change)
+            obj.updated_by = request.user
+            super().save_model(request, obj, form, change)
+        except:
+            pass
 
     def save_formset(self, request, form, formset, change):
         instances = formset.save(commit=False)
