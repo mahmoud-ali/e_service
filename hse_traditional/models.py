@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from django.forms import ValidationError
 from django.utils.translation import gettext_lazy as _
 
 from company_profile.models import LkpState
@@ -435,6 +436,10 @@ class HseTraditionalCorrectiveAction(LoggingModel):
     class Meta:
         verbose_name = _("Hse Traditional Corrective Action")
         verbose_name_plural = _("Hse Traditional Corrective Action")
+
+    def clean(self):
+        if not self.source_accident and not self.source_near_miss:
+            raise ValidationError(_(f"Either source_accident or source_near_miss must be provided."))
 
     def __str__(self):
         return f"{self.corrective_action}"
