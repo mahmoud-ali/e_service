@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
 
-from hse_traditional.forms import TblStateRepresentativeForm
+from hse_traditional.forms import HseTraditionalCorrectiveActionForm, TblStateRepresentativeForm
 from hse_traditional.models import Achievement, ArrangementOfMarkets, EnvironmentalInspection, EnvironmentalRequirements, HseTraditionalAccident, HseTraditionalAccidentDamage, HseTraditionalAccidentInjury, HseTraditionalAccidentWho, HseTraditionalAccidentWhy, HseTraditionalCorrectiveAction, HseTraditionalCorrectiveActionFinalDecision, HseTraditionalCorrectiveActionReccomendation, HseTraditionalNearMiss, HseTraditionalNearMissWho, HseTraditionalNearMissWhy, HseTraditionalReport, ImmediateAction, QuickEmergencyTeam, TblStateRepresentative, TrainingAwareness, WasteManagement
 from workflow.admin_utils import create_main_form
 
@@ -617,6 +617,13 @@ admin.site.register(model_admin.model, model_admin)
 
 
 ##########Corrective action################
+
+def get_corrective_action_form(self, request, obj=None, **kwargs):
+
+    HseTraditionalCorrectiveActionForm.request = request
+
+    return HseTraditionalCorrectiveActionForm
+
 corrective_action_main_mixins = [LogMixin]
 corrective_action_main_class = {
     'model': HseTraditionalCorrectiveAction,
@@ -625,6 +632,7 @@ corrective_action_main_class = {
         'list_display': ('source_accident','source_near_miss','source_state','state'),
         'list_filter': ('source_accident','source_near_miss','source_state','state'),
         'exclude': ('state','source_state'),
+        'get_form': get_corrective_action_form,
         'save_as_continue': False,
     },
     'groups': {
