@@ -5100,7 +5100,7 @@ msgstr "استمارة طلب برنامج"
 
 #: it/models.py:41
 msgid "DevelopmentRequestForms"
-msgstr "استمارات طلب برنامج"
+msgstr "طلب برنامج"
 
 #: it/models.py:120
 #, fuzzy
