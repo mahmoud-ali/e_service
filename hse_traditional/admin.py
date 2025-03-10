@@ -413,7 +413,7 @@ accident_inline_classes = {
         'model': HseTraditionalAccidentInjury,
         'mixins': [admin.StackedInline],
         'kwargs': {
-            'extra': 1,
+            'extra': 0,
             'min_num': 0,
         },
         'groups': {
@@ -444,7 +444,7 @@ accident_inline_classes = {
         'model': HseTraditionalAccidentDamage,
         'mixins': [admin.StackedInline],
         'kwargs': {
-            'extra': 1,
+            'extra': 0,
             'min_num': 0,
         },
         'groups': {
@@ -635,7 +635,7 @@ corrective_action_main_class = {
         },
         'hse_tra_manager':{
             'permissions': {
-                HseTraditionalCorrectiveAction.STATE_CONFIRMED1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                HseTraditionalCorrectiveAction.STATE_CONFIRMED1: {'add': 0, 'change': 1, 'delete': 0, 'view': 1},
                 HseTraditionalCorrectiveAction.STATE_CONFIRMED2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 HseTraditionalCorrectiveAction.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
             },
@@ -643,7 +643,7 @@ corrective_action_main_class = {
         'hse_tra_gm':{
             'permissions': {
                 HseTraditionalCorrectiveAction.STATE_CONFIRMED1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                HseTraditionalCorrectiveAction.STATE_CONFIRMED2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                HseTraditionalCorrectiveAction.STATE_CONFIRMED2: {'add': 0, 'change': 1, 'delete': 0, 'view': 1},
                 HseTraditionalCorrectiveAction.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
             },
         },
@@ -670,8 +670,8 @@ corrective_action_inline_classes = {
             'hse_tra_manager':{
                 'permissions': {
                     # HseTraditionalCorrectiveAction.STATE_DRAFT: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    HseTraditionalCorrectiveAction.STATE_CONFIRMED1: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
-                    HseTraditionalCorrectiveAction.STATE_CONFIRMED2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    HseTraditionalCorrectiveAction.STATE_CONFIRMED1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    HseTraditionalCorrectiveAction.STATE_CONFIRMED2: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
                     HseTraditionalCorrectiveAction.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
@@ -711,8 +711,8 @@ corrective_action_inline_classes = {
                 'permissions': {
                     # HseTraditionalCorrectiveAction.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
                     # HseTraditionalCorrectiveAction.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    HseTraditionalCorrectiveAction.STATE_CONFIRMED2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    HseTraditionalCorrectiveAction.STATE_APPROVED: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
+                    HseTraditionalCorrectiveAction.STATE_CONFIRMED2: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
+                    HseTraditionalCorrectiveAction.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
 
