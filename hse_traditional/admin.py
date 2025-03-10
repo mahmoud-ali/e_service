@@ -33,9 +33,7 @@ class LogMixin:
             source_state = request.user.hse_tra_state.state
             qs = qs.filter(source_state=source_state)
         except:
-            if qs.state in [1,2]:
-                qs = qs.none()
-        
+            pass
         return qs
 
 class TblStateRepresentativeAdmin(admin.ModelAdmin):

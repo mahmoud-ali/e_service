@@ -161,7 +161,6 @@ class TrainingAwareness(models.Model):
     report = models.ForeignKey(HseTraditionalReport, on_delete=models.PROTECT, related_name="training_awarenesses")
     market_name = models.CharField(_("Market name / اسم السوق"), max_length=255)
     traning_type = models.IntegerField(_("نوع التدريب -  type of training"), choices=TRAINING_CHOICES.items())
-    training_id = models.CharField(_("training_id"), max_length=255)
     subject = models.TextField(_("Subject الموضوع"))
     attendees = models.IntegerField(_("Attendees الحضور"))
     notes = models.TextField(_("Notes ملاحظات"))
