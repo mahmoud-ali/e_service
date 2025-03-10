@@ -70,7 +70,7 @@ class HseTraditionalReport(LoggingModel):
     STATE_CHOICES = {
         STATE_DRAFT: _("draft"),
         STATE_CONFIRMED: _("confirmed"),
-        STATE_APPROVED:_("IT_STATE_APPROVED"),
+        STATE_APPROVED:_("approved"),
     }
 
     year = models.IntegerField(_("year"))

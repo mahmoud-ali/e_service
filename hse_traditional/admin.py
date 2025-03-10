@@ -242,7 +242,7 @@ report_inline_classes = {
         'model': QuickEmergencyTeam,
         'mixins': [admin.StackedInline],
         'kwargs': {
-            'extra': 1,
+            'extra': 0,
             'min_num': 0,
         },
         'groups': {
@@ -274,7 +274,7 @@ report_inline_classes = {
         'model': Achievement,
         'mixins': [admin.StackedInline],
         'kwargs': {
-            'extra': 1,
+            'extra': 0,
             'min_num': 0,
         },
         'groups': {
