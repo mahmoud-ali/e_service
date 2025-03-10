@@ -39,6 +39,8 @@ class LogMixin:
 class TblStateRepresentativeAdmin(admin.ModelAdmin):
     model = TblStateRepresentative
     form = TblStateRepresentativeForm
+    list_display = ["state", "name", "user"]
+    list_filter = ["state"]
     
 admin.site.register(TblStateRepresentative,TblStateRepresentativeAdmin)
 
