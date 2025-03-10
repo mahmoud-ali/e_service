@@ -26,6 +26,18 @@ class LogMixin:
             instance.save()
         formset.save_m2m()
 
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+
+        try:
+            source_state = request.user.hse_tra_state.state
+            qs = qs.filter(source_state=source_state)
+        except:
+            if qs.state in [1,2]:
+                qs = qs.none()
+        
+        return qs
+
 class TblStateRepresentativeAdmin(admin.ModelAdmin):
     model = TblStateRepresentative
     form = TblStateRepresentativeForm

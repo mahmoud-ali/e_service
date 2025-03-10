@@ -414,7 +414,7 @@ class HseTraditionalNearMissWhy(models.Model):
 
 class HseTraditionalCorrectiveAction(LoggingModel):
     STATE_DRAFT = 1
-    STATE_CONFIRMED1 = 12
+    STATE_CONFIRMED1 = 2
     STATE_CONFIRMED2 = 22
     STATE_APPROVED = 3
 
@@ -450,7 +450,7 @@ class HseTraditionalCorrectiveAction(LoggingModel):
         states = []
         if 'hse_tra_state_employee' in user_groups:
             if self.state == self.STATE_DRAFT:
-                states.append((self.STATE_CONFIRMED1, self.STATE_CHOICES[self.STATE_CONFIRMED]))
+                states.append((self.STATE_CONFIRMED1, self.STATE_CHOICES[self.STATE_CONFIRMED1]))
 
         if 'hse_tra_manager' in user_groups:
             if self.state == self.STATE_CONFIRMED1:
