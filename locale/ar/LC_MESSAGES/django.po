@@ -4721,7 +4721,7 @@ msgstr "Hse Monthly Report - تقرير البيئة والسلامة"
 
 #: hse_traditional/models.py:83
 msgid "Hse Traditional Monthly Reports"
-msgstr "Hse Monthly Reports - تقارير البيئة والسلامة"
+msgstr "Hse Monthly Reports -  تقارير البيئة والسلامة الشهرية"
 
 #: hse_traditional/models.py:131
 msgid "market_name"
