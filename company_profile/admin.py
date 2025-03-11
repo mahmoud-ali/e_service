@@ -786,7 +786,7 @@ class AppFuelPermissionAdmin(WorkflowAdminMixin,admin.ModelAdmin):
     inlines = [AppFuelPermissionDetailDetailInline]
 
     list_display = ["company", "created_at", "created_by","updated_at", "updated_by"]        
-    list_filter = ["company"]
+    list_filter = ["company__company_type","updated_at",]
     view_on_site = False
     
 admin.site.register(AppFuelPermission, AppFuelPermissionAdmin)
