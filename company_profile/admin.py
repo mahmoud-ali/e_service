@@ -114,7 +114,7 @@ class WorkflowAdminMixin:
         email = None
         lang = None
         
-        url = 'https://'+Site.objects.get_current().domain+'/app' #settings.BASE_URL
+        url = 'https://'+Site.objects.get_current().domain+'/' #app #settings.BASE_URL
         
         try:
             if obj.notify:
