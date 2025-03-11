@@ -9,6 +9,7 @@ from django.contrib.admin.utils import (
     unquote,
 )
 from django.contrib.admin.options import TO_FIELD_VAR
+from django.forms.formsets import DELETION_FIELD_NAME, all_valid
 
 def view_model_states(inline_val={},user_groups=[],check_permission=['view']):
     """Check if the user can view the model based on their group permissions"""
@@ -195,7 +196,26 @@ def get_workflow_mixin(main_class,inline_classes={},inlines_dict={}):
             return self.render_change_form(
                 request, context, add=add, change=not add, obj=obj, form_url=form_url
             )
+        
+        def _check_form(self,request,object_id):
+            to_field = request.POST.get(TO_FIELD_VAR, request.GET.get(TO_FIELD_VAR))
+            obj = self.get_object(request, unquote(object_id), to_field)
+            fieldsets = self.get_fieldsets(request, obj)
+            ModelForm = self.get_form(
+                request, obj, change=True, fields=flatten_fieldsets(fieldsets)
+            )
+            form = ModelForm(request.POST, request.FILES, instance=obj)
+            formsets, inline_instances = self._create_formsets(
+                request,
+                form.instance,
+                change=True,
+            )
 
+            if all_valid(formsets) and form.is_valid():
+                return True
+            
+            return False
+        
         def change_view(self,request,object_id, form_url='', extra_context=None):
             to_field = request.POST.get(TO_FIELD_VAR, request.GET.get(TO_FIELD_VAR))
             obj = self.get_object(request, unquote(object_id), to_field)
@@ -213,6 +233,8 @@ def get_workflow_mixin(main_class,inline_classes={},inlines_dict={}):
                             response = None
                             if self.has_change_permission(request, obj):
                                 response = super().change_view(request,object_id, form_url, extra_context)
+                                if not self._check_form(request,object_id):
+                                    return response
 
                             obj = self.get_object(request, unquote(object_id), to_field)
                             obj.transition_to_next_state(request.user, next_state)

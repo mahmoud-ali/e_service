@@ -229,6 +229,8 @@ class BasicFormAdmin(LogMixin,admin.ModelAdmin):
 
             if self._check_data_exist(object_id,obj.get_next_state()):
                 response = super().change_view(request,object_id, form_url, extra_context)
+
+                obj = self.get_object(request, unquote(object_id), to_field)
                 obj.state = obj.get_next_state()
                 obj.save()
                 self.log_change(request,obj,_("SSWG State "+str(obj.state)))
