@@ -211,7 +211,7 @@ def get_workflow_mixin(main_class,inline_classes={},inlines_dict={}):
                 change=True,
             )
 
-            if all_valid(formsets) and form.is_valid():
+            if form.is_valid() and all_valid(formsets):
                 return True
             
             return False
