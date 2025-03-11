@@ -78,7 +78,7 @@ def get_sumitted_responsible(app,company_type):
             groups__name="pro_company_application_accept",
         )
 
-        return qs.first()
+        return qs.last()
 
 def can_do_transition(instance, user):
     ###logic here!
