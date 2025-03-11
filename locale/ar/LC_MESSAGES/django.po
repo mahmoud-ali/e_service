@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-09 16:37+0200\n"
+"POT-Creation-Date: 2025-03-11 14:38+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -162,9 +162,9 @@ msgstr ""
 #: company_profile/forms.py:457 company_profile/forms.py:471
 #: company_profile/forms.py:485 company_profile/forms.py:499
 #: company_profile/forms.py:513 company_profile/forms.py:527
-#: company_profile/forms.py:541 company_profile/forms.py:555
-#: company_profile/forms.py:571 company_profile/forms.py:585
-#: company_profile/forms.py:599 company_profile/models.py:191
+#: company_profile/forms.py:541 company_profile/forms.py:562
+#: company_profile/forms.py:578 company_profile/forms.py:592
+#: company_profile/forms.py:606 company_profile/models.py:191
 #: company_profile/models.py:211 company_profile/models.py:247
 #: company_profile/models.py:292 company_profile/models.py:318
 #: company_profile/models.py:347 company_profile/models.py:374
@@ -182,8 +182,8 @@ msgstr ""
 #: company_profile/models.py:997 company_profile/models.py:1013
 #: company_profile/models.py:1031 company_profile/models.py:1047
 #: company_profile/models.py:1063 company_profile/models.py:1088
-#: company_profile/models.py:1134 company_profile/models.py:1154
-#: company_profile/models.py:1775 company_profile/models.py:1799
+#: company_profile/models.py:1135 company_profile/models.py:1155
+#: company_profile/models.py:1776 company_profile/models.py:1800
 #: executive_office/admin.py:114 executive_office/admin.py:173
 #: executive_office/forms.py:37 executive_office/models.py:130
 #: pa/forms/commitment.py:80 pa/forms/daily.py:9 pa/models.py:93
@@ -231,8 +231,8 @@ msgstr "عدد الرخص"
 #: gold_travel/models.py:22 gold_travel/models.py:50 gold_travel/models.py:145
 #: gold_travel/models.py:262 gold_travel_traditional/models.py:18
 #: gold_travel_traditional/models.py:29 gold_travel_traditional/models.py:42
-#: gold_travel_traditional/models.py:114 hse_traditional/models.py:52
-#: hse_traditional/models.py:78 pa/templates/pa/company_panel.html:21
+#: gold_travel_traditional/models.py:114 hse_traditional/models.py:53
+#: hse_traditional/models.py:79 pa/templates/pa/company_panel.html:21
 #: planning/models.py:491 planning/models.py:511 planning/models.py:567
 #: planning/models.py:608 planning/models.py:658 planning/models.py:678
 #: planning/models.py:760 planning/models.py:798 traditional_api/models.py:30
@@ -258,63 +258,67 @@ msgstr "ملف الشركة"
 msgid "company_borrow_from"
 msgstr "الشركة المستلف منها"
 
+#: company_profile/forms.py:555 company_profile/models.py:1107
+msgid "fuel_actual_qty"
+msgstr "كمية الوقود المصدق"
+
 #: company_profile/models.py:26 hr_portal/models.py:22
-#: hse_traditional/models.py:21 planning/models.py:71 revenu_dist/models.py:22
+#: hse_traditional/models.py:22 planning/models.py:71 revenu_dist/models.py:22
 msgid "MONTH_JAN"
 msgstr "يناير"
 
 #: company_profile/models.py:27 hr_portal/models.py:23
-#: hse_traditional/models.py:22 planning/models.py:72 revenu_dist/models.py:23
+#: hse_traditional/models.py:23 planning/models.py:72 revenu_dist/models.py:23
 msgid "MONTH_FEB"
 msgstr "فبراير"
 
 #: company_profile/models.py:28 hr_portal/models.py:24
-#: hse_traditional/models.py:23 planning/models.py:73 revenu_dist/models.py:24
+#: hse_traditional/models.py:24 planning/models.py:73 revenu_dist/models.py:24
 msgid "MONTH_MAR"
 msgstr "مارس"
 
 #: company_profile/models.py:29 hr_portal/models.py:25
-#: hse_traditional/models.py:24 planning/models.py:74 revenu_dist/models.py:25
+#: hse_traditional/models.py:25 planning/models.py:74 revenu_dist/models.py:25
 msgid "MONTH_APR"
 msgstr "ابريل"
 
 #: company_profile/models.py:30 hr_portal/models.py:26
-#: hse_traditional/models.py:25 planning/models.py:75 revenu_dist/models.py:26
+#: hse_traditional/models.py:26 planning/models.py:75 revenu_dist/models.py:26
 msgid "MONTH_MAY"
 msgstr "مايو"
 
 #: company_profile/models.py:31 hr_portal/models.py:27
-#: hse_traditional/models.py:26 planning/models.py:76 revenu_dist/models.py:27
+#: hse_traditional/models.py:27 planning/models.py:76 revenu_dist/models.py:27
 msgid "MONTH_JUN"
 msgstr "يونيو"
 
 #: company_profile/models.py:32 hr_portal/models.py:28
-#: hse_traditional/models.py:27 planning/models.py:77 revenu_dist/models.py:28
+#: hse_traditional/models.py:28 planning/models.py:77 revenu_dist/models.py:28
 msgid "MONTH_JLY"
 msgstr "يوليو"
 
 #: company_profile/models.py:33 hr_portal/models.py:29
-#: hse_traditional/models.py:28 planning/models.py:78 revenu_dist/models.py:29
+#: hse_traditional/models.py:29 planning/models.py:78 revenu_dist/models.py:29
 msgid "MONTH_AUG"
 msgstr "اغسطس"
 
 #: company_profile/models.py:34 hr_portal/models.py:30
-#: hse_traditional/models.py:29 planning/models.py:79 revenu_dist/models.py:30
+#: hse_traditional/models.py:30 planning/models.py:79 revenu_dist/models.py:30
 msgid "MONTH_SEP"
 msgstr "سبتمبر"
 
 #: company_profile/models.py:35 hr_portal/models.py:31
-#: hse_traditional/models.py:30 planning/models.py:80 revenu_dist/models.py:31
+#: hse_traditional/models.py:31 planning/models.py:80 revenu_dist/models.py:31
 msgid "MONTH_OCT"
 msgstr "اكتوبر"
 
 #: company_profile/models.py:36 hr_portal/models.py:32
-#: hse_traditional/models.py:31 planning/models.py:81 revenu_dist/models.py:32
+#: hse_traditional/models.py:32 planning/models.py:81 revenu_dist/models.py:32
 msgid "MONTH_NOV"
 msgstr "نوفمبر"
 
 #: company_profile/models.py:37 hr_portal/models.py:33
-#: hse_traditional/models.py:32 planning/models.py:82 revenu_dist/models.py:33
+#: hse_traditional/models.py:33 planning/models.py:82 revenu_dist/models.py:33
 msgid "MONTH_DEC"
 msgstr "ديسمبر"
 
@@ -325,7 +329,7 @@ msgstr "ديسمبر"
 #: dabtiaat_altaedin/models.py:12 executive_office/models.py:27
 #: gold_travel/models.py:12 gold_travel_traditional/admin.py:340
 #: gold_travel_traditional/models.py:8 help_request/models.py:11
-#: hr_portal/models.py:89 hse_traditional/models.py:40 mokhalafat/models.py:6
+#: hr_portal/models.py:89 hse_traditional/models.py:41 mokhalafat/models.py:6
 #: pa/models.py:46 planning/models.py:183 production_control/models.py:13
 #: revenu_dist/models.py:53 sswg/models.py:13 traditional_api/models.py:10
 #: workflow/model_utils.py:9 workflow/model_utils.py:71
@@ -336,7 +340,7 @@ msgstr "تاريخ الانشاء"
 #: executive_office/models.py:28 gold_travel/models.py:13
 #: gold_travel_traditional/admin.py:340 gold_travel_traditional/models.py:9
 #: help_request/models.py:13 hr_portal/models.py:90
-#: hse_traditional/models.py:41 mokhalafat/models.py:7 pa/models.py:47
+#: hse_traditional/models.py:42 mokhalafat/models.py:7 pa/models.py:47
 #: planning/models.py:184 production_control/models.py:14
 #: revenu_dist/models.py:54 sswg/models.py:14 traditional_api/models.py:11
 #: workflow/model_utils.py:10 workflow/model_utils.py:72
@@ -350,7 +354,7 @@ msgstr "المستخدم المسئول عن الانشاء"
 #: dabtiaat_altaedin/models.py:15 executive_office/models.py:30
 #: gold_travel/models.py:15 gold_travel_traditional/admin.py:340
 #: gold_travel_traditional/models.py:11 help_request/models.py:12
-#: hr_portal/models.py:92 hse_traditional/models.py:43 mokhalafat/models.py:9
+#: hr_portal/models.py:92 hse_traditional/models.py:44 mokhalafat/models.py:9
 #: pa/models.py:49 planning/models.py:185 production_control/models.py:16
 #: revenu_dist/models.py:56 sswg/models.py:16 traditional_api/models.py:13
 #: workflow/model_utils.py:12 workflow/model_utils.py:74
@@ -361,7 +365,7 @@ msgstr "تاريخ اخر تعديل"
 #: executive_office/models.py:31 gold_travel/models.py:16
 #: gold_travel_traditional/admin.py:340 gold_travel_traditional/models.py:12
 #: help_request/models.py:14 hr_portal/models.py:93
-#: hse_traditional/models.py:44 mokhalafat/models.py:10 pa/models.py:50
+#: hse_traditional/models.py:45 mokhalafat/models.py:10 pa/models.py:50
 #: planning/models.py:186 production_control/models.py:17
 #: revenu_dist/models.py:57 sswg/models.py:17 traditional_api/models.py:14
 #: workflow/model_utils.py:13 workflow/model_utils.py:75
@@ -384,13 +388,13 @@ msgstr ""
 #: company_profile/models.py:110 company_profile/models.py:120
 #: company_profile/models.py:163 company_profile/models.py:201
 #: company_profile/models.py:223 company_profile/models.py:758
-#: company_profile/models.py:856 company_profile/models.py:1113
+#: company_profile/models.py:856 company_profile/models.py:1114
 #: dabtiaat_altaedin/models.py:46 dabtiaat_altaedin/models.py:159
 #: executive_office/models.py:38 executive_office/models.py:48
 #: executive_office/models.py:71 gold_travel/models.py:49
 #: gold_travel/models.py:65 gold_travel_traditional/models.py:19
 #: gold_travel_traditional/models.py:30 gold_travel_traditional/models.py:41
-#: hr_portal/models.py:405 hse_traditional/models.py:51 it/models.py:32
+#: hr_portal/models.py:405 hse_traditional/models.py:52 it/models.py:32
 #: it/models.py:164 planning/models.py:201 planning/models.py:224
 #: planning/models.py:251 production_control/models.py:28
 #: production_control/models.py:29 revenu_dist/models.py:63
@@ -1555,9 +1559,9 @@ msgstr ""
 msgid "item"
 msgstr "البند"
 
-#: company_profile/models.py:890 company_profile/models.py:1292
-#: hse_traditional/models.py:319 hse_traditional/models.py:491
-#: hse_traditional/models.py:499 it/models.py:167 it/models.py:226
+#: company_profile/models.py:890 company_profile/models.py:1293
+#: hse_traditional/models.py:319 hse_traditional/models.py:495
+#: hse_traditional/models.py:503 it/models.py:167 it/models.py:226
 #: it/models.py:243
 msgid "description"
 msgstr "الوصف"
@@ -1607,7 +1611,7 @@ msgid "study_comment"
 msgstr "تعليق مختصر عن الدراسة"
 
 #: company_profile/models.py:940 company_profile/models.py:966
-#: company_profile/models.py:1049 company_profile/models.py:1140
+#: company_profile/models.py:1049 company_profile/models.py:1141
 #: dabtiaat_altaedin/models.py:94 gold_travel/models.py:144 pa/models.py:309
 #: pa/models.py:521 pa/models.py:640
 msgid "attachement_file"
@@ -1773,945 +1777,945 @@ msgstr "نوع الوقود"
 msgid "fuel_qty"
 msgstr "كمية الوقود"
 
-#: company_profile/models.py:1109
+#: company_profile/models.py:1110
 msgid "Fuel Permission Detail"
 msgstr "تفاصيل موافقة وقود"
 
-#: company_profile/models.py:1110
+#: company_profile/models.py:1111
 msgid "Fuel Permission Details"
 msgstr "تفاصيل موافقة وقود"
 
-#: company_profile/models.py:1119
+#: company_profile/models.py:1120
 msgid "Accident Type"
 msgstr "نوع حادث"
 
-#: company_profile/models.py:1120
+#: company_profile/models.py:1121
 msgid "Accident Types"
 msgstr "انواع الحوادث"
 
-#: company_profile/models.py:1129
+#: company_profile/models.py:1130
 msgid "minor"
 msgstr "بسيط"
 
-#: company_profile/models.py:1130
+#: company_profile/models.py:1131
 msgid "moderate"
 msgstr "متوسط"
 
-#: company_profile/models.py:1131
+#: company_profile/models.py:1132
 msgid "major"
 msgstr "جسيم"
 
-#: company_profile/models.py:1135
+#: company_profile/models.py:1136
 msgid "accident_place"
 msgstr "مكان الحادث"
 
-#: company_profile/models.py:1136
+#: company_profile/models.py:1137
 msgid "accident_dt"
 msgstr "تاريخ الحادث"
 
-#: company_profile/models.py:1137 hse_traditional/models.py:230
+#: company_profile/models.py:1138 hse_traditional/models.py:230
 #: hse_traditional/models.py:344
 msgid "accident_type"
 msgstr "نوع الحادث"
 
-#: company_profile/models.py:1138
+#: company_profile/models.py:1139
 msgid "accident_class"
 msgstr "تصنيف الحادث"
 
-#: company_profile/models.py:1143
+#: company_profile/models.py:1144
 msgid "HSE Accident Report"
 msgstr "تقرير التحقيق عن حادث"
 
-#: company_profile/models.py:1150 company_profile/models.py:1151
+#: company_profile/models.py:1151 company_profile/models.py:1152
 #: company_profile/templates/company_profile/base.html:277
 msgid "Application: HSE Accident Report"
 msgstr "تقرير التحقيق عن حادث"
 
-#: company_profile/models.py:1155 hse_traditional/models.py:76
+#: company_profile/models.py:1156 hse_traditional/models.py:77
 #: planning/models.py:249 planning/models.py:332 planning/models.py:434
 msgid "year"
 msgstr "العام"
 
-#: company_profile/models.py:1156 hse_traditional/models.py:77
+#: company_profile/models.py:1157 hse_traditional/models.py:78
 #: planning/models.py:270 planning/models.py:350 planning/models.py:359
 #: planning/models.py:368 planning/models.py:378 planning/models.py:387
 #: planning/models.py:397 planning/models.py:435
 msgid "month"
 msgstr "شهر"
 
-#: company_profile/models.py:1157
+#: company_profile/models.py:1158
 msgid "album"
 msgstr ""
 
-#: company_profile/models.py:1158 executive_office/models.py:87
+#: company_profile/models.py:1159 executive_office/models.py:87
 #: executive_office/models.py:147
 msgid "comment"
 msgstr "ملاحظات"
 
-#: company_profile/models.py:1163
+#: company_profile/models.py:1164
 msgid "HSE Performance Report"
 msgstr "تقرير البيئة والسلامة"
 
-#: company_profile/models.py:1170 company_profile/models.py:1171
+#: company_profile/models.py:1171 company_profile/models.py:1172
 #: company_profile/templates/company_profile/base.html:280
 msgid "Application: HSE Performance Report"
 msgstr "تقرير البيئة والسلامة"
 
-#: company_profile/models.py:1178
+#: company_profile/models.py:1179
 msgid "man_power_total"
 msgstr "Total Man Power In Site"
 
-#: company_profile/models.py:1179
+#: company_profile/models.py:1180
 msgid "man_power_work_hours"
 msgstr "Total Man Hours"
 
-#: company_profile/models.py:1183
+#: company_profile/models.py:1184
 msgid "hse_man_power"
 msgstr "القوى العاملة Manpower"
 
-#: company_profile/models.py:1184
+#: company_profile/models.py:1185
 msgid "no_gov"
 msgstr "ممثلي الحكومة Government representatives"
 
-#: company_profile/models.py:1185 company_profile/models.py:1289
-#: company_profile/models.py:1327 company_profile/models.py:1590
+#: company_profile/models.py:1186 company_profile/models.py:1290
+#: company_profile/models.py:1328 company_profile/models.py:1591
 msgid "no_staff"
 msgstr "موظفي الشركة Company staff"
 
-#: company_profile/models.py:1186 company_profile/models.py:1290
-#: company_profile/models.py:1328 company_profile/models.py:1591
+#: company_profile/models.py:1187 company_profile/models.py:1291
+#: company_profile/models.py:1329 company_profile/models.py:1592
 msgid "no_contractor"
 msgstr "المتعاقدين Contractors"
 
-#: company_profile/models.py:1189 company_profile/models.py:1190
+#: company_profile/models.py:1190 company_profile/models.py:1191
 msgid "HSE Man power"
 msgstr "القوى العاملة Manpower"
 
-#: company_profile/models.py:1200
+#: company_profile/models.py:1201
 msgid "fire_fighting_1"
 msgstr "CO2"
 
-#: company_profile/models.py:1201
+#: company_profile/models.py:1202
 msgid "fire_fighting_2"
 msgstr "Powder"
 
-#: company_profile/models.py:1202
+#: company_profile/models.py:1203
 msgid "fire_fighting_3"
 msgstr "Foam"
 
-#: company_profile/models.py:1203
+#: company_profile/models.py:1204
 msgid "fire_fighting_4"
 msgstr "Water"
 
-#: company_profile/models.py:1204
+#: company_profile/models.py:1205
 msgid "fire_fighting_5"
 msgstr "Others"
 
-#: company_profile/models.py:1211
+#: company_profile/models.py:1212
 msgid "situation_ok"
 msgstr "صالح"
 
-#: company_profile/models.py:1212
+#: company_profile/models.py:1213
 msgid "situation_bad"
 msgstr "غير صالح"
 
-#: company_profile/models.py:1216
+#: company_profile/models.py:1217
 msgid "hse_fire_fighting"
 msgstr "معدات اطفاء الحرائق - Fire Fighting & extinguishing equipment"
 
-#: company_profile/models.py:1217
+#: company_profile/models.py:1218
 msgid "size"
 msgstr "الحجم size"
 
-#: company_profile/models.py:1218 planning/models.py:833 planning/models.py:871
+#: company_profile/models.py:1219 planning/models.py:833 planning/models.py:871
 #: planning/models.py:908 planning/models.py:964 planning/models.py:1011
 #: planning/models.py:1058
 msgid "count"
 msgstr "العدد number"
 
-#: company_profile/models.py:1219
+#: company_profile/models.py:1220
 msgid "exam_dt"
 msgstr "تاريخ الفحص Date of examination"
 
-#: company_profile/models.py:1220
+#: company_profile/models.py:1221
 msgid "situation"
 msgstr "الحالة Situation"
 
-#: company_profile/models.py:1223 company_profile/models.py:1224
+#: company_profile/models.py:1224 company_profile/models.py:1225
 msgid "HSE fire fighting"
 msgstr "معدات اطفاء الحرائق - Fire Fighting & extinguishing equipment"
 
-#: company_profile/models.py:1237
+#: company_profile/models.py:1238
 msgid "work_environment_factor1"
 msgstr "الإضاءة - Lighting"
 
-#: company_profile/models.py:1238
+#: company_profile/models.py:1239
 msgid "work_environment_factor2"
 msgstr "التهوية  - Ventilation"
 
-#: company_profile/models.py:1239
+#: company_profile/models.py:1240
 msgid "work_environment_factor3"
 msgstr "الممرات والطرق الداخلية Corridors and roads"
 
-#: company_profile/models.py:1240
+#: company_profile/models.py:1241
 msgid "work_environment_factor4"
 msgstr "الارضيات   - Flooring"
 
-#: company_profile/models.py:1241
+#: company_profile/models.py:1242
 msgid "work_environment_factor5"
 msgstr "مخارج الطوارئ Emergency Exits"
 
-#: company_profile/models.py:1242
+#: company_profile/models.py:1243
 msgid "work_environment_factor6"
 msgstr "الضوضاء - Noise"
 
-#: company_profile/models.py:1243
+#: company_profile/models.py:1244
 msgid "work_environment_factor7"
 msgstr "الحرارة - Heat"
 
-#: company_profile/models.py:1244
+#: company_profile/models.py:1245
 msgid "work_environment_factor8"
 msgstr "علامات السلامة Safety signs"
 
-#: company_profile/models.py:1253
+#: company_profile/models.py:1254
 msgid "ranking_excellent"
 msgstr "ممتاز"
 
-#: company_profile/models.py:1254
+#: company_profile/models.py:1255
 msgid "ranking_very_good"
 msgstr "جيدجدا"
 
-#: company_profile/models.py:1255
+#: company_profile/models.py:1256
 msgid "ranking_good"
 msgstr "جيد"
 
-#: company_profile/models.py:1256
+#: company_profile/models.py:1257
 msgid "ranking_bad"
 msgstr "سيء"
 
-#: company_profile/models.py:1260
+#: company_profile/models.py:1261
 msgid "hse_work_environment"
 msgstr "الحالة Situation"
 
-#: company_profile/models.py:1261
+#: company_profile/models.py:1262
 msgid "offices"
 msgstr "المكاتب Offices"
 
-#: company_profile/models.py:1262
+#: company_profile/models.py:1263
 msgid "camp"
 msgstr "المعسكر Camp"
 
-#: company_profile/models.py:1263
+#: company_profile/models.py:1264
 msgid "kitchen_dining"
 msgstr "المطبخ وصالة الطعام Kitchen and dining room"
 
-#: company_profile/models.py:1264
+#: company_profile/models.py:1265
 msgid "factory"
 msgstr "المصنع The Factory"
 
-#: company_profile/models.py:1265
+#: company_profile/models.py:1266
 msgid "Stores"
 msgstr "المخازن Stores"
 
-#: company_profile/models.py:1266
+#: company_profile/models.py:1267
 msgid "lab"
 msgstr "المعمل The lab"
 
-#: company_profile/models.py:1267
+#: company_profile/models.py:1268
 msgid "mines"
 msgstr "المناجم Mines"
 
-#: company_profile/models.py:1270 company_profile/models.py:1271
+#: company_profile/models.py:1271 company_profile/models.py:1272
 msgid "HSE work environment"
 msgstr "تقييم بيئة العمل Work environment"
 
-#: company_profile/models.py:1280
+#: company_profile/models.py:1281
 msgid "proactive_indicators_type1"
 msgstr "عدد الحوادث وشيكة الوقوع - Near Miss (Near Accident)"
 
-#: company_profile/models.py:1281
+#: company_profile/models.py:1282
 msgid "proactive_indicators_type2"
 msgstr "عدد الممارسات غير الآمنة - Unsafe Act"
 
-#: company_profile/models.py:1282
+#: company_profile/models.py:1283
 msgid "proactive_indicators_type3"
 msgstr "عدد الاوضاع غير الآمنة - Unsafe Condition"
 
-#: company_profile/models.py:1283
+#: company_profile/models.py:1284
 msgid "proactive_indicators_type4"
 msgstr "التدقيق - Audit"
 
-#: company_profile/models.py:1287
+#: company_profile/models.py:1288
 msgid "hse_proactive_indicators"
 msgstr "مؤشرات استباقية - PROACTIVE INDICATORS"
 
-#: company_profile/models.py:1291
+#: company_profile/models.py:1292
 #, fuzzy
 #| msgid "location"
 msgid "action"
 msgstr "المنطقة"
 
-#: company_profile/models.py:1295 company_profile/models.py:1296
+#: company_profile/models.py:1296 company_profile/models.py:1297
 msgid "HSE proactive indicators"
 msgstr "مؤشرات استباقية - PROACTIVE INDICATORS"
 
-#: company_profile/models.py:1312
+#: company_profile/models.py:1313
 msgid "ACTIVITIES_type1"
 msgstr "Safety Inspection No.عدد عمليات التفتيش والفحص الخاص بالسلامة"
 
-#: company_profile/models.py:1313
+#: company_profile/models.py:1314
 msgid "ACTIVITIES_type2"
 msgstr "Environmental Inspection No. - التفتيش والفحص الخاص بالبيئة"
 
-#: company_profile/models.py:1314
+#: company_profile/models.py:1315
 msgid "ACTIVITIES_type3"
 msgstr "Health Hygiene inspection No. عدد عمليات التفتيش الصحي -"
 
-#: company_profile/models.py:1315
+#: company_profile/models.py:1316
 msgid "ACTIVITIES_type4"
 msgstr ""
 "Corrective and Preventive Actions Closed out No. عدد الإجراءات التصحيحية "
 "والوقائية التي تم تنفيذها"
 
-#: company_profile/models.py:1316
+#: company_profile/models.py:1317
 msgid "ACTIVITIES_type5"
 msgstr "HSE Training No. عدد الدورات التدريبية الخاصة بالبيئة والسلامة"
 
-#: company_profile/models.py:1317
+#: company_profile/models.py:1318
 msgid "ACTIVITIES_type6"
 msgstr "Training attendees No.عدد المتدربين -"
 
-#: company_profile/models.py:1318
+#: company_profile/models.py:1319
 msgid "ACTIVITIES_type7"
 msgstr "Job Safety Analysis  ( JSA)"
 
-#: company_profile/models.py:1319
+#: company_profile/models.py:1320
 msgid "ACTIVITIES_type8"
 msgstr "Permit to Work Issued No. عدد أذونات العمل المصدقة -"
 
-#: company_profile/models.py:1320
+#: company_profile/models.py:1321
 msgid "ACTIVITIES_type9"
 msgstr "Tool Box Talk No – عدد إجتماعات السلامة اليومية"
 
-#: company_profile/models.py:1321
+#: company_profile/models.py:1322
 msgid "ACTIVITIES_type10"
 msgstr "HSE Meeting No  - عدد إجتماعات السلامة الدورية"
 
-#: company_profile/models.py:1322
+#: company_profile/models.py:1323
 msgid "ACTIVITIES_type11"
 msgstr "Lock out – tag out- نظام الحماية والقفل لمصادر الطاقة"
 
-#: company_profile/models.py:1326
+#: company_profile/models.py:1327
 msgid "hse_activities"
 msgstr "أنشطة البيئة والسلامة والصحة المهنية - HSE ACTIVITY"
 
-#: company_profile/models.py:1331 company_profile/models.py:1332
+#: company_profile/models.py:1332 company_profile/models.py:1333
 msgid "HSE activities"
 msgstr "أنشطة البيئة والسلامة والصحة المهنية - HSE ACTIVITY"
 
-#: company_profile/models.py:1342
+#: company_profile/models.py:1343
 msgid "CHEMICAL_USED1"
 msgstr "سيانيد الصوديوم - Sodium cyanide in Kg"
 
-#: company_profile/models.py:1343
+#: company_profile/models.py:1344
 msgid "CHEMICAL_USED2"
 msgstr "البوراكس  - Borax in Kg"
 
-#: company_profile/models.py:1344
+#: company_profile/models.py:1345
 msgid "CHEMICAL_USED3"
 msgstr "السيلكا - Silica in Kg"
 
-#: company_profile/models.py:1345
+#: company_profile/models.py:1346
 msgid "CHEMICAL_USED4"
 msgstr "الرصاص - Lead in Kg"
 
-#: company_profile/models.py:1346
+#: company_profile/models.py:1347
 msgid "CHEMICAL_USED5"
 msgstr "نترات الامونيوم - Ammonium nitrate in Kg"
 
-#: company_profile/models.py:1350 company_profile/models.py:1361
+#: company_profile/models.py:1351 company_profile/models.py:1362
 msgid "hse_chemical_used"
 msgstr "الموارد المستخدمة Resources used / Chemicals"
 
-#: company_profile/models.py:1351 company_profile/models.py:1362
-#: company_profile/models.py:1450 company_profile/models.py:1471
-#: company_profile/models.py:1516 company_profile/models.py:1643
-#: company_profile/models.py:1709
+#: company_profile/models.py:1352 company_profile/models.py:1363
+#: company_profile/models.py:1451 company_profile/models.py:1472
+#: company_profile/models.py:1517 company_profile/models.py:1644
+#: company_profile/models.py:1710
 msgid "qty_used"
 msgstr "الكمية المستخدمة Quantity used"
 
-#: company_profile/models.py:1352 company_profile/models.py:1363
+#: company_profile/models.py:1353 company_profile/models.py:1364
 msgid "qty_in_store"
 msgstr "الكمية المخزنة Quantity in Storage"
 
-#: company_profile/models.py:1353 company_profile/models.py:1364
-#: company_profile/models.py:1645
+#: company_profile/models.py:1354 company_profile/models.py:1365
+#: company_profile/models.py:1646
 msgid "expire_dt"
 msgstr "انتهاء صلاحية"
 
-#: company_profile/models.py:1356 company_profile/models.py:1357
+#: company_profile/models.py:1357 company_profile/models.py:1358
 msgid "HSE CHEMICAL USED"
 msgstr "نوع وكمية المواد الكيميائية المستخدمة وطرق التخزين"
 
-#: company_profile/models.py:1361
+#: company_profile/models.py:1362
 msgid "not exists"
 msgstr "لايوجد"
 
-#: company_profile/models.py:1367 company_profile/models.py:1368
+#: company_profile/models.py:1368 company_profile/models.py:1369
 msgid "HSE OTHER CHEMICAL USED"
 msgstr "المواد الكميائية الأخرى المستخدمة Any other chemicals used"
 
-#: company_profile/models.py:1375
+#: company_profile/models.py:1376
 msgid "STORAGE_METHOD1"
 msgstr "براميل"
 
-#: company_profile/models.py:1376
+#: company_profile/models.py:1377
 msgid "STORAGE_METHOD2"
 msgstr "شيكارات"
 
-#: company_profile/models.py:1384
+#: company_profile/models.py:1385
 msgid "HANDLING_METHOD1"
 msgstr "يدوي"
 
-#: company_profile/models.py:1385
+#: company_profile/models.py:1386
 msgid "HANDLING_METHOD2"
 msgstr "نصف ميكانيكي (لودر – رافعة)"
 
-#: company_profile/models.py:1386
+#: company_profile/models.py:1387
 msgid "HANDLING_METHOD3"
 msgstr "ميكانيكي (نظام الي)"
 
-#: company_profile/models.py:1393 company_profile/models.py:1423
-#: company_profile/models.py:1546 company_profile/models.py:1670
+#: company_profile/models.py:1394 company_profile/models.py:1424
+#: company_profile/models.py:1547 company_profile/models.py:1671
 msgid "YES"
 msgstr "نعم"
 
-#: company_profile/models.py:1394 company_profile/models.py:1424
-#: company_profile/models.py:1547 company_profile/models.py:1671
+#: company_profile/models.py:1395 company_profile/models.py:1425
+#: company_profile/models.py:1548 company_profile/models.py:1672
 msgid "NO"
 msgstr "لا"
 
-#: company_profile/models.py:1398 company_profile/models.py:1452
-#: company_profile/models.py:1473
+#: company_profile/models.py:1399 company_profile/models.py:1453
+#: company_profile/models.py:1474
 msgid "storage_method"
 msgstr "طريقة التخزين Storage Method"
 
-#: company_profile/models.py:1399
+#: company_profile/models.py:1400
 msgid "handling_method"
 msgstr "Handling Method طريقة المناولة"
 
-#: company_profile/models.py:1400
+#: company_profile/models.py:1401
 msgid "hcn_detector"
 msgstr "يوجد HCN Detector جهاز كشف غاز سيانيد الهيدروجين"
 
-#: company_profile/models.py:1403 company_profile/models.py:1404
+#: company_profile/models.py:1404 company_profile/models.py:1405
 msgid "HSE CYANIDE TABLE"
 msgstr "خاص بالسيانيد- Cyanide Table"
 
-#: company_profile/models.py:1413
+#: company_profile/models.py:1414
 msgid "SPECIFICATION1"
 msgstr "كاميرات مراقبة"
 
-#: company_profile/models.py:1414
+#: company_profile/models.py:1415
 msgid "SPECIFICATION2"
 msgstr "أرضية خرسانية"
 
-#: company_profile/models.py:1415
+#: company_profile/models.py:1416
 msgid "SPECIFICATION3"
 msgstr "مروحة تهوية"
 
-#: company_profile/models.py:1416
+#: company_profile/models.py:1417
 msgid "SPECIFICATION4"
 msgstr "إنارة"
 
-#: company_profile/models.py:1428 company_profile/models.py:1675
-#: company_profile/models.py:1739 company_profile/models.py:1766
+#: company_profile/models.py:1429 company_profile/models.py:1676
+#: company_profile/models.py:1740 company_profile/models.py:1767
 msgid "Specification"
 msgstr "المواصفات"
 
-#: company_profile/models.py:1429 company_profile/models.py:1676
+#: company_profile/models.py:1430 company_profile/models.py:1677
 msgid "is_exists"
 msgstr "موجود؟"
 
-#: company_profile/models.py:1432 company_profile/models.py:1433
+#: company_profile/models.py:1433 company_profile/models.py:1434
 msgid "HSE CYANIDE CN Storage Specification"
 msgstr "مواصفات مخزن السيانيد"
 
-#: company_profile/models.py:1442
+#: company_profile/models.py:1443
 msgid "WATER_USED1"
 msgstr ""
 "المياه المستخدمة فى المعالجة – متر مكعب Water Consumed for Process – cubic "
 "meter"
 
-#: company_profile/models.py:1443
+#: company_profile/models.py:1444
 msgid "WATER_USED2"
 msgstr ""
 "المياه المستخدمة فى المعسكر – متر مكعب Water Consumed in camp – cubic meter"
 
-#: company_profile/models.py:1444
+#: company_profile/models.py:1445
 msgid "WATER_USED3"
 msgstr ""
 "المياه المعالجة  (مياه الصرف الصحي) – متر مكعب Sewage water – cubic meter"
 
-#: company_profile/models.py:1445
+#: company_profile/models.py:1446
 msgid "WATER_USED4"
 msgstr "المياه المعاد استخدامها – متر مكعب Reused water – cubic meter"
 
-#: company_profile/models.py:1449
+#: company_profile/models.py:1450
 msgid "hse_water_used"
 msgstr "الموارد المستخدمة Resources used / Water"
 
-#: company_profile/models.py:1451
+#: company_profile/models.py:1452
 msgid "source_of_water"
 msgstr "مصدر المياه Source Of Water"
 
-#: company_profile/models.py:1455 company_profile/models.py:1456
+#: company_profile/models.py:1456 company_profile/models.py:1457
 msgid "HSE WATER USED"
 msgstr "نوع وكمية المواد المياه المستخدمة وطرق التخزين"
 
-#: company_profile/models.py:1464
+#: company_profile/models.py:1465
 msgid "OIL_USED1"
 msgstr "الوقود المستخدم Consumed Fuel/Liter"
 
-#: company_profile/models.py:1465
+#: company_profile/models.py:1466
 msgid "OIL_USED2"
 msgstr "الزيوت الراجعة Used oil/Liter"
 
-#: company_profile/models.py:1466
+#: company_profile/models.py:1467
 msgid "OIL_USED3"
 msgstr "الزيوت المستخدمة للاليات Type of Fuel/Liter"
 
-#: company_profile/models.py:1470
+#: company_profile/models.py:1471
 msgid "hse_oil_used"
 msgstr "الموارد المستخدمة Resources used / Fuels"
 
-#: company_profile/models.py:1472 company_profile/models.py:1517
+#: company_profile/models.py:1473 company_profile/models.py:1518
 msgid "disposal_method"
 msgstr "طريقة التخلص Disposal Method"
 
-#: company_profile/models.py:1476 company_profile/models.py:1477
+#: company_profile/models.py:1477 company_profile/models.py:1478
 msgid "HSE OIL USED"
 msgstr "نوع وكمية المواد الزيوت المستخدمة وطرق التخزين"
 
-#: company_profile/models.py:1497
+#: company_profile/models.py:1498
 msgid "WASTE_DISPOSAL1"
 msgstr "الصلبة/ نفايات الخام-طن Tailing Waste - Ton"
 
-#: company_profile/models.py:1498
+#: company_profile/models.py:1499
 msgid "WASTE_DISPOSAL2"
 msgstr "الصلبة/ إسكراب - كيلوجرام Scrap - Kg"
 
-#: company_profile/models.py:1499
+#: company_profile/models.py:1500
 msgid "WASTE_DISPOSAL3"
 msgstr "الصلبة/ أخرى كيلوجرام  - Other Kg"
 
-#: company_profile/models.py:1500
+#: company_profile/models.py:1501
 msgid "WASTE_DISPOSAL4"
 msgstr ""
 "العبوات الفارغة/ عبوات السيانيد الفارغة (براميل – شكارات) Empty  Cyanide "
 "container (bags – barrel)"
 
-#: company_profile/models.py:1501
+#: company_profile/models.py:1502
 msgid "WASTE_DISPOSAL5"
 msgstr ""
 "العبوات الفارغة/ عبوات المواد الكيميائية الفارغة Empty Chemical container"
 
-#: company_profile/models.py:1502
+#: company_profile/models.py:1503
 msgid "WASTE_DISPOSAL6"
 msgstr "العبوات الفارغة/ عبوات الأحماض الفارغة Empty Acids container"
 
-#: company_profile/models.py:1503
+#: company_profile/models.py:1504
 msgid "WASTE_DISPOSAL7"
 msgstr "العبوات الفارغة/ أخرى - Other"
 
-#: company_profile/models.py:1504
+#: company_profile/models.py:1505
 msgid "WASTE_DISPOSAL8"
 msgstr "السائلة/ سوائل المعمل  - متر مكعب Lab liquid – cubic meter"
 
-#: company_profile/models.py:1505
+#: company_profile/models.py:1506
 msgid "WASTE_DISPOSAL9"
 msgstr "السائلة/ مياه الصرف الصحي - متر مكعب Sewage - cubic meter"
 
-#: company_profile/models.py:1506
+#: company_profile/models.py:1507
 msgid "WASTE_DISPOSAL10"
 msgstr "السائلة/ أخرى متر مكعب - Other - cubic meter"
 
-#: company_profile/models.py:1507
+#: company_profile/models.py:1508
 msgid "WASTE_DISPOSAL11"
 msgstr "نفايات المطبخ Kitchen waste"
 
-#: company_profile/models.py:1508
+#: company_profile/models.py:1509
 msgid "WASTE_DISPOSAL12"
 msgstr ""
 "كمية الزئبق المجمع في غرفة الصهر (مكثف الزئبق) Quantity of Mercury Condensed "
 "in smelting Room (Mercury Condenser)"
 
-#: company_profile/models.py:1509
+#: company_profile/models.py:1510
 msgid "WASTE_DISPOSAL13"
 msgstr ""
 "كمية الزئبق المجمع في الخلية (مكثف الزئبق) Quantity of Mercury Condensed in "
 "Electro winning (Mercury Condenser)"
 
-#: company_profile/models.py:1510
+#: company_profile/models.py:1511
 msgid "WASTE_DISPOSAL14"
 msgstr "نسبة السيانيد في حوض النفاية Percentage of Cyanide in tailing dam"
 
-#: company_profile/models.py:1511
+#: company_profile/models.py:1512
 msgid "WASTE_DISPOSAL15"
 msgstr "نسبة الزئبق في حوض النفاية Percentage of Mercury in tailing dam"
 
-#: company_profile/models.py:1515
+#: company_profile/models.py:1516
 msgid "hse_WASTE_DISPOSAL"
 msgstr "المخلفات Waste"
 
-#: company_profile/models.py:1520 company_profile/models.py:1521
+#: company_profile/models.py:1521 company_profile/models.py:1522
 msgid "HSE WASTE DISPOSAL"
 msgstr "طرق التخلص من النفايات بالموقع – on site waste disposal method"
 
-#: company_profile/models.py:1528
+#: company_profile/models.py:1529
 msgid "QUALIFICATION1"
 msgstr "طبيب"
 
-#: company_profile/models.py:1529
+#: company_profile/models.py:1530
 msgid "QUALIFICATION2"
 msgstr "مساعد طبي"
 
-#: company_profile/models.py:1537
+#: company_profile/models.py:1538
 msgid "AMBULANCE_USED1"
 msgstr "عربة إسعاف"
 
-#: company_profile/models.py:1538
+#: company_profile/models.py:1539
 msgid "AMBULANCE_USED2"
 msgstr "مركبة طوارئ"
 
-#: company_profile/models.py:1539
+#: company_profile/models.py:1540
 msgid "AMBULANCE_USED3"
 msgstr "لايوجد"
 
-#: company_profile/models.py:1551
+#: company_profile/models.py:1552
 msgid "unit_manager"
 msgstr ""
 "اسم مدير الوحدة / عيادة خارجية - Name of Unit Manager / External Clinic"
 
-#: company_profile/models.py:1552
+#: company_profile/models.py:1553
 msgid "unit_phone"
 msgstr "رقم الهاتف - Telephone number"
 
-#: company_profile/models.py:1553
+#: company_profile/models.py:1554
 msgid "unit_qualification"
 msgstr "المؤهل (طبيب / مساعد طبي) - Qualification (doctor / medical assistant)"
 
-#: company_profile/models.py:1554
+#: company_profile/models.py:1555
 msgid "aid_qty_used"
 msgstr "عدد صناديق الإسعافات الاولية - Number of First Aid Boxes"
 
-#: company_profile/models.py:1555
+#: company_profile/models.py:1556
 msgid "ambulance_used"
 msgstr "Ambulance  -  عربة طوارئ"
 
-#: company_profile/models.py:1556
+#: company_profile/models.py:1557
 msgid "periodic_medical_examination"
 msgstr "الفحص الطبي الدوري - Periodic medical examination"
 
-#: company_profile/models.py:1557
+#: company_profile/models.py:1558
 msgid "primary_medical_examination"
 msgstr ""
 "الفحص الطبي الأولي للعاملين الجدد - primary medical examination for New "
 "Workers"
 
-#: company_profile/models.py:1560 company_profile/models.py:1561
+#: company_profile/models.py:1561 company_profile/models.py:1562
 msgid "HSE Therapeutic unit"
 msgstr "الوحدة العلاجية  - Therapeutic unit"
 
-#: company_profile/models.py:1565
+#: company_profile/models.py:1566
 msgid "disease_dt"
 msgstr "التاريخ Date"
 
-#: company_profile/models.py:1566
+#: company_profile/models.py:1567
 msgid "disease_type"
 msgstr "نوع المرض The type of disease"
 
-#: company_profile/models.py:1567
+#: company_profile/models.py:1568
 msgid "no_patients"
 msgstr "عدد المرضى Number of patients"
 
-#: company_profile/models.py:1568
+#: company_profile/models.py:1569
 msgid "patients_career"
 msgstr "مهنة المريض Patient career"
 
-#: company_profile/models.py:1569
+#: company_profile/models.py:1570
 msgid "patients_worksite"
 msgstr "موقع عمل المريض Patient work site"
 
-#: company_profile/models.py:1572 company_profile/models.py:1573
+#: company_profile/models.py:1573 company_profile/models.py:1574
 msgid "HSE Diseases For Workers"
 msgstr ""
 "الصحة المهنية والحالات المرضية للعاملين  Occupational Health & Diseases For "
 "Workers"
 
-#: company_profile/models.py:1582
+#: company_profile/models.py:1583
 msgid " STATISTICAL_DATA1"
 msgstr "No. of Days Lost due to LWDC عدد أيام  LWDC"
 
-#: company_profile/models.py:1583
+#: company_profile/models.py:1584
 msgid " STATISTICAL_DATA2"
 msgstr "No. of Days Lost due to RWDC عدد أيام RWDC"
 
-#: company_profile/models.py:1584
+#: company_profile/models.py:1585
 msgid " STATISTICAL_DATA3"
 msgstr ""
 "No. of Employees Received Medical Treatment Due Injury عدد الموظفين الذين "
 "تلقوا علاج طبي نتيجة الإصابة"
 
-#: company_profile/models.py:1585
+#: company_profile/models.py:1586
 msgid " STATISTICAL_DATA4"
 msgstr "Days Lost Due to Sickness Absence عدد الأيام المفقودة نتيجة للمرض"
 
-#: company_profile/models.py:1589
+#: company_profile/models.py:1590
 msgid "hse_statistical_data"
 msgstr "بيانات احصائية  - STATISTICAL DATA"
 
-#: company_profile/models.py:1594 company_profile/models.py:1595
+#: company_profile/models.py:1595 company_profile/models.py:1596
 msgid "HSE STATISTICAL DATA"
 msgstr "بيانات احصائية  - STATISTICAL DATA"
 
-#: company_profile/models.py:1599
+#: company_profile/models.py:1600
 msgid "meal_served"
 msgstr "أصناف الوجبات المقدمة Type Of Meals Served"
 
-#: company_profile/models.py:1600
+#: company_profile/models.py:1601
 msgid "food_sources"
 msgstr "مصادر المواد الغذائية Food sources"
 
-#: company_profile/models.py:1601
+#: company_profile/models.py:1602
 msgid "food_transportation"
 msgstr "وسائل نقل المواد الغذائية Food stuffs transport"
 
-#: company_profile/models.py:1602
+#: company_profile/models.py:1603
 msgid "food_storage"
 msgstr "تخزين المواد الغذائية Food storage"
 
-#: company_profile/models.py:1603
+#: company_profile/models.py:1604
 msgid "kitchen_cleaning"
 msgstr "الية النظافة المتبعة للمطبخ Cleaning mechanism for kitchen"
 
-#: company_profile/models.py:1606 company_profile/models.py:1607
+#: company_profile/models.py:1607 company_profile/models.py:1608
 msgid "HSE Catering"
 msgstr "الطعام والغذاء - Catering"
 
-#: company_profile/models.py:1630
+#: company_profile/models.py:1631
 msgid "EXPLOSIVES_USED1"
 msgstr "نترات الامونيوم - Ammonium Nitrate"
 
-#: company_profile/models.py:1631
+#: company_profile/models.py:1632
 msgid "EXPLOSIVES_USED2"
 msgstr "املشن - Emulsions"
 
-#: company_profile/models.py:1632
+#: company_profile/models.py:1633
 msgid "EXPLOSIVES_USED3"
 msgstr "شريط تفجير - Detonating Card"
 
-#: company_profile/models.py:1633
+#: company_profile/models.py:1634
 msgid "EXPLOSIVES_USED4"
 msgstr "كبسولات كهربائية - Elect Detonator"
 
-#: company_profile/models.py:1634
+#: company_profile/models.py:1635
 msgid "EXPLOSIVES_USED5"
 msgstr "كبسولة غير كهربائية - Non Elect Detonator"
 
-#: company_profile/models.py:1635
+#: company_profile/models.py:1636
 msgid "EXPLOSIVES_USED6"
 msgstr "شريط امان - Safety Fuse"
 
-#: company_profile/models.py:1636
+#: company_profile/models.py:1637
 msgid "EXPLOSIVES_USED7"
 msgstr "بوستر - Booster"
 
-#: company_profile/models.py:1637
+#: company_profile/models.py:1638
 msgid "EXPLOSIVES_USED8"
 msgstr "اجهزة تفجير - Detonating Devices"
 
-#: company_profile/models.py:1638
+#: company_profile/models.py:1639
 msgid "EXPLOSIVES_USED9"
 msgstr "كابل - Cable"
 
-#: company_profile/models.py:1642
+#: company_profile/models.py:1643
 msgid "hse_explosives_used"
 msgstr "المتفجرات و المواد الكيميائية و الخطرة – Explosives"
 
-#: company_profile/models.py:1644
+#: company_profile/models.py:1645
 msgid "qty_remain"
 msgstr "المتبقي"
 
-#: company_profile/models.py:1648 company_profile/models.py:1649
+#: company_profile/models.py:1649 company_profile/models.py:1650
 msgid "HSE EXPLOSIVES USED"
 msgstr "المتفجرات و المواد الكيميائية و الخطرة – Explosives"
 
-#: company_profile/models.py:1659
+#: company_profile/models.py:1660
 msgid "EXP_SPECIFICATION1"
 msgstr "كاميرات مراقبة"
 
-#: company_profile/models.py:1660
+#: company_profile/models.py:1661
 msgid "EXP_SPECIFICATION2"
 msgstr "مانعة صواعق"
 
-#: company_profile/models.py:1661
+#: company_profile/models.py:1662
 msgid "EXP_SPECIFICATION3"
 msgstr "مروحة تهوية"
 
-#: company_profile/models.py:1662
+#: company_profile/models.py:1663
 msgid "EXP_SPECIFICATION4"
 msgstr "إنارة"
 
-#: company_profile/models.py:1663
+#: company_profile/models.py:1664
 msgid "EXP_SPECIFICATION5"
 msgstr "طفايات"
 
-#: company_profile/models.py:1679 company_profile/models.py:1680
+#: company_profile/models.py:1680 company_profile/models.py:1681
 msgid "HSE Explosive Storage Specification"
 msgstr "مواصفات مخزن المتفجرات"
 
-#: company_profile/models.py:1695
+#: company_profile/models.py:1696
 msgid "BILLS_OF_QUANTITIES1"
 msgstr "عدد الحفر - Holes number"
 
-#: company_profile/models.py:1696
+#: company_profile/models.py:1697
 msgid "BILLS_OF_QUANTITIES2"
 msgstr "ميلان الحفر - Hole inclination"
 
-#: company_profile/models.py:1697
+#: company_profile/models.py:1698
 msgid "BILLS_OF_QUANTITIES3"
 msgstr "نمط الحفر - Drilling pattern"
 
-#: company_profile/models.py:1698
+#: company_profile/models.py:1699
 msgid "BILLS_OF_QUANTITIES4"
 msgstr "نوع الية الحفر - Rig type"
 
-#: company_profile/models.py:1699
+#: company_profile/models.py:1700
 msgid "BILLS_OF_QUANTITIES5"
 msgstr "اقطار الحفر - Drilling diameter"
 
-#: company_profile/models.py:1700
+#: company_profile/models.py:1701
 msgid "BILLS_OF_QUANTITIES6"
 msgstr "ارتفاع الواجهات - Bench height"
 
-#: company_profile/models.py:1701
+#: company_profile/models.py:1702
 msgid "BILLS_OF_QUANTITIES7"
 msgstr "الحفر تحت مستوي الواجهات - Sub-drilling"
 
-#: company_profile/models.py:1702
+#: company_profile/models.py:1703
 msgid "BILLS_OF_QUANTITIES8"
 msgstr "الابعاد بين الحفر - Space/burden"
 
-#: company_profile/models.py:1703
+#: company_profile/models.py:1704
 msgid "BILLS_OF_QUANTITIES9"
 msgstr "بعد الصف الاول من الواجهة - Front row burden"
 
-#: company_profile/models.py:1704
+#: company_profile/models.py:1705
 msgid "BILLS_OF_QUANTITIES10"
 msgstr "عدد اذونات التفجير"
 
-#: company_profile/models.py:1708
+#: company_profile/models.py:1709
 msgid "hse_bills_of_quantities"
 msgstr "Attribute"
 
-#: company_profile/models.py:1712 company_profile/models.py:1713
+#: company_profile/models.py:1713 company_profile/models.py:1714
 msgid "HSE BILLS OF QUANTITIES"
 msgstr "جداول الكميات - Bills of Quantities"
 
-#: company_profile/models.py:1727
+#: company_profile/models.py:1728
 msgid "CADASTRAL_SPECIFICATION1"
 msgstr "الانظمة التاخيرية - Delay initiation system"
 
-#: company_profile/models.py:1728
+#: company_profile/models.py:1729
 msgid "CADASTRAL_SPECIFICATION2"
 msgstr "عمق الدفن - Stemming"
 
-#: company_profile/models.py:1729
+#: company_profile/models.py:1730
 msgid "CADASTRAL_SPECIFICATION3"
 msgstr "اعماق الحفر الكلية - Total drilling depth"
 
-#: company_profile/models.py:1730
+#: company_profile/models.py:1731
 msgid "CADASTRAL_SPECIFICATION4"
 msgstr "نوع كبسولات الاشعال - Detonators type"
 
-#: company_profile/models.py:1731
+#: company_profile/models.py:1732
 msgid "CADASTRAL_SPECIFICATION5"
 msgstr "نوع الشحنة السفلي - Bottom charge"
 
-#: company_profile/models.py:1732
+#: company_profile/models.py:1733
 msgid "CADASTRAL_SPECIFICATION6"
 msgstr "نوع الشحنة الاساسية - Main charge"
 
-#: company_profile/models.py:1733
+#: company_profile/models.py:1734
 msgid "CADASTRAL_SPECIFICATION7"
 msgstr "نوع عازل الدفن - Stemming type"
 
-#: company_profile/models.py:1734
+#: company_profile/models.py:1735
 msgid "CADASTRAL_SPECIFICATION8"
 msgstr "قيمة الشحنة النوعية مقابل الكمية - Specific charge Kg/m3"
 
-#: company_profile/models.py:1735
+#: company_profile/models.py:1736
 msgid "CADASTRAL_SPECIFICATION9"
 msgstr "قيمة الشحنة النوعية مقابل الزمن التاخيري - Max. Kg/m3"
 
-#: company_profile/models.py:1740
+#: company_profile/models.py:1741
 msgid "value"
 msgstr "القيمة"
 
-#: company_profile/models.py:1743 company_profile/models.py:1744
+#: company_profile/models.py:1744 company_profile/models.py:1745
 msgid "HSE cadastral operations"
 msgstr "بيانات العمليات المساحية - Data of cadastral operations"
 
-#: company_profile/models.py:1756
+#: company_profile/models.py:1757
 msgid "CADASTRAL2_SPECIFICATION1"
 msgstr "مقاسات الصخور  - Fragmentation"
 
-#: company_profile/models.py:1757
+#: company_profile/models.py:1758
 msgid "CADASTRAL2_SPECIFICATION2"
 msgstr "ابعد مدي للصخور المتطائرة  - Fly Rocks"
 
-#: company_profile/models.py:1758
+#: company_profile/models.py:1759
 msgid "CADASTRAL2_SPECIFICATION3"
 msgstr "الاهتزازات الارضية – Vibration"
 
-#: company_profile/models.py:1759
+#: company_profile/models.py:1760
 msgid "CADASTRAL2_SPECIFICATION4"
 msgstr "التضاغط الهوائي – Air Compression"
 
-#: company_profile/models.py:1760
+#: company_profile/models.py:1761
 msgid "CADASTRAL2_SPECIFICATION5"
 msgstr "سحب الاكاسيد النيتروجينية - NOX"
 
-#: company_profile/models.py:1761
+#: company_profile/models.py:1762
 msgid "CADASTRAL2_SPECIFICATION6"
 msgstr " عدم الاشعال – Miss Fire"
 
-#: company_profile/models.py:1762
+#: company_profile/models.py:1763
 msgid "CADASTRAL2_SPECIFICATION7"
 msgstr "مسافة الامان للكابل – Safety  Distance"
 
-#: company_profile/models.py:1767
+#: company_profile/models.py:1768
 msgid "observation"
 msgstr "ملاحظات observations"
 
-#: company_profile/models.py:1768
+#: company_profile/models.py:1769
 msgid "result"
 msgstr "النتيجة Result"
 
-#: company_profile/models.py:1771 company_profile/models.py:1772
+#: company_profile/models.py:1772 company_profile/models.py:1773
 msgid "HSE cadastral operations2"
 msgstr "بيانات العمليات المساحية - Data of cadastral operations"
 
-#: company_profile/models.py:1777
+#: company_profile/models.py:1778
 msgid "whom_reason"
 msgstr "الغرض من الشهادة"
 
-#: company_profile/models.py:1778
+#: company_profile/models.py:1779
 msgid "whom_subject"
 msgstr "الموضوع"
 
-#: company_profile/models.py:1779 company_profile/models.py:1790
+#: company_profile/models.py:1780 company_profile/models.py:1791
 #: company_profile/templates/company_profile/application_readonly.html:25
 #: company_profile/templates/company_profile/application_readonly_master_details2.html:61
 #: pa/templates/pa/application_readonly.html:40
@@ -2719,70 +2723,70 @@ msgstr "الموضوع"
 msgid "whom_attachement_file"
 msgstr "ملف شهادة لمن يهمه الامر"
 
-#: company_profile/models.py:1782
+#: company_profile/models.py:1783
 msgid "Whom may concern"
 msgstr "الى من يهمه الامر"
 
-#: company_profile/models.py:1795
+#: company_profile/models.py:1796
 msgid "Application: Whom may concern request"
 msgstr "طلب شهادة لمن يهمه الامر"
 
-#: company_profile/models.py:1796
+#: company_profile/models.py:1797
 #: company_profile/templates/company_profile/base.html:273
 msgid "Application: Whom may concern requests"
 msgstr "طلب شهادة لمن يهمه الامر"
 
-#: company_profile/models.py:1801 production_control/models.py:83
+#: company_profile/models.py:1802 production_control/models.py:83
 #: production_control/models.py:133
 msgid "form_no"
 msgstr "رقم الاستمارة"
 
-#: company_profile/models.py:1802 production_control/models.py:89
+#: company_profile/models.py:1803 production_control/models.py:89
 msgid "gold_production_form_file"
 msgstr "مرفق استمارة الانتاج"
 
-#: company_profile/models.py:1805
+#: company_profile/models.py:1806
 msgid "Gold Production"
 msgstr "انتاج الذهب"
 
-#: company_profile/models.py:1812 company_profile/models.py:1813
+#: company_profile/models.py:1813 company_profile/models.py:1814
 #: company_profile/templates/company_profile/base.html:139
 msgid "Application: Gold Production"
 msgstr "استمارة انتاج الذهب"
 
-#: company_profile/models.py:1817
+#: company_profile/models.py:1818
 msgid "melt_dt"
 msgstr "تاريخ الصهر"
 
-#: company_profile/models.py:1818
+#: company_profile/models.py:1819
 msgid "melt_bar_no"
 msgstr "رقم السبيكة"
 
-#: company_profile/models.py:1819
+#: company_profile/models.py:1820
 msgid "melt_bar_weight"
 msgstr "وزن السبيكة"
 
-#: company_profile/models.py:1820
+#: company_profile/models.py:1821
 msgid "melt_jaf"
 msgstr "وزن المركز الجاف"
 
-#: company_profile/models.py:1821
+#: company_profile/models.py:1822
 msgid "melt_khabath"
 msgstr "وزن الخبث"
 
-#: company_profile/models.py:1822
+#: company_profile/models.py:1823
 msgid "melt_added_gold"
 msgstr "وزن الذهب المضاف للصهر"
 
-#: company_profile/models.py:1823
+#: company_profile/models.py:1824
 msgid "melt_remaind"
 msgstr "وزن الذهب المتبقي"
 
-#: company_profile/models.py:1826
+#: company_profile/models.py:1827
 msgid "Gold Production Detail"
 msgstr "تفاصيل استمارة الانتاج"
 
-#: company_profile/models.py:1827
+#: company_profile/models.py:1828
 msgid "Gold Production Details"
 msgstr "تفاصيل استمارة الانتاج"
 
@@ -3472,7 +3476,7 @@ msgid "state_smrc"
 msgstr "اعتماد ممثل الشركة السودانية بالولاية"
 
 #: dabtiaat_altaedin/admin.py:275 gold_travel/admin.py:369
-#: gold_travel/admin.py:648 sswg/admin.py:235 workflow/admin_utils.py:220
+#: gold_travel/admin.py:648 sswg/admin.py:237 workflow/admin_utils.py:242
 msgid "application confirmed successfully!"
 msgstr "تم إعتماد الطلب بنجاح."
 
@@ -3523,7 +3527,7 @@ msgstr "المبلغ الكلي"
 #: executive_office/models.py:149 gold_travel/admin.py:417
 #: gold_travel/admin.py:458 gold_travel/models.py:143 gold_travel/models.py:261
 #: gold_travel_traditional/admin.py:339 gold_travel_traditional/models.py:112
-#: hse_traditional/models.py:79 hse_traditional/models.py:232
+#: hse_traditional/models.py:80 hse_traditional/models.py:232
 #: hse_traditional/models.py:346 hse_traditional/models.py:429 it/models.py:37
 #: it/models.py:168 pa/models.py:95 pa/models.py:133 pa/models.py:197
 #: pa/models.py:307 pa/models.py:519 pa/tables/payment.py:34
@@ -3584,7 +3588,7 @@ msgstr "نظام ضبطيات التعدين"
 #: executive_office/forms.py:15 executive_office/models.py:37
 #: gold_travel/forms.py:11 gold_travel/models.py:48
 #: gold_travel_traditional/forms.py:12 gold_travel_traditional/models.py:40
-#: hse_traditional/forms.py:10 hse_traditional/models.py:50
+#: hse_traditional/forms.py:10 hse_traditional/models.py:51
 #: planning/forms.py:17 planning/models.py:200 production_control/forms.py:22
 #: production_control/models.py:27
 msgid "user"
@@ -3599,12 +3603,12 @@ msgid "authority"
 msgstr "الجهة"
 
 #: dabtiaat_altaedin/models.py:58 gold_travel/models.py:61
-#: hse_traditional/models.py:62
+#: hse_traditional/models.py:63
 msgid "state representative"
 msgstr "الممثل بالولاية"
 
 #: dabtiaat_altaedin/models.py:59 gold_travel/models.py:62
-#: hse_traditional/models.py:63
+#: hse_traditional/models.py:64
 msgid "state representatives"
 msgstr "الممثلين بالولاية"
 
@@ -4700,99 +4704,104 @@ msgstr ""
 msgid "hse traditional"
 msgstr "البيئة والسلامة بالتعدين التقليدي"
 
-#: hse_traditional/models.py:71 hse_traditional/models.py:225
+#: hse_traditional/forms.py:17 hse_traditional/models.py:430
+msgid "source_accident"
+msgstr "الحادث"
+
+#: hse_traditional/forms.py:18 hse_traditional/models.py:431
+msgid "source_near_miss"
+msgstr "حادث وشيك الوقوع"
+
+#: hse_traditional/models.py:72 hse_traditional/models.py:225
 #: hse_traditional/models.py:339 hse_traditional/models.py:422 it/models.py:148
 #: pa/models.py:33
 msgid "draft"
 msgstr "مسودة"
 
-#: hse_traditional/models.py:72 hse_traditional/models.py:226
+#: hse_traditional/models.py:73 hse_traditional/models.py:226
 #: hse_traditional/models.py:340 it/models.py:149
 msgid "confirmed"
 msgstr "مؤكد"
 
-#: hse_traditional/models.py:73 it/models.py:22 it/models.py:150
-msgid "IT_STATE_APPROVED"
-msgstr "اعتماد الطلب بواسطة مدير الادارة العامة"
+#: hse_traditional/models.py:74 hse_traditional/models.py:227
+#: hse_traditional/models.py:341 hse_traditional/models.py:425
+msgid "approved"
+msgstr "Approved - تم التصديق"
 
-#: hse_traditional/models.py:82
+#: hse_traditional/models.py:83
 msgid "Hse Traditional Monthly Report"
 msgstr "Hse Monthly Report - تقرير البيئة والسلامة"
 
-#: hse_traditional/models.py:83
+#: hse_traditional/models.py:84
 msgid "Hse Traditional Monthly Reports"
 msgstr "Hse Monthly Reports -  تقارير البيئة والسلامة الشهرية"
 
-#: hse_traditional/models.py:131
+#: hse_traditional/models.py:132
 msgid "market_name"
 msgstr "اسم السوق"
 
-#: hse_traditional/models.py:132
+#: hse_traditional/models.py:133
 msgid "What ماذا"
 msgstr ""
 
-#: hse_traditional/models.py:133
+#: hse_traditional/models.py:134
 msgid "Who من"
 msgstr ""
 
-#: hse_traditional/models.py:134
+#: hse_traditional/models.py:135
 msgid "Hazard identified تحديد المخاطر"
 msgstr ""
 
-#: hse_traditional/models.py:135
+#: hse_traditional/models.py:136
 msgid "Closed date الاغلاق"
 msgstr ""
 
-#: hse_traditional/models.py:138
+#: hse_traditional/models.py:139
 msgid "Environmental Inspection"
 msgstr "التفتيش البيئي لسوق تعدين"
 
-#: hse_traditional/models.py:139
+#: hse_traditional/models.py:140
 msgid "Environmental Inspections"
 msgstr "التفتيش البيئي لأسواق التعدين"
 
-#: hse_traditional/models.py:143 hse_traditional/models.py:162
+#: hse_traditional/models.py:144 hse_traditional/models.py:163
 #: hse_traditional/models.py:175 hse_traditional/models.py:185
 msgid "Market name / اسم السوق"
 msgstr ""
 
-#: hse_traditional/models.py:144
+#: hse_traditional/models.py:145
 #, fuzzy
 #| msgid "item_description"
 msgid "Item description وصف"
 msgstr "وصف التحديث"
 
-#: hse_traditional/models.py:145
+#: hse_traditional/models.py:146
 msgid "Material by ton الخام بالطن"
 msgstr ""
 
-#: hse_traditional/models.py:146
+#: hse_traditional/models.py:147
 msgid "Comment تعليق"
 msgstr ""
 
-#: hse_traditional/models.py:149
+#: hse_traditional/models.py:150
 msgid "Waste Management"
 msgstr "إدارة نفايات التعدين"
 
-#: hse_traditional/models.py:150
+#: hse_traditional/models.py:151
 msgid "Waste Managements"
 msgstr "إدارة نفايات التعدين"
 
-#: hse_traditional/models.py:157
+#: hse_traditional/models.py:158
 msgid "Training - تدريب"
 msgstr ""
 
-#: hse_traditional/models.py:158
+#: hse_traditional/models.py:159
 msgid "Awareness - إرشاد"
 msgstr ""
 
-#: hse_traditional/models.py:163
+#: hse_traditional/models.py:164
 msgid "نوع التدريب -  type of training"
 msgstr ""
-
-#: hse_traditional/models.py:164
-msgid "training_id"
-msgstr "سيء"
 
 #: hse_traditional/models.py:165
 msgid "Subject الموضوع"
@@ -4876,11 +4885,6 @@ msgstr ""
 #| msgid "HSE work environment"
 msgid "Environmental - بيئي"
 msgstr "تقييم بيئة العمل Work environment"
-
-#: hse_traditional/models.py:227 hse_traditional/models.py:341
-#: hse_traditional/models.py:425
-msgid "approved"
-msgstr "Approved - تم التصديق"
 
 #: hse_traditional/models.py:233
 msgid "what - ماذا"
@@ -5008,14 +5012,6 @@ msgstr "تأكيد مشرف الولاية"
 msgid "confirmed_mngr"
 msgstr "تأكيد مدير الادارة"
 
-#: hse_traditional/models.py:430
-msgid "source_accident"
-msgstr "الحادث"
-
-#: hse_traditional/models.py:431
-msgid "source_near_miss"
-msgstr "حادث وشيك الوقوع"
-
 #: hse_traditional/models.py:434
 msgid "corrective_action"
 msgstr "Corrective action - اجراء تصحيحي"
@@ -5024,19 +5020,23 @@ msgstr "Corrective action - اجراء تصحيحي"
 msgid "Hse Traditional Corrective Action"
 msgstr "Corrective action - اجراء تصحيحي"
 
-#: hse_traditional/models.py:494
+#: hse_traditional/models.py:442
+msgid "Either source_accident or source_near_miss must be provided."
+msgstr ""
+
+#: hse_traditional/models.py:498
 msgid "Hse Traditional Corrective Action Reccomendation"
 msgstr "Reccomendation - التوصية"
 
-#: hse_traditional/models.py:495
+#: hse_traditional/models.py:499
 msgid "Hse Traditional Corrective Action Reccomendations"
 msgstr "Reccomendations - التوصيات"
 
-#: hse_traditional/models.py:502
+#: hse_traditional/models.py:506
 msgid "Hse Traditional Corrective Action Final Decision"
 msgstr "Final Decision - القرار النهائي"
 
-#: hse_traditional/models.py:503
+#: hse_traditional/models.py:507
 msgid "Hse Traditional Corrective Action Final Decisions"
 msgstr "Final Decisions - القرار النهائي"
 
@@ -5047,6 +5047,10 @@ msgstr "مسودة"
 #: it/models.py:21
 msgid "IT_STATE_CONFIRMED"
 msgstr "تأكيد الطلب بواسطة مدير الادارة الفرعية"
+
+#: it/models.py:22 it/models.py:150
+msgid "IT_STATE_APPROVED"
+msgstr "اعتماد الطلب بواسطة مدير الادارة العامة"
 
 #: it/models.py:23
 msgid "IT_STATE_IT_MANAGER_STUDING_APPROVAL"
@@ -6703,13 +6707,13 @@ msgstr "تفاصيل توزيع الايرادات"
 msgid "Revenu distribution details"
 msgstr "تفاصيل توزيع الايرادات"
 
-#: sswg/admin.py:234
+#: sswg/admin.py:236
 #, fuzzy
 #| msgid "SSWG State 1"
 msgid "SSWG State "
 msgstr "مسودة"
 
-#: sswg/admin.py:269 workflow/admin_utils.py:193
+#: sswg/admin.py:271 workflow/admin_utils.py:194
 msgid "application not confirmed!"
 msgstr "لم يتم إعتماد الطلب، الرجاء التأكد من اكتمال البيانات."
 
@@ -7061,9 +7065,12 @@ msgstr "تم تسجيل الدخول بنجاح."
 msgid "Record added sucessfully."
 msgstr "تم حفظ السجل بنجاح."
 
-#: workflow/admin_utils.py:219
+#: workflow/admin_utils.py:241
 msgid "Transition to"
 msgstr ""
+
+#~ msgid "training_id"
+#~ msgstr "سيء"
 
 #~ msgid "material_by_ton"
 #~ msgstr "المواد المطلوبة"

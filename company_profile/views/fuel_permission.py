@@ -81,7 +81,7 @@ class AppFuelPermissionCreateView(ApplicationMasterDetailCreateView):
 class AppFuelPermissionReadonlyView(ApplicationMasterDetailReadonlyView):
     model = AppFuelPermission
     model_details = AppFuelPermissionDetail
-    model_details_fields = ["fuel_type_name","fuel_qty"]
+    model_details_fields = ["fuel_type_name","fuel_qty","fuel_actual_qty"]
     form_class = AppFuelPermissionForm
     detail_formset = None
     menu_name = "profile:app_fuel_permission_list"

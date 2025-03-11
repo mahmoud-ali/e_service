@@ -1104,6 +1104,7 @@ class AppFuelPermissionDetail(models.Model):
     fuel_master = models.ForeignKey(AppFuelPermission, on_delete=models.PROTECT)    
     fuel_type_name = models.CharField(_("fuel_type_name"),max_length=20)
     fuel_qty = models.FloatField(_("fuel_qty"))
+    fuel_actual_qty = models.FloatField(_("fuel_actual_qty"),blank=True,null=True)
 
     class Meta:
         verbose_name = _("Fuel Permission Detail")

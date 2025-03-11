@@ -8,7 +8,7 @@ from django_fsm import can_proceed
 
 from .workflow import SUBMITTED,ACCEPTED,APPROVED,REJECTED,WorkflowFormMixin
 
-from .models import AppFuelPermission, AppGoldProduction, AppHSEAccidentReport, AppHSEPerformanceReport, AppImportPermission, AppRenewalContract, AppRestartActivity, AppWhomConcern, TblCompanyProduction, AppForignerMovement,AppBorrowMaterial,AppWorkPlan,AppTechnicalFinancialReport,AppChangeCompanyName, \
+from .models import AppFuelPermission, AppFuelPermissionDetail, AppGoldProduction, AppHSEAccidentReport, AppHSEPerformanceReport, AppImportPermission, AppRenewalContract, AppRestartActivity, AppWhomConcern, TblCompanyProduction, AppForignerMovement,AppBorrowMaterial,AppWorkPlan,AppTechnicalFinancialReport,AppChangeCompanyName, \
                     AppExplorationTime, AppAddArea, AppRemoveArea, AppTnazolShraka, AppTajeelTnazol,AppTajmeed,AppTakhali,AppTamdeed, \
                     AppTaaweed,AppMda,AppChangeWorkProcedure,AppExportGold,AppExportGoldRaw,AppSendSamplesForAnalysis,AppForeignerProcedure, \
                     AppAifaaJomrki,AppReexportEquipments,AppRequirementsList,TblCompanyProductionLicense,AppVisibityStudy, \
@@ -550,6 +550,13 @@ class AppFuelPermissionForm(AppFuelPermissionAdminForm):
         model = AppFuelPermission
         exclude = ["company","state","reject_comments"]
         widgets = {}
+
+class AppFuelPermissionDetailForm(ModelForm):
+    fuel_actual_qty = forms.FloatField(label=_("fuel_actual_qty"))
+    class Meta:
+        model = AppFuelPermissionDetail
+        fields = ["fuel_type_name","fuel_qty","fuel_actual_qty"]
+
 
 class AppHSEAccidentReportAdminForm(WorkflowFormMixin,ModelForm):
     company = forms.ModelChoiceField(queryset=TblCompanyProduction.objects.all(), disabled=True, label=_("company"))
