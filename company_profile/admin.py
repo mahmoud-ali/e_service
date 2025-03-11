@@ -88,6 +88,10 @@ class WorkflowAdminMixin:
         if request.user.groups.filter(name__in=["pro_company_application_approve","hse_approve"]).exists():
             filter += ["accepted","approved","rejected"]
 
+        if self.model == AppFuelPermission:
+            if request.user.groups.filter(name__in=["fuel_permission"]).exists():
+                filter += ["accepted","approved","rejected"]
+
         if request.user.groups.filter(name="company_type_entaj").exists():
             company_types += [TblCompany.COMPANY_TYPE_ENTAJ]
         if request.user.groups.filter(name="company_type_mokhalfat").exists():
