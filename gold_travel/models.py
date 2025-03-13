@@ -62,7 +62,16 @@ class TblStateRepresentative(models.Model):
         verbose_name_plural = _("state representatives")
 
 class LkpOwner(models.Model):
+    STATE_ACTIVE = 1
+    STATE_INACTIVE = 2
+
+    STATE_CHOICES = {
+        STATE_ACTIVE: _('active'),
+        STATE_INACTIVE: _('inactive'),
+    }
+
     name = models.CharField(_("name"),max_length=100)
+    state = models.IntegerField(_("record_state"), choices=STATE_CHOICES, default=STATE_ACTIVE)
 
     def __str__(self):
         return f'{self.name}'

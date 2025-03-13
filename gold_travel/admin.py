@@ -61,9 +61,16 @@ admin.site.register(LkpStateDetails, LkpStateDetailsAdmin)
 
 class LkpOwnerAdmin(admin.ModelAdmin):
     model = LkpOwner
-    list_display = ["name"]
+    list_display = ["name","state"]
     # list_filter = ["name"]
     search_fields = ["name"]
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+
+        if not request.user.groups.filter(name='gold_travel_manager').exists():
+            qs = qs.filter(state=LkpOwner.STATE_ACTIVE)
+
+        return qs
 
 admin.site.register(LkpOwner, LkpOwnerAdmin)
 
@@ -321,6 +328,11 @@ class AppMoveAdmin(LogAdminMixin,admin.ModelAdmin):
             qs = qs.none()
 
         return qs
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == "owner_name_lst":
+            kwargs["queryset"] = LkpOwner.objects.filter(state=LkpOwner.STATE_ACTIVE)
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
     def get_actions(self, request):
         actions = super().get_actions(request)
