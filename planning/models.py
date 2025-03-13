@@ -532,6 +532,8 @@ class OtherMineralsTask(TaskExecutionDetail):
         verbose_name_plural = _("OtherMineralsTasks")
 
 class ExportGoldTraditionalTask(TaskExecutionDetail):
+    state = models.ForeignKey(LkpState, on_delete=models.PROTECT,verbose_name=_("state"))
+    no_alloy = models.IntegerField(_("no_alloy"))
     raw_total_weight = models.FloatField(_("raw_total_weight"))
     net_total_weight = models.FloatField(_("net_total_weight"))
     total_hasila_dollar = models.FloatField(_("total_hasila_dollar"))
