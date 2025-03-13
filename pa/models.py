@@ -119,11 +119,15 @@ class TblCompanyOpenningBalanceDetail(models.Model):
         verbose_name_plural = _("Openning balance details")
 
     def clean(self):
-        if self.commitment_master.company.company_type != self.item.company_type:
+        try:
+            if self.commitment_master.company.company_type != self.item.company_type:
+                raise ValidationError(
+                    {"item":_("item type should match company type")}
+                )
+        except models.RelatedObjectDoesNotExist:
             raise ValidationError(
                 {"item":_("item type should match company type")}
             )
-
 
 class TblCompanyCommitmentMaster(LoggingModel):
     company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
