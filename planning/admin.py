@@ -179,7 +179,7 @@ class TaskExecutionAdmin(admin.ModelAdmin):
     def get_queryset(self, request):
         qs = super().get_queryset(request)
 
-        if request.user.is_superuser:
+        if request.user.is_superuser or request.user.groups.filter(name__in=["planning_manager",]).exists():
             return qs
 
         try:
