@@ -901,7 +901,7 @@ class AppHSEPerformanceReportAdmin(admin.ModelAdmin):
         AppHSEPerformanceReportCadastralOperations2DetailInline,
     ]
 
-    list_display = ["company", "year", "month","album"]
+    list_display = ["company", "year", "month","album","ask_ai_link"]
     list_filter = ["company", "year", "month",]
     view_on_site = False
 
@@ -922,6 +922,12 @@ class AppHSEPerformanceReportAdmin(admin.ModelAdmin):
 
         return qs
     
+    @admin.display(description=_('Ask AI'))
+    def ask_ai_link(self, obj):
+        url = reverse('profile:app_hse_performance_ai',args=[obj.id])
+        return format_html('<a target="_blank" class="viewlink" href="{url}">'+_('Ask AI')+'</a>',
+                    url=url
+                )
 admin.site.register(AppHSEPerformanceReport, AppHSEPerformanceReportAdmin)
 
 class AppWhomConcernAdmin(WorkflowAdminMixin,admin.ModelAdmin):

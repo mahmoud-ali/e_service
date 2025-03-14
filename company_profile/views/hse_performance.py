@@ -12,6 +12,8 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.sites.models import Site
 
+from company_profile.utils import queryset_to_markdown
+
 from ..models import AppHSEPerformanceReport, AppHSEPerformanceReportActivities, AppHSEPerformanceReportBillsOfQuantities, AppHSEPerformanceReportCadastralOperations, AppHSEPerformanceReportCadastralOperationsTwo, AppHSEPerformanceReportCatering, AppHSEPerformanceReportChemicalUsed, AppHSEPerformanceReportCyanideCNStorageSpecification, AppHSEPerformanceReportCyanideTable, AppHSEPerformanceReportDiseasesForWorkers, AppHSEPerformanceReportExplosivesUsed, AppHSEPerformanceReportExplosivesUsedSpecification, AppHSEPerformanceReportFireFighting, AppHSEPerformanceReportManPower, AppHSEPerformanceReportOilUsed, AppHSEPerformanceReportOtherChemicalUsed, AppHSEPerformanceReportProactiveIndicators, AppHSEPerformanceReportStatisticalData, AppHSEPerformanceReportTherapeuticUnit, AppHSEPerformanceReportWasteDisposal, AppHSEPerformanceReportWaterUsed, AppHSEPerformanceReportWorkEnvironment, TblCompany
 from ..forms import AppHSEPerformanceReportForm
 
@@ -158,3 +160,32 @@ class AppHSEPerformanceReportReadonlyView(LoginRequiredMixin,DetailView):
 
         return render(request, self.template_name, self.extra_context)
     
+class AppHSEPerformanceReportAskAIView(LoginRequiredMixin,DetailView):
+    model = AppHSEPerformanceReport
+    model_details = model_details_lst
+    template_name = "company_profile/views/ai_prompt.html"
+
+    def dispatch(self, *args, **kwargs):
+        if self.request.user.pro_company.company.company_type in [TblCompany.COMPANY_TYPE_ENTAJ, TblCompany.COMPANY_TYPE_SAGEER, TblCompany.COMPANY_TYPE_EMTIAZ]:
+            if explosive[0] not in self.model_details:
+                self.model_details = self.model_details + explosive
+
+        return super().dispatch(*args, **kwargs)                    
+
+    def get(self,request,pk):        
+        obj = self.get_object()
+
+        context = ""
+        for model in self.model_details:
+            qs = model.objects.filter(master=obj)
+            if qs.count() > 0:
+                context += "## "+qs[0]._meta.verbose_name
+                context += queryset_to_markdown(qs,["id","master"]) + "\n\n"
+
+
+        self.extra_context = {
+            "prompt":"please analyze this HSE report for opertunity of improvements and suggest corrective actions",
+            "context":context, 
+         }
+
+        return render(request, self.template_name, self.extra_context)

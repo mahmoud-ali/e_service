@@ -3,6 +3,7 @@ from django.conf.urls.static import static
 
 from django.conf import settings
 
+from company_profile.views.hse_performance import AppHSEPerformanceReportAskAIView
 from company_profile.views.pa_request import AppRequestListView, AppRequestReadonlyView
 
 from .views import CompanySummaryView,SetLanguageView, HomePageView, \
@@ -220,6 +221,7 @@ urlpatterns = [
     path('app_hse_performance/<int:type>/', AppHSEPerformanceReportListView.as_view(), name='app_hse_performance_list'),
     path('app_hse_performance/<int:pk>/show/', AppHSEPerformanceReportReadonlyView.as_view(), name='app_hse_performance_show'),    
     path('app_hse_performance/add/', AppHSEPerformanceReportCreateView.as_view(), name='app_hse_performance_add'),
+    path('app_hse_performance/ai/<int:pk>/', AppHSEPerformanceReportAskAIView.as_view(), name='app_hse_performance_ai'),
 
     path('app_whom_concern/', AppWhomConcernListView.as_view(), name='app_whom_concern_list'),
     path('app_whom_concern/<int:type>/', AppWhomConcernListView.as_view(), name='app_whom_concern_list'),
