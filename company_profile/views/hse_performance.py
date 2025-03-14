@@ -184,7 +184,7 @@ class AppHSEPerformanceReportAskAIView(LoginRequiredMixin,DetailView):
 
 
         self.extra_context = {
-            "prompt":"Review the attached HSE report thoroughly. Identify any weaknesses, inefficiencies, or areas of non-compliance, and recommend specific, actionable corrective measures to improve health, safety, and environmental performance. Your analysis should highlight both immediate fixes and long-term opportunities for improvement, based on best practices and industry standards. Identify the key issues discussed and determine the top ten corrective actions needed. List these actions in prioritized order, and for each, include a brief explanation detailing why it was ranked as such, referring to relevant parts of the report where applicable",
+            "prompt":"Review the attached HSE report thoroughly. Identify any weaknesses, inefficiencies, or areas of non-compliance, and recommend specific, actionable corrective measures to improve health, safety, and environmental performance. Your analysis should highlight both immediate fixes and long-term opportunities for improvement, based on best practices and industry standards. ",
             "data":context, 
          }
 
