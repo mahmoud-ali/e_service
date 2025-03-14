@@ -105,7 +105,7 @@ def display_field(instance, field):
         return str(getattr(instance, "get_"+field.name+"_display")())
     else:
         return str(getattr(instance, field.name))
-def queryset_to_markdown(qs,exclude=[]):
+def queryset_to_markdown(qs,exclude=[],newline="<br/>"):
     if qs.count() > 0:
         instance = qs.first()
         headers = "| " + " | ".join([str(field.verbose_name) for field in instance._meta.fields if field.name not in exclude]) + " |"
@@ -113,9 +113,9 @@ def queryset_to_markdown(qs,exclude=[]):
 
         values = ""
         for instance in qs:
-            values += "| " + " | ".join([display_field(instance, field) for field in instance._meta.fields if field.name not in exclude]) + " |" + "\n"
+            values += "| " + " | ".join([display_field(instance, field) for field in instance._meta.fields if field.name not in exclude]) + " |" + newline
         
-        markdown = f"{headers}\n{separator}\n{values}"
+        markdown = f"{headers}{newline}{separator}{newline}{values}"
         return markdown
 
 

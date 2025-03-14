@@ -5,6 +5,7 @@ from django.views.generic import View, ListView, CreateView, DetailView
 from django.http import HttpResponseRedirect, HttpResponse
 from django.utils.translation import gettext_lazy as _
 from django.utils import translation
+from django.utils.html import format_html
 
 from django.conf import settings
 
@@ -172,17 +173,19 @@ class AppHSEPerformanceReportAskAIView(LoginRequiredMixin,DetailView):
             if explosive[0] not in self.model_details:
                 self.model_details = self.model_details + explosive
 
-        context = ""
+        context = []
         for model in self.model_details:
             qs = model.objects.filter(master=obj)
             if qs.count() > 0:
-                context += "## "+qs[0]._meta.verbose_name
-                context += queryset_to_markdown(qs,["id","master"]) + "\n\n"
+                context.append({
+                    "title":"## "+qs[0]._meta.verbose_name,
+                    "md": format_html(queryset_to_markdown(qs,["id","master"]))
+                })
 
 
         self.extra_context = {
-            "prompt":"please analyze this HSE report for opertunity of improvements and suggest corrective actions",
-            "context":context, 
+            "prompt":"Review the attached HSE report thoroughly. Identify any weaknesses, inefficiencies, or areas of non-compliance, and recommend specific, actionable corrective measures to improve health, safety, and environmental performance. Your analysis should highlight both immediate fixes and long-term opportunities for improvement, based on best practices and industry standards.",
+            "data":context, 
          }
 
         return render(request, self.template_name, self.extra_context)
