@@ -165,15 +165,12 @@ class AppHSEPerformanceReportAskAIView(LoginRequiredMixin,DetailView):
     model_details = model_details_lst
     template_name = "company_profile/views/ai_prompt.html"
 
-    def dispatch(self, *args, **kwargs):
-        if self.request.user.pro_company.company.company_type in [TblCompany.COMPANY_TYPE_ENTAJ, TblCompany.COMPANY_TYPE_SAGEER, TblCompany.COMPANY_TYPE_EMTIAZ]:
-            if explosive[0] not in self.model_details:
-                self.model_details = self.model_details + explosive
-
-        return super().dispatch(*args, **kwargs)                    
-
     def get(self,request,pk):        
         obj = self.get_object()
+
+        if obj.company.company_type in [TblCompany.COMPANY_TYPE_ENTAJ, TblCompany.COMPANY_TYPE_SAGEER, TblCompany.COMPANY_TYPE_EMTIAZ]:
+            if explosive[0] not in self.model_details:
+                self.model_details = self.model_details + explosive
 
         context = ""
         for model in self.model_details:
