@@ -902,7 +902,7 @@ class AppHSEPerformanceReportAdmin(admin.ModelAdmin):
     ]
 
     list_display = ["company", "year", "month","album","ask_ai_link"]
-    list_filter = ["company", "year", "month",]
+    list_filter = ["year", "month",]
     view_on_site = False
 
     def get_queryset(self, request):

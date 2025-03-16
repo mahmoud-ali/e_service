@@ -182,9 +182,18 @@ class AppHSEPerformanceReportAskAIView(LoginRequiredMixin,DetailView):
                     "md": format_html(queryset_to_markdown(qs,["id","master"]))
                 })
 
+        prompt = """
+            You are a professional Health and Safety Manager with over 25 years of experience. 
+            Your task is to generate a comprehensive 'Health and Safety Report' based on specific context provided by users. 
+            This must comply with international standards and align with the given project or facility's parameters. 
+            The resultant document should be detailed and extend beyond 2500 words. 
+            Review the attached HSE report thoroughly. 
+            Identify any weaknesses, inefficiencies, or areas of non-compliance, and recommend specific, actionable corrective measures to improve health, safety, and environmental performance. 
+            Your analysis should highlight both immediate fixes and long-term opportunities for improvement, based on best practices and industry standards.
+        """
 
         self.extra_context = {
-            "prompt":"You are a professional Health and Safety Manager with over 25 years of experience. Your task is to generate a comprehensive 'Health and Safety Report' based on specific context provided by users. This must comply with international standards and align with the given project or facility's parameters. The resultant document should be detailed and extend beyond 2500 words. Review the attached HSE report thoroughly. Identify any weaknesses, inefficiencies, or areas of non-compliance, and recommend specific, actionable corrective measures to improve health, safety, and environmental performance. Your analysis should highlight both immediate fixes and long-term opportunities for improvement, based on best practices and industry standards. ",
+            "prompt":prompt,
             "data":context, 
          }
 
