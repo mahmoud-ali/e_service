@@ -3860,7 +3860,7 @@ msgstr "وصل للمواصفات والمقاييس"
 
 #: gold_travel/admin.py:379 gold_travel/models.py:105
 msgid "state_ssmo"
-msgstr "أكملت اجراءات الصادر"
+msgstr "إكتملت اجراءات الصادر"
 
 #: gold_travel/admin.py:382 gold_travel/admin.py:388 gold_travel/models.py:106
 msgid "state_waived"
