@@ -12,6 +12,18 @@ HAJR_TYPE_CHOICES = {
     HAJR_TYPE_BOLIMAL: _('بوليمل'),
 }
 
+class TraditionalAppUser(LoggingModel):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.PROTECT,related_name="traditional_app_user",verbose_name=_("user"))
+    name = models.CharField(_("name"),max_length=100)
+    state = models.ForeignKey(LkpState, on_delete=models.PROTECT,related_name="traditional_app_state",verbose_name=_("state"))
+
+    def __str__(self):
+        return f'{self.user} ({self.name})'
+
+    class Meta:
+        verbose_name = _("مستخدم نظام التعدين التقليدي")
+        verbose_name_plural = _("مستخدمي نظام التعدين التقليدي")
+
 class Employee(LoggingModel):
     EMPLOYEE_TYPE_EMPLOYEE = 1
     EMPLOYEE_TYPE_T3AGOOD = 2

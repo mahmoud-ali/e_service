@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 from company_profile.models import LkpLocality, LkpState
-from traditional_app.models import DailyGrabeel, DailyHofrKabira, DailyIncome, DailyReport, DailyGoldMor7ala, DailyKartaMor7ala, DailySmallProcessingUnit, Employee, EmployeeProject, Lkp2bar, Lkp2jhizatBahth, Lkp7ofrKabira, LkpGrabeel, LkpKhalatat, LkpMojam3atTawa7in, LkpSaig, LkpSmallProcessingUnit, LkpSoag, LkpSosalGold, DailyTahsilForm, DailyWardHajr, RentedApartment, RentedVehicle, Vehicle
+from traditional_app.models import DailyGrabeel, DailyHofrKabira, DailyIncome, DailyReport, DailyGoldMor7ala, DailyKartaMor7ala, DailySmallProcessingUnit, Employee, EmployeeProject, Lkp2bar, Lkp2jhizatBahth, Lkp7ofrKabira, LkpGrabeel, LkpKhalatat, LkpMojam3atTawa7in, LkpSaig, LkpSmallProcessingUnit, LkpSoag, LkpSosalGold, DailyTahsilForm, DailyWardHajr, RentedApartment, RentedVehicle, TraditionalAppUser, Vehicle
 from workflow.admin_utils import create_main_form
 
 class LogMixin:
@@ -26,6 +26,14 @@ class LogMixin:
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
     
 ####### Lookups ########
+class TraditionalAppUserAdmin(LogMixin, admin.ModelAdmin):
+    model = TraditionalAppUser
+    list_display = ['name', 'state']
+    search_fields = ('name',)
+    list_filter = ('state',)
+
+admin.site.register(TraditionalAppUser, TraditionalAppUserAdmin)
+
 class LkpMojam3atTawa7inInline(admin.TabularInline):
     model = LkpMojam3atTawa7in
     exclude = ["created_at","created_by","updated_at","updated_by"]
