@@ -81,9 +81,8 @@ class AppDabtiaat(LoggingModel):
     }
 
     def attachement_path(self, filename):
-        company = self.owner_name
         date = self.created_at.date()
-        return "company_{0}/travel/{1}/{2}".format(company,date, filename)    
+        return "dabtiaat/{0}/{1}".format(date, filename)    
 
     date = models.DateField(_("date"))
     report_number = models.CharField(_("Report number"), max_length=20)
