@@ -109,6 +109,7 @@ INSTALLED_APPS = [
     'workflow',
     'it',
     'hse_traditional',
+    'traditional_app',
 
     # Debug
     'debug_toolbar',

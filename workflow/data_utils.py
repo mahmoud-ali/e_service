@@ -49,6 +49,7 @@ def create_model_groups(app,model_name,model_attrs):
     #         group.permissions.add(permission)
 
     for group_name,group_dict in model_attrs.get("groups").items():
+        print(f"Get/Create group {group_name}")
         group, created = Group.objects.get_or_create(name=group_name)
         state_permissions = group_dict.get("permissions",{})
         user_perm = {'add': 0, 'change': 0, 'delete': 0, 'view': 0}
@@ -63,6 +64,7 @@ def create_model_groups(app,model_name,model_attrs):
                 model_name = model_name.lower()
                 content_type = ContentType.objects.get(app_label=app, model=model_name)
                 permission = Permission.objects.get(codename=perm_type+'_'+model_name, content_type=content_type)
+                print(f"Add permission {permission}")
                 group.permissions.add(permission)
 
 def create_master_details_groups(app,main_model_name,main_model_attrs,inline_classes):
