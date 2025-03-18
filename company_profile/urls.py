@@ -42,7 +42,7 @@ from .views import CompanySummaryView,SetLanguageView, HomePageView, \
                    AppHSEAccidentReportListView,AppHSEAccidentReportCreateView,AppHSEAccidentReportReadonlyView, \
                    AppHSEPerformanceReportListView,AppHSEPerformanceReportCreateView,AppHSEPerformanceReportReadonlyView, \
                    AppWhomConcernListView,AppWhomConcernCreateView,AppWhomConcernReadonlyView, \
-                   AppGoldProductionListView,AppGoldProductionCreateView,AppGoldProductionReadonlyView
+                   AppGoldProductionListView,AppGoldProductionCreateView,AppGoldProductionReadonlyView, TblCompanyProductionLicenseSelectView
 
 app_name = "profile"
 urlpatterns = [                                                        
@@ -51,6 +51,7 @@ urlpatterns = [
     path('summary',CompanySummaryView.as_view(),name='summary'),
 
     path('lkp_locality/<int:master_id>/<int:dependent_id>/', LkpLocalitySelectView.as_view(), name='lkp_locality_select'),
+    path('lkp_license/<int:master_id>/<int:dependent_id>/', TblCompanyProductionLicenseSelectView.as_view(), name='lkp_license_select'),
     
     path('app_foreigner/', AppForignerMovementListView.as_view(), name='app_foreigner_list'),
     path('app_foreigner/<int:type>/', AppForignerMovementListView.as_view(), name='app_foreigner_list'),

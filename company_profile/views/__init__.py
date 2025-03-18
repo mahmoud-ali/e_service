@@ -5,7 +5,9 @@ from django.http import HttpResponseRedirect, HttpResponseBadRequest, HttpRespon
 from django.shortcuts import get_object_or_404,render
 from django.utils.translation import gettext_lazy as _
 from django.utils import translation
-
+from django.db import models
+from django.db.models import F,Value,ExpressionWrapper
+from django.db.models.functions import Concat
 from django.conf import settings
 
 from django.forms import inlineformset_factory
@@ -19,7 +21,7 @@ from django_tables2.paginators import LazyPaginator
 
 from company_profile.utils import get_app_metrics
 
-from ..models import LkpState,LkpLocality,TblCompanyProduction,AppForignerMovement,AppBorrowMaterial,AppBorrowMaterialDetail
+from ..models import LkpState,LkpLocality,TblCompanyProduction,AppForignerMovement,AppBorrowMaterial,AppBorrowMaterialDetail, TblCompanyProductionLicense
 from ..forms import LanguageForm,AppForignerMovementForm,AppBorrowMaterialForm
 
 from ..workflow import STATE_CHOICES,SUBMITTED,ACCEPTED,APPROVED,REJECTED,send_transition_email,get_sumitted_responsible
@@ -160,6 +162,17 @@ class HomePageView(LoginRequiredMixin,TranslationMixin,TemplateView):
 class LkpLocalitySelectView(LkpSelectView):
     def get_queryset(self):
         qs = LkpLocality.objects.filter(state__id = self.kwargs['master_id'])
+        return qs
+    
+class TblCompanyProductionLicenseSelectView(LkpSelectView):
+    def get_queryset(self):
+        qs = TblCompanyProductionLicense.objects \
+                .filter(company__id = self.kwargs['master_id']) \
+                .annotate(
+                    name=ExpressionWrapper(
+                        Concat(F('company__name_ar'),Value(" ("),F('license_no'),Value(")") ), output_field=models.CharField()
+                    )
+                )
         return qs
     
 class AppForignerMovementListView(ApplicationListView):

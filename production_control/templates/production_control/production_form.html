@@ -1,0 +1,130 @@
+{% extends 'gold_travel/report_base.html' %}
+{% load i18n %}
+{% load bootstrap3 %}
+{% load auth_extras %}
+{% load static  %}
+{% load humanize %}
+{% block content %}
+  <div style="text-align:left">{{object.date|date:"Y/m/d"}}م</div>
+  <center>
+    <h3 style="font-weight: bold !important;text-decoration: underline !important;">
+    إستمارة إنتاج {{object.form_no}}
+
+
+{%if object.state == 1 %}
+&nbsp;(مسودة)
+{%endif%}
+    </h3>
+  </center>
+  
+  <br/>
+
+  <div class="table-responsive">
+    <table class="table table-bordered">
+        <tr>
+            <th width="15%" class="active">اسم الشركة</th>
+            <td colspan="3">{{object.company.name_ar}}</td>
+        </tr>
+        <tr>
+            <th width="15%" class="active">الولاية</th>
+            <td>{{license.state}}</td>
+            <th width="15%" class="active">المحلية</th>
+            <td>{{license.locality}}</td>
+        </tr>
+    </table>
+</div>
+
+<div class="table-responsive">
+    <table class="table table-bordered">
+        <tr>
+            <th width="15%" class="active">وزن الركاز</th>
+            <td>{{object.alloy_jaf}}</td>
+            <th width="15%" class="active">وزن الخبث</th>
+            <td>{{object.alloy_khabath}}</td>
+        </tr>
+        <tr>
+            <th width="15%" class="active">وزن الذهب المتبقي</th>
+            <td>{{object.alloy_remaind}}</td>
+            <th width="15%" class="active">الوزن المتوقع</th>
+            <td>{{object.alloy_weight_expected}}</td>
+        </tr>
+    </table>
+</div>
+
+
+{% for chunk in alloy_chunks%}
+
+<div class="table-responsive">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th width="34%" class="active">رقم السبيكة</th>
+                <th width="33%" class="active">وزن السبيكة </th>
+                <th width="33%" class="active">وزن الذهب المضاف للصهر </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for obj in chunk%}
+            <tr>
+                <td>{{obj.alloy_id}}</td>
+                <td>{{obj.alloy_weight|intcomma}}</td>
+                <td>{{obj.alloy_added_gold}}</td>
+            </tr>
+            {% endfor %}
+
+            {% if forloop.last %}
+            <tr>
+                <th class="active">المجموع الكلي</th>
+                <th class="active">{{object.total_weight|intcomma}}</th>
+                <th class="active">&nbsp;</th>
+            </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+
+{% endfor %}
+
+  <h4>الإعتماد:</h4>
+  {% with has_astikhbarat=request.user.state_representative.state.state_gold_travel.has_2lestikhbarat_2l3askria %}
+  <div class="table-responsive">
+    <table class="table table-bordered">
+        <tr class="active">
+            <th width="20%">&nbsp;</th>
+            <th width="20%">ممثل الشركة بالموقع</th>
+            <th width="20%">ممثل الشركة السودانية للموارد المعدنية المحدودة</th>
+            <th width="20%">ممثل أمن التعدين</th>
+            <th width="20%">ممثل شرطة التعدين</th>
+        </tr>
+        <tr>
+            <th height="20px" class="active">الإسم</th>
+            <td height="20px">&nbsp;</td>
+            <td height="20px">&nbsp;</td>
+            <td height="20px">&nbsp;</td>
+            <td height="20px">&nbsp;</td>
+        </tr>
+        <tr>
+            <th height="20px" class="active">التوقيع</th>
+            <td height="20px">&nbsp;</td>
+            <td height="20px">&nbsp;</td>
+            <td height="20px">&nbsp;</td>
+            <td height="20px">&nbsp;</td>
+        </tr>
+        <tr>
+            <th height="80px" class="active">الختم</th>
+            <td height="80px">&nbsp;</td>
+            <td height="80px">&nbsp;</td>
+            <td height="80px">&nbsp;</td>
+            <td height="80px">&nbsp;</td>
+        </tr>
+
+    </table>
+  </div>
+    {% endwith %}
+    <p>تنبيهات هامة:</p>
+    <ol>
+        <li>أي تعديل أو كشط يلغي الإستمارة.</li>
+        <li>كل الاوزان بالجرام.</li>
+    </ol>
+
+{% endblock content %}

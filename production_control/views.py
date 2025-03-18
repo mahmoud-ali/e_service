@@ -1,9 +1,10 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.db.models import Prefetch
+from django.views.generic import TemplateView
 
 from django.contrib.auth import authenticate
 
-from .models import GoldProductionForm, GoldShippingForm
+from .models import STATE_CONFIRMED, GoldProductionForm, GoldShippingForm
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
@@ -11,28 +12,74 @@ from rest_framework.authtoken.models import Token
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 
-# @api_view(['POST'])
-# def Auth(request):
-#     username = request.POST['username']
-#     password = request.POST['password']
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 
-#     status = 401
-#     token_key = ''
+class UserPermissionMixin(UserPassesTestMixin):
+    user_groups = []
 
-#     user = authenticate(email=username, password=password)
+    def test_func(self):
+        if self.request.user.is_superuser:
+            return True
+        
+        try:
+            company_lst = self.request.user.moragib_list.moragib_distribution.goldproductionuserdetail_set.filter(master__state=STATE_CONFIRMED).values_list('company',flat=True)
+            return True
+            # authority = self.request.user.state_representative.authority
+            # return (authority==TblStateRepresentative.AUTHORITY_SMRC)
+        except:
+            pass
 
-#     if user is not None and user.groups.filter(name__in=("production_control_api",)).exists(): 
-#         token,created = Token.objects.get_or_create(user=user)
-#         status = 200
-#         token_key = token.key
+        return False
+    
+class CertificateTemplate(LoginRequiredMixin,UserPermissionMixin,TemplateView):
+    def _partition(self,lst, size=20):
+        l = len(lst)
+        if l <= 18:
+            yield lst
+        else:
+            yield lst[0 : 18]
+            for i in range(18, l, size):
+                yield lst[i : i+size]
 
-#     return Response(
-#         data={
-#             'status':status,
-#             'token':token_key,
-#         },
-#         status=status
-#     )
+class ProductionCert(CertificateTemplate):
+    template_name = 'production_control/production_form.html'
+
+    def get(self,*args,**kwargs):
+        id = int(self.request.GET['id'])
+        obj = get_object_or_404(GoldProductionForm,pk=id)
+        license = {"state":"","locality":""}
+        if obj.license:
+            license = obj.license
+
+        alloy_chunks = self._partition(obj.goldproductionformalloy_set.all())
+
+        self.extra_context = {
+            'object': obj,
+            'alloy_chunks': alloy_chunks,
+            'license':license, 
+            # 'state_repr': state_repr,
+        }
+        return render(self.request, self.template_name, self.extra_context)    
+
+class ShippingCert(CertificateTemplate):
+    template_name = 'production_control/shipping_form.html'
+
+    def get(self,*args,**kwargs):
+        id = int(self.request.GET['id'])
+        obj = get_object_or_404(GoldShippingForm,pk=id)
+        license = {"state":"","locality":""}
+        if obj.license:
+            license = obj.license
+
+        alloy_chunks = self._partition(obj.goldshippingformalloy_set.all())
+
+        self.extra_context = {
+            'object': obj,
+            'alloy_chunks': alloy_chunks,
+            'license':license, 
+            # 'state_repr': state_repr,
+        }
+        return render(self.request, self.template_name, self.extra_context)    
 
 @api_view(['GET'])
 # @authentication_classes([TokenAuthentication,])

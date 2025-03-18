@@ -4,7 +4,7 @@ from django.utils.translation import gettext_lazy as _
 from django.conf import settings
 from django.forms import ValidationError
 
-from company_profile.models import TblCompany, TblCompanyProduction
+from company_profile.models import TblCompany, TblCompanyProduction, TblCompanyProductionLicense
 
 STATE_DRAFT = 1
 STATE_CONFIRMED = 2
@@ -60,9 +60,19 @@ class GoldProductionUser(LoggingModel):
 class GoldProductionUserDetail(models.Model):
     master = models.ForeignKey(GoldProductionUser, on_delete=models.PROTECT)    
     company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))
+    license  = models.ForeignKey(TblCompanyProductionLicense, on_delete=models.PROTECT,verbose_name=_("Production Company License"),blank=True,null=True)
 
     def __str__(self):
         return f'{self.master} ({self.company})'
+    
+    def clean(self):
+        #raise error if licence.company not equal company
+        if self.license and (self.license.company != self.company):
+            print(self.license.company,self.company)
+            raise ValidationError(
+                {"license":_("licence should belong to same company!")}
+            )
+
 
     class Meta:
         verbose_name = _("gold_production_user_detail")
@@ -78,6 +88,8 @@ class GoldProductionForm(LoggingModel):
     }
 
     company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
+    license  = models.ForeignKey(TblCompanyProductionLicense, on_delete=models.PROTECT,verbose_name=_("Production Company License"),blank=True,null=True)
+
     date = models.DateField(_("date"))
 
     form_no = models.CharField(_("form_no"),max_length=20)
@@ -128,6 +140,7 @@ class GoldShippingForm(LoggingModel):
     }
 
     company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
+    license  = models.ForeignKey(TblCompanyProductionLicense, on_delete=models.PROTECT,verbose_name=_("Production Company License"),blank=True,null=True)
     date = models.DateField(_("date"))
 
     form_no = models.CharField(_("form_no"),max_length=20)
@@ -138,7 +151,11 @@ class GoldShippingForm(LoggingModel):
         return f'{self.company} ({self.form_no})' 
         
     def get_absolute_url(self): 
-        return reverse('profile:app_gold_shipping_show',args=[str(self.id)])                
+        return reverse('profile:app_gold_shipping_show',args=[str(self.id)])           
+         
+    def total_weight(self):
+        total = self.goldshippingformalloy_set.aggregate(total=models.Sum('alloy_serial_no__alloy_weight'))['total'] or 0
+        return round(total,2)
     
     def alloy_shipped(self):
         if self.state == STATE_CONFIRMED:

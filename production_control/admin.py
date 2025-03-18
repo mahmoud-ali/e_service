@@ -4,6 +4,8 @@ from django.contrib import admin
 from django.forms import TextInput
 from django.urls import path
 from django.utils.translation import gettext_lazy as _
+from django.urls import reverse
+from django.utils.html import format_html
 
 # from rest_framework.authtoken.admin import TokenAdmin
 
@@ -122,6 +124,10 @@ class GoldProductionUserDetailInline(admin.TabularInline):
 
     extra = 1    
 
+    class Media:
+        js = ('admin/js/jquery.init.js',"production_control/js/company_change.js",)
+
+
 class GoldProductionUserAdmin(StateMixin,LogAdminMixin,admin.ModelAdmin):
     model = GoldProductionUser
     inlines = [GoldProductionUserDetailInline]
@@ -216,7 +222,7 @@ class GoldProductionFormAdmin(AuditorMixin,StateMixin,LogAdminMixin,admin.ModelA
     model = GoldProductionForm
     inlines = [GoldProductionFormAlloyInline]
     form = GoldProductionFormForm
-    list_display = ["company","date","form_no","total_weight","state"]
+    list_display = ["company","date","form_no","total_weight","state","show_certificate_link"]
     list_filter = ["state","date"]
     actions=['approved','draft']
     formfield_overrides = {
@@ -245,6 +251,13 @@ class GoldProductionFormAdmin(AuditorMixin,StateMixin,LogAdminMixin,admin.ModelA
     @admin.display(description=_('total_weight'))
     def total_weight(self, obj):
         return f'{obj.total_weight():,}'
+
+    @admin.display(description=_('Show certificate'))
+    def show_certificate_link(self, obj):
+        url = reverse('production:production_certificate')
+        return format_html('<a target="_blank" class="viewlink" href="{url}?id={id}">'+_('Show certificate')+'</a>',
+                    url=url,id=obj.id
+                )
 
     def get_actions(self, request):
         actions = super().get_actions(request)
@@ -285,7 +298,7 @@ class GoldShippingFormAdmin(AuditorMixin,StateMixin,LogAdminMixin,admin.ModelAdm
     model = GoldShippingForm
     inlines = [GoldShippingFormInline]
     form = GoldShippingFormForm
-    list_display = ["company","date","form_no","state"]
+    list_display = ["company","date","form_no","state","show_certificate_link"]
     list_filter = ["state","date"]
     actions=['approved','draft']
 
@@ -344,6 +357,13 @@ class GoldShippingFormAdmin(AuditorMixin,StateMixin,LogAdminMixin,admin.ModelAdm
                 del actions['draft']
 
         return actions
+
+    @admin.display(description=_('Show certificate'))
+    def show_certificate_link(self, obj):
+        url = reverse('production:shipping_certificate')
+        return format_html('<a target="_blank" class="viewlink" href="{url}?id={id}">'+_('Show certificate')+'</a>',
+                    url=url,id=obj.id
+                )
 
     @admin.action(description=_('approved_action'))
     def approved(self, request, queryset):

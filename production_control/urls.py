@@ -2,7 +2,7 @@ from django.urls import path, include
 
 from django.conf import settings
 from rest_framework.authtoken import views
-from .views import ProductionView, ShippingView
+from .views import ProductionCert, ProductionView, ShippingCert, ShippingView
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
@@ -10,7 +10,9 @@ from rest_framework_simplejwt.views import (
 )
 
 app_name = "production"
-urlpatterns = [                                                        
+urlpatterns = [                           
+    path('certificate/production/', ProductionCert.as_view(), name='production_certificate'),
+    path('certificate/shipping/', ShippingCert.as_view(), name='shipping_certificate'),
     path('auth/', include([
         path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
         path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
