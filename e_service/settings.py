@@ -275,6 +275,8 @@ ACCOUNT_LOGOUT_REDIRECT_URL = 'profile:home'
 
 ACCOUNT_DEFAULT_PASSWORD = "changethispassword"
 
+DATA_UPLOAD_MAX_NUMBER_FIELDS = 2000
+
 # logging 
 LOGGING = {
     'version': 1,
