@@ -153,7 +153,7 @@ class EmployeeTelegramRegistrationAdmin(FlowMixin,admin.ModelAdmin):
             employee_group = Group.objects.get(name='hr_employee') 
             employee_group.user_set.add(user)
 
-            message = f"الآن يمكنك الدخول لبوابة الموارد البشرية عبر الرابط التالي {portal_url} \n باسم المستخدم {username} \n وكلمة المرور{password}"
+            message = f"الآن يمكنك الدخول لبوابة الموارد البشرية عبر الرابط التالي {portal_url} \n باسم المستخدم {username} \n وكلمة المرور {password}"
 
         telegram_url = f"https://api.telegram.org/bot{TOKEN_ID}/sendMessage?chat_id={int(obj.user_id)}&text={message}"
         requests.get(telegram_url)
