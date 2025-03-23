@@ -40,7 +40,7 @@ def get_inline_mixin(inline_class):
             states = view_model_states(inline_class,user_groups,['change'])
             if obj and obj.state in states:
                 return True
-            
+
             return False
         
         def has_delete_permission(self, request, obj=None):
@@ -116,6 +116,7 @@ def get_workflow_mixin(main_class,inline_classes={},inlines_dict={}):
         
         def get_inlines(self, request, obj):        
             inlines = []
+
             user_groups = list(request.user.groups.values_list('name', flat=True))
 
             states = set()
@@ -126,7 +127,7 @@ def get_workflow_mixin(main_class,inline_classes={},inlines_dict={}):
                     inline = inlines_dict[model_name]
                     inlines.append(inline)                
 
-            return inlines
+            return inlines + main_class.get("static_inlines", [])
 
         # def has_change_inlines(self, request):        
         #     user_groups = list(request.user.groups.values_list('name', flat=True))

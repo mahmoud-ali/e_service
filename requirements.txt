@@ -26,3 +26,4 @@ django-otp
 qrcode
 ipython
 django-autocomplete-light
+django-admin-comments
