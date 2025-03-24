@@ -26,7 +26,8 @@ class AppWorkPlan(WorkFlowModel):
     STATE_REVIEW_CONTRACT= 5
     STATE_REVIEW_TECHNICAL= 6
     STATE_REVIEW_COMPANY= 7
-    STATE_RELEASE_CERTIFICATE= 8
+    STATE_RELEASE_ACCEPTANCE_CERTIFICATE= 8
+    STATE_RELEASE_REJECTION_CERTIFICATE= 9
 
     STATE_CHOICES = {
         STATE_DRAFT: _("draft"),
@@ -34,7 +35,8 @@ class AppWorkPlan(WorkFlowModel):
         STATE_REVIEW_CONTRACT: _("دراسة اولية"),
         STATE_REVIEW_TECHNICAL: _("دراسة فنية"),
         STATE_REVIEW_COMPANY: _("مراجعة الطلب بواسطة الشركة"),
-        STATE_RELEASE_CERTIFICATE: _("تحرير شهادة القبول/الرفض"),
+        STATE_RELEASE_ACCEPTANCE_CERTIFICATE: _("تحرير شهادة القبول"),
+        STATE_RELEASE_REJECTION_CERTIFICATE: _("تحرير شهادة الرفض"),
         # STATE_APPROVED:_("approved"),
     }
 
@@ -60,7 +62,8 @@ class AppWorkPlan(WorkFlowModel):
                 states.append((self.STATE_REVIEW_CONTRACT, self.STATE_CHOICES[self.STATE_REVIEW_CONTRACT]))
                 states.append((self.STATE_REVIEW_TECHNICAL, self.STATE_CHOICES[self.STATE_REVIEW_TECHNICAL]))
                 states.append((self.STATE_REVIEW_COMPANY, self.STATE_CHOICES[self.STATE_REVIEW_COMPANY]))
-                states.append((self.STATE_RELEASE_CERTIFICATE, self.STATE_CHOICES[self.STATE_RELEASE_CERTIFICATE]))
+                states.append((self.STATE_RELEASE_ACCEPTANCE_CERTIFICATE, self.STATE_CHOICES[self.STATE_RELEASE_ACCEPTANCE_CERTIFICATE]))
+                states.append((self.STATE_RELEASE_REJECTION_CERTIFICATE, self.STATE_CHOICES[self.STATE_RELEASE_REJECTION_CERTIFICATE]))
 
             if self.state == self.STATE_REVIEW_CONTRACT:
                 states.append((self.STATE_GM_DECISION, self.STATE_CHOICES[self.STATE_GM_DECISION]))
