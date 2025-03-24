@@ -4,20 +4,22 @@ from django.utils.translation import gettext_lazy as _
 from django.conf import settings
 from django.forms import ValidationError
 
+from workflow.model_utils import LoggingModel, WorkFlowModel
+
 from company_profile.models import TblCompany, TblCompanyProduction, TblCompanyProductionLicense
 
 STATE_DRAFT = 1
 STATE_CONFIRMED = 2
 
-class LoggingModel(models.Model):
-    created_at = models.DateTimeField(_("created_at"),auto_now_add=True,editable=False,)
-    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT,related_name="+",editable=False,verbose_name=_("created_by")) 
+# class LoggingModel(models.Model):
+#     created_at = models.DateTimeField(_("created_at"),auto_now_add=True,editable=False,)
+#     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT,related_name="+",editable=False,verbose_name=_("created_by")) 
     
-    updated_at = models.DateTimeField(_("updated_at"),auto_now=True,editable=False)
-    updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT,related_name="+",editable=False,verbose_name=_("updated_by"))
+#     updated_at = models.DateTimeField(_("updated_at"),auto_now=True,editable=False)
+#     updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT,related_name="+",editable=False,verbose_name=_("updated_by"))
     
-    class Meta:
-        abstract = True
+#     class Meta:
+#         abstract = True
         
 def company_applications_path(instance, filename):
     # file will be uploaded to MEDIA_ROOT/company_<id>/applications/<filename>
@@ -78,13 +80,19 @@ class GoldProductionUserDetail(models.Model):
         verbose_name = _("gold_production_user_detail")
         verbose_name_plural = _("gold_production_user_details")
 
-class GoldProductionForm(LoggingModel):
-    STATE_APPROVED = 3
+class GoldProductionForm(WorkFlowModel):
+    STATE_DRAFT = 1
+    STATE_CONFIRMED1 = 2
+    STATE_CONFIRMED2 = 3
+    STATE_APPROVED = 4
+    STATE_REVIEW_REQUIRED = 5
 
     STATE_CHOICES = {
         STATE_DRAFT: _('state_draft'),
-        STATE_CONFIRMED: _('state_confirmed'),
-        STATE_APPROVED: _('state_approved'),
+        STATE_CONFIRMED1: _('تأكيد المراقب'),
+        STATE_CONFIRMED2: _('تأكيد رئيس قسم الانتاج بالولاية'),
+        STATE_APPROVED: _('إعتماد مشرف القطاع'),
+        STATE_REVIEW_REQUIRED: _('مراجعة الإدخال'),
     }
 
     company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
@@ -113,6 +121,55 @@ class GoldProductionForm(LoggingModel):
         total = self.goldproductionformalloy_set.aggregate(total=models.Sum('alloy_weight'))['total'] or 0
         return round(total,2)
 
+    def get_next_states(self, user):
+        """
+        Determine the next possible states based on the current state and user's role.
+        """
+        # user = self.updated_by
+        user_groups = list(user.groups.values_list('name', flat=True))
+
+        states = []
+        if 'production_control_auditor' in user_groups:
+            if self.state == self.STATE_DRAFT:
+                states.append((self.STATE_CONFIRMED1, self.STATE_CHOICES[self.STATE_CONFIRMED1]))
+
+            if self.state == self.STATE_REVIEW_REQUIRED:
+                states.append((self.STATE_CONFIRMED1, self.STATE_CHOICES[self.STATE_CONFIRMED1]))
+
+        if 'production_control_state_mgr' in user_groups:
+            if self.state == self.STATE_CONFIRMED1:
+                states.append((self.STATE_CONFIRMED2, self.STATE_CHOICES[self.STATE_CONFIRMED2]))
+                states.append((self.STATE_REVIEW_REQUIRED, self.STATE_CHOICES[self.STATE_REVIEW_REQUIRED]))
+
+        if 'production_control_sector_mgr' in user_groups:
+            if self.state == self.STATE_CONFIRMED2:
+                states.append((self.STATE_APPROVED, self.STATE_CHOICES[self.STATE_APPROVED]))
+                states.append((self.STATE_REVIEW_REQUIRED, self.STATE_CHOICES[self.STATE_REVIEW_REQUIRED]))
+
+        return states
+
+    def can_transition_to_next_state(self, user, state):
+        """
+        Check if the given user can transition to the specified state.
+        """
+        if state[0] in map(lambda x: x[0], self.get_next_states(user)):
+            return True
+
+        return False
+
+    def transition_to_next_state(self, user, state):
+        """
+        Transitions the workflow to the given state, after checking user permissions.
+        """
+        if self.can_transition_to_next_state(user, state):
+            self.state = state[0]
+            self.updated_by = user
+            self.save()
+        else:
+            raise Exception(f"User {user.username} cannot transition to state {state} from state {self.state}")
+
+        return self
+
 class GoldProductionFormAlloy(models.Model):
     master = models.ForeignKey(GoldProductionForm, on_delete=models.CASCADE)    
     alloy_serial_no = models.CharField(_("alloy_serial_no"),max_length=30)
@@ -130,13 +187,19 @@ class GoldProductionFormAlloy(models.Model):
         verbose_name = _("Gold Production Form - Alloy")
         verbose_name_plural = _("Gold Production Form - Alloy")
 
-class GoldShippingForm(LoggingModel):
-    STATE_APPROVED = 3
+class GoldShippingForm(WorkFlowModel):
+    STATE_DRAFT = 1
+    STATE_CONFIRMED1 = 2
+    STATE_CONFIRMED2 = 3
+    STATE_APPROVED = 4
+    STATE_REVIEW_REQUIRED = 5
 
     STATE_CHOICES = {
         STATE_DRAFT: _('state_draft'),
-        STATE_CONFIRMED: _('state_confirmed'),
-        STATE_APPROVED: _('state_approved'),
+        STATE_CONFIRMED1: _('تأكيد المراقب'),
+        STATE_CONFIRMED2: _('تأكيد رئيس قسم الانتاج بالولاية'),
+        STATE_APPROVED: _('إعتماد مشرف القطاع'),
+        STATE_REVIEW_REQUIRED: _('مراجعة الإدخال'),
     }
 
     company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
@@ -162,7 +225,55 @@ class GoldShippingForm(LoggingModel):
             for obj in self.goldshippingformalloy_set.all():
                 obj.alloy_serial_no.alloy_shipped = True
                 obj.alloy_serial_no.save()
-    
+
+    def get_next_states(self, user):
+        """
+        Determine the next possible states based on the current state and user's role.
+        """
+        # user = self.updated_by
+        user_groups = list(user.groups.values_list('name', flat=True))
+
+        states = []
+        if 'production_control_auditor' in user_groups:
+            if self.state == self.STATE_DRAFT:
+                states.append((self.STATE_CONFIRMED1, self.STATE_CHOICES[self.STATE_CONFIRMED1]))
+
+            if self.state == self.STATE_REVIEW_REQUIRED:
+                states.append((self.STATE_CONFIRMED1, self.STATE_CHOICES[self.STATE_CONFIRMED1]))
+
+        if 'production_control_state_mgr' in user_groups:
+            if self.state == self.STATE_CONFIRMED1:
+                states.append((self.STATE_CONFIRMED2, self.STATE_CHOICES[self.STATE_CONFIRMED2]))
+                states.append((self.STATE_REVIEW_REQUIRED, self.STATE_CHOICES[self.STATE_REVIEW_REQUIRED]))
+
+        if 'production_control_sector_mgr' in user_groups:
+            if self.state == self.STATE_CONFIRMED2:
+                states.append((self.STATE_APPROVED, self.STATE_CHOICES[self.STATE_APPROVED]))
+                states.append((self.STATE_REVIEW_REQUIRED, self.STATE_CHOICES[self.STATE_REVIEW_REQUIRED]))
+
+        return states
+
+    def can_transition_to_next_state(self, user, state):
+        """
+        Check if the given user can transition to the specified state.
+        """
+        if state[0] in map(lambda x: x[0], self.get_next_states(user)):
+            return True
+
+        return False
+
+    def transition_to_next_state(self, user, state):
+        """
+        Transitions the workflow to the given state, after checking user permissions.
+        """
+        if self.can_transition_to_next_state(user, state):
+            self.state = state[0]
+            self.updated_by = user
+            self.save()
+        else:
+            raise Exception(f"User {user.username} cannot transition to state {state} from state {self.state}")
+
+        return self
     class Meta:
         ordering = ["-id"]
         verbose_name = _("Gold Shipping Form")

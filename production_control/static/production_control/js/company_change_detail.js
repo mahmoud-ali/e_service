@@ -10,10 +10,10 @@ django.jQuery(function($){
         // console.log('Selecting: ' ,initial_license);
         
         $.get("/app/lkp_license/"+company.val()+"/"+licence_val+"/", function( data ) {          
-            console.log(licence)
+            // console.log(licence)
             // console.log(data)
             licence = licence.html(data);
-            // console.log(licence)
+            console.log("ddd",data)
         });
     });
 });
