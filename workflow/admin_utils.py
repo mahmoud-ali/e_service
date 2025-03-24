@@ -24,13 +24,15 @@ def view_model_states(inline_val={},user_groups=[],check_permission=['view']):
     
     return view_states
     
-def get_inline_mixin(inline_class):
+def get_inline_mixin(inline_class,main_model):
     class InlineMixin:
         def has_add_permission(self, request,kwargs):
             user_groups = list(request.user.groups.values_list('name', flat=True))       
             states = view_model_states(inline_class,user_groups,['add'])
-
-            if len(states) > 0:
+            object_id = request.path.split('/')[-3]
+            obj = main_model.objects.get(pk=object_id)
+            
+            if obj and obj.state in states:
                 return True
             
             return False
@@ -58,7 +60,7 @@ def create_main_form(main_class,inline_classes,global_mixins):
 
     for model_name, inline_attrs in inline_classes.items():
         inline_types = [admin.StackedInline, admin.TabularInline, ]
-        perm_mixin = get_inline_mixin(inline_attrs)
+        perm_mixin = get_inline_mixin(inline_attrs,main_class.get('model'))
         model_mixin = [perm_mixin] + list(set(inline_attrs.get('mixins', [])))
 
         for t in inline_types:
@@ -129,22 +131,29 @@ def get_workflow_mixin(main_class,inline_classes={},inlines_dict={}):
 
             return inlines + main_class.get("static_inlines", [])
 
-        # def has_change_inlines(self, request):        
-        #     user_groups = list(request.user.groups.values_list('name', flat=True))
+        def has_change_inlines(self, request, obj=None):        
+            if not obj:
+                return False
+                
+            user_groups = list(request.user.groups.values_list('name', flat=True))
 
-        #     states = set()
-        #     for _, inline_attrs in inline_classes.items():
-        #         states.update(view_model_states(inline_attrs,user_groups,['change',])) # = view_model_states(inline_attrs,user_groups,['change',])
+            states = set()
+            for _, inline_attrs in inline_classes.items():
+                states.update(view_model_states(inline_attrs,user_groups,['change',])) # = view_model_states(inline_attrs,user_groups,['change',])
 
-        #     if len(states) > 0:
-        #         return True
+            if obj.state in states:
+                return True
             
-        #     return False
+            return False
         
         def has_change_permission(self, request, obj=None):
             user_groups = list(request.user.groups.values_list('name', flat=True))       
             states = view_model_states(main_class,user_groups,['change'])
             if obj and obj.state in states:
+                return True
+            
+            if obj and self.has_change_inlines(request,obj):
+                self.readonly_fields = self.get_fields(request, obj) #['company']
                 return True
             
             return False
