@@ -95,7 +95,18 @@ class LkpNationality(models.Model):
         verbose_name = _("Nationality")
         verbose_name_plural = _("Nationalities")
 
+class LkpSector(models.Model):
+    name = models.CharField(_("name"),max_length=100)
+    
+    def __str__(self):
+        return self.name    
+        
+    class Meta:
+        verbose_name = _("Sector")
+        verbose_name_plural = _("Sectors")
+
 class LkpState(models.Model):
+    sector = models.ForeignKey(LkpSector, on_delete=models.PROTECT,verbose_name=_("sector"), null=True, blank=True)
     name = models.CharField(_("name"),max_length=100)
     
     def __str__(self):
