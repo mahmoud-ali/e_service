@@ -249,7 +249,6 @@ class SamplePreparation(LoggingModel):
         verbose_name = _("Sample Preparation")
         verbose_name_plural = _("Sample Preparations")
 
-#model Others with relation one to many with AppWorkPlan has the following fields: Activity/Item, Total, Unit cost, Total cost
 class Other(LoggingModel):
     work_plan = models.ForeignKey(AppWorkPlan, on_delete=models.PROTECT, verbose_name=_("work_plan"))
     activity_item = models.CharField(_("Activity/Item"), max_length=100)
@@ -260,3 +259,22 @@ class Other(LoggingModel):
     class Meta:
         verbose_name = _("Other")
         verbose_name_plural = _("Others")
+
+class Todo(LoggingModel):
+    TECHNICAL = 1
+    CONTRACT = 2
+    COMPANY = 3
+    TO_CHOICES = (
+        (TECHNICAL, _("الادارة الفنية")),
+        (CONTRACT, _("البرامج والعقود")),
+        (COMPANY, _("الشركة")),
+    )
+    work_plan = models.ForeignKey(AppWorkPlan, on_delete=models.PROTECT, verbose_name=_("work_plan"))
+    to = models.IntegerField(_("To"), choices=TO_CHOICES)
+    topic = models.CharField(_("Topic"), max_length=255)
+    actions = models.TextField(_("Actions"))
+    is_done = models.BooleanField(_("Is Done"), default=False)
+
+    class Meta:
+        verbose_name = _("Todo")
+        verbose_name_plural = _("Todos")

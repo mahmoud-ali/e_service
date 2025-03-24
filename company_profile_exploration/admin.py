@@ -1,5 +1,5 @@
 from django.contrib import admin
-from company_profile_exploration.models.work_plan import AppWorkPlan, Brief, Coordinate, Equipment, LkpPhase, LogisticsAdministration, Other, Phase, SamplePreparation, StaffInformation, SubsurfaceExplorationActivitie, SurfaceExplorationActivitie, TargetCommodity
+from company_profile_exploration.models.work_plan import AppWorkPlan, Brief, Coordinate, Equipment, LkpPhase, LogisticsAdministration, Other, Phase, SamplePreparation, StaffInformation, SubsurfaceExplorationActivitie, SurfaceExplorationActivitie, TargetCommodity, Todo
 from workflow.admin_utils import create_main_form
 
 class LogMixin:
@@ -49,7 +49,7 @@ work_plan_main_class = {
         'exploration_gm':{
             'permissions': {
                 AppWorkPlan.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
-                AppWorkPlan.STATE_GM_DECISION: {'add': 0, 'change': 1, 'delete': 0, 'view': 1},
+                AppWorkPlan.STATE_GM_DECISION: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 AppWorkPlan.STATE_REVIEW_CONTRACT: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 AppWorkPlan.STATE_REVIEW_TECHNICAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 AppWorkPlan.STATE_REVIEW_COMPANY: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -72,7 +72,7 @@ work_plan_inline_classes = {
             'exploration_gm':{
                 'permissions': {
                 AppWorkPlan.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
-                AppWorkPlan.STATE_GM_DECISION: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                AppWorkPlan.STATE_GM_DECISION: {'add': 0, 'change': 1, 'delete': 0, 'view': 1},
                 AppWorkPlan.STATE_REVIEW_CONTRACT: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 AppWorkPlan.STATE_REVIEW_TECHNICAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 AppWorkPlan.STATE_REVIEW_COMPANY: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -273,6 +273,25 @@ work_plan_inline_classes = {
                 'permissions': {
                 AppWorkPlan.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
                 AppWorkPlan.STATE_GM_DECISION: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                AppWorkPlan.STATE_REVIEW_CONTRACT: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                AppWorkPlan.STATE_REVIEW_TECHNICAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                AppWorkPlan.STATE_REVIEW_COMPANY: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                AppWorkPlan.STATE_RELEASE_CERTIFICATE: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
+        },
+    },
+    'Todo': {
+        'model': Todo,
+        'mixins': [admin.TabularInline],
+        'kwargs': {
+            'extra': 1,
+            'min_num': 0,
+        },
+        'groups': {
+            'exploration_gm':{
+                'permissions': {
+                AppWorkPlan.STATE_GM_DECISION: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
                 AppWorkPlan.STATE_REVIEW_CONTRACT: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 AppWorkPlan.STATE_REVIEW_TECHNICAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 AppWorkPlan.STATE_REVIEW_COMPANY: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
