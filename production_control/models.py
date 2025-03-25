@@ -6,7 +6,7 @@ from django.forms import ValidationError
 
 from workflow.model_utils import LoggingModel, WorkFlowModel
 
-from company_profile.models import TblCompany, TblCompanyProduction, TblCompanyProductionLicense
+from company_profile.models import LkpSector,LkpState, TblCompany, TblCompanyProduction, TblCompanyProductionLicense
 
 STATE_DRAFT = 1
 STATE_CONFIRMED = 2
@@ -59,6 +59,32 @@ class GoldProductionUser(LoggingModel):
         verbose_name = _("moragib_distribution")
         verbose_name_plural = _("moragib_distribution")
 
+class GoldProductionStateUser(LoggingModel):
+    company_type = models.CharField(_("company_type"),max_length=15, choices=TblCompany.COMPANY_TYPE_CHOICES)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.PROTECT,related_name="gold_production_state_user",verbose_name=_("user"))
+    name = models.CharField(_("name"),max_length=100)
+    state = models.ForeignKey(LkpState, on_delete=models.PROTECT,verbose_name=_("state"))
+
+    def __str__(self):
+        return f'{self.name}({self.user})' # ({self.state})
+
+    class Meta:
+        verbose_name = _("رئيس القسم بالولاية")
+        verbose_name_plural = _("رؤساء الاقسام بالولايات")
+
+class GoldProductionSectorUser(LoggingModel):
+    company_type = models.CharField(_("company_type"),max_length=15, choices=TblCompany.COMPANY_TYPE_CHOICES)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.PROTECT,related_name="gold_production_sector_user",verbose_name=_("user"))
+    name = models.CharField(_("name"),max_length=100)
+    sector = models.ForeignKey(LkpSector, on_delete=models.PROTECT,verbose_name=_("sector"))
+
+    def __str__(self):
+        return f'{self.name}({self.user})' # ({self.state})
+
+    class Meta:
+        verbose_name = _("مشرف القطاع")
+        verbose_name_plural = _("مشرفي القطاعات")
+
 class GoldProductionUserDetail(models.Model):
     master = models.ForeignKey(GoldProductionUser, on_delete=models.PROTECT)    
     company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))
@@ -95,7 +121,7 @@ class GoldProductionForm(WorkFlowModel):
         STATE_REVIEW_REQUIRED: _('مراجعة الإدخال'),
     }
 
-    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
+    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"),blank=True,null=True)    
     license  = models.ForeignKey(TblCompanyProductionLicense, on_delete=models.PROTECT,verbose_name=_("Production Company License"),blank=True,null=True)
 
     date = models.DateField(_("date"))
@@ -115,8 +141,14 @@ class GoldProductionForm(WorkFlowModel):
         verbose_name_plural = _("Gold Production Form")
 
     def __str__(self):
-        return f'{self.company} ({self.form_no})' 
-        
+        return f'{self.license} ({self.form_no})' 
+
+    def clean(self):
+        if not self.license:
+            raise ValidationError(
+                {"license":_("Required field")}
+            )
+
     def total_weight(self):
         total = self.goldproductionformalloy_set.aggregate(total=models.Sum('alloy_weight'))['total'] or 0
         return round(total,2)
@@ -202,7 +234,7 @@ class GoldShippingForm(WorkFlowModel):
         STATE_REVIEW_REQUIRED: _('مراجعة الإدخال'),
     }
 
-    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
+    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"),blank=True,null=True)    
     license  = models.ForeignKey(TblCompanyProductionLicense, on_delete=models.PROTECT,verbose_name=_("Production Company License"),blank=True,null=True)
     date = models.DateField(_("date"))
 
@@ -211,11 +243,17 @@ class GoldShippingForm(WorkFlowModel):
     attachement_file = models.FileField(_("gold_shipping_form_file"),upload_to=company_applications_path,blank=True,null=True)
 
     def __str__(self):
-        return f'{self.company} ({self.form_no})' 
+        return f'{self.license} ({self.form_no})' 
         
     def get_absolute_url(self): 
         return reverse('profile:app_gold_shipping_show',args=[str(self.id)])           
          
+    def clean(self):
+        if not self.license:
+            raise ValidationError(
+                {"license":_("Required field")}
+            )
+
     def total_weight(self):
         total = self.goldshippingformalloy_set.aggregate(total=models.Sum('alloy_serial_no__alloy_weight'))['total'] or 0
         return round(total,2)
@@ -298,3 +336,14 @@ class GoldShippingFormAlloy(models.Model):
             )
 
         return super().clean()
+    
+from django.db.models.signals import post_save, pre_save
+from django.dispatch import receiver
+
+@receiver(pre_save, sender=GoldProductionForm)
+def update_smrc_data(sender, instance, **kwargs):
+    instance.company = instance.license.company
+
+@receiver(pre_save, sender=GoldShippingForm)
+def update_smrc_data(sender, instance, **kwargs):
+    instance.company = instance.license.company

@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
-from production_control.forms import GoldProductionFormForm, GoldShippingFormAlloyForm, GoldShippingFormForm, TblCompanyProductionAutocomplete
-from production_control.models import STATE_CONFIRMED, GoldProductionForm, GoldProductionFormAlloy, GoldShippingForm, GoldShippingFormAlloy
+from production_control.forms import GoldProductionFormForm, GoldProductionSectorUserForm, GoldProductionStateUserForm, GoldProductionUserDetailForm, GoldProductionUserForm, GoldShippingFormAlloyForm, GoldShippingFormForm, MoragibForm, TblCompanyProductionAutocomplete
+from production_control.models import STATE_CONFIRMED, STATE_DRAFT, GoldProductionForm, GoldProductionFormAlloy, GoldProductionSectorUser, GoldProductionStateUser, GoldProductionUser, GoldProductionUserDetail, GoldShippingForm, GoldShippingFormAlloy, LkpMoragib
 from workflow.admin_utils import create_main_form
 
 from django.db import models
@@ -14,6 +14,8 @@ from django.urls import path
 from .utils import get_company_types
 
 class LogMixin:
+    view_on_site = False
+
     def save_model(self, request, obj, form, change):
         try:
             if not obj.pk:  # New object
@@ -37,12 +39,54 @@ class LogMixin:
     def get_queryset(self, request):
         qs = super().get_queryset(request)
 
+        if request.user.groups.filter(name__in=("production_control_sector_mgr",)).exists():
+            try:
+                company_type = request.user.gold_production_sector_user.company_type
+                sector = request.user.gold_production_sector_user.sector
+                return qs.filter(
+                    company__company_type__in= [company_type],
+                    license__state__sector=sector
+                )
+            except:
+                pass
+
+        if request.user.groups.filter(name__in=("production_control_state_mgr",)).exists():
+            try:
+                company_type = request.user.gold_production_sector_user.company_type
+                state = request.user.gold_production_sector_user.state
+                return qs.filter(
+                    company__company_type__in= [company_type],
+                    license__state=state
+                )
+            except:
+                pass
+        
         try:
-            source_state = request.user.hse_tra_state.state
-            qs = qs.filter(source_state=source_state)
+            license_lst = request.user.moragib_list.moragib_distribution.goldproductionuserdetail_set.filter(master__state=STATE_CONFIRMED).values_list('license',flat=True)
+            return qs.filter(license__id__in=license_lst)
         except:
             pass
-        return qs
+
+        return qs.none() #super().get_queryset(request)
+    
+    def get_form(self, request, obj=None, **kwargs):
+        kwargs["form"] = self.form
+
+        try:
+            if request.user.groups.filter(name__in=("production_control_state_mgr","production_control_sector_mgr")).exists():
+                if obj:
+                    license_lst = [obj.license.id]
+                    kwargs["form"].license_list = license_lst
+                # else:
+                #     kwargs["form"].company_types = get_company_types(request)
+            else:
+                license_lst = request.user.moragib_list.moragib_distribution.goldproductionuserdetail_set.filter(master__state=STATE_CONFIRMED).values_list('license',flat=True)
+                kwargs["form"].license_list = license_lst
+
+        except:
+            pass
+
+        return super().get_form(request, obj, **kwargs)
 
 class GoldProductionMixin:
     class Media:
@@ -59,25 +103,6 @@ class GoldProductionMixin:
     def total_weight(self, obj):
         return f'{obj.total_weight():,}'
 
-    def get_form(self, request, obj=None, **kwargs):
-        kwargs["form"] = GoldProductionFormForm
-
-        try:
-            if request.user.groups.filter(name__in=("pro_company_application_accept","pro_company_application_approve")).exists():
-                if obj:
-                    company_lst = [obj.company.id]
-                    kwargs["form"].company_list = company_lst
-                else:
-                    kwargs["form"].company_types = get_company_types(request)
-            else:
-                company_lst = request.user.moragib_list.moragib_distribution.goldproductionuserdetail_set.filter(master__state=STATE_CONFIRMED).values_list('company',flat=True)
-                kwargs["form"].company_list = company_lst
-
-        except:
-            pass
-
-        return super().get_form(request, obj, **kwargs)
-
     def get_urls(self):
         urls = super().get_urls()
         my_urls = [
@@ -91,7 +116,7 @@ production_main_class = {
     'mixins': [],
     'kwargs': {
         'form': GoldProductionFormForm,
-        'list_display': ["company","date","form_no","total_weight","state","show_certificate_link"],
+        'list_display': ["license","date","form_no","total_weight","state","show_certificate_link"],
         'list_filter': ["state","date"],
         'formfield_overrides': {
             models.FloatField: {"widget": TextInput},
@@ -189,40 +214,19 @@ class GoldShippingMixin:
                     url=url,id=obj.id
                 )
 
-    def get_form(self, request, obj=None, **kwargs):
-        kwargs["form"] = GoldShippingFormForm
-
-        try:
-            if request.user.groups.filter(name__in=("pro_company_application_accept","pro_company_application_approve")).exists():
-                if obj:
-                    company_lst = [obj.company.id]
-                    kwargs["form"].company_list = company_lst
-                else:
-                    kwargs["form"].company_types = get_company_types(request)
-
-            else:
-                company_lst = request.user.moragib_list.moragib_distribution.goldproductionuserdetail_set.filter(master__state=STATE_CONFIRMED).values_list('company',flat=True)
-                kwargs["form"].company_list = company_lst
-
-        except:
-            pass
-
-        return super().get_form(request, obj, **kwargs)
-
     def get_formsets_with_inlines(self, request, obj=None):
         for inline in self.get_inline_instances(request, obj):
             formset = inline.get_formset(request, obj)
-            if isinstance(inline.model,GoldShippingFormAlloy):
+            if inline.model ==GoldShippingFormAlloy:
                 formset.form = GoldShippingFormAlloyForm
                 if obj:
                     formset.form.master_id = obj.id
-                    formset.form.company_ids = [obj.company.id]
+                    formset.form.license_ids = [obj.license.id]
                 else:
                     try:
-                        formset.form.company_ids = request.user.moragib_list.moragib_distribution.goldproductionuserdetail_set.values_list('company')
+                        formset.form.license_ids = request.user.moragib_list.moragib_distribution.goldproductionuserdetail_set.filter(master__state=GoldShippingForm.STATE_CONFIRMED1).values_list('license')
                     except Exception as e:
-                        formset.form.company_ids = []
-                        print('err',e)
+                        formset.form.license_ids = []
 
             yield formset,inline
 
@@ -232,8 +236,9 @@ move_main_class = {
     'mixins': [],
     'kwargs': {
         'form': GoldShippingFormForm,
-        'list_display': ["company","date","form_no","state","show_certificate_link"],
+        'list_display': ["license","date","form_no","state","show_certificate_link"],
         'list_filter': ["state","date"],
+        # 'readonly_fields': ["company"],
         'save_as_continue': False,
     },
     'groups': {
@@ -313,3 +318,155 @@ move_inline_classes = {
 move_model_admin, inlines = create_main_form(move_main_class,move_inline_classes,move_main_mixins)
 
 admin.site.register(move_model_admin.model,move_model_admin)
+
+#############################
+@admin.register(LkpMoragib)
+class LkpMoragibAdmin(admin.ModelAdmin):
+    model = LkpMoragib
+    form = MoragibForm
+    list_display = ["name","user","company_type"]
+    search_fields = ["name","user__email"]
+    list_filter = ["company_type"]
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+
+        if request.user.is_superuser:
+            return qs
+
+        if request.user.groups.filter(name__in=("production_control_auditor_distributor")).exists():
+            return qs.filter(company_type__in= get_company_types(request))
+        
+        return qs.none()
+
+class GoldProductionUserDetailInline(admin.TabularInline):
+    model = GoldProductionUserDetail
+    form = GoldProductionUserDetailForm
+    # fields = ['company']
+
+    extra = 1    
+
+    class Media:
+        js = ('admin/js/jquery.init.js',"production_control/js/company_change_detail.js",)
+
+
+class GoldProductionUserAdmin(admin.ModelAdmin):
+    model = GoldProductionUser
+    inlines = [GoldProductionUserDetailInline]
+    form = GoldProductionUserForm
+    list_display = ["moragib_name","companies","company_type","state"] #"user","name",
+    list_filter = ["moragib__company_type","state"]
+    actions=['end_distribution']
+    autocomplete_fields = ["moragib"]
+
+    def save_model(self, request, obj, form, change):
+        if obj.pk:
+            obj.updated_by = request.user
+        else:
+            obj.created_by = obj.updated_by = request.user
+        super().save_model(request, obj, form, change)                
+        
+    def get_formsets_with_inlines(self, request, obj=None):
+        for inline in self.get_inline_instances(request, obj):
+            formset = inline.get_formset(request, obj)
+            if isinstance(inline,GoldProductionUserDetailInline):
+                formset.form = GoldProductionUserDetailForm
+                formset.form.company_types = get_company_types(request)
+
+            yield formset,inline
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        qs= qs.prefetch_related(models.Prefetch("goldproductionuserdetail_set"))
+
+        if request.user.is_superuser:
+            return qs
+
+        if request.user.groups.filter(name__in=("pro_company_application_accept","pro_company_application_approve")).exists():
+            ids = GoldProductionUserDetail.objects.filter(company__company_type__in= get_company_types(request)).values_list("master")
+            return qs.filter(id__in=ids)
+
+        # return qs.filter(user__groups__name__in=get_company_types(request))
+        
+        return qs
+
+    def has_add_permission(self, request):        
+        if not request.user.groups.filter(name__in=("production_control_auditor_distributor",)).exists():
+            return False
+        
+        return super().has_add_permission(request)
+
+    def has_change_permission(self, request, obj=None):
+        if not obj or obj.state != STATE_DRAFT:
+            return False
+
+        if not request.user.groups.filter(name__in=("production_control_auditor_distributor",)).exists():
+            return False
+                
+        return super().has_change_permission(request,obj)
+
+    @admin.action(description=_('end distribution'))
+    def end_distribution(self, request, queryset):
+        for obj in queryset:
+            # obj.state = GoldProductionUser.STATE_EXPIRED
+            # obj.save()
+            # self.log_change(request,obj,_('state_expired'))
+
+            obj.goldproductionuserdetail_set.all().delete()
+            obj.delete()
+
+    @admin.display(description=_('company_type'))
+    def company_type(self, obj):
+        if obj.moragib and hasattr(obj.moragib,"company_type"):
+            return f'{obj.moragib.get_company_type_display()}'
+        
+        return '-'
+
+    @admin.display(description=_('company'))
+    def companies(self, obj):
+        return "، ".join(obj.goldproductionuserdetail_set.all().values_list('company__name_ar',flat=True))
+
+    @admin.display(description=_('moragib'))
+    def moragib_name(self, obj):
+        return obj.moragib.name
+
+    def get_urls(self):
+        urls = super().get_urls()
+        my_urls = [
+            path("company_list/", TblCompanyProductionAutocomplete.as_view(),name="lkp_company_list"),
+        ]
+        return my_urls + urls
+
+admin.site.register(GoldProductionUser, GoldProductionUserAdmin)
+
+@admin.register(GoldProductionStateUser)
+class GoldProductionStateUserAdmin(admin.ModelAdmin):
+    model = GoldProductionStateUser
+    form = GoldProductionStateUserForm
+
+    def save_model(self, request, obj, form, change):
+        try:
+            if not obj.pk:  # New object
+                obj.created_by = request.user
+                obj.source_state = request.user.hse_tra_state.state
+
+            obj.updated_by = request.user
+            super().save_model(request, obj, form, change)
+        except:
+            pass
+
+@admin.register(GoldProductionSectorUser)
+class GoldProductionSectorUserAdmin(admin.ModelAdmin):
+    model = GoldProductionSectorUser
+    form = GoldProductionSectorUserForm
+
+    def save_model(self, request, obj, form, change):
+        try:
+            if not obj.pk:  # New object
+                obj.created_by = request.user
+                obj.source_state = request.user.hse_tra_state.state
+
+            obj.updated_by = request.user
+            super().save_model(request, obj, form, change)
+        except:
+            pass
