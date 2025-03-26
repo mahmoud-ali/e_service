@@ -111,6 +111,10 @@ def get_workflow_mixin(main_class,inline_classes={},inlines_dict={}):
         def get_queryset(self, request):
             """Filter records by user's state, with full access for superusers"""
             qs = super().get_queryset(request)
+
+            if request.user.is_superuser:
+                return qs
+
             user_groups = list(request.user.groups.values_list('name', flat=True))            
             states = view_model_states(main_class,user_groups,['view'])
 
