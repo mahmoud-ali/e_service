@@ -120,7 +120,7 @@ class GoldShippingFormForm(forms.ModelForm):
         if len(self.license_list) > 0:
             self.fields["license"].queryset = license_all_qs.filter(id__in=self.license_list)
         else:
-            self.fields["company"].queryset = license_all_qs.filter(company_type__in=self.company_types)
+            self.fields["license"].queryset = license_all_qs.filter(company__company_type__in=self.company_types)
             
         # self.fields["company"].disabled = False
 
