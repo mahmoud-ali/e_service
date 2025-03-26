@@ -39,6 +39,9 @@ class LogMixin:
     def get_queryset(self, request):
         qs = super().get_queryset(request)
 
+        if request.user.is_superuser:
+            return qs
+
         if request.user.groups.filter(name__in=("production_control_sector_mgr",)).exists():
             try:
                 company_type = request.user.gold_production_sector_user.company_type
