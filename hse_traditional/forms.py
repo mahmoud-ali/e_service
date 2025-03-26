@@ -14,8 +14,8 @@ class TblStateRepresentativeForm(forms.ModelForm):
         fields = ["user","name","state"] 
 
 class HseTraditionalCorrectiveActionForm(forms.ModelForm):
-    source_accident = forms.ModelChoiceField(queryset=HseTraditionalAccident.objects.filter(state__gte=HseTraditionalAccident.STATE_CONFIRMED), label=_("source_accident"))
-    source_near_miss = forms.ModelChoiceField(queryset=HseTraditionalNearMiss.objects.filter(state__gte=HseTraditionalNearMiss.STATE_CONFIRMED), label=_("source_near_miss"))
+    source_accident = forms.ModelChoiceField(queryset=HseTraditionalAccident.objects.filter(state__gte=HseTraditionalAccident.STATE_CONFIRMED), label=_("source_accident"), required=False)
+    source_near_miss = forms.ModelChoiceField(queryset=HseTraditionalNearMiss.objects.filter(state__gte=HseTraditionalNearMiss.STATE_CONFIRMED), label=_("source_near_miss"), required=False)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
