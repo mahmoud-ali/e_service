@@ -1,5 +1,5 @@
 from django.contrib import admin
-from company_profile_exploration.models.work_plan import AppWorkPlan, Brief, Coordinate, Equipment, LkpPhase, LogisticsAdministration, Other, Phase, SamplePreparation, StaffInformation, SubsurfaceExplorationActivitie, SurfaceExplorationActivitie, TargetCommodity, Todo
+from company_profile_exploration.models.work_plan import AppWorkPlan, Brief, ContractRecommendation, Coordinate, Equipment, LkpPhase, LogisticsAdministration, Other, Phase, SamplePreparation, StaffInformation, SubsurfaceExplorationActivitie, SurfaceExplorationActivitie, TargetCommodity, TechnicalRecommendation, Todo
 from workflow.admin_utils import create_main_form
 
 class LogMixin:
@@ -286,6 +286,46 @@ work_plan_inline_classes = {
                 AppWorkPlan.STATE_GM_DECISION: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 AppWorkPlan.STATE_REVIEW_CONTRACT: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 AppWorkPlan.STATE_REVIEW_TECHNICAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                AppWorkPlan.STATE_REVIEW_COMPANY: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                AppWorkPlan.STATE_RELEASE_ACCEPTANCE_CERTIFICATE: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                AppWorkPlan.STATE_RELEASE_REJECTION_CERTIFICATE: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
+        },
+    },
+    'ContractRecommendation': {
+        'model': ContractRecommendation,
+        'mixins': [admin.TabularInline],
+        'kwargs': {
+            'extra': 0,
+            'min_num': 1,
+        },
+        'groups': {
+            'exploration_gm':{
+                'permissions': {
+                AppWorkPlan.STATE_GM_DECISION: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                AppWorkPlan.STATE_REVIEW_CONTRACT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
+                AppWorkPlan.STATE_REVIEW_TECHNICAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                AppWorkPlan.STATE_REVIEW_COMPANY: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                AppWorkPlan.STATE_RELEASE_ACCEPTANCE_CERTIFICATE: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                AppWorkPlan.STATE_RELEASE_REJECTION_CERTIFICATE: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
+        },
+    },
+    'TechnicalRecommendation': {
+        'model': TechnicalRecommendation,
+        'mixins': [admin.TabularInline],
+        'kwargs': {
+            'extra': 0,
+            'min_num': 1,
+        },
+        'groups': {
+            'exploration_gm':{
+                'permissions': {
+                AppWorkPlan.STATE_GM_DECISION: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                AppWorkPlan.STATE_REVIEW_CONTRACT: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                AppWorkPlan.STATE_REVIEW_TECHNICAL: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
                 AppWorkPlan.STATE_REVIEW_COMPANY: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 AppWorkPlan.STATE_RELEASE_ACCEPTANCE_CERTIFICATE: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 AppWorkPlan.STATE_RELEASE_REJECTION_CERTIFICATE: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},

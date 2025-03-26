@@ -3,6 +3,7 @@ from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
 from company_profile.models import TblCompanyProduction,LkpMineral
+from pa.models import CURRENCY_TYPE_CHOICES,CURRENCY_TYPE_SDG
 from workflow.model_utils import LoggingModel, WorkFlowModel
 
 class TblCompanyExplorationManager(models.Manager):
@@ -31,9 +32,9 @@ class AppWorkPlan(WorkFlowModel):
 
     STATE_CHOICES = {
         STATE_DRAFT: _("draft"),
-        STATE_GM_DECISION: _("توجيه م.ا.ع"),
-        STATE_REVIEW_CONTRACT: _("دراسة اولية"),
-        STATE_REVIEW_TECHNICAL: _("دراسة فنية"),
+        STATE_GM_DECISION: _("مدير الإدارة العامة"),
+        STATE_REVIEW_CONTRACT: _("توصية البرامج والعقود"),
+        STATE_REVIEW_TECHNICAL: _("توصية الادارة الفنية المختصة"),
         STATE_REVIEW_COMPANY: _("مراجعة الطلب بواسطة الشركة"),
         STATE_RELEASE_ACCEPTANCE_CERTIFICATE: _("تحرير شهادة القبول"),
         STATE_RELEASE_REJECTION_CERTIFICATE: _("تحرير شهادة الرفض"),
@@ -41,6 +42,7 @@ class AppWorkPlan(WorkFlowModel):
     }
 
     company  = models.ForeignKey(TblCompanyExploration, related_name="work_plan", on_delete=models.PROTECT,verbose_name=_("company"))    
+    currency = models.CharField(_("currency"),max_length=10, choices=CURRENCY_TYPE_CHOICES, default=CURRENCY_TYPE_SDG)
     state = models.IntegerField(_("record_state"), choices=STATE_CHOICES.items(), default=STATE_DRAFT)
 
     def __str__(self):
@@ -268,7 +270,7 @@ class Todo(LoggingModel):
     CONTRACT = 2
     COMPANY = 3
     TO_CHOICES = (
-        (TECHNICAL, _("الادارة الفنية")),
+        (TECHNICAL, _("الادارة الفنية المختصة")),
         (CONTRACT, _("البرامج والعقود")),
         (COMPANY, _("الشركة")),
     )
@@ -281,3 +283,20 @@ class Todo(LoggingModel):
     class Meta:
         verbose_name = _("Todo")
         verbose_name_plural = _("Todos")
+
+class ContractRecommendation(LoggingModel):
+    work_plan = models.ForeignKey(AppWorkPlan, on_delete=models.PROTECT, verbose_name=_("work_plan"))
+    recommendation = models.TextField(_("Recommendation"))
+
+    class Meta:
+        verbose_name = _("Contract Recommendation")
+        verbose_name_plural = _("Contract Recommendations")
+
+#model technical_recommendation with relation one to many with AppWorkPlan has the following fields: recommendation
+class TechnicalRecommendation(LoggingModel):
+    work_plan = models.ForeignKey(AppWorkPlan, on_delete=models.PROTECT, verbose_name=_("work_plan"))
+    recommendation = models.TextField(_("Recommendation"))
+
+    class Meta:
+        verbose_name = _("Technical Recommendation")
+        verbose_name_plural = _("Technical Recommendations")
