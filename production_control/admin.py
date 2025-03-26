@@ -336,7 +336,7 @@ class LkpMoragibAdmin(admin.ModelAdmin):
         if request.user.is_superuser:
             return qs
 
-        if request.user.groups.filter(name__in=("production_control_auditor_distributor")).exists():
+        if request.user.groups.filter(name__in=("production_control_auditor_distributor",)).exists():
             return qs.filter(company_type__in= get_company_types(request))
         
         return qs.none()
