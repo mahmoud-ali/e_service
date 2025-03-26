@@ -51,3 +51,13 @@ def import_moragbin(company_type=None,file_name='mokhlafat.csv'):
 
             except Exception as e:
                 print(f"id: {code}, Exception: {e}")
+
+from workflow.data_utils import create_master_details_groups
+from production_control import admin
+
+def create_groups():
+    create_master_details_groups('production_control','goldproductionform',admin.production_main_class,admin.production_inline_classes)
+    create_master_details_groups('production_control','goldshippingform',admin.move_main_class,admin.move_inline_classes)
+
+if __name__ == '__main__':
+    create_groups()
