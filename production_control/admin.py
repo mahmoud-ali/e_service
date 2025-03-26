@@ -358,7 +358,7 @@ class GoldProductionUserAdmin(admin.ModelAdmin):
     form = GoldProductionUserForm
     list_display = ["moragib_name","companies","company_type","state"] #"user","name",
     list_filter = ["moragib__company_type","state"]
-    actions=['end_distribution']
+    actions=['approved','end_distribution']
     autocomplete_fields = ["moragib"]
 
     def save_model(self, request, obj, form, change):
@@ -406,6 +406,14 @@ class GoldProductionUserAdmin(admin.ModelAdmin):
             return False
                 
         return super().has_change_permission(request,obj)
+
+    @admin.action(description=_('تأكيد الطلبات المحددة'))
+    def approved(self, request, queryset):
+        for obj in queryset:
+            if obj.state == STATE_DRAFT:
+                obj.state = STATE_CONFIRMED
+                obj.save()
+                self.log_change(request,obj,_('state_confirmed'))
 
     @admin.action(description=_('end distribution'))
     def end_distribution(self, request, queryset):
