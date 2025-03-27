@@ -23,7 +23,7 @@ STATE_CONFIRMED = 2
         
 def company_applications_path(instance, filename):
     # file will be uploaded to MEDIA_ROOT/company_<id>/applications/<filename>
-    return "company_{0}/applications/{1}".format(instance.company.id, filename)    
+    return "company_{0}/applications/{1}".format(instance.license.company.id, filename)    
 
 class LkpMoragib(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.PROTECT,related_name="moragib_list",verbose_name=_("user"))
