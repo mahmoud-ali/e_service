@@ -5,7 +5,7 @@
 {% if original and original.state %}
 <li>
     {% url opts|admin_urlname:'changelist' as changelist_url %}
-    <a href="{{changelist_url}}?state__exact={{original.state}}" style="background-color:var(--link-fg);color:var(--primary-fg)">
+    <a href="#" style="background-color:var(--link-fg);color:var(--primary-fg)">
         {{original.get_state_display}}
     </a>
 </li>
