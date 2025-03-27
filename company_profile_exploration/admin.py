@@ -24,17 +24,24 @@ class LogMixin:
         
         formset.save_m2m()
 
+class AppWorkPlanMixin:
     def get_queryset(self, request):
         qs = super().get_queryset(request)
 
-        try:
-            source_state = request.user.hse_tra_state.state
-            qs = qs.filter(source_state=source_state)
-        except:
-            pass
+        if request.user.groups.filter(name__in=("exploration_technical",)).exists():
+            ids = []
+            for obj in qs:
+                if request.user.groups.filter(name__in=("exploration_technical_development",)).exists() and obj.company.state in []:
+                    ids.append(obj.id)
+                
+                if request.user.groups.filter(name__in=("exploration_technical_exploration",)).exists() and obj.company.state in []:
+                    ids.append(obj.id)
+                    
+            qs = qs.filter(id__in=ids)
+
         return qs
 
-work_plan_main_mixins = [LogMixin]
+work_plan_main_mixins = [AppWorkPlanMixin,LogMixin]
 work_plan_main_class = {
     'model': AppWorkPlan,
     'mixins': [],
@@ -54,7 +61,9 @@ work_plan_main_class = {
                 AppWorkPlan.STATE_REVIEW_TECHNICAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 AppWorkPlan.STATE_REVIEW_COMPANY: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 AppWorkPlan.STATE_RELEASE_ACCEPTANCE_CERTIFICATE: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                AppWorkPlan.STATE_ACCEPTANCE_CERTIFICATE_RELEASED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 AppWorkPlan.STATE_RELEASE_REJECTION_CERTIFICATE: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                AppWorkPlan.STATE_REJECTION_CERTIFICATE_RELEASED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
             },
         },
 
@@ -73,12 +82,14 @@ work_plan_inline_classes = {
             'exploration_gm':{
                 'permissions': {
                 AppWorkPlan.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
-                AppWorkPlan.STATE_GM_DECISION: {'add': 0, 'change': 1, 'delete': 0, 'view': 1},
+                AppWorkPlan.STATE_GM_DECISION: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 AppWorkPlan.STATE_REVIEW_CONTRACT: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 AppWorkPlan.STATE_REVIEW_TECHNICAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 AppWorkPlan.STATE_REVIEW_COMPANY: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 AppWorkPlan.STATE_RELEASE_ACCEPTANCE_CERTIFICATE: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                AppWorkPlan.STATE_ACCEPTANCE_CERTIFICATE_RELEASED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 AppWorkPlan.STATE_RELEASE_REJECTION_CERTIFICATE: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                AppWorkPlan.STATE_REJECTION_CERTIFICATE_RELEASED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
         },
@@ -99,7 +110,9 @@ work_plan_inline_classes = {
                 AppWorkPlan.STATE_REVIEW_TECHNICAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 AppWorkPlan.STATE_REVIEW_COMPANY: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 AppWorkPlan.STATE_RELEASE_ACCEPTANCE_CERTIFICATE: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                AppWorkPlan.STATE_ACCEPTANCE_CERTIFICATE_RELEASED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 AppWorkPlan.STATE_RELEASE_REJECTION_CERTIFICATE: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                AppWorkPlan.STATE_REJECTION_CERTIFICATE_RELEASED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
         },
@@ -120,7 +133,9 @@ work_plan_inline_classes = {
                 AppWorkPlan.STATE_REVIEW_TECHNICAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 AppWorkPlan.STATE_REVIEW_COMPANY: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 AppWorkPlan.STATE_RELEASE_ACCEPTANCE_CERTIFICATE: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                AppWorkPlan.STATE_ACCEPTANCE_CERTIFICATE_RELEASED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 AppWorkPlan.STATE_RELEASE_REJECTION_CERTIFICATE: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                AppWorkPlan.STATE_REJECTION_CERTIFICATE_RELEASED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
         },
@@ -141,7 +156,9 @@ work_plan_inline_classes = {
                 AppWorkPlan.STATE_REVIEW_TECHNICAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 AppWorkPlan.STATE_REVIEW_COMPANY: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 AppWorkPlan.STATE_RELEASE_ACCEPTANCE_CERTIFICATE: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                AppWorkPlan.STATE_ACCEPTANCE_CERTIFICATE_RELEASED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 AppWorkPlan.STATE_RELEASE_REJECTION_CERTIFICATE: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                AppWorkPlan.STATE_REJECTION_CERTIFICATE_RELEASED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
         },
@@ -162,7 +179,9 @@ work_plan_inline_classes = {
                 AppWorkPlan.STATE_REVIEW_TECHNICAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 AppWorkPlan.STATE_REVIEW_COMPANY: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 AppWorkPlan.STATE_RELEASE_ACCEPTANCE_CERTIFICATE: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                AppWorkPlan.STATE_ACCEPTANCE_CERTIFICATE_RELEASED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 AppWorkPlan.STATE_RELEASE_REJECTION_CERTIFICATE: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                AppWorkPlan.STATE_REJECTION_CERTIFICATE_RELEASED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
         },
@@ -183,7 +202,9 @@ work_plan_inline_classes = {
                 AppWorkPlan.STATE_REVIEW_TECHNICAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 AppWorkPlan.STATE_REVIEW_COMPANY: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 AppWorkPlan.STATE_RELEASE_ACCEPTANCE_CERTIFICATE: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                AppWorkPlan.STATE_ACCEPTANCE_CERTIFICATE_RELEASED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 AppWorkPlan.STATE_RELEASE_REJECTION_CERTIFICATE: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                AppWorkPlan.STATE_REJECTION_CERTIFICATE_RELEASED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
         },
@@ -204,7 +225,9 @@ work_plan_inline_classes = {
                 AppWorkPlan.STATE_REVIEW_TECHNICAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 AppWorkPlan.STATE_REVIEW_COMPANY: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 AppWorkPlan.STATE_RELEASE_ACCEPTANCE_CERTIFICATE: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                AppWorkPlan.STATE_ACCEPTANCE_CERTIFICATE_RELEASED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 AppWorkPlan.STATE_RELEASE_REJECTION_CERTIFICATE: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                AppWorkPlan.STATE_REJECTION_CERTIFICATE_RELEASED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
         },
@@ -225,7 +248,9 @@ work_plan_inline_classes = {
                 AppWorkPlan.STATE_REVIEW_TECHNICAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 AppWorkPlan.STATE_REVIEW_COMPANY: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 AppWorkPlan.STATE_RELEASE_ACCEPTANCE_CERTIFICATE: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                AppWorkPlan.STATE_ACCEPTANCE_CERTIFICATE_RELEASED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 AppWorkPlan.STATE_RELEASE_REJECTION_CERTIFICATE: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                AppWorkPlan.STATE_REJECTION_CERTIFICATE_RELEASED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
         },
@@ -246,7 +271,9 @@ work_plan_inline_classes = {
                 AppWorkPlan.STATE_REVIEW_TECHNICAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 AppWorkPlan.STATE_REVIEW_COMPANY: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 AppWorkPlan.STATE_RELEASE_ACCEPTANCE_CERTIFICATE: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                AppWorkPlan.STATE_ACCEPTANCE_CERTIFICATE_RELEASED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 AppWorkPlan.STATE_RELEASE_REJECTION_CERTIFICATE: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                AppWorkPlan.STATE_REJECTION_CERTIFICATE_RELEASED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
         },
@@ -267,7 +294,9 @@ work_plan_inline_classes = {
                 AppWorkPlan.STATE_REVIEW_TECHNICAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 AppWorkPlan.STATE_REVIEW_COMPANY: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 AppWorkPlan.STATE_RELEASE_ACCEPTANCE_CERTIFICATE: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                AppWorkPlan.STATE_ACCEPTANCE_CERTIFICATE_RELEASED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 AppWorkPlan.STATE_RELEASE_REJECTION_CERTIFICATE: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                AppWorkPlan.STATE_REJECTION_CERTIFICATE_RELEASED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
         },
@@ -288,7 +317,9 @@ work_plan_inline_classes = {
                 AppWorkPlan.STATE_REVIEW_TECHNICAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 AppWorkPlan.STATE_REVIEW_COMPANY: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 AppWorkPlan.STATE_RELEASE_ACCEPTANCE_CERTIFICATE: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                AppWorkPlan.STATE_ACCEPTANCE_CERTIFICATE_RELEASED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 AppWorkPlan.STATE_RELEASE_REJECTION_CERTIFICATE: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                AppWorkPlan.STATE_REJECTION_CERTIFICATE_RELEASED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
         },
@@ -308,7 +339,9 @@ work_plan_inline_classes = {
                 AppWorkPlan.STATE_REVIEW_TECHNICAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 AppWorkPlan.STATE_REVIEW_COMPANY: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 AppWorkPlan.STATE_RELEASE_ACCEPTANCE_CERTIFICATE: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                AppWorkPlan.STATE_ACCEPTANCE_CERTIFICATE_RELEASED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 AppWorkPlan.STATE_RELEASE_REJECTION_CERTIFICATE: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                AppWorkPlan.STATE_REJECTION_CERTIFICATE_RELEASED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
         },
@@ -328,7 +361,9 @@ work_plan_inline_classes = {
                 AppWorkPlan.STATE_REVIEW_TECHNICAL: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
                 AppWorkPlan.STATE_REVIEW_COMPANY: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 AppWorkPlan.STATE_RELEASE_ACCEPTANCE_CERTIFICATE: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                AppWorkPlan.STATE_ACCEPTANCE_CERTIFICATE_RELEASED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 AppWorkPlan.STATE_RELEASE_REJECTION_CERTIFICATE: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                AppWorkPlan.STATE_REJECTION_CERTIFICATE_RELEASED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
         },
@@ -348,7 +383,9 @@ work_plan_inline_classes = {
                 AppWorkPlan.STATE_REVIEW_TECHNICAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 AppWorkPlan.STATE_REVIEW_COMPANY: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 AppWorkPlan.STATE_RELEASE_ACCEPTANCE_CERTIFICATE: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                AppWorkPlan.STATE_ACCEPTANCE_CERTIFICATE_RELEASED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 AppWorkPlan.STATE_RELEASE_REJECTION_CERTIFICATE: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                AppWorkPlan.STATE_REJECTION_CERTIFICATE_RELEASED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
         },

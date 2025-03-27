@@ -28,7 +28,9 @@ class AppWorkPlan(WorkFlowModel):
     STATE_REVIEW_TECHNICAL= 6
     STATE_REVIEW_COMPANY= 7
     STATE_RELEASE_ACCEPTANCE_CERTIFICATE= 8
-    STATE_RELEASE_REJECTION_CERTIFICATE= 9
+    STATE_ACCEPTANCE_CERTIFICATE_RELEASED= 9
+    STATE_RELEASE_REJECTION_CERTIFICATE= 10
+    STATE_REJECTION_CERTIFICATE_RELEASED= 11
 
     STATE_CHOICES = {
         STATE_DRAFT: _("draft"),
@@ -37,7 +39,9 @@ class AppWorkPlan(WorkFlowModel):
         STATE_REVIEW_TECHNICAL: _("توصية الادارة الفنية المختصة"),
         STATE_REVIEW_COMPANY: _("مراجعة الطلب بواسطة الشركة"),
         STATE_RELEASE_ACCEPTANCE_CERTIFICATE: _("تحرير شهادة القبول"),
+        STATE_ACCEPTANCE_CERTIFICATE_RELEASED: _("تم تحرير شهادة القبول"),
         STATE_RELEASE_REJECTION_CERTIFICATE: _("تحرير شهادة الرفض"),
+        STATE_REJECTION_CERTIFICATE_RELEASED: _("تم تحرير شهادة الرفض"),
         # STATE_APPROVED:_("approved"),
     }
 
@@ -75,6 +79,14 @@ class AppWorkPlan(WorkFlowModel):
 
             if self.state == self.STATE_REVIEW_COMPANY:
                 states.append((self.STATE_GM_DECISION, self.STATE_CHOICES[self.STATE_GM_DECISION]))
+
+            if self.state == self.STATE_RELEASE_ACCEPTANCE_CERTIFICATE:
+                states.append((self.STATE_GM_DECISION, self.STATE_CHOICES[self.STATE_GM_DECISION]))
+                states.append((self.STATE_ACCEPTANCE_CERTIFICATE_RELEASED, self.STATE_CHOICES[self.STATE_ACCEPTANCE_CERTIFICATE_RELEASED]))
+
+            if self.state == self.STATE_RELEASE_REJECTION_CERTIFICATE:
+                states.append((self.STATE_GM_DECISION, self.STATE_CHOICES[self.STATE_GM_DECISION]))
+                states.append((self.STATE_REJECTION_CERTIFICATE_RELEASED, self.STATE_CHOICES[self.STATE_REJECTION_CERTIFICATE_RELEASED]))
 
         return states
 
@@ -266,13 +278,16 @@ class Other(LoggingModel):
         verbose_name_plural = _("Others")
 
 class Todo(LoggingModel):
-    TECHNICAL = 1
-    CONTRACT = 2
-    COMPANY = 3
+    COMPANY = 1
+    TECHNICAL = 2
+    CONTRACT = 3
+    SECRETARY = 4
+
     TO_CHOICES = (
+        (COMPANY, _("الشركة")),
         (TECHNICAL, _("الادارة الفنية المختصة")),
         (CONTRACT, _("البرامج والعقود")),
-        (COMPANY, _("الشركة")),
+        (SECRETARY, _("المكتب التنفيذي")),
     )
     work_plan = models.ForeignKey(AppWorkPlan, on_delete=models.PROTECT, verbose_name=_("work_plan"))
     to = models.IntegerField(_("To"), choices=TO_CHOICES)
