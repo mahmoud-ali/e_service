@@ -7,7 +7,6 @@ class LogMixin:
         try:
             if not obj.pk:  # New object
                 obj.created_by = request.user
-                obj.source_state = request.user.hse_tra_state.state
 
             obj.updated_by = request.user
             super().save_model(request, obj, form, change)
