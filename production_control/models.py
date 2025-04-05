@@ -330,11 +330,13 @@ class GoldShippingFormAlloy(models.Model):
         verbose_name_plural = _("Gold Shipping Form - Alloy")
 
     def clean(self) -> None:
-        if self.master and (self.master.company != self.alloy_serial_no.master.company):
-            raise ValidationError(
-                {"alloy_serial_no":_("alloy should belong to same company!")}
-            )
-
+        try:
+            if self.master and (self.master.company != self.alloy_serial_no.master.company):
+                raise ValidationError(
+                    {"alloy_serial_no":_("alloy should belong to same company!")}
+                )
+        except:
+            pass
         return super().clean()
     
 from django.db.models.signals import post_save, pre_save
