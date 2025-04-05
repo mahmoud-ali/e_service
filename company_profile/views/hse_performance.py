@@ -141,6 +141,9 @@ class AppHSEPerformanceReportReadonlyView(LoginRequiredMixin,DetailView):
     template_name = "company_profile/views/requirements_list_readonly_master_details.html"
 
     def dispatch(self, *args, **kwargs):
+        if not hasattr(self.request.user,"pro_company"):
+            return HttpResponseRedirect(reverse_lazy("profile:home"))    
+
         if self.request.user.pro_company.company.company_type in [TblCompany.COMPANY_TYPE_ENTAJ, TblCompany.COMPANY_TYPE_SAGEER, TblCompany.COMPANY_TYPE_EMTIAZ]:
             if explosive[0] not in self.model_details:
                 self.model_details = self.model_details + explosive
