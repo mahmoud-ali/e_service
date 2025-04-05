@@ -336,7 +336,9 @@ class GoldShippingFormAlloy(models.Model):
                     {"alloy_serial_no":_("alloy should belong to same company!")}
                 )
         except:
-            pass
+            raise ValidationError(
+                    {"alloy_serial_no":_("هذا الحقل مطلوب!")}
+                )
         return super().clean()
     
 from django.db.models.signals import post_save, pre_save
