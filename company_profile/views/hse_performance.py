@@ -86,7 +86,12 @@ class AppHSEPerformanceReportCreateView(LoginRequiredMixin,View):
             if explosive[0] not in self.model_details:
                 self.model_details = self.model_details + explosive
 
-        self.detail_formset = [inlineformset_factory(self.model, m, exclude=[],extra=0,can_delete=False,min_num=1, validate_min=True) for m in self.model_details]
+        self.detail_formset = []
+        for m in self.model_details:
+            if m in (AppHSEPerformanceReportOtherChemicalUsed,):
+                self.detail_formset.append(inlineformset_factory(self.model, m, exclude=[],extra=1,can_delete=False,min_num=0, validate_min=True))
+            else:
+                self.detail_formset.append(inlineformset_factory(self.model, m, exclude=[],extra=0,can_delete=False,min_num=1, validate_min=True))
             
         self.success_url = reverse_lazy(self.menu_name)    
         self.extra_context = {
