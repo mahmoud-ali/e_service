@@ -6,6 +6,7 @@
 
 {% block content %}
 <h1 class="page-header">{{title}}</h1>
+{% bootstrap_form_errors form %}
 {% bootstrap_messages %}
 
 <form  method="post"  enctype="multipart/form-data" novalidate>
@@ -13,6 +14,8 @@
     {% bootstrap_form form %}
 {% for formset in detail_formset  %}
 	<h3>{% get_item_from_list detail_title forloop.counter0 %}:</h3>
+    {% bootstrap_formset_errors formset %}
+
     {{ formset.management_form }}
     <table id="detail_table{{ formset.prefix }}"  class="table table-bordered">
         <tr>
