@@ -14,7 +14,7 @@
         &nbsp;(مسودة)
     {%endif%}
 {% elif object.form_type == 2 %}
-    إستمارة تصدير ذهب بغرض التصنيع والإعادة
+    إستمارة تصدير ذهب بغرض التصنيع وإعادة التصنيع
     {%if object.state == 1 %}
         &nbsp;(مسودة)
     {%endif%}
@@ -124,7 +124,11 @@
         {%elif object.form_type == 3 %}
         <li>هذه الإستمارة صادرة لأغراض ترحيل الفضة ولأغراض الصادر فقط.</li>
         {%endif %}
+
+        {% if object.form_type != 2 %}
         <li>هذه الإستمارة مجانية.</li>
+        {%endif %}
+
     </ol>
 
     <div style="page-break-after: always;"></div>

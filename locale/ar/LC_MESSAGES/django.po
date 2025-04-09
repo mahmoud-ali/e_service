@@ -4384,7 +4384,7 @@ msgstr "استمارة ترحيل ذهب صادر"
 
 #: gold_travel/models.py:219 gold_travel/models.py:220
 msgid "Re-export Gold"
-msgstr "استمارة ترحيل ذهب صادر بغرض التصنيع والإعادة"
+msgstr "استمارة ترحيل ذهب صادر بغرض التصنيع وإعادة التصنيع"
 
 #: gold_travel/models.py:232 gold_travel/models.py:233
 msgid "Export Silver"
