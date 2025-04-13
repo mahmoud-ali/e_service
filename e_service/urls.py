@@ -37,7 +37,8 @@ urlpatterns = [
     path('production/', include('production_control.urls')), 
     path('', include('user_sessions.urls', 'user_sessions')),
     path('', include('company_profile.urls')),
-    # path('', include('pwa.urls')),  # You MUST use an empty string as the URL prefix    
+    path('', include('company_profile_exploration.urls')),
+        # path('', include('pwa.urls')),  # You MUST use an empty string as the URL prefix    
 ]
 
 if settings.DEBUG:
