@@ -453,7 +453,9 @@ admin.site.register(GoldProductionUser, GoldProductionUserAdmin)
 class GoldProductionStateUserAdmin(admin.ModelAdmin):
     model = GoldProductionStateUser
     form = GoldProductionStateUserForm
-
+    list_display = ["company_type","name","state"]
+    list_filter = ["company_type","state"]
+    
     def save_model(self, request, obj, form, change):
         try:
             if not obj.pk:  # New object
@@ -468,6 +470,8 @@ class GoldProductionStateUserAdmin(admin.ModelAdmin):
 class GoldProductionSectorUserAdmin(admin.ModelAdmin):
     model = GoldProductionSectorUser
     form = GoldProductionSectorUserForm
+    list_display = ["company_type","name","sector"]
+    list_filter = ["company_type","sector"]
 
     def save_model(self, request, obj, form, change):
         try:
