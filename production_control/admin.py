@@ -55,10 +55,10 @@ class LogMixin:
         if request.user.groups.filter(name__in=("production_control_state_mgr",)).exists():
             try:
                 company_type = request.user.gold_production_sector_user.company_type
-                state = request.user.gold_production_sector_user.state
+                states = request.user.gold_production_state_user.state
                 return qs.filter(
                     company__company_type__in= [company_type],
-                    license__state=state
+                    license__state__in=states
                 )
             except:
                 pass
@@ -453,7 +453,7 @@ admin.site.register(GoldProductionUser, GoldProductionUserAdmin)
 class GoldProductionStateUserAdmin(admin.ModelAdmin):
     model = GoldProductionStateUser
     form = GoldProductionStateUserForm
-    list_display = ["company_type","name","state"]
+    list_display = ["company_type","name"]
     list_filter = ["company_type","state"]
     
     def save_model(self, request, obj, form, change):

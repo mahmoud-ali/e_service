@@ -63,7 +63,8 @@ class GoldProductionStateUser(LoggingModel):
     company_type = models.CharField(_("company_type"),max_length=15, choices=TblCompany.COMPANY_TYPE_CHOICES)
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.PROTECT,related_name="gold_production_state_user",verbose_name=_("user"))
     name = models.CharField(_("name"),max_length=100)
-    state = models.ForeignKey(LkpState, on_delete=models.PROTECT,verbose_name=_("state"))
+    state = models.ManyToManyField(LkpState,verbose_name=_("state"))
+    # state = models .ForeignKey(LkpState, on_delete=models.PROTECT,verbose_name=_("state"))
 
     def __str__(self):
         return f'{self.name}({self.user})' # ({self.state})
