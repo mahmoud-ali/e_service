@@ -2,7 +2,7 @@ from django.db import models
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
-from company_profile.models import TblCompanyProduction,LkpMineral
+from company_profile.models import TblCompanyProduction,LkpMineral, TblCompanyProductionLicense
 from pa.models import CURRENCY_TYPE_CHOICES,CURRENCY_TYPE_SDG
 from workflow.model_utils import LoggingModel, WorkFlowModel
 
@@ -18,6 +18,19 @@ class TblCompanyExploration(TblCompanyProduction):
         proxy = True
         verbose_name = _("Production Company")
         verbose_name_plural = _("Production Companies")
+
+class TblLicenseExplorationManager(models.Manager):
+    def get_queryset(self):
+       return super().get_queryset().filter(company__company_type=TblCompanyProduction.COMPANY_TYPE_EMTIAZ)
+
+class TblLicenseExploration(TblCompanyProductionLicense):
+    objects = TblLicenseExplorationManager()
+    default_manager = objects
+
+    class Meta:
+        proxy = True
+        verbose_name = _("Production Company License")
+        verbose_name_plural = _("Production Company Licenses")
 
 class AppWorkPlan(WorkFlowModel):
     STATE_DRAFT = 1
@@ -45,7 +58,8 @@ class AppWorkPlan(WorkFlowModel):
         # STATE_APPROVED:_("approved"),
     }
 
-    company  = models.ForeignKey(TblCompanyExploration, related_name="work_plan", on_delete=models.PROTECT,verbose_name=_("company"))    
+    company  = models.ForeignKey(TblCompanyExploration, related_name="work_plan_company", on_delete=models.PROTECT,verbose_name=_("company"))    
+    license  = models.ForeignKey(TblLicenseExploration, related_name="work_plan_license", on_delete=models.PROTECT,verbose_name=_("license"))    
     currency = models.CharField(_("currency"),max_length=10, choices=CURRENCY_TYPE_CHOICES, default=CURRENCY_TYPE_SDG)
     state = models.IntegerField(_("record_state"), choices=STATE_CHOICES.items(), default=STATE_DRAFT)
 
@@ -213,7 +227,7 @@ class LogisticsAdministration(LoggingModel):
     activity_item = models.CharField(_("Activity/Item"), max_length=100)
     count = models.IntegerField(_("count"))
     unit_cost = models.FloatField(_("Unit cost"))
-    total_cost = models.FloatField(_("Total Cost"))
+    # total_cost = models.FloatField(_("Total Cost"))
 
     class Meta:
         verbose_name = _("Logistics Administration")
@@ -223,8 +237,9 @@ class Equipment(LoggingModel):
     work_plan = models.ForeignKey(AppWorkPlan, on_delete=models.PROTECT, verbose_name=_("work_plan"))
     equipment_machine = models.CharField(_("Equipment/Machine"), max_length=100)
     item = models.CharField(_("Item"), max_length=100)
+    count = models.IntegerField(_("count"))
     unit_cost = models.FloatField(_("Unit cost"))
-    total_cost = models.FloatField(_("Total cost"))
+    # total_cost = models.FloatField(_("Total cost"))
     remarks = models.TextField(_("Remarks"), blank=True, null=True)
 
     class Meta:
@@ -235,7 +250,8 @@ class SurfaceExplorationActivitie(LoggingModel):
     work_plan = models.ForeignKey(AppWorkPlan, on_delete=models.PROTECT, verbose_name=_("work_plan"))
     activity = models.CharField(_("Activity"), max_length=100)
     unit_cost = models.FloatField(_("Unit cost"))
-    total_cost = models.FloatField(_("Total cost"))
+    count = models.IntegerField(_("count"))
+    # total_cost = models.FloatField(_("Total cost"))
     remarks = models.TextField(_("Remarks"), blank=True, null=True)
 
     class Meta:
@@ -247,7 +263,8 @@ class SubsurfaceExplorationActivitie(LoggingModel):
     activity = models.CharField(_("Activity"), max_length=100)
     total_depth_length = models.FloatField(_("Total (depth, Length)/m"))
     cost_per_meter = models.FloatField(_("Cost/m"))
-    total_cost = models.FloatField(_("Total cost"))
+    count = models.FloatField(_("count"))
+    # total_cost = models.FloatField(_("Total cost"))
     remarks = models.TextField(_("Remarks"), blank=True, null=True)
 
     class Meta:
@@ -259,7 +276,8 @@ class SamplePreparation(LoggingModel):
     activity = models.CharField(_("Activity"), max_length=100)
     total = models.FloatField(_("Total"))
     unit_cost = models.FloatField(_("Unit cost"))
-    total_cost = models.FloatField(_("Total cost"))
+    count = models.IntegerField(_("count"))
+    # total_cost = models.FloatField(_("Total cost"))
     remarks = models.TextField(_("Remarks"), blank=True, null=True)
 
     class Meta:
@@ -271,7 +289,8 @@ class Other(LoggingModel):
     activity_item = models.CharField(_("Activity/Item"), max_length=100)
     total = models.FloatField(_("Total"))
     unit_cost = models.FloatField(_("Unit cost"))
-    total_cost = models.FloatField(_("Total cost"))
+    count = models.IntegerField(_("count"))
+    # total_cost = models.FloatField(_("Total cost"))
 
     class Meta:
         verbose_name = _("Other")

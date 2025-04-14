@@ -7,13 +7,14 @@ from django.utils.translation import gettext_lazy as _
 from django.contrib import messages
 
 from company_profile.models import TblCompanyProduction
+from company_profile_exploration.forms import AppWorkPlanForm
 from company_profile_exploration.models.work_plan import AppWorkPlan, Brief, Coordinate, Equipment, LogisticsAdministration, Other, Phase, SamplePreparation, StaffInformation, SubsurfaceExplorationActivitie, SurfaceExplorationActivitie, TargetCommodity
 from company_profile_exploration.tables.workplan import AppWorkPlanTable
 
 from .application import ApplicationDeleteMasterDetailView, ApplicationListView, ApplicationMasterDetailCreateView, ApplicationMasterDetailUpdateView, ApplicationReadonlyView
 
 model_master = AppWorkPlan
-form_master = modelform_factory(model_master,fields=["currency"])
+form_master = AppWorkPlanForm #modelform_factory(model_master,fields=["license","currency"],formfield_callback=getAppWorkPlanForm)
 details = [
         {
             "id":1,
@@ -28,7 +29,7 @@ details = [
                 "extra":0,
                 "min_num":1, 
                 "validate_min":True,
-                "can_delete":True,
+                "can_delete":False,
             },
         },
         {
@@ -44,7 +45,7 @@ details = [
                 "extra":0,
                 "min_num":1, 
                 "validate_min":True,
-                "can_delete":True,
+                "can_delete":False,
             },
         },
         {
@@ -61,7 +62,7 @@ details = [
                 "min_num":1, 
                 "max_num":1, 
                 "validate_min":True,
-                "can_delete":True,
+                "can_delete":False,
             },
         },
         {
@@ -77,7 +78,7 @@ details = [
                 "extra":0,
                 "min_num":1, 
                 "validate_min":True,
-                "can_delete":True,
+                "can_delete":False,
             },
         },
         {
@@ -93,7 +94,7 @@ details = [
                 "extra":0,
                 "min_num":1, 
                 "validate_min":True,
-                "can_delete":True,
+                "can_delete":False,
             },
         },
         {
@@ -109,7 +110,7 @@ details = [
                 "extra":0,
                 "min_num":1, 
                 "validate_min":True,
-                "can_delete":True,
+                "can_delete":False,
             },
         },
         {
@@ -125,7 +126,7 @@ details = [
                 "extra":0,
                 "min_num":1, 
                 "validate_min":True,
-                "can_delete":True,
+                "can_delete":False,
             },
         },
         {
@@ -141,7 +142,7 @@ details = [
                 "extra":0,
                 "min_num":1, 
                 "validate_min":True,
-                "can_delete":True,
+                "can_delete":False,
             },
         },
         {
@@ -157,7 +158,7 @@ details = [
                 "extra":0,
                 "min_num":1, 
                 "validate_min":True,
-                "can_delete":True,
+                "can_delete":False,
             },
         },
         {
@@ -173,7 +174,7 @@ details = [
                 "extra":0,
                 "min_num":1, 
                 "validate_min":True,
-                "can_delete":True,
+                "can_delete":False,
             },
         },
         {
@@ -189,7 +190,7 @@ details = [
                 "extra":0,
                 "min_num":1, 
                 "validate_min":True,
-                "can_delete":True,
+                "can_delete":False,
             },
         },
     ]
@@ -214,6 +215,9 @@ class AppWorkPlanCreateView(ApplicationMasterDetailCreateView):
     menu_name = "exploration:workplan_list"
     title = _("Add new work plan")            
     template_name = "company_profile_exploration/application_add_master_details.html"     
+
+    def dispatch(self, request,*args, **kwargs):         
+        return super().dispatch(request,*args, **kwargs)                    
 
 class AppWorkPlanUpdateView(ApplicationMasterDetailUpdateView):
     model = model_master

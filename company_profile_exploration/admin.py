@@ -1,4 +1,6 @@
 from django.contrib import admin
+from django.utils.translation import gettext_lazy as _
+
 from company_profile_exploration.models.work_plan import AppWorkPlan, Brief, ContractRecommendation, Coordinate, Equipment, LkpPhase, LogisticsAdministration, Other, Phase, SamplePreparation, StaffInformation, SubsurfaceExplorationActivitie, SurfaceExplorationActivitie, TargetCommodity, TechnicalRecommendation, Todo
 from workflow.admin_utils import create_main_form
 
@@ -24,6 +26,14 @@ class LogMixin:
         formset.save_m2m()
 
 class AppWorkPlanMixin:
+    @admin.display(description=_('from_dt'))
+    def from_dt(self, obj):
+        return f'{obj.from_dt}'
+
+    @admin.display(description=_('to_dt'))
+    def to_dt(self, obj):
+        return f'{obj.to_dt}'
+
     def get_queryset(self, request):
         qs = super().get_queryset(request)
 
@@ -46,8 +56,9 @@ work_plan_main_class = {
     'mixins': [],
     # 'static_inlines': [],
     'kwargs': {
-        # 'list_display': ('year', 'month','source_state','state'),
-        # 'list_filter': ('year', 'month','source_state','state'),
+        'list_display': ('company', 'currency','state','from_dt','to_dt'),
+        'list_filter': ('state',),
+        'search_fields': ('company__name_ar','company__name_en',),
         'exclude': ('state',),
         'save_as_continue': False,
     },

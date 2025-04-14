@@ -85,6 +85,7 @@ class ApplicationMasterDetailCreateView(LoginRequiredMixin,UserPermissionMixin,V
                 "formset":inlineformset_factory(*d['args'], **d['kwargs']),
             })
             
+        self.form_class.request = request
         self.form_class.user = request.user
         self.success_url = reverse_lazy(self.menu_name)    
         self.extra_context = {
@@ -165,6 +166,7 @@ class ApplicationMasterDetailUpdateView(LoginRequiredMixin,UserPermissionMixin,S
                 "formset":inlineformset_factory(*d['args'], **d['kwargs']),
             })
             
+        self.form_class.request = request
         self.form_class.user = request.user
         self.success_url = reverse_lazy(self.menu_name)    
         self.extra_context = {
@@ -268,8 +270,10 @@ class ApplicationReadonlyView(LoginRequiredMixin,UserPermissionMixin,SingleObjec
                 "title":d['title'],
                 "formset":inlineformset_factory(*d['args'], **d['kwargs']),
             })
-            
-        # self.form_class.user = request.user
+
+        self.form_class.request = request            
+        self.form_class.user = request.user
+
         self.success_url = reverse_lazy(self.menu_name)    
         self.extra_context = {
                             "menu_name":self.menu_name,
@@ -312,7 +316,8 @@ class ApplicationDeleteMasterDetailView(LoginRequiredMixin,UserPermissionMixin,S
                 "title":d['title'],
                 "formset":inlineformset_factory(*d['args'], **d['kwargs']),
             })
-            
+
+        self.form_class.request = request
         self.form_class.user = request.user
         self.success_url = reverse_lazy(self.menu_name)    
         self.extra_context = {
