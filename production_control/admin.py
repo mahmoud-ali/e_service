@@ -453,7 +453,7 @@ admin.site.register(GoldProductionUser, GoldProductionUserAdmin)
 class GoldProductionStateUserAdmin(admin.ModelAdmin):
     model = GoldProductionStateUser
     form = GoldProductionStateUserForm
-    list_display = ["company_type","name"]
+    list_display = ["company_type","name","states"]
     list_filter = ["company_type","state"]
     
     def save_model(self, request, obj, form, change):
@@ -466,6 +466,10 @@ class GoldProductionStateUserAdmin(admin.ModelAdmin):
         except:
             pass
 
+    @admin.display(description=_('states'))
+    def states(self, obj):
+        return "، ".join(obj.state.values_list('name',flat=True))
+        
 @admin.register(GoldProductionSectorUser)
 class GoldProductionSectorUserAdmin(admin.ModelAdmin):
     model = GoldProductionSectorUser
