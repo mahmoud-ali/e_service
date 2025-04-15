@@ -7,7 +7,7 @@ from company_profile.models import TblCompany
 
 from django.conf import settings
 
-from production_control.models import LkpMoragib
+from production_control.models import GoldProductionForm, GoldShippingForm, LkpMoragib
 from django.contrib.auth import get_user_model
 
 admin_user = get_user_model().objects.get(id=1)
@@ -58,6 +58,23 @@ from production_control import admin
 def create_groups():
     create_master_details_groups('production_control','goldproductionform',admin.production_main_class,admin.production_inline_classes)
     create_master_details_groups('production_control','goldshippingform',admin.move_main_class,admin.move_inline_classes)
+
+def update_one_license_company():
+    qs = GoldProductionForm.objects.exclude(license__isnull=False)
+    for obj in qs:
+        license = obj.company.tblcompanyproductionlicense_set.first()
+        if license:
+            print("*",obj.company.tblcompanyproductionlicense_set.first())
+            obj.license = obj.company.tblcompanyproductionlicense_set.first()
+            obj.save()
+
+    qs = GoldShippingForm.objects.exclude(license__isnull=False)
+    for obj in qs:
+        license = obj.company.tblcompanyproductionlicense_set.first()
+        if license:
+            print("*",obj.company.tblcompanyproductionlicense_set.first())
+            obj.license = obj.company.tblcompanyproductionlicense_set.first()
+            obj.save()
 
 if __name__ == '__main__':
     create_groups()
