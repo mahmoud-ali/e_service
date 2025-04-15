@@ -41,7 +41,7 @@ class CheckCordinatesView(LoginRequiredMixin,View):
             points = []
             for form in formset:
                 x,y = (form.cleaned_data['x'],form.cleaned_data['y'])
-                points.append(Point(float(x), float(y),srid=32636))
+                points.append(Point(float(x), float(y))) #,srid=32636
 
             points.append(points[0])
 
