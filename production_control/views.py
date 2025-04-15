@@ -18,16 +18,43 @@ class UserPermissionMixin(UserPassesTestMixin):
     user_groups = []
 
     def test_func(self):
+        id = int(self.request.GET['id'])
+        qs = self.model.objects.filter(pk=id)
+        
+        if not qs:
+            return False
+            
         if self.request.user.is_superuser:
-            return True
+            return qs.exists()
+
+        if self.request.user.groups.filter(name__in=("production_control_sector_mgr",)).exists():
+            try:
+                company_type = self.request.user.gold_production_sector_user.company_type
+                sector = self.request.user.gold_production_sector_user.sector
+                return qs.filter(
+                    company__company_type__in= [company_type],
+                    license__state__sector=sector
+                ).exists()
+            except Exception as e:
+                print(e)
+
+        if self.request.user.groups.filter(name__in=("production_control_state_mgr",)).exists():
+            try:
+                company_type = self.request.user.gold_production_state_user.company_type
+                states = self.request.user.gold_production_state_user.state.values_list('id',flat=True)
+
+                return qs.filter(
+                    company__company_type__in= [company_type],
+                    license__state__in=states
+                ).exists()
+            except Exception as e:
+                print(e)
         
         try:
-            company_lst = self.request.user.moragib_list.moragib_distribution.goldproductionuserdetail_set.filter(master__state=STATE_CONFIRMED).values_list('company',flat=True)
-            return True
-            # authority = self.request.user.state_representative.authority
-            # return (authority==TblStateRepresentative.AUTHORITY_SMRC)
-        except:
-            pass
+            license_lst = self.request.user.moragib_list.moragib_distribution.goldproductionuserdetail_set.filter(master__state=STATE_CONFIRMED).values_list('license',flat=True)
+            return qs.filter(license__id__in=license_lst).exists()
+        except Exception as e:
+            print(e)
 
         return False
     
@@ -43,10 +70,11 @@ class CertificateTemplate(LoginRequiredMixin,UserPermissionMixin,TemplateView):
 
 class ProductionCert(CertificateTemplate):
     template_name = 'production_control/production_form.html'
+    model = GoldProductionForm
 
     def get(self,*args,**kwargs):
         id = int(self.request.GET['id'])
-        obj = get_object_or_404(GoldProductionForm,pk=id)
+        obj = get_object_or_404(self.model,pk=id)
         license = {"state":"","locality":""}
         if obj.license:
             license = obj.license
@@ -63,10 +91,11 @@ class ProductionCert(CertificateTemplate):
 
 class ShippingCert(CertificateTemplate):
     template_name = 'production_control/shipping_form.html'
+    model = GoldShippingForm
 
     def get(self,*args,**kwargs):
         id = int(self.request.GET['id'])
-        obj = get_object_or_404(GoldShippingForm,pk=id)
+        obj = get_object_or_404(self.model,pk=id)
         license = {"state":"","locality":""}
         if obj.license:
             license = obj.license
