@@ -10,10 +10,10 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RemoveField(
-            model_name='smallmining',
-            name='id',
-        ),
+        # migrations.RemoveField(
+        #     model_name='smallmining',
+        #     name='id',
+        # ),
         migrations.AlterField(
             model_name='smallmining',
             name='objectid',
