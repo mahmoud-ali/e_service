@@ -54,7 +54,7 @@ class LogMixin:
 
         if request.user.groups.filter(name__in=("production_control_state_mgr",)).exists():
             try:
-                company_type = request.user.gold_production_sector_user.company_type
+                company_type = request.user.gold_production_state_user.company_type
                 states = request.user.gold_production_state_user.state
                 return qs.filter(
                     company__company_type__in= [company_type],
