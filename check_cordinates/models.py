@@ -1,7 +1,7 @@
 from django.contrib.gis.db import models
 
 class SmallMining(models.Model):
-    OBJECTID = models.IntegerField(primary_key=True,serialize=True)
+    OBJECTID = models.IntegerField(null=True,blank=True)
     license_nu = models.CharField(max_length=254,null=True)
     company_name = models.CharField(max_length=100,null=True)
     state = models.CharField(max_length=50,blank=True,null=True)
