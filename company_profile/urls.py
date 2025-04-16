@@ -9,7 +9,7 @@ from company_profile.views.pa_request import AppRequestListView, AppRequestReado
 from .views import CompanySummaryView,SetLanguageView, HomePageView, \
                    AppForignerMovementListView,AppForignerMovementCreateView,AppForignerMovementReadonlyView, \
                    AppBorrowMaterialListView,AppBorrowMaterialCreateView,AppBorrowMaterialReadonlyView, \
-                   LkpLocalitySelectView,AppWorkPlanListView,AppWorkPlanCreateView,AppWorkPlanReadonlyView, \
+                   LkpLocalitySelectView,AppWorkPlanCreateView,AppWorkPlanReadonlyView, \
                    AppTechnicalFinancialReportListView, AppTechnicalFinancialReportCreateView, AppTechnicalFinancialReportReadonlyView, \
                    AppChangeCompanyNameListView, AppChangeCompanyNameCreateView, AppChangeCompanyNameReadonlyView, \
                    AppExplorationTimeListView, AppExplorationTimeCreateView, AppExplorationTimeReadonlyView, \
@@ -42,7 +42,7 @@ from .views import CompanySummaryView,SetLanguageView, HomePageView, \
                    AppHSEAccidentReportListView,AppHSEAccidentReportCreateView,AppHSEAccidentReportReadonlyView, \
                    AppHSEPerformanceReportListView,AppHSEPerformanceReportCreateView,AppHSEPerformanceReportReadonlyView, \
                    AppWhomConcernListView,AppWhomConcernCreateView,AppWhomConcernReadonlyView, \
-                   AppGoldProductionListView,AppGoldProductionCreateView,AppGoldProductionReadonlyView, TblCompanyProductionLicenseSelectView
+                   AppGoldProductionListView,AppGoldProductionCreateView,AppGoldProductionReadonlyView, TblCompanyProductionLicenseSelectView, dispatcher_for_work_plan_list
 
 app_name = "profile"
 urlpatterns = [                                                        
@@ -63,8 +63,8 @@ urlpatterns = [
     path('app_borrow_materials/<int:pk>/show/', AppBorrowMaterialReadonlyView.as_view(), name='app_borrow_show'),    
     path('app_borrow_materials/add/', AppBorrowMaterialCreateView.as_view(), name='app_borrow_add'),
 
-    path('app_work_plan/', AppWorkPlanListView.as_view(), name='app_work_plan_list'),
-    path('app_work_plan/<int:type>/', AppWorkPlanListView.as_view(), name='app_work_plan_list'),
+    path('app_work_plan/', dispatcher_for_work_plan_list, name='app_work_plan_list'),
+    path('app_work_plan/<int:type>/', dispatcher_for_work_plan_list, name='app_work_plan_list'),
     path('app_work_plan/<int:pk>/show/', AppWorkPlanReadonlyView.as_view(), name='app_work_plan_show'),    
     path('app_work_plan/add/', AppWorkPlanCreateView.as_view(), name='app_work_plan_add'),
 

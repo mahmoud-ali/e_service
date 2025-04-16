@@ -21,7 +21,7 @@ from django_tables2.paginators import LazyPaginator
 
 from company_profile.utils import get_app_metrics
 
-from ..models import LkpState,LkpLocality,TblCompanyProduction,AppForignerMovement,AppBorrowMaterial,AppBorrowMaterialDetail, TblCompanyProductionLicense
+from ..models import LkpState,LkpLocality, TblCompany,TblCompanyProduction,AppForignerMovement,AppBorrowMaterial,AppBorrowMaterialDetail, TblCompanyProductionLicense
 from ..forms import LanguageForm,AppForignerMovementForm,AppBorrowMaterialForm
 
 from ..workflow import STATE_CHOICES,SUBMITTED,ACCEPTED,APPROVED,REJECTED,send_transition_email,get_sumitted_responsible
@@ -29,7 +29,8 @@ from ..tables import AppForignerMovementTable,AppBorrowMaterialTable
 
 from .application import ApplicationListView, ApplicationCreateView, ApplicationReadonlyView, \
                          ApplicationMasterDetailCreateView, ApplicationMasterDetailReadonlyView, TranslationMixin
-from .work_plan import AppWorkPlanListView,AppWorkPlanCreateView,AppWorkPlanReadonlyView
+from .work_plan import AppWorkPlanListView as AppWorkPlanListViewV1,AppWorkPlanCreateView,AppWorkPlanReadonlyView
+from company_profile_exploration.views.workplan import AppWorkPlanListView as AppWorkPlanListViewV2
 from .technical_financial_report import AppTechnicalFinancialReportListView, AppTechnicalFinancialReportCreateView, AppTechnicalFinancialReportReadonlyView
 from .change_company_name import AppChangeCompanyNameListView, AppChangeCompanyNameCreateView, AppChangeCompanyNameReadonlyView
 from .exploration_time import AppExplorationTimeListView, AppExplorationTimeCreateView, AppExplorationTimeReadonlyView
@@ -315,3 +316,10 @@ class AppBorrowMaterialReadonlyView(ApplicationMasterDetailReadonlyView):
         query = super().get_queryset()        
         return query.filter(company=self.request.user.pro_company.company)
 
+
+def dispatcher_for_work_plan_list(request, *args, **kwargs):
+    company = request.user.pro_company.company
+    if company.company_type == TblCompany.COMPANY_TYPE_EMTIAZ:
+        return AppWorkPlanListViewV1.as_view()(request, *args, **kwargs)
+    else:
+        return AppWorkPlanListViewV2.as_view()(request, *args, **kwargs)
