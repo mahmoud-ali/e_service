@@ -320,6 +320,7 @@ class AppBorrowMaterialReadonlyView(ApplicationMasterDetailReadonlyView):
 def dispatcher_for_work_plan_list(request, *args, **kwargs):
     company = request.user.pro_company.company
     if company.company_type == TblCompany.COMPANY_TYPE_EMTIAZ:
-        return AppWorkPlanListViewV1.as_view()(request, *args, **kwargs)
-    else:
         return AppWorkPlanListViewV2.as_view()(request, *args, **kwargs)
+    else:
+        return AppWorkPlanListViewV1.as_view()(request, *args, **kwargs)
+    
