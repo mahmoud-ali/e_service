@@ -30,7 +30,7 @@ class OsmanState(models.Model):
     areakm2z35 = models.FloatField(null=True,blank=True)
     shape_leng = models.FloatField(null=True,blank=True)
     shape_area = models.FloatField(null=True,blank=True)
-    geom = models.PolygonField(srid=4326)
+    POLYGON = models.PolygonField(srid=4326)
 
     def __str__(self):
         return f'{self.name_arb} ({self.scode})'
