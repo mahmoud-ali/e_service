@@ -57,7 +57,7 @@ def run_osman(verbose=True):
         'areakm2z35': 'AreaKm2Z35',
         'shape_leng': 'SHAPE_Leng',
         'shape_area': 'SHAPE_Area',
-        'geom': 'POLYGON',
+        'shape': 'POLYGON',
     }
 
     OsmanState.objects.all().delete()
