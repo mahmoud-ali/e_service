@@ -68,7 +68,7 @@ class LogMixin:
             license_lst = request.user.moragib_list.moragib_distribution.goldproductionuserdetail_set.filter(master__state=STATE_CONFIRMED).values_list('license',flat=True)
             return qs.filter(license__id__in=license_lst)
         except Exception as e:
-            print(e)
+            print(request.user,e)
 
         return qs.none() #super().get_queryset(request)
     
