@@ -16,7 +16,7 @@ company_none = TblCompanyProduction.objects.none()
 company_all_qs = TblCompanyProduction.objects.all()
 
 license_none = TblCompanyProductionLicense.objects.none()
-license_all_qs = TblCompanyProductionLicense.objects.all()
+license_all_qs = TblCompanyProductionLicense.objects.exclude(license_type=TblCompanyProductionLicense.LICENSE_TYPE_ROKH9A)
 
 alloy_none = GoldProductionFormAlloy.objects.none()
 alloy_all_qs = GoldProductionFormAlloy.objects.all()
