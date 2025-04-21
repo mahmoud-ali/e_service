@@ -98,7 +98,7 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
         (
             _("others"),
             {
-                'fields': [("jihat_alaisdar","wijhat_altarhil",),("muharir_alaistimara","almushtari_name")]
+                'fields': [("jihat_alaisdar","wijhat_altarhil",),("muharir_alaistimara","almushtari_name"),("attachement_file",)]
             },
         ),
     ]
