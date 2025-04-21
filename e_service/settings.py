@@ -111,6 +111,7 @@ INSTALLED_APPS = [
     'hse_traditional',
     'traditional_app',
     'company_profile_exploration',
+    'hse_companies',
 
     # Debug
     'debug_toolbar',
