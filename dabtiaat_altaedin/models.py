@@ -29,14 +29,14 @@ class LoggingModel(models.Model):
 
 class TblStateRepresentative2(models.Model):
     AUTHORITY_SMRC = 2
-    # AUTHORITY_2MN_2LM3ADIN = 3
+    AUTHORITY_APPROVED = 3
     # AUTHORITY_SHORTAT_2LM3ADIN = 4
     # AUTHORITY_2LESTIKHBARAT_2L3ASKRIA = 5
     # AUTHORITY_SMRC_NAFIZA = 6
 
     AUTHORITY_CHOICES = {
         AUTHORITY_SMRC: _('authority_smrc'),
-        # AUTHORITY_2MN_2LM3ADIN: _('authority_2mn_2lm3adin'),
+        # AUTHORITY_APPROVED: _('authority_approved'),
         # AUTHORITY_SHORTAT_2LM3ADIN: _('authority_shortat_2lm3adin'),
         # AUTHORITY_2LESTIKHBARAT_2L3ASKRIA: _('authority_2lestikhbarat_2l3askria'),
         # AUTHORITY_SMRC_NAFIZA: _('authority_smrc_nafiza'),
@@ -62,7 +62,7 @@ class AppDabtiaat(LoggingModel):
 
     STATE_DRAFT = 1
     STATE_SMRC = 2
-    # STATE_2MN_2LM3ADIN = 3
+    STATE_APPROVED = 3
     # STATE_SHORTAT_2LM3ADIN = 4
     # STATE_2LESTIKHBARAT_2L3ASKRIA = 5
     # STATE_SSMO = 6
@@ -72,7 +72,7 @@ class AppDabtiaat(LoggingModel):
     STATE_CHOICES = {
         STATE_DRAFT: _('state_draft'),
         STATE_SMRC: _('state_smrc'),
-        # STATE_2MN_2LM3ADIN: _('state_2mn_2lm3adin'),
+        STATE_APPROVED: _('state_approved'),
         # STATE_SHORTAT_2LM3ADIN: _('state_shortat_2lm3adin'),
         # STATE_2LESTIKHBARAT_2L3ASKRIA: _('state_2lestikhbarat_2l3askria'),
         # STATE_SSMO: _('state_ssmo'),

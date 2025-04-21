@@ -15,18 +15,22 @@ from dabtiaat_altaedin.models import AppDabtiaat, RevenueSettlement, SettlementT
 class LogAdminMixin:
     def get_queryset(self, request):
         qs = super().get_queryset(request)
-        qs = qs.prefetch_related('source_state')
 
-        if request.user.is_superuser or request.user.groups.filter(name__in=["dabtiaat_altaedin_manager"]).exists():
+        if request.user.is_superuser:
             return qs
 
         try:
-            state_representative = request.user.state_representative2
-            qs = qs.filter(source_state=state_representative.state)
-        except:
-            qs = qs.none()
+            if request.user.groups.filter(name='dabtiaat_altaedin_manager').count() > 0:
+                qs = qs.filter(state__in=(AppDabtiaat.STATE_SMRC,AppDabtiaat.STATE_APPROVED))
 
-        return qs
+            elif request.user.groups.filter(name='dabtiaat_altaedin_state').count() > 0:
+                qs = qs.filter(state=AppDabtiaat.STATE_DRAFT)
+                
+            return qs
+        except Exception as e:
+            print(e)
+
+        return qs.none()
 
     def save_model(self, request, obj, form, change):
         try:
@@ -42,32 +46,40 @@ class LogAdminMixin:
             pass
 
     def has_add_permission(self, request):
+        # print(request.user.groups)
+
         try:
-            if request.user.state_representative2.authority==TblStateRepresentative2.AUTHORITY_SMRC:
-                return super().has_add_permission(request)
-        except:
-            pass
+            if request.user.groups.filter(name='dabtiaat_altaedin_state').count() > 0:
+                return True
+                
+        except Exception as e:
+            print(e)
         
         return False
 
     def has_change_permission(self, request, obj=None):
         try:
-            if request.user.state_representative2.authority==TblStateRepresentative2.AUTHORITY_SMRC:
-                if not obj or obj.state==1:
-                    return super().has_change_permission(request,obj)
-        except:
-            pass
-        
+            # if request.user.groups.filter(name='dabtiaat_altaedin_manager').count() > 0:
+            #     if obj and obj.state==AppDabtiaat.STATE_SMRC:
+            #         return True
+
+            if request.user.groups.filter(name='dabtiaat_altaedin_state').count() > 0:
+                if obj and obj.state==AppDabtiaat.STATE_DRAFT:
+                    return True
+                
+        except Exception as e:
+            print(e)
+
         return False
 
     def has_delete_permission(self, request, obj=None):
         try:
-            if request.user.state_representative2.authority==TblStateRepresentative2.AUTHORITY_SMRC:
-                if not obj or obj.state==1:
-                    return super().has_delete_permission(request,obj)
-        except:
-            pass
-     
+            if request.user.groups.filter(name='dabtiaat_altaedin_state').count() > 0:
+                return True
+                
+        except Exception as e:
+            print(e)
+        
         return False
 
     # def save_model(self, request, obj, form, change):
@@ -250,23 +262,37 @@ class RelatedOnlyFieldListFilterNotEmpty(admin.RelatedOnlyFieldListFilter):
 class AppDabtiaatAdmin(LogAdminMixin,admin.ModelAdmin):
     model = AppDabtiaat
     exclude = ["created_at","created_by","updated_at","updated_by","state","source_state"]
-    list_display = ["date","gold_weight_in_gram","gold_price","koli_amount","state","source_state","al3wayid_aljalila_amount","alhafiz_amount","alniyaba_amount","smrc_amount","state_amount","police_amount","amn_amount","riasat_alquat_aldaabita_amount","alquat_aldaabita_amount"]        
+    list_display = ["date","created_by_name","updated_by_name","gold_weight_in_gram","gold_price","koli_amount","state","source_state","al3wayid_aljalila_amount","alhafiz_amount","alniyaba_amount","smrc_amount","state_amount","police_amount","amn_amount","riasat_alquat_aldaabita_amount","alquat_aldaabita_amount"]        
     list_filter = [("date",DateFieldListFilterWithLast30days),("state",ChoicesFieldListFilterNotEmpty),("source_state",RelatedOnlyFieldListFilterNotEmpty)]
-    actions = ['confirm_app','return_to_draft','export_as_csv']
+    actions = ['approve_app','confirm_app','return_to_draft','export_as_csv']
 
     extra = 1    
     formfield_overrides = {
         models.FloatField: {"widget": TextInput},
     }    
 
+    def get_actions(self, request):
+        actions = super().get_actions(request)
+
+        if request.user.groups.filter(name='dabtiaat_altaedin_manager').count() > 0:
+            if "confirm_app" in actions:
+                del actions['confirm_app']
+
+        elif request.user.groups.filter(name='dabtiaat_altaedin_state').count() > 0:
+            if "approve_app" in actions:
+                del actions['approve_app']
+                del actions['return_to_draft']
+
+        return actions
+
     @admin.action(description=_('Confirm application'))
     def confirm_app(self, request, queryset):
         try:
-            authority = request.user.state_representative.authority
             change_flag = False
             for obj in queryset:
-                if (obj.state+1)==authority:
-                    obj.state = authority
+                if obj.state==AppDabtiaat.STATE_DRAFT:
+                    obj.state = AppDabtiaat.STATE_SMRC
+                    obj.updated_by = request.user
                     obj.save()
                     self.log_change(request,obj,_('state_smrc'))
                     change_flag = True
@@ -276,20 +302,29 @@ class AppDabtiaatAdmin(LogAdminMixin,admin.ModelAdmin):
         except:
             pass
 
-    # @admin.action(description=_('state_canceled'))
-    # def cancel_app(self, request, queryset):
-    #     for obj in queryset:
-    #         if obj.state >= AppDabtiaat.STATE_SMRC and obj.state < AppDabtiaat.STATE_SSMO:
-    #             obj.state = AppDabtiaat.STATE_CANCELED
-    #             obj.save()
-    #             self.log_change(request,obj,_('state_canceled'))
-    #             self.message_user(request,_('application changed successfully!'))
+    @admin.action(description=_('Approve application'))
+    def approve_app(self, request, queryset):
+        try:
+            change_flag = False
+            for obj in queryset:
+                if obj.state==AppDabtiaat.STATE_SMRC:
+                    obj.state = AppDabtiaat.STATE_APPROVED
+                    obj.updated_by = request.user
+                    obj.save()
+                    self.log_change(request,obj,_('state_approved'))
+                    change_flag = True
+
+            if change_flag:
+                self.message_user(request,_('application confirmed successfully!'))
+        except:
+            pass
 
     @admin.action(description=_('return_to_draft'))
     def return_to_draft(self, request, queryset):
         for obj in queryset:
             if obj.state == AppDabtiaat.STATE_SMRC:
                 obj.state = AppDabtiaat.STATE_DRAFT
+                obj.updated_by = request.user
                 obj.save()
                 self.log_change(request,obj,_('return_to_draft'))
                 self.message_user(request,_('application changed successfully!'))
@@ -322,6 +357,20 @@ class AppDabtiaatAdmin(LogAdminMixin,admin.ModelAdmin):
 
         return response
 
+    @admin.display(description=_('المنشئ'))
+    def created_by_name(self, obj):
+        try:
+            return f'{obj.created_by.state_representative2.name}'
+        except:
+            return ''
+
+    @admin.display(description=_('اخر تحديث'))
+    def updated_by_name(self, obj):
+        try:
+            return f'{obj.updated_by.state_representative2.name}'
+        except:
+            return ''
+    
     @admin.display(description=_('koli_amount'))
     def koli_amount(self, obj):
         return f'{round(obj.koli_amount):,}'
