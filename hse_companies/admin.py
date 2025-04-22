@@ -827,12 +827,17 @@ admin.site.register(report_model_admin.model,report_model_admin)
 
 
 ##############Corrective actions######################
-corrective_main_mixins = [LogMixin]
+class AppHSECorrectiveActionMixin:
+    @admin.display(description=_('الإجراء التصحيحي'))
+    def corrective_action_summary(self, obj):
+        return obj.corrective_action[:50]
+
+corrective_main_mixins = [AppHSECorrectiveActionMixin,LogMixin]
 corrective_main_class = {
     'model': AppHSECorrectiveAction,
     'mixins': [],
     'kwargs': {
-        'list_display': ( "report__company","from_dt","to_dt"),
+        'list_display': ( "report__company","from_dt","to_dt","corrective_action_summary","state"),
         'list_filter': ("from_dt","to_dt",'state'),
         'fields': ("report", "corrective_action", "from_dt","to_dt",),
         'save_as_continue': False,

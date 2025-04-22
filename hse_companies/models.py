@@ -766,8 +766,12 @@ class AppHSECorrectiveAction(models.Model):
 
         states = []
 
-        if 'hse_cmpny_department_mngr' in user_groups:
+        if 'hse_cmpny_state_mngr' in user_groups:
             if self.state == self.STATE_STATE_MNGR_SUBMIT:
+                states.append((self.STATE_STATE_MNGR_CONFIRM, self.STATE_CHOICES[self.STATE_STATE_MNGR_CONFIRM]))
+
+        if 'hse_cmpny_department_mngr' in user_groups:
+            if self.state == self.STATE_STATE_MNGR_CONFIRM:
                 states.append((self.STATE_DEPARTMENT_MNGR_CONFIRM, self.STATE_CHOICES[self.STATE_DEPARTMENT_MNGR_CONFIRM]))
 
         if 'hse_cmpny_gm' in user_groups:
