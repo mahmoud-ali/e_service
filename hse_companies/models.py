@@ -32,8 +32,8 @@ class AppHSEPerformanceReport(LoggingModel):
 
     STATE_CHOICES = {
         STATE_SUBMITTED: _("draft"),
-        STATE_AUDITOR_APPROVAL: _("مؤكد من المشرف"),
-        STATE_STATE_MNGR_APPROVAL:_("معتمد من مشرف الولاية"),
+        STATE_AUDITOR_APPROVAL: _("تأكيد المشرف"),
+        STATE_STATE_MNGR_APPROVAL:_("إعتماد مشرف الولاية"),
     }
    
     company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"),related_name="hse_performance_report")    
@@ -82,6 +82,11 @@ class AppHSEPerformanceReport(LoggingModel):
             if self.state == self.STATE_AUDITOR_APPROVAL:
                 # states.append((self.STATE_SUBMITTED, self.STATE_CHOICES[self.STATE_SUBMITTED]))
                 states.append((self.STATE_STATE_MNGR_APPROVAL, self.STATE_CHOICES[self.STATE_STATE_MNGR_APPROVAL]))
+
+        if 'hse_cmpny_gm' in user_groups:
+            if self.state == self.STATE_STATE_MNGR_APPROVAL:
+                # states.append((self.STATE_SUBMITTED, self.STATE_CHOICES[self.STATE_SUBMITTED]))
+                states.append((self.STATE_SUBMITTED, self.STATE_CHOICES[self.STATE_SUBMITTED]))
 
         return states
 
@@ -718,16 +723,18 @@ class AppHSEPerformanceReportAuditorComment(models.Model):
 
 class AppHSECorrectiveAction(models.Model):
     STATE_STATE_MNGR_SUBMIT = 1
-    STATE_DEPARTMENT_MNGR_CONFIRM = 2
-    STATE_GM_APPROVE = 3
+    STATE_STATE_MNGR_CONFIRM = 2
+    STATE_DEPARTMENT_MNGR_CONFIRM = 3
+    STATE_GM_APPROVE = 4
 
     STATE_CHOICES = {
         STATE_STATE_MNGR_SUBMIT: _("تحرير مشرف الولاية"),
+        STATE_STATE_MNGR_CONFIRM: _("تأكيد مشرف الولاية"),
         STATE_DEPARTMENT_MNGR_CONFIRM: _("تأكيد مدير الإدارة المختصة "),
         STATE_GM_APPROVE:_("إعتماد مدير الإدارة العامة"),
     }
 
-    report = models.ForeignKey(AppHSEPerformanceReport, on_delete=models.PROTECT,null=True,blank=True)    
+    report = models.ForeignKey(AppHSEPerformanceReport, on_delete=models.PROTECT,null=True,blank=True,verbose_name=_("Application: HSE Performance Report"))    
     corrective_action = models.CharField(_("الإجراء التصحيحي"))
     from_dt = models.DateField(_("من"))
     to_dt = models.DateField(_("إلى"))
@@ -738,7 +745,7 @@ class AppHSECorrectiveAction(models.Model):
         verbose_name_plural = _("الإجراءات التصحيحية")
     def __str__(self):
         try:
-            return _("HSE Corrective Action") +" ("+str(self.report.company)+")"
+            return _("إجراء تصحيحي") +" ("+str(self.report.company)+")"
         except:
             return ''
         
@@ -747,8 +754,8 @@ class AppHSECorrectiveAction(models.Model):
     
     class Meta:
         ordering = ["-id"]
-        verbose_name = _("Application: HSE Corrective Action")
-        verbose_name_plural = _("Application: HSE Corrective Actions")
+        verbose_name = _("الإجراء التصحيحي HSE Corrective Action")
+        verbose_name_plural = _("الإجراءات التصحيحية HSE Corrective Actions")
 
     def get_next_states(self, user):
         """
@@ -790,3 +797,11 @@ class AppHSECorrectiveAction(models.Model):
             raise Exception(f"User {user.username} cannot transition to state {state} from state {self.state}")
 
         return self
+
+from django.db.models.signals import post_save, pre_save
+from django.dispatch import receiver
+
+@receiver(pre_save, sender=AppHSEPerformanceReport)
+def update_corrective_action_status(sender, instance, **kwargs):
+    if instance.state and instance.state == AppHSEPerformanceReport.STATE_STATE_MNGR_APPROVAL:
+        instance.apphsecorrectiveaction_set.update(state=AppHSECorrectiveAction.STATE_STATE_MNGR_CONFIRM)
