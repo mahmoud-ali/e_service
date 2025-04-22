@@ -223,13 +223,13 @@ class GoldShippingMixin:
             if inline.model ==GoldShippingFormAlloy:
                 formset.form = GoldShippingFormAlloyForm
                 if obj:
-                    formset.form.master_id = obj.id
+                    # formset.form.master_id = obj.id
                     formset.form.license_ids = [obj.license.id]
-                else:
-                    try:
-                        formset.form.license_ids = request.user.moragib_list.moragib_distribution.goldproductionuserdetail_set.filter(master__state=GoldShippingForm.STATE_CONFIRMED1).values_list('license')
-                    except Exception as e:
-                        formset.form.license_ids = []
+                # else:
+                #     try:
+                #         formset.form.license_ids = request.user.moragib_list.moragib_distribution.goldproductionuserdetail_set.filter(master__state=GoldShippingForm.STATE_CONFIRMED1).values_list('license')
+                #     except Exception as e:
+                #         formset.form.license_ids = []
 
             yield formset,inline
 

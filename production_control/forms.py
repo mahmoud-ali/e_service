@@ -142,8 +142,8 @@ class GoldShippingFormAlloyForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
 
         self.fields["alloy_serial_no"].queryset = alloy_all_qs.filter(master__license__id__in=self.license_ids,alloy_shipped=False)
-        if self.master_id:
-            self.fields["alloy_serial_no"].queryset |= alloy_all_qs.filter(id__in=GoldShippingFormAlloy.objects.filter(master=self.master_id).values_list('alloy_serial_no'))
+        # if self.master_id:
+        #     self.fields["alloy_serial_no"].queryset |= alloy_all_qs.filter(id__in=GoldShippingFormAlloy.objects.filter(master=self.master_id).values_list('alloy_serial_no'))
 
         self.fields["alloy_serial_no"].disabled = False
     class Meta:
