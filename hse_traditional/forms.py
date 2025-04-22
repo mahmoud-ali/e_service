@@ -41,4 +41,4 @@ class HseTraditionalCorrectiveActionForm(forms.ModelForm):
 
     class Meta:
         model = HseTraditionalCorrectiveAction
-        fields = ["source_accident","source_near_miss","corrective_action"] 
+        fields = ["source_accident","source_near_miss","corrective_action","where"] 
