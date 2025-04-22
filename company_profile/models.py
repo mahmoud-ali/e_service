@@ -386,7 +386,7 @@ class AppTechnicalFinancialReport(WorkflowModel):
     report_from = models.DateField(_("report_from"), help_text="Ex: 2025-01-31")
     report_to = models.DateField(_("report_to"))
     report_type = models.CharField(_("report_type"),max_length=15, choices=REPORT_TYPE_CHOICES)
-    report_comments = models.TextField(_("report_comments"),max_length=256)
+    report_comments = models.TextField(_("Covering letter"),max_length=256) #report_comments
 
     report_file = models.FileField(_("report_file"),upload_to=company_applications_path)
     other_attachments_file = models.FileField(_("other_attachments_file"),upload_to=company_applications_path)
