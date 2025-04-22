@@ -336,7 +336,7 @@ class GoldShippingFormAlloy(models.Model):
                 raise ValidationError(
                     {"alloy_serial_no":_("alloy should belong to same company!")}
                 )
-        except self.RelatedObjectDoesNotExist:
+        except GoldShippingFormAlloy.RelatedObjectDoesNotExist:
             raise ValidationError(
                     {"alloy_serial_no":_("هذا الحقل مطلوب!")}
                 )
