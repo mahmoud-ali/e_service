@@ -467,7 +467,7 @@ class HseTraditionalCorrectiveAction(LoggingModel):
     source_accident = models.ForeignKey(HseTraditionalAccident, on_delete=models.PROTECT, null=True, blank=True, related_name="corrective_actions", verbose_name=_("source_accident"))
     source_near_miss = models.ForeignKey(HseTraditionalNearMiss, on_delete=models.PROTECT, null=True, blank=True, related_name="corrective_actions", verbose_name=_("source_near_miss"))
     # what = models.TextField(_("what"))
-    # where = models.TextField(_("where"))
+    where = models.TextField(_("where"))
     corrective_action = models.TextField(_("corrective_action"))
 
     class Meta:
