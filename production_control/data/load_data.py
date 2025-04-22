@@ -76,5 +76,13 @@ def update_one_license_company():
             obj.license = obj.company.tblcompanyproductionlicense_set.first()
             obj.save()
 
+    # qs = GoldShippingForm.objects.all()
+    # for obj in qs:
+    #     company = obj.license.company
+    #     if company and obj.company != company:
+    #         print("*",company)
+    #         obj.company = company
+    #         obj.save()
+
 if __name__ == '__main__':
     create_groups()
