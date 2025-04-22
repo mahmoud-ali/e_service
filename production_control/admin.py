@@ -165,6 +165,7 @@ production_inline_classes = {
         'kwargs': {
             'extra': 0,
             'min_num': 1,
+            'exclude': ['alloy_shipped'],
         },
         'groups': {
             'production_control_auditor':{

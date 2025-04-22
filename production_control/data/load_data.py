@@ -84,5 +84,17 @@ def update_one_license_company():
     #         obj.company = company
     #         obj.save()
 
+    # qs = GoldProductionForm.objects.all()
+    # for obj in qs: 
+    #     obj.goldproductionformalloy_set.update(alloy_shipped=False)
+
+    # qs = GoldShippingForm.objects.all()
+    # for obj in qs:
+    #     if obj.state == GoldShippingForm.STATE_CONFIRMED1:
+    #         for x in obj.goldshippingformalloy_set.all():
+    #             x.alloy_serial_no.alloy_shipped = True
+    #             x.alloy_serial_no.save()
+
+
 if __name__ == '__main__':
     create_groups()

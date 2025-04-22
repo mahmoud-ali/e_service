@@ -260,7 +260,7 @@ class GoldShippingForm(WorkFlowModel):
         return round(total,2)
     
     def alloy_shipped(self):
-        if self.state == STATE_CONFIRMED:
+        if self.state == self.STATE_CONFIRMED1:
             for obj in self.goldshippingformalloy_set.all():
                 obj.alloy_serial_no.alloy_shipped = True
                 obj.alloy_serial_no.save()
