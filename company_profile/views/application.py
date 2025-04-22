@@ -16,6 +16,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django_tables2 import SingleTableView
 from django_tables2.paginators import LazyPaginator
 
+from hse_companies.models import AppHSEPerformanceReport
+
 from ..workflow import STATE_CHOICES,SUBMITTED,ACCEPTED,APPROVED,REJECTED,send_transition_email,get_sumitted_responsible
 
 class TranslationMixin:
@@ -55,6 +57,35 @@ class ApplicationListView(LoginRequiredMixin,TranslationMixin,SingleTableView):
             query_filter = [APPROVED]
         elif self.extra_context["type"] == 3:
             query_filter = [REJECTED]
+                
+        query = super().get_queryset()
+        return query.filter(state__in=query_filter).prefetch_related(*self.table_class.relation_fields)
+
+class ApplicationHSEListView(LoginRequiredMixin,TranslationMixin,SingleTableView):
+    model = None
+    table_class = None
+    title = None
+    menu_name = ""
+    context_object_name = "apps"    
+    template_name = "company_profile/application_list.html"     
+    paginator_class = LazyPaginator
+    
+    def dispatch(self, *args, **kwargs):         
+        self.extra_context = {
+                            "type":kwargs.get("type",1),
+                            "menu_name":self.menu_name,
+                            "title":self.title,
+         }
+        return super().dispatch(*args, **kwargs)       
+        
+    def get_queryset(self):
+        query_filter = []
+        if self.extra_context["type"] == 1:
+            query_filter = [AppHSEPerformanceReport.STATE_SUBMITTED,AppHSEPerformanceReport.STATE_AUDITOR_APPROVAL,]
+        elif self.extra_context["type"] == 2:
+            query_filter = [AppHSEPerformanceReport.STATE_STATE_MNGR_APPROVAL]
+        elif self.extra_context["type"] == 3:
+            query_filter = [999] #not exists
                 
         query = super().get_queryset()
         return query.filter(state__in=query_filter).prefetch_related(*self.table_class.relation_fields)

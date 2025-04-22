@@ -15,13 +15,15 @@ from django.contrib.sites.models import Site
 
 from company_profile.utils import queryset_to_markdown
 
-from ..models import AppHSEPerformanceReport, AppHSEPerformanceReportActivities, AppHSEPerformanceReportBillsOfQuantities, AppHSEPerformanceReportCadastralOperations, AppHSEPerformanceReportCadastralOperationsTwo, AppHSEPerformanceReportCatering, AppHSEPerformanceReportChemicalUsed, AppHSEPerformanceReportCyanideCNStorageSpecification, AppHSEPerformanceReportCyanideTable, AppHSEPerformanceReportDiseasesForWorkers, AppHSEPerformanceReportExplosivesUsed, AppHSEPerformanceReportExplosivesUsedSpecification, AppHSEPerformanceReportFireFighting, AppHSEPerformanceReportManPower, AppHSEPerformanceReportOilUsed, AppHSEPerformanceReportOtherChemicalUsed, AppHSEPerformanceReportProactiveIndicators, AppHSEPerformanceReportStatisticalData, AppHSEPerformanceReportTherapeuticUnit, AppHSEPerformanceReportWasteDisposal, AppHSEPerformanceReportWaterUsed, AppHSEPerformanceReportWorkEnvironment, TblCompany
+from hse_companies.models import AppHSEPerformanceReport, AppHSEPerformanceReportActivities, AppHSEPerformanceReportBillsOfQuantities, AppHSEPerformanceReportCadastralOperations, AppHSEPerformanceReportCadastralOperationsTwo, AppHSEPerformanceReportCatering, AppHSEPerformanceReportChemicalUsed, AppHSEPerformanceReportCyanideCNStorageSpecification, AppHSEPerformanceReportCyanideTable, AppHSEPerformanceReportDiseasesForWorkers, AppHSEPerformanceReportExplosivesUsed, AppHSEPerformanceReportExplosivesUsedSpecification, AppHSEPerformanceReportFireFighting, AppHSEPerformanceReportManPower, AppHSEPerformanceReportOilUsed, AppHSEPerformanceReportOtherChemicalUsed, AppHSEPerformanceReportProactiveIndicators, AppHSEPerformanceReportStatisticalData, AppHSEPerformanceReportTherapeuticUnit, AppHSEPerformanceReportWasteDisposal, AppHSEPerformanceReportWaterUsed, AppHSEPerformanceReportWorkEnvironment
+from company_profile.models import TblCompany
+
 from ..forms import AppHSEPerformanceReportForm
 
 from ..workflow import STATE_CHOICES,SUBMITTED,ACCEPTED,APPROVED,REJECTED,send_transition_email,get_sumitted_responsible
 from ..tables import AppHSEPerformanceReportTable
 
-from .application import ApplicationListView
+from .application import ApplicationHSEListView, ApplicationListView
 
 model_details_lst = (
     AppHSEPerformanceReportManPower,
@@ -51,7 +53,7 @@ explosive = (
 )    
 
 
-class AppHSEPerformanceReportListView(ApplicationListView):
+class AppHSEPerformanceReportListView(ApplicationHSEListView):
     model = AppHSEPerformanceReport
     table_class = AppHSEPerformanceReportTable
     menu_name = "profile:app_hse_performance_list"
@@ -62,7 +64,7 @@ class AppHSEPerformanceReportListView(ApplicationListView):
             return HttpResponseRedirect(reverse_lazy("profile:home"))    
             
         return super().dispatch(*args, **kwargs)        
-            
+
     def get_queryset(self):
 
         query = super().get_queryset()        
@@ -130,7 +132,7 @@ class AppHSEPerformanceReportCreateView(LoginRequiredMixin,View):
             info = (self.object._meta.app_label, self.object._meta.model_name)
             resp_user = get_sumitted_responsible('pro_company',self.object.company.company_type)
             url = 'https://'+Site.objects.get_current().domain+reverse_lazy('admin:%s_%s_change' % info, args=(self.object.id,))
-            send_transition_email(self.object.state,resp_user.email,url,resp_user.lang.lower())
+            send_transition_email(SUBMITTED,resp_user.email,url,resp_user.lang.lower())
                 
             return HttpResponseRedirect(self.success_url)            
         
