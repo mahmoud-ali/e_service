@@ -246,7 +246,7 @@ class HseTraditionalAccident(LoggingModel):
         return f"{self.ACCIDENT_TYPE_CHOICES[self.type]}/{self.what}"
 
     def send_notifications(self):
-        subject = f"{self.ACCIDENT_TYPE_CHOICES[self.type]}/{self.what}"
+        subject = 'تقرير حادث' #f"{self.ACCIDENT_TYPE_CHOICES[self.type]}/{self.what}"
         message = f"""
             الإدارة العامة للبيئة والسلامة / إدارة التعدين التقليدي
             الولاية: {self.source_state}

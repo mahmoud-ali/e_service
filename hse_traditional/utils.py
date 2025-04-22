@@ -1,5 +1,7 @@
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import Group
+from django.contrib.auth import get_user_model
 
+User = get_user_model()
 def get_user_emails_by_groups(group_names):
     """
     Retrieves email addresses of users belonging to specific groups.
