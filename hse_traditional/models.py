@@ -322,6 +322,14 @@ class ImmediateAction(models.Model):
         verbose_name = _("Immediate Action")
         verbose_name_plural = _("Immediate Actions")
 
+class HseTraditionalAccidentManagerComment(models.Model):
+    accident = models.ForeignKey(HseTraditionalAccident, on_delete=models.PROTECT, related_name="manager_comments")    
+    comment = models.TextField(_("comment"))
+
+    class Meta:
+        verbose_name = _("ملاحظات مدير الإدارة")
+        verbose_name_plural = _("ملاحظات مدير الإدارة")
+
 class HseTraditionalNearMiss(LoggingModel):
     ACCIDENT_TYPE_SAFTY = 'safty'
     ACCIDENT_TYPE_ENVIRONMENTAL = 'enviromental'
