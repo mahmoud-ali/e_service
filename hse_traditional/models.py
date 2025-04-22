@@ -257,7 +257,7 @@ class HseTraditionalAccident(LoggingModel):
             رابط التفاصيل: https://mineralsgate.com/app/managers/hse_traditional/hsetraditionalaccident/{self.id}/change/
 
         """
-        emails = get_user_emails_by_groups(['hse_tra_manager','hse_tra_gm']) + ['omer.awad@smrc.sd',]
+        emails = get_user_emails_by_groups(['hse_tra_manager','hse_tra_gm']) + ['mohammed.653@smrc.sd','osman.suliman@smrc.sd','omer.awad@smrc.sd',]
         try:
             send_mail(
                 subject,
