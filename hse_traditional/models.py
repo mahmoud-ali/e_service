@@ -1,9 +1,13 @@
+import sys
 from django.db import models
 from django.conf import settings
 from django.forms import ValidationError
 from django.utils.translation import gettext_lazy as _
+from django.core.mail import send_mail
+from django.utils.html import strip_tags
 
 from company_profile.models import LkpState
+from hse_traditional.utils import get_user_emails_by_groups
 
 MONTH_JAN = 1
 MONTH_FEB = 2
@@ -240,6 +244,31 @@ class HseTraditionalAccident(LoggingModel):
 
     def __str__(self):
         return f"{self.ACCIDENT_TYPE_CHOICES[self.type]}/{self.what}"
+
+    def send_notifications(self):
+        subject = f"{self.ACCIDENT_TYPE_CHOICES[self.type]}/{self.what}"
+        message = f"""
+            الإدارة العامة للبيئة والسلامة / إدارة التعدين التقليدي
+            الولاية: {self.source_state}
+            ماذا حدث: {self.what}
+            متى حدث: {self.when}
+            اين حدث: {self.where}
+
+            رابط التفاصيل: https://mineralsgate.com/app/managers/hse_traditional/hsetraditionalaccident/{self.id}/change/
+
+        """
+        emails = get_user_emails_by_groups(['hse_tra_manager','hse_tra_gm']) + ['omer.awad@smrc.sd',]
+        try:
+            send_mail(
+                subject,
+                strip_tags(message),
+                None,
+                emails,
+                html_message=message,
+                fail_silently=False,
+            )        
+        except:
+            print("Error sending email",sys.stderr)
 
     def get_next_states(self, user):
         """
@@ -513,3 +542,14 @@ class HseTraditionalCorrectiveActionFinalDecision(models.Model):
     class Meta:
         verbose_name = _("Hse Traditional Corrective Action Final Decision")
         verbose_name_plural = _("Hse Traditional Corrective Action Final Decisions")
+
+from django.db.models.signals import post_save, pre_save
+from django.dispatch import receiver
+
+@receiver(pre_save, sender=HseTraditionalAccident)
+def send_notifications(sender, instance, **kwargs):
+    if instance.state:
+        obj = HseTraditionalAccident.objects.get(pk=instance.pk)
+
+        if obj.state != instance.state and instance.state == HseTraditionalAccident.STATE_CONFIRMED:
+            instance.send_notifications()
