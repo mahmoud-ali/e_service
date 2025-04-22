@@ -38,7 +38,7 @@ class HseTraditionalCorrectiveActionForm(forms.ModelForm):
 
     class Meta:
         model = HseTraditionalCorrectiveAction
-
-    class Meta:
-        model = HseTraditionalCorrectiveAction
-        fields = ["source_accident","source_near_miss","corrective_action","where"] 
+        fields = ["source_accident","source_near_miss","when","corrective_action",] 
+        widgets = {
+            'when': forms.DateInput(attrs={'type': 'date'}),
+        }
