@@ -53,6 +53,9 @@ class AppHSEPerformanceReport(LoggingModel):
         ordering = ["-id"]
         verbose_name = _("Application: HSE Performance Report")
         verbose_name_plural = _("Application: HSE Performance Report")
+        constraints = [
+            models.UniqueConstraint(fields=['year', 'month','company'], name='unique_report_per_month')
+        ]
 
     def get_next_states(self, user):
         """
