@@ -548,7 +548,7 @@ from django.dispatch import receiver
 
 @receiver(pre_save, sender=HseTraditionalAccident)
 def send_notifications(sender, instance, **kwargs):
-    if instance.state:
+    if instance.pk:
         obj = HseTraditionalAccident.objects.get(pk=instance.pk)
 
         if obj.state != instance.state and instance.state == HseTraditionalAccident.STATE_CONFIRMED:
