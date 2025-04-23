@@ -65,31 +65,14 @@ class AppHSEPerformanceReport(LoggingModel):
         user_groups = list(user.groups.values_list('name', flat=True))
 
         states = []
-        # if 'hse_tra_state_employee' in user_groups:
-        #     if self.state == self.STATE_DRAFT:
-        #         states.append((self.STATE_CONFIRMED, self.STATE_CHOICES[self.STATE_CONFIRMED]))
-
-        # if 'hse_tra_manager' in user_groups:
-        #     if self.state == self.STATE_CONFIRMED:
-        #         states.append((self.STATE_APPROVED, self.STATE_CHOICES[self.STATE_APPROVED]))
-        #         states.append((self.STATE_DRAFT, self.STATE_CHOICES[self.STATE_DRAFT]))
 
         if 'hse_cmpny_auditor' in user_groups:
             if self.state == self.STATE_SUBMITTED:
                 states.append((self.STATE_AUDITOR_APPROVAL, self.STATE_CHOICES[self.STATE_AUDITOR_APPROVAL]))
-            # if self.state == self.STATE_AUDITOR_APPROVAL:
-            #     states.append((self.STATE_SUBMITTED, self.STATE_CHOICES[self.STATE_SUBMITTED]))
-                # states.append((self.STATE_STATE_MNGR_APPROVAL, self.STATE_CHOICES[self.STATE_STATE_MNGR_APPROVAL]))
 
         if 'hse_cmpny_state_mngr' in user_groups:
             if self.state == self.STATE_AUDITOR_APPROVAL:
-                # states.append((self.STATE_SUBMITTED, self.STATE_CHOICES[self.STATE_SUBMITTED]))
                 states.append((self.STATE_STATE_MNGR_APPROVAL, self.STATE_CHOICES[self.STATE_STATE_MNGR_APPROVAL]))
-
-        if 'hse_cmpny_gm' in user_groups:
-            if self.state == self.STATE_STATE_MNGR_APPROVAL:
-                # states.append((self.STATE_SUBMITTED, self.STATE_CHOICES[self.STATE_SUBMITTED]))
-                states.append((self.STATE_SUBMITTED, self.STATE_CHOICES[self.STATE_SUBMITTED]))
 
         return states
 
@@ -724,6 +707,107 @@ class AppHSEPerformanceReportAuditorComment(models.Model):
         verbose_name = _("ملاحظات المراقب")
         verbose_name_plural = _("ملاحظات المراقب")
 
+
+# class HseTraditionalAccident(LoggingModel):
+#     ACCIDENT_TYPE_SAFTY = 'safty'
+#     ACCIDENT_TYPE_ENVIRONMENTAL = 'enviromental'
+
+#     ACCIDENT_TYPE_CHOICES = {
+#         ACCIDENT_TYPE_SAFTY: _("Safty - سلامة"),
+#         ACCIDENT_TYPE_ENVIRONMENTAL: _("Environmental - بيئي"),
+#     }
+
+#     STATE_DRAFT = 1
+#     STATE_CONFIRMED = 2
+#     STATE_APPROVED = 3
+
+#     STATE_CHOICES = {
+#         STATE_DRAFT: _("draft"),
+#         STATE_CONFIRMED: _("confirmed"),
+#         STATE_APPROVED: _("approved"),
+#     }
+
+#     type = models.CharField(_("accident_type"), max_length=20, choices=ACCIDENT_TYPE_CHOICES.items())
+#     source_state = models.ForeignKey(LkpState, on_delete=models.PROTECT, verbose_name=_("source_state"))
+#     state = models.IntegerField(_("record_state"), choices=STATE_CHOICES.items(), default=STATE_DRAFT)
+#     what = models.TextField(_("what - ماذا"))
+#     when = models.DateTimeField(_("when - متى"))
+#     where = models.TextField(_("where - اين"))
+
+#     class Meta:
+#         verbose_name = _("Hse Traditional Accident")
+#         verbose_name_plural = _("Hse Traditional Accidents")
+
+#     def __str__(self):
+#         return f"{self.ACCIDENT_TYPE_CHOICES[self.type]}/{self.what}"
+
+#     def send_notifications(self):
+#         subject = 'تقرير حادث' #f"{self.ACCIDENT_TYPE_CHOICES[self.type]}/{self.what}"
+#         message = f"""
+#             الإدارة العامة للبيئة والسلامة / إدارة التعدين التقليدي
+#             الولاية: {self.source_state}
+#             ماذا حدث: {self.what}
+#             متى حدث: {self.when}
+#             اين حدث: {self.where}
+
+#             رابط التفاصيل: https://mineralsgate.com/app/managers/hse_traditional/hsetraditionalaccident/{self.id}/change/
+
+#         """
+#         emails = get_user_emails_by_groups(['hse_tra_manager','hse_tra_gm']) + ['mohammed.653@smrc.sd','osman.suliman@smrc.sd','omer.awad@smrc.sd',]
+#         try:
+#             send_mail(
+#                 subject,
+#                 strip_tags(message),
+#                 None,
+#                 emails,
+#                 html_message=message,
+#                 fail_silently=False,
+#             )        
+#         except:
+#             print("Error sending email",sys.stderr)
+
+#     def get_next_states(self, user):
+#         """
+#         Determine the next possible states based on the current state and user's role.
+#         """
+#         # user = self.updated_by
+#         user_groups = list(user.groups.values_list('name', flat=True))
+
+#         states = []
+#         if 'hse_tra_state_employee' in user_groups:
+#             if self.state == self.STATE_DRAFT:
+#                 states.append((self.STATE_CONFIRMED, self.STATE_CHOICES[self.STATE_CONFIRMED]))
+
+#         if 'hse_tra_manager' in user_groups:
+#             if self.state == self.STATE_CONFIRMED:
+#                 states.append((self.STATE_APPROVED, self.STATE_CHOICES[self.STATE_APPROVED]))
+#                 states.append((self.STATE_DRAFT, self.STATE_CHOICES[self.STATE_DRAFT]))
+
+#         return states
+
+#     def can_transition_to_next_state(self, user, state):
+#         """
+#         Check if the given user can transition to the specified state.
+#         """
+#         if state[0] in map(lambda x: x[0], self.get_next_states(user)):
+#             return True
+
+#         return False
+
+#     def transition_to_next_state(self, user, state):
+#         """
+#         Transitions the workflow to the given state, after checking user permissions.
+#         """
+#         if self.can_transition_to_next_state(user, state):
+#             self.state = state[0]
+#             self.updated_by = user
+#             self.save()
+#         else:
+#             raise Exception(f"User {user.username} cannot transition to state {state} from state {self.state}")
+
+#         return self
+    
+
 class AppHSECorrectiveAction(models.Model):
     STATE_STATE_MNGR_SUBMIT = 1
     STATE_STATE_MNGR_CONFIRM = 2
@@ -743,9 +827,6 @@ class AppHSECorrectiveAction(models.Model):
     to_dt = models.DateField(_("إلى"))
     state = models.IntegerField(_("record_state"), choices=STATE_CHOICES.items(), default=STATE_STATE_MNGR_SUBMIT)
 
-    class Meta:
-        verbose_name = _("الإجراء التصحيحي")
-        verbose_name_plural = _("الإجراءات التصحيحية")
     def __str__(self):
         try:
             return _("إجراء تصحيحي") +" ("+str(self.report.company)+")"
@@ -780,6 +861,7 @@ class AppHSECorrectiveAction(models.Model):
         if 'hse_cmpny_gm' in user_groups:
             if self.state == self.STATE_DEPARTMENT_MNGR_CONFIRM:
                 states.append((self.STATE_GM_APPROVE, self.STATE_CHOICES[self.STATE_GM_APPROVE]))
+                states.append((self.STATE_STATE_MNGR_CONFIRM, 'إرجاع إلى مدير الإدارة المختصة '))
 
         return states
 
@@ -804,6 +886,74 @@ class AppHSECorrectiveAction(models.Model):
             raise Exception(f"User {user.username} cannot transition to state {state} from state {self.state}")
 
         return self
+
+class AppHSECorrectiveActionFeedback(models.Model):
+    STATE_SUBMITTED = 1
+    STATE_AUDITOR_APPROVAL = 2
+    STATE_STATE_MNGR_APPROVAL = 3
+
+    STATE_CHOICES = {
+        STATE_SUBMITTED: _("draft"),
+        STATE_AUDITOR_APPROVAL: _("تأكيد المشرف"),
+        STATE_STATE_MNGR_APPROVAL:_("إعتماد مشرف الولاية"),
+    }
+
+    corrective_action = models.ForeignKey(AppHSECorrectiveAction, on_delete=models.PROTECT,null=True,blank=True,verbose_name=_("الإجراء التصحيحي"))    
+    percentage = models.IntegerField(_("نسبة التنفيذ"),validators=[MinValueValidator(0), MaxValueValidator(100)])
+    company_comment = models.TextField(_("تعليق الشركة"))
+    auditor_comment = models.TextField(_("تعليق المشرف الميداني"))
+    state = models.IntegerField(_("record_state"), choices=STATE_CHOICES.items(), default=STATE_SUBMITTED)
+
+    class Meta:
+        verbose_name = _("إفادة عن اجراء تصحيحي")
+        verbose_name_plural = _("إفادة عن إجراءات تصحيحية")
+    def __str__(self):
+        try:
+            return _("إفادة عن اجراء تصحيحي") +" ("+str(self.corrective_action)+")"
+        except:
+            return ''
+        
+    def get_next_states(self, user):
+        """
+        Determine the next possible states based on the current state and user's role.
+        """
+        # user = self.updated_by
+        user_groups = list(user.groups.values_list('name', flat=True))
+
+        states = []
+
+        if 'hse_cmpny_auditor' in user_groups:
+            if self.state == self.STATE_SUBMITTED:
+                states.append((self.STATE_AUDITOR_APPROVAL, self.STATE_CHOICES[self.STATE_AUDITOR_APPROVAL]))
+
+        if 'hse_cmpny_state_mngr' in user_groups:
+            if self.state == self.STATE_AUDITOR_APPROVAL:
+                states.append((self.STATE_STATE_MNGR_APPROVAL, self.STATE_CHOICES[self.STATE_STATE_MNGR_APPROVAL]))
+
+        return states
+
+    def can_transition_to_next_state(self, user, state):
+        """
+        Check if the given user can transition to the specified state.
+        """
+        if state[0] in map(lambda x: x[0], self.get_next_states(user)):
+            return True
+
+        return False
+
+    def transition_to_next_state(self, user, state):
+        """
+        Transitions the workflow to the given state, after checking user permissions.
+        """
+        if self.can_transition_to_next_state(user, state):
+            self.state = state[0]
+            self.updated_by = user
+            self.save()
+        else:
+            raise Exception(f"User {user.username} cannot transition to state {state} from state {self.state}")
+
+        return self
+
 
 from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver

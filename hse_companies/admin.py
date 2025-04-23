@@ -5,7 +5,7 @@ from django.utils.translation import gettext_lazy as _
 
 from workflow.admin_utils import create_main_form
 
-from hse_companies.models import AppHSECorrectiveAction, AppHSEPerformanceReport, AppHSEPerformanceReportActivities, AppHSEPerformanceReportAuditorComment, AppHSEPerformanceReportBillsOfQuantities, AppHSEPerformanceReportCadastralOperations, AppHSEPerformanceReportCadastralOperationsTwo, AppHSEPerformanceReportCatering, AppHSEPerformanceReportChemicalUsed, AppHSEPerformanceReportCyanideCNStorageSpecification, AppHSEPerformanceReportCyanideTable, AppHSEPerformanceReportDiseasesForWorkers, AppHSEPerformanceReportExplosivesUsed, AppHSEPerformanceReportExplosivesUsedSpecification, AppHSEPerformanceReportFireFighting, AppHSEPerformanceReportManPower, AppHSEPerformanceReportOilUsed, AppHSEPerformanceReportOtherChemicalUsed, AppHSEPerformanceReportProactiveIndicators, AppHSEPerformanceReportStatisticalData, AppHSEPerformanceReportTherapeuticUnit, AppHSEPerformanceReportWasteDisposal, AppHSEPerformanceReportWaterUsed, AppHSEPerformanceReportWorkEnvironment
+from hse_companies.models import AppHSECorrectiveAction, AppHSECorrectiveActionFeedback, AppHSEPerformanceReport, AppHSEPerformanceReportActivities, AppHSEPerformanceReportAuditorComment, AppHSEPerformanceReportBillsOfQuantities, AppHSEPerformanceReportCadastralOperations, AppHSEPerformanceReportCadastralOperationsTwo, AppHSEPerformanceReportCatering, AppHSEPerformanceReportChemicalUsed, AppHSEPerformanceReportCyanideCNStorageSpecification, AppHSEPerformanceReportCyanideTable, AppHSEPerformanceReportDiseasesForWorkers, AppHSEPerformanceReportExplosivesUsed, AppHSEPerformanceReportExplosivesUsedSpecification, AppHSEPerformanceReportFireFighting, AppHSEPerformanceReportManPower, AppHSEPerformanceReportOilUsed, AppHSEPerformanceReportOtherChemicalUsed, AppHSEPerformanceReportProactiveIndicators, AppHSEPerformanceReportStatisticalData, AppHSEPerformanceReportTherapeuticUnit, AppHSEPerformanceReportWasteDisposal, AppHSEPerformanceReportWaterUsed, AppHSEPerformanceReportWorkEnvironment
 
 class LogMixin:
     def save_model(self, request, obj, form, change):
@@ -799,6 +799,7 @@ report_inline_classes = {
             'extra': 1,
             # 'min_num': 1,
             'view_on_site': False,
+            'exclude': ('state',),
         },
         'groups': {
             'hse_cmpny_state_mngr':{
@@ -840,10 +841,16 @@ corrective_main_class = {
         'list_display': ( "report__company","from_dt","to_dt","corrective_action_summary","state"),
         'list_filter': ("from_dt","to_dt",'state'),
         'fields': ("report", "corrective_action", "from_dt","to_dt",),
+        'readonly_fields':('report',),
         'save_as_continue': False,
         'view_on_site': False,
     },
     'groups': {
+        'hse_cmpny_auditor':{
+            'permissions': {
+                AppHSECorrectiveAction.STATE_GM_APPROVE: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+            },
+        },
         'hse_cmpny_state_mngr':{
             'permissions': {
                 AppHSECorrectiveAction.STATE_STATE_MNGR_SUBMIT: {'add': 1, 'change': 1, 'delete': 0, 'view': 1},
@@ -854,16 +861,16 @@ corrective_main_class = {
         },
         'hse_cmpny_department_mngr':{
             'permissions': {
-                AppHSECorrectiveAction.STATE_STATE_MNGR_SUBMIT: {'add': 0, 'change': 1, 'delete': 0, 'view': 1},
-                AppHSECorrectiveAction.STATE_STATE_MNGR_CONFIRM: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                # AppHSECorrectiveAction.STATE_STATE_MNGR_SUBMIT: {'add': 0, 'change': 1, 'delete': 0, 'view': 1},
+                AppHSECorrectiveAction.STATE_STATE_MNGR_CONFIRM: {'add': 0, 'change': 1, 'delete': 0, 'view': 1},
                 AppHSECorrectiveAction.STATE_DEPARTMENT_MNGR_CONFIRM: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 AppHSECorrectiveAction.STATE_GM_APPROVE: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
             },
         },
         'hse_cmpny_gm':{
             'permissions': {
-                AppHSECorrectiveAction.STATE_STATE_MNGR_SUBMIT: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                AppHSECorrectiveAction.STATE_STATE_MNGR_CONFIRM: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                # AppHSECorrectiveAction.STATE_STATE_MNGR_SUBMIT: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                # AppHSECorrectiveAction.STATE_STATE_MNGR_CONFIRM: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 AppHSECorrectiveAction.STATE_DEPARTMENT_MNGR_CONFIRM: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 AppHSECorrectiveAction.STATE_GM_APPROVE: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
             },
@@ -876,3 +883,53 @@ corrective_inline_classes = {}
 corrective_model_admin, corrective_inlines = create_main_form(corrective_main_class,corrective_inline_classes,corrective_main_mixins)
 
 admin.site.register(corrective_model_admin.model,corrective_model_admin)
+
+##########################Corrective actions feedback############
+class AppHSECorrectiveActionFeedbackMixin:
+    pass
+
+corrective_action_feedback_main_mixins = [LogMixin]
+corrective_action_feedback_main_class = {
+    'model': AppHSECorrectiveActionFeedback,
+    'mixins': [],
+    'kwargs': {
+        'list_display': ("corrective_action", "percentage", "company_comment","auditor_comment",),
+        'list_filter': ('percentage', 'company_comment','state'),
+        # 'readonly_fields':('corrective_action',),
+        'fields': ("corrective_action", "percentage", "company_comment","auditor_comment",),
+        'save_as_continue': False,
+        'view_on_site': False,
+    },
+    'groups': {
+        'hse_cmpny_auditor':{
+            'permissions': {
+                AppHSECorrectiveActionFeedback.STATE_SUBMITTED: {'add': 1, 'change': 1, 'delete': 0, 'view': 1},
+                AppHSECorrectiveActionFeedback.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                AppHSECorrectiveActionFeedback.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+            },
+        },
+        'hse_cmpny_state_mngr':{
+            'permissions': {
+                AppHSECorrectiveActionFeedback.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                AppHSECorrectiveActionFeedback.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+            },
+        },
+        # 'hse_cmpny_department_mngr':{
+        #     'permissions': {
+        #         AppHSECorrectiveActionFeedback.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+        #     },
+        # },
+        # 'hse_cmpny_gm':{
+        #     'permissions': {
+        #         AppHSECorrectiveActionFeedback.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+        #     },
+        # },
+    },
+}
+
+corrective_action_feedback_inline_classes = {
+}
+
+corrective_action_feedback_model_admin, corrective_action_feedback_inlines = create_main_form(corrective_action_feedback_main_class,corrective_action_feedback_inline_classes,corrective_action_feedback_main_mixins)
+
+admin.site.register(corrective_action_feedback_model_admin.model,corrective_action_feedback_model_admin)
