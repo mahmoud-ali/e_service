@@ -1,0 +1,18 @@
+{% load admin_list %}
+{% load i18n %}
+{% load humanize %}
+
+{% load alloy_list %}
+
+<p class="paginator">
+{% if pagination_required %}
+{% for i in page_range %}
+    {% paginator_number cl i %}
+{% endfor %}
+{% endif %}
+<b>{{cl.paginator.object_list|total_alloy_weight|intcomma}}</b> {% translate 'gold_weight_in_gram' %}، 
+<b>{{cl.paginator.object_list|total_alloy_count|intcomma}}</b> {% translate 'gold_alloy_count' %}، 
+<b>{{ cl.result_count }}</b> {% if cl.result_count == 1 %}{{ cl.opts.verbose_name }}{% else %}{{ cl.opts.verbose_name_plural }}{% endif %}
+{% if show_all_url %}<a href="{{ show_all_url }}" class="showall">{% translate 'Show all' %}</a>{% endif %}
+{% if cl.formset and cl.result_count %}<input type="submit" name="_save" class="default" value="{% translate 'Save' %}">{% endif %}
+</p>
