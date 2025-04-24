@@ -248,13 +248,13 @@ class HseTraditionalAccident(LoggingModel):
     def send_notifications(self):
         subject = 'تقرير حادث' #f"{self.ACCIDENT_TYPE_CHOICES[self.type]}/{self.what}"
         message = f"""
-            الإدارة العامة للبيئة والسلامة / إدارة التعدين التقليدي
-            الولاية: {self.source_state}
-            ماذا حدث: {self.what}
-            متى حدث: {self.when}
-            اين حدث: {self.where}
+            <p>الإدارة العامة للبيئة والسلامة / إدارة التعدين التقليدي</p>
+            <p>الولاية: {self.source_state}</p>
+            <p>ماذا حدث: {self.what}</p>
+            <p>متى حدث: {self.when}</p>
+            <p>اين حدث: {self.where}</p>
 
-            رابط التفاصيل: https://mineralsgate.com/app/managers/hse_traditional/hsetraditionalaccident/{self.id}/change/
+            <p>رابط التفاصيل: https://mineralsgate.com/app/managers/hse_traditional/hsetraditionalaccident/{self.id}/change/</p>
 
         """
         emails = get_user_emails_by_groups(['hse_tra_manager','hse_tra_gm']) + ['mohammed.653@smrc.sd','osman.suliman@smrc.sd','omer.awad@smrc.sd',]
