@@ -10,9 +10,9 @@ from workflow.model_utils import LoggingModel
 class IncidentInfo(LoggingModel):
     # Incident Category choices
     CATEGORY_CHOICES = [
-        ('OCC_HEALTH', 'Occupational Health'),
-        ('SAFETY', 'Safety'),
-        ('ENVIRONMENT', 'Environment'),
+        (1, 'Occupational Health'),
+        (2, 'Safety'),
+        (3, 'Environment'),
     ]
     
     # Incident Type choices
@@ -53,6 +53,16 @@ class IncidentInfo(LoggingModel):
         (4, 'متعاقد Contractor'),
     ]
     
+    STATE_SUBMITTED = 1
+    STATE_AUDITOR_APPROVAL = 2
+    STATE_STATE_MNGR_APPROVAL = 3
+
+    STATE_CHOICES = {
+        STATE_SUBMITTED: _("draft"),
+        STATE_AUDITOR_APPROVAL: _("تأكيد المشرف"),
+        STATE_STATE_MNGR_APPROVAL:_("إعتماد مشرف الولاية"),
+    }
+
     company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"),related_name="hse_incidents_report")    
 
     # Category, Type, and Classification
@@ -121,6 +131,9 @@ class IncidentInfo(LoggingModel):
     site_closed_now = models.BooleanField(default=False, verbose_name=_("هل موقع العمل مغلق؟ Site closed now?"))
     site_closed_because_of_incident = models.BooleanField(default=False, verbose_name=_("تم الاغلاق نتيجة الحادث؟ Shutdown because of the incident?"))
     
+    #Incident state
+    state = models.IntegerField(_("record_state"), choices=STATE_CHOICES.items(), default=STATE_SUBMITTED)
+    
     def __str__(self):
         return f"Incident {self.company} - {self.get_incident_type_display()} - {self.date_time_occurred}"
     
@@ -128,6 +141,47 @@ class IncidentInfo(LoggingModel):
         ordering = ['-date_time_occurred']
         verbose_name = 'Incident'
         verbose_name_plural = 'Incidents'
+
+    def get_next_states(self, user):
+        """
+        Determine the next possible states based on the current state and user's role.
+        """
+        # user = self.updated_by
+        user_groups = list(user.groups.values_list('name', flat=True))
+
+        states = []
+
+        if 'hse_cmpny_auditor' in user_groups:
+            if self.state == self.STATE_SUBMITTED:
+                states.append((self.STATE_AUDITOR_APPROVAL, self.STATE_CHOICES[self.STATE_AUDITOR_APPROVAL]))
+
+        if 'hse_cmpny_state_mngr' in user_groups:
+            if self.state == self.STATE_AUDITOR_APPROVAL:
+                states.append((self.STATE_STATE_MNGR_APPROVAL, self.STATE_CHOICES[self.STATE_STATE_MNGR_APPROVAL]))
+
+        return states
+
+    def can_transition_to_next_state(self, user, state):
+        """
+        Check if the given user can transition to the specified state.
+        """
+        if state[0] in map(lambda x: x[0], self.get_next_states(user)):
+            return True
+
+        return False
+
+    def transition_to_next_state(self, user, state):
+        """
+        Transitions the workflow to the given state, after checking user permissions.
+        """
+        if self.can_transition_to_next_state(user, state):
+            self.state = state[0]
+            self.updated_by = user
+            self.save()
+        else:
+            raise Exception(f"User {user.username} cannot transition to state {state} from state {self.state}")
+
+        return self
 
 class IncidentWitness(models.Model):
     incident = models.ForeignKey(IncidentInfo, on_delete=models.CASCADE, related_name='incident_witnesses')
@@ -151,7 +205,7 @@ class IncidentPhoto(models.Model):
         verbose_name = 'Photo'
         verbose_name_plural = 'Photos'
 
-class IncidentAnalysis(LoggingModel):
+class IncidentAnalysis(models.Model):
     """Model for incident analysis and investigation"""
     incident = models.OneToOneField(IncidentInfo, on_delete=models.CASCADE, related_name='analysis')
     
@@ -190,13 +244,16 @@ class ContributingFactor(models.Model):
         (12, 'اخرى Other'),
     ]
     
-    incident_analysis = models.ForeignKey(IncidentAnalysis, on_delete=models.CASCADE, related_name='contributing_factors')
+    incident = models.ForeignKey(IncidentInfo, on_delete=models.CASCADE, related_name='contributing_factors')
     factor_type = models.SmallIntegerField(choices=FACTOR_CHOICES, verbose_name=_("الاسباب المساهمة في الحادث Contributing Causes"))
     description = models.TextField(help_text="Explain how this factor contributed to the incident", verbose_name=_("وصف الاسباب المساهمة في الحادث contributing factors description"))
     
     def __str__(self):
-        return f"{self.get_factor_type_display()} - {self.incident_analysis.incident.id}"
+        return f"{self.get_factor_type_display()} - {self.incident}"
 
+    class Meta:
+        verbose_name = 'الاسباب المساهمة في الحادث Contributing Causes'
+        verbose_name_plural = 'الاسباب المساهمة في الحادث Contributing Causes'
 
 class FactorsAssessment(models.Model):
     """Model for assessing various factors related to the incident"""
@@ -264,10 +321,18 @@ class FactorsAssessment(models.Model):
     def __str__(self): 
         return f"Factors Assessment for Incident {self.incident}"
     
+    class Meta:
+        verbose_name = 'تحليل اسباب وقوع الحادث Causes Analysis of the Incident'
+        verbose_name_plural = 'تحليل اسباب وقوع الحادث Causes Analysis of the Incident'
+
 class LeasonLearnt(models.Model):
     """Model for leason learnt related to the incident"""
-    incident = models.OneToOneField(IncidentInfo, on_delete=models.CASCADE, related_name='leasons_learnt')
+    incident = models.ForeignKey(IncidentInfo, on_delete=models.CASCADE, related_name='leasons_learnt')
     leason = models.TextField(verbose_name=_("الدروس المستفادة Lesson Learnt"))
 
     def __str__(self): 
         return f"Leason learnt for Incident {self.incident}"
+
+    class Meta:
+        verbose_name = 'الدروس المستفادة Lessons Learnt'
+        verbose_name_plural = 'الدروس المستفادة Lessons Learnt'
