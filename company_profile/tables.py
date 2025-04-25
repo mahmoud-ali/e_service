@@ -3,11 +3,13 @@ from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
 
 import django_tables2 as tables
-from .models import AppCyanideCertificate, AppExplosivePermission, AppForignerMovement,AppBorrowMaterial, AppFuelPermission, AppGoldProduction, AppHSEAccidentReport, AppHSEPerformanceReport, AppImportPermission, AppLocalPurchase, AppRenewalContract, AppRestartActivity, AppTemporaryExemption, AppWhomConcern,AppWorkPlan,AppTechnicalFinancialReport,AppChangeCompanyName, \
+from .models import AppCyanideCertificate, AppExplosivePermission, AppForignerMovement,AppBorrowMaterial, AppFuelPermission, AppGoldProduction, AppHSEAccidentReport, AppImportPermission, AppLocalPurchase, AppRenewalContract, AppRestartActivity, AppTemporaryExemption, AppWhomConcern,AppWorkPlan,AppTechnicalFinancialReport,AppChangeCompanyName, \
                     AppExplorationTime, AppAddArea,AppRemoveArea,AppTnazolShraka,AppTajeelTnazol,AppTajmeed,AppTakhali, \
                     AppTamdeed, AppTaaweed, AppMda,AppChangeWorkProcedure,AppExportGold,AppExportGoldRaw, \
                     AppSendSamplesForAnalysis,AppForeignerProcedure,AppAifaaJomrki,AppReexportEquipments,AppRequirementsList, \
                     AppVisibityStudy
+
+from hse_companies.models import AppHSEPerformanceReport
 
 class AppTable(tables.Table):
     menu_name = None
