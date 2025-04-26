@@ -10,7 +10,7 @@ from django.utils.html import format_html
 from django.db import models
 from django.forms.widgets import TextInput
 from dabtiaat_altaedin.forms import TblStateRepresentativeForm
-from dabtiaat_altaedin.models import AppDabtiaat, RevenueSettlement, SettlementType, TblStateRepresentative2
+from dabtiaat_altaedin.models import AppDabtiaat, AppDabtiaatDetails, RevenueSettlement, SettlementType, TblStateRepresentative2
 
 class LogAdminMixin:
     def get_queryset(self, request):
@@ -259,8 +259,12 @@ class RelatedOnlyFieldListFilterNotEmpty(admin.RelatedOnlyFieldListFilter):
                 "display": empty_title,
             }
 
+class AppDabtiaatDetailsInline(admin.TabularInline):
+    model = AppDabtiaatDetails
+
 class AppDabtiaatAdmin(LogAdminMixin,admin.ModelAdmin):
     model = AppDabtiaat
+    inlines = [AppDabtiaatDetailsInline]
     exclude = ["created_at","created_by","updated_at","updated_by","state","source_state"]
     list_display = ["date","created_by_name","updated_by_name","gold_weight_in_gram","gold_price","koli_amount","state","source_state","al3wayid_aljalila_amount","alhafiz_amount","alniyaba_amount","smrc_amount","state_amount","police_amount","amn_amount","riasat_alquat_aldaabita_amount","alquat_aldaabita_amount"]        
     list_filter = [("date",DateFieldListFilterWithLast30days),("state",ChoicesFieldListFilterNotEmpty),("source_state",RelatedOnlyFieldListFilterNotEmpty)]

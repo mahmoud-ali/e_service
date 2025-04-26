@@ -94,33 +94,33 @@ class AppDabtiaat(LoggingModel):
     source_state = models.ForeignKey(LkpState, on_delete=models.PROTECT,verbose_name=_("state"))
 
     @property
-    def koli_amount(self):
-        qty = self.gold_weight_in_gram
-        price = self.gold_price
+    def sum_of_weight_multiply_price(self):
+        qs = self.appdabtiaatdetails_set.all()
+        total = 0
+        for obj in qs:
+            total += obj.gold_weight_in_gram*obj.gold_price
+        return total
 
-        return qty*price*0.22
+    @property
+    def total_price(self):
+        return self.gold_weight_in_gram*self.gold_price
+
+    @property
+    def koli_amount(self):
+        return self.sum_of_weight_multiply_price*0.22
 
 
     @property
     def al3wayid_aljalila_amount(self):
-        qty = self.gold_weight_in_gram
-        price = self.gold_price
-
-        return qty*price*0.10
+        return self.sum_of_weight_multiply_price*0.10
 
     @property
     def alhafiz_amount(self):
-        qty = self.gold_weight_in_gram
-        price = self.gold_price
-
-        return qty*price*0.10
+        return self.sum_of_weight_multiply_price*0.10
 
     @property
     def alniyaba_amount(self):
-        qty = self.gold_weight_in_gram
-        price = self.gold_price
-
-        return qty*price*0.02
+        return self.sum_of_weight_multiply_price*0.02
 
     @property
     def smrc_amount(self):
@@ -153,6 +153,12 @@ class AppDabtiaat(LoggingModel):
         ordering = ["-date","-id"]
         verbose_name = _("dabtiaat app")
         verbose_name_plural = _("dabtiaat app")
+
+class AppDabtiaatDetails(models.Model):
+    app_dabtiaat = models.ForeignKey(AppDabtiaat, on_delete=models.PROTECT,verbose_name =_("app_dabtiaat"))
+    gold_weight_in_gram = models.FloatField(_("gold_weight_in_gram"))
+    gold_price = models.FloatField(_("gold_price"))
+    gold_caliber = models.FloatField(_("gold_caliber"))
 
 class SettlementType(models.Model):
     name = models.CharField(_("name"),max_length=100)
