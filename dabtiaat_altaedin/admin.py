@@ -261,6 +261,9 @@ class RelatedOnlyFieldListFilterNotEmpty(admin.RelatedOnlyFieldListFilter):
 
 class AppDabtiaatDetailsInline(admin.TabularInline):
     model = AppDabtiaatDetails
+    min_num = 1
+    extra = 0
+
 
 class AppDabtiaatAdmin(LogAdminMixin,admin.ModelAdmin):
     model = AppDabtiaat
@@ -340,7 +343,7 @@ class AppDabtiaatAdmin(LogAdminMixin,admin.ModelAdmin):
             headers={"Content-Disposition": f'attachment; filename="dabtiaat_form.csv"'},
         )
         header = [
-                    _("date"),_('gold_weight_in_gram'),_('gold_price'),_('koli_amount'),_("record_state"),_("source_state"),_( "al3wayid_aljalila_amount"),\
+                    _("date"),_('مجموع اوزان السبائك'),_('متوسط سعر الجرام'),_('koli_amount'),_("record_state"),_("source_state"),_( "al3wayid_aljalila_amount"),\
                     _("alhafiz_amount"),_("alniyaba_amount"),_("smrc_amount"),_("state_amount"),_("police_amount"),_("amn_amount"),_("riasat_alquat_aldaabita_amount"),_("alquat_aldaabita_amount")
         ]
 
@@ -353,7 +356,7 @@ class AppDabtiaatAdmin(LogAdminMixin,admin.ModelAdmin):
         for obj in queryset.order_by("source_state","-date"):
 
             row = [
-                    obj.date,obj.gold_weight_in_gram,obj.gold_price,obj.koli_amount,obj.get_state_display(),obj.source_state,\
+                    obj.date,obj.sum_of_weight_in_gram,obj.avg_of_price,obj.koli_amount,obj.get_state_display(),obj.source_state,\
                     obj.al3wayid_aljalila_amount,obj.alhafiz_amount,obj.alniyaba_amount,obj.smrc_amount,obj.state_amount,\
                     obj.police_amount,obj.amn_amount,obj.riasat_alquat_aldaabita_amount,obj.alquat_aldaabita_amount
             ]
@@ -379,13 +382,13 @@ class AppDabtiaatAdmin(LogAdminMixin,admin.ModelAdmin):
     def koli_amount(self, obj):
         return f'{round(obj.koli_amount):,}'
 
-    @admin.display(description=_('gold_price'))
+    @admin.display(description=_('متوسط سعر الجرام'))
     def gold_price(self, obj):
-        return f'{round(obj.gold_price):,}'
+        return f'{round(obj.avg_of_price):,}'
 
-    @admin.display(description=_('gold_weight_in_gram'))
+    @admin.display(description=_('مجموع اوزان السبائك'))
     def gold_weight_in_gram(self, obj):
-        return f'{round(obj.gold_weight_in_gram):,}'
+        return f'{round(obj.sum_of_weight_in_gram):,}'
 
     @admin.display(description=_('al3wayid_aljalila_amount'))
     def al3wayid_aljalila_amount(self, obj):

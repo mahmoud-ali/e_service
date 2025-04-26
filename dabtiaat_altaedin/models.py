@@ -86,12 +86,24 @@ class AppDabtiaat(LoggingModel):
 
     date = models.DateField(_("date"))
     report_number = models.CharField(_("Report number"), max_length=20)
-    gold_weight_in_gram = models.FloatField(_("gold_weight_in_gram"))
-    gold_price = models.FloatField(_("gold_price"))
-    gold_caliber = models.FloatField(_("gold_caliber"))
+    # gold_weight_in_gram = models.FloatField(_("gold_weight_in_gram"))
+    # gold_price = models.FloatField(_("gold_price"))
+    # gold_caliber = models.FloatField(_("gold_caliber"))
     state = models.IntegerField(_("record_state"), choices=STATE_CHOICES, default=STATE_DRAFT)
     attachement_file = models.FileField(_("attachement_file"),upload_to=attachement_path,null=True,blank=True)
     source_state = models.ForeignKey(LkpState, on_delete=models.PROTECT,verbose_name=_("state"))
+
+    @property
+    def sum_of_weight_in_gram(self):
+        total =self.appdabtiaatdetails_set.aggregate(sum=models.Sum("gold_weight_in_gram"))['sum'] or 0
+
+        return total
+
+    @property
+    def avg_of_price(self):
+        total =self.appdabtiaatdetails_set.aggregate(avg=models.Avg("gold_price"))['avg'] or 0
+
+        return total
 
     @property
     def sum_of_weight_multiply_price(self):
@@ -147,7 +159,7 @@ class AppDabtiaat(LoggingModel):
         return self.alhafiz_amount*0.50
 
     def __str__(self):
-        return f'{self.source_state} ({self.gold_weight_in_gram} جرام)'
+        return f'{self.source_state} ({self.sum_of_weight_in_gram} جرام)'
 
     class Meta:
         ordering = ["-date","-id"]
@@ -156,6 +168,8 @@ class AppDabtiaat(LoggingModel):
 
 class AppDabtiaatDetails(models.Model):
     app_dabtiaat = models.ForeignKey(AppDabtiaat, on_delete=models.PROTECT,verbose_name =_("app_dabtiaat"))
+
+    alloy_id = models.CharField(_("alloy_id"),max_length=20, default='')
     gold_weight_in_gram = models.FloatField(_("gold_weight_in_gram"))
     gold_price = models.FloatField(_("gold_price"))
     gold_caliber = models.FloatField(_("gold_caliber"))
