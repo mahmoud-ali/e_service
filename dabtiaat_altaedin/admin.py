@@ -309,7 +309,7 @@ class AppDabtiaatAdmin(LogAdminMixin,admin.ModelAdmin):
         except:
             pass
 
-    @admin.action(description=_('Approve application'))
+    @admin.action(description=_('إعتماد الطلب'))
     def approve_app(self, request, queryset):
         try:
             change_flag = False
