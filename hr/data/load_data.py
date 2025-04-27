@@ -282,7 +282,7 @@ def import_bank_accounts():
                 account_no = row[3]
                 if code:
                     emp = EmployeeBasic.objects.get(code=code)
-                    EmployeeBankAccount.objects.create(
+                    EmployeeBankAccount.objects.get_or_create(
                         employee=emp,
                         bank=bank,
                         account_no=account_no,
