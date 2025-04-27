@@ -85,43 +85,6 @@ class IncidentInfo(LoggingModel):
     
     # Description
     incident_description = models.TextField(verbose_name=_("وصف الحادث Description of the Incident"))
-    
-    # Injured Person Details
-    injured_surname = models.CharField(max_length=100, blank=True, null=True, verbose_name=_("إسم المصاب Injured Surname"))
-    injured_position = models.CharField(max_length=100, blank=True, null=True, verbose_name=_("الوظيفة Position"))
-    injured_experience_years = models.PositiveIntegerField(blank=True, null=True, verbose_name=_(" الخبرة بالأعوام Experience in Years"))
-    injured_date_of_birth = models.DateField(blank=True, null=True, verbose_name=_("تاريخ الميلاد Date of Birth"))
-    injured_employment_basis = models.SmallIntegerField(choices=EMPLOYMENT_BASIS_CHOICES, blank=True, null=True, verbose_name=_("نوع التوظيف Basis of Employment"))
-    lost_time_injury = models.BooleanField(default=False, verbose_name=_("هل تسببت الإصابة في التغيب عن العمل؟ Did this incident cause of Lost Time of working days?"))
-    lost_days = models.PositiveIntegerField(blank=True, null=True, verbose_name=_("في حال كانت الإجابة نعم حدد عدد الأيام حتى تاريخ هذا التقرير If yes, specify Number of lost days up to this report"))
-    
-    # PPE Used During Incident
-    ppe_gloves = models.BooleanField(default=False, verbose_name=_("قفازات Gloves"))
-    ppe_helmet = models.BooleanField(default=False, verbose_name=_("خوذة Helmet"))
-    ppe_safety_cloth = models.BooleanField(default=False, verbose_name=_("لبس السلامة Safety cloth"))
-    ppe_safety_shoes = models.BooleanField(default=False, verbose_name=_("حذاء السلامة Safety Shoes"))
-    ppe_face_protection = models.BooleanField(default=False, verbose_name=_("نظارة/واقي وجهGlass/face Protection"))
-    ppe_ear_protection = models.BooleanField(default=False, verbose_name=_(" واقي الاذن Ear Protection"))
-    ppe_mask = models.BooleanField(default=False, verbose_name=_("كمامة Mask"))
-    ppe_other = models.CharField(max_length=100, blank=True, null=True, verbose_name=_("اخرى Other"))
-    
-    # Injury/Illness Details
-    nature_of_injury = models.TextField(blank=True, null=True, verbose_name=_("طبيعة الاصابة او المرض ( مثلا تمزق ، كسر، جرح) Nature of Injury or Illness (e.g. fracture, strain/sprain, bruising)"))
-    bodily_location = models.CharField(max_length=100, blank=True, null=True, verbose_name=_("مكان الاصابة بالجسم او المرض(مثلا اليد اليمنى، اسفل الظهر، الرئتين) Bodily Location of Injury or Illness (e.g. right leg, lower back)"))
-    first_aid_details = models.TextField(blank=True, null=True, verbose_name=_("تفاصيل الاسعافات الاولية المقدمة للمصاب Details of Any First Aid Treatment Provided"))
-    first_aider_name = models.CharField(max_length=100, blank=True, null=True, verbose_name=_("اسم المسعف Name of First Aider"))
-    hospital_name = models.CharField(max_length=100, blank=True, null=True, verbose_name=_("في حالة تم نقله للمستشفى، اسم المستشفى If admitted to Hospital,hospital name"))
-    
-    # Property/Equipment Damage Details
-    property_description = models.CharField(max_length=200, blank=True, null=True, verbose_name=_("وصف للالية/الملكية المتضررة Description of Property/Equipment Damage"))
-    damage_nature = models.TextField(blank=True, null=True, verbose_name=_("طبيعة الضرر للالية/الملكية Nature of Property/Equipment Damage"))
-    material_spill_details = models.TextField(blank=True, null=True, verbose_name=_("تفاصيل كمية المواد المتسربة ونوعها Details of materials spill and quantities, its type"))
-    
-    # Cost Estimation
-    control_cost = models.DecimalField(max_digits=12, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(0)], verbose_name=_("تكلفة الاليات/المركبات/الاشخاص المستخدمة في التحكم في الحادث Cost of Equipment's/vehicle’s/human’s used to control Incident"))
-    total_cost = models.DecimalField(max_digits=12, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(0)], verbose_name=_("تكلفة الحادث Cost of the accident"))
-    other_expenses = models.DecimalField(max_digits=12, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(0)], verbose_name=_("اي مصاريف اخرى Other expenses"))
-    currency = models.CharField(max_length=10, choices=CURRENCY_TYPE_CHOICES, default=CURRENCY_TYPE_SDG, verbose_name=_("currency"))
 
     # Location and Operation at Time of Incident
     precise_location = models.TextField(verbose_name=_("تحديد موقع وقوع الحادث Precise location at which incident occurred"))
@@ -133,7 +96,7 @@ class IncidentInfo(LoggingModel):
     
     #Incident state
     state = models.IntegerField(_("record_state"), choices=STATE_CHOICES.items(), default=STATE_SUBMITTED)
-    
+
     def __str__(self):
         return f"Incident {self.company} - {self.get_incident_type_display()} - {self.date_time_occurred}"
     
@@ -158,6 +121,7 @@ class IncidentInfo(LoggingModel):
         if 'hse_cmpny_state_mngr' in user_groups:
             if self.state == self.STATE_AUDITOR_APPROVAL:
                 states.append((self.STATE_STATE_MNGR_APPROVAL, self.STATE_CHOICES[self.STATE_STATE_MNGR_APPROVAL]))
+                # states.append((self.STATE_SUBMITTED, self.STATE_CHOICES[self.STATE_SUBMITTED]))
 
         return states
 
@@ -182,6 +146,64 @@ class IncidentInfo(LoggingModel):
             raise Exception(f"User {user.username} cannot transition to state {state} from state {self.state}")
 
         return self
+
+class IncidentInjured(models.Model):
+    incident = models.ForeignKey(IncidentInfo, on_delete=models.CASCADE, related_name='incident_injured')
+
+    # Injured Person Details
+    injured_surname = models.CharField(max_length=100, blank=True, null=True, verbose_name=_("إسم المصاب Injured Surname"))
+    injured_position = models.CharField(max_length=100, blank=True, null=True, verbose_name=_("الوظيفة Position"))
+    injured_experience_years = models.PositiveIntegerField(blank=True, null=True, verbose_name=_(" الخبرة بالأعوام Experience in Years"))
+    injured_date_of_birth = models.DateField(blank=True, null=True, verbose_name=_("تاريخ الميلاد Date of Birth"))
+    injured_employment_basis = models.SmallIntegerField(choices=IncidentInfo.EMPLOYMENT_BASIS_CHOICES, blank=True, null=True, verbose_name=_("نوع التوظيف Basis of Employment"))
+    lost_time_injury = models.BooleanField(default=False, verbose_name=_("هل تسببت الإصابة في التغيب عن العمل؟ Did this incident cause of Lost Time of working days?"))
+    lost_days = models.PositiveIntegerField(blank=True, null=True, verbose_name=_("في حال كانت الإجابة نعم حدد عدد الأيام حتى تاريخ هذا التقرير If yes, specify Number of lost days up to this report"))
+    
+    # PPE Used During Incident
+    ppe_gloves = models.BooleanField(default=False, verbose_name=_("قفازات Gloves"))
+    ppe_helmet = models.BooleanField(default=False, verbose_name=_("خوذة Helmet"))
+    ppe_safety_cloth = models.BooleanField(default=False, verbose_name=_("لبس السلامة Safety cloth"))
+    ppe_safety_shoes = models.BooleanField(default=False, verbose_name=_("حذاء السلامة Safety Shoes"))
+    ppe_face_protection = models.BooleanField(default=False, verbose_name=_("نظارة/واقي وجهGlass/face Protection"))
+    ppe_ear_protection = models.BooleanField(default=False, verbose_name=_(" واقي الاذن Ear Protection"))
+    ppe_mask = models.BooleanField(default=False, verbose_name=_("كمامة Mask"))
+    ppe_other = models.CharField(max_length=100, blank=True, null=True, verbose_name=_("اخرى Other"))
+    
+    # Injury/Illness Details
+    nature_of_injury = models.TextField(blank=True, null=True, verbose_name=_("طبيعة الاصابة او المرض ( مثلا تمزق ، كسر، جرح) Nature of Injury or Illness (e.g. fracture, strain/sprain, bruising)"))
+    bodily_location = models.CharField(max_length=100, blank=True, null=True, verbose_name=_("مكان الاصابة بالجسم او المرض(مثلا اليد اليمنى، اسفل الظهر، الرئتين) Bodily Location of Injury or Illness (e.g. right leg, lower back)"))
+    first_aid_details = models.TextField(blank=True, null=True, verbose_name=_("تفاصيل الاسعافات الاولية المقدمة للمصاب Details of Any First Aid Treatment Provided"))
+    first_aider_name = models.CharField(max_length=100, blank=True, null=True, verbose_name=_("اسم المسعف Name of First Aider"))
+    hospital_name = models.CharField(max_length=100, blank=True, null=True, verbose_name=_("في حالة تم نقله للمستشفى، اسم المستشفى If admitted to Hospital,hospital name"))
+
+    class Meta:
+        verbose_name = "تفاصيل الشخص المصاب Details of Injured Person"
+        verbose_name_plural = "تفاصيل الشخص المصاب Details of Injured Person"
+
+class IncidentProperty(models.Model):
+    incident = models.ForeignKey(IncidentInfo, on_delete=models.CASCADE, related_name='incident_property')
+
+    # Property/Equipment Damage Details
+    property_description = models.CharField(max_length=200, blank=True, null=True, verbose_name=_("وصف للالية/الملكية المتضررة Description of Property/Equipment Damage"))
+    damage_nature = models.TextField(blank=True, null=True, verbose_name=_("طبيعة الضرر للالية/الملكية Nature of Property/Equipment Damage"))
+    material_spill_details = models.TextField(blank=True, null=True, verbose_name=_("تفاصيل كمية المواد المتسربة ونوعها Details of materials spill and quantities, its type"))
+
+    class Meta:
+        verbose_name = "تفاصيل الملكية/الالية او المركبة المتضررة/كمية المواد المتسربة Details of Property/Equipment or vehicle Damage/Quantity of Spill"
+        verbose_name_plural = "تفاصيل الملكية/الالية او المركبة المتضررة/كمية المواد المتسربة Details of Property/Equipment or vehicle Damage/Quantity of Spill"
+
+class IncidentCost(models.Model):
+    incident = models.ForeignKey(IncidentInfo, on_delete=models.CASCADE, related_name='incident_cost')
+
+    # Cost Estimation
+    control_cost = models.DecimalField(max_digits=12, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(0)], verbose_name=_("تكلفة الاليات/المركبات/الاشخاص المستخدمة في التحكم في الحادث Cost of Equipment's/vehicle’s/human’s used to control Incident"))
+    total_cost = models.DecimalField(max_digits=12, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(0)], verbose_name=_("تكلفة الحادث Cost of the accident"))
+    other_expenses = models.DecimalField(max_digits=12, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(0)], verbose_name=_("اي مصاريف اخرى Other expenses"))
+    currency = models.CharField(max_length=10, choices=CURRENCY_TYPE_CHOICES, default=CURRENCY_TYPE_SDG, verbose_name=_("currency"))
+    
+    class Meta:
+        verbose_name = "تكاليف الحادث Cost Estimation"
+        verbose_name_plural = "تكاليف الحادث Cost Estimation"
 
 class IncidentWitness(models.Model):
     incident = models.ForeignKey(IncidentInfo, on_delete=models.CASCADE, related_name='incident_witnesses')

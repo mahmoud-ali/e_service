@@ -3,7 +3,7 @@ from django.urls import reverse
 from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
 
-from hse_companies.models.incidents import ContributingFactor, FactorsAssessment, IncidentAnalysis, IncidentInfo, IncidentPhoto, IncidentWitness, LeasonLearnt
+from hse_companies.models.incidents import ContributingFactor, FactorsAssessment, IncidentAnalysis, IncidentCost, IncidentInfo, IncidentInjured, IncidentPhoto, IncidentProperty, IncidentWitness, LeasonLearnt
 from workflow.admin_utils import create_main_form
 
 from hse_companies.models import AppHSECorrectiveAction, AppHSECorrectiveActionFeedback, AppHSEPerformanceReport, AppHSEPerformanceReportActivities, AppHSEPerformanceReportAuditorComment, AppHSEPerformanceReportBillsOfQuantities, AppHSEPerformanceReportCadastralOperations, AppHSEPerformanceReportCadastralOperationsTwo, AppHSEPerformanceReportCatering, AppHSEPerformanceReportChemicalUsed, AppHSEPerformanceReportCyanideCNStorageSpecification, AppHSEPerformanceReportCyanideTable, AppHSEPerformanceReportDiseasesForWorkers, AppHSEPerformanceReportExplosivesUsed, AppHSEPerformanceReportExplosivesUsedSpecification, AppHSEPerformanceReportFireFighting, AppHSEPerformanceReportManPower, AppHSEPerformanceReportOilUsed, AppHSEPerformanceReportOtherChemicalUsed, AppHSEPerformanceReportProactiveIndicators, AppHSEPerformanceReportStatisticalData, AppHSEPerformanceReportTherapeuticUnit, AppHSEPerformanceReportWasteDisposal, AppHSEPerformanceReportWaterUsed, AppHSEPerformanceReportWorkEnvironment
@@ -960,11 +960,6 @@ incident_main_class = {
         'fieldsets': [
             (None,{"fields": ("company", ("incident_category","classification"), ("incident_type","other_type_details"))}),
             ("تفاصيل الحادث Details of Incident",{"fields": (("equipment_vehicle_no","client_contractor"), "date_time_occurred","date_time_reported","reported_to","location","incident_description")}),
-            ("تفاصيل الشخص المصاب Details of Injured Person",{"fields": ("injured_surname", ("injured_position","injured_experience_years","injured_date_of_birth"),"injured_employment_basis",("lost_time_injury","lost_days"))}),
-            ("معدات الحماية الشخصية المستخدمة اثناء الحادث protective equipment’s used during the Incident",{"fields": (("ppe_gloves", "ppe_helmet","ppe_safety_cloth","ppe_safety_shoes"), ("ppe_face_protection", "ppe_ear_protection","ppe_mask","ppe_other"))}),
-            ("تفاصيل الاصابة/المرض المهني  Details of Injury/illness",{"fields": ("nature_of_injury", "bodily_location","first_aid_details", ("first_aider_name","hospital_name"))}),
-            ("تفاصيل الملكية/الالية او المركبة المتضررة/كمية المواد المتسربة Details of Property/Equipment or vehicle Damage/Quantity of Spill",{"fields": ("property_description", "damage_nature","material_spill_details")}),
-            ("تكاليف الحادث Cost Estimation",{"fields": ("control_cost", "total_cost","other_expenses","currency")}),
             ("تفاصيل العملية والمكان في زمن الحادث Location and Operation at Time of Incident",{"fields": ("precise_location", "precise_operation","site_closed_now","site_closed_because_of_incident")}),
         ],
         'save_as_continue': False,
@@ -998,10 +993,127 @@ incident_main_class = {
 }
 
 incident_inline_classes = {
+    'IncidentInjured': {
+        'model': IncidentInjured,
+        'mixins': [admin.StackedInline],
+        'kwargs': {
+            'min_num': 1,
+            'extra': 0,
+            'fieldsets': [
+                (None,{"fields": ("injured_surname", ("injured_position","injured_experience_years","injured_date_of_birth"),"injured_employment_basis",("lost_time_injury","lost_days"))}),
+                ("معدات الحماية الشخصية المستخدمة اثناء الحادث protective equipment’s used during the Incident",{"fields": (("ppe_gloves", "ppe_helmet","ppe_safety_cloth","ppe_safety_shoes"), ("ppe_face_protection", "ppe_ear_protection","ppe_mask","ppe_other"))}),
+                ("تفاصيل الاصابة/المرض المهني  Details of Injury/illness",{"fields": ("nature_of_injury", "bodily_location","first_aid_details", ("first_aider_name","hospital_name"))}),
+            ],
+
+        },
+        'groups': {
+            'hse_cmpny_auditor':{
+                'permissions': {
+                    IncidentInfo.STATE_SUBMITTED: {'add': 1, 'change': 1, 'delete': 0, 'view': 1},
+                    IncidentInfo.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    IncidentInfo.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
+            'hse_cmpny_state_mngr':{
+                'permissions': {
+                    IncidentInfo.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    IncidentInfo.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
+            'hse_cmpny_department_mngr':{
+                'permissions': {
+                    IncidentInfo.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
+            'hse_cmpny_gm':{
+                'permissions': {
+                    IncidentInfo.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
+
+        },
+    },
+    'IncidentProperty': {
+        'model': IncidentProperty,
+        'mixins': [admin.StackedInline],
+        'kwargs': {
+            'min_num': 1,
+            'extra': 0,
+            'fieldsets': [
+                (None,{"fields": ("property_description", "damage_nature","material_spill_details")}),
+            ],
+
+        },
+        'groups': {
+            'hse_cmpny_auditor':{
+                'permissions': {
+                    IncidentInfo.STATE_SUBMITTED: {'add': 1, 'change': 1, 'delete': 0, 'view': 1},
+                    IncidentInfo.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    IncidentInfo.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
+            'hse_cmpny_state_mngr':{
+                'permissions': {
+                    IncidentInfo.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    IncidentInfo.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
+            'hse_cmpny_department_mngr':{
+                'permissions': {
+                    IncidentInfo.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
+            'hse_cmpny_gm':{
+                'permissions': {
+                    IncidentInfo.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
+
+        },
+    },
+    'IncidentCost': {
+        'model': IncidentCost,
+        'mixins': [admin.StackedInline],
+        'kwargs': {
+            'min_num': 1,
+            'extra': 0,
+            'fieldsets': [
+                (None,{"fields": ("control_cost", "total_cost","other_expenses","currency")}),
+            ],
+
+        },
+        'groups': {
+            'hse_cmpny_auditor':{
+                'permissions': {
+                    IncidentInfo.STATE_SUBMITTED: {'add': 1, 'change': 1, 'delete': 0, 'view': 1},
+                    IncidentInfo.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    IncidentInfo.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
+            'hse_cmpny_state_mngr':{
+                'permissions': {
+                    IncidentInfo.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    IncidentInfo.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
+            'hse_cmpny_department_mngr':{
+                'permissions': {
+                    IncidentInfo.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
+            'hse_cmpny_gm':{
+                'permissions': {
+                    IncidentInfo.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
+
+        },
+    },
     'IncidentWitness': {
         'model': IncidentWitness,
         'mixins': [admin.TabularInline],
         'kwargs': {
+            'min_num': 1,
             'extra': 0,
         },
         'groups': {
@@ -1068,6 +1180,7 @@ incident_inline_classes = {
         'model': IncidentAnalysis,
         'mixins': [admin.StackedInline],
         'kwargs': {
+            'min_num': 1,
             'extra': 0,
             'fieldsets': [
                 (None,{"fields": ("sequence_of_events",)}),
@@ -1105,6 +1218,7 @@ incident_inline_classes = {
         'model': ContributingFactor,
         'mixins': [admin.TabularInline],
         'kwargs': {
+            'min_num': 1,
             'extra': 0,
         },
         'groups': {
@@ -1138,7 +1252,29 @@ incident_inline_classes = {
         'model': FactorsAssessment,
         'mixins': [admin.StackedInline],
         'kwargs': {
+            'min_num': 1,
             'extra': 0,
+            'fieldsets': [
+                (None,{"fields": (("related_documents_exist", "related_documents_details"),"failed_controls")}),
+                (None,{"fields": (
+                    ("supervisor_present", "supervisor_presence_reason"),
+                    ("supervisor_hazard_competency", "supervisor_hazard_reason"),
+                    ("supervisor_controls_competency", "supervisor_controls_reason"),
+                    ("person_hazard_competency", "person_hazard_reason"),
+                    ("competency_in_controls", "competency_controls_reason"),
+                    ("correct_ppe_worn", "ppe_reason"),
+                    ("technical_competence", "technical_competence_reason"),
+                    ("fatigue_factor", "fatigue_reason"),
+                    ("substance_abuse_factor", "substance_abuse_reason"),
+                    ("correct_equipment_used", "equipment_reason"),
+                    ("equipment_good_condition", "equipment_condition_reason"),
+                    ("equipment_inspected", "equipment_inspection_reason"),
+                    ("risk_assessment_conducted", "risk_assessment_reason"),
+                    ("area_declared_safe", "area_safety_reason"),
+                    ("changes_after_declaration", "changes_details"),
+                    ("other_root_causes", ),
+                )}),
+            ],
         },
         'groups': {
             'hse_cmpny_auditor':{
@@ -1171,8 +1307,8 @@ incident_inline_classes = {
         'model': AppHSECorrectiveAction,
         'mixins': [admin.TabularInline],
         'kwargs': {
-            'extra': 1,
-            # 'min_num': 1,
+            'extra': 0,
+            'min_num': 1,
             'view_on_site': False,
             'exclude': ('report', 'state',),
         },
@@ -1199,8 +1335,8 @@ incident_inline_classes = {
         'model': LeasonLearnt,
         'mixins': [admin.TabularInline],
         'kwargs': {
-            'extra': 1,
-            # 'min_num': 1,
+            'extra': 0,
+            'min_num': 1,
             'view_on_site': False,
             'exclude': ('state',),
         },
