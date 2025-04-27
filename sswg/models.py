@@ -24,8 +24,8 @@ class CompanyDetails(LoggingModel):
     name = models.ForeignKey(LkpOwner, on_delete=models.PROTECT,verbose_name=_("Company Name"))
     surrogate_name = models.CharField(_("Surrogate Name"), max_length=255)
     surrogate_id_type = models.IntegerField(_("ID Type"), choices=AppMoveGold.IDENTITY_CHOICES)
-    surrogate_id_val = models.CharField(_("ID Value"), max_length=20)
-    surrogate_id_phone = models.CharField(_("Contact Phone"), max_length=20)
+    surrogate_id_val = models.CharField(_("ID Value"), max_length=50)
+    surrogate_id_phone = models.CharField(_("Contact Phone"), max_length=50)
     basic_form = models.OneToOneField(
         'BasicForm',
         on_delete=models.PROTECT,
