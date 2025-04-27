@@ -49,7 +49,7 @@ class TransferRelocationFormDataInline(LogMixin,admin.TabularInline):
 class CompanyDetailsInline(LogMixin,admin.StackedInline):
     model = CompanyDetails
     fk_name = 'basic_form'
-    extra = 1
+    min_num = 1
     readonly_fields = ['name','surrogate_name','surrogate_id_type','surrogate_id_val','surrogate_id_phone',]
 
     def has_change_permission(self, request, obj=None):
@@ -61,7 +61,7 @@ class CompanyDetailsInline(LogMixin,admin.StackedInline):
 class SSMODataInline(LogMixin,admin.StackedInline):
     model = SSMOData
     fk_name = 'basic_form'
-    extra = 1
+    min_num = 1
 
     def has_change_permission(self, request, obj=None):
         if obj and obj.state == BasicForm.STATE_3:
@@ -72,7 +72,7 @@ class SSMODataInline(LogMixin,admin.StackedInline):
 class SmrcNoObjectionDataInline(LogMixin,admin.StackedInline):
     model = SmrcNoObjectionData
     fk_name = 'basic_form'
-    extra = 1
+    min_num = 1
 
     def has_change_permission(self, request, obj=None):
         if obj and obj.state == BasicForm.STATE_4:
@@ -83,7 +83,7 @@ class SmrcNoObjectionDataInline(LogMixin,admin.StackedInline):
 class MmAceptanceDataInline(LogMixin,admin.StackedInline):
     model = MmAceptanceData
     fk_name = 'basic_form'
-    extra = 1
+    min_num = 1
 
     def has_change_permission(self, request, obj=None):
         if obj and obj.state == BasicForm.STATE_5:
@@ -94,7 +94,7 @@ class MmAceptanceDataInline(LogMixin,admin.StackedInline):
 class MOCSDataInline(LogMixin,admin.StackedInline):
     model = MOCSData
     fk_name = 'basic_form'
-    extra = 1
+    min_num = 1
 
     def has_change_permission(self, request, obj=None):
         if obj and obj.state == BasicForm.STATE_7:
@@ -105,7 +105,7 @@ class MOCSDataInline(LogMixin,admin.StackedInline):
 class CBSDataInline(LogMixin,admin.StackedInline):
     model = CBSData
     fk_name = 'basic_form'
-    extra = 1
+    min_num = 1
 
     def has_change_permission(self, request, obj=None):
         if obj and obj.state == BasicForm.STATE_8:
@@ -137,7 +137,7 @@ class BasicFormAdmin(LogMixin,admin.ModelAdmin):
             "sswg_smrc": (BasicForm.STATE_4,),
             "sswg_mm": (BasicForm.STATE_5,),
             "sswg_military_intelligence": (BasicForm.STATE_6,),
-            "sswg_mocs": (BasicForm.STATE_7,),
+            "sswg_moc": (BasicForm.STATE_7,),
             "sswg_cbs": (BasicForm.STATE_8,),
             "sswg_custom_force": (BasicForm.STATE_9,),
         }
@@ -147,7 +147,7 @@ class BasicFormAdmin(LogMixin,admin.ModelAdmin):
                 for state in state_lst:
                     states.append(state)
 
-        print("states",states)
+        # print("states",states)
 
         return qs.filter(state__in=states)
 
@@ -187,8 +187,8 @@ class BasicFormAdmin(LogMixin,admin.ModelAdmin):
             "sswg_ssmo": [TransferRelocationFormDataInline, CompanyDetailsInline, SSMODataInline,],
             "sswg_smrc": [TransferRelocationFormDataInline, CompanyDetailsInline, SSMODataInline, SmrcNoObjectionDataInline,],
             "sswg_mm": [TransferRelocationFormDataInline, CompanyDetailsInline, SSMODataInline, SmrcNoObjectionDataInline, MmAceptanceDataInline,],
-            "sswg_military_intelligence": [TransferRelocationFormDataInline, CompanyDetailsInline, SSMODataInline, SmrcNoObjectionDataInline, MmAceptanceDataInline, MOCSDataInline,],
-            "sswg_mocs": [TransferRelocationFormDataInline, CompanyDetailsInline, SSMODataInline, SmrcNoObjectionDataInline, MmAceptanceDataInline, MOCSDataInline, ],
+            "sswg_military_intelligence": [TransferRelocationFormDataInline, CompanyDetailsInline, SSMODataInline, SmrcNoObjectionDataInline, MmAceptanceDataInline, ],
+            "sswg_moc": [TransferRelocationFormDataInline, CompanyDetailsInline, SSMODataInline, SmrcNoObjectionDataInline, MmAceptanceDataInline, MOCSDataInline,],
             "sswg_cbs": [TransferRelocationFormDataInline, CompanyDetailsInline, SSMODataInline, SmrcNoObjectionDataInline, MmAceptanceDataInline, MOCSDataInline, CBSDataInline],
             "sswg_custom_force": [TransferRelocationFormDataInline, CompanyDetailsInline, SSMODataInline, SmrcNoObjectionDataInline, MmAceptanceDataInline, MOCSDataInline, CBSDataInline],
         }
@@ -198,7 +198,7 @@ class BasicFormAdmin(LogMixin,admin.ModelAdmin):
                 for inline in inline_lst:
                     inlines.append(inline)
 
-        return inlines
+        return list(dict.fromkeys((inlines)))
     
     def _check_data_exist(self,object_id,state):
         state_inline_mapping = {

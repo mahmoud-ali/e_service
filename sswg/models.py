@@ -258,11 +258,13 @@ class BasicForm(LoggingModel):
         if self.state < len(self.STATE_CHOICES):
             return self.state + 1
         
-        return self.state
+        # return self.state
     
     def get_next_state_display(self):
         curr_index = self.get_next_state()
-        return self.STATE_CHOICES[curr_index]
+
+        if curr_index:
+            return self.STATE_CHOICES[curr_index]
 
 from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
