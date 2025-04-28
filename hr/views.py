@@ -678,7 +678,7 @@ class KhosomatPlusMokaf2(LoginRequiredMixin,UserPermissionMixin,View):
                 data.append(l)
         else:
             template_name = 'hr/moratab_mokaf2.html'
-            header = ['الرمز','الموظف','الدرجة الوظيفية','العلاوة','صافي المرتب','صافي الاستحقاق','المجموع',]
+            header = ['الرمز','الموظف','الدرجة الوظيفية','العلاوة','صافي المرتب','صافي المكافئة','المجموع',]
 
             for (emp,(khosomat,mokaf2)) in moratab_mokaf2.all_employees_from_db():
                 total = khosomat.safi_alisti7gag + mokaf2.safi_2l2sti7gag
