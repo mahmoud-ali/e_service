@@ -422,7 +422,77 @@ class Mokaf2Sheet():
             x = self.employee_mokaf2_from_db(emp)
             if x:
                 yield(emp.employee,x)
+################
+class MoratabMokaf2Sheet():
+    def __init__(self,year,month) -> None:
+        self.year = int(year)
+        self.month = int(month)
+
+        next_year = self.year
+        next_month = (self.month+1)
+        if next_month > 12:
+            next_month = 1
+            next_year += 1
+
+        self.hr_settings = HrSettings()
+        self.employees = EmployeeBasic.objects \
+            .filter(status=EmployeeBasic.STATUS_ACTIVE) \
+            .filter(tarikh_ta3in__lt=datetime.date(next_year,next_month,1)) \
+            .exclude(no3_2lertibat__in=[EmployeeBasic.NO3_2LERTIBAT_2L7ag, EmployeeBasic.NO3_2LERTIBAT_TA3AGOD, EmployeeBasic.NO3_2LERTIBAT_TA3AGOD_MOSIMI,EmployeeBasic.NO3_2LERTIBAT_MASHRO3,EmployeeBasic.NO3_2LERTIBAT_MAJLIS_EL2DARA])
+
+        try:
+            self.payroll_master = PayrollMaster.objects.get(year=self.year,month=self.month)
+            self.payroll_details = PayrollDetail.objects \
+                .filter(payroll_master=self.payroll_master).prefetch_related("payroll_master","employee") \
+                .exclude(employee__no3_2lertibat__in=[EmployeeBasic.NO3_2LERTIBAT_2L7ag, EmployeeBasic.NO3_2LERTIBAT_TA3AGOD, EmployeeBasic.NO3_2LERTIBAT_TA3AGOD_MOSIMI,EmployeeBasic.NO3_2LERTIBAT_MASHRO3,EmployeeBasic.NO3_2LERTIBAT_MAJLIS_EL2DARA])
+                # .exclude(employee__hikal_wazifi=self.hr_settings.get_code_as_float(Settings.SETTINGS_KHARJ_ELSHARIKA))
+        except PayrollMaster.DoesNotExist:
+            self.payroll_master = None
+            self.payroll_details = []
+
+    def employee_from_db(self,emp_payroll:PayrollDetail):
+        badal = Badalat_3lawat(
+            emp_payroll.abtdai,
+            emp_payroll.galaa_m3isha,
+            shakhsia=emp_payroll.shakhsia,
+            aadoa=emp_payroll.aadoa,
+            gasima=emp_payroll.gasima,
+            atfal=emp_payroll.atfal,
+            moahil=emp_payroll.moahil,
+            ma3adin=emp_payroll.ma3adin
+        )
+        khosomat = Khosomat(
+            badal,self.payroll_master.zaka_kafaf,
+            self.payroll_master.zaka_nisab,
+            damga=emp_payroll.damga,
+            m3ash=emp_payroll.m3ash,
+            salafiat=emp_payroll.salafiat,
+            jazaat=emp_payroll.jazaat,
+            sandog_kahraba=emp_payroll.sandog_kahraba,
+            sandog=emp_payroll.sandog,
+            enable_sandog_kahraba=self.payroll_master.enable_sandog_kahraba,
+            enable_youm_algoat_almosalaha=self.payroll_master.enable_youm_algoat_almosalaha,
+            tarikh_2lmilad=emp_payroll.tarikh_milad,
+            m3ash_age=self.payroll_master.m3ash_age,
+            salafiat_sandog=emp_payroll.salafiat_sandog,
+            salafiat_3la_2lmoratab=emp_payroll.salafiat_3la_2lmoratab,
+            salafiat_3la_2lmokaf2=emp_payroll.salafiat_3la_2lmokaf2,
+            khasm_salafiat_elsandog_min_elomoratab=self.payroll_master.khasm_salafiat_elsandog_min_elomoratab,
+            dariba_mokaf2=self.hr_settings.get_code_as_float(Settings.SETTINGS_DARIBAT_2LMOKAFA),
+        )
+
+        return (khosomat,Mokaf2(badal,emp_payroll.payroll_master.daribat_2lmokafa,emp_payroll.damga,khasm_salafiat_elsandog_min_elmokaf2=(not emp_payroll.payroll_master.khasm_salafiat_elsandog_min_elomoratab),salafiat_sandog=emp_payroll.salafiat_sandog,salafiat_3la_2lmokaf2=emp_payroll.salafiat_3la_2lmokaf2))
+
+    def all_employees_from_db(self):
+        for emp in self.payroll_details:
+            x = self.employee_from_db(emp)
+            if x:
+                yield(emp.employee,x)
     
+ 
+
+ 
+# ############    
 class M2moriaSheet():
     def __init__(self,year,month) -> None:
         self.year = int(year)

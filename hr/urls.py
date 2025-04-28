@@ -2,7 +2,7 @@ from django.urls import path
 
 from django.conf import settings
 
-from .views import Badalat, CheckPayroll, FargKhosomat,Khosomat, M2moria, MajlisEl2daraMokaf2View, Mobashara, Modir3amBadalatView, Modir3amKhosomatView, Modir3amMokaf2View, Mokaf2,FargBadalat, Ta3agodMosimiMokaf2, Ta3agodMosimiMoratab, Tasoia, Wi7datMosa3idaMokaf2tFarigMoratab,Wi7datMosa3idaMokaf2t
+from .views import Badalat, CheckPayroll, FargKhosomat,Khosomat, KhosomatPlusMokaf2, M2moria, MajlisEl2daraMokaf2View, Mobashara, Modir3amBadalatView, Modir3amKhosomatView, Modir3amMokaf2View, Mokaf2,FargBadalat, Ta3agodMosimiMokaf2, Ta3agodMosimiMoratab, Tasoia, Wi7datMosa3idaMokaf2tFarigMoratab,Wi7datMosa3idaMokaf2t
 
 app_name = "hr"
 urlpatterns = [                                                        
@@ -11,6 +11,7 @@ urlpatterns = [
     path('payroll/check_payroll', CheckPayroll.as_view(), name='payroll_check'),
     path('payroll/mobashara', Mobashara.as_view(), name='payroll_mobashara'),
     path('payroll/mokaf2', Mokaf2.as_view(), name='payroll_mokaf2'),
+    path('payroll/moratab_mokaf2', KhosomatPlusMokaf2.as_view(), name='payroll_moratab_mokaf2'),
     path('payroll/m2moria', M2moria.as_view(), name='payroll_m2moria'),
 
     path('payroll/diff_badalat', FargBadalat.as_view(), name='payroll_diff_badalat'),
