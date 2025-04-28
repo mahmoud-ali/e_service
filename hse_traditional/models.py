@@ -5,6 +5,8 @@ from django.forms import ValidationError
 from django.utils.translation import gettext_lazy as _
 from django.core.mail import send_mail
 from django.utils.html import strip_tags
+from django.template.loader import render_to_string
+from django.contrib.sites.models import Site
 
 from company_profile.models import LkpState
 from hse_traditional.utils import get_user_emails_by_groups
@@ -247,24 +249,37 @@ class HseTraditionalAccident(LoggingModel):
 
     def send_notifications(self):
         subject = 'تقرير حادث' #f"{self.ACCIDENT_TYPE_CHOICES[self.type]}/{self.what}"
-        message = f"""
-            <h3>الإدارة العامة للبيئة والسلامة / إدارة التعدين التقليدي</h3>
-            <p><b>الولاية</b>: {self.source_state}</p>
-            <p><b>ماذا حدث</b>: {self.what}</p>
-            <p><b>متى حدث</b>: {self.when}</p>
-            <p><b>اين حدث</b>: {self.where}</p>
+        # message = f"""
+        #     <div dir="rtl">
+        #         <h3>الإدارة العامة للبيئة والسلامة / إدارة التعدين التقليدي</h3>
+        #         <p><b>الولاية</b>: {self.source_state}</p>
+        #         <p><b>ماذا حدث</b>: {self.what}</p>
+        #         <p><b>متى حدث</b>: {self.when}</p>
+        #         <p><b>اين حدث</b>: {self.where}</p>
 
-            <p>رابط التفاصيل: https://mineralsgate.com/app/managers/hse_traditional/hsetraditionalaccident/{self.id}/change/</p>
+        #         <p>رابط التفاصيل: <a href="https://mineralsgate.com/app/managers/hse_traditional/hsetraditionalaccident/{self.id}/change/">اضغط هنا</a></p>
+        #     </div>
+        # """
+        url = f"https://mineralsgate.com/app/managers/hse_traditional/hsetraditionalaccident/{self.id}/change/"
+        logo_url = "https://"+Site.objects.get_current().domain+"/app/static/company_profile/img/smrc_logo.png"
 
-        """
+        message_html = render_to_string( 
+            'hse_traditional/email/accident.html', 
+            { 
+                'url':url, 
+                'logo':logo_url,
+                'data':self,
+            },
+        ) 
+
         emails = get_user_emails_by_groups(['hse_tra_manager','hse_tra_gm']) + ['mohammed.653@smrc.sd','osman.suliman@smrc.sd','omer.awad@smrc.sd',]
         try:
             send_mail(
                 subject,
-                strip_tags(message),
+                strip_tags(message_html),
                 None,
                 emails,
-                html_message=message,
+                html_message=message_html,
                 fail_silently=False,
             )        
         except:
