@@ -621,9 +621,9 @@ class EmployeeBankAccount(LoggingModel):
     active = models.BooleanField(_("active"),default=False)
 
     class Meta:
-        # constraints = [
-        #     models.UniqueConstraint(fields=['bank','account_no'],name="unique_bank_account")
-        # ]
+        constraints = [
+            models.UniqueConstraint(fields=['bank','account_no'],name="unique_bank_account")
+        ]
         indexes = [
             models.Index(fields=["bank"]),
             models.Index(fields=["account_no"]),
