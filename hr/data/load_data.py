@@ -281,7 +281,7 @@ def import_bank_accounts():
             try:
                 code = int(row[0])
                 bank = row[2]
-                account_no = str(row[3])
+                account_no = str(row[3]).strip()
                 if code:
                     emp = EmployeeBasic.objects.get(code=code)
 
