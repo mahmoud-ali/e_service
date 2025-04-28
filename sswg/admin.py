@@ -9,7 +9,7 @@ from django.contrib.admin.utils import (
 from django.contrib.admin import helpers
 from django.contrib.admin.options import TO_FIELD_VAR
 from sswg.forms import TransferRelocationFormDataForm
-from .models import CompanyDetails, MmAceptanceData, TransferRelocationFormData, SSMOData, BasicForm, MOCSData, CBSData, SmrcNoObjectionData
+from .models import BasicForm, CompanyDetails, MmAceptanceData, TransferRelocationFormData, SSMOData, MOCSData, CBSData, SmrcNoObjectionData
 
 class LogMixin:
     def save_model(self, request, obj, form, change):
@@ -50,13 +50,20 @@ class CompanyDetailsInline(LogMixin,admin.StackedInline):
     model = CompanyDetails
     fk_name = 'basic_form'
     min_num = 1
-    readonly_fields = ['name','surrogate_name','surrogate_id_type','surrogate_id_val','surrogate_id_phone',]
+    fields = ['name','surrogate_name','surrogate_id_type','surrogate_id_val','surrogate_id_phone',]
+    readonly_fields = ['name',]
 
     def has_change_permission(self, request, obj=None):
         if obj and obj.state == BasicForm.STATE_1:
             return True
         
         return False
+    
+    def get_readonly_fields(self, request, obj=None):
+        if obj:
+            return self.readonly_fields
+        
+        return self.fields
 
 class SSMODataInline(LogMixin,admin.StackedInline):
     model = SSMOData
