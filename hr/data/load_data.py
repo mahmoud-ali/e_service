@@ -272,6 +272,8 @@ def create_hikal_for_states(parent_id):
         create_hikal_state_child(parent,name)
 
 def import_bank_accounts():    
+    EmployeeBankAccount.objects.all().delete()
+
     with open(f'./hr/data/accounts.csv', newline='') as csvfile:
         reader = csv.reader(csvfile, delimiter=',')
         next(reader, None)  # skip the headers
@@ -279,10 +281,11 @@ def import_bank_accounts():
             try:
                 code = int(row[0])
                 bank = row[2]
-                account_no = row[3]
+                account_no = str(row[3])
                 if code:
                     emp = EmployeeBasic.objects.get(code=code)
-                    EmployeeBankAccount.objects.get_or_create(
+
+                    EmployeeBankAccount.objects.create(
                         employee=emp,
                         bank=bank,
                         account_no=account_no,
@@ -291,7 +294,7 @@ def import_bank_accounts():
                         updated_by=admin_user
                     )
             except Exception as e:
-                print('not imported',e)
+                print('not imported',code,e)
 
 def import_email():    
     with open(f'./hr/data/email.csv', newline='') as csvfile:

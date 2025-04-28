@@ -65,7 +65,7 @@ class Badalat(LoginRequiredMixin,UserPermissionMixin,View):
             # BOM
             response.write(codecs.BOM_UTF8)
 
-            writer = csv.writer(response)
+            writer = csv.writer(response, quoting=csv.QUOTE_ALL)
             writer.writerow(header)
 
             if SHOW_CSV_TOTAL:
@@ -163,7 +163,7 @@ class Khosomat(LoginRequiredMixin,UserPermissionMixin,View):
             # BOM
             response.write(codecs.BOM_UTF8)
 
-            writer = csv.writer(response)
+            writer = csv.writer(response, quoting=csv.QUOTE_ALL)
             writer.writerow(header)
 
             if SHOW_CSV_TOTAL:
@@ -294,7 +294,7 @@ class FargBadalat(LoginRequiredMixin,UserPermissionMixin,View):
             # BOM
             response.write(codecs.BOM_UTF8)
 
-            writer = csv.writer(response)
+            writer = csv.writer(response, quoting=csv.QUOTE_ALL)
             writer.writerow(header)
 
             if SHOW_CSV_TOTAL:
@@ -712,7 +712,7 @@ class KhosomatPlusMokaf2(LoginRequiredMixin,UserPermissionMixin,View):
             # BOM
             response.write(codecs.BOM_UTF8)
 
-            writer = csv.writer(response)
+            writer = csv.writer(response, quoting=csv.QUOTE_ALL)
             writer.writerow(header)
 
             if SHOW_CSV_TOTAL:
@@ -786,7 +786,7 @@ class M2moria(LoginRequiredMixin,UserPermissionMixin,View):
             # BOM
             response.write(codecs.BOM_UTF8)
 
-            writer = csv.writer(response)
+            writer = csv.writer(response, quoting=csv.QUOTE_ALL)
             writer.writerow(header)
 
             for r in data:
@@ -859,7 +859,7 @@ class Wi7datMosa3idaMokaf2tFarigMoratab(LoginRequiredMixin,UserPermissionMixin,V
             # BOM
             response.write(codecs.BOM_UTF8)
 
-            writer = csv.writer(response)
+            writer = csv.writer(response, quoting=csv.QUOTE_ALL)
             writer.writerow(header)
 
             if SHOW_CSV_TOTAL:
@@ -937,7 +937,7 @@ class Wi7datMosa3idaMokaf2t(LoginRequiredMixin,UserPermissionMixin,View):
             # BOM
             response.write(codecs.BOM_UTF8)
 
-            writer = csv.writer(response)
+            writer = csv.writer(response, quoting=csv.QUOTE_ALL)
             writer.writerow(header)
 
             if SHOW_CSV_TOTAL:
@@ -1015,7 +1015,7 @@ class Ta3agodMosimiMoratab(LoginRequiredMixin,UserPermissionMixin,View):
             # BOM
             response.write(codecs.BOM_UTF8)
 
-            writer = csv.writer(response)
+            writer = csv.writer(response, quoting=csv.QUOTE_ALL)
             writer.writerow(header)
 
             if SHOW_CSV_TOTAL:
@@ -1093,7 +1093,7 @@ class Ta3agodMosimiMokaf2(LoginRequiredMixin,UserPermissionMixin,View):
             # BOM
             response.write(codecs.BOM_UTF8)
 
-            writer = csv.writer(response)
+            writer = csv.writer(response, quoting=csv.QUOTE_ALL)
             writer.writerow(header)
 
             if SHOW_CSV_TOTAL:
@@ -1171,7 +1171,7 @@ class MajlisEl2daraMokaf2View(LoginRequiredMixin,UserPermissionMixin,View):
             # BOM
             response.write(codecs.BOM_UTF8)
 
-            writer = csv.writer(response)
+            writer = csv.writer(response, quoting=csv.QUOTE_ALL)
             writer.writerow(header)
 
             if SHOW_CSV_TOTAL:
@@ -1236,7 +1236,7 @@ class Modir3amBadalatView(LoginRequiredMixin,UserPermissionMixin,View):
             # BOM
             response.write(codecs.BOM_UTF8)
 
-            writer = csv.writer(response)
+            writer = csv.writer(response, quoting=csv.QUOTE_ALL)
             writer.writerow(header)
 
             if SHOW_CSV_TOTAL:
@@ -1314,7 +1314,7 @@ class Modir3amKhosomatView(LoginRequiredMixin,UserPermissionMixin,View):
             # BOM
             response.write(codecs.BOM_UTF8)
 
-            writer = csv.writer(response)
+            writer = csv.writer(response, quoting=csv.QUOTE_ALL)
             writer.writerow(header)
 
             if SHOW_CSV_TOTAL:
@@ -1392,7 +1392,7 @@ class Modir3amMokaf2View(LoginRequiredMixin,UserPermissionMixin,View):
             # BOM
             response.write(codecs.BOM_UTF8)
 
-            writer = csv.writer(response)
+            writer = csv.writer(response, quoting=csv.QUOTE_ALL)
             writer.writerow(header)
 
             if SHOW_CSV_TOTAL:
