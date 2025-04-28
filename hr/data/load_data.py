@@ -294,7 +294,7 @@ def import_bank_accounts():
                         updated_by=admin_user
                     )
             except Exception as e:
-                print('not imported',code,e)
+                print('not imported',code,emp,e)
 
 def import_email():    
     with open(f'./hr/data/email.csv', newline='') as csvfile:
