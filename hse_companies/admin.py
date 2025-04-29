@@ -989,6 +989,12 @@ incident_main_class = {
                 IncidentInfo.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
             },
         },
+        'general_manager':{
+            'permissions': {
+                IncidentInfo.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                IncidentInfo.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+            },
+        },
     },
 }
 
@@ -1030,7 +1036,12 @@ incident_inline_classes = {
                     IncidentInfo.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
-
+            'general_manager':{
+                'permissions': {
+                    IncidentInfo.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    IncidentInfo.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
         },
     },
     'IncidentProperty': {
@@ -1068,7 +1079,12 @@ incident_inline_classes = {
                     IncidentInfo.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
-
+            'general_manager':{
+                'permissions': {
+                    IncidentInfo.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    IncidentInfo.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
         },
     },
     'IncidentCost': {
@@ -1106,7 +1122,12 @@ incident_inline_classes = {
                     IncidentInfo.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
-
+            'general_manager':{
+                'permissions': {
+                    IncidentInfo.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    IncidentInfo.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
         },
     },
     'IncidentWitness': {
@@ -1140,7 +1161,12 @@ incident_inline_classes = {
                     IncidentInfo.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
-
+            'general_manager':{
+                'permissions': {
+                    IncidentInfo.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    IncidentInfo.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
         },
     },
     'IncidentPhoto': {
@@ -1173,7 +1199,12 @@ incident_inline_classes = {
                     IncidentInfo.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
-
+            'general_manager':{
+                'permissions': {
+                    IncidentInfo.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    IncidentInfo.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
         },
     },
     'IncidentAnalysis': {
@@ -1211,7 +1242,12 @@ incident_inline_classes = {
                     IncidentInfo.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
-
+            'general_manager':{
+                'permissions': {
+                    IncidentInfo.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    IncidentInfo.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
         },
     },
     'ContributingFactor': {
@@ -1245,7 +1281,12 @@ incident_inline_classes = {
                     IncidentInfo.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
-
+            'general_manager':{
+                'permissions': {
+                    IncidentInfo.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    IncidentInfo.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
         },
     },
     'FactorsAssessment': {
@@ -1300,7 +1341,12 @@ incident_inline_classes = {
                     IncidentInfo.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
-
+            'general_manager':{
+                'permissions': {
+                    IncidentInfo.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    IncidentInfo.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
         },
     },
     'AppHSECorrectiveAction': {
