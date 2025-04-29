@@ -146,7 +146,7 @@ class EmployeeTelegramRegistrationAdmin(FlowMixin,admin.ModelAdmin):
             message = f"الآن يمكنك الدخول لبوابة الموارد البشرية عبر الرابط التالي {portal_url} \n باسم المستخدم {username}"
 
         else:
-            password = f"{username}{int(random.random()*10000)}"
+            password = f"{int(random.random()*1000000)}"
 
             user = User.objects.create_user(username, username, password, is_staff=True)
 
