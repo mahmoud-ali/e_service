@@ -133,6 +133,8 @@ def get_workflow_mixin(main_class,inline_classes={},inlines_dict={}):
                     inline = inlines_dict[model_name]
                     inlines.append(inline)                
 
+            inlines = list(dict.fromkeys((inlines)))
+
             return inlines + main_class.get("static_inlines", [])
 
         def has_change_inlines(self, request, obj=None):        
