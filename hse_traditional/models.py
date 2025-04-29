@@ -248,7 +248,7 @@ class HseTraditionalAccident(LoggingModel):
         return f"{self.ACCIDENT_TYPE_CHOICES[self.type]}/{self.what}"
 
     def send_notifications(self):
-        subject = 'تقرير حادث' #f"{self.ACCIDENT_TYPE_CHOICES[self.type]}/{self.what}"
+        subject = 'بلاغ حادث' #f"{self.ACCIDENT_TYPE_CHOICES[self.type]}/{self.what}"
         # message = f"""
         #     <div dir="rtl">
         #         <h3>الإدارة العامة للبيئة والسلامة / إدارة التعدين التقليدي</h3>
@@ -268,6 +268,9 @@ class HseTraditionalAccident(LoggingModel):
             { 
                 'url':url, 
                 'logo':logo_url,
+                'subject':subject,
+                'title':"الإدارة العامة للبيئة والسلامة",
+                'sub_title':"إدارة التعدين التقليدي",
                 'data':self,
             },
         ) 
