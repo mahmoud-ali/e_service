@@ -555,7 +555,7 @@ class Mokaf2(LoginRequiredMixin,UserPermissionMixin,View):
     user_groups = ['hr_manager','hr_payroll']
     def get(self,*args,**kwargs):
         year = self.request.GET['year']
-        month = self.request.GET['month']
+        month = int(self.request.GET['month'])
         format = self.request.GET.get('format',None)
         bank_sheet = self.request.GET.get('bank_sheet',False)
         data = []
@@ -634,10 +634,12 @@ class Mokaf2(LoginRequiredMixin,UserPermissionMixin,View):
 
         else:
             context = {
-                'title':'كشف المكافأة',
+                'title':'كشف مكافأة',
                 'header':header,
                 'data': data,
                 'summary':summary_list,
+                'month':MONTH_CHOICES[month],
+                'year':year,
             }
 
             response = render(self.request,template_name,context)
@@ -648,7 +650,7 @@ class KhosomatPlusMokaf2(LoginRequiredMixin,UserPermissionMixin,View):
     user_groups = ['hr_manager','hr_payroll']
     def get(self,*args,**kwargs):
         year = self.request.GET['year']
-        month = self.request.GET['month']
+        month = int(self.request.GET['month'])
         format = self.request.GET.get('format',None)
         bank_sheet = self.request.GET.get('bank_sheet',False)
         data = []
@@ -726,10 +728,12 @@ class KhosomatPlusMokaf2(LoginRequiredMixin,UserPermissionMixin,View):
 
         else:
             context = {
-                'title':'كشف المرتب والمكافأة',
+                'title':'كشف مرتب ومكافأة',
                 'header':header,
                 'data': data,
                 'summary':summary_list,
+                'month':MONTH_CHOICES[month],
+                'year':year,
             }
 
             response = render(self.request,template_name,context)
@@ -742,7 +746,7 @@ class M2moria(LoginRequiredMixin,UserPermissionMixin,View):
     user_groups = ['hr_manager','hr_payroll']
     def get(self,*args,**kwargs):
         year = self.request.GET['year']
-        month = self.request.GET['month']
+        month = int(self.request.GET['month'])
         format = self.request.GET.get('format',None)
         bank_sheet = self.request.GET.get('bank_sheet',False)
         data = []
@@ -800,6 +804,8 @@ class M2moria(LoginRequiredMixin,UserPermissionMixin,View):
                 'title':'كشف المأمورية',
                 'header':header,
                 'data': data,
+                'month':MONTH_CHOICES[month],
+                'year':year,
             }
 
             response = render(self.request,template_name,context)
