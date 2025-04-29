@@ -905,7 +905,7 @@ class AppHSEPerformanceReportAdmin(admin.ModelAdmin):
         AppHSEPerformanceReportCadastralOperations2DetailInline,
     ]
 
-    list_display = ["company", "year", "month","album","ask_ai_link"]
+    list_display = ["company", "year", "month","album"] #,"ask_ai_link"
     list_filter = ["year", "month",]
     view_on_site = False
 
