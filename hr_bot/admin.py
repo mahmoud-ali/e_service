@@ -79,6 +79,7 @@ class FlowMixin:
         for obj in queryset:
             obj.state = STATE_REJECTED
             obj.save()
+            self.log_change(request,obj,"تحويل الطلب إلى "+"مرفوض")
             self.message_user(request,_('application rejected!'))
 
 # @admin.register(EmployeeTelegram)
@@ -128,6 +129,7 @@ class EmployeeTelegramRegistrationAdmin(FlowMixin,admin.ModelAdmin):
         for obj in queryset:
             obj.state = STATE_ACCEPTED
             obj.save()
+            self.log_change(request,obj,"تحويل الطلب إلى "+"مقبول")
 
             EmployeeTelegram.objects.update_or_create(
                 employee=obj.employee,
@@ -178,6 +180,7 @@ class EmployeeTelegramFamilyAdmin(PermissionMixin,FlowMixin,admin.ModelAdmin):
             print(f"obj: {obj}")
             obj.state = STATE_ACCEPTED
             obj.save()
+            self.log_change(request,obj,"تحويل الطلب إلى "+"مقبول")
 
             EmployeeFamily.objects.create(
                 employee=obj.employee,
@@ -211,6 +214,7 @@ class EmployeeTelegramMoahilAdmin(PermissionMixin,FlowMixin,admin.ModelAdmin):
             print(f"obj: {obj}")
             obj.state = STATE_ACCEPTED
             obj.save()
+            self.log_change(request,obj,"تحويل الطلب إلى "+"مقبول")
 
             EmployeeMoahil.objects.create(
                 employee=obj.employee,
@@ -246,6 +250,7 @@ class EmployeeTelegramBankAccountAdmin(PermissionMixin,FlowMixin,admin.ModelAdmi
             print(f"obj: {obj}")
             obj.state = STATE_ACCEPTED
             obj.save()
+            self.log_change(request,obj,"تحويل الطلب إلى "+"مقبول")
 
             EmployeeBankAccount.objects.create(
                 employee=obj.employee,
