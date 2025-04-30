@@ -459,7 +459,9 @@ class MoratabMokaf2Sheet():
             gasima=emp_payroll.gasima,
             atfal=emp_payroll.atfal,
             moahil=emp_payroll.moahil,
-            ma3adin=emp_payroll.ma3adin
+            ma3adin=emp_payroll.ma3adin,
+            month = emp_payroll.payroll_master.month,
+            year = emp_payroll.payroll_master.year,
         )
         khosomat = Khosomat(
             badal,self.payroll_master.zaka_kafaf,
