@@ -1350,7 +1350,7 @@ class TasoiaPayroll():
         ajtima3ia = round((total_gasima + total_atfal),2)
 
         try:
-            obj = PayrollTasoia.objects.create(
+            _, obj = PayrollTasoia.objects.get_or_create(
                 payroll_master = self.payroll.payroll_master,
                 total_abtdai = total_abtdai,
                 total_galaa_m3isha = total_galaa_m3isha,
