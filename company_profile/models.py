@@ -108,6 +108,8 @@ class LkpSector(models.Model):
 class LkpState(models.Model):
     sector = models.ForeignKey(LkpSector, on_delete=models.PROTECT,verbose_name=_("sector"), null=True, blank=True)
     name = models.CharField(_("name"),max_length=100)
+    x = models.FloatField(_("x"))
+    y = models.FloatField(_("y"))
     
     def __str__(self):
         return self.name    

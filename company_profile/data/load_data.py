@@ -494,3 +494,23 @@ def import_licenses_type(file_name='licenses_type.csv'):
                 license.save()
             except Exception as e:
                 print(f'id: {id} Exception: {e}')
+
+def import_lkp_state_cordinates(file_name='lkp_state_cord.csv'):
+    with open('./company_profile/data/'+file_name, newline='') as csvfile:
+        reader = csv.reader(csvfile, delimiter=',')
+        next(reader, None)  # skip the headers
+        for row in reader:
+            try:
+                id = int(row[0].strip())
+                x = float(row[3].strip())
+                y = float(row[4].strip())
+
+                state = LkpState.objects.get(
+                    id=id
+                )
+
+                state.x = x
+                state.y = y
+                state.save()
+            except Exception as e:
+                print(f'id: {id} Exception: {e}')
