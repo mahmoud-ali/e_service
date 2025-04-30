@@ -683,8 +683,8 @@ class KhosomatPlusMokaf2(LoginRequiredMixin,UserPermissionMixin,View):
             header = ['الرمز','الموظف','الدرجة الوظيفية','العلاوة','صافي المرتب','صافي المكافئة','المجموع',]
 
             for (emp,(khosomat,mokaf2)) in moratab_mokaf2.all_employees_from_db():
-                total = round(khosomat.safi_alisti7gag + mokaf2.safi_2l2sti7gag,2)
-                moratab_mokaf2_list = [round(khosomat.safi_alisti7gag,2),round(mokaf2.safi_2l2sti7gag,2),round(total,2),]
+                total = khosomat.safi_alisti7gag + mokaf2.safi_2l2sti7gag
+                moratab_mokaf2_list = [khosomat.safi_alisti7gag,mokaf2.safi_2l2sti7gag,total,]
                 # moratab_mokaf2_list = [khosomat.safi_alisti7gag,mokaf2.safi_2l2sti7gag,total,]
 
                 l = [emp.code,emp.name,emp.get_draja_wazifia_display(),emp.get_alawa_sanawia_display(),]+moratab_mokaf2_list #round(emp_mokaf2.ajmali_2lmoratab,2),round(emp_mokaf2.dariba,2),emp_mokaf2.damga,]
