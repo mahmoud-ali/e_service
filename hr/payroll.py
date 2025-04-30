@@ -1322,58 +1322,58 @@ class TasoiaPayroll():
         total_safi_alisti7gag = 0
 
         for (emp,badalat,khosomat,draja_wazifia,alawa_sanawia) in self.payroll.all_employees_payroll_from_db():
-            total_abtdai += badalat.abtdai
-            total_galaa_m3isha += badalat.galaa_m3isha
-            total_tabi3at_3mal += badalat.tabi3at_3mal
-            total_tamtheel += badalat.tamtheel
-            total_mihna += badalat.mihna
-            total_ma3adin += badalat.ma3adin
-            total_aadoa += badalat.aadoa
-            total_gasima += badalat.ajtima3ia_gasima
-            total_atfal += badalat.ajtima3ia_atfal
-            total_moahil += badalat.moahil
-            total_shakhsia += badalat.shakhsia
-            total_makhatir += badalat.makhatir
+            total_abtdai += round(badalat.abtdai,2)
+            total_galaa_m3isha += round(badalat.galaa_m3isha,2)
+            total_tabi3at_3mal += round(badalat.tabi3at_3mal,2)
+            total_tamtheel += round(badalat.tamtheel,2)
+            total_mihna += round(badalat.mihna,2)
+            total_ma3adin += round(badalat.ma3adin,2)
+            total_aadoa += round(badalat.aadoa,2)
+            total_gasima += round(badalat.ajtima3ia_gasima,2)
+            total_atfal += round(badalat.ajtima3ia_atfal,2)
+            total_moahil += round(badalat.moahil,2)
+            total_shakhsia += round(badalat.shakhsia,2)
+            total_makhatir += round(badalat.makhatir,2)
 
-            total_salafiat += (khosomat.salafiat + khosomat.salafiat_3la_2lmoratab)
-            total_dariba += khosomat.dariba
-            total_damga += khosomat.damga
-            total_tameen_ajtima3i += khosomat.tameen_ajtima3i
-            total_m3ash += khosomat.m3ash
-            total_sandog += khosomat.sandog
-            total_zakat += khosomat.zakat
-            total_youm_algoat_almosalaha += khosomat.youm_algoat_almosalaha
-            total_jazaat += khosomat.jazaat
-            total_salafiat_sandog += khosomat.salafiat_sandog_remain
-            total_safi_alisti7gag += khosomat.safi_alisti7gag
+            total_salafiat += round((khosomat.salafiat + khosomat.salafiat_3la_2lmoratab),2)
+            total_dariba += round(khosomat.dariba,2)
+            total_damga += round(khosomat.damga,2)
+            total_tameen_ajtima3i += round(khosomat.tameen_ajtima3i,2)
+            total_m3ash += round(khosomat.m3ash,2)
+            total_sandog += round(khosomat.sandog,2)
+            total_zakat += round(khosomat.zakat,2)
+            total_youm_algoat_almosalaha += round(khosomat.youm_algoat_almosalaha,2)
+            total_jazaat += round(khosomat.jazaat,2)
+            total_salafiat_sandog += round(khosomat.salafiat_sandog_remain,2)
+            total_safi_alisti7gag += round(khosomat.safi_alisti7gag,2)
 
-        ajtima3ia = (total_gasima + total_atfal)
+        ajtima3ia = round((total_gasima + total_atfal),2)
 
         try:
             obj = PayrollTasoia.objects.create(
-                payroll_master =  round(self.payroll.payroll_master,2),
-                total_abtdai =  round(total_abtdai,2),
-                total_galaa_m3isha =  round(total_galaa_m3isha,2),
-                total_tabi3at_3mal =  round(total_tabi3at_3mal,2),
-                total_tamtheel =  round(total_tamtheel,2),
-                total_mihna =  round(total_mihna,2),
-                total_ma3adin =  round(total_ma3adin,2),
-                total_aadoa =  round(total_aadoa,2),
-                total_ajtima3ia =  round(ajtima3ia,2),
-                total_moahil =  round(total_moahil,2),
-                total_shakhsia =  round(total_shakhsia,2),
-                total_makhatir =  round(total_makhatir,2),
-                total_salafiat =  round(total_salafiat,2),
-                total_dariba =  round(total_dariba,2),
-                total_damga = round(total_damga,2),
-                total_m3ash =  round(total_m3ash,2),
-                total_tameen_ajtima3i =  round(total_tameen_ajtima3i,2),
-                total_sandog =  round(total_sandog,2),
-                total_zakat =  round(total_zakat,2),
-                total_youm_algoat_almosalaha =  round(total_youm_algoat_almosalaha,2),
-                total_jazaat =  round(total_jazaat,2),
-                total_salafiat_sandog =  round(total_salafiat_sandog,2),
-                total_safi_alisti7gag =  round(total_safi_alisti7gag,2),
+                payroll_master = self.payroll.payroll_master,
+                total_abtdai = total_abtdai,
+                total_galaa_m3isha = total_galaa_m3isha,
+                total_tabi3at_3mal = total_tabi3at_3mal,
+                total_tamtheel = total_tamtheel,
+                total_mihna = total_mihna,
+                total_ma3adin = total_ma3adin,
+                total_aadoa = total_aadoa,
+                total_ajtima3ia = ajtima3ia,
+                total_moahil = total_moahil,
+                total_shakhsia = total_shakhsia,
+                total_makhatir = total_makhatir,
+                total_salafiat = total_salafiat,
+                total_dariba = total_dariba,
+                total_damga = total_damga,
+                total_m3ash = total_m3ash,
+                total_tameen_ajtima3i = total_tameen_ajtima3i,
+                total_sandog = total_sandog,
+                total_zakat = total_zakat,
+                total_youm_algoat_almosalaha = total_youm_algoat_almosalaha,
+                total_jazaat = total_jazaat,
+                total_salafiat_sandog = total_salafiat_sandog,
+                total_safi_alisti7gag = total_safi_alisti7gag,
             )
 
         except IntegrityError:
