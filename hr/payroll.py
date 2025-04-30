@@ -1322,32 +1322,32 @@ class TasoiaPayroll():
         total_safi_alisti7gag = 0
 
         for (emp,badalat,khosomat,draja_wazifia,alawa_sanawia) in self.payroll.all_employees_payroll_from_db():
-            total_abtdai += badalat.abtdai
-            total_galaa_m3isha += badalat.galaa_m3isha
-            total_tabi3at_3mal += badalat.tabi3at_3mal
-            total_tamtheel += badalat.tamtheel
-            total_mihna += badalat.mihna
-            total_ma3adin += badalat.ma3adin
-            total_aadoa += badalat.aadoa
-            total_gasima += badalat.ajtima3ia_gasima
-            total_atfal += badalat.ajtima3ia_atfal
-            total_moahil += badalat.moahil
-            total_shakhsia += badalat.shakhsia
-            total_makhatir += badalat.makhatir
+            total_abtdai += round(badalat.abtdai,2)
+            total_galaa_m3isha += round(badalat.galaa_m3isha,2)
+            total_tabi3at_3mal += round(badalat.tabi3at_3mal,2)
+            total_tamtheel += round(badalat.tamtheel,2)
+            total_mihna += round(badalat.mihna,2)
+            total_ma3adin += round(badalat.ma3adin,2)
+            total_aadoa += round(badalat.aadoa,2)
+            total_gasima += round(badalat.ajtima3ia_gasima,2)
+            total_atfal += round(badalat.ajtima3ia_atfal,2)
+            total_moahil += round(badalat.moahil,2)
+            total_shakhsia += round(badalat.shakhsia,2)
+            total_makhatir += round(badalat.makhatir,2)
 
-            total_salafiat += (khosomat.salafiat + khosomat.salafiat_3la_2lmoratab)
-            total_dariba += khosomat.dariba
-            total_damga += khosomat.damga
-            total_tameen_ajtima3i += khosomat.tameen_ajtima3i
-            total_m3ash += khosomat.m3ash
-            total_sandog += khosomat.sandog            
-            total_zakat += khosomat.zakat
-            total_youm_algoat_almosalaha += khosomat.youm_algoat_almosalaha
-            total_jazaat += khosomat.jazaat
-            total_salafiat_sandog +=khosomat.salafiat_sandog_remain
-            total_safi_alisti7gag += khosomat.safi_alisti7gag
+            total_salafiat += round((khosomat.salafiat + khosomat.salafiat_3la_2lmoratab),2)
+            total_dariba += round(khosomat.dariba,2)
+            total_damga += round(khosomat.damga,2)
+            total_tameen_ajtima3i += round(khosomat.tameen_ajtima3i,2)
+            total_m3ash += round(khosomat.m3ash,2)
+            total_sandog += round(khosomat.sandog,2)
+            total_zakat += round(khosomat.zakat,2)
+            total_youm_algoat_almosalaha += round(khosomat.youm_algoat_almosalaha,2)
+            total_jazaat += round(khosomat.jazaat,2)
+            total_salafiat_sandog += round(khosomat.salafiat_sandog_remain,2)
+            total_safi_alisti7gag += round(khosomat.safi_alisti7gag,2)
 
-        ajtima3ia = (total_gasima + total_atfal)
+        ajtima3ia = round((total_gasima + total_atfal),2)
 
         try:
             obj = PayrollTasoia.objects.create(
