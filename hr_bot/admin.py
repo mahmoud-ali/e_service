@@ -84,6 +84,14 @@ class FlowMixin:
             self.log_change(request,obj,"تحويل الطلب إلى "+"مرفوض")
             self.message_user(request,_('application rejected!'))
 
+            message = f"تم رفض طلبك: {obj}. الرجاء مراجعة البيانات."
+
+            try:
+                user_id = obj.employee.employeetelegramregistration_set.first().user_id
+                send_message(TOKEN_ID, user_id, message)
+            except:
+                pass
+
 # @admin.register(EmployeeTelegram)
 # class EmployeeTelegramAdmin(admin.ModelAdmin):
 #     model = EmployeeTelegram
@@ -144,6 +152,9 @@ class EmployeeTelegramRegistrationAdmin(FlowMixin,admin.ModelAdmin):
             self.message_user(request,_('application accepted!'))
 
         username = obj.employee.email
+
+        obj.employee.phone = obj.phone
+        obj.employee.save()
 
         if User.objects.filter(username=username).exists():
             # user = User.objects.get(username=username)

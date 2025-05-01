@@ -6,7 +6,7 @@ import requests
 User = get_user_model()
 
 def create_user(username, email, password):
-    user = User.objects.create_user(username=username, email=email, password=password, is_staff=True)
+    user = User.objects.create_user(username=username.lower(), email=email.lower(), password=password, is_staff=True)
 
     # user = User.objects.create_user(username, username, password, is_staff=True)
 

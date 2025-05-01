@@ -87,8 +87,11 @@ class EmployeeTelegramFamily(LoggingModel):
         verbose_name = _("Employee Family Application")
         verbose_name_plural = _("Employee Family Application")
 
+    # def __str__(self) -> str:
+    #     return f'{self.employee.name} ({self.get_relation_display()})'
     def __str__(self) -> str:
-        return f'{self.employee.name} ({self.get_relation_display()})'
+        return f'بيانات الاسرة: {self.name}({self.get_relation_display()})'
+
 
 class EmployeeTelegramMoahil(LoggingModel):
     """
@@ -121,8 +124,10 @@ class EmployeeTelegramMoahil(LoggingModel):
         verbose_name = _("Employee Moahil Application")
         verbose_name_plural = _("Employee Moahil Application")
 
+    # def __str__(self) -> str:
+    #     return f'{self.employee.name} ({self.get_moahil_display()})'
     def __str__(self) -> str:
-        return f'{self.employee.name} ({self.get_moahil_display()})'
+        return f'بيانات المؤهل: {self.get_moahil_display()}'
 
 class EmployeeTelegramBankAccount(LoggingModel):
     """
@@ -149,8 +154,11 @@ class EmployeeTelegramBankAccount(LoggingModel):
         verbose_name = _("Bank Account Application")
         verbose_name_plural = _("Bank Account Application")
 
+    # def __str__(self) -> str:
+    #     return f'{self.employee.name} ({EmployeeBankAccount.BANK_CHOICES[self.bank]})'# / {self.edara_3ama.name}'
     def __str__(self) -> str:
-        return f'{self.employee.name} ({EmployeeBankAccount.BANK_CHOICES[self.bank]})'# / {self.edara_3ama.name}'
+        return f'رقم حساب: {self.account_no} - ({EmployeeBankAccount.BANK_CHOICES[self.bank]})'
+
 
 class EmployeeBasicProxy(hr_models.EmployeeBasic):
     class Meta:
