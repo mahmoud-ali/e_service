@@ -5,7 +5,6 @@ from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
 
 from django.contrib import admin
-import requests
 from django.contrib.auth.models import  Group
 from django.contrib.auth import get_user_model
 
@@ -13,8 +12,11 @@ from hr.admin import SalafiatForm
 from hr.models import EmployeeBankAccount, EmployeeFamily, EmployeeMoahil
 from hr_bot.management.commands.telegram_main import TOKEN_ID
 from hr_bot.models import STATE_ACCEPTED, STATE_DRAFT, STATE_REJECTED, EmployeeBankAccountProxy, EmployeeBasicProxy, EmployeeFamilyProxy, EmployeeMoahilProxy, EmployeeTelegram, EmployeeTelegramBankAccount, EmployeeTelegramFamily, EmployeeTelegramMoahil, EmployeeTelegramRegistration, JazaatProxy, SalafiatProxy
+from hr_bot.utils import create_user, reset_user_password, send_message
 
 User = get_user_model()
+
+portal_url = "https://hr1.mineralsgate.com/app/managers/"
 
 class PermissionMixin:
     def has_add_permission(self, request):
@@ -107,8 +109,9 @@ class FlowMixin:
 class EmployeeTelegramRegistrationAdmin(FlowMixin,admin.ModelAdmin):
     model = EmployeeTelegramRegistration
     exclude = ["created_at","created_by","updated_at","updated_by","state"] #,"user_id"
-    list_display = ["employee","name","phone"]        
+    list_display = ["employee","name","phone","state"]        
     list_filter = ["state"]
+    actions = ['accept','reject','reset_password']
     view_on_site = False
     search_fields = ["employee__name","phone","name"]
     formfield_overrides = {
@@ -140,25 +143,32 @@ class EmployeeTelegramRegistrationAdmin(FlowMixin,admin.ModelAdmin):
             )
             self.message_user(request,_('application accepted!'))
 
-        portal_url = "https://hr1.mineralsgate.com/app/managers/"
         username = obj.employee.email
 
         if User.objects.filter(username=username).exists():
             # user = User.objects.get(username=username)
-            message = f"الآن يمكنك الدخول لبوابة الموارد البشرية عبر الرابط التالي {portal_url} \n باسم المستخدم {username}"
+            message = f"الآن يمكنك الدخول لبوابة الموارد البشرية عبر الرابط التالي\n {portal_url} \n باسم المستخدم {username}"
 
         else:
             password = f"{int(random.random()*1000000)}"
 
-            user = User.objects.create_user(username, username, password, is_staff=True)
+            user = create_user(username, username, password)
 
-            employee_group = Group.objects.get(name='hr_employee') 
-            employee_group.user_set.add(user)
+            message = f"الآن يمكنك الدخول لبوابة الموارد البشرية عبر الرابط التالي\n {portal_url} \n باسم المستخدم {username} \n وكلمة المرور {password}"
+            self.log_change(request,obj,"اعتماد مستخدم جديد")
 
-            message = f"الآن يمكنك الدخول لبوابة الموارد البشرية عبر الرابط التالي {portal_url} \n باسم المستخدم {username} \n وكلمة المرور {password}"
+        send_message(TOKEN_ID, obj.user_id, message)
 
-        telegram_url = f"https://api.telegram.org/bot{TOKEN_ID}/sendMessage?chat_id={int(obj.user_id)}&text={message}"
-        requests.get(telegram_url)
+    @admin.action(description=_('إعادة تعيين كلمة مرور الموظف'))
+    def reset_password(self, request, queryset):
+        for obj in queryset:
+            password = f"{int(random.random()*1000000)}"
+            message = f"تم إعادة تعيين كلمة المرور الخاصة بك.\nالآن يمكنك الدخول لبوابة الموارد البشرية عبر الرابط التالي {portal_url} \n باسم المستخدم {obj.employee.email} \n وكلمة المرور {password}"
+            reset_user_password(obj.employee.email,password)
+            send_message(TOKEN_ID, obj.user_id, message)
+
+            self.message_user(request,_('password reset!'))
+            self.log_change(request,obj,"إعادة تعيين كلمة مرور الموظف")
 
 @admin.register(EmployeeTelegramFamily)
 class EmployeeTelegramFamilyAdmin(PermissionMixin,FlowMixin,admin.ModelAdmin):
