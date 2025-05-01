@@ -54,7 +54,7 @@ class FlowMixin:
     def get_queryset(self, request):
         qs = super().get_queryset(request)
         if request.user.is_superuser or request.user.groups.filter(name__in=["hr_manager","hr_manpower"]).exists():
-            return qs.filter(state=STATE_DRAFT)
+            return qs #.filter(state=STATE_DRAFT)
 
         return qs.filter(employee__email=request.user.email)
     
@@ -108,7 +108,7 @@ class EmployeeTelegramRegistrationAdmin(FlowMixin,admin.ModelAdmin):
     model = EmployeeTelegramRegistration
     exclude = ["created_at","created_by","updated_at","updated_by","state"] #,"user_id"
     list_display = ["employee","name","phone"]        
-    # list_filter = ["category"]
+    list_filter = ["state"]
     view_on_site = False
     search_fields = ["employee__name","phone","name"]
     formfield_overrides = {
@@ -165,7 +165,7 @@ class EmployeeTelegramFamilyAdmin(PermissionMixin,FlowMixin,admin.ModelAdmin):
     model = EmployeeTelegramFamily
     exclude = ["created_at","created_by","updated_at","updated_by","state","tarikh_el2dafa"] #,"user_id"
     list_display = ["name","relation","attachement_file","state"]        
-    # list_filter = ["category"]
+    list_filter = ["state"]
     autocomplete_fields = ["employee"]
     view_on_site = False
     search_fields = ["employee__name","employee__code"]
@@ -199,7 +199,7 @@ class EmployeeTelegramMoahilAdmin(PermissionMixin,FlowMixin,admin.ModelAdmin):
     model = EmployeeTelegramMoahil
     exclude = ["created_at","created_by","updated_at","updated_by","state","tarikh_el2dafa"] #,"user_id"
     list_display = ["employee","moahil","university","graduate_dt","state"]        
-    list_filter = ["moahil","university","takhasos","graduate_dt","attachement_file"]
+    list_filter = ["moahil","state"]
     autocomplete_fields = ["employee"]
     view_on_site = False
     search_fields = ["employee__name","employee__code"]
@@ -235,7 +235,7 @@ class EmployeeTelegramBankAccountAdmin(PermissionMixin,FlowMixin,admin.ModelAdmi
     model = EmployeeTelegramBankAccount
     exclude = ["created_at","created_by","updated_at","updated_by","state"] #,"user_id"
     list_display = ["employee","bank","account_no","active","state"]        
-    list_filter = ["bank",]
+    list_filter = ["bank","state"]
     autocomplete_fields = ["employee"]
     view_on_site = False
     search_fields = ["employee__name","employee__code"]
