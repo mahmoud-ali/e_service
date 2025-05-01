@@ -161,19 +161,29 @@ class EmployeeBasicProxy(hr_models.EmployeeBasic):
 class EmployeeBankAccountProxy(hr_models.EmployeeBankAccount):
     class Meta:
         proxy = True
+        verbose_name = _("Bank Account")
+        verbose_name_plural = _("Bank Accounts")
 
 class EmployeeFamilyProxy(hr_models.EmployeeFamily):
     class Meta:
         proxy = True
+        verbose_name = _("Employee Family")
+        verbose_name_plural = _("Employee Family")
 
 class EmployeeMoahilProxy(hr_models.EmployeeMoahil):
     class Meta:
         proxy = True
+        verbose_name = _("Employee Moahil")
+        verbose_name_plural = _("Employee Moahil")
 
 class SalafiatProxy(hr_models.EmployeeSalafiat):
     class Meta:
         proxy = True
+        verbose_name = _("Salafiat")
+        verbose_name_plural = _("Salafiat")
 
 class JazaatProxy(hr_models.EmployeeJazaat):
     class Meta:
         proxy = True
+        verbose_name = _("Jazaat")
+        verbose_name_plural = _("Jazaat")
