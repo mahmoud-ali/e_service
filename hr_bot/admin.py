@@ -310,9 +310,9 @@ class JazaatInline(admin.TabularInline):
 class EmployeeBasicProxyAdmin(admin.ModelAdmin):
     model = EmployeeBasicProxy
     inlines = [EmployeeBankAccountInline, EmployeeFamilyInline, EmployeeMoahilInline,SalafiatInline,JazaatInline]
-    fields = ["code","name", "draja_wazifia","alawa_sanawia","hikal_wazifi", "edara_3ama_tmp","edara_far3ia_tmp", "mosama_wazifi","sex","tarikh_milad","tarikh_ta3in","tarikh_akhir_targia","gasima","atfal","phone","email","no3_2lertibat","sanoat_2lkhibra","aadoa","m3ash","status"]        
-    # readonly_fields = ["code","name", "draja_wazifia","alawa_sanawia","hikal_wazifi", "edara_3ama_tmp","edara_far3ia_tmp", "mosama_wazifi","sex","tarikh_milad","tarikh_ta3in","tarikh_akhir_targia","gasima","atfal","phone","email","no3_2lertibat","sanoat_2lkhibra","aadoa","m3ash","status"]        
-    list_display_links = []
+    fields = ["code","name", "draja_wazifia","alawa_sanawia","hikal_wazifi", "edara_3ama_tmp","edara_far3ia_tmp", "mosama_wazifi","sex","tarikh_milad","tarikh_ta3in","tarikh_akhir_targia","gasima","atfal","moahil","phone","email","no3_2lertibat","sanoat_2lkhibra","aadoa","m3ash","status"]        
+    readonly_fields = ["code","name", "draja_wazifia","alawa_sanawia","hikal_wazifi", "edara_3ama_tmp","edara_far3ia_tmp", "mosama_wazifi","sex","tarikh_milad","tarikh_ta3in","tarikh_akhir_targia","gasima","atfal","phone","email","no3_2lertibat","sanoat_2lkhibra","aadoa","m3ash","status"]        
+    list_display_links = ["code","name"]
     list_display = ["code","name", "draja_wazifia","alawa_sanawia", "edara_3ama","edara_far3ia","gisim", "mosama_wazifi","tarikh_ta3in",]        
     view_on_site = False
 
