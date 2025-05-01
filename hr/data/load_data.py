@@ -334,5 +334,6 @@ def swap_emps(id1,id2):
 
 def update_email_to_lower():
     for obj in EmployeeBasic.objects.all():
-        obj.email = obj.email.lower()
-        obj.save()
+        if obj.email:
+            obj.email = obj.email.lower()
+            obj.save()
