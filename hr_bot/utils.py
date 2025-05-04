@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.models import  Group
 
 from hr.models import EmployeeFamily
-from hr_bot.models import EmployeeTelegramBankAccount, EmployeeTelegramFamily, EmployeeTelegramMoahil
+from hr_bot.models import EmployeeTelegramBankAccount, EmployeeTelegramFamily, EmployeeTelegramMoahil,ApplicationRequirement
 
 import requests
 
@@ -33,15 +33,28 @@ def send_message(TOKEN_ID, user_id, message):
 
 def reject_cause(model, obj):
     msg = ""
+    qs = ApplicationRequirement.objects.all()
+
     if model == EmployeeTelegramFamily:
         if obj.relation == EmployeeFamily.FAMILY_RELATION_CHILD:
-            msg += "" #"child requirements"
-        elif obj.relation == EmployeeFamily.FAMILY_RELATION_CONSORT:
-            msg += "" #"consort requirements"
+            qs = qs.filter(app=ApplicationRequirement.ATFAL)
 
+            msg = ""
+            msg += "\n".join(qs.values_list("requirement",flat=True))
+        elif obj.relation == EmployeeFamily.FAMILY_RELATION_CONSORT:
+            qs = qs.filter(app=ApplicationRequirement.GASIMA)
+
+            msg = ""
+            msg += "\n".join(qs.values_list("requirement",flat=True))
     elif model == EmployeeTelegramMoahil:
-        msg += "" #"moahil requirements"
+        qs = qs.filter(app=ApplicationRequirement.MOAHIL)
+
+        msg = ""
+        msg += "\n".join(qs.values_list("requirement",flat=True))
     elif model == EmployeeTelegramBankAccount:
-        msg += "" #"bank account requirements"
+        qs = qs.filter(app=ApplicationRequirement.BANK_ACCOUNT)
+
+        msg = ""
+        msg += "\n".join(qs.values_list("requirement",flat=True))
 
     return msg

@@ -195,3 +195,25 @@ class JazaatProxy(hr_models.EmployeeJazaat):
         proxy = True
         verbose_name = _("Jazaat")
         verbose_name_plural = _("Jazaat")
+
+class ApplicationRequirement(models.Model):
+    ATFAL = 1
+    GASIMA = 2
+    MOAHIL = 3
+    BANK_ACCOUNT = 4
+
+    APP_CHOICES = {
+        ATFAL: _("إضافة طفل"),
+        GASIMA: _("إضافة قسيمة"),
+        MOAHIL: _("إضافة مؤهل"),
+        BANK_ACCOUNT: _("إضافة حساب بنكي"),
+    }
+    app = models.PositiveSmallIntegerField(_("الطلب"),choices=APP_CHOICES)
+    requirement = models.CharField(_("المتطلبات"),max_length=255)
+
+    def __str__(self) -> str:
+        return f"{self.app}: {self.requirement}"
+
+    class Meta:
+        verbose_name = _("مطلوبات الاجراءات")
+        verbose_name_plural = _("مطلوبات الاجراءات")
