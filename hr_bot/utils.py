@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import  Group
 
-from hr.models import EmployeeBankAccount, EmployeeFamily, EmployeeMoahil
+from hr_bot.models import EmployeeFamilyProxy, EmployeeMoahilProxy, EmployeeTelegramBankAccount
 
 import requests
 
@@ -32,15 +32,15 @@ def send_message(TOKEN_ID, user_id, message):
 
 def reject_cause(model, obj):
     msg = ""
-    if model == EmployeeFamily:
-        if obj.relation == EmployeeFamily.FAMILY_RELATION_CHILD:
+    if model == EmployeeFamilyProxy:
+        if obj.relation == EmployeeFamilyProxy.FAMILY_RELATION_CHILD:
             msg += "child requirements"
-        elif obj.relation == EmployeeFamily.FAMILY_RELATION_CONSORT:
+        elif obj.relation == EmployeeFamilyProxy.FAMILY_RELATION_CONSORT:
             msg += "consort requirements"
 
-    elif model == EmployeeMoahil:
+    elif model == EmployeeMoahilProxy:
         msg += "moahil requirements"
-    elif model == EmployeeBankAccount:
+    elif model == EmployeeTelegramBankAccount:
         msg += "bank account requirements"
 
     return msg
