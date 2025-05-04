@@ -1,6 +1,8 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import  Group
 
+from hr.models import EmployeeBankAccount, EmployeeFamily, EmployeeMoahil
+
 import requests
 
 User = get_user_model()
@@ -27,3 +29,18 @@ def reset_user_password(username, new_password):
 def send_message(TOKEN_ID, user_id, message):
     telegram_url = f"https://api.telegram.org/bot{TOKEN_ID}/sendMessage?chat_id={int(user_id)}&text={message}"
     return requests.get(telegram_url)
+
+def reject_cause(model, obj):
+    msg = ""
+    if model == EmployeeFamily:
+        if obj.relation == EmployeeFamily.FAMILY_RELATION_CHILD:
+            msg += "child requirements"
+        elif obj.relation == EmployeeFamily.FAMILY_RELATION_CONSORT:
+            msg += "consort requirements"
+
+    elif model == EmployeeMoahil:
+        msg += "moahil requirements"
+    elif model == EmployeeBankAccount:
+        msg += "bank account requirements"
+
+    return msg

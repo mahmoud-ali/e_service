@@ -12,7 +12,7 @@ from hr.admin import SalafiatForm
 from hr.models import EmployeeBankAccount, EmployeeFamily, EmployeeMoahil
 from hr_bot.management.commands.telegram_main import TOKEN_ID
 from hr_bot.models import STATE_ACCEPTED, STATE_DRAFT, STATE_REJECTED, EmployeeBankAccountProxy, EmployeeBasicProxy, EmployeeFamilyProxy, EmployeeMoahilProxy, EmployeeTelegram, EmployeeTelegramBankAccount, EmployeeTelegramFamily, EmployeeTelegramMoahil, EmployeeTelegramRegistration, JazaatProxy, SalafiatProxy
-from hr_bot.utils import create_user, reset_user_password, send_message
+from hr_bot.utils import create_user, reject_cause, reset_user_password, send_message
 
 User = get_user_model()
 
@@ -90,13 +90,14 @@ class FlowMixin:
             self.log_change(request,obj,"تحويل الطلب إلى "+"مرفوض")
             self.message_user(request,_('application rejected!'))
 
-            message = f"تم رفض طلبك: {obj}. الرجاء مراجعة البيانات."
+            message = f"تم رفض طلبك: {obj}. الرجاء مراجعة البيانات.\n\n{reject_cause(self.model,obj)}"
 
             try:
                 user_id = obj.employee.employeetelegramregistration_set.first().user_id
                 send_message(TOKEN_ID, user_id, message)
             except:
                 pass
+            
 
 # @admin.register(EmployeeTelegram)
 # class EmployeeTelegramAdmin(admin.ModelAdmin):
