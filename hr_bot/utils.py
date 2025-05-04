@@ -38,23 +38,23 @@ def reject_cause(model, obj):
     if model == EmployeeTelegramFamily:
         if obj.relation == EmployeeFamily.FAMILY_RELATION_CHILD:
             qs = qs.filter(app=ApplicationRequirement.ATFAL)
-
-            msg = ""
-            msg += "\n".join(qs.values_list("requirement",flat=True))
+            if qs.exists():
+                msg = "*** مطلوبات إضافة طفل ***\n - "
+                msg += "\n - ".join(qs.values_list("requirement",flat=True))
         elif obj.relation == EmployeeFamily.FAMILY_RELATION_CONSORT:
             qs = qs.filter(app=ApplicationRequirement.GASIMA)
-
-            msg = ""
-            msg += "\n".join(qs.values_list("requirement",flat=True))
+            if qs.exists():
+                msg = "*** مطلوبات إضافة قسيمة ***\n - "
+                msg += "\n - ".join(qs.values_list("requirement",flat=True))
     elif model == EmployeeTelegramMoahil:
         qs = qs.filter(app=ApplicationRequirement.MOAHIL)
-
-        msg = ""
-        msg += "\n".join(qs.values_list("requirement",flat=True))
+        if qs.exists():
+            msg = "*** مطلوبات إضافة مؤهل ***\n - "
+            msg += "\n - ".join(qs.values_list("requirement",flat=True))
     elif model == EmployeeTelegramBankAccount:
         qs = qs.filter(app=ApplicationRequirement.BANK_ACCOUNT)
-
-        msg = ""
-        msg += "\n".join(qs.values_list("requirement",flat=True))
+        if qs.exists():
+            msg = "*** مطلوبات إضافة حساب بنكي ***\n - "
+            msg += "\n - ".join(qs.values_list("requirement",flat=True))
 
     return msg

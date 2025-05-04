@@ -85,18 +85,19 @@ class FlowMixin:
     @admin.action(description=_('Reject'))
     def reject(self, request, queryset):
         for obj in queryset:
-            obj.state = STATE_REJECTED
-            obj.save()
-            self.log_change(request,obj,"تحويل الطلب إلى "+"مرفوض")
-            self.message_user(request,_('application rejected!'))
+            if obj.state ==STATE_DRAFT:
+                obj.state = STATE_REJECTED
+                obj.save()
+                self.log_change(request,obj,"تحويل الطلب إلى "+"مرفوض")
+                self.message_user(request,_('application rejected!'))
 
-            message = f"تم رفض طلبك: {obj}. الرجاء مراجعة البيانات.\n\n{reject_cause(self.model,obj)}"
+                message = f"تم رفض طلبك: {obj}. الرجاء مراجعة البيانات.\n\n{reject_cause(self.model,obj)}"
 
-            try:
-                user_id = obj.employee.employeetelegramregistration_set.first().user_id
-                send_message(TOKEN_ID, user_id, message)
-            except:
-                pass
+                try:
+                    user_id = obj.employee.employeetelegramregistration_set.first().user_id
+                    send_message(TOKEN_ID, user_id, message)
+                except:
+                    pass
             
 
 # @admin.register(EmployeeTelegram)
@@ -205,22 +206,30 @@ class EmployeeTelegramFamilyAdmin(PermissionMixin,FlowMixin,admin.ModelAdmin):
     @admin.action(description=_('Accept'))
     def accept(self, request, queryset):
         for obj in queryset:
-            print(f"obj: {obj}")
-            obj.state = STATE_ACCEPTED
-            obj.save()
-            self.log_change(request,obj,"تحويل الطلب إلى "+"مقبول")
+            if obj.state ==STATE_DRAFT:
+                obj.state = STATE_ACCEPTED
+                obj.save()
+                self.log_change(request,obj,"تحويل الطلب إلى "+"مقبول")
 
-            EmployeeFamily.objects.create(
-                employee=obj.employee,
-                relation=obj.relation,
-                name=obj.name,
-                tarikh_el2dafa=timezone.now(),
-                attachement_file=obj.attachement_file,
+                EmployeeFamily.objects.create(
+                    employee=obj.employee,
+                    relation=obj.relation,
+                    name=obj.name,
+                    tarikh_el2dafa=timezone.now(),
+                    attachement_file=obj.attachement_file,
 
-                created_by=request.user,
-                updated_by=request.user,
-            )
-            self.message_user(request,_('application accepted!'))
+                    created_by=request.user,
+                    updated_by=request.user,
+                )
+                self.message_user(request,_('application accepted!'))
+
+                message = f"تم قبول طلبك: {obj}."
+
+                try:
+                    user_id = obj.employee.employeetelegramregistration_set.first().user_id
+                    send_message(TOKEN_ID, user_id, message)
+                except:
+                    pass
 
 @admin.register(EmployeeTelegramMoahil)
 class EmployeeTelegramMoahilAdmin(PermissionMixin,FlowMixin,admin.ModelAdmin):
@@ -239,24 +248,32 @@ class EmployeeTelegramMoahilAdmin(PermissionMixin,FlowMixin,admin.ModelAdmin):
     @admin.action(description=_('Accept'))
     def accept(self, request, queryset):
         for obj in queryset:
-            print(f"obj: {obj}")
-            obj.state = STATE_ACCEPTED
-            obj.save()
-            self.log_change(request,obj,"تحويل الطلب إلى "+"مقبول")
+            if obj.state ==STATE_DRAFT:
+                obj.state = STATE_ACCEPTED
+                obj.save()
+                self.log_change(request,obj,"تحويل الطلب إلى "+"مقبول")
 
-            EmployeeMoahil.objects.create(
-                employee=obj.employee,
-                moahil=obj.moahil,
-                university=obj.university,
-                takhasos=obj.takhasos,
-                graduate_dt=obj.graduate_dt,
-                tarikh_el2dafa=timezone.now(),
-                attachement_file=obj.attachement_file,
+                EmployeeMoahil.objects.create(
+                    employee=obj.employee,
+                    moahil=obj.moahil,
+                    university=obj.university,
+                    takhasos=obj.takhasos,
+                    graduate_dt=obj.graduate_dt,
+                    tarikh_el2dafa=timezone.now(),
+                    attachement_file=obj.attachement_file,
 
-                created_by=request.user,
-                updated_by=request.user,
-            )
-            self.message_user(request,_('application accepted!'))
+                    created_by=request.user,
+                    updated_by=request.user,
+                )
+                self.message_user(request,_('application accepted!'))
+
+                message = f"تم قبول طلبك: {obj}."
+
+                try:
+                    user_id = obj.employee.employeetelegramregistration_set.first().user_id
+                    send_message(TOKEN_ID, user_id, message)
+                except:
+                    pass
 
 @admin.register(EmployeeTelegramBankAccount)
 class EmployeeTelegramBankAccountAdmin(PermissionMixin,FlowMixin,admin.ModelAdmin):
@@ -275,21 +292,29 @@ class EmployeeTelegramBankAccountAdmin(PermissionMixin,FlowMixin,admin.ModelAdmi
     @admin.action(description=_('Accept'))
     def accept(self, request, queryset):
         for obj in queryset:
-            print(f"obj: {obj}")
-            obj.state = STATE_ACCEPTED
-            obj.save()
-            self.log_change(request,obj,"تحويل الطلب إلى "+"مقبول")
+            if obj.state ==STATE_DRAFT:
+                obj.state = STATE_ACCEPTED
+                obj.save()
+                self.log_change(request,obj,"تحويل الطلب إلى "+"مقبول")
 
-            EmployeeBankAccount.objects.create(
-                employee=obj.employee,
-                bank=obj.bank,
-                account_no=obj.account_no,
-                active=obj.active,
+                EmployeeBankAccount.objects.create(
+                    employee=obj.employee,
+                    bank=obj.bank,
+                    account_no=obj.account_no,
+                    active=obj.active,
 
-                created_by=request.user,
-                updated_by=request.user,
-            )
-            self.message_user(request,_('application accepted!'))
+                    created_by=request.user,
+                    updated_by=request.user,
+                )
+                self.message_user(request,_('application accepted!'))
+
+                message = f"تم قبول طلبك: {obj}."
+
+                try:
+                    user_id = obj.employee.employeetelegramregistration_set.first().user_id
+                    send_message(TOKEN_ID, user_id, message)
+                except:
+                    pass
 
 class EmployeeBankAccountInline(admin.TabularInline):
     model = EmployeeBankAccountProxy
