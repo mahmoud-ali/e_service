@@ -174,6 +174,10 @@ class AppDabtiaatDetails(models.Model):
     gold_price = models.FloatField(_("gold_price"))
     gold_caliber = models.FloatField(_("gold_caliber"))
 
+    class Meta:
+        verbose_name = _("تفاصيل استمارة ضبطية")
+        verbose_name_plural = _("تفاصيل استمارة ضبطية")
+
 class SettlementType(models.Model):
     name = models.CharField(_("name"),max_length=100)
 
