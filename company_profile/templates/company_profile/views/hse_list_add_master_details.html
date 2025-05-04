@@ -9,7 +9,7 @@
 {% bootstrap_form_errors form %}
 {% bootstrap_messages %}
 
-<form  method="post"  enctype="multipart/form-data" novalidate>
+<form  method="post"  enctype="multipart/form-data" novalidate  onsubmit="this.querySelector('button').disabled = true;">
 {% csrf_token %}
     {% bootstrap_form form %}
 {% for formset in detail_formset  %}

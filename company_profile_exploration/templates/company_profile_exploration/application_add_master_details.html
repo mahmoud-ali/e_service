@@ -13,7 +13,7 @@
 {% bootstrap_messages %}
 
 {{ form.media }}
-<form  method="post"  enctype="multipart/form-data" novalidate>
+<form  method="post"  enctype="multipart/form-data" novalidate onsubmit="this.querySelector('button').disabled = true;">
 {% csrf_token %}
 
     {% bootstrap_form form %}
