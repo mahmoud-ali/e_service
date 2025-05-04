@@ -38,6 +38,7 @@ urlpatterns = [
     path('', include('user_sessions.urls', 'user_sessions')),
     path('', include('company_profile.urls')),
     path('', include('company_profile_exploration.urls')),
+    path('', include('hse_companies.urls')),
         # path('', include('pwa.urls')),  # You MUST use an empty string as the URL prefix    
 ]
 

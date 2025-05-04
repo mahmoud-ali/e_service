@@ -147,19 +147,26 @@ class IncidentInfo(LoggingModel):
 
         return self
 
-class IncidentInjured(models.Model):
-    incident = models.ForeignKey(IncidentInfo, on_delete=models.CASCADE, related_name='incident_injured')
+# Injured Person Details
+class IncidentInjuredPerson(models.Model):
+    incident = models.ForeignKey(IncidentInfo, on_delete=models.CASCADE, related_name='incident_injured_person')
 
-    # Injured Person Details
-    injured_surname = models.CharField(max_length=100, blank=True, null=True, verbose_name=_("إسم المصاب Injured Surname"))
+    injured_surname = models.CharField(max_length=100, verbose_name=_("إسم المصاب Injured Surname"))
     injured_position = models.CharField(max_length=100, blank=True, null=True, verbose_name=_("الوظيفة Position"))
     injured_experience_years = models.PositiveIntegerField(blank=True, null=True, verbose_name=_(" الخبرة بالأعوام Experience in Years"))
     injured_date_of_birth = models.DateField(blank=True, null=True, verbose_name=_("تاريخ الميلاد Date of Birth"))
     injured_employment_basis = models.SmallIntegerField(choices=IncidentInfo.EMPLOYMENT_BASIS_CHOICES, blank=True, null=True, verbose_name=_("نوع التوظيف Basis of Employment"))
     lost_time_injury = models.BooleanField(default=False, verbose_name=_("هل تسببت الإصابة في التغيب عن العمل؟ Did this incident cause of Lost Time of working days?"))
     lost_days = models.PositiveIntegerField(blank=True, null=True, verbose_name=_("في حال كانت الإجابة نعم حدد عدد الأيام حتى تاريخ هذا التقرير If yes, specify Number of lost days up to this report"))
-    
-    # PPE Used During Incident
+
+    class Meta:
+        verbose_name = "تفاصيل الشخص المصاب Details of Injured Person"
+        verbose_name_plural = "تفاصيل الشخص المصاب Details of Injured Person"
+
+# PPE Used During Incident
+class IncidentInjuredPPE(models.Model):
+    incident = models.ForeignKey(IncidentInfo, on_delete=models.CASCADE, related_name='incident_injured_ppe')
+
     ppe_gloves = models.BooleanField(default=False, verbose_name=_("قفازات Gloves"))
     ppe_helmet = models.BooleanField(default=False, verbose_name=_("خوذة Helmet"))
     ppe_safety_cloth = models.BooleanField(default=False, verbose_name=_("لبس السلامة Safety cloth"))
@@ -168,8 +175,15 @@ class IncidentInjured(models.Model):
     ppe_ear_protection = models.BooleanField(default=False, verbose_name=_(" واقي الاذن Ear Protection"))
     ppe_mask = models.BooleanField(default=False, verbose_name=_("كمامة Mask"))
     ppe_other = models.CharField(max_length=100, blank=True, null=True, verbose_name=_("اخرى Other"))
-    
-    # Injury/Illness Details
+
+    class Meta:
+        verbose_name = "معدات الحماية الشخصية المستخدمة اثناء الحادث protective equipment’s used during the Incident"
+        verbose_name_plural = "معدات الحماية الشخصية المستخدمة اثناء الحادث protective equipment’s used during the Incident"
+
+# Injury/Illness Details
+class IncidentInjuredDetails(models.Model):
+    incident = models.ForeignKey(IncidentInfo, on_delete=models.CASCADE, related_name='incident_injured_details')
+
     nature_of_injury = models.TextField(blank=True, null=True, verbose_name=_("طبيعة الاصابة او المرض ( مثلا تمزق ، كسر، جرح) Nature of Injury or Illness (e.g. fracture, strain/sprain, bruising)"))
     bodily_location = models.CharField(max_length=100, blank=True, null=True, verbose_name=_("مكان الاصابة بالجسم او المرض(مثلا اليد اليمنى، اسفل الظهر، الرئتين) Bodily Location of Injury or Illness (e.g. right leg, lower back)"))
     first_aid_details = models.TextField(blank=True, null=True, verbose_name=_("تفاصيل الاسعافات الاولية المقدمة للمصاب Details of Any First Aid Treatment Provided"))
@@ -177,8 +191,8 @@ class IncidentInjured(models.Model):
     hospital_name = models.CharField(max_length=100, blank=True, null=True, verbose_name=_("في حالة تم نقله للمستشفى، اسم المستشفى If admitted to Hospital,hospital name"))
 
     class Meta:
-        verbose_name = "تفاصيل الشخص المصاب Details of Injured Person"
-        verbose_name_plural = "تفاصيل الشخص المصاب Details of Injured Person"
+        verbose_name = "تفاصيل الاصابة/المرض المهني  Details of Injury/illness"
+        verbose_name_plural = "تفاصيل الاصابة/المرض المهني  Details of Injury/illness"
 
 class IncidentProperty(models.Model):
     incident = models.ForeignKey(IncidentInfo, on_delete=models.CASCADE, related_name='incident_property')
