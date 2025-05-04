@@ -259,7 +259,7 @@ class RelatedOnlyFieldListFilterNotEmpty(admin.RelatedOnlyFieldListFilter):
                 "display": empty_title,
             }
 
-class AppDabtiaatDetailsInline(admin.TabularInline):
+class AppDabtiaatDetailsInline(admin.StackedInline):
     model = AppDabtiaatDetails
     min_num = 1
     extra = 0
