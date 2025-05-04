@@ -32,16 +32,16 @@ def send_message(TOKEN_ID, user_id, message):
     return requests.get(telegram_url)
 
 def reject_cause(model, obj):
-    msg = "*** "
+    msg = ""
     if model == EmployeeTelegramFamily:
         if obj.relation == EmployeeFamily.FAMILY_RELATION_CHILD:
-            msg += "child requirements"
+            msg += "" #"child requirements"
         elif obj.relation == EmployeeFamily.FAMILY_RELATION_CONSORT:
-            msg += "consort requirements"
+            msg += "" #"consort requirements"
 
     elif model == EmployeeTelegramMoahil:
-        msg += "moahil requirements"
+        msg += "" #"moahil requirements"
     elif model == EmployeeTelegramBankAccount:
-        msg += "bank account requirements"
+        msg += "" #"bank account requirements"
 
     return msg
