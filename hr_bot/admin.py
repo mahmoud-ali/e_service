@@ -72,6 +72,12 @@ class FlowMixin:
 
         return ["employee",]
 
+    def get_actions(self, request):
+        if not request.user.groups.filter(name__in=["hr_manager","hr_manpower",]).exists():
+            return []
+
+        return super().get_actions(request)
+
     @admin.action(description=_('Accept'))
     def accept(self, request, queryset):
         raise NotImplementedError
@@ -185,7 +191,7 @@ class EmployeeTelegramRegistrationAdmin(FlowMixin,admin.ModelAdmin):
 class EmployeeTelegramFamilyAdmin(PermissionMixin,FlowMixin,admin.ModelAdmin):
     model = EmployeeTelegramFamily
     exclude = ["created_at","created_by","updated_at","updated_by","state","tarikh_el2dafa"] #,"user_id"
-    list_display = ["name","relation","attachement_file","state"]        
+    list_display = ["employee","name","relation","attachement_file","state"]        
     list_filter = ["state"]
     autocomplete_fields = ["employee"]
     view_on_site = False
