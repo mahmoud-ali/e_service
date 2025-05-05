@@ -172,7 +172,7 @@ class AppDabtiaatDetails(models.Model):
     alloy_id = models.CharField(_("alloy_id"),max_length=20, default='')
     gold_weight_in_gram = models.FloatField(_("gold_weight_in_gram"))
     gold_price = models.FloatField(_("gold_price"))
-    gold_caliber = models.FloatField(_("gold_caliber"))
+    gold_caliber = models.FloatField(_("gold_caliber"),default=0)
 
     class Meta:
         verbose_name = _("تفاصيل استمارة ضبطية")
