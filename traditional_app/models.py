@@ -506,3 +506,398 @@ class DailySmallProcessingUnit(LoggingModel):
     class Meta:
         verbose_name = _("وحدة معالجة صغيرة")
         verbose_name_plural = _("وحدات المعالجة الصغيرة")
+
+# This is an auto-generated Django model module created by ogrinspect.
+from django.contrib.gis.db import models
+
+
+class LkpSaigTmp(models.Model):
+    name = models.CharField(max_length=100, blank=True, null=True)
+    type = models.CharField(max_length=100, blank=True, null=True)
+    grindingmi = models.CharField(max_length=100, blank=True, null=True)
+    market_cod = models.CharField(max_length=15, blank=True, null=True)
+    market = models.CharField(max_length=100, blank=True, null=True)
+    aveagemerc = models.CharField(max_length=100, blank=True, null=True)
+    locality = models.CharField(max_length=15, blank=True, null=True)
+    state = models.CharField(max_length=30, blank=True, null=True)
+    phone_no = models.CharField(max_length=15, blank=True, null=True)
+    age = models.CharField(max_length=100, blank=True, null=True)
+    social_sta = models.CharField(max_length=100, blank=True, null=True)
+    edu_level = models.CharField(max_length=20, blank=True, null=True)
+    adress_of = models.CharField(max_length=254, blank=True, null=True)
+    blood = models.CharField(max_length=100, blank=True, null=True)
+    previous_j = models.CharField(max_length=100, blank=True, null=True)
+    national_n = models.CharField(max_length=100, blank=True, null=True)
+    age_work = models.CharField(max_length=100, blank=True, null=True)
+    laborer_no = models.CharField(max_length=10, blank=True, null=True)
+    point_x = models.FloatField(blank=True, null=True)
+    point_y = models.FloatField(blank=True, null=True)
+    geom = models.MultiPointField(srid=4326, blank=True, null=True)
+
+
+# Auto-generated `LayerMapping` dictionary for LkpSaigTmp model
+lkpsaigtmp_mapping = {
+    'name': 'Name',
+    'type': 'Type',
+    'grindingmi': 'GrindingMi',
+    'market_cod': 'Market_Cod',
+    'market': 'Market',
+    'aveagemerc': 'AveageMerc',
+    'locality': 'Locality',
+    'state': 'State',
+    'phone_no': 'Phone_no',
+    'age': 'Age',
+    'social_sta': 'Social_Sta',
+    'edu_level': 'Edu_Level',
+    'adress_of': 'Adress_Of',
+    'blood': 'blood',
+    'previous_j': 'Previous_j',
+    'national_n': 'National_N',
+    'age_work': 'Age_Work',
+    'laborer_no': 'Laborer_No',
+    'point_x': 'POINT_X',
+    'point_y': 'POINT_Y',
+    'geom': 'MULTIPOINT',
+}
+
+class LkpGrindinTmp(models.Model):
+    name = models.CharField(max_length=200, blank=True, null=True)
+    mill_owner = models.CharField(max_length=100, blank=True, null=True)
+    code = models.CharField(max_length=15, blank=True, null=True)
+    market_cod = models.CharField(max_length=15, blank=True, null=True)
+    laborersno = models.CharField(max_length=50, blank=True, null=True)
+    fuelconsum = models.CharField(max_length=50, blank=True, null=True)
+    waterconsu = models.CharField(max_length=50, blank=True, null=True)
+    mill_sort = models.CharField(max_length=30, blank=True, null=True)
+    state = models.CharField(max_length=15, blank=True, null=True)
+    locality = models.CharField(max_length=30, blank=True, null=True)
+    elc_consum = models.CharField(max_length=50, blank=True, null=True)
+    amount_car = models.CharField(max_length=15, blank=True, null=True)
+    phone_no = models.CharField(max_length=15, blank=True, null=True)
+    age = models.CharField(max_length=20, blank=True, null=True)
+    company_na = models.CharField(max_length=30, blank=True, null=True)
+    social_sta = models.CharField(max_length=15, blank=True, null=True)
+    edu_level = models.CharField(max_length=50, blank=True, null=True)
+    adress_of = models.CharField(max_length=254, blank=True, null=True)
+    blood = models.CharField(max_length=150, blank=True, null=True)
+    previous_j = models.CharField(max_length=100, blank=True, null=True)
+    national_n = models.CharField(max_length=100, blank=True, null=True)
+    age_work = models.CharField(max_length=100, blank=True, null=True)
+    laborer_no = models.CharField(max_length=10, blank=True, null=True)
+    unit_numb = models.CharField(max_length=20, blank=True, null=True)
+    zabuq = models.CharField(max_length=50, blank=True, null=True)
+    market = models.CharField(max_length=50, blank=True, null=True)
+    amount_c_1 = models.FloatField(blank=True, null=True)
+    point_x = models.FloatField(blank=True, null=True)
+    point_y = models.FloatField(blank=True, null=True)
+    geom = models.MultiPointField(srid=4326, blank=True, null=True)
+
+# Auto-generated `LayerMapping` dictionary for LkpGrindinTmp model
+lkpgrindintmp_mapping = {
+    'name': 'Name',
+    'mill_owner': 'Mill_Owner',
+    'code': 'Code',
+    'market_cod': 'Market_Cod',
+    'laborersno': 'LaborersNo',
+    'fuelconsum': 'FuelConsum',
+    'waterconsu': 'WaterConsu',
+    'mill_sort': 'Mill_Sort',
+    'state': 'State',
+    'locality': 'Locality',
+    'elc_consum': 'ELC_Consum',
+    'amount_car': 'Amount_Car',
+    'phone_no': 'Phone_no',
+    'age': 'Age',
+    'company_na': 'Company_Na',
+    'social_sta': 'Social_Sta',
+    'edu_level': 'Edu_Level',
+    'adress_of': 'Adress_Of',
+    'blood': 'BLood',
+    'previous_j': 'Previous_j',
+    'national_n': 'National_N',
+    'age_work': 'Age_Work',
+    'laborer_no': 'Laborer_No',
+    'unit_numb': 'Unit_Numb',
+    'zabuq': 'Zabuq',
+    'market': 'Market',
+    'amount_c_1': 'Amount_C_1',
+    'point_x': 'POINT_X',
+    'point_y': 'POINT_Y',
+    'geom': 'MULTIPOINT',
+}
+
+class LkpSougTmp(models.Model):
+    name = models.CharField(max_length=30, blank=True, null=True)
+    network_so = models.CharField(max_length=15, blank=True, null=True)
+    framingsta = models.CharField(max_length=15, blank=True, null=True)
+    processing_type = models.CharField(max_length=30, blank=True, null=True)
+    fuel_stati = models.FloatField(blank=True, null=True)
+    tailingsco = models.FloatField(blank=True, null=True)
+    market_man = models.CharField(max_length=30, blank=True, null=True)
+    controller = models.FloatField(blank=True, null=True)
+    accountcol = models.FloatField(blank=True, null=True)
+    state = models.CharField(max_length=15, blank=True, null=True)
+    locality = models.CharField(max_length=15, blank=True, null=True)
+    contorol_v = models.CharField(max_length=15, blank=True, null=True)
+    securityfo = models.FloatField(blank=True, null=True)
+    total_cart = models.CharField(max_length=15, blank=True, null=True)
+    shape_leng = models.FloatField(blank=True, null=True)
+    shape_area = models.FloatField(blank=True, null=True)
+    geom = models.MultiPolygonField(srid=4326, blank=True, null=True)
+
+# Auto-generated `LayerMapping` dictionary for LkpSougTmp model
+lkpsougtmp_mapping = {
+    'name': 'Name',
+    'network_so': 'Network_So',
+    'framingsta': 'FramingSta',
+    'processing_type': 'نوع_م',
+    'fuel_stati': 'Fuel_Stati',
+    'tailingsco': 'TailingsCo',
+    'market_man': 'Market_Man',
+    'controller': 'Controller',
+    'accountcol': 'AccountCol',
+    'state': 'State',
+    'locality': 'Locality',
+    'contorol_v': 'Contorol_V',
+    'securityfo': 'SecurityFo',
+    'total_cart': 'Total_Cart',
+    'shape_leng': 'SHAPE_Leng',
+    'shape_area': 'SHAPE_Area',
+    'geom': 'MULTIPOLYGON',
+}
+
+class LkpSougOtherTmp(models.Model):
+    id_of_poc1 = models.FloatField(blank=True, null=True)
+    date_of_po = models.CharField(max_length=254, blank=True, null=True)
+    national_n = models.CharField(max_length=254, blank=True, null=True)
+    state = models.CharField(max_length=254, blank=True, null=True)
+    classfy_of = models.CharField(max_length=254, blank=True, null=True)
+    owner_name = models.CharField(max_length=254, blank=True, null=True)
+    partnar_na = models.CharField(max_length=254, blank=True, null=True)
+    nickname = models.CharField(max_length=254, blank=True, null=True)
+    phone_no = models.CharField(max_length=254, blank=True, null=True)
+    adress_of_field = models.CharField(max_length=254, blank=True, null=True)
+    age = models.CharField(max_length=254, blank=True, null=True)
+    soc_status = models.CharField(max_length=254, blank=True, null=True)
+    company_na = models.CharField(max_length=254, blank=True, null=True)
+    number_yea = models.CharField(max_length=254, blank=True, null=True)
+    number_gil = models.CharField(max_length=254, blank=True, null=True)
+    number_lab = models.CharField(max_length=254, blank=True, null=True)
+    number_mac = models.CharField(max_length=254, blank=True, null=True)
+    techncal_a = models.CharField(max_length=254, blank=True, null=True)
+    market_pur = models.CharField(max_length=254, blank=True, null=True)
+    resources_field = models.CharField(max_length=254, blank=True, null=True)
+    enter_at = models.CharField(max_length=254, blank=True, null=True)
+    place_of = models.CharField(max_length=254, blank=True, null=True)
+    flag = models.FloatField(blank=True, null=True)
+    edulevel = models.CharField(max_length=254, blank=True, null=True)
+    job = models.CharField(max_length=254, blank=True, null=True)
+    units = models.CharField(max_length=254, blank=True, null=True)
+    zabuq = models.CharField(max_length=254, blank=True, null=True)
+    mother = models.CharField(max_length=254, blank=True, null=True)
+    blood = models.CharField(max_length=254, blank=True, null=True)
+    gender = models.CharField(max_length=254, blank=True, null=True)
+    upload_at = models.CharField(max_length=254, blank=True, null=True)
+    place = models.CharField(max_length=254, blank=True, null=True)
+    geom = models.MultiPointField(srid=4326, blank=True, null=True)
+
+
+# Auto-generated `LayerMapping` dictionary for LkpSougOtherTmp model
+lkpsougothertmp_mapping = {
+    'id_of_poc1': 'id_of_poc1',
+    'date_of_po': 'date_of_po',
+    'national_n': 'national_n',
+    'state': 'state',
+    'classfy_of': 'classfy_of',
+    'owner_name': 'owner_name',
+    'partnar_na': 'partnar_na',
+    'nickname': 'nickname',
+    'phone_no': 'phone_no',
+    'adress_of_field': 'adress_of_',
+    'age': 'age',
+    'soc_status': 'soc_status',
+    'company_na': 'company_na',
+    'number_yea': 'number_yea',
+    'number_gil': 'number_gil',
+    'number_lab': 'number_lab',
+    'number_mac': 'number_mac',
+    'techncal_a': 'techncal_a',
+    'market_pur': 'market_pur',
+    'resources_field': 'resources_',
+    'enter_at': 'enter_at',
+    'place_of': 'place_of',
+    'flag': 'flag',
+    'edulevel': 'edulevel',
+    'job': 'job',
+    'units': 'units',
+    'zabuq': 'zabuq',
+    'mother': 'mother',
+    'blood': 'blood',
+    'gender': 'gender',
+    'upload_at': 'upload_at',
+    'place': 'place',
+    'geom': 'MULTIPOINT',
+}
+
+class LkpProductionTmp(models.Model):
+    classifica = models.CharField(max_length=30, blank=True, null=True)
+    area_name = models.CharField(max_length=30, blank=True, null=True)
+    processing = models.CharField(max_length=100, blank=True, null=True)
+    watersourc = models.CharField(max_length=100, blank=True, null=True)
+    code = models.CharField(max_length=15, blank=True, null=True)
+    state = models.CharField(max_length=30, blank=True, null=True)
+    locality = models.CharField(max_length=15, blank=True, null=True)
+    name = models.CharField(max_length=100, blank=True, null=True)
+    locationsu = models.CharField(max_length=30, blank=True, null=True)
+    traditiona = models.CharField(max_length=30, blank=True, null=True)
+    phone_no = models.CharField(max_length=15, blank=True, null=True)
+    age = models.CharField(max_length=100, blank=True, null=True)
+    company_na = models.CharField(max_length=254, blank=True, null=True)
+    social_sta = models.CharField(max_length=254, blank=True, null=True)
+    edu_level = models.CharField(max_length=254, blank=True, null=True)
+    adress_of = models.CharField(max_length=254, blank=True, null=True)
+    blood = models.CharField(max_length=254, blank=True, null=True)
+    previous_j = models.CharField(max_length=200, blank=True, null=True)
+    national_n = models.CharField(max_length=200, blank=True, null=True)
+    age_work = models.CharField(max_length=200, blank=True, null=True)
+    laborer_no = models.CharField(max_length=10, blank=True, null=True)
+    geom = models.MultiPointField(srid=4326, blank=True, null=True)
+
+
+# Auto-generated `LayerMapping` dictionary for LkpProductionTmp model
+lkpproductiontmp_mapping = {
+    'classifica': 'Classifica',
+    'area_name': 'Area_Name',
+    'processing': 'Processing',
+    'watersourc': 'WaterSourc',
+    'code': 'Code',
+    'state': 'State',
+    'locality': 'Locality',
+    'name': 'Name',
+    'locationsu': 'LocationSu',
+    'traditiona': 'Traditiona',
+    'phone_no': 'Phone_no',
+    'age': 'Age',
+    'company_na': 'Company_Na',
+    'social_sta': 'Social_Sta',
+    'edu_level': 'Edu_Level',
+    'adress_of': 'Adress_Of',
+    'blood': 'BLood',
+    'previous_j': 'Previous_j',
+    'national_n': 'National_N',
+    'age_work': 'Age_Work',
+    'laborer_no': 'Laborer_No',
+    'geom': 'MULTIPOINT',
+}
+
+class LkpProductionPathTmp(models.Model):
+    line_name = models.CharField(max_length=30, blank=True, null=True)
+    target_to = models.CharField(max_length=30, blank=True, null=True)
+    target_fro = models.CharField(max_length=30, blank=True, null=True)
+    state = models.CharField(max_length=15, blank=True, null=True)
+    locality = models.CharField(max_length=15, blank=True, null=True)
+    shape_leng = models.FloatField(blank=True, null=True)
+    geom = models.MultiLineStringField(srid=4326, blank=True, null=True)
+
+
+# Auto-generated `LayerMapping` dictionary for LkpProductionPathTmp model
+lkpproductionpathtmp_mapping = {
+    'line_name': 'Line_Name',
+    'target_to': 'Target_TO',
+    'target_fro': 'Target_FRO',
+    'state': 'State',
+    'locality': 'Locality',
+    'shape_leng': 'SHAPE_Leng',
+    'geom': 'MULTILINESTRING',
+}
+
+class LkpSougServiceTmp(models.Model):
+    owner = models.CharField(max_length=40, blank=True, null=True)
+    market = models.CharField(max_length=100, blank=True, null=True)
+    market_cod = models.CharField(max_length=15, blank=True, null=True)
+    servicetyp = models.CharField(max_length=20, blank=True, null=True)
+    locality = models.CharField(max_length=15, blank=True, null=True)
+    state = models.CharField(max_length=30, blank=True, null=True)
+    phone_no = models.CharField(max_length=200, blank=True, null=True)
+    age = models.CharField(max_length=5, blank=True, null=True)
+    social_sta = models.CharField(max_length=200, blank=True, null=True)
+    edu_level = models.CharField(max_length=20, blank=True, null=True)
+    adress_of = models.CharField(max_length=254, blank=True, null=True)
+    blood = models.CharField(max_length=200, blank=True, null=True)
+    previous_j = models.CharField(max_length=200, blank=True, null=True)
+    national_n = models.CharField(max_length=200, blank=True, null=True)
+    age_work = models.CharField(max_length=200, blank=True, null=True)
+    laborer_no = models.CharField(max_length=10, blank=True, null=True)
+    point_x = models.FloatField(blank=True, null=True)
+    point_y = models.FloatField(blank=True, null=True)
+    geom = models.MultiPointField(srid=4326, blank=True, null=True)
+
+
+# Auto-generated `LayerMapping` dictionary for LkpSougServiceTmp model
+lkpsougservicetmp_mapping = {
+    'owner': 'Owner',
+    'market': 'Market',
+    'market_cod': 'Market_Cod',
+    'servicetyp': 'ServiceTyp',
+    'locality': 'Locality',
+    'state': 'State',
+    'phone_no': 'Phone_no',
+    'age': 'Age',
+    'social_sta': 'Social_Sta',
+    'edu_level': 'Edu_Level',
+    'adress_of': 'Adress_Of',
+    'blood': 'BLood',
+    'previous_j': 'Previous_j',
+    'national_n': 'National_N',
+    'age_work': 'Age_Work',
+    'laborer_no': 'Laborer_No',
+    'point_x': 'POINT_X',
+    'point_y': 'POINT_Y',
+    'geom': 'MULTIPOINT',
+}
+
+class LkpSougWashingTmp(models.Model):
+    basinowner = models.CharField(max_length=40, blank=True, null=True)
+    code = models.CharField(max_length=15, blank=True, null=True)
+    mercury_us = models.CharField(max_length=100, blank=True, null=True)
+    state = models.CharField(max_length=15, blank=True, null=True)
+    locality = models.CharField(max_length=15, blank=True, null=True)
+    phone_no = models.CharField(max_length=15, blank=True, null=True)
+    edu_level = models.CharField(max_length=100, blank=True, null=True)
+    adress_of = models.CharField(max_length=20, blank=True, null=True)
+    age = models.CharField(max_length=5, blank=True, null=True)
+    blood = models.CharField(max_length=50, blank=True, null=True)
+    previous_j = models.CharField(max_length=50, blank=True, null=True)
+    national_n = models.CharField(max_length=15, blank=True, null=True)
+    age_work = models.CharField(max_length=20, blank=True, null=True)
+    laborer_no = models.CharField(max_length=10, blank=True, null=True)
+    market = models.CharField(max_length=50, blank=True, null=True)
+    karta = models.CharField(max_length=50, blank=True, null=True)
+    water_cons = models.CharField(max_length=30, blank=True, null=True)
+    point_x = models.FloatField(blank=True, null=True)
+    point_y = models.FloatField(blank=True, null=True)
+    geom = models.MultiPointField(srid=4326, blank=True, null=True)
+
+# Auto-generated `LayerMapping` dictionary for LkpSougWashingTmp model
+lkpsougwashingtmp_mapping = {
+    'basinowner': 'BasinOwner',
+    'code': 'Code',
+    'mercury_us': 'Mercury_Us',
+    'state': 'State',
+    'locality': 'Locality',
+    'phone_no': 'Phone_no',
+    'edu_level': 'Edu_Level',
+    'adress_of': 'Adress_Of',
+    'age': 'Age',
+    'blood': 'BLood',
+    'previous_j': 'Previous_j',
+    'national_n': 'National_N',
+    'age_work': 'Age_Work',
+    'laborer_no': 'Laborer_No',
+    'market': 'Market',
+    'karta': 'karta',
+    'water_cons': 'Water_Cons',
+    'point_x': 'POINT_X',
+    'point_y': 'POINT_Y',
+    'geom': 'MULTIPOINT',
+}
