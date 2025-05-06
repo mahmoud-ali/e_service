@@ -85,7 +85,7 @@ class AppDabtiaat(LoggingModel):
         return "dabtiaat/{0}/{1}".format(date, filename)    
 
     date = models.DateField(_("date"))
-    report_number = models.CharField(_("Report number"), max_length=20)
+    report_number = models.CharField(_("Report number"), max_length=20, null=True, blank=True,default='')
     # gold_weight_in_gram = models.FloatField(_("gold_weight_in_gram"))
     # gold_price = models.FloatField(_("gold_price"))
     # gold_caliber = models.FloatField(_("gold_caliber"))
@@ -169,7 +169,7 @@ class AppDabtiaat(LoggingModel):
 class AppDabtiaatDetails(models.Model):
     app_dabtiaat = models.ForeignKey(AppDabtiaat, on_delete=models.PROTECT,verbose_name =_("app_dabtiaat"))
 
-    alloy_id = models.CharField(_("alloy_id"),max_length=20, default='')
+    alloy_id = models.CharField(_("alloy_id"),max_length=20,null=True,blank=True, default='')
     gold_weight_in_gram = models.FloatField(_("gold_weight_in_gram"))
     gold_price = models.FloatField(_("gold_price"))
     gold_caliber = models.FloatField(_("gold_caliber"),default=0)
