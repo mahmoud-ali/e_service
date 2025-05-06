@@ -222,16 +222,52 @@ class LkpCompanyProductionFactoryType(models.Model):
         
 class TblCompanyProductionFactory(LoggingModel): 
     company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))
-    factory_type  = models.ForeignKey(LkpCompanyProductionFactoryType, on_delete=models.PROTECT,verbose_name=_("factory_type"))
-    capacity = models.FloatField(_("Capacity (Tones per day)"))
+    # factory_type  = models.ForeignKey(LkpCompanyProductionFactoryType, on_delete=models.PROTECT,verbose_name=_("factory_type"))
+    cil_exists = models.BooleanField(_("CIL?"))
+    cil_capacity = models.FloatField(_("السعة التشغيلية بالطن/يوم"),default=0)
     
+    heap_exists = models.BooleanField(_("Heap?"))
+    heap_capacity = models.FloatField(_("السعة التشغيلية بالطن/يوم"),default=0)
+
+    def clean(self):
+        if not self.cil_exists and self.cil_capacity > 0:
+            raise ValidationError(
+                {"cil_capacity":_("لايمكن اضافة السعة التشغيلية اذا لا يوجد CIL")}
+            ) 
+        elif self.cil_exists and self.cil_capacity <= 0:
+            raise ValidationError(
+                {"cil_capacity":_("ادخل سعة تشغيلية أكبر من صفر")}
+            ) 
+        
+        if not self.heap_exists and self.heap_capacity > 0:
+            raise ValidationError(
+                {"heap_capacity":_("لايمكن اضافة السعة التشغيلية اذا لا يوجد Heap")}
+            )
+        elif self.heap_exists and self.heap_capacity <= 0:
+            raise ValidationError(
+                {"heap_capacity":_("ادخل سعة تشغيلية أكبر من صفر")}
+            ) 
+
     def __str__(self):
-        return self.company.name_ar+" - "+self.factory_type.name
+        return self.company.name_ar
         
     class Meta:
         verbose_name = _("Production Company Factory")
         verbose_name_plural = _("Production Company Factories")
-    
+
+class TblCompanyProductionFactoryVAT(models.Model): 
+    factory  = models.ForeignKey(TblCompanyProductionFactory, on_delete=models.PROTECT,verbose_name=_("company"))
+    no_sink = models.IntegerField(_("عدد الأحواض"))
+    sink_capacity = models.FloatField(_("سعة الحوض"))
+    avg_capacity_dimension = models.CharField(_("متوسط ابعاد الحوض"),max_length=100)        
+
+    def __str__(self):
+        return f"{self.factory}: {self.no_sink}, {self.sink_capacity}"
+        
+    class Meta:
+        verbose_name = _("حوض")
+        verbose_name_plural = _("احواض")
+
 class LkpCompanyProductionLicenseStatus(models.Model):
     name = models.CharField(_("name"),max_length=100)    
     

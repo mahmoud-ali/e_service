@@ -16,7 +16,7 @@ from django.contrib.messages import constants as message_constants
 from import_export.admin import ExportActionMixin
 from django.db.utils import IntegrityError
 from .models import AppCyanideCertificate, AppExplosivePermission, AppFuelPermission, AppFuelPermissionDetail, AppGoldProduction, AppGoldProductionDetail, AppHSEAccidentReport, AppHSEPerformanceReport, AppHSEPerformanceReportActivities, AppHSEPerformanceReportBillsOfQuantities, AppHSEPerformanceReportCadastralOperations, AppHSEPerformanceReportCadastralOperationsTwo, AppHSEPerformanceReportCatering, AppHSEPerformanceReportChemicalUsed, AppHSEPerformanceReportCyanideCNStorageSpecification, AppHSEPerformanceReportCyanideTable, AppHSEPerformanceReportDiseasesForWorkers, AppHSEPerformanceReportExplosivesUsed, AppHSEPerformanceReportExplosivesUsedSpecification, AppHSEPerformanceReportFireFighting, AppHSEPerformanceReportManPower, AppHSEPerformanceReportOilUsed, AppHSEPerformanceReportOtherChemicalUsed, AppHSEPerformanceReportProactiveIndicators, AppHSEPerformanceReportStatisticalData, AppHSEPerformanceReportTherapeuticUnit, AppHSEPerformanceReportWasteDisposal, AppHSEPerformanceReportWaterUsed, AppHSEPerformanceReportWorkEnvironment, AppImportPermission, AppImportPermissionDetail, AppLocalPurchase, AppRenewalContract, AppRestartActivity, AppTemporaryExemption, AppWhomConcern, LkpAccidentType, LkpNationality, LkpSector,LkpState,LkpLocality,LkpMineral,LkpCompanyProductionStatus,LkpForeignerProcedureType,TblCompanyProduction, \
-                                      LkpCompanyProductionFactoryType,TblCompanyProductionFactory,LkpCompanyProductionLicenseStatus, \
+                                      LkpCompanyProductionFactoryType,TblCompanyProductionFactory,LkpCompanyProductionLicenseStatus, TblCompanyProductionFactoryVAT, \
                                       TblCompanyProductionLicense,AppForignerMovement,TblCompanyProductionUserRole, \
                                       AppBorrowMaterial,AppBorrowMaterialDetail,AppWorkPlan,AppTechnicalFinancialReport, \
                                       AppChangeCompanyName, AppExplorationTime, AppAddArea,AppRemoveArea, AppTnazolShraka, \
@@ -290,12 +290,19 @@ class TblCompanyProductionAdmin(ExportActionMixin,LoggingAdminMixin,admin.ModelA
                     url=url,id=obj.id
                 )
 
+class TblCompanyProductionFactoryVATInline(admin.TabularInline):
+    model = TblCompanyProductionFactoryVAT
+    # exclude = ["created_at","created_by","updated_at","updated_by"]
+    extra = 1    
+
 class TblCompanyProductionFactoryAdmin(LoggingAdminMixin,admin.ModelAdmin):
-    fields = ["company", ("factory_type","capacity")]
-    exclude = ["created_at","created_by","updated_at","updated_by"]
+    inlines = [TblCompanyProductionFactoryVATInline]
     
-    list_display = ["company", "factory_type", "capacity"]    
-    list_filter = ["factory_type"]
+    fields = ["company",("cil_exists","cil_capacity"),("heap_exists","heap_capacity")]
+    exclude = ["created_at","created_by","updated_at","updated_by"]
+    autocomplete_fields = ["company"]
+    list_display = ["company",]    
+    list_filter = []
     view_on_site = False
     
 # class ContractFileFilter(admin.SimpleListFilter):
