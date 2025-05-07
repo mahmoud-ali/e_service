@@ -21,7 +21,7 @@ class LogAdminMixin:
 
         try:
             if request.user.groups.filter(name='dabtiaat_altaedin_manager').count() > 0:
-                qs = qs.filter(state__in=(AppDabtiaat.STATE_SMRC,AppDabtiaat.STATE_APPROVED))
+                qs = qs.filter(state__in=(AppDabtiaat.STATE_SMRC)).filter(state_gte=AppDabtiaat.STATE_APPROVED)
 
             elif request.user.groups.filter(name='dabtiaat_altaedin_state').count() > 0:
                 qs = qs.filter(source_state=request.user.state_representative2.state) #,state=AppDabtiaat.STATE_DRAFT
