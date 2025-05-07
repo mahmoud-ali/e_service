@@ -1,5 +1,5 @@
 from pathlib import Path
-
+from django.contrib.gis.db.models.functions import Transform
 from django.contrib.gis.utils import LayerMapping
 
 from workflow.data_utils import create_master_details_groups
@@ -7,9 +7,6 @@ from traditional_app import admin,models
 
 def create_groups():
     create_master_details_groups('traditional_app','dailyreport',admin.daily_report_main_class,admin.daily_report_inline_classes)
-
-if __name__ == '__main__':
-    create_groups()
 
 geo_root_path = Path(__file__).resolve().parent / "geo" 
 
@@ -66,3 +63,39 @@ def run(verbose=True):
         lm = LayerMapping(layer["model"], geo_root_path / layer["filename"], layer["mapping"])
         lm.save(strict=True, verbose=verbose)
 
+def point_within_polygon(poins_qs,polygon_qs,buffer,srs=32636):
+    for poly in polygon_qs:
+        points_within_x_meter = poins_qs.annotate(
+            location_srs=Transform('geom', srs)
+        ).filter(
+            location_srs__distance_lte=(
+                Transform(poly.geom, srs),
+                buffer  # meters
+            )
+        )
+
+        yield (poly,points_within_x_meter)
+
+def polygon_within_polygon(polygon_small_qs,polygon_big_qs2):
+    c = 0
+
+    for poly_b in polygon_big_qs2:
+        poly_s_qs = polygon_small_qs.filter(
+            geom__intersects=poly_b.geom
+        )
+
+        if poly_s_qs.count() > 0:
+            c += poly_s_qs.count()
+            print("total",c)
+            yield (poly_b.name,poly_s_qs.count()) #poly_b,poly_s_qs,
+
+        
+if __name__ == '__main__':
+    create_groups()
+
+# from traditional_app.data import load_data
+# from traditional_app import models
+
+# a = load_data.point_within_polygon(models.LkpSaigTmp.objects.all(),models.LkpSougTmp.objects.all()[0:5],1000,32636)
+# b = load_data.polygon_within_polygon(models.LkpSougTmp.objects.all(),models.LkpLocalityTmp.objects.all())
+# print(a)

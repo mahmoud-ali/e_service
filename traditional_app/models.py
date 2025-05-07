@@ -906,10 +906,13 @@ class LkpLocalityTmp(models.Model):
     objectid = models.BigIntegerField()
     name = models.CharField(max_length=20, blank=True, null=True)
     city = models.CharField(max_length=15, blank=True, null=True)
-    state = models.CharField(max_length=15, blank=True, null=True)
+    state_gis = models.CharField(max_length=15, blank=True, null=True)
     shape_leng = models.FloatField(blank=True, null=True)
     shape_area = models.FloatField(blank=True, null=True)
     geom = models.MultiPolygonField(srid=4326)
+
+    state = models.ForeignKey(LkpState, on_delete=models.PROTECT, verbose_name=_("الولاية"),null=True, blank=True)
+    locality = models.ForeignKey(LkpLocality, on_delete=models.PROTECT, verbose_name=_("Locality"),null=True, blank=True)
 
 
 # Auto-generated `LayerMapping` dictionary for LkpLocalityTmp model

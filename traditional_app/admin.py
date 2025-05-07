@@ -1,7 +1,8 @@
 from django.contrib import admin
+from django.contrib.gis import admin as gis_admin
 
 from company_profile.models import LkpLocality, LkpState
-from traditional_app.models import DailyGrabeel, DailyHofrKabira, DailyIncome, DailyReport, DailyGoldMor7ala, DailyKartaMor7ala, DailySmallProcessingUnit, Employee, EmployeeProject, Lkp2bar, Lkp2jhizatBahth, Lkp7ofrKabira, LkpGrabeel, LkpKhalatat, LkpMojam3atTawa7in, LkpSaig, LkpSmallProcessingUnit, LkpSoag, LkpSosalGold, DailyTahsilForm, DailyWardHajr, RentedApartment, RentedVehicle, TraditionalAppUser, Vehicle
+from traditional_app.models import DailyGrabeel, DailyHofrKabira, DailyIncome, DailyReport, DailyGoldMor7ala, DailyKartaMor7ala, DailySmallProcessingUnit, Employee, EmployeeProject, Lkp2bar, Lkp2jhizatBahth, Lkp7ofrKabira, LkpGrabeel, LkpKhalatat, LkpLocalityTmp, LkpMojam3atTawa7in, LkpSaig, LkpSmallProcessingUnit, LkpSoag, LkpSosalGold, DailyTahsilForm, DailyWardHajr, RentedApartment, RentedVehicle, TraditionalAppUser, Vehicle
 from workflow.admin_utils import create_main_form
 
 class LogMixin:
@@ -339,3 +340,15 @@ daily_report_inline_classes = {
 model_admin, inlines = create_main_form(daily_report_main_class,daily_report_inline_classes,daily_report_main_mixins)
 
 admin.site.register(model_admin.model,model_admin)
+
+@admin.register(LkpLocalityTmp)
+class LkpLocalityTmpAdmin(gis_admin.GISModelAdmin):
+    model = LkpLocalityTmp
+    exclude = ['geom']
+    list_display = ['name','city','state_gis', 'state']
+    search_fields = ('name',)
+    list_filter = ('state',)
+    readonly_fields = ('objectid','name','city','state_gis','shape_leng','shape_area')
+
+    class Media:
+        js = ('admin/js/jquery.init.js',"traditional_app/js/lkp_state_change.js",)
