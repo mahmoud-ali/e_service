@@ -54,9 +54,15 @@ layers = [
         "filename": "AMM_WashingBasin.shp",
         "mapping": models.lkpsougwashingtmp_mapping,
     },
+    {
+        "model": models.LkpLocalityTmp,
+        "filename": "Localities.shp",
+        "mapping": models.lkplocalitytmp_mapping,
+    },
 ]
 def run(verbose=True):
     for layer in layers:
+        layer["model"].objects.all().delete()
         lm = LayerMapping(layer["model"], geo_root_path / layer["filename"], layer["mapping"])
         lm.save(strict=True, verbose=verbose)
 

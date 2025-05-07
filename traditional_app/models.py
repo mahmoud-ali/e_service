@@ -901,3 +901,24 @@ lkpsougwashingtmp_mapping = {
     'point_y': 'POINT_Y',
     'geom': 'MULTIPOINT',
 }
+
+class LkpLocalityTmp(models.Model):
+    objectid = models.BigIntegerField()
+    name = models.CharField(max_length=20, blank=True, null=True)
+    city = models.CharField(max_length=15, blank=True, null=True)
+    state = models.CharField(max_length=15, blank=True, null=True)
+    shape_leng = models.FloatField(blank=True, null=True)
+    shape_area = models.FloatField(blank=True, null=True)
+    geom = models.MultiPolygonField(srid=4326)
+
+
+# Auto-generated `LayerMapping` dictionary for LkpLocalityTmp model
+lkplocalitytmp_mapping = {
+    'objectid': 'OBJECTID',
+    'name': 'Name',
+    'city': 'City',
+    'state': 'State',
+    'shape_leng': 'SHAPE_Leng',
+    'shape_area': 'SHAPE_Area',
+    'geom': 'MULTIPOLYGON',
+}
