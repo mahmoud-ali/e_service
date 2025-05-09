@@ -5,6 +5,8 @@ from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from django.core.validators import MaxValueValidator, MinValueValidator
 
+from django.contrib.gis.db import models as gis_models
+
 from django_fsm import FSMField, transition
 
 from .workflow import *
@@ -105,12 +107,13 @@ class LkpSector(models.Model):
         verbose_name = _("Sector")
         verbose_name_plural = _("Sectors")
 
-class LkpState(models.Model):
-    sector = models.ForeignKey(LkpSector, on_delete=models.PROTECT,verbose_name=_("sector"), null=True, blank=True)
-    name = models.CharField(_("name"),max_length=100)
-    x = models.FloatField(_("x"))
-    y = models.FloatField(_("y"))
-    
+class LkpState(gis_models.Model):
+    sector = gis_models.ForeignKey(LkpSector, on_delete=gis_models.PROTECT,verbose_name=_("sector"), null=True, blank=True)
+    name = gis_models.CharField(_("name"),max_length=100)
+    x = gis_models.FloatField(_("x"))
+    y = gis_models.FloatField(_("y"))
+    geom = gis_models.MultiPolygonField(srid=4326,null=True)
+
     def __str__(self):
         return self.name    
         
