@@ -1,7 +1,7 @@
 from pathlib import Path
+from django.contrib.gis.geos import Point
 from django.contrib.gis.db.models.functions import Transform
 from django.contrib.gis.utils import LayerMapping
-
 from workflow.data_utils import create_master_details_groups
 from traditional_app import admin,models
 
@@ -90,6 +90,14 @@ def polygon_within_polygon(polygon_small_qs,polygon_big_qs2):
             yield (poly_b.name,poly_s_qs.count()) #poly_b,poly_s_qs,
 
         
+def xy_within_polygon(poins_qs,polygon_qs,field_name='geom'):
+    for poly in polygon_qs:
+        for pnt_obj in poins_qs:
+            tmp_pnt = Point(pnt_obj.x,pnt_obj.y,srid=4326)
+            if tmp_pnt.within(getattr(poly,field_name)):
+                yield (poly,pnt_obj)
+                break
+
 if __name__ == '__main__':
     create_groups()
 
