@@ -1,7 +1,10 @@
+import json
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import TemplateView
+from django.db.models import Count, Sum, F, ExpressionWrapper, DecimalField
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 
+from django.http import JsonResponse
 from gold_travel.models import AppMoveGold, AppPrepareGold, TblStateRepresentative
 
 class UserPermissionMixin(UserPassesTestMixin):
@@ -55,3 +58,39 @@ class WhomMayConcern(LoginRequiredMixin,UserPermissionMixin,TemplateView):
             'object': obj,
         }
         return render(self.request, self.template_name, self.extra_context)    
+
+def get_exported_gold(request):
+    qs = AppMoveGold.objects \
+        .filter(form_type=1,state=6) \
+        .select_related('appmovegolddetails','source_state') \
+        .values('source_state__name','source_state__geom') \
+        .annotate(
+            total_weight_in_ton = Sum(
+                ExpressionWrapper(F('appmovegolddetails__alloy_weight_in_gram') /1000000, output_field=DecimalField())
+            ),
+            forms_count = Count('appmovegolddetails')
+        )
+    
+    features = []
+    for item in qs:
+        geom = item['source_state__geom']
+        if geom:
+            features.append({
+                "type": "Feature",
+                "geometry": json.loads(geom.geojson),  # Convert GEOSGeometry to dict
+                "properties": {
+                    "state_name": item['source_state__name'],
+                    "total_weight_in_ton": item['total_weight_in_ton'],
+                    "forms_count": item['forms_count'],
+                }
+            })
+
+    geojson = {
+        "type": "FeatureCollection",
+        "features": features
+    }
+
+    return JsonResponse(geojson)
+
+    # geojson_data = serialize('geojson', qs, geometry_field='geom', fields=('source_state__name','total_weight_in_ton','forms_count'))
+    # return HttpResponse(geojson_data, content_type='application/json')
