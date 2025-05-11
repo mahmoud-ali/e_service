@@ -1,9 +1,12 @@
+import csv
+
 from pathlib import Path
 from django.contrib.gis.geos import Point
 from django.contrib.gis.db.models.functions import Transform
 from django.contrib.gis.utils import LayerMapping
 from workflow.data_utils import create_master_details_groups
 from traditional_app import admin,models
+from company_profile.models import LkpLocality
 
 def create_groups():
     create_master_details_groups('traditional_app','dailyreport',admin.daily_report_main_class,admin.daily_report_inline_classes)
@@ -107,3 +110,26 @@ if __name__ == '__main__':
 # a = load_data.point_within_polygon(models.LkpSaigTmp.objects.all(),models.LkpSougTmp.objects.all()[0:5],1000,32636)
 # b = load_data.polygon_within_polygon(models.LkpSougTmp.objects.all(),models.LkpLocalityTmp.objects.all())
 # print(a)
+
+def load_locality_xy(file_name='locality_xy.csv'):
+    with open('./traditional_app/data/geo/'+file_name, newline='') as csvfile:
+        reader = csv.reader(csvfile, delimiter=',')
+        next(reader, None)  # skip the headers
+        for row in reader:
+            try:
+
+                id = float(row[0].strip())
+                x = float(row[3].strip())
+                y = float(row[4].strip())
+
+                locality = LkpLocality.objects.get(id=id)
+                tmp_pnt = Point(x,y,srid=4326)
+
+                for poly in models.LkpLocalityTmp.objects.all():
+                    if tmp_pnt.within(poly.geom):
+                        locality.geom = poly.geom
+                        locality.save()
+                        break
+
+            except Exception as e:
+                print(f'id: {id} Exception: {e}')
