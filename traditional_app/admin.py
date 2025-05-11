@@ -345,9 +345,9 @@ admin.site.register(model_admin.model,model_admin)
 class LkpLocalityTmpAdmin(gis_admin.GISModelAdmin):
     model = LkpLocalityTmp
     exclude = ['geom']
-    list_display = ['name','city','state_gis', 'state']
+    list_display = ['name','city','state_gis'] #, 'state'
     search_fields = ('name',)
-    list_filter = ('state',)
+    # list_filter = ('state',)
     readonly_fields = ('objectid','name','city','state_gis','shape_leng','shape_area')
 
     class Media:

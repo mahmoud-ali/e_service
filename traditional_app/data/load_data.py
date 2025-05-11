@@ -11,46 +11,46 @@ def create_groups():
 geo_root_path = Path(__file__).resolve().parent / "geo" 
 
 layers = [
-    {
-        "model": models.LkpSaigTmp,
-        "filename": "AMM_Alsaagha.shp",
-        "mapping": models.lkpsaigtmp_mapping,
-    },
-    {
-        "model": models.LkpGrindinTmp,
-        "filename": "AMM_GrindingMill.shp",
-        "mapping": models.lkpgrindintmp_mapping,
-    },
-    {
-        "model": models.LkpSougTmp,
-        "filename": "AMM_Market.shp",
-        "mapping": models.lkpsougtmp_mapping,
-    },
-    {
-        "model": models.LkpSougOtherTmp,
-        "filename": "AMM_Others.shp",
-        "mapping": models.lkpsougothertmp_mapping,
-    },
-    {
-        "model": models.LkpProductionTmp,
-        "filename": "AMM_ProductionSite.shp",
-        "mapping": models.lkpproductiontmp_mapping,
-    },
-    {
-        "model": models.LkpProductionPathTmp,
-        "filename": "AMM_ProductionSitePaths.shp",
-        "mapping": models.lkpproductionpathtmp_mapping,
-    },
-    {
-        "model": models.LkpSougServiceTmp,
-        "filename": "AMM_Services.shp",
-        "mapping": models.lkpsougservicetmp_mapping,
-    },
-    {
-        "model": models.LkpSougWashingTmp,
-        "filename": "AMM_WashingBasin.shp",
-        "mapping": models.lkpsougwashingtmp_mapping,
-    },
+    # {
+    #     "model": models.LkpSaigTmp,
+    #     "filename": "AMM_Alsaagha.shp",
+    #     "mapping": models.lkpsaigtmp_mapping,
+    # },
+    # {
+    #     "model": models.LkpGrindinTmp,
+    #     "filename": "AMM_GrindingMill.shp",
+    #     "mapping": models.lkpgrindintmp_mapping,
+    # },
+    # {
+    #     "model": models.LkpSougTmp,
+    #     "filename": "AMM_Market.shp",
+    #     "mapping": models.lkpsougtmp_mapping,
+    # },
+    # {
+    #     "model": models.LkpSougOtherTmp,
+    #     "filename": "AMM_Others.shp",
+    #     "mapping": models.lkpsougothertmp_mapping,
+    # },
+    # {
+    #     "model": models.LkpProductionTmp,
+    #     "filename": "AMM_ProductionSite.shp",
+    #     "mapping": models.lkpproductiontmp_mapping,
+    # },
+    # {
+    #     "model": models.LkpProductionPathTmp,
+    #     "filename": "AMM_ProductionSitePaths.shp",
+    #     "mapping": models.lkpproductionpathtmp_mapping,
+    # },
+    # {
+    #     "model": models.LkpSougServiceTmp,
+    #     "filename": "AMM_Services.shp",
+    #     "mapping": models.lkpsougservicetmp_mapping,
+    # },
+    # {
+    #     "model": models.LkpSougWashingTmp,
+    #     "filename": "AMM_WashingBasin.shp",
+    #     "mapping": models.lkpsougwashingtmp_mapping,
+    # },
     {
         "model": models.LkpLocalityTmp,
         "filename": "Localities.shp",

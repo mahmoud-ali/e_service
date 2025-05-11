@@ -911,8 +911,8 @@ class LkpLocalityTmp(models.Model):
     shape_area = models.FloatField(blank=True, null=True)
     geom = models.MultiPolygonField(srid=4326)
 
-    state = models.ForeignKey(LkpState, on_delete=models.PROTECT, verbose_name=_("الولاية"),null=True, blank=True)
-    locality = models.ForeignKey(LkpLocality, on_delete=models.PROTECT, verbose_name=_("Locality"),null=True, blank=True)
+    # state = models.ForeignKey(LkpState, on_delete=models.PROTECT, verbose_name=_("الولاية"),null=True, blank=True)
+    # locality = models.ForeignKey(LkpLocality, on_delete=models.PROTECT, verbose_name=_("Locality"),null=True, blank=True)
 
 
 # Auto-generated `LayerMapping` dictionary for LkpLocalityTmp model
