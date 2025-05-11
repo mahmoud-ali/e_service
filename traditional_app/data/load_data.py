@@ -127,8 +127,9 @@ def load_locality_xy(file_name='locality_xy.csv'):
 
                 for poly in models.LkpLocalityTmp.objects.all():
                     if tmp_pnt.within(poly.geom):
-                        locality.geom = poly.geom
-                        locality.save()
+                        poly.state = locality.state
+                        poly.locality = locality
+                        poly.save()
                         break
 
             except Exception as e:
