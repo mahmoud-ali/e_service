@@ -111,7 +111,7 @@ if __name__ == '__main__':
 # b = load_data.polygon_within_polygon(models.LkpSougTmp.objects.all(),models.LkpLocalityTmp.objects.all())
 # print(a)
 
-def load_locality_xy(file_name='locality_xy.csv'):
+def load_locality_xy(file_name='locality_xy2.csv'):
     with open('./traditional_app/data/geo/'+file_name, newline='') as csvfile:
         reader = csv.reader(csvfile, delimiter=',')
         next(reader, None)  # skip the headers
