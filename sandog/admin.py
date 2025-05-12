@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 from hr.models import EmployeeBasic
-from sandog.models import EmployeeSolarSystem
+from sandog.models import EmployeeSolarSystem, LkpSolarSystemCategory
 
 class EmployeeSolarSystemMixin:
     def has_add_permission(self, request):
@@ -49,3 +49,7 @@ class EmployeeSolarSystemAdmin(EmployeeSolarSystemMixin,admin.ModelAdmin):
     model = EmployeeSolarSystem
     fields = ["category",]
     list_display = ["employee","category",]
+
+@admin.register(LkpSolarSystemCategory)
+class LkpSolarSystemCategoryAdmin(admin.ModelAdmin):
+    model = LkpSolarSystemCategory
