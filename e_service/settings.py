@@ -85,6 +85,7 @@ INSTALLED_APPS = [
     'help_request',
     'hr',
     'hr_bot',
+    'sandog',
 
     # Debug
     'debug_toolbar',
