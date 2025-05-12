@@ -28,6 +28,13 @@ class EmployeeSolarSystemMixin:
         
         return False
 
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        if request.user.is_superuser or request.user.groups.filter(name__in=["hr_manager","hr_manpower"]).exists():
+            return qs #.filter(state=STATE_DRAFT)
+
+        return qs.filter(employee__email=request.user.email)
+
     def save_model(self, request, obj, form, change):
         if obj.pk:
             obj.updated_by = request.user
