@@ -17,7 +17,7 @@ class EmployeeSolarSystem(LoggingModel):
     category = models.ForeignKey(LkpSolarSystemCategory, on_delete=models.PROTECT,verbose_name=_("المجموعة"))
 
     def __str__(self) -> str:
-        return f'نوع منظومة الطاقة الشمسية: {self.get_category_display()}'
+        return f'نوع منظومة الطاقة الشمسية: {self.category.name}'
 
     class Meta:
         verbose_name = _("منظومة الطاقة الشمسية")
