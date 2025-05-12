@@ -2,7 +2,7 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 from hr.models import EmployeeBasic, LoggingModel
 
-class LkpSolarSystemCategory(LoggingModel):
+class LkpSolarSystemCategory(models.Model):
     name = models.CharField(_("category name"),max_length=150)
 
     def __str__(self) -> str:
