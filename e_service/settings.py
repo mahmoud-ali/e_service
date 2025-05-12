@@ -147,7 +147,7 @@ DATABASES = {
         "USER": config('DB_USER'),
         "PASSWORD": config('DB_PASSWD'),
         "HOST": config('DB_HOST'),
-        "PORT": "5432",
+        "PORT": config('DB_PORT'),
         "CONN_MAX_AGE": 300,
         "CONN_HEALTH_CHECKS": True,
         "ATOMIC_REQUESTS": True
