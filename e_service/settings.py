@@ -112,6 +112,7 @@ INSTALLED_APPS = [
     'traditional_app',
     'company_profile_exploration',
     'hse_companies',
+    'khatabat',
 
     # Debug
     'debug_toolbar',
