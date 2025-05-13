@@ -18,22 +18,13 @@ def create_model_groups(app,model_name,model_attrs):
 
     Example:
         model_attrs = {
-            'groups': [
-                {
-                    'name': 'group1',
-                    'add': True,
-                    'change': True,
-                    'delete': False,
-                    'view': True,
+            'groups':{
+                'tra_state_manager':{
+                    'permissions': {
+                        'state_name': {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
+                    },
                 },
-                {
-                    'name': 'group2',
-                    'add': False,
-                    'change': True,
-                    'delete': True,
-                    'view': True
-                }
-            ]
+            },
         }
         create_model_groups('my_app', 'MyModel', model_attrs)
     """
