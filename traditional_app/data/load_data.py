@@ -4,12 +4,43 @@ from pathlib import Path
 from django.contrib.gis.geos import Point
 from django.contrib.gis.db.models.functions import Transform
 from django.contrib.gis.utils import LayerMapping
-from workflow.data_utils import create_master_details_groups
+from workflow.data_utils import create_master_details_groups, create_model_groups
 from traditional_app import admin,models
 from company_profile.models import LkpLocality
 
 def create_groups():
-    create_master_details_groups('traditional_app','dailyreport',admin.daily_report_main_class,admin.daily_report_inline_classes)
+    app = 'traditional_app'
+
+    create_master_details_groups(app,'dailyreport',admin.daily_report_main_class,admin.daily_report_inline_classes)
+
+    arr = [
+        'lkpsoag',
+        'employee',
+        'vehicle',
+        'rentedapartment',
+        'rentedvehicle',
+        'lkp7ofrkabira',
+        'lkp2bar',
+        'lkp2jhizatbahth',
+        'lkpsosalgold',
+        'lkpgrabeel',
+        'lkpkhalatat',
+        'lkpsmallprocessingunit',
+    ]
+
+    for model_name in arr:
+        print("Create groups for model",model_name)
+        create_model_groups(app,model_name,{
+            'groups':{
+                'tra_state_manager':{
+                    'permissions': {
+                        '*': {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
+                    },
+                },
+            },
+        })
+
+    return
 
 geo_root_path = Path(__file__).resolve().parent / "geo" 
 

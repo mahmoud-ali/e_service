@@ -21,9 +21,32 @@ class LogMixin:
             instance.save()
         formset.save_m2m()
 
+class StateControlMixin:
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+
+        obj = qs.first()
+
+        try:
+            state = request.user.traditional_app_user.state
+
+            if hasattr(obj,'source_state'):
+                qs = qs.filter(source_state=state)
+            elif hasattr(obj,'state'):
+                qs = qs.filter(state=state)
+
+            return qs
+        except:
+            return qs.none()
+
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
-        if db_field.name == "state":
-            kwargs["queryset"] = LkpState.objects.filter(id=1) #request.user
+        if db_field.name == "state" or db_field.name == "source_state":
+            try:
+                state = request.user.traditional_app_user.state
+                kwargs["queryset"] = LkpState.objects.filter(id=state.id) #request.user
+            except:
+                kwargs["queryset"] = LkpState.objects.none()
+
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
     
 ####### Lookups ########
@@ -45,7 +68,7 @@ class LkpSaigInline(admin.TabularInline):
     exclude = ["created_at","created_by","updated_at","updated_by"]
     min_num = 1
 
-class SougAdmin(LogMixin, admin.ModelAdmin):
+class SougAdmin(LogMixin,StateControlMixin, admin.ModelAdmin):
     model = LkpSoag
     list_display = ['name', 'state','locality']
     search_fields = ('name',)
@@ -60,7 +83,7 @@ admin.site.register(LkpSoag, SougAdmin)
 class EmployeeProjectAdminInline(admin.StackedInline):
     model = EmployeeProject
 
-class EmployeeAdmin(LogMixin, admin.ModelAdmin):
+class EmployeeAdmin(LogMixin,StateControlMixin, admin.ModelAdmin):
     model = Employee
     list_display = ['state','no3_elta3god', 'name','job']
     search_fields = ('name',)
@@ -75,7 +98,7 @@ admin.site.register(Employee, EmployeeAdmin)
 class RentedVehicleAdminInline(admin.StackedInline):
     model = RentedVehicle
 
-class VehicleAdmin(LogMixin, admin.ModelAdmin):
+class VehicleAdmin(LogMixin,StateControlMixin, admin.ModelAdmin):
     model = Vehicle
     list_display = ['state','vehicle_type', 'plate_no','model']
     search_fields = ('plate_no',)
@@ -87,7 +110,7 @@ class VehicleAdmin(LogMixin, admin.ModelAdmin):
 
 admin.site.register(Vehicle, VehicleAdmin)
 
-class RentedApartmentAdmin(LogMixin, admin.ModelAdmin):
+class RentedApartmentAdmin(LogMixin,StateControlMixin, admin.ModelAdmin):
     model = RentedApartment
     list_display = ['state', 'apartment_type','owner_name']
     search_fields = ('owner_name',)
@@ -98,7 +121,7 @@ class RentedApartmentAdmin(LogMixin, admin.ModelAdmin):
 
 admin.site.register(RentedApartment, RentedApartmentAdmin)
 
-class Lkp7ofrKabiraAdmin(LogMixin, admin.ModelAdmin):
+class Lkp7ofrKabiraAdmin(LogMixin,StateControlMixin, admin.ModelAdmin):
     model = Lkp7ofrKabira
 
     class Media:
@@ -106,7 +129,7 @@ class Lkp7ofrKabiraAdmin(LogMixin, admin.ModelAdmin):
 
 admin.site.register(Lkp7ofrKabira, Lkp7ofrKabiraAdmin)
 
-class Lkp2barAdmin(LogMixin, admin.ModelAdmin):
+class Lkp2barAdmin(LogMixin,StateControlMixin, admin.ModelAdmin):
     model = Lkp2bar
     
     class Media:
@@ -114,7 +137,7 @@ class Lkp2barAdmin(LogMixin, admin.ModelAdmin):
 
 admin.site.register(Lkp2bar, Lkp2barAdmin)
 
-class Lkp2jhizatBahthAdmin(LogMixin, admin.ModelAdmin):
+class Lkp2jhizatBahthAdmin(LogMixin,StateControlMixin, admin.ModelAdmin):
     model = Lkp2jhizatBahth
     
     class Media:
@@ -122,7 +145,7 @@ class Lkp2jhizatBahthAdmin(LogMixin, admin.ModelAdmin):
 
 admin.site.register(Lkp2jhizatBahth, Lkp2jhizatBahthAdmin)
 
-class LkpSosalGoldAdmin(LogMixin, admin.ModelAdmin):
+class LkpSosalGoldAdmin(LogMixin,StateControlMixin, admin.ModelAdmin):
     model = LkpSosalGold
     
     class Media:
@@ -130,7 +153,7 @@ class LkpSosalGoldAdmin(LogMixin, admin.ModelAdmin):
 
 admin.site.register(LkpSosalGold, LkpSosalGoldAdmin)
 
-class LkpGrabeelAdmin(LogMixin, admin.ModelAdmin):
+class LkpGrabeelAdmin(LogMixin,StateControlMixin, admin.ModelAdmin):
     model = LkpGrabeel
     
     class Media:
@@ -138,7 +161,7 @@ class LkpGrabeelAdmin(LogMixin, admin.ModelAdmin):
 
 admin.site.register(LkpGrabeel, LkpGrabeelAdmin)
 
-class LkpKhalatatAdmin(LogMixin, admin.ModelAdmin):
+class LkpKhalatatAdmin(LogMixin,StateControlMixin, admin.ModelAdmin):
     model = LkpKhalatat
     
     class Media:
@@ -146,7 +169,7 @@ class LkpKhalatatAdmin(LogMixin, admin.ModelAdmin):
 
 admin.site.register(LkpKhalatat, LkpKhalatatAdmin)
 
-class LkpSmallProcessingUnitAdmin(LogMixin, admin.ModelAdmin):
+class LkpSmallProcessingUnitAdmin(LogMixin,StateControlMixin, admin.ModelAdmin):
     model = LkpSmallProcessingUnit
     
     class Media:
@@ -156,7 +179,34 @@ admin.site.register(LkpSmallProcessingUnit, LkpSmallProcessingUnitAdmin)
 
 ####### Daily Report ##########
 
-daily_report_main_mixins = [LogMixin]
+class DailyReportMixin:
+    def get_formsets_with_inlines(self, request, obj=None):
+        super().get_formsets_with_inlines(request, obj)
+
+        state = request.user.traditional_app_user.state
+
+        for inline in self.get_inline_instances(request, obj):
+            formset = inline.get_formset(request, obj)
+            if inline.model == DailyWardHajr:
+                formset.form.base_fields['soag'].queryset = formset.form.base_fields['soag'].queryset.filter(state=state)
+            elif inline.model == DailyIncome:
+                formset.form.base_fields['soag'].queryset = formset.form.base_fields['soag'].queryset.filter(state=state)
+            elif inline.model == DailyTahsilForm:
+                formset.form.base_fields['soag'].queryset = formset.form.base_fields['soag'].queryset.filter(state=state)
+            elif inline.model == DailyKartaMor7ala:
+                formset.form.base_fields['soag'].queryset = formset.form.base_fields['soag'].queryset.filter(state=state)
+            elif inline.model == DailyGoldMor7ala:
+                formset.form.base_fields['soag'].queryset = formset.form.base_fields['soag'].queryset.filter(state=state)
+            elif inline.model == DailyGrabeel:
+                formset.form.base_fields['grabeel'].queryset = formset.form.base_fields['grabeel'].queryset.filter(state=state)
+            elif inline.model == DailyHofrKabira:
+                formset.form.base_fields['hofr_kabira'].queryset = formset.form.base_fields['hofr_kabira'].queryset.filter(state=state)
+            elif inline.model == DailySmallProcessingUnit:
+                formset.form.base_fields['small_processing_unit'].queryset = formset.form.base_fields['small_processing_unit'].queryset.filter(state=state)
+                
+            yield formset,inline
+
+daily_report_main_mixins = [LogMixin,StateControlMixin,DailyReportMixin]
 daily_report_main_class = {
     'model': DailyReport,
     'mixins': [],
@@ -171,6 +221,22 @@ daily_report_main_class = {
         'tra_tahsil_department':{
             'permissions': {
                 DailyReport.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
+                DailyReport.STATE_CONFIRMED1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                DailyReport.STATE_CONFIRMED2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                DailyReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+            },
+        },
+        'tra_asoag_department':{
+            'permissions': {
+                DailyReport.STATE_DRAFT: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                DailyReport.STATE_CONFIRMED1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                DailyReport.STATE_CONFIRMED2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                DailyReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+            },
+        },
+        'tra_state_manager':{
+            'permissions': {
+                DailyReport.STATE_DRAFT: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 DailyReport.STATE_CONFIRMED1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 DailyReport.STATE_CONFIRMED2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 DailyReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -198,8 +264,23 @@ daily_report_inline_classes = {
                     DailyReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
-
-        },
+            'tra_asoag_department':{
+                'permissions': {
+                    DailyReport.STATE_DRAFT: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    DailyReport.STATE_CONFIRMED1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    DailyReport.STATE_CONFIRMED2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    DailyReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
+            'tra_state_manager':{
+                'permissions': {
+                    DailyReport.STATE_DRAFT: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    DailyReport.STATE_CONFIRMED1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    DailyReport.STATE_CONFIRMED2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    DailyReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
+        }
     },
     'DailyIncome': {
         'model': DailyIncome,
@@ -212,6 +293,22 @@ daily_report_inline_classes = {
             'tra_tahsil_department':{
                 'permissions': {
                     DailyReport.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
+                    DailyReport.STATE_CONFIRMED1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    DailyReport.STATE_CONFIRMED2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    DailyReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
+            'tra_asoag_department':{
+                'permissions': {
+                    DailyReport.STATE_DRAFT: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    DailyReport.STATE_CONFIRMED1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    DailyReport.STATE_CONFIRMED2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    DailyReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
+            'tra_state_manager':{
+                'permissions': {
+                    DailyReport.STATE_DRAFT: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     DailyReport.STATE_CONFIRMED1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     DailyReport.STATE_CONFIRMED2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     DailyReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -236,6 +333,22 @@ daily_report_inline_classes = {
                     DailyReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
+            'tra_asoag_department':{
+                'permissions': {
+                    DailyReport.STATE_DRAFT: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    DailyReport.STATE_CONFIRMED1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    DailyReport.STATE_CONFIRMED2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    DailyReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
+            'tra_state_manager':{
+                'permissions': {
+                    DailyReport.STATE_DRAFT: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    DailyReport.STATE_CONFIRMED1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    DailyReport.STATE_CONFIRMED2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    DailyReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
 
         },
     },
@@ -250,6 +363,22 @@ daily_report_inline_classes = {
             'tra_tahsil_department':{
                 'permissions': {
                     DailyReport.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
+                    DailyReport.STATE_CONFIRMED1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    DailyReport.STATE_CONFIRMED2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    DailyReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
+            'tra_asoag_department':{
+                'permissions': {
+                    DailyReport.STATE_DRAFT: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    DailyReport.STATE_CONFIRMED1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    DailyReport.STATE_CONFIRMED2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    DailyReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
+            'tra_state_manager':{
+                'permissions': {
+                    DailyReport.STATE_DRAFT: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     DailyReport.STATE_CONFIRMED1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     DailyReport.STATE_CONFIRMED2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     DailyReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -274,6 +403,22 @@ daily_report_inline_classes = {
                     DailyReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
+            'tra_asoag_department':{
+                'permissions': {
+                    DailyReport.STATE_DRAFT: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    DailyReport.STATE_CONFIRMED1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    DailyReport.STATE_CONFIRMED2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    DailyReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
+            'tra_state_manager':{
+                'permissions': {
+                    DailyReport.STATE_DRAFT: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    DailyReport.STATE_CONFIRMED1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    DailyReport.STATE_CONFIRMED2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    DailyReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
 
         },
     },
@@ -288,6 +433,22 @@ daily_report_inline_classes = {
             'tra_tahsil_department':{
                 'permissions': {
                     DailyReport.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
+                    DailyReport.STATE_CONFIRMED1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    DailyReport.STATE_CONFIRMED2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    DailyReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
+            'tra_asoag_department':{
+                'permissions': {
+                    DailyReport.STATE_DRAFT: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    DailyReport.STATE_CONFIRMED1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    DailyReport.STATE_CONFIRMED2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    DailyReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
+            'tra_state_manager':{
+                'permissions': {
+                    DailyReport.STATE_DRAFT: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     DailyReport.STATE_CONFIRMED1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     DailyReport.STATE_CONFIRMED2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     DailyReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -312,6 +473,22 @@ daily_report_inline_classes = {
                     DailyReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
+            'tra_asoag_department':{
+                'permissions': {
+                    DailyReport.STATE_DRAFT: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    DailyReport.STATE_CONFIRMED1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    DailyReport.STATE_CONFIRMED2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    DailyReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
+            'tra_state_manager':{
+                'permissions': {
+                    DailyReport.STATE_DRAFT: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    DailyReport.STATE_CONFIRMED1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    DailyReport.STATE_CONFIRMED2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    DailyReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
 
         },
     },
@@ -331,10 +508,25 @@ daily_report_inline_classes = {
                     DailyReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
+            'tra_asoag_department':{
+                'permissions': {
+                    DailyReport.STATE_DRAFT: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    DailyReport.STATE_CONFIRMED1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    DailyReport.STATE_CONFIRMED2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    DailyReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
+            'tra_state_manager':{
+                'permissions': {
+                    DailyReport.STATE_DRAFT: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    DailyReport.STATE_CONFIRMED1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    DailyReport.STATE_CONFIRMED2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    DailyReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
 
         },
-    },
-
+    },    
 }
 
 model_admin, inlines = create_main_form(daily_report_main_class,daily_report_inline_classes,daily_report_main_mixins)
