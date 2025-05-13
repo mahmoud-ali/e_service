@@ -51,6 +51,13 @@ class KhatabatAdmin(LogMixin,admin.ModelAdmin):
     search_fields = ('letter_number', 'subject')
     inlines = [HarkatKhatabatInline]
 
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        maktab = request.user.maktab_tanfizi_user
+
+        qs = qs.filter(maktab_tanfizi=maktab)
+        return qs
+
     def get_formsets_with_inlines(self, request, obj=None):
         for inline in self.get_inline_instances(request, obj):
             formset = inline.get_formset(request, obj)
