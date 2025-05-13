@@ -1,6 +1,6 @@
 from django.contrib import admin
-from django.contrib.gis import admin as gis_admin
-
+# from django.contrib.gis import admin as gis_admin
+from leaflet.admin import LeafletGeoAdmin
 from company_profile.models import LkpLocality, LkpState
 from traditional_app.models import DailyGrabeel, DailyHofrKabira, DailyIncome, DailyReport, DailyGoldMor7ala, DailyKartaMor7ala, DailySmallProcessingUnit, Employee, EmployeeProject, Lkp2bar, Lkp2jhizatBahth, Lkp7ofrKabira, LkpGrabeel, LkpKhalatat, LkpLocalityTmp, LkpMojam3atTawa7in, LkpSaig, LkpSmallProcessingUnit, LkpSoag, LkpSosalGold, DailyTahsilForm, DailyWardHajr, RentedApartment, RentedVehicle, TraditionalAppUser, Vehicle
 from workflow.admin_utils import create_main_form
@@ -68,12 +68,29 @@ class LkpSaigInline(admin.TabularInline):
     exclude = ["created_at","created_by","updated_at","updated_by"]
     min_num = 1
 
-class SougAdmin(LogMixin,StateControlMixin, admin.ModelAdmin):
+class SougAdmin(LogMixin,StateControlMixin, LeafletGeoAdmin):
     model = LkpSoag
     list_display = ['name', 'state','locality']
     search_fields = ('name',)
     list_filter = ('state','locality')
+
     inlines = [LkpMojam3atTawa7inInline, LkpSaigInline,]
+
+    settings_overrides = {
+        # 'TILES': [
+        #     ('OpenStreetMap', 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        #         'attribution': '&copy; OpenStreetMap contributors',
+        #     }),
+        # ],
+        # 'MAP_TEMPLATE': 'leaflet/admin/map.html',  
+        'PLUGINS': {
+            'measure': {
+                'css': ['https://cdn.jsdelivr.net/npm/leaflet-measure@3.3.0/dist/leaflet-measure.css'],
+                'js': 'https://cdn.jsdelivr.net/npm/leaflet-measure@3.3.0/dist/leaflet-measure.min.js',
+                'auto-include': True,
+            },
+        }        
+    }
 
     class Media:
         js = ('admin/js/jquery.init.js',"traditional_app/js/lkp_state_change.js",)
@@ -534,7 +551,7 @@ model_admin, inlines = create_main_form(daily_report_main_class,daily_report_inl
 admin.site.register(model_admin.model,model_admin)
 
 @admin.register(LkpLocalityTmp)
-class LkpLocalityTmpAdmin(gis_admin.GISModelAdmin):
+class LkpLocalityTmpAdmin(LeafletGeoAdmin):
     model = LkpLocalityTmp
     exclude = ['geom']
     list_display = ['name','city','state_gis'] #, 'state'

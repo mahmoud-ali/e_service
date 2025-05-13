@@ -1,0 +1,38 @@
+{% load static %}
+{% load leaflet_tags %}
+
+{% leaflet_css %}
+{% leaflet_js %}
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-measure@3.3.0/dist/leaflet-measure.css" />
+<script src="https://cdn.jsdelivr.net/npm/leaflet-measure@3.3.0/dist/leaflet-measure.min.js"></script>
+
+<div id="{{ id }}_container" class="leaflet-container" style="width: 100%; height: 500px;"></div>
+
+<script>
+    var map = L.map('{{ id }}_container').setView([0, 0], 2);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    // Add the measurement tool
+    L.control.measure({
+        primaryLengthUnit: 'meters',
+        secondaryLengthUnit: 'kilometers',
+        primaryAreaUnit: 'sqmeters',
+        secondaryAreaUnit: 'hectares'
+    }).addTo(map);
+
+    // Optional: Add geometry from existing model instance
+    var geom_input = document.getElementById('{{ id }}');
+    if (geom_input && geom_input.value) {
+        var wkt = geom_input.value;
+        var feature = Terraformer.WKT.parse(wkt);
+        var leaflet_geom = Terraformer.Leaflet.convert(feature);
+        leaflet_geom.addTo(map);
+        map.fitBounds(leaflet_geom.getBounds());
+    }
+
+    // Optional: Add draw/edit behavior if needed
+</script>

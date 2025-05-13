@@ -144,7 +144,7 @@ class LkpSoag(LoggingModelGis):
     locality = models.ForeignKey(LkpLocality, related_name="+", on_delete=models.PROTECT,verbose_name=_("Locality"))
 
     name = models.CharField(_("الاسم"),max_length=100)
-    geom = gis_models.MultiPointField(srid=4326, blank=True, null=True)
+    geom = gis_models.MultiPolygonField(srid=4326, blank=True, null=True)
     
     def __str__(self):
         return self.name

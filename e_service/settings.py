@@ -89,6 +89,8 @@ INSTALLED_APPS = [
     'django_otp.plugins.otp_static',
     'django_otp.plugins.otp_email',
     # 'pwa',
+
+    'leaflet',
     
     # Local                
     'accounts',
@@ -395,6 +397,32 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
     ),
+}
+
+LEAFLET_CONFIG = {
+    'DEFAULT_CENTER': (0, 0),
+    'DEFAULT_ZOOM': 2,
+    'MIN_ZOOM': 4,
+    'MAX_ZOOM': 17,
+    'SCALE': 'metric',
+    'RESET_VIEW': False,
+
+    'TILES': [
+        ('Esri', 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+            'attribution': 'Tiles &copy; Esri',
+            'subdomains': 'abcd',
+
+        }),
+    ],
+
+    'PLUGINS': {
+        'leaflet-measure': {
+            'css': ['https://cdn.jsdelivr.net/npm/leaflet-measure@3.3.0/dist/leaflet-measure.css'],
+            'js': 'https://cdn.jsdelivr.net/npm/leaflet-measure@3.3.0/dist/leaflet-measure.min.js',
+            'auto-include': True,
+        },
+    }
+
 }
 
 TESTING = 'test' in sys.argv[1:]

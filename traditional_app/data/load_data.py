@@ -8,12 +8,18 @@ from workflow.data_utils import create_master_details_groups, create_model_group
 from traditional_app import admin,models
 from company_profile.models import LkpLocality
 
+from django.contrib.auth import get_user_model
+
+admin_user = get_user_model().objects.get(id=1)
+
 def create_groups():
     app = 'traditional_app'
 
     create_master_details_groups(app,'dailyreport',admin.daily_report_main_class,admin.daily_report_inline_classes)
 
     arr = [
+        'lkpsaig',
+        'lkpmojam3attawa7in',
         'lkpsoag',
         'employee',
         'vehicle',
@@ -165,3 +171,35 @@ def load_locality_xy(file_name='locality_xy2.csv'):
 
             except Exception as e:
                 print(f'id: {id} Exception: {e}')
+
+from django.contrib.gis.db.models.functions import Centroid
+
+def get_locality_soug():
+    """
+    return locality with soug queryset pair
+    """
+    poins_qs = models.LkpSougTmp.objects.annotate(
+        centroid=Centroid('geom'),
+    )
+
+    for poly in models.LkpLocalityTmp.objects.all():
+        points_within_x_meter = poins_qs.filter(
+            centroid__within=poly.geom
+        )
+
+        if poly and poly.locality and points_within_x_meter.exists():
+            yield (poly.locality,points_within_x_meter)
+
+def import_soug():
+    for locality,soug_qs in get_locality_soug():
+        print("locality",locality.name)
+        for tmp_soug in soug_qs:
+            print("soug",tmp_soug.name)
+            yield models.LkpSoag.objects.create(
+                name=tmp_soug.name,
+                locality=locality,
+                state=locality.state,
+                geom=tmp_soug.geom,
+                created_by=admin_user,
+                updated_by=admin_user,
+            )
