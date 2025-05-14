@@ -269,8 +269,8 @@ daily_report_inline_classes = {
         'model': DailyWardHajr,
         'mixins': [admin.TabularInline],
         'kwargs': {
-            'extra': 0,
-            'min_num': 1,
+            'extra': 1,
+            'min_num': 0,
         },
         'groups': {
             'tra_tahsil_department':{
@@ -303,8 +303,8 @@ daily_report_inline_classes = {
         'model': DailyIncome,
         'mixins': [admin.TabularInline],
         'kwargs': {
-            'extra': 0,
-            'min_num': 1,
+            'extra': 1,
+            'min_num': 0,
         },
         'groups': {
             'tra_tahsil_department':{
@@ -338,8 +338,8 @@ daily_report_inline_classes = {
         'model': DailyTahsilForm,
         'mixins': [admin.TabularInline],
         'kwargs': {
-            'extra': 0,
-            'min_num': 1,
+            'extra': 1,
+            'min_num': 0,
         },
         'groups': {
             'tra_tahsil_department':{
@@ -373,8 +373,8 @@ daily_report_inline_classes = {
         'model': DailyKartaMor7ala,
         'mixins': [admin.TabularInline],
         'kwargs': {
-            'extra': 0,
-            'min_num': 1,
+            'extra': 1,
+            'min_num': 0,
         },
         'groups': {
             'tra_tahsil_department':{
@@ -408,8 +408,8 @@ daily_report_inline_classes = {
         'model': DailyGoldMor7ala,
         'mixins': [admin.TabularInline],
         'kwargs': {
-            'extra': 0,
-            'min_num': 1,
+            'extra': 1,
+            'min_num': 0,
         },
         'groups': {
             'tra_tahsil_department':{
@@ -443,8 +443,8 @@ daily_report_inline_classes = {
         'model': DailyGrabeel,
         'mixins': [admin.TabularInline],
         'kwargs': {
-            'extra': 0,
-            'min_num': 1,
+            'extra': 1,
+            'min_num': 0,
         },
         'groups': {
             'tra_tahsil_department':{
@@ -478,8 +478,8 @@ daily_report_inline_classes = {
         'model': DailyHofrKabira,
         'mixins': [admin.TabularInline],
         'kwargs': {
-            'extra': 0,
-            'min_num': 1,
+            'extra': 1,
+            'min_num': 0,
         },
         'groups': {
             'tra_tahsil_department':{
@@ -513,8 +513,8 @@ daily_report_inline_classes = {
         'model': DailySmallProcessingUnit,
         'mixins': [admin.TabularInline],
         'kwargs': {
-            'extra': 0,
-            'min_num': 1,
+            'extra': 1,
+            'min_num': 0,
         },
         'groups': {
             'tra_tahsil_department':{
