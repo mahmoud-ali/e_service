@@ -127,7 +127,7 @@ class VehicleAdmin(LogMixin,StateControlMixin, admin.ModelAdmin):
 
 admin.site.register(Vehicle, VehicleAdmin)
 
-class RentedApartmentAdmin(LogMixin,StateControlMixin, admin.ModelAdmin):
+class RentedApartmentAdmin(LogMixin,StateControlMixin, LeafletGeoAdmin):
     model = RentedApartment
     list_display = ['state', 'apartment_type','owner_name']
     search_fields = ('owner_name',)
@@ -138,7 +138,7 @@ class RentedApartmentAdmin(LogMixin,StateControlMixin, admin.ModelAdmin):
 
 admin.site.register(RentedApartment, RentedApartmentAdmin)
 
-class Lkp7ofrKabiraAdmin(LogMixin,StateControlMixin, admin.ModelAdmin):
+class Lkp7ofrKabiraAdmin(LogMixin,StateControlMixin, LeafletGeoAdmin):
     model = Lkp7ofrKabira
 
     class Media:
@@ -146,7 +146,7 @@ class Lkp7ofrKabiraAdmin(LogMixin,StateControlMixin, admin.ModelAdmin):
 
 admin.site.register(Lkp7ofrKabira, Lkp7ofrKabiraAdmin)
 
-class Lkp2barAdmin(LogMixin,StateControlMixin, admin.ModelAdmin):
+class Lkp2barAdmin(LogMixin,StateControlMixin, LeafletGeoAdmin):
     model = Lkp2bar
     
     class Media:
@@ -154,7 +154,7 @@ class Lkp2barAdmin(LogMixin,StateControlMixin, admin.ModelAdmin):
 
 admin.site.register(Lkp2bar, Lkp2barAdmin)
 
-class Lkp2jhizatBahthAdmin(LogMixin,StateControlMixin, admin.ModelAdmin):
+class Lkp2jhizatBahthAdmin(LogMixin,StateControlMixin, LeafletGeoAdmin):
     model = Lkp2jhizatBahth
     
     class Media:
@@ -162,7 +162,7 @@ class Lkp2jhizatBahthAdmin(LogMixin,StateControlMixin, admin.ModelAdmin):
 
 admin.site.register(Lkp2jhizatBahth, Lkp2jhizatBahthAdmin)
 
-class LkpSosalGoldAdmin(LogMixin,StateControlMixin, admin.ModelAdmin):
+class LkpSosalGoldAdmin(LogMixin,StateControlMixin, LeafletGeoAdmin):
     model = LkpSosalGold
     
     class Media:
@@ -170,7 +170,7 @@ class LkpSosalGoldAdmin(LogMixin,StateControlMixin, admin.ModelAdmin):
 
 admin.site.register(LkpSosalGold, LkpSosalGoldAdmin)
 
-class LkpGrabeelAdmin(LogMixin,StateControlMixin, admin.ModelAdmin):
+class LkpGrabeelAdmin(LogMixin,StateControlMixin, LeafletGeoAdmin):
     model = LkpGrabeel
     
     class Media:
@@ -178,7 +178,7 @@ class LkpGrabeelAdmin(LogMixin,StateControlMixin, admin.ModelAdmin):
 
 admin.site.register(LkpGrabeel, LkpGrabeelAdmin)
 
-class LkpKhalatatAdmin(LogMixin,StateControlMixin, admin.ModelAdmin):
+class LkpKhalatatAdmin(LogMixin,StateControlMixin, LeafletGeoAdmin):
     model = LkpKhalatat
     
     class Media:
@@ -186,7 +186,7 @@ class LkpKhalatatAdmin(LogMixin,StateControlMixin, admin.ModelAdmin):
 
 admin.site.register(LkpKhalatat, LkpKhalatatAdmin)
 
-class LkpSmallProcessingUnitAdmin(LogMixin,StateControlMixin, admin.ModelAdmin):
+class LkpSmallProcessingUnitAdmin(LogMixin,StateControlMixin, LeafletGeoAdmin):
     model = LkpSmallProcessingUnit
     
     class Media:

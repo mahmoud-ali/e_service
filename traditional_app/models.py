@@ -128,9 +128,8 @@ class RentedApartment(LoggingModel):
     contract_start_date = models.DateField(_("تاريخ بداية العقد"))
     contract_end_date = models.DateField(_("تاريخ نهاية العقد"))
     owner_name = models.CharField(_("اسم مالك العقار"), max_length=100)
-    cordinates_x = models.FloatField(_("الإحداثيات x"))
-    cordinates_y = models.FloatField(_("الإحداثيات y"))
     contract_attachment = models.FileField(_("صورة من العقد"), upload_to="traditional/rented_apartments/", blank=True, null=True)
+    geom = gis_models.MultiPointField(srid=4326, blank=True, null=True)
 
     def __str__(self):
         return f"{self.owner_name} ({self.get_apartment_type_display()})"
@@ -165,6 +164,7 @@ class LkpMojam3atTawa7in(LoggingModel):
     cordinates_x = models.FloatField(_("الإحداثيات x"))
     cordinates_y = models.FloatField(_("الإحداثيات y"))
     pid_attachment = models.FileField(_("صورة من إثبات الشخصية"), upload_to="traditional/mojam3at_tawa7in/", blank=True, null=True)
+    geom = gis_models.MultiPointField(srid=4326, blank=True, null=True)
 
     def __str__(self):
         return f"{self.owner_name} ({self.soag.name})"
@@ -182,6 +182,7 @@ class LkpSaig(LoggingModel):
     cordinates_x = models.FloatField(_("الإحداثيات x"))
     cordinates_y = models.FloatField(_("الإحداثيات y"))
     pid_attachment = models.FileField(_("صورة من إثبات الشخصية"), upload_to="traditional/saig/", blank=True, null=True)
+    geom = gis_models.MultiPointField(srid=4326, blank=True, null=True)
 
     def __str__(self):
         return f"{self.name} ({self.soag.name})"
@@ -204,10 +205,9 @@ class Lkp7ofrKabira(LoggingModel):
     state = models.ForeignKey(LkpState, on_delete=models.PROTECT, verbose_name=_("state"))
     locality = models.ForeignKey(LkpLocality, on_delete=models.PROTECT, verbose_name=_("locality"))
     name = models.CharField(_("owner_name"),max_length=100)
-    cordinates_x = models.FloatField(_("الإحداثيات x"))
-    cordinates_y = models.FloatField(_("الإحداثيات y"))
     status = models.IntegerField(_("الحالة"), choices=STATE_CHOICES, default=STATE_ACTIVE)
     pid_attachment = models.FileField(_("صورة من إثبات الشخصية"), upload_to="traditional/7ofr_kabira/", blank=True, null=True)
+    geom = gis_models.MultiPointField(srid=4326, blank=True, null=True)
 
     def __str__(self):
         return f"{self.name} ({self.state.name})"
@@ -223,9 +223,8 @@ class Lkp2bar(LoggingModel):
     state = models.ForeignKey(LkpState, on_delete=models.PROTECT, verbose_name=_("state"))
     locality = models.ForeignKey(LkpLocality, on_delete=models.PROTECT, verbose_name=_("locality"))
     name = models.CharField(_("owner_name"),max_length=100)
-    cordinates_x = models.FloatField(_("الإحداثيات x"))
-    cordinates_y = models.FloatField(_("الإحداثيات y"))
     pid_attachment = models.FileField(_("صورة من إثبات الشخصية"), upload_to="traditional/2bar/", blank=True, null=True)
+    geom = gis_models.MultiPointField(srid=4326, blank=True, null=True)
 
     def __str__(self):
         return f"{self.name} ({self.state.name})"
@@ -258,6 +257,7 @@ class LkpSosalGold(LoggingModel):
     locality = models.ForeignKey(LkpLocality, on_delete=models.PROTECT, verbose_name=_("locality"))
     name = models.CharField(_("owner_name"),max_length=100)
     pid_attachment = models.FileField(_("صورة من إثبات الشخصية"), upload_to="traditional/sosl_gold/", blank=True, null=True)
+    geom = gis_models.MultiPointField(srid=4326, blank=True, null=True)
 
     def __str__(self):
         return f"{self.name} ({self.state.name})"
@@ -281,9 +281,8 @@ class LkpGrabeel(LoggingModel):
     locality = models.ForeignKey(LkpLocality, on_delete=models.PROTECT, verbose_name=_("locality"))
     name = models.CharField(_("owner_name"),max_length=100)
     type = models.IntegerField(_("type"), choices=TYPE_CHOICES, default=TYPE_BIG)
-    cordinates_x = models.FloatField(_("الإحداثيات x"))
-    cordinates_y = models.FloatField(_("الإحداثيات y"))
     pid_attachment = models.FileField(_("صورة من إثبات الشخصية"), upload_to="traditional/grabeel/", blank=True, null=True)
+    geom = gis_models.MultiPointField(srid=4326, blank=True, null=True)
 
     def __str__(self):
         return f"{self.name} ({self.state.name})"
@@ -299,9 +298,8 @@ class LkpKhalatat(LoggingModel):
     state = models.ForeignKey(LkpState, on_delete=models.PROTECT, verbose_name=_("state"))
     locality = models.ForeignKey(LkpLocality, on_delete=models.PROTECT, verbose_name=_("locality"))
     name = models.CharField(_("owner_name"),max_length=100)
-    cordinates_x = models.FloatField(_("الإحداثيات x"))
-    cordinates_y = models.FloatField(_("الإحداثيات y"))
     pid_attachment = models.FileField(_("صورة من إثبات الشخصية"), upload_to="traditional/khalatat/", blank=True, null=True)
+    geom = gis_models.MultiPointField(srid=4326, blank=True, null=True)
 
     def __str__(self):
         return f"{self.name} ({self.state.name})"
@@ -320,10 +318,8 @@ class LkpSmallProcessingUnit(LoggingModel):
     bolimal_count = models.IntegerField(_("عدد طواحين البولميل"))
     khalatat_count = models.IntegerField(_("عدد الخلاطات"))
     kasarat_count = models.IntegerField(_("عدد الكسارات"))
-    cordinates_x = models.FloatField(_("الإحداثيات x"))
-    cordinates_y = models.FloatField(_("الإحداثيات y"))
-
     pid_attachment = models.FileField(_("صورة من إثبات الشخصية"), upload_to="traditional/small_processing_unit/", blank=True, null=True)
+    geom = gis_models.MultiPointField(srid=4326, blank=True, null=True)
 
     def __str__(self):
         return f"{self.name} ({self.state.name})"
