@@ -105,16 +105,21 @@ def run(verbose=True):
 
 def point_within_polygon(poins_qs,polygon_qs,buffer,srs=32636):
     for poly in polygon_qs:
-        points_within_x_meter = poins_qs.annotate(
-            location_srs=Transform('geom', srs)
-        ).filter(
-            location_srs__distance_lte=(
-                Transform(poly.geom, srs),
-                buffer  # meters
+        if poly and poly.geom and poins_qs:
+            points_within_x_meter = poins_qs.filter(geom__isnull=False) \
+            .annotate(
+                location_srs=Transform('geom', srs)
+            ) \
+            .filter(
+                location_srs__distance_lte=(
+                    Transform(poly.geom,srs),
+                    buffer  # meters
+                )
             )
-        )
+            
 
-        yield (poly,points_within_x_meter)
+            if points_within_x_meter:
+                yield (poly,points_within_x_meter)
 
 def polygon_within_polygon(polygon_small_qs,polygon_big_qs2):
     c = 0
@@ -203,3 +208,39 @@ def import_soug():
                 created_by=admin_user,
                 updated_by=admin_user,
             )
+
+def import_saig():
+    models.LkpSaig.objects.all().delete()
+    for soug,saig_qs in point_within_polygon(models.LkpSaigTmp.objects.all(),models.LkpSoag.objects.all(),1000):
+        print("soug",soug.name)
+        for tmp_saig in saig_qs:
+            if soug:
+                print("soug",tmp_saig.name)
+                yield models.LkpSaig.objects.create(
+                    soag=soug,
+                    name=tmp_saig.name,
+                    cordinates_x=tmp_saig.geom[0].x,
+                    cordinates_y=tmp_saig.geom[0].y,
+                    geom=tmp_saig.geom,
+                    created_by=admin_user,
+                    updated_by=admin_user,
+                )
+
+def import_mojam3_tawa7in():
+    models.LkpMojam3atTawa7in.objects.all().delete()
+    for soug,mojam3_qs in point_within_polygon(models.LkpGrindinTmp.objects.all(),models.LkpSoag.objects.all(),1000):
+        print("soug",soug.name)
+        for tmp_mojam3 in mojam3_qs:
+            if soug:
+                print("soug",tmp_mojam3.name)
+                yield models.LkpMojam3atTawa7in.objects.create(
+                    soag=soug,
+                    owner_name=tmp_mojam3.mill_owner,
+                    toa7in_jafa_count=1,
+                    toa7in_ratiba_count=1,
+                    cordinates_x=tmp_mojam3.geom[0].x,
+                    cordinates_y=tmp_mojam3.geom[0].y,
+                    geom=tmp_mojam3.geom,
+                    created_by=admin_user,
+                    updated_by=admin_user,
+                )
