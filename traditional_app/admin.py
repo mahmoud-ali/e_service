@@ -60,12 +60,12 @@ admin.site.register(TraditionalAppUser, TraditionalAppUserAdmin)
 
 class LkpMojam3atTawa7inInline(admin.TabularInline):
     model = LkpMojam3atTawa7in
-    exclude = ["created_at","created_by","updated_at","updated_by"]
+    exclude = ["geom","created_at","created_by","updated_at","updated_by"]
     min_num = 1
 
 class LkpSaigInline(admin.TabularInline):
     model = LkpSaig
-    exclude = ["created_at","created_by","updated_at","updated_by"]
+    exclude = ["geom","created_at","created_by","updated_at","updated_by"]
     min_num = 1
 
 class SougAdmin(LogMixin,StateControlMixin, LeafletGeoAdmin):
