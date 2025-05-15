@@ -48,6 +48,31 @@ class StateControlMixin:
                 kwargs["queryset"] = LkpState.objects.none()
 
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
+
+class SoagControlMixin:
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+
+        obj = qs.first()
+
+        try:
+            state = request.user.traditional_app_user.state
+
+            qs = qs.filter(soag__state=state)
+
+            return qs
+        except:
+            return qs.none()
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == "soag":
+            try:
+                state = request.user.traditional_app_user.state
+                kwargs["queryset"] = LkpSoag.objects.filter(state=state) #request.user
+            except Exception as e:
+                kwargs["queryset"] = LkpSoag.objects.none()
+
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
     
 ####### Lookups ########
 class TraditionalAppUserAdmin(LogMixin, admin.ModelAdmin):
@@ -58,15 +83,31 @@ class TraditionalAppUserAdmin(LogMixin, admin.ModelAdmin):
 
 admin.site.register(TraditionalAppUser, TraditionalAppUserAdmin)
 
-class LkpMojam3atTawa7inInline(admin.TabularInline):
+class LkpMojam3atTawa7inAdmin(LogMixin,SoagControlMixin, LeafletGeoAdmin):
     model = LkpMojam3atTawa7in
-    exclude = ["geom","created_at","created_by","updated_at","updated_by"]
-    min_num = 1
+    list_display = ['soag__state','soag__locality','soag', 'owner_name','toa7in_jafa_count','toa7in_ratiba_count']
+    list_filter = ('soag__state',)
+    exclude = ["created_at","created_by","updated_at","updated_by"]
 
-class LkpSaigInline(admin.TabularInline):
+admin.site.register(LkpMojam3atTawa7in, LkpMojam3atTawa7inAdmin)
+
+class LkpSaigAdmin(LogMixin,SoagControlMixin, LeafletGeoAdmin):
     model = LkpSaig
-    exclude = ["geom","created_at","created_by","updated_at","updated_by"]
-    min_num = 1
+    list_display = ['soag__state','soag__locality','soag', 'name']
+    list_filter = ('soag__state',)
+    exclude = ["created_at","created_by","updated_at","updated_by"]
+
+admin.site.register(LkpSaig, LkpSaigAdmin)
+
+# class LkpMojam3atTawa7inInline(admin.TabularInline):
+#     model = LkpMojam3atTawa7in
+#     exclude = ["geom","created_at","created_by","updated_at","updated_by"]
+#     min_num = 1
+
+# class LkpSaigInline(admin.TabularInline):
+#     model = LkpSaig
+#     exclude = ["geom","created_at","created_by","updated_at","updated_by"]
+#     min_num = 1
 
 class SougAdmin(LogMixin,StateControlMixin, LeafletGeoAdmin):
     model = LkpSoag
@@ -74,7 +115,7 @@ class SougAdmin(LogMixin,StateControlMixin, LeafletGeoAdmin):
     search_fields = ('name',)
     list_filter = ('state','locality')
 
-    inlines = [LkpMojam3atTawa7inInline, LkpSaigInline,]
+    # inlines = [LkpMojam3atTawa7inInline, LkpSaigInline,]
 
     settings_overrides = {
         # 'TILES': [
