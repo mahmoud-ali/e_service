@@ -376,7 +376,7 @@ class TblCompanyProductionLicenseAdmin(LoggingAdminMixin,admin.ModelAdmin):
         )
         header = [
                     _("id"),_("company"),_("company_type"),_("License no"),_("license_type"),_("start_date"),_("end_date"),_( "License count"),\
-                    _("state"),_("sheet_no"),_("contract_status")
+                    _("state"),_("locality"),_("sheet_no"),_("contract_status")
         ]
 
         # BOM
@@ -388,7 +388,7 @@ class TblCompanyProductionLicenseAdmin(LoggingAdminMixin,admin.ModelAdmin):
         for license in queryset.order_by("company"):
 
             row = [
-                    license.id,license.company,license.company.get_company_type_display(),license.license_no,license.get_license_type_display(),license.start_date,license.end_date,license.license_count,license.state,\
+                    license.id,license.company,license.company.get_company_type_display(),license.license_no,license.get_license_type_display(),license.start_date,license.end_date,license.license_count,license.state,license.locality,\
                     license.sheet_no,license.contract_status
             ]
             writer.writerow(row)
