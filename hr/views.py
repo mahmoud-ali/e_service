@@ -43,7 +43,7 @@ class Badalat(LoginRequiredMixin,UserPermissionMixin,View):
         summary_list = []
 
         for (emp,badalat,khosomat,draja_wazifia,alawa_sanawia) in payroll.all_employees_payroll_from_db():
-            badalat_list = [round(b[1],2) for b in badalat]
+            badalat_list = [b[1] for b in badalat]
             l = [emp.code,emp.name,Drajat3lawat.DRAJAT_CHOICES[draja_wazifia],Drajat3lawat.ALAWAT_CHOICES[alawa_sanawia]] + badalat_list
             data.append(l)
 
@@ -140,7 +140,7 @@ class Khosomat(LoginRequiredMixin,UserPermissionMixin,View):
             template_name = 'hr/khosomat.html'
 
             for (emp,badalat,khosomat,draja_wazifia,alawa_sanawia) in payroll.all_employees_payroll_from_db():
-                khosomat_list = [round(k[1],2) for k in khosomat]
+                khosomat_list = [k[1] for k in khosomat]
                 l = [emp.code,emp.name,Drajat3lawat.DRAJAT_CHOICES[draja_wazifia],Drajat3lawat.ALAWAT_CHOICES[alawa_sanawia]] + khosomat_list
                 data.append(l)
 
@@ -592,7 +592,7 @@ class Mokaf2(LoginRequiredMixin,UserPermissionMixin,View):
             summary_list = []
 
             for (emp,emp_mokaf2) in mokaf2.all_employees_mokaf2_from_db():
-                mokaf2_list = [round(k[1],2) for k in emp_mokaf2]
+                mokaf2_list = [k[1] for k in emp_mokaf2]
                 l = [emp.code,emp.name,emp.get_draja_wazifia_display(),emp.get_alawa_sanawia_display(),]+mokaf2_list #round(emp_mokaf2.ajmali_2lmoratab,2),round(emp_mokaf2.dariba,2),emp_mokaf2.damga,]
                 #if not payroll_master.khasm_salafiat_elsandog_min_elomoratab:
                 #    l += [round(emp_mokaf2.salafiat_sandog,2),]
@@ -843,7 +843,7 @@ class Wi7datMosa3idaMokaf2tFarigMoratab(LoginRequiredMixin,UserPermissionMixin,V
         else:
             template_name = 'hr/wi7dat_mosa3ida.html'
             for (emp,badalat,mokaf2,draja_wazifia,alawa_sanawia) in payroll.all_employees_payroll_from_db():
-                badalat_list = [round(b[1],2) for b in mokaf2]
+                badalat_list = [b[1] for b in mokaf2]
                 l = [emp.code,emp.name,emp.hikal_wazifi,Drajat3lawat.DRAJAT_CHOICES[draja_wazifia],Drajat3lawat.ALAWAT_CHOICES[alawa_sanawia]] + badalat_list
                 data.append(l)
 
@@ -921,7 +921,7 @@ class Wi7datMosa3idaMokaf2t(LoginRequiredMixin,UserPermissionMixin,View):
         else:
             template_name = 'hr/wi7dat_mosa3ida.html'
             for (emp,badalat,mokaf2,draja_wazifia,alawa_sanawia) in payroll.all_employees_payroll_from_db():
-                badalat_list = [round(b[1],2) for b in mokaf2]
+                badalat_list = [b[1] for b in mokaf2]
                 l = [emp.code,emp.name,emp.hikal_wazifi,Drajat3lawat.DRAJAT_CHOICES[draja_wazifia],Drajat3lawat.ALAWAT_CHOICES[alawa_sanawia]] + badalat_list
                 data.append(l)
 
@@ -999,7 +999,7 @@ class Ta3agodMosimiMoratab(LoginRequiredMixin,UserPermissionMixin,View):
         else:
             template_name = 'hr/t3agood_mosimi.html'
             for (emp,moratab,draja_wazifia,alawa_sanawia) in payroll.all_employees_payroll_from_db():
-                badalat_list = [round(b[1],2) for b in moratab]
+                badalat_list = [b[1] for b in moratab]
                 l = [emp.code,emp.name,Drajat3lawat.DRAJAT_CHOICES[draja_wazifia],Drajat3lawat.ALAWAT_CHOICES[alawa_sanawia]] + badalat_list
                 data.append(l)
 
@@ -1077,7 +1077,7 @@ class Ta3agodMosimiMokaf2(LoginRequiredMixin,UserPermissionMixin,View):
         else:
             template_name = 'hr/t3agood_mosimi.html'
             for (emp,moratab,draja_wazifia,alawa_sanawia) in payroll.all_employees_payroll_from_db():
-                badalat_list = [round(b[1],2) for b in moratab]
+                badalat_list = [b[1] for b in moratab]
                 l = [emp.code,emp.name,Drajat3lawat.DRAJAT_CHOICES[draja_wazifia],Drajat3lawat.ALAWAT_CHOICES[alawa_sanawia]] + badalat_list
                 data.append(l)
 
@@ -1155,7 +1155,7 @@ class MajlisEl2daraMokaf2View(LoginRequiredMixin,UserPermissionMixin,View):
         else:
             template_name = 'hr/majlis_el2dara.html'
             for (emp,moratab,draja_wazifia,alawa_sanawia) in payroll.all_employees_payroll_from_db():
-                badalat_list = [round(b[1],2) for b in moratab]
+                badalat_list = [b[1] for b in moratab]
                 l = [emp.code,emp.name] + badalat_list
                 data.append(l)
 
@@ -1220,7 +1220,7 @@ class Modir3amBadalatView(LoginRequiredMixin,UserPermissionMixin,View):
         if True:
             template_name = 'hr/modir_3am.html'
             for (emp,badalat,khosomat,mokaf2,draja_wazifia,alawa_sanawia) in payroll.all_employees_payroll_from_db():
-                badalat_list = [round(b[1],2) for b in badalat]
+                badalat_list = [b[1] for b in badalat]
                 l = [emp.code,emp.name] + badalat_list
                 data.append(l)
 
@@ -1298,7 +1298,7 @@ class Modir3amKhosomatView(LoginRequiredMixin,UserPermissionMixin,View):
         else:
             template_name = 'hr/modir_3am.html'
             for (emp,badalat,khosomat,mokaf2,draja_wazifia,alawa_sanawia) in payroll.all_employees_payroll_from_db():
-                badalat_list = [round(b[1],2) for b in khosomat]
+                badalat_list = [b[1] for b in khosomat]
                 l = [emp.code,emp.name] + badalat_list
                 data.append(l)
 
@@ -1376,7 +1376,7 @@ class Modir3amMokaf2View(LoginRequiredMixin,UserPermissionMixin,View):
         else:
             template_name = 'hr/modir_3am.html'
             for (emp,badalat,khosomat,mokaf2,draja_wazifia,alawa_sanawia) in payroll.all_employees_payroll_from_db():
-                badalat_list = [round(b[1],2) for b in mokaf2]
+                badalat_list = [b[1] for b in mokaf2]
                 l = [emp.code,emp.name] + badalat_list
                 data.append(l)
 
