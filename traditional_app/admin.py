@@ -1,3 +1,5 @@
+from django.utils.translation import gettext_lazy as _
+
 from django.contrib import admin
 # from django.contrib.gis import admin as gis_admin
 from leaflet.admin import LeafletGeoAdmin
@@ -74,6 +76,45 @@ class SoagControlMixin:
 
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
     
+class RelatedOnlyFieldListFilterNotEmpty(admin.RelatedOnlyFieldListFilter):
+    def choices(self, changelist):
+        add_facets = changelist.add_facets
+        facet_counts = self.get_facet_queryset(changelist)
+        yield {
+            "selected": self.lookup_val is None and not self.lookup_val_isnull,
+            "query_string": changelist.get_query_string(
+                remove=[self.lookup_kwarg, self.lookup_kwarg_isnull]
+            ),
+            "display": _("All"),
+        }
+        count = None
+        for pk_val, val in self.lookup_choices:
+            count = facet_counts[f"{pk_val}__c"]
+            if count == 0:
+                continue
+            if add_facets:
+                val = f"{val} ({count})"
+            yield {
+                "selected": self.lookup_val is not None
+                and str(pk_val) in self.lookup_val,
+                "query_string": changelist.get_query_string(
+                    {self.lookup_kwarg: pk_val}, [self.lookup_kwarg_isnull]
+                ),
+                "display": val,
+            }
+        empty_title = self.empty_value_display
+        if self.include_empty_choice:
+            if add_facets:
+                count = facet_counts["__c"]
+                empty_title = f"{empty_title} ({count})"
+            yield {
+                "selected": bool(self.lookup_val_isnull),
+                "query_string": changelist.get_query_string(
+                    {self.lookup_kwarg_isnull: "True"}, [self.lookup_kwarg]
+                ),
+                "display": empty_title,
+            }
+
 ####### Lookups ########
 class TraditionalAppUserAdmin(LogMixin, admin.ModelAdmin):
     model = TraditionalAppUser
@@ -85,17 +126,33 @@ admin.site.register(TraditionalAppUser, TraditionalAppUserAdmin)
 
 class LkpMojam3atTawa7inAdmin(LogMixin,SoagControlMixin, LeafletGeoAdmin):
     model = LkpMojam3atTawa7in
-    list_display = ['soag__state','soag__locality','soag', 'owner_name','toa7in_jafa_count','toa7in_ratiba_count']
-    list_filter = ('soag__state',)
+    list_display = ['soag_state','soag_locality','soag', 'owner_name','toa7in_jafa_count','toa7in_ratiba_count']
+    list_filter = [('soag',RelatedOnlyFieldListFilterNotEmpty),]
     exclude = ["created_at","created_by","updated_at","updated_by"]
+
+    @admin.display(description=_('الولاية'))
+    def soag_state(self, obj):
+        return f'{obj.soag.state}'
+
+    @admin.display(description=_('المحلية'))
+    def soag_locality(self, obj):
+        return f'{obj.soag.locality}'
 
 admin.site.register(LkpMojam3atTawa7in, LkpMojam3atTawa7inAdmin)
 
 class LkpSaigAdmin(LogMixin,SoagControlMixin, LeafletGeoAdmin):
     model = LkpSaig
-    list_display = ['soag__state','soag__locality','soag', 'name']
-    list_filter = ('soag__state',)
+    list_display = ['soag_state','soag_locality','soag', 'name']
+    list_filter = [('soag',RelatedOnlyFieldListFilterNotEmpty),]
     exclude = ["created_at","created_by","updated_at","updated_by"]
+
+    @admin.display(description=_('الولاية'))
+    def soag_state(self, obj):
+        return f'{obj.soag.state}'
+
+    @admin.display(description=_('المحلية'))
+    def soag_locality(self, obj):
+        return f'{obj.soag.locality}'
 
 admin.site.register(LkpSaig, LkpSaigAdmin)
 
