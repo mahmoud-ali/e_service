@@ -36,6 +36,16 @@ class TraditionalAppUser(LoggingModel):
         verbose_name = _("مستخدم نظام التعدين التقليدي")
         verbose_name_plural = _("مستخدمي نظام التعدين التقليدي")
 
+class EmployeeCategory(models.Model):
+    name = models.CharField(_("name"),max_length=100)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = _("فئة الموظف")
+        verbose_name_plural = _("فئات الموظفين")
+
 class Employee(LoggingModel):
     EMPLOYEE_TYPE_EMPLOYEE = 1
     EMPLOYEE_TYPE_T3AGOOD = 2
@@ -51,6 +61,7 @@ class Employee(LoggingModel):
     state = models.ForeignKey(LkpState, on_delete=models.PROTECT, verbose_name=_("state"))
     no3_elta3god = models.IntegerField(_("نوع التعاقد"), choices=EMPLOYEE_TYPE_CHOICES, default=EMPLOYEE_TYPE_EMPLOYEE)
     name = models.CharField(_("name"), max_length=100)
+    category = models.ForeignKey(EmployeeCategory, on_delete=models.PROTECT, verbose_name=_("فئة الموظف"))
     job = models.CharField(_("الوظيفة"), max_length=100)
 
     def __str__(self):
