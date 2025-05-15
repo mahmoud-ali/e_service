@@ -161,8 +161,8 @@ class LkpMojam3atTawa7in(LoggingModel):
     owner_name = models.CharField(_("اسم المالك"),max_length=100)
     toa7in_jafa_count = models.IntegerField(_("عدد الطواحين الجافة"))
     toa7in_ratiba_count = models.IntegerField(_("عدد الطواحين الرطبة"))
-    cordinates_x = models.FloatField(_("الإحداثيات x"))
-    cordinates_y = models.FloatField(_("الإحداثيات y"))
+    # cordinates_x = models.FloatField(_("الإحداثيات x"))
+    # cordinates_y = models.FloatField(_("الإحداثيات y"))
     pid_attachment = models.FileField(_("صورة من إثبات الشخصية"), upload_to="traditional/mojam3at_tawa7in/", blank=True, null=True)
     geom = gis_models.MultiPointField(srid=4326, blank=True, null=True)
 
@@ -179,8 +179,8 @@ class LkpSaig(LoggingModel):
     """
     soag = models.ForeignKey(LkpSoag, on_delete=models.PROTECT, verbose_name=_("السوق"))
     name = models.CharField(_("اسم الصائغ"),max_length=100)
-    cordinates_x = models.FloatField(_("الإحداثيات x"))
-    cordinates_y = models.FloatField(_("الإحداثيات y"))
+    # cordinates_x = models.FloatField(_("الإحداثيات x"))
+    # cordinates_y = models.FloatField(_("الإحداثيات y"))
     pid_attachment = models.FileField(_("صورة من إثبات الشخصية"), upload_to="traditional/saig/", blank=True, null=True)
     geom = gis_models.MultiPointField(srid=4326, blank=True, null=True)
 
