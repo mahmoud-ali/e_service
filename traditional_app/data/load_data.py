@@ -6,11 +6,55 @@ from django.contrib.gis.db.models.functions import Transform
 from django.contrib.gis.utils import LayerMapping
 from workflow.data_utils import create_master_details_groups, create_model_groups
 from traditional_app import admin,models
-from company_profile.models import LkpLocality
+from company_profile.models import LkpLocality, LkpState
 
 from django.contrib.auth import get_user_model
 
 admin_user = get_user_model().objects.get(id=1)
+
+def import_employees(file_name='employee_list.csv'):
+    state_code = {
+        'نهر النيل':1,
+        'البحر الاحمر':10,
+        'الشمالية':4,
+        'القضارف':11,
+        'النيل الازرق':13,
+        'كسلا':6,
+    }
+
+    contract_type_code = {
+        'موظف':1,
+        'المتعاقدين على المشروع':2,
+        'ملحقين':3,
+        'قوات امنية':4,
+    }
+
+    with open('./traditional_app/data/'+file_name, newline='') as csvfile:
+        reader = csv.reader(csvfile, delimiter=',')
+        next(reader, None)  # skip the headers
+        for row in reader:
+            try:
+                state_name = row[0].strip()
+                state_id = state_code[state_name]
+                contract_type_name = row[1].strip()
+                contract_type_id = contract_type_code[contract_type_name]
+                category_str = row[2].strip()
+                employee_category, created = models.EmployeeCategory.objects.get_or_create(name=category_str) 
+                name = row[3].strip()
+                job = row[4].strip()
+
+                yield models.Employee.objects.create(
+                    state=LkpState.objects.get(id=state_id),
+                    no3_elta3god=contract_type_id,
+                    category=employee_category,
+                    name=name,
+                    job=job,
+                    created_by=admin_user,
+                    updated_by=admin_user,
+                )
+            except Exception as e:
+                print(f'Exception: {e}')
+            
 
 def create_groups():
     app = 'traditional_app'
