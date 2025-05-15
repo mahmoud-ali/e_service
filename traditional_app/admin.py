@@ -197,13 +197,20 @@ admin.site.register(LkpSoag, SougAdmin)
 
 class EmployeeProjectAdminInline(admin.StackedInline):
     model = EmployeeProject
+    min_num = 1
 
 class EmployeeAdmin(LogMixin,StateControlMixin, admin.ModelAdmin):
     model = Employee
     list_display = ['state','no3_elta3god', 'name','job']
     search_fields = ('name',)
     list_filter = ('state','no3_elta3god')
-    inlines = [EmployeeProjectAdminInline, ]
+    # inlines = [EmployeeProjectAdminInline, ]
+
+    def get_inlines(self, request, obj):
+        if obj and obj.no3_elta3god == Employee.EMPLOYEE_TYPE_T3AGOOD:
+            return (EmployeeProjectAdminInline,)
+
+        return super().get_inlines(request, obj)
 
     class Media:
         js = ('admin/js/jquery.init.js',"traditional_app/js/lkp_state_change.js",)
