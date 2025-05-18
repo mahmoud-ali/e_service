@@ -80,7 +80,7 @@ class EmployeeTelegramFamily(LoggingModel):
     relation = models.CharField(_("relation"), choices=EmployeeFamily.FAMILY_RELATION_CHOICES,max_length=10)
     name = models.CharField(_("name"),max_length=100)
     tarikh_el2dafa = models.DateField(_("tarikh_el2dafa"),blank=True,null=True)
-    attachement_file = models.FileField(_("attachement"),upload_to=hr_models.attachement_path,blank=True,null=True)
+    attachement_file = models.FileField(_("attachement"),upload_to=hr_models.attachement_path)
     state = models.IntegerField(_("record_state"), choices=STATE_CHOICES, default=STATE_DRAFT)
 
     class Meta:
@@ -117,7 +117,7 @@ class EmployeeTelegramMoahil(LoggingModel):
     takhasos = models.CharField(_("takhasos"),max_length=100)
     graduate_dt = models.DateField(_("graduate_dt"))
     tarikh_el2dafa = models.DateField(_("tarikh_el2dafa"),blank=True,null=True)
-    attachement_file = models.FileField(_("attachement"),upload_to=hr_models.attachement_path,blank=True,null=True)
+    attachement_file = models.FileField(_("attachement"),upload_to=hr_models.attachement_path)
     state = models.IntegerField(_("record_state"), choices=STATE_CHOICES, default=STATE_DRAFT)
     
     class Meta:
