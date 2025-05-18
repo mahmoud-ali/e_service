@@ -53,9 +53,13 @@ class KhatabatAdmin(LogMixin,admin.ModelAdmin):
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
-        maktab = request.user.maktab_tanfizi_user
+        try:
+            maktab = request.user.maktab_tanfizi_user
 
-        qs = qs.filter(maktab_tanfizi=maktab)
+            qs = qs.filter(maktab_tanfizi=maktab)
+        except:
+            qs = qs.none()
+            
         return qs
 
     def get_formsets_with_inlines(self, request, obj=None):
