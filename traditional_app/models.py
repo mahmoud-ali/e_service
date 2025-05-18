@@ -1,11 +1,40 @@
 from django.db import models
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
+from django.core.validators import MaxValueValidator, MinValueValidator,MinLengthValidator
 
 from django.contrib.gis.db import models as gis_models
 
 from company_profile.models import LkpLocality, LkpState
 from workflow.model_utils import LoggingModel, WorkFlowModel
+
+MONTH_JAN = 1
+MONTH_FEB = 2
+MONTH_MAR = 3
+MONTH_APR = 4
+MONTH_MAY = 5
+MONTH_JUN = 6
+MONTH_JLY = 7
+MONTH_AUG = 8
+MONTH_SEP = 9
+MONTH_OCT = 10
+MONTH_NOV = 11
+MONTH_DEC = 12
+
+MONTH_CHOICES = {
+    MONTH_JAN: _('MONTH_JAN'),
+    MONTH_FEB: _('MONTH_FEB'),
+    MONTH_MAR: _('MONTH_MAR'),
+    MONTH_APR: _('MONTH_APR'),
+    MONTH_MAY: _('MONTH_MAY'),
+    MONTH_JUN: _('MONTH_JUN'),
+    MONTH_JLY: _('MONTH_JLY'),
+    MONTH_AUG: _('MONTH_AUG'),
+    MONTH_SEP: _('MONTH_SEP'),
+    MONTH_OCT: _('MONTH_OCT'),
+    MONTH_NOV: _('MONTH_NOV'),
+    MONTH_DEC: _('MONTH_DEC'),
+}
 
 class LoggingModelGis(gis_models.Model):
     created_at = models.DateTimeField(_("created_at"),auto_now_add=True,editable=False,)
@@ -542,6 +571,48 @@ class DailySmallProcessingUnit(LoggingModel):
         verbose_name = _("وحدة معالجة صغيرة")
         verbose_name_plural = _("وحدات المعالجة الصغيرة")
 
+################ HR ####################
+class PayrollMaster(LoggingModel):
+    year = models.IntegerField(_("year"), validators=[MinValueValidator(limit_value=2015),MaxValueValidator(limit_value=2100)])
+    month = models.IntegerField(_("month"), choices=MONTH_CHOICES)
+
+    asasi = models.FloatField(_("الاساسي"),default=0)
+    galaa_m3isha = models.FloatField(_("غلاء معيشة"),default=0)
+    badel_sakan = models.FloatField(_("بدل سكن"),default=0)
+    badel_tar7il = models.FloatField(_("بدل ترحيل"),default=0)
+    tabi3at_3amal = models.FloatField(_("طبيعة عمل"),default=0)
+    badel_laban = models.FloatField(_("بدل لبن"),default=0)
+    badel_3laj = models.FloatField(_("بدل علاج"),default=0)
+    damga = models.FloatField(_("دمغة"),default=0)
+
+    confirmed = models.BooleanField(_("confirmed"),default=False)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['year','month'],name="tra_unique_payroll_year_month")
+        ]
+        indexes = [
+            models.Index(fields=["year","month"]),
+        ]
+        verbose_name = _("Payroll")
+        verbose_name_plural = _("Payroll")
+
+    def __str__(self) -> str:
+        return f'{_("Payroll")} {self.get_month_display()} {self.year}'
+
+class PayrollDetail(models.Model):
+    payroll_master = models.ForeignKey(PayrollMaster, on_delete=models.CASCADE)
+    employee = models.ForeignKey(Employee, on_delete=models.PROTECT,verbose_name=_("employee_name"))
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['payroll_master','employee'],name="tra_unique_employee_payroll")
+        ]
+
+        verbose_name = _("Payroll detail")
+        verbose_name_plural = _("Payroll details")
+
+##########################
 class LkpSaigTmp(gis_models.Model):
     name = gis_models.CharField(max_length=100, blank=True, null=True)
     type = gis_models.CharField(max_length=100, blank=True, null=True)

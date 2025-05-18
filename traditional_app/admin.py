@@ -1,10 +1,12 @@
 from django.utils.translation import gettext_lazy as _
-
+from django.urls import reverse
 from django.contrib import admin
+from django.utils.html import format_html
 # from django.contrib.gis import admin as gis_admin
 from leaflet.admin import LeafletGeoAdmin
 from company_profile.models import LkpLocality, LkpState
-from traditional_app.models import DailyGrabeel, DailyHofrKabira, DailyIncome, DailyReport, DailyGoldMor7ala, DailyKartaMor7ala, DailySmallProcessingUnit, Employee, EmployeeProject, Lkp2bar, Lkp2jhizatBahth, Lkp7ofrKabira, LkpGrabeel, LkpKhalatat, LkpLocalityTmp, LkpMojam3atTawa7in, LkpSaig, LkpSmallProcessingUnit, LkpSoag, LkpSosalGold, DailyTahsilForm, DailyWardHajr, RentedApartment, RentedVehicle, TraditionalAppUser, Vehicle
+from traditional_app.hr_payroll import T3agoodPayroll
+from traditional_app.models import DailyGrabeel, DailyHofrKabira, DailyIncome, DailyReport, DailyGoldMor7ala, DailyKartaMor7ala, DailySmallProcessingUnit, Employee, EmployeeProject, Lkp2bar, Lkp2jhizatBahth, Lkp7ofrKabira, LkpGrabeel, LkpKhalatat, LkpLocalityTmp, LkpMojam3atTawa7in, LkpSaig, LkpSmallProcessingUnit, LkpSoag, LkpSosalGold, DailyTahsilForm, DailyWardHajr, PayrollDetail, PayrollMaster, RentedApartment, RentedVehicle, TraditionalAppUser, Vehicle
 from workflow.admin_utils import create_main_form
 
 class LogMixin:
@@ -655,14 +657,71 @@ model_admin, inlines = create_main_form(daily_report_main_class,daily_report_inl
 
 admin.site.register(model_admin.model,model_admin)
 
-@admin.register(LkpLocalityTmp)
-class LkpLocalityTmpAdmin(LeafletGeoAdmin):
-    model = LkpLocalityTmp
-    exclude = ['geom']
-    list_display = ['name','city','state_gis'] #, 'state'
-    search_fields = ('name',)
-    # list_filter = ('state',)
-    readonly_fields = ('objectid','name','city','state_gis','shape_leng','shape_area')
+# @admin.register(LkpLocalityTmp)
+# class LkpLocalityTmpAdmin(LeafletGeoAdmin):
+#     model = LkpLocalityTmp
+#     exclude = ['geom']
+#     list_display = ['name','city','state_gis'] #, 'state'
+#     search_fields = ('name',)
+#     # list_filter = ('state',)
+#     readonly_fields = ('objectid','name','city','state_gis','shape_leng','shape_area')
 
-    class Media:
-        js = ('admin/js/jquery.init.js',"traditional_app/js/lkp_state_change.js",)
+#     class Media:
+#         js = ('admin/js/jquery.init.js',"traditional_app/js/lkp_state_change.js",)
+
+class PayrollDetailInline(admin.TabularInline):
+    model = PayrollDetail
+    #exclude = ["created_at","created_by","updated_at","updated_by"]
+    fields = ['employee',]
+    extra = 0
+    readonly_fields = fields #['employee','abtdai','galaa_m3isha','shakhsia','aadoa','gasima','atfal','moahil','ma3adin','m3ash','salafiat','jazaat','damga','sandog','sandog_kahraba','salafiat_sandog','tarikh_milad','draja_wazifia','alawa_sanawia']
+    can_delete = False
+    list_select_related = True
+    def has_add_permission(self,request, obj):
+        return False
+
+class PayrollMasterAdmin(admin.ModelAdmin):
+    model = PayrollMaster
+    exclude = ["created_at","created_by","updated_at","updated_by","confirmed"]
+    inlines = [PayrollDetailInline,]
+
+    # list_display = ["year","month","confirmed","show_badalat_link","show_khosomat_link","show_mokaf2_link","show_mobashara_link"]
+    list_filter = ["year","month","confirmed"]
+    list_display = ["year","month","confirmed",] #,"show_payroll_link"
+    readonly_fields = ["asasi","galaa_m3isha","badel_sakan","badel_tar7il","tabi3at_3amal","badel_laban","badel_3laj","damga",]
+    view_on_site = False
+    list_select_related = True
+    save_on_top = True
+
+    actions = ["confirm_payroll"]
+
+    # readonly_fields = ["year","month","confirmed"]
+
+    # @admin.display(description=_('Show badalat sheet'))
+    # def show_payroll_link(self, obj):
+    #     url = reverse('hr:payroll_badalat')
+    #     return format_html('<a target="_blank" class="viewlink" href="{url}?year={year}&month={month}">'+_('Show badalat sheet')\
+    #                            +'</a> / '\
+    #                            +'<a target="_blank" href="{url}?year={year}&month={month}&format=csv">CSV</a>',
+    #                        url=url,year=obj.year,month=obj.month)
+
+
+    def save_model(self, request, obj, form, change):
+        # if not obj.pk:  # New object
+        #     obj.created_by = request.user
+        # obj.updated_by = request.user
+        # super().save_model(request, obj, form, change)
+
+        payroll = T3agoodPayroll(obj.year,obj.month)
+        payroll.calculate()
+
+    def has_change_permission(self, request, obj=None):
+        return False
+    
+    def has_delete_permission(self, request, obj=None):
+        if obj and obj.confirmed:
+            return False
+        
+        return True
+    
+admin.site.register(PayrollMaster,PayrollMasterAdmin)
