@@ -120,3 +120,38 @@ class KhatabatAdmin(MaktabTanfiziMixin,LogMixin,admin.ModelAdmin):
                 formset.form.request = request
 
             yield formset,inline
+
+@admin.register(HarkatKhatabat)
+class HarkatKhatabatAdmin(admin.ModelAdmin):
+    model = HarkatKhatabat
+    list_display = ('letter_number', 'subject', 'movement_type', 'date', 'source_entity', 'procedure', 'delivery_date', 'followup_result')    
+    search_fields = ('letter__letter_number', 'letter__subject')
+    list_filter = ('movement_type','date', 'source_entity', 'procedure', 'delivery_date', 'followup_result')
+
+    @admin.display(description='رقم الخطاب')
+    def letter_number(self, obj):
+        return obj.letter.letter_number
+
+    @admin.display(description='موضوع الخطاب')
+    def subject(self, obj):
+        return obj.letter.subject
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        try:
+            maktab = request.user.maktab_tanfizi_user
+
+            qs = qs.filter(letter__maktab_tanfizi=maktab)
+        except:
+            qs = qs.none()
+
+        return qs
+
+    def has_add_permission(self, request):
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        return False
+    
+    def has_delete_permission(self, request, obj=None):
+        return False
