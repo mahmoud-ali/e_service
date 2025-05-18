@@ -16,9 +16,13 @@ class KhatabatAdminForm(ModelForm):
         super().__init__(*args, **kwargs)
 
         if self.request:
-            maktab = self.request.user.maktab_tanfizi_user
-            self.fields["source_entity"].queryset = jiha_all_qs.filter(maktab_tanfizi=maktab)
-            self.fields["forwarded_to"].queryset = jiha_all_qs.filter(maktab_tanfizi=maktab)
+            try:
+                maktab = self.request.user.maktab_tanfizi_user
+                self.fields["source_entity"].queryset = jiha_all_qs.filter(maktab_tanfizi=maktab)
+                self.fields["forwarded_to"].queryset = jiha_all_qs.filter(maktab_tanfizi=maktab)
+            except:
+                self.fields["source_entity"].queryset = jiha_none
+                self.fields["forwarded_to"].queryset = jiha_none
 
     class Meta:
         model = HarkatKhatabat
