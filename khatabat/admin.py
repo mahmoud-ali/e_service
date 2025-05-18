@@ -8,6 +8,12 @@ User = get_user_model()
 
 class LogMixin:
     def save_model(self, request, obj, form, change):
+        try:
+            maktab = request.user.maktab_tanfizi_user
+            obj.maktab_tanfizi=maktab
+        except:
+            pass
+
         if not change:  # New object
             obj.created_by = request.user
         obj.updated_by = request.user
@@ -22,7 +28,46 @@ class LogMixin:
             instance.save()
         formset.save_m2m()
 
-class MaktabTanfiziJihaInline(admin.StackedInline):  # You can use StackedInline if you prefer vertical layout
+class MaktabTanfiziMixin:
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        try:
+            maktab = request.user.maktab_tanfizi_user
+
+            qs = qs.filter(maktab_tanfizi=maktab)
+        except:
+            qs = qs.none()
+
+        return qs
+
+    def has_add_permission(self, request):
+        try:
+            maktab = request.user.maktab_tanfizi_user
+            return super().has_add_permission(request)
+        except:
+            pass
+
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        try:
+            maktab = request.user.maktab_tanfizi_user
+            return super().has_change_permission(request,obj)
+        except:
+            pass
+
+        return False
+    
+    def has_delete_permission(self, request, obj=None):
+        try:
+            maktab = request.user.maktab_tanfizi_user
+            return super().has_delete_permission(request,obj)
+        except:
+            pass
+
+        return False
+
+class MaktabTanfiziJihaInline(admin.StackedInline):
     model = MaktabTanfiziJiha
     min_num = 1  # Minimum number of empty forms
     extra = 0  # Number of empty forms to display
@@ -38,6 +83,21 @@ class MaktabTanfiziAdmin(admin.ModelAdmin):
             
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
+@admin.register(MaktabTanfiziJiha)
+class MaktabTanfiziJihaAdmin(MaktabTanfiziMixin, admin.ModelAdmin):
+    model = MaktabTanfiziJiha
+    exclude = ('maktab_tanfizi',)
+    list_display = ('name',)
+
+    def save_model(self, request, obj, form, change):
+        try:
+            maktab = request.user.maktab_tanfizi_user
+            obj.maktab_tanfizi=maktab
+        except:
+            pass
+
+        super().save_model(request, obj, form, change)
+
 class HarkatKhatabatInline(admin.StackedInline):  # You can use StackedInline if you prefer vertical layout
     model = HarkatKhatabat
     min_num = 1  # Minimum number of empty forms
@@ -46,21 +106,11 @@ class HarkatKhatabatInline(admin.StackedInline):  # You can use StackedInline if
 
 
 @admin.register(Khatabat)
-class KhatabatAdmin(LogMixin,admin.ModelAdmin):
+class KhatabatAdmin(MaktabTanfiziMixin,LogMixin,admin.ModelAdmin):
+    exclude = ('maktab_tanfizi','created_by', 'updated_by')
     list_display = ('letter_number', 'subject')
     search_fields = ('letter_number', 'subject')
     inlines = [HarkatKhatabatInline]
-
-    def get_queryset(self, request):
-        qs = super().get_queryset(request)
-        try:
-            maktab = request.user.maktab_tanfizi_user
-
-            qs = qs.filter(maktab_tanfizi=maktab)
-        except:
-            qs = qs.none()
-            
-        return qs
 
     def get_formsets_with_inlines(self, request, obj=None):
         for inline in self.get_inline_instances(request, obj):
