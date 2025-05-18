@@ -1,0 +1,28 @@
+{% extends "admin/change_form.html" %}
+{% block content %}
+    {{ block.super }}
+
+    {% if original.employee.employeefamily_set.exists%}
+    <h2>البيانات المتوفرة: </h2>
+    <div class="results">
+    <table id="result_list">
+    <thead>
+    <tr>
+        <th>صلة القرابة</th>
+        <th>الاسم</th>
+    </tr>
+    </thead>
+    <tbody>
+
+        {% for obj in original.employee.employeefamily_set.all%}
+        <tr>
+            <td>{{obj.get_relation_display}}</td>
+            <td>{{obj.name}}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+    </table>
+    </div>
+    {% endif %}
+    
+{% endblock %}
