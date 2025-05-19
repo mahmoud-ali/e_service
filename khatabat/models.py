@@ -100,13 +100,14 @@ class HarkatKhatabat(models.Model):  # جدول_حركة_الخطابات
     date = models.DateField(verbose_name="التاريخ")
     source_entity = models.ForeignKey(MaktabTanfiziJiha, on_delete=models.PROTECT, related_name="source_entities", verbose_name="جهة الخطاب")
     procedure = models.IntegerField(verbose_name="الإجراء", choices=PROCEDURE_CHOICES)
-    letter_attachment = models.FileField(upload_to='khatabat/', verbose_name="صورة الخطاب")
+    letter_attachment = models.FileField(upload_to='khatabat/', verbose_name="صورة الخطاب", null=True, blank=True)
     forwarded_to = models.ForeignKey(MaktabTanfiziJiha, on_delete=models.PROTECT, null=True, blank=True, related_name="forwarded_to", verbose_name="الجهة المحول لها")
     forward_date = models.DateField(null=True, blank=True, verbose_name="تاريخ التحويل")
     # receiver_signature = models.BooleanField(default=False, verbose_name="توقيع المستلم")
     delivery_date = models.DateField(null=True, blank=True, verbose_name="تاريخ التسليم")
     followup_result = models.IntegerField(default=FOLLOWUP_NOT_DONE, choices=FOLLOWUP_CHOICES, verbose_name="نتيجة المتابعة",)
     followup_attachment = models.FileField(upload_to='mutabaah/', null=True, blank=True, verbose_name="صورة نتيجة المتابعة")
+    note = models.TextField(verbose_name="ملاحظات", null=True, blank=True)
 
     def __str__(self):
         return f"{self.get_movement_type_display()}/{self.date}/{self.source_entity}"
