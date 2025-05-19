@@ -80,10 +80,10 @@ class Khosomat():
 
     def __iter__(self):
         props = [
+            ('ajmali_almoratab',self.Badalat.ajmali_almoratab),
             ('tameen_ajtima3i',self.tameen_ajtima3i),
             ('dariba',self.dariba),
             ('damga',self.damga),
-            ('ajmali_almoratab',self.Badalat.ajmali_almoratab),
             ('safi_alisti7gag',self.safi_alisti7gag),
         ]
 

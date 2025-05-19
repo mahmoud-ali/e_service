@@ -687,7 +687,7 @@ class PayrollMasterAdmin(admin.ModelAdmin):
 
     # list_display = ["year","month","confirmed","show_badalat_link","show_khosomat_link","show_mokaf2_link","show_mobashara_link"]
     list_filter = ["year","month","confirmed"]
-    list_display = ["year","month","confirmed",] #,"show_payroll_link"
+    list_display = ["year","month","confirmed","show_payroll_link"] #
     readonly_fields = ["asasi","galaa_m3isha","badel_sakan","badel_tar7il","tabi3at_3amal","badel_laban","badel_3laj","damga",]
     view_on_site = False
     list_select_related = True
@@ -697,14 +697,31 @@ class PayrollMasterAdmin(admin.ModelAdmin):
 
     # readonly_fields = ["year","month","confirmed"]
 
-    # @admin.display(description=_('Show badalat sheet'))
-    # def show_payroll_link(self, obj):
-    #     url = reverse('hr:payroll_badalat')
-    #     return format_html('<a target="_blank" class="viewlink" href="{url}?year={year}&month={month}">'+_('Show badalat sheet')\
-    #                            +'</a> / '\
-    #                            +'<a target="_blank" href="{url}?year={year}&month={month}&format=csv">CSV</a>',
-    #                        url=url,year=obj.year,month=obj.month)
+    def get_queryset(self, request):
+        # Save the current user to the instance (just for this request cycle)
+        self._current_user = request.user
+        return super().get_queryset(request)
+    
+    @admin.display(description=_('Show badalat sheet'))
+    def show_payroll_link(self, obj):
+        url = reverse('traditional_app:payroll_t3agood')
 
+        qs = LkpState.objects.none()
+        urls_list = []
+
+        try:
+            user = getattr(self, "_current_user", None)
+            user_state = user.traditional_app_user.state
+            qs = LkpState.objects.filter(id=user_state.id) #request.user
+            for state in qs:
+                urls_list.append(
+                    f'<a target="_blank" class="viewlink" href="{url}?year={obj.year}&month={obj.month}&state={state.id}">'+'مرتب '+state.name+'</a> / '\
+                        +f' <a target="_blank" href="{url}?year={obj.year}&month={obj.month}&state={state.id}&format=csv">'+'تصدير '+state.name+'</a>'
+                )            
+        except:
+            pass
+
+        return format_html(" ".join(urls_list))
 
     def save_model(self, request, obj, form, change):
         # if not obj.pk:  # New object

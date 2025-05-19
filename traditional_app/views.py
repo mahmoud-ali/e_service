@@ -1,11 +1,13 @@
 import csv
 import codecs
-from django.shortcuts import render
-from django.http import HttpResponse
+from django.shortcuts import render,get_object_or_404
+from django.http import Http404, HttpResponse
 from django.views.generic import View
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.utils import cache
+from django.core.exceptions import PermissionDenied
 
+from company_profile.models import LkpState
 from traditional_app.hr_payroll import T3agoodPayroll
 from traditional_app.models import MONTH_CHOICES
 
@@ -20,14 +22,24 @@ class PayrollT3agood(LoginRequiredMixin,UserPermissionMixin,View):
     def get(self,*args,**kwargs):
         year = self.request.GET['year']
         month = int(self.request.GET['month'])
+        state = get_object_or_404(LkpState,pk=self.request.GET['state'])
         format = self.request.GET.get('format',None)
         data = []
+
+        try:
+            user_state = self.request.user.traditional_app_user.state
+            # print(user_state ,state)
+            if user_state != state:
+                raise Exception
+        except:
+            raise Http404
+
         
         payroll = T3agoodPayroll(year,month)
-        header = ['الرمز','الموظف','المرتب الاساسي','غلاء معيشة','بدل السكن','بدل ترحيل','طبيعة عمل','بدل لبن','بدل علاج','تأمين اجتماعي','ضريبة','دمغة','اجمالي المرتب','صافي الإستحقاق',]
+        header = ['الرمز','الموظف','المرتب الاساسي','غلاء معيشة','بدل السكن','بدل ترحيل','طبيعة عمل','بدل لبن','بدل علاج','اجمالي المرتب','تأمين اجتماعي','ضريبة','دمغة','صافي الإستحقاق',]
         summary_list = []
 
-        for (emp,badalat,khosomat,) in payroll.all_employees_payroll_from_db():
+        for (emp,badalat,khosomat,) in payroll.employees_payroll_from_db(state=state):
             badalat_list = [b[1] for b in badalat]
             khsomat_list = [k[1] for k in khosomat]
             l = [emp.employee.id,emp.employee.name,] + badalat_list + khsomat_list
@@ -52,7 +64,7 @@ class PayrollT3agood(LoginRequiredMixin,UserPermissionMixin,View):
             sheet_name = 'payroll'
             response = HttpResponse(
                 content_type="text/csv",
-                headers={"Content-Disposition": f'attachment; filename="{sheet_name}_{month}_{year}.csv"'},
+                headers={"Content-Disposition": f'attachment; filename="{sheet_name}_{state.name}_{month}_{year}.csv"'},
             )
 
             # BOM
@@ -71,6 +83,7 @@ class PayrollT3agood(LoginRequiredMixin,UserPermissionMixin,View):
             template_name = 'traditional_app/payroll.html'
             context = {
                 'title':'كشف مرتبات',
+                'state':state.name,
                 'header':header,
                 'data': data,
                 'summary':summary_list,

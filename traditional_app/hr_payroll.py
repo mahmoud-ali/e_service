@@ -81,11 +81,15 @@ class T3agoodPayroll():
             print(f'Payroll not calculated: {e}')
             return False
         
-    def all_employees_payroll_from_db(self):
+    def employees_payroll_from_db(self,state=None):
         if not self.is_calculated():
             return []
         
-        for emp_payroll in self.payroll_details:
+        qs = self.payroll_details
+        if state:
+            qs = qs.filter(employee__state=state)
+        
+        for emp_payroll in qs:
             badalat = Badalat_3lawat(
                 emp_payroll.payroll_master.asasi,
                 emp_payroll.payroll_master.galaa_m3isha,
