@@ -26,7 +26,7 @@ class KhatabatAdminForm(ModelForm):
 
     class Meta:
         model = HarkatKhatabat
-        fields = ["movement_type","date","source_entity","procedure","letter_attachment","forwarded_to","forward_date","delivery_date","followup_result","followup_attachment",]
+        fields = ["movement_type","date","source_entity","procedure","letter_attachment","forwarded_to","forward_date","delivery_date","followup_result","followup_attachment","note"]
         widgets = {
             "date":AdminDateWidget(),
             "forward_date":AdminDateWidget(),

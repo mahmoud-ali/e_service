@@ -125,7 +125,7 @@ class KhatabatAdmin(MaktabTanfiziMixin,LogMixin,admin.ModelAdmin):
 class HarkatKhatabatAdmin(admin.ModelAdmin):
     model = HarkatKhatabat
     list_display = ('letter_number', 'subject', 'movement_type', 'date', 'source_entity', 'procedure', 'delivery_date', 'followup_result')    
-    search_fields = ('letter__letter_number', 'letter__subject')
+    search_fields = ('letter__letter_number', 'letter__subject','note')
     list_filter = ('movement_type','date', 'source_entity', 'procedure', 'delivery_date', 'followup_result')
 
     @admin.display(description='رقم الخطاب')
