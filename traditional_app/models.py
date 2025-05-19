@@ -594,8 +594,8 @@ class PayrollMaster(LoggingModel):
         indexes = [
             models.Index(fields=["year","month"]),
         ]
-        verbose_name = _("Payroll")
-        verbose_name_plural = _("Payroll")
+        verbose_name = _("الموظفين - المرتبات")
+        verbose_name_plural = _("الموظفين - المرتبات")
 
     def __str__(self) -> str:
         return f'{_("Payroll")} {self.get_month_display()} {self.year}'
