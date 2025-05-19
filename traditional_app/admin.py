@@ -702,7 +702,7 @@ class PayrollMasterAdmin(admin.ModelAdmin):
         self._current_user = request.user
         return super().get_queryset(request)
     
-    @admin.display(description=_('Show badalat sheet'))
+    @admin.display(description=_('كشف المرتبات'))
     def show_payroll_link(self, obj):
         url = reverse('traditional_app:payroll_t3agood')
 
