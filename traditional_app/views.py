@@ -18,7 +18,7 @@ class UserPermissionMixin(UserPassesTestMixin):
         return self.request.user.groups.filter(name__in=self.user_groups).exists()
 
 class PayrollT3agood(LoginRequiredMixin,UserPermissionMixin,View):
-    user_groups = ['hr_manager','hr_payroll']
+    user_groups = ['tra_state_manager',]
     def get(self,*args,**kwargs):
         year = self.request.GET['year']
         month = int(self.request.GET['month'])
