@@ -539,8 +539,8 @@ def import_license_shapefile(filename='./company_profile/data/geo/export1.shp'):
                 im_geom = MultiPolygon(im_geom)
 
             if obj.geom:
-                #new_geom = obj.geom.union(im_geom)
-                new_geom = MultiPolygon(*(list(obj.geom) + list(im_geom)))
+                new_geom = obj.geom.union(im_geom)
+                # new_geom = MultiPolygon(*(list(obj.geom) + list(im_geom)))
             else:
                 new_geom = im_geom
 
