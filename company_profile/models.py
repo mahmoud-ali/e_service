@@ -40,19 +40,25 @@ MONTH_CHOICES = {
 }
 
 class LoggingModel(models.Model):
-    """
-    An abstract base class model that provides self-
-    updating ``created_at`` and ``updated_at`` fields for responsable user.
-    """
     created_at = models.DateTimeField(_("created_at"),auto_now_add=True,editable=False,)
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT,related_name="+",editable=False,verbose_name=_("created_by")) 
     
     updated_at = models.DateTimeField(_("updated_at"),auto_now=True,editable=False)
     updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT,related_name="+",editable=False,verbose_name=_("updated_by"))
-    
+
     class Meta:
         abstract = True
         
+class LoggingModelGis(gis_models.Model):
+    created_at = models.DateTimeField(_("created_at"),auto_now_add=True,editable=False,)
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT,related_name="+",editable=False,verbose_name=_("created_by")) 
+    
+    updated_at = models.DateTimeField(_("updated_at"),auto_now=True,editable=False)
+    updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT,related_name="+",editable=False,verbose_name=_("updated_by"))
+
+    class Meta:
+        abstract = True
+    
 class WorkflowModel(LoggingModel):
     reject_comments = models.TextField(_("reject_comments"),max_length=256,blank=True)
     state = FSMField(_("application_state"),default=SUBMITTED, choices=STATE_CHOICES)
@@ -285,7 +291,7 @@ def company_contract_path(instance, filename):
     # file will be uploaded to MEDIA_ROOT/company_<id>/contract_<id>/<filename>
     return "company_{0}/contract_{1}/{2}".format(instance.company.id,instance.date, filename)    
 
-class TblCompanyProductionLicense(LoggingModel):
+class TblCompanyProductionLicense(LoggingModelGis):
     LICENSE_TYPE_2TIFAGIA = 1
     LICENSE_TYPE_3AGD = 2
     LICENSE_TYPE_ROKH9A = 3
@@ -323,6 +329,8 @@ class TblCompanyProductionLicense(LoggingModel):
 
     contract_status  = models.ForeignKey(LkpCompanyProductionLicenseStatus, on_delete=models.PROTECT,verbose_name=_("contract_status"))
     contract_file = models.FileField(_("contract_file"),upload_to=company_contract_path,blank=True,null=True)
+
+    geom = gis_models.MultiPolygonField(srid=4326,null=True)
 
     def __str__(self):
         return self.company.name_ar+"("+str(self.license_no)+")"

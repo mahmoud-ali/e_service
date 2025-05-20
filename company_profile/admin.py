@@ -15,6 +15,9 @@ from django.contrib.sites.models import Site
 from django.contrib.messages import constants as message_constants
 from import_export.admin import ExportActionMixin
 from django.db.utils import IntegrityError
+
+from leaflet.admin import LeafletGeoAdmin
+
 from .models import AppCyanideCertificate, AppExplosivePermission, AppFuelPermission, AppFuelPermissionDetail, AppGoldProduction, AppGoldProductionDetail, AppHSEAccidentReport, AppHSEPerformanceReport, AppHSEPerformanceReportActivities, AppHSEPerformanceReportBillsOfQuantities, AppHSEPerformanceReportCadastralOperations, AppHSEPerformanceReportCadastralOperationsTwo, AppHSEPerformanceReportCatering, AppHSEPerformanceReportChemicalUsed, AppHSEPerformanceReportCyanideCNStorageSpecification, AppHSEPerformanceReportCyanideTable, AppHSEPerformanceReportDiseasesForWorkers, AppHSEPerformanceReportExplosivesUsed, AppHSEPerformanceReportExplosivesUsedSpecification, AppHSEPerformanceReportFireFighting, AppHSEPerformanceReportManPower, AppHSEPerformanceReportOilUsed, AppHSEPerformanceReportOtherChemicalUsed, AppHSEPerformanceReportProactiveIndicators, AppHSEPerformanceReportStatisticalData, AppHSEPerformanceReportTherapeuticUnit, AppHSEPerformanceReportWasteDisposal, AppHSEPerformanceReportWaterUsed, AppHSEPerformanceReportWorkEnvironment, AppImportPermission, AppImportPermissionDetail, AppLocalPurchase, AppRenewalContract, AppRestartActivity, AppTemporaryExemption, AppWhomConcern, LkpAccidentType, LkpNationality, LkpSector,LkpState,LkpLocality,LkpMineral,LkpCompanyProductionStatus,LkpForeignerProcedureType,TblCompanyProduction, \
                                       LkpCompanyProductionFactoryType,TblCompanyProductionFactory,LkpCompanyProductionLicenseStatus, TblCompanyProductionFactoryVAT, \
                                       TblCompanyProductionLicense,AppForignerMovement,TblCompanyProductionUserRole, \
@@ -323,9 +326,9 @@ class TblCompanyProductionFactoryAdmin(LoggingAdminMixin,admin.ModelAdmin):
         
 #         return queryset
 
-class TblCompanyProductionLicenseAdmin(LoggingAdminMixin,admin.ModelAdmin):
+class TblCompanyProductionLicenseAdmin(LoggingAdminMixin,LeafletGeoAdmin): #admin.ModelAdmin
     fieldsets = [
-        (None, {"fields": ["company",("license_no","license_type","license_count")]}),
+        (None, {"fields": ["company",("license_no","license_type","license_count","geom")]}),
         (_("General information"), {"fields": ["date",("start_date","end_date")]}),
         (_("Location information"), {"fields": [("state","locality","location","sheet_no")]}),
         (_("Contract information"), {"fields": ["mineral","area_initial","area","reserve","royalty","zakat","annual_rent","gov_rep","rep_percent","com_percent","business_profit","social_responsibility","contract_status","contract_file"]}),

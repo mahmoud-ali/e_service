@@ -514,3 +514,36 @@ def import_lkp_state_cordinates(file_name='lkp_state_cord.csv'):
                 state.save()
             except Exception as e:
                 print(f'id: {id} Exception: {e}')
+
+
+from django.contrib.gis.gdal import DataSource
+from django.contrib.gis.geos import MultiPolygon, Polygon
+
+def import_license_shapefile(filename='./company_profile/data/geo/export1.shp'):
+    # Load the shapefile
+    ds = DataSource(filename)
+
+    # Get the first layer (most shapefiles have one)
+    layer = ds[0]
+
+    # Loop through each feature in the layer
+    for feature in layer:
+        try:
+            obj = TblCompanyProductionLicense.objects.get(
+                id=int(feature.get('id2'))
+            )
+
+            im_geom = feature.geom  # GEOSGeometry
+
+            if isinstance(im_geom, Polygon):
+                im_geom = MultiPolygon(im_geom)
+
+
+            new_geom = MultiPolygon(*(list(obj.geom) + list(im_geom)))
+
+            # Save back to the model
+            obj.geom = new_geom
+            obj.save()
+
+        except:
+            pass
