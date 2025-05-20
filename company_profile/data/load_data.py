@@ -545,5 +545,5 @@ def import_license_shapefile(filename='./company_profile/data/geo/export1.shp'):
             obj.geom = new_geom
             obj.save()
 
-        except:
-            pass
+        except Exception as e:
+            print("Error",e)
