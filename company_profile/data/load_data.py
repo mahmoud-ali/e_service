@@ -529,14 +529,15 @@ def import_license_shapefile(filename='./company_profile/data/geo/export1.shp'):
     # Loop through each feature in the layer
     for feature in layer:
         try:
-            obj = TblCompanyProductionLicense.objects.get(
-                id=int(feature.get('id2'))
-            )
 
-            im_geom = feature.geom  # GEOSGeometry
+            im_geom = feature.geom.geos  # GEOSGeometry
 
             if isinstance(im_geom, Polygon):
                 im_geom = MultiPolygon(im_geom)
+
+            obj = TblCompanyProductionLicense.objects.get(
+                id=int(feature.get('id2'))
+            )
 
             if obj.geom:
                 new_geom = obj.geom.union(im_geom)
