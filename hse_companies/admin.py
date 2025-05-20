@@ -3,17 +3,18 @@ from django.urls import reverse
 from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
 
+from hse_companies.forms import TblStateRepresentativeForm
 from hse_companies.models.incidents import ContributingFactor, FactorsAssessment, IncidentAnalysis, IncidentCost, IncidentInfo, IncidentInjuredPerson,IncidentInjuredPPE,IncidentInjuredDetails, IncidentPhoto, IncidentProperty, IncidentWitness, LeasonLearnt
 from workflow.admin_utils import create_main_form
 
-from hse_companies.models import AppHSECorrectiveAction, AppHSECorrectiveActionFeedback, AppHSEPerformanceReport, AppHSEPerformanceReportActivities, AppHSEPerformanceReportAuditorComment, AppHSEPerformanceReportBillsOfQuantities, AppHSEPerformanceReportCadastralOperations, AppHSEPerformanceReportCadastralOperationsTwo, AppHSEPerformanceReportCatering, AppHSEPerformanceReportChemicalUsed, AppHSEPerformanceReportCyanideCNStorageSpecification, AppHSEPerformanceReportCyanideTable, AppHSEPerformanceReportDiseasesForWorkers, AppHSEPerformanceReportExplosivesUsed, AppHSEPerformanceReportExplosivesUsedSpecification, AppHSEPerformanceReportFireFighting, AppHSEPerformanceReportManPower, AppHSEPerformanceReportOilUsed, AppHSEPerformanceReportOtherChemicalUsed, AppHSEPerformanceReportProactiveIndicators, AppHSEPerformanceReportStatisticalData, AppHSEPerformanceReportTherapeuticUnit, AppHSEPerformanceReportWasteDisposal, AppHSEPerformanceReportWaterUsed, AppHSEPerformanceReportWorkEnvironment
+from hse_companies.models import AppHSECorrectiveAction, AppHSECorrectiveActionFeedback, AppHSEPerformanceReport, AppHSEPerformanceReportActivities, AppHSEPerformanceReportAuditorComment, AppHSEPerformanceReportBillsOfQuantities, AppHSEPerformanceReportCadastralOperations, AppHSEPerformanceReportCadastralOperationsTwo, AppHSEPerformanceReportCatering, AppHSEPerformanceReportChemicalUsed, AppHSEPerformanceReportCyanideCNStorageSpecification, AppHSEPerformanceReportCyanideTable, AppHSEPerformanceReportDiseasesForWorkers, AppHSEPerformanceReportExplosivesUsed, AppHSEPerformanceReportExplosivesUsedSpecification, AppHSEPerformanceReportFireFighting, AppHSEPerformanceReportManPower, AppHSEPerformanceReportOilUsed, AppHSEPerformanceReportOtherChemicalUsed, AppHSEPerformanceReportProactiveIndicators, AppHSEPerformanceReportStatisticalData, AppHSEPerformanceReportTherapeuticUnit, AppHSEPerformanceReportWasteDisposal, AppHSEPerformanceReportWaterUsed, AppHSEPerformanceReportWorkEnvironment, TblStateRepresentative
 
 class LogMixin:
     def save_model(self, request, obj, form, change):
         try:
             if not obj.pk:  # New object
                 obj.created_by = request.user
-                obj.source_state = request.user.hse_tra_state.state
+                obj.source_state = request.user.hse_cmpny_state.state
 
             obj.updated_by = request.user
             super().save_model(request, obj, form, change)
@@ -33,12 +34,20 @@ class LogMixin:
         qs = super().get_queryset(request)
 
         try:
-            source_state = request.user.hse_tra_state.state
+            source_state = request.user.hse_cmpny_state.state
             qs = qs.filter(source_state=source_state)
         except:
             pass
         return qs
+
+class TblStateRepresentativeAdmin(admin.ModelAdmin):
+    model = TblStateRepresentative
+    form = TblStateRepresentativeForm
+    list_display = ["state", "name", "user"]
+    list_filter = ["state"]
     
+admin.site.register(TblStateRepresentative,TblStateRepresentativeAdmin)
+
 class AppHSEPerformanceReportMixin:
     @admin.display(description=_('Ask AI'))
     def ask_ai_link(self, obj):
