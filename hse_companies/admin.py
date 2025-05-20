@@ -60,7 +60,7 @@ report_main_class = {
         'view_on_site': False,
     },
     'groups': {
-        'hse_cmpny_auditor':{
+        'production_control_auditor':{
             'permissions': {
                 AppHSEPerformanceReport.STATE_SUBMITTED: {'add': 0, 'change': 1, 'delete': 0, 'view': 1},
                 AppHSEPerformanceReport.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -94,7 +94,7 @@ report_inline_classes = {
             'extra': 0,
         },
         'groups': {
-            'hse_cmpny_auditor':{
+            'production_control_auditor':{
                 'permissions': {
                     AppHSEPerformanceReport.STATE_SUBMITTED: {'add': 0, 'change': 1, 'delete': 0, 'view': 1},
                     AppHSEPerformanceReport.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -127,7 +127,7 @@ report_inline_classes = {
             'extra': 0,
         },
         'groups': {
-            'hse_cmpny_auditor':{
+            'production_control_auditor':{
                 'permissions': {
                     AppHSEPerformanceReport.STATE_SUBMITTED: {'add': 0, 'change': 1, 'delete': 0, 'view': 1},
                     AppHSEPerformanceReport.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -159,7 +159,7 @@ report_inline_classes = {
             'extra': 0,
         },
         'groups': {
-            'hse_cmpny_auditor':{
+            'production_control_auditor':{
                 'permissions': {
                     AppHSEPerformanceReport.STATE_SUBMITTED: {'add': 0, 'change': 1, 'delete': 0, 'view': 1},
                     AppHSEPerformanceReport.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -191,7 +191,7 @@ report_inline_classes = {
             'extra': 0,
         },
         'groups': {
-            'hse_cmpny_auditor':{
+            'production_control_auditor':{
                 'permissions': {
                     AppHSEPerformanceReport.STATE_SUBMITTED: {'add': 0, 'change': 1, 'delete': 0, 'view': 1},
                     AppHSEPerformanceReport.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -223,7 +223,7 @@ report_inline_classes = {
             'extra': 0,
         },
         'groups': {
-            'hse_cmpny_auditor':{
+            'production_control_auditor':{
                 'permissions': {
                     AppHSEPerformanceReport.STATE_SUBMITTED: {'add': 0, 'change': 1, 'delete': 0, 'view': 1},
                     AppHSEPerformanceReport.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -255,7 +255,7 @@ report_inline_classes = {
             'extra': 0,
         },
         'groups': {
-            'hse_cmpny_auditor':{
+            'production_control_auditor':{
                 'permissions': {
                     AppHSEPerformanceReport.STATE_SUBMITTED: {'add': 0, 'change': 1, 'delete': 0, 'view': 1},
                     AppHSEPerformanceReport.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -287,7 +287,7 @@ report_inline_classes = {
             'extra': 0,
         },
         'groups': {
-            'hse_cmpny_auditor':{
+            'production_control_auditor':{
                 'permissions': {
                     AppHSEPerformanceReport.STATE_SUBMITTED: {'add': 0, 'change': 1, 'delete': 0, 'view': 1},
                     AppHSEPerformanceReport.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -319,7 +319,7 @@ report_inline_classes = {
             'extra': 0,
         },
         'groups': {
-            'hse_cmpny_auditor':{
+            'production_control_auditor':{
                 'permissions': {
                     AppHSEPerformanceReport.STATE_SUBMITTED: {'add': 0, 'change': 1, 'delete': 0, 'view': 1},
                     AppHSEPerformanceReport.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -351,7 +351,7 @@ report_inline_classes = {
             'extra': 0,
         },
         'groups': {
-            'hse_cmpny_auditor':{
+            'production_control_auditor':{
                 'permissions': {
                     AppHSEPerformanceReport.STATE_SUBMITTED: {'add': 0, 'change': 1, 'delete': 0, 'view': 1},
                     AppHSEPerformanceReport.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -383,7 +383,7 @@ report_inline_classes = {
             'extra': 0,
         },
         'groups': {
-            'hse_cmpny_auditor':{
+            'production_control_auditor':{
                 'permissions': {
                     AppHSEPerformanceReport.STATE_SUBMITTED: {'add': 0, 'change': 1, 'delete': 0, 'view': 1},
                     AppHSEPerformanceReport.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -415,7 +415,7 @@ report_inline_classes = {
             'extra': 0,
         },
         'groups': {
-            'hse_cmpny_auditor':{
+            'production_control_auditor':{
                 'permissions': {
                     AppHSEPerformanceReport.STATE_SUBMITTED: {'add': 0, 'change': 1, 'delete': 0, 'view': 1},
                     AppHSEPerformanceReport.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -447,7 +447,7 @@ report_inline_classes = {
             'extra': 0,
         },
         'groups': {
-            'hse_cmpny_auditor':{
+            'production_control_auditor':{
                 'permissions': {
                     AppHSEPerformanceReport.STATE_SUBMITTED: {'add': 0, 'change': 1, 'delete': 0, 'view': 1},
                     AppHSEPerformanceReport.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -479,7 +479,7 @@ report_inline_classes = {
             'extra': 0,
         },
         'groups': {
-            'hse_cmpny_auditor':{
+            'production_control_auditor':{
                 'permissions': {
                     AppHSEPerformanceReport.STATE_SUBMITTED: {'add': 0, 'change': 1, 'delete': 0, 'view': 1},
                     AppHSEPerformanceReport.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -511,7 +511,7 @@ report_inline_classes = {
             'extra': 0,
         },
         'groups': {
-            'hse_cmpny_auditor':{
+            'production_control_auditor':{
                 'permissions': {
                     AppHSEPerformanceReport.STATE_SUBMITTED: {'add': 0, 'change': 1, 'delete': 0, 'view': 1},
                     AppHSEPerformanceReport.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -543,7 +543,7 @@ report_inline_classes = {
             'extra': 0,
         },
         'groups': {
-            'hse_cmpny_auditor':{
+            'production_control_auditor':{
                 'permissions': {
                     AppHSEPerformanceReport.STATE_SUBMITTED: {'add': 0, 'change': 1, 'delete': 0, 'view': 1},
                     AppHSEPerformanceReport.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -575,7 +575,7 @@ report_inline_classes = {
             'extra': 0,
         },
         'groups': {
-            'hse_cmpny_auditor':{
+            'production_control_auditor':{
                 'permissions': {
                     AppHSEPerformanceReport.STATE_SUBMITTED: {'add': 0, 'change': 1, 'delete': 0, 'view': 1},
                     AppHSEPerformanceReport.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -607,7 +607,7 @@ report_inline_classes = {
             'extra': 0,
         },
         'groups': {
-            'hse_cmpny_auditor':{
+            'production_control_auditor':{
                 'permissions': {
                     AppHSEPerformanceReport.STATE_SUBMITTED: {'add': 0, 'change': 1, 'delete': 0, 'view': 1},
                     AppHSEPerformanceReport.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -639,7 +639,7 @@ report_inline_classes = {
             'extra': 0,
         },
         'groups': {
-            'hse_cmpny_auditor':{
+            'production_control_auditor':{
                 'permissions': {
                     AppHSEPerformanceReport.STATE_SUBMITTED: {'add': 0, 'change': 1, 'delete': 0, 'view': 1},
                     AppHSEPerformanceReport.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -671,7 +671,7 @@ report_inline_classes = {
             'extra': 0,
         },
         'groups': {
-            'hse_cmpny_auditor':{
+            'production_control_auditor':{
                 'permissions': {
                     AppHSEPerformanceReport.STATE_SUBMITTED: {'add': 0, 'change': 1, 'delete': 0, 'view': 1},
                     AppHSEPerformanceReport.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -703,7 +703,7 @@ report_inline_classes = {
             'extra': 0,
         },
         'groups': {
-            'hse_cmpny_auditor':{
+            'production_control_auditor':{
                 'permissions': {
                     AppHSEPerformanceReport.STATE_SUBMITTED: {'add': 0, 'change': 1, 'delete': 0, 'view': 1},
                     AppHSEPerformanceReport.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -735,7 +735,7 @@ report_inline_classes = {
             'extra': 0,
         },
         'groups': {
-            'hse_cmpny_auditor':{
+            'production_control_auditor':{
                 'permissions': {
                     AppHSEPerformanceReport.STATE_SUBMITTED: {'add': 0, 'change': 1, 'delete': 0, 'view': 1},
                     AppHSEPerformanceReport.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -768,7 +768,7 @@ report_inline_classes = {
             'min_num': 1,
         },
         'groups': {
-            'hse_cmpny_auditor':{
+            'production_control_auditor':{
                 'permissions': {
                     AppHSEPerformanceReport.STATE_SUBMITTED: {'add': 1, 'change': 1, 'delete': 0, 'view': 1},
                     AppHSEPerformanceReport.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -857,7 +857,7 @@ corrective_main_class = {
         'view_on_site': False,
     },
     'groups': {
-        'hse_cmpny_auditor':{
+        'production_control_auditor':{
             'permissions': {
                 AppHSECorrectiveAction.STATE_GM_APPROVE: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
             },
@@ -912,7 +912,7 @@ corrective_action_feedback_main_class = {
         'view_on_site': False,
     },
     'groups': {
-        'hse_cmpny_auditor':{
+        'production_control_auditor':{
             'permissions': {
                 AppHSECorrectiveActionFeedback.STATE_SUBMITTED: {'add': 1, 'change': 1, 'delete': 0, 'view': 1},
                 AppHSECorrectiveActionFeedback.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -966,7 +966,7 @@ incident_main_class = {
         'view_on_site': False,
     },
     'groups': {
-        'hse_cmpny_auditor':{
+        'production_control_auditor':{
             'permissions': {
                 IncidentInfo.STATE_SUBMITTED: {'add': 0, 'change': 1, 'delete': 0, 'view': 1},
                 IncidentInfo.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -1011,7 +1011,7 @@ incident_inline_classes = {
 
         },
         'groups': {
-            'hse_cmpny_auditor':{
+            'production_control_auditor':{
                 'permissions': {
                     IncidentInfo.STATE_SUBMITTED: {'add': 1, 'change': 1, 'delete': 0, 'view': 1},
                     IncidentInfo.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -1054,7 +1054,7 @@ incident_inline_classes = {
 
         },
         'groups': {
-            'hse_cmpny_auditor':{
+            'production_control_auditor':{
                 'permissions': {
                     IncidentInfo.STATE_SUBMITTED: {'add': 1, 'change': 1, 'delete': 0, 'view': 1},
                     IncidentInfo.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -1097,7 +1097,7 @@ incident_inline_classes = {
 
         },
         'groups': {
-            'hse_cmpny_auditor':{
+            'production_control_auditor':{
                 'permissions': {
                     IncidentInfo.STATE_SUBMITTED: {'add': 1, 'change': 1, 'delete': 0, 'view': 1},
                     IncidentInfo.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -1140,7 +1140,7 @@ incident_inline_classes = {
 
         },
         'groups': {
-            'hse_cmpny_auditor':{
+            'production_control_auditor':{
                 'permissions': {
                     IncidentInfo.STATE_SUBMITTED: {'add': 1, 'change': 1, 'delete': 0, 'view': 1},
                     IncidentInfo.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -1183,7 +1183,7 @@ incident_inline_classes = {
 
         },
         'groups': {
-            'hse_cmpny_auditor':{
+            'production_control_auditor':{
                 'permissions': {
                     IncidentInfo.STATE_SUBMITTED: {'add': 1, 'change': 1, 'delete': 0, 'view': 1},
                     IncidentInfo.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -1222,7 +1222,7 @@ incident_inline_classes = {
             'extra': 0,
         },
         'groups': {
-            'hse_cmpny_auditor':{
+            'production_control_auditor':{
                 'permissions': {
                     IncidentInfo.STATE_SUBMITTED: {'add': 1, 'change': 1, 'delete': 0, 'view': 1},
                     IncidentInfo.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -1260,7 +1260,7 @@ incident_inline_classes = {
             'extra': 0,
         },
         'groups': {
-            'hse_cmpny_auditor':{
+            'production_control_auditor':{
                 'permissions': {
                     IncidentInfo.STATE_SUBMITTED: {'add': 1, 'change': 1, 'delete': 0, 'view': 1},
                     IncidentInfo.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -1303,7 +1303,7 @@ incident_inline_classes = {
             ],
         },
         'groups': {
-            'hse_cmpny_auditor':{
+            'production_control_auditor':{
                 'permissions': {
                     IncidentInfo.STATE_SUBMITTED: {'add': 1, 'change': 1, 'delete': 0, 'view': 1},
                     IncidentInfo.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -1342,7 +1342,7 @@ incident_inline_classes = {
             'extra': 0,
         },
         'groups': {
-            'hse_cmpny_auditor':{
+            'production_control_auditor':{
                 'permissions': {
                     IncidentInfo.STATE_SUBMITTED: {'add': 1, 'change': 1, 'delete': 0, 'view': 1},
                     IncidentInfo.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -1402,7 +1402,7 @@ incident_inline_classes = {
             ],
         },
         'groups': {
-            'hse_cmpny_auditor':{
+            'production_control_auditor':{
                 'permissions': {
                     IncidentInfo.STATE_SUBMITTED: {'add': 1, 'change': 1, 'delete': 0, 'view': 1},
                     IncidentInfo.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
