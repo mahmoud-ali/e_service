@@ -526,13 +526,16 @@ def import_license_shapefile(filename='./company_profile/data/geo/export1.shp'):
     # Get the first layer (most shapefiles have one)
     layer = ds[0]
 
+    # remove old data
+    TblCompanyProductionLicense.objects.all().update(geom=None)
+
     # Loop through each feature in the layer
     for feature in layer:
         try:
 
             im_geom = feature.geom.geos  # GEOSGeometry
 
-            if isinstance(im_geom, Polygon):
+            if im_geom.geom_type == 'Polygon':
                 im_geom = MultiPolygon(im_geom)
 
             obj = TblCompanyProductionLicense.objects.get(
@@ -550,4 +553,4 @@ def import_license_shapefile(filename='./company_profile/data/geo/export1.shp'):
             obj.save()
 
         except Exception as e:
-            print("Error",e)
+            print("Error",feature.get('id2'),e)
