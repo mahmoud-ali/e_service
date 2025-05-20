@@ -535,16 +535,19 @@ def import_license_shapefile(filename='./company_profile/data/geo/export1.shp'):
 
             im_geom = feature.geom.geos  # GEOSGeometry
 
-            if im_geom.geom_type == 'Polygon':
+            #if im_geom.geom_type == 'Polygon':
+            try:
                 im_geom = MultiPolygon(im_geom)
+            except Exception as e:
+                print("not converted",e)
 
             obj = TblCompanyProductionLicense.objects.get(
                 id=int(feature.get('id2'))
             )
 
             if obj.geom:
-                new_geom = obj.geom.union(im_geom)
-                # new_geom = MultiPolygon(*(list(obj.geom) + list(im_geom)))
+                #new_geom = obj.geom.union(im_geom)
+                new_geom = MultiPolygon(*(list(obj.geom) + list(im_geom)))
             else:
                 new_geom = im_geom
 
