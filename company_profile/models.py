@@ -330,7 +330,7 @@ class TblCompanyProductionLicense(LoggingModelGis):
     contract_status  = models.ForeignKey(LkpCompanyProductionLicenseStatus, on_delete=models.PROTECT,verbose_name=_("contract_status"))
     contract_file = models.FileField(_("contract_file"),upload_to=company_contract_path,blank=True,null=True)
 
-    geom = gis_models.MultiPolygonField(srid=4326,null=True)
+    geom = gis_models.MultiPolygonField(srid=4326,null=True,blank=True)
 
     def __str__(self):
         return self.company.name_ar+"("+str(self.license_no)+")"
