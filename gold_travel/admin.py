@@ -314,7 +314,10 @@ class AppMoveAdmin(LogAdminMixin,admin.ModelAdmin):
 
         if request.user.is_superuser or request.user.groups.filter(name__in=["gold_travel_manager","gold_travel_show"]).exists():
             return qs
-
+        
+        if request.user.groups.filter(name__in=["sswg_manager","sswg_secretary","sswg_economic_security","sswg_ssmo","sswg_smrc","sswg_mm","sswg_military_intelligence","sswg_moc","sswg_cbs","sswg_custom_force",]).exists():
+            return qs.filter(state=AppMoveGold.STATE_SSMO)
+        
         try:
             state_representative = request.user.state_representative
             if state_representative.authority!=TblStateRepresentative.AUTHORITY_SMRC:

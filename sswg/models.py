@@ -286,6 +286,10 @@ def update_smrc_data(sender, instance, **kwargs):
 def create_company_details(sender, instance, **kwargs):
     """Automatically create CompanyDetails when SMRCData is created"""
     if instance.form:
+        # update state
+        instance.form.state = AppMoveGold.STATE_SSMO
+        instance.form.save()
+
         # Get the owner name from the related AppMoveGold instance
         owner_name = instance.form.owner_name_lst
 
