@@ -172,7 +172,7 @@ class MOCSData(LoggingModel):
         verbose_name=_("SSWG Basic Form"),
     )
     mocs1_file = models.FileField(_("mocs1_file"), upload_to=attachment_path)  #,null=True,blank=True
-    mocs2_file = models.FileField(_("mocs2_file"), upload_to=attachment_path)  #,null=True,blank=True
+    # mocs2_file = models.FileField(_("mocs2_file"), upload_to=attachment_path)  #,null=True,blank=True
 
     def __str__(self):
         return f"MOCS-{self.contract_number}"
@@ -180,6 +180,28 @@ class MOCSData(LoggingModel):
     class Meta:
         verbose_name = _("SSWG MOCSData")
         verbose_name_plural = _("SSWG MOCSData")
+
+class COCSData(LoggingModel):
+    """Stores Chamber of Commerce related data"""
+    def attachment_path(self, filename):
+        company = self.basic_form.id
+        date = self.created_at.date()
+        return "company_{0}/sswg/{1}/{2}".format(company,date, filename)    
+
+    basic_form = models.OneToOneField(
+        'BasicForm',
+        on_delete=models.PROTECT,
+        related_name='coc_data',
+        verbose_name=_("SSWG Basic Form"),
+    )
+    cocs_file = models.FileField(_("mocs2_file"), upload_to=attachment_path)
+
+    def __str__(self):
+        return f"COC-{self.id}"
+
+    class Meta:
+        verbose_name = _("الغرفة التجارية")
+        verbose_name_plural = _("الغرفة التجارية")
 
 class CBSData(LoggingModel):
     """Stores Central Bank of Sudan related data"""
@@ -228,6 +250,7 @@ class BasicForm(LoggingModel):
     STATE_8 = 8
     STATE_9 = 9
     STATE_10 = 10
+    STATE_11 = 11
 
     STATE_CHOICES = {
         STATE_1:_("SSWG State 1"), 
@@ -240,6 +263,7 @@ class BasicForm(LoggingModel):
         STATE_8:_("SSWG State 8"),
         STATE_9:_("SSWG State 9"),
         STATE_10:_("SSWG State 10"),
+        STATE_11:_("SSWG State 11"),
     }
 
     date = models.DateField(_("Form Date"))

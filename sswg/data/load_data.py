@@ -55,6 +55,13 @@ def create_app_groups():
             'view':['BasicForm','CompanyDetails', 'TransferRelocationFormData', 'SSMOData', 'SmrcNoObjectionData', 'MmAceptanceData', 'MOCSData', 'CBSData',], 
         },
         {
+            'group':'sswg_coc',
+            'add':['MOCSData'], 
+            'change':['BasicForm','COCSData'], 
+            'delete':[],
+            'view':['BasicForm','CompanyDetails', 'TransferRelocationFormData', 'SSMOData', 'SmrcNoObjectionData', 'MmAceptanceData', 'MOCSData', 'CBSData',], 
+        },
+        {
             'group':'sswg_military_intelligence',
             'add':[], 
             'change':['BasicForm',], 

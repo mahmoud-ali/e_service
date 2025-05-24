@@ -9,7 +9,7 @@ from django.contrib.admin.utils import (
 from django.contrib.admin import helpers
 from django.contrib.admin.options import TO_FIELD_VAR
 from sswg.forms import TransferRelocationFormDataForm
-from .models import BasicForm, CompanyDetails, MmAceptanceData, TransferRelocationFormData, SSMOData, MOCSData, CBSData, SmrcNoObjectionData
+from .models import BasicForm, COCSData, CompanyDetails, MmAceptanceData, TransferRelocationFormData, SSMOData, MOCSData, CBSData, SmrcNoObjectionData
 
 class LogMixin:
     def save_model(self, request, obj, form, change):
@@ -38,9 +38,16 @@ class TransferRelocationFormDataInline(LogMixin,admin.TabularInline):
     form=TransferRelocationFormDataForm
     fk_name = 'basic_form'
     readonly_fields = ['raw_weight','allow_count']
-    extra = 1
+    min_num = 1
+    extra = 0
 
     def has_change_permission(self, request, obj=None):
+        if obj and obj.state == BasicForm.STATE_1:
+            return True
+        
+        return False
+
+    def has_add_permission(self, request, obj=None):
         if obj and obj.state == BasicForm.STATE_1:
             return True
         
@@ -119,6 +126,17 @@ class CBSDataInline(LogMixin,admin.StackedInline):
             return True
         
         return False
+    
+class COCDataInline(LogMixin,admin.StackedInline):
+    model = COCSData
+    fk_name = 'basic_form'
+    min_num = 1
+
+    def has_change_permission(self, request, obj=None):
+        if obj and obj.state == BasicForm.STATE_9:
+            return True
+        
+        return False
 
 @admin.register(BasicForm)
 class BasicFormAdmin(LogMixin,admin.ModelAdmin):
@@ -126,6 +144,12 @@ class BasicFormAdmin(LogMixin,admin.ModelAdmin):
     search_fields = ('sn_no', 'date')
     exclude = ('state',)
     save_as_continue = False
+
+    def has_change_permission(self, request, obj = None):
+        if obj and obj.state == len(BasicForm.STATE_CHOICES):
+            return False
+
+        return super().has_change_permission(request, obj)
 
     def get_queryset(self, request):
         """Filter records by user's state, with full access for superusers"""
@@ -137,7 +161,7 @@ class BasicFormAdmin(LogMixin,admin.ModelAdmin):
         user_groups = request.user.groups.values_list('name', flat=True)
 
         group_state_mapping = {
-            "sswg_manager": (range(BasicForm.STATE_1, BasicForm.STATE_10)),  # All states for sswg_manager from 1-9
+            "sswg_manager": (range(BasicForm.STATE_1, BasicForm.STATE_11)),  # All states for sswg_manager from 1-9
             "sswg_secretary": (BasicForm.STATE_1,),
             "sswg_economic_security": (BasicForm.STATE_2,),
             "sswg_ssmo": (BasicForm.STATE_3,),
@@ -146,7 +170,8 @@ class BasicFormAdmin(LogMixin,admin.ModelAdmin):
             "sswg_military_intelligence": (BasicForm.STATE_6,),
             "sswg_moc": (BasicForm.STATE_7,),
             "sswg_cbs": (BasicForm.STATE_8,),
-            "sswg_custom_force": (BasicForm.STATE_9,),
+            "sswg_coc": (BasicForm.STATE_9,),
+            "sswg_custom_force": (BasicForm.STATE_10,),
         }
 
         for group, state_lst in group_state_mapping.items():
@@ -183,7 +208,7 @@ class BasicFormAdmin(LogMixin,admin.ModelAdmin):
     
     def get_inlines(self, request, obj):
         if request.user.is_superuser or request.user.groups.filter(name='sswg_manager').exists():
-            return [TransferRelocationFormDataInline, CompanyDetailsInline, SSMODataInline, SmrcNoObjectionDataInline, MmAceptanceDataInline, MOCSDataInline, CBSDataInline]
+            return [TransferRelocationFormDataInline, CompanyDetailsInline, SSMODataInline, SmrcNoObjectionDataInline, MmAceptanceDataInline, MOCSDataInline, CBSDataInline, COCDataInline]
         
         inlines = []
         user_groups = request.user.groups.values_list('name', flat=True)
@@ -196,8 +221,9 @@ class BasicFormAdmin(LogMixin,admin.ModelAdmin):
             "sswg_mm": [TransferRelocationFormDataInline, CompanyDetailsInline, SSMODataInline, SmrcNoObjectionDataInline, MmAceptanceDataInline,],
             "sswg_military_intelligence": [TransferRelocationFormDataInline, CompanyDetailsInline, SSMODataInline, SmrcNoObjectionDataInline, MmAceptanceDataInline, ],
             "sswg_moc": [TransferRelocationFormDataInline, CompanyDetailsInline, SSMODataInline, SmrcNoObjectionDataInline, MmAceptanceDataInline, MOCSDataInline,],
-            "sswg_cbs": [TransferRelocationFormDataInline, CompanyDetailsInline, SSMODataInline, SmrcNoObjectionDataInline, MmAceptanceDataInline, MOCSDataInline, CBSDataInline],
-            "sswg_custom_force": [TransferRelocationFormDataInline, CompanyDetailsInline, SSMODataInline, SmrcNoObjectionDataInline, MmAceptanceDataInline, MOCSDataInline, CBSDataInline],
+            "sswg_coc": [TransferRelocationFormDataInline, CompanyDetailsInline, SSMODataInline, SmrcNoObjectionDataInline, MmAceptanceDataInline, MOCSDataInline, COCDataInline],
+            "sswg_cbs": [TransferRelocationFormDataInline, CompanyDetailsInline, SSMODataInline, SmrcNoObjectionDataInline, MmAceptanceDataInline, MOCSDataInline, COCDataInline, CBSDataInline],
+            "sswg_custom_force": [TransferRelocationFormDataInline, CompanyDetailsInline, SSMODataInline, SmrcNoObjectionDataInline, MmAceptanceDataInline, MOCSDataInline, COCDataInline, CBSDataInline],
         }
 
         for group, inline_lst in group_inline_mapping.items():
@@ -215,6 +241,7 @@ class BasicFormAdmin(LogMixin,admin.ModelAdmin):
             BasicForm.STATE_6: [MmAceptanceDataInline,],
             BasicForm.STATE_8: [MOCSDataInline,],
             BasicForm.STATE_9: [CBSDataInline,],
+            BasicForm.STATE_10: [COCDataInline,],
         }
 
         if state_inline_mapping.get(state,None):
