@@ -11,6 +11,7 @@ from django.db import models
 from django.forms.widgets import TextInput
 from gold_travel.forms import TblStateRepresentativeForm
 from gold_travel.models import AppMoveGoldExportGold, AppMoveGoldExportSilver, AppMoveGoldREExportGold, AppPrepareGold, LkpOwner, LkpStateDetails, TblStateRepresentative,AppMoveGold, AppMoveGoldDetails
+from sswg.models import TransferRelocationFormData
 
 class LogAdminMixin:
     def has_add_permission(self, request):
@@ -316,7 +317,8 @@ class AppMoveAdmin(LogAdminMixin,admin.ModelAdmin):
             return qs
         
         if request.user.groups.filter(name__in=["sswg_manager","sswg_secretary","sswg_economic_security","sswg_ssmo","sswg_smrc","sswg_mm","sswg_military_intelligence","sswg_moc","sswg_cbs","sswg_custom_force",]).exists():
-            return qs.filter(state=AppMoveGold.STATE_SSMO)
+            arrive_qs = TransferRelocationFormData.objects.values_list('form__id',flat=True)
+            return qs.filter(id__in=arrive_qs,state=AppMoveGold.STATE_SSMO)
         
         try:
             state_representative = request.user.state_representative

@@ -1,6 +1,8 @@
 from django.contrib.auth.models import Group, Permission
 from django.contrib.contenttypes.models import ContentType
 
+from workflow.data_utils import create_model_groups
+
 
 def create_app_groups():
     app = 'sswg'
@@ -92,3 +94,24 @@ def create_app_groups():
                 content_type = ContentType.objects.get(app_label=app, model=model)
                 permission = Permission.objects.get(codename=perm_type+'_'+model, content_type=content_type)
                 group.permissions.add(permission)
+
+    #other apps
+    arr = [
+        ('gold_travel','appmovegold'),
+        ('gold_travel','appmovegolddetails'),
+    ]
+
+    groups = ['sswg_manager','sswg_secretary','sswg_economic_security','sswg_ssmo','sswg_smrc','sswg_mm','sswg_moc','sswg_coc','sswg_military_intelligence','sswg_cbs','sswg_custom_force',]
+
+    for app,model_name in arr:
+        print("Create groups for model",model_name)
+        for g in groups:
+            create_model_groups(app,model_name,{
+                'groups':{
+                    g:{
+                        'permissions': {
+                            '*': {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                        },
+                    },
+                },
+            })
