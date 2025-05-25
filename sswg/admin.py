@@ -42,13 +42,13 @@ class TransferRelocationFormDataInline(LogMixin,admin.TabularInline):
     extra = 0
 
     def has_change_permission(self, request, obj=None):
-        if obj and obj.state == BasicForm.STATE_1:
+        if not obj or obj.state == BasicForm.STATE_1:
             return True
         
         return False
 
     def has_add_permission(self, request, obj=None):
-        if obj and obj.state == BasicForm.STATE_1:
+        if not obj or obj.state == BasicForm.STATE_1:
             return True
         
         return False
@@ -56,9 +56,9 @@ class TransferRelocationFormDataInline(LogMixin,admin.TabularInline):
 class CompanyDetailsInline(LogMixin,admin.StackedInline):
     model = CompanyDetails
     fk_name = 'basic_form'
-    min_num = 1
-    fields = ['name','surrogate_name','surrogate_id_type','surrogate_id_val','surrogate_id_phone',]
-    readonly_fields = ['name',]
+    extra = 1
+    fields = ['name','surrogate_name','surrogate_id_type','surrogate_id_val','surrogate_id_phone','total_weight','total_count']
+    readonly_fields = ['name','total_weight','total_count']
 
     def has_change_permission(self, request, obj=None):
         if obj and obj.state == BasicForm.STATE_1:

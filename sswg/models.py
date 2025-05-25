@@ -26,6 +26,8 @@ class CompanyDetails(LoggingModel):
     surrogate_id_type = models.IntegerField(_("ID Type"), choices=AppMoveGold.IDENTITY_CHOICES)
     surrogate_id_val = models.CharField(_("ID Value"), max_length=50)
     surrogate_id_phone = models.CharField(_("Contact Phone"), max_length=50)
+    total_weight = models.FloatField(_("الوزن الكلي"),default=0)
+    total_count = models.IntegerField(_("عدد الاستمارات"),default=0)
     basic_form = models.OneToOneField(
         'BasicForm',
         on_delete=models.PROTECT,
@@ -293,6 +295,17 @@ class BasicForm(LoggingModel):
 from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 
+@receiver(pre_save, sender=BasicForm)
+def update_basic_form_state(sender, instance, **kwargs):
+    if instance.pk:
+        obj = BasicForm.objects.get(pk=instance.pk)
+
+        if obj.state != instance.state and instance.state == BasicForm.STATE_2:
+            # update state
+            for t in obj.smrc_data.all():
+                t.form.state = AppMoveGold.STATE_SSMO
+                t.form.save()
+
 @receiver(pre_save, sender=TransferRelocationFormData)
 def update_smrc_data(sender, instance, **kwargs):
     """Automatically update SMRCData with values from related AppMoveGold form before saving.
@@ -310,10 +323,6 @@ def update_smrc_data(sender, instance, **kwargs):
 def create_company_details(sender, instance, **kwargs):
     """Automatically create CompanyDetails when SMRCData is created"""
     if instance.form:
-        # update state
-        instance.form.state = AppMoveGold.STATE_SSMO
-        instance.form.save()
-
         # Get the owner name from the related AppMoveGold instance
         owner_name = instance.form.owner_name_lst
 
@@ -336,7 +345,7 @@ def create_company_details(sender, instance, **kwargs):
             if obj:
                 obj.delete()
 
-            CompanyDetails.objects.create(
+            obj = CompanyDetails.objects.create(
                 name=owner_name,
                 basic_form=instance.basic_form,
                 surrogate_name=instance.form.repr_name,
@@ -346,3 +355,12 @@ def create_company_details(sender, instance, **kwargs):
                 created_by=instance.created_by,
                 updated_by=instance.updated_by,
             )
+
+        ##### update totals
+        all_forms = obj.basic_form.smrc_data.all()
+        total_weight = all_forms.aggregate(sum=models.Sum('raw_weight'))['sum']
+        total_count = all_forms.aggregate(sum=models.Sum('allow_count'))['sum']
+
+        obj.total_weight=total_weight
+        obj.total_count=total_count
+        obj.save()
