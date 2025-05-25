@@ -8,7 +8,7 @@ from gold_travel.models import LkpOwner,AppMoveGold
 class LoggingModel(models.Model):
     """
     An abstract base class model that provides self-
-    updating ``created_at`` and ``updated_at`` fields for responsable user.
+    updating ``created_at`` and ``updated_at`` fields for respons959034able user.
     """
     created_at = models.DateTimeField(_("created_at"),auto_now_add=True,editable=False,)
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT,related_name="+",editable=False,verbose_name=_("created_by")) 
@@ -335,7 +335,7 @@ def create_company_details(sender, instance, **kwargs):
         except:
             pass
 
-        if not obj or obj.name != owner_name \
+        if obj and obj.name != owner_name \
             or obj.basic_form != instance.basic_form \
             or obj.surrogate_name != instance.form.repr_name \
             or obj.surrogate_id_type != instance.form.repr_identity_type \
@@ -357,10 +357,11 @@ def create_company_details(sender, instance, **kwargs):
             )
 
         ##### update totals
-        all_forms = obj.basic_form.smrc_data.all()
-        total_weight = all_forms.aggregate(sum=models.Sum('raw_weight'))['sum']
-        total_count = all_forms.aggregate(sum=models.Sum('allow_count'))['sum']
+        if obj:
+            all_forms = obj.basic_form.smrc_data.all()
+            total_weight = all_forms.aggregate(sum=models.Sum('raw_weight'))['sum']
+            total_count = all_forms.aggregate(sum=models.Sum('allow_count'))['sum']
 
-        obj.total_weight=total_weight
-        obj.total_count=total_count
-        obj.save()
+            obj.total_weight=total_weight
+            obj.total_count=total_count
+            obj.save()
