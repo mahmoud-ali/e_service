@@ -140,8 +140,9 @@ class COCDataInline(LogMixin,admin.StackedInline):
 
 @admin.register(BasicForm)
 class BasicFormAdmin(LogMixin,admin.ModelAdmin):
-    list_display = ('sn_no', 'date')
+    list_display = ('sn_no', 'date','state')
     search_fields = ('sn_no', 'date')
+    list_filter = ('state',)
     exclude = ('state',)
     save_as_continue = False
 
@@ -162,7 +163,7 @@ class BasicFormAdmin(LogMixin,admin.ModelAdmin):
 
         group_state_mapping = {
             "sswg_manager": (range(BasicForm.STATE_1, BasicForm.STATE_11)),  # All states for sswg_manager from 1-9
-            "sswg_secretary": (BasicForm.STATE_1,),
+            "sswg_secretary": (BasicForm.STATE_1,BasicForm.STATE_11),
             "sswg_economic_security": (BasicForm.STATE_2,),
             "sswg_ssmo": (BasicForm.STATE_3,),
             "sswg_smrc": (BasicForm.STATE_4,),
