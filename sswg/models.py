@@ -28,7 +28,7 @@ class CompanyDetails(LoggingModel):
     surrogate_id_phone = models.CharField(_("Contact Phone"), max_length=50)
     total_weight = models.FloatField(_("الوزن الكلي"),default=0)
     total_count = models.IntegerField(_("عدد الاستمارات"),default=0)
-    basic_form = models.ForeignKey(
+    basic_form = models.OneToOneField(
         'BasicForm',
         on_delete=models.PROTECT,
         related_name='company_details',
@@ -345,16 +345,19 @@ def create_company_details(sender, instance, **kwargs):
         #     if obj:
         #         obj.delete()
 
-        obj,_ = CompanyDetails.objects.get_or_create(
-            name=owner_name,
-            basic_form=instance.basic_form,
-            surrogate_name=instance.form.repr_name,
-            surrogate_id_type=instance.form.repr_identity_type,
-            surrogate_id_val=instance.form.repr_identity,
-            surrogate_id_phone=instance.form.repr_phone,
-            created_by=instance.created_by,
-            updated_by=instance.updated_by,
-        )
+        try:
+            obj,_ = CompanyDetails.objects.get_or_create(
+                name=owner_name,
+                basic_form=instance.basic_form,
+                surrogate_name=instance.form.repr_name,
+                surrogate_id_type=instance.form.repr_identity_type,
+                surrogate_id_val=instance.form.repr_identity,
+                surrogate_id_phone=instance.form.repr_phone,
+                created_by=instance.created_by,
+                updated_by=instance.updated_by,
+            )
+        except:
+            pass
 
         ##### update totals
         if obj:

@@ -56,7 +56,7 @@ class TransferRelocationFormDataInline(LogMixin,admin.TabularInline):
 class CompanyDetailsInline(LogMixin,admin.StackedInline):
     model = CompanyDetails
     fk_name = 'basic_form'
-    extra = 1
+    min_num = 1
     fields = ['name','surrogate_name','surrogate_id_type','surrogate_id_val','surrogate_id_phone','total_weight','total_count']
     readonly_fields = ['name','total_weight','total_count']
 
