@@ -95,10 +95,11 @@ def create_app_groups():
                 permission = Permission.objects.get(codename=perm_type+'_'+model, content_type=content_type)
                 group.permissions.add(permission)
 
-    #other apps
+    #other apps 
     arr = [
         ('gold_travel','appmovegold'),
         ('gold_travel','appmovegolddetails'),
+        ('gold_travel','lkpowner'),
     ]
 
     groups = ['sswg_manager','sswg_secretary','sswg_economic_security','sswg_ssmo','sswg_smrc','sswg_mm','sswg_moc','sswg_coc','sswg_military_intelligence','sswg_cbs','sswg_custom_force',]
