@@ -28,7 +28,7 @@ class CompanyDetails(LoggingModel):
     surrogate_id_phone = models.CharField(_("Contact Phone"), max_length=50)
     total_weight = models.FloatField(_("الوزن الكلي"),default=0)
     total_count = models.IntegerField(_("عدد الاستمارات"),default=0)
-    basic_form = models.OneToOneField(
+    basic_form = models.ForeignKey(
         'BasicForm',
         on_delete=models.PROTECT,
         related_name='company_details',
@@ -335,26 +335,26 @@ def create_company_details(sender, instance, **kwargs):
         except:
             pass
 
-        if obj and obj.name != owner_name \
-            or obj.basic_form != instance.basic_form \
-            or obj.surrogate_name != instance.form.repr_name \
-            or obj.surrogate_id_type != instance.form.repr_identity_type \
-            or obj.surrogate_id_val != instance.form.repr_identity \
-            or obj.surrogate_id_phone != instance.form.repr_phone:
+        # if obj and (obj.name != owner_name \
+        #     or obj.basic_form != instance.basic_form \
+        #     or obj.surrogate_name != instance.form.repr_name \
+        #     or obj.surrogate_id_type != instance.form.repr_identity_type \
+        #     or obj.surrogate_id_val != instance.form.repr_identity \
+        #     or obj.surrogate_id_phone != instance.form.repr_phone):
 
-            if obj:
-                obj.delete()
+        #     if obj:
+        #         obj.delete()
 
-            obj = CompanyDetails.objects.create(
-                name=owner_name,
-                basic_form=instance.basic_form,
-                surrogate_name=instance.form.repr_name,
-                surrogate_id_type=instance.form.repr_identity_type,
-                surrogate_id_val=instance.form.repr_identity,
-                surrogate_id_phone=instance.form.repr_phone,
-                created_by=instance.created_by,
-                updated_by=instance.updated_by,
-            )
+        obj,_ = CompanyDetails.objects.get_or_create(
+            name=owner_name,
+            basic_form=instance.basic_form,
+            surrogate_name=instance.form.repr_name,
+            surrogate_id_type=instance.form.repr_identity_type,
+            surrogate_id_val=instance.form.repr_identity,
+            surrogate_id_phone=instance.form.repr_phone,
+            created_by=instance.created_by,
+            updated_by=instance.updated_by,
+        )
 
         ##### update totals
         if obj:
