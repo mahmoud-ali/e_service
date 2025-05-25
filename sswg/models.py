@@ -27,7 +27,7 @@ class CompanyDetails(LoggingModel):
     surrogate_id_val = models.CharField(_("ID Value"), max_length=50)
     surrogate_id_phone = models.CharField(_("Contact Phone"), max_length=50)
     total_weight = models.FloatField(_("الوزن الكلي"),default=0)
-    total_count = models.IntegerField(_("عدد الاستمارات"),default=0)
+    total_count = models.IntegerField(_("عدد السبائك"),default=0)
     basic_form = models.OneToOneField(
         'BasicForm',
         on_delete=models.PROTECT,
@@ -84,6 +84,8 @@ class SSMOData(LoggingModel):
     net_weight = models.FloatField(_("Net Weight"), validators=[MinValueValidator(0.0)])
     allow_count = models.PositiveIntegerField(_("Allow Count"))
     certificate_id = models.CharField(_("Certificate ID"), max_length=20) 
+    return_weight = models.FloatField(_("الذهب الراجع"),help_text=_("في حال التصنيع والإعادة"),default=0, validators=[MinValueValidator(0.0)])
+
     basic_form = models.OneToOneField(
         'BasicForm',
         on_delete=models.PROTECT,
@@ -279,18 +281,92 @@ class BasicForm(LoggingModel):
         verbose_name = _("SSWG Basic Form")
         verbose_name_plural = _("SSWG Basic Forms")
         ordering = ['-date']
-    
-    def get_next_state(self):
-        if self.state < len(self.STATE_CHOICES):
-            return self.state + 1
-        
-        # return self.state
-    
-    def get_next_state_display(self):
-        curr_index = self.get_next_state()
 
-        if curr_index:
-            return self.STATE_CHOICES[curr_index]
+    def get_next_states(self, user):
+        """
+        Determine the next possible states based on the current state and user's role.
+        """
+        # user = self.updated_by
+        user_groups = list(user.groups.values_list('name', flat=True))
+
+        states = []
+
+        if 'sswg_secretary' in user_groups:
+            if self.state == self.STATE_1:
+                states.append((self.STATE_2, self.STATE_CHOICES[self.STATE_2]))
+
+        if 'sswg_economic_security' in user_groups:
+            if self.state == self.STATE_2:
+                states.append((self.STATE_3, self.STATE_CHOICES[self.STATE_3]))
+
+        if 'sswg_ssmo' in user_groups:
+            if self.state == self.STATE_3:
+                states.append((self.STATE_4, self.STATE_CHOICES[self.STATE_4]))
+
+        if 'sswg_smrc' in user_groups:
+            if self.state == self.STATE_4:
+                states.append((self.STATE_5, self.STATE_CHOICES[self.STATE_5]))
+
+        if 'sswg_mm' in user_groups:
+            if self.state == self.STATE_5:
+                states.append((self.STATE_6, self.STATE_CHOICES[self.STATE_6]))
+
+        if 'sswg_military_intelligence' in user_groups:
+            if self.state == self.STATE_6:
+                states.append((self.STATE_7, self.STATE_CHOICES[self.STATE_7]))
+
+        if 'sswg_moc' in user_groups:
+            if self.state == self.STATE_7:
+                states.append((self.STATE_8, self.STATE_CHOICES[self.STATE_8]))
+
+        if 'sswg_cbs' in user_groups:
+            if self.state == self.STATE_8:
+                states.append((self.STATE_9, self.STATE_CHOICES[self.STATE_9]))
+
+        if 'sswg_coc' in user_groups:
+            if self.state == self.STATE_9:
+                states.append((self.STATE_10, self.STATE_CHOICES[self.STATE_10]))
+
+        if 'sswg_custom_force' in user_groups:
+            if self.state == self.STATE_10:
+                states.append((self.STATE_11, self.STATE_CHOICES[self.STATE_11]))
+
+        return states
+
+    def can_transition_to_next_state(self, user, state):
+        """
+        Check if the given user can transition to the specified state.
+        """
+        if state[0] in map(lambda x: x[0], self.get_next_states(user)):
+            return True
+
+        return False
+
+    def transition_to_next_state(self, user, state):
+        """
+        Transitions the workflow to the given state, after checking user permissions.
+        """
+        if self.can_transition_to_next_state(user, state):
+            self.state = state[0]
+            self.updated_by = user
+            self.save()
+        else:
+            raise Exception(f"User {user.username} cannot transition to state {state} from state {self.state}")
+
+        return self
+
+
+    # def get_next_state(self):
+    #     if self.state < len(self.STATE_CHOICES):
+    #         return self.state + 1
+        
+    #     # return self.state
+    
+    # def get_next_state_display(self):
+    #     curr_index = self.get_next_state()
+
+    #     if curr_index:
+    #         return self.STATE_CHOICES[curr_index]
 
 from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver

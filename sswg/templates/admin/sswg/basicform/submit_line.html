@@ -1,8 +1,15 @@
 {% load i18n admin_urls %}
+{% load workflow %}
 <div class="submit-row">
 {% block submit-row %}
 {% if show_save %}<input type="submit" value="{% translate 'Save' %}" class="default" name="_continue">{% endif %}
-{% if original and original.state and original.get_next_state_display %}<input type="submit" value="{{original.get_next_state_display}}" name="_save_confirm">{% endif %}
+
+{% if original %}
+    {% for next_state in original|get_next_states:request.user  %}
+        <input type="submit" value="{{next_state.1}}" name="_save_state_{{next_state.0}}">
+    {% endfor %}
+{% endif %}
+
 {% if show_close %}
     {% url opts|admin_urlname:'changelist' as changelist_url %}
     <a href="{% add_preserved_filters changelist_url %}" class="closelink">{% translate 'Close' %}</a>

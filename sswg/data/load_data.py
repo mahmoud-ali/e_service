@@ -1,8 +1,12 @@
 from django.contrib.auth.models import Group, Permission
 from django.contrib.contenttypes.models import ContentType
 
-from workflow.data_utils import create_model_groups
+from workflow.data_utils import create_master_details_groups,create_model_groups
+from sswg import admin
 
+
+def create_groups():
+    create_master_details_groups('sswg','basicform',admin.report_main_class,admin.report_inline_classes)
 
 def create_app_groups():
     app = 'sswg'
