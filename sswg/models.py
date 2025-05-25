@@ -402,27 +402,11 @@ def create_company_details(sender, instance, **kwargs):
         # Get the owner name from the related AppMoveGold instance
         owner_name = instance.form.owner_name_lst
 
-        obj = None
-        try:
-            obj = CompanyDetails.objects.get(
-                name=owner_name,
-                basic_form=instance.basic_form,
-            )
-        except:
-            pass
-
-        # if obj and (obj.name != owner_name \
-        #     or obj.basic_form != instance.basic_form \
-        #     or obj.surrogate_name != instance.form.repr_name \
-        #     or obj.surrogate_id_type != instance.form.repr_identity_type \
-        #     or obj.surrogate_id_val != instance.form.repr_identity \
-        #     or obj.surrogate_id_phone != instance.form.repr_phone):
-
-        #     if obj:
-        #         obj.delete()
-
-        try:
-            obj,_ = CompanyDetails.objects.get_or_create(
+        qs = CompanyDetails.objects.filter(basic_form=instance.basic_form)
+        if qs.exists():
+            obj = qs.first()
+        else:
+            obj = CompanyDetails.objects.create(
                 name=owner_name,
                 basic_form=instance.basic_form,
                 surrogate_name=instance.form.repr_name,
@@ -432,15 +416,12 @@ def create_company_details(sender, instance, **kwargs):
                 created_by=instance.created_by,
                 updated_by=instance.updated_by,
             )
-        except:
-            pass
 
         ##### update totals
-        if obj:
-            all_forms = obj.basic_form.smrc_data.all()
-            total_weight = all_forms.aggregate(sum=models.Sum('raw_weight'))['sum']
-            total_count = all_forms.aggregate(sum=models.Sum('allow_count'))['sum']
+        all_forms = obj.basic_form.smrc_data.all()
+        total_weight = all_forms.aggregate(sum=models.Sum('raw_weight'))['sum']
+        total_count = all_forms.aggregate(sum=models.Sum('allow_count'))['sum']
 
-            obj.total_weight=total_weight
-            obj.total_count=total_count
-            obj.save()
+        obj.total_weight=total_weight
+        obj.total_count=total_count
+        obj.save()

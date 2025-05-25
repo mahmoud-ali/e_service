@@ -34,7 +34,20 @@ class LogMixin:
         
         return False
 
-report_main_mixins = [LogMixin]
+class SswgManagerMixin:
+    def has_add_permission(self, request, obj=None):
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        user_groups = list(request.user.groups.values_list('name', flat=True))
+
+        if 'sswg_manager' in user_groups:
+            return False
+        
+        return super().has_change_permission(request, obj)
+
+
+report_main_mixins = [LogMixin,]
 report_main_class = {
     'model': BasicForm,
     'mixins': [],
@@ -49,7 +62,7 @@ report_main_class = {
     'groups': {
         'sswg_manager':{
             'permissions': {
-                BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                #BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -79,7 +92,7 @@ report_main_class = {
         },
         'sswg_economic_security':{
             'permissions': {
-                BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                #BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -94,7 +107,7 @@ report_main_class = {
         },
         'sswg_ssmo':{
             'permissions': {
-                BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                #BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -109,7 +122,7 @@ report_main_class = {
         },
         'sswg_smrc':{
             'permissions': {
-                BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                #BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -124,7 +137,7 @@ report_main_class = {
         },
         'sswg_mm':{
             'permissions': {
-                BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                #BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -139,7 +152,7 @@ report_main_class = {
         },
         'sswg_military_intelligence':{
             'permissions': {
-                BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                #BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -154,7 +167,7 @@ report_main_class = {
         },
         'sswg_moc':{
             'permissions': {
-                BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                #BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -169,7 +182,7 @@ report_main_class = {
         },
         'sswg_cbs':{
             'permissions': {
-                BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                #BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -184,7 +197,7 @@ report_main_class = {
         },
         'sswg_coc':{
             'permissions': {
-                BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                #BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -199,7 +212,7 @@ report_main_class = {
         },
         'sswg_custom_force':{
             'permissions': {
-                BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                #BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -218,15 +231,17 @@ report_main_class = {
 report_inline_classes = {
     'TransferRelocationFormData': {
         'model': TransferRelocationFormData,
-        'mixins': [admin.TabularInline],
+        'mixins': [admin.TabularInline,],
         'kwargs': {
             'extra': 0,
             'min_num': 1,
+            'form': TransferRelocationFormDataForm,
+            'readonly_fields': ['raw_weight','allow_count'],
         },
         'groups': {
             'sswg_manager':{
                 'permissions': {
-                    BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    #BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -256,7 +271,7 @@ report_inline_classes = {
             },
             'sswg_economic_security':{
                 'permissions': {
-                    BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    #BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -271,7 +286,7 @@ report_inline_classes = {
             },
             'sswg_ssmo':{
                 'permissions': {
-                    BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    #BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -286,7 +301,7 @@ report_inline_classes = {
             },
             'sswg_smrc':{
                 'permissions': {
-                    BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    #BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -301,7 +316,7 @@ report_inline_classes = {
             },
             'sswg_mm':{
                 'permissions': {
-                    BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    #BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -316,7 +331,7 @@ report_inline_classes = {
             },
             'sswg_military_intelligence':{
                 'permissions': {
-                    BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    #BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -331,7 +346,7 @@ report_inline_classes = {
             },
             'sswg_moc':{
                 'permissions': {
-                    BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    #BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -346,7 +361,7 @@ report_inline_classes = {
             },
             'sswg_cbs':{
                 'permissions': {
-                    BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    #BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -361,7 +376,7 @@ report_inline_classes = {
             },
             'sswg_coc':{
                 'permissions': {
-                    BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    #BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -376,7 +391,7 @@ report_inline_classes = {
             },
             'sswg_custom_force':{
                 'permissions': {
-                    BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    #BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -393,17 +408,17 @@ report_inline_classes = {
     },
     'CompanyDetails': {
         'model': CompanyDetails,
-        'mixins': [admin.StackedInline],
+        'mixins': [admin.StackedInline,],
         'kwargs': {
-            'extra': 0,
-            'min_num': 1,
+            'extra': 1,
+            'min_num': 0,
             'fields' : ['name','surrogate_name','surrogate_id_type','surrogate_id_val','surrogate_id_phone','total_weight','total_count'],
             'readonly_fields' : ['name','total_weight','total_count'],
         },
         'groups': {
             'sswg_manager':{
                 'permissions': {
-                    BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    #BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -433,7 +448,7 @@ report_inline_classes = {
             },
             'sswg_economic_security':{
                 'permissions': {
-                    BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    #BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -448,7 +463,7 @@ report_inline_classes = {
             },
             'sswg_ssmo':{
                 'permissions': {
-                    BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    #BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -463,7 +478,7 @@ report_inline_classes = {
             },
             'sswg_smrc':{
                 'permissions': {
-                    BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    #BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -478,7 +493,7 @@ report_inline_classes = {
             },
             'sswg_mm':{
                 'permissions': {
-                    BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    #BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -493,7 +508,7 @@ report_inline_classes = {
             },
             'sswg_military_intelligence':{
                 'permissions': {
-                    BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    #BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -508,7 +523,7 @@ report_inline_classes = {
             },
             'sswg_moc':{
                 'permissions': {
-                    BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    #BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -523,7 +538,7 @@ report_inline_classes = {
             },
             'sswg_cbs':{
                 'permissions': {
-                    BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    #BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -538,7 +553,7 @@ report_inline_classes = {
             },
             'sswg_coc':{
                 'permissions': {
-                    BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    #BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -553,7 +568,7 @@ report_inline_classes = {
             },
             'sswg_custom_force':{
                 'permissions': {
-                    BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    #BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -570,7 +585,7 @@ report_inline_classes = {
     },
     'SSMOData': {
         'model': SSMOData,
-        'mixins': [admin.StackedInline],
+        'mixins': [SswgManagerMixin,admin.StackedInline,],
         'kwargs': {
             'extra': 0,
             'min_num': 1,
@@ -578,9 +593,9 @@ report_inline_classes = {
         'groups': {
             'sswg_manager':{
                 'permissions': {
-                    BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    #BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -593,9 +608,9 @@ report_inline_classes = {
             },
             'sswg_secretary':{
                 'permissions': {
-                    BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    #BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -608,9 +623,9 @@ report_inline_classes = {
             },
             'sswg_economic_security':{
                 'permissions': {
-                    BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
                     BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
                     BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
                     BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
@@ -623,8 +638,8 @@ report_inline_classes = {
             },
             'sswg_ssmo':{
                 'permissions': {
-                    BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    #BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_3: {'add': 1, 'change': 1, 'delete': 0, 'view': 1},
                     BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -638,9 +653,9 @@ report_inline_classes = {
             },
             'sswg_smrc':{
                 'permissions': {
-                    BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    #BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -653,9 +668,9 @@ report_inline_classes = {
             },
             'sswg_mm':{
                 'permissions': {
-                    BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    #BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -668,9 +683,9 @@ report_inline_classes = {
             },
             'sswg_military_intelligence':{
                 'permissions': {
-                    BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    #BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -683,9 +698,9 @@ report_inline_classes = {
             },
             'sswg_moc':{
                 'permissions': {
-                    BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    #BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -698,9 +713,9 @@ report_inline_classes = {
             },
             'sswg_cbs':{
                 'permissions': {
-                    BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    #BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -713,9 +728,9 @@ report_inline_classes = {
             },
             'sswg_coc':{
                 'permissions': {
-                    BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    #BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -728,9 +743,9 @@ report_inline_classes = {
             },
             'sswg_custom_force':{
                 'permissions': {
-                    BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    #BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -745,7 +760,7 @@ report_inline_classes = {
     },
     'SmrcNoObjectionData': {
         'model': SmrcNoObjectionData,
-        'mixins': [admin.StackedInline],
+        'mixins': [admin.StackedInline,SswgManagerMixin],
         'kwargs': {
             'extra': 0,
             'min_num': 1,
@@ -753,10 +768,10 @@ report_inline_classes = {
         'groups': {
             'sswg_manager':{
                 'permissions': {
-                    BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    #BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_7: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -768,10 +783,10 @@ report_inline_classes = {
             },
             'sswg_secretary':{
                 'permissions': {
-                    BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    #BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_7: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -783,10 +798,10 @@ report_inline_classes = {
             },
             'sswg_economic_security':{
                 'permissions': {
-                    BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
                     BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
                     BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
                     BasicForm.STATE_7: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
@@ -798,10 +813,10 @@ report_inline_classes = {
             },
             'sswg_ssmo':{
                 'permissions': {
-                    BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
                     BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
                     BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
                     BasicForm.STATE_7: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
@@ -813,9 +828,9 @@ report_inline_classes = {
             },
             'sswg_smrc':{
                 'permissions': {
-                    BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    #BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_4: {'add': 1, 'change': 1, 'delete': 0, 'view': 1},
                     BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -828,10 +843,10 @@ report_inline_classes = {
             },
             'sswg_mm':{
                 'permissions': {
-                    BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    #BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_7: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -843,10 +858,10 @@ report_inline_classes = {
             },
             'sswg_military_intelligence':{
                 'permissions': {
-                    BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    #BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_7: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -858,10 +873,10 @@ report_inline_classes = {
             },
             'sswg_moc':{
                 'permissions': {
-                    BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    #BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_7: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -873,10 +888,10 @@ report_inline_classes = {
             },
             'sswg_cbs':{
                 'permissions': {
-                    BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    #BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_7: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -888,10 +903,10 @@ report_inline_classes = {
             },
             'sswg_coc':{
                 'permissions': {
-                    BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    #BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_7: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -903,10 +918,10 @@ report_inline_classes = {
             },
             'sswg_custom_force':{
                 'permissions': {
-                    BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    #BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_7: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -920,7 +935,7 @@ report_inline_classes = {
     },
     'MmAceptanceData': {
         'model': MmAceptanceData,
-        'mixins': [admin.StackedInline],
+        'mixins': [admin.StackedInline,SswgManagerMixin],
         'kwargs': {
             'extra': 0,
             'min_num': 1,
@@ -928,11 +943,11 @@ report_inline_classes = {
         'groups': {
             'sswg_manager':{
                 'permissions': {
-                    BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    #BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_7: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_8: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -943,11 +958,11 @@ report_inline_classes = {
             },
             'sswg_secretary':{
                 'permissions': {
-                    BasicForm.STATE_1: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
-                    BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_1: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
+                    # BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_7: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_8: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -958,11 +973,11 @@ report_inline_classes = {
             },
             'sswg_economic_security':{
                 'permissions': {
-                    BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
                     BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
                     BasicForm.STATE_7: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
                     BasicForm.STATE_8: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
@@ -973,11 +988,11 @@ report_inline_classes = {
             },
             'sswg_ssmo':{
                 'permissions': {
-                    BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
                     BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
                     BasicForm.STATE_7: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
                     BasicForm.STATE_8: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
@@ -988,11 +1003,11 @@ report_inline_classes = {
             },
             'sswg_smrc':{
                 'permissions': {
-                    BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
                     BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
                     BasicForm.STATE_7: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
                     BasicForm.STATE_8: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
@@ -1003,10 +1018,10 @@ report_inline_classes = {
             },
             'sswg_mm':{
                 'permissions': {
-                    BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    #BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_5: {'add': 1, 'change': 1, 'delete': 0, 'view': 1},
                     BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_7: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -1018,11 +1033,11 @@ report_inline_classes = {
             },
             'sswg_military_intelligence':{
                 'permissions': {
-                    BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    #BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_7: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_8: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -1033,11 +1048,11 @@ report_inline_classes = {
             },
             'sswg_moc':{
                 'permissions': {
-                    BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    #BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_7: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_8: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -1048,11 +1063,11 @@ report_inline_classes = {
             },
             'sswg_cbs':{
                 'permissions': {
-                    BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    #BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_7: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_8: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -1063,11 +1078,11 @@ report_inline_classes = {
             },
             'sswg_coc':{
                 'permissions': {
-                    BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    #BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_7: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_8: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -1078,11 +1093,11 @@ report_inline_classes = {
             },
             'sswg_custom_force':{
                 'permissions': {
-                    BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    #BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_7: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_8: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -1095,7 +1110,7 @@ report_inline_classes = {
     },
     'MOCSData': {
         'model': MOCSData,
-        'mixins': [admin.StackedInline],
+        'mixins': [admin.StackedInline,SswgManagerMixin],
         'kwargs': {
             'extra': 0,
             'min_num': 1,
@@ -1103,13 +1118,13 @@ report_inline_classes = {
         'groups': {
             'sswg_manager':{
                 'permissions': {
-                    BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_7: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    #BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_7: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_8: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_9: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_10: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -1118,13 +1133,13 @@ report_inline_classes = {
             },
             'sswg_secretary':{
                 'permissions': {
-                    BasicForm.STATE_1: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
-                    BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_7: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_1: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
+                    # BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_7: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_8: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_9: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_10: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -1133,13 +1148,13 @@ report_inline_classes = {
             },
             'sswg_economic_security':{
                 'permissions': {
-                    BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_7: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_7: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
                     BasicForm.STATE_8: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
                     BasicForm.STATE_9: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
                     BasicForm.STATE_10: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
@@ -1148,13 +1163,13 @@ report_inline_classes = {
             },
             'sswg_ssmo':{
                 'permissions': {
-                    BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_7: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_7: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
                     BasicForm.STATE_8: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
                     BasicForm.STATE_9: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
                     BasicForm.STATE_10: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
@@ -1163,13 +1178,13 @@ report_inline_classes = {
             },
             'sswg_smrc':{
                 'permissions': {
-                    BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_7: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_7: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
                     BasicForm.STATE_8: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
                     BasicForm.STATE_9: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
                     BasicForm.STATE_10: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
@@ -1178,13 +1193,13 @@ report_inline_classes = {
             },
             'sswg_mm':{
                 'permissions': {
-                    BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_7: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_7: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
                     BasicForm.STATE_8: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
                     BasicForm.STATE_9: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
                     BasicForm.STATE_10: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
@@ -1193,13 +1208,13 @@ report_inline_classes = {
             },
             'sswg_military_intelligence':{
                 'permissions': {
-                    BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_7: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_7: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
                     BasicForm.STATE_8: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
                     BasicForm.STATE_9: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
                     BasicForm.STATE_10: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
@@ -1208,12 +1223,12 @@ report_inline_classes = {
             },
             'sswg_moc':{
                 'permissions': {
-                    BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    #BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_7: {'add': 1, 'change': 1, 'delete': 0, 'view': 1},
                     BasicForm.STATE_8: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_9: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -1223,13 +1238,13 @@ report_inline_classes = {
             },
             'sswg_cbs':{
                 'permissions': {
-                    BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_7: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    #BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_7: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_8: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_9: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_10: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -1238,13 +1253,13 @@ report_inline_classes = {
             },
             'sswg_coc':{
                 'permissions': {
-                    BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_7: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    #BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_7: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_8: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_9: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_10: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -1253,13 +1268,13 @@ report_inline_classes = {
             },
             'sswg_custom_force':{
                 'permissions': {
-                    BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_7: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    #BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_7: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_8: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_9: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_10: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -1270,7 +1285,7 @@ report_inline_classes = {
     },
     'CBSData': {
         'model': CBSData,
-        'mixins': [admin.StackedInline],
+        'mixins': [admin.StackedInline,SswgManagerMixin],
         'kwargs': {
             'extra': 0,
             'min_num': 1,
@@ -1278,14 +1293,14 @@ report_inline_classes = {
         'groups': {
             'sswg_manager':{
                 'permissions': {
-                    BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_7: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_8: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    #BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_7: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_8: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_9: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_10: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_11: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -1293,14 +1308,14 @@ report_inline_classes = {
             },
             'sswg_secretary':{
                 'permissions': {
-                    BasicForm.STATE_1: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
-                    BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_7: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_8: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_1: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
+                    # BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_7: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_8: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_9: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_10: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_11: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -1308,14 +1323,14 @@ report_inline_classes = {
             },
             'sswg_economic_security':{
                 'permissions': {
-                    BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_7: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_8: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_7: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_8: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
                     BasicForm.STATE_9: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
                     BasicForm.STATE_10: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
                     BasicForm.STATE_11: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
@@ -1323,14 +1338,14 @@ report_inline_classes = {
             },
             'sswg_ssmo':{
                 'permissions': {
-                    BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_7: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_8: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_7: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_8: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
                     BasicForm.STATE_9: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
                     BasicForm.STATE_10: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
                     BasicForm.STATE_11: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
@@ -1338,14 +1353,14 @@ report_inline_classes = {
             },
             'sswg_smrc':{
                 'permissions': {
-                    BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_7: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_8: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_7: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_8: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
                     BasicForm.STATE_9: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
                     BasicForm.STATE_10: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
                     BasicForm.STATE_11: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
@@ -1353,14 +1368,14 @@ report_inline_classes = {
             },
             'sswg_mm':{
                 'permissions': {
-                    BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_7: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_8: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_7: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_8: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
                     BasicForm.STATE_9: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
                     BasicForm.STATE_10: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
                     BasicForm.STATE_11: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
@@ -1368,14 +1383,14 @@ report_inline_classes = {
             },
             'sswg_military_intelligence':{
                 'permissions': {
-                    BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_7: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_8: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_7: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_8: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
                     BasicForm.STATE_9: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
                     BasicForm.STATE_10: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
                     BasicForm.STATE_11: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
@@ -1383,14 +1398,14 @@ report_inline_classes = {
             },
             'sswg_moc':{
                 'permissions': {
-                    BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_7: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_8: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_7: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_8: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
                     BasicForm.STATE_9: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
                     BasicForm.STATE_10: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
                     BasicForm.STATE_11: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
@@ -1398,13 +1413,13 @@ report_inline_classes = {
             },
             'sswg_cbs':{
                 'permissions': {
-                    BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_7: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    #BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_7: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_8: {'add': 1, 'change': 1, 'delete': 0, 'view': 1},
                     BasicForm.STATE_9: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_10: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -1413,14 +1428,14 @@ report_inline_classes = {
             },
             'sswg_coc':{
                 'permissions': {
-                    BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_7: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_8: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    #BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_7: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_8: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_9: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_10: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_11: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -1428,14 +1443,14 @@ report_inline_classes = {
             },
             'sswg_custom_force':{
                 'permissions': {
-                    BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_7: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_8: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    #BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_7: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_8: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_9: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_10: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_11: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -1445,7 +1460,7 @@ report_inline_classes = {
     },
     'COCSData': {
         'model': COCSData,
-        'mixins': [admin.StackedInline],
+        'mixins': [admin.StackedInline,SswgManagerMixin],
         'kwargs': {
             'extra': 0,
             'min_num': 1,
@@ -1453,149 +1468,149 @@ report_inline_classes = {
         'groups': {
             'sswg_manager':{
                 'permissions': {
-                    BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_7: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_8: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_9: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    #BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_7: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_8: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_9: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_10: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_11: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
             'sswg_secretary':{
                 'permissions': {
-                    BasicForm.STATE_1: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
-                    BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_7: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_8: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_9: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_1: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
+                    # BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_7: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_8: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_9: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_10: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_11: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
             'sswg_economic_security':{
                 'permissions': {
-                    BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_7: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_8: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_9: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_7: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_8: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_9: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
                     BasicForm.STATE_10: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
                     BasicForm.STATE_11: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
                 },
             },
             'sswg_ssmo':{
                 'permissions': {
-                    BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_7: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_8: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_9: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_7: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_8: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_9: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
                     BasicForm.STATE_10: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
                     BasicForm.STATE_11: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
                 },
             },
             'sswg_smrc':{
                 'permissions': {
-                    BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_7: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_8: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_9: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_7: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_8: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_9: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
                     BasicForm.STATE_10: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
                     BasicForm.STATE_11: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
                 },
             },
             'sswg_mm':{
                 'permissions': {
-                    BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_7: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_8: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_9: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_7: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_8: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_9: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
                     BasicForm.STATE_10: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
                     BasicForm.STATE_11: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
                 },
             },
             'sswg_military_intelligence':{
                 'permissions': {
-                    BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_7: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_8: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_9: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_7: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_8: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_9: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
                     BasicForm.STATE_10: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
                     BasicForm.STATE_11: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
                 },
             },
             'sswg_moc':{
                 'permissions': {
-                    BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_7: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_8: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_9: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_7: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_8: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_9: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
                     BasicForm.STATE_10: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
                     BasicForm.STATE_11: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
                 },
             },
             'sswg_cbs':{
                 'permissions': {
-                    BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_7: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_8: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
-                    BasicForm.STATE_9: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_7: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_8: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
+                    # BasicForm.STATE_9: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
                     BasicForm.STATE_10: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
                     BasicForm.STATE_11: {'add': 0, 'change': 0, 'delete': 0, 'view': 0},
                 },
             },
             'sswg_coc':{
                 'permissions': {
-                    BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_7: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_8: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    #BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_7: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_8: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_9: {'add': 1, 'change': 1, 'delete': 0, 'view': 1},
                     BasicForm.STATE_10: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_11: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -1603,15 +1618,15 @@ report_inline_classes = {
             },
             'sswg_custom_force':{
                 'permissions': {
-                    BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_7: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_8: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    BasicForm.STATE_9: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    #BasicForm.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_7: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_8: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    # BasicForm.STATE_9: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_10: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     BasicForm.STATE_11: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
