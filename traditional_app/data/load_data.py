@@ -40,8 +40,8 @@ def import_daily_report(state_id=1,file_name='daily_rn.csv'):
             try:
                 date = datetime.strptime(row[9].strip(), "%d/%m/%Y").date()
                 soug_id=int(row[10].strip())
-                haj_toahin=int(row[7].strip())
-                haj_bolimal=int(row[6].strip())
+                haj_toahin=float(row[7].strip())
+                haj_bolimal=float(row[6].strip())
                 income_toahin_amount=float(row[5].strip())
                 income_bolimal_amount=float(row[4].strip())
                 form_count=int(row[1].strip())
