@@ -13,6 +13,23 @@ from django.contrib.auth import get_user_model
 
 admin_user = get_user_model().objects.get(id=1)
 
+def delete_daily_report(state_id=1):
+    state = LkpState.objects.get(id=state_id)
+    qs = daily_report = models.DailyReport.objects.filter(
+        source_state=state,
+    )
+
+    for d in qs:
+        models.DailyWardHajr.objects.filter(daily_report=d).delete()
+        models.DailyIncome.objects.filter(daily_report=d).delete()
+        models.DailyTahsilForm.objects.filter(daily_report=d).delete()
+        models.DailyKartaMor7ala.objects.filter(daily_report=d).delete()
+        models.DailyGoldMor7ala.objects.filter(daily_report=d).delete()
+        models.DailyGrabeel.objects.filter(daily_report=d).delete()
+        models.DailyHofrKabira.objects.filter(daily_report=d).delete()
+        models.DailySmallProcessingUnit.objects.filter(daily_report=d).delete()
+        d.delete()
+
 def import_daily_report(state_id=1,file_name='daily_rn.csv'):
     with open('./traditional_app/data/'+file_name, newline='') as csvfile:
         reader = csv.reader(csvfile, delimiter=',')
@@ -86,7 +103,7 @@ def import_daily_report(state_id=1,file_name='daily_rn.csv'):
                         updated_by=admin_user,
                     )
 
-                    models.DailyKartaMor7alaf.objects.create(
+                    models.DailyKartaMor7ala.objects.create(
                         daily_report=daily_report,
                         soag=soug,
                         galabat_count=galabat_count,
