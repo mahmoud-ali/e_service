@@ -20,7 +20,7 @@ def import_daily_report(state_id=1,file_name='daily_rn.csv'):
         for row in reader:
             try:
                 date = datetime.strptime(row[9].strip(), "%d/%m/%Y").date()
-                soug=int(row[10].strip())
+                soug_id=int(row[10].strip())
                 haj_toahin=int(row[7].strip())
                 haj_bolimal=int(row[6].strip())
                 income_toahin_amount=float(row[5].strip())
@@ -38,7 +38,9 @@ def import_daily_report(state_id=1,file_name='daily_rn.csv'):
                     updated_by=admin_user,
                 )
 
-                if soug > 0:
+                if soug_id > 0:
+                    soug = models.LkpSoag.objects.get(id=soug_id)
+
                     models.DailyWardHajr.objects.create(
                         daily_report=daily_report,
                         soag=soug,
