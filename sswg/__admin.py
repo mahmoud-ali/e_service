@@ -9,7 +9,7 @@ from django.contrib.admin.utils import (
 from django.contrib.admin import helpers
 from django.contrib.admin.options import TO_FIELD_VAR
 from sswg.forms import TransferRelocationFormDataForm
-from .models import BasicForm, COCSData, CompanyDetails, MmAceptanceData, TransferRelocationFormData, SSMOData, MOCSData, CBSData, SmrcNoObjectionData
+from .models import BasicFormExport, COCSData, CompanyDetails, MmAceptanceData, TransferRelocationFormData, SSMOData, MOCSData, CBSData, SmrcNoObjectionData
 
 class LogMixin:
     def save_model(self, request, obj, form, change):
@@ -42,13 +42,13 @@ class TransferRelocationFormDataInline(LogMixin,admin.TabularInline):
     extra = 0
 
     def has_change_permission(self, request, obj=None):
-        if not obj or obj.state == BasicForm.STATE_1:
+        if not obj or obj.state == BasicFormExport.STATE_1:
             return True
         
         return False
 
     def has_add_permission(self, request, obj=None):
-        if not obj or obj.state == BasicForm.STATE_1:
+        if not obj or obj.state == BasicFormExport.STATE_1:
             return True
         
         return False
@@ -61,7 +61,7 @@ class CompanyDetailsInline(LogMixin,admin.StackedInline):
     readonly_fields = ['name','total_weight','total_count']
 
     def has_change_permission(self, request, obj=None):
-        if obj and obj.state == BasicForm.STATE_1:
+        if obj and obj.state == BasicFormExport.STATE_1:
             return True
         
         return False
@@ -78,7 +78,7 @@ class SSMODataInline(LogMixin,admin.StackedInline):
     min_num = 1
 
     def has_change_permission(self, request, obj=None):
-        if obj and obj.state == BasicForm.STATE_3:
+        if obj and obj.state == BasicFormExport.STATE_3:
             return True
         
         return False
@@ -89,7 +89,7 @@ class SmrcNoObjectionDataInline(LogMixin,admin.StackedInline):
     min_num = 1
 
     def has_change_permission(self, request, obj=None):
-        if obj and obj.state == BasicForm.STATE_4:
+        if obj and obj.state == BasicFormExport.STATE_4:
             return True
         
         return False
@@ -100,7 +100,7 @@ class MmAceptanceDataInline(LogMixin,admin.StackedInline):
     min_num = 1
 
     def has_change_permission(self, request, obj=None):
-        if obj and obj.state == BasicForm.STATE_5:
+        if obj and obj.state == BasicFormExport.STATE_5:
             return True
         
         return False
@@ -111,7 +111,7 @@ class MOCSDataInline(LogMixin,admin.StackedInline):
     min_num = 1
 
     def has_change_permission(self, request, obj=None):
-        if obj and obj.state == BasicForm.STATE_7:
+        if obj and obj.state == BasicFormExport.STATE_7:
             return True
         
         return False
@@ -122,7 +122,7 @@ class CBSDataInline(LogMixin,admin.StackedInline):
     min_num = 1
 
     def has_change_permission(self, request, obj=None):
-        if obj and obj.state == BasicForm.STATE_8:
+        if obj and obj.state == BasicFormExport.STATE_8:
             return True
         
         return False
@@ -133,12 +133,12 @@ class COCDataInline(LogMixin,admin.StackedInline):
     min_num = 1
 
     def has_change_permission(self, request, obj=None):
-        if obj and obj.state == BasicForm.STATE_9:
+        if obj and obj.state == BasicFormExport.STATE_9:
             return True
         
         return False
 
-@admin.register(BasicForm)
+@admin.register(BasicFormExport)
 class BasicFormAdmin(LogMixin,admin.ModelAdmin):
     list_display = ('sn_no', 'date','state')
     search_fields = ('sn_no', 'date')
@@ -147,7 +147,7 @@ class BasicFormAdmin(LogMixin,admin.ModelAdmin):
     save_as_continue = False
 
     def has_change_permission(self, request, obj = None):
-        if obj and obj.state == len(BasicForm.STATE_CHOICES):
+        if obj and obj.state == len(BasicFormExport.STATE_CHOICES):
             return False
 
         return super().has_change_permission(request, obj)
@@ -162,17 +162,17 @@ class BasicFormAdmin(LogMixin,admin.ModelAdmin):
         user_groups = request.user.groups.values_list('name', flat=True)
 
         group_state_mapping = {
-            "sswg_manager": (range(BasicForm.STATE_1, BasicForm.STATE_11)),  # All states for sswg_manager from 1-9
-            "sswg_secretary": (BasicForm.STATE_1,BasicForm.STATE_11),
-            "sswg_economic_security": (BasicForm.STATE_2,),
-            "sswg_ssmo": (BasicForm.STATE_3,),
-            "sswg_smrc": (BasicForm.STATE_4,),
-            "sswg_mm": (BasicForm.STATE_5,),
-            "sswg_military_intelligence": (BasicForm.STATE_6,),
-            "sswg_moc": (BasicForm.STATE_7,),
-            "sswg_cbs": (BasicForm.STATE_8,),
-            "sswg_coc": (BasicForm.STATE_9,),
-            "sswg_custom_force": (BasicForm.STATE_10,),
+            "sswg_manager": (range(BasicFormExport.STATE_1, BasicFormExport.STATE_11)),  # All states for sswg_manager from 1-9
+            "sswg_secretary": (BasicFormExport.STATE_1,BasicFormExport.STATE_11),
+            "sswg_economic_security": (BasicFormExport.STATE_2,),
+            "sswg_ssmo": (BasicFormExport.STATE_3,),
+            "sswg_smrc": (BasicFormExport.STATE_4,),
+            "sswg_mm": (BasicFormExport.STATE_5,),
+            "sswg_military_intelligence": (BasicFormExport.STATE_6,),
+            "sswg_moc": (BasicFormExport.STATE_7,),
+            "sswg_cbs": (BasicFormExport.STATE_8,),
+            "sswg_coc": (BasicFormExport.STATE_9,),
+            "sswg_custom_force": (BasicFormExport.STATE_10,),
         }
 
         for group, state_lst in group_state_mapping.items():
@@ -197,12 +197,12 @@ class BasicFormAdmin(LogMixin,admin.ModelAdmin):
 
     def get_readonly_fields(self, request, obj=None):
         """Make sn_no and date readonly when state progresses beyond initial state"""
-        if obj and obj.state > BasicForm.STATE_1:
+        if obj and obj.state > BasicFormExport.STATE_1:
             return ('sn_no', 'date')
         return super().get_readonly_fields(request, obj)
 
     def has_delete_permission(self, request, obj=None):
-        if obj and obj.state == BasicForm.STATE_1:
+        if obj and obj.state == BasicFormExport.STATE_1:
             return True
         
         return False
@@ -236,13 +236,13 @@ class BasicFormAdmin(LogMixin,admin.ModelAdmin):
     
     def _check_data_exist(self,object_id,state):
         state_inline_mapping = {
-            BasicForm.STATE_2: [TransferRelocationFormDataInline, ],
-            BasicForm.STATE_4: [SSMODataInline,],
-            BasicForm.STATE_5: [SmrcNoObjectionDataInline,],
-            BasicForm.STATE_6: [MmAceptanceDataInline,],
-            BasicForm.STATE_8: [MOCSDataInline,],
-            BasicForm.STATE_9: [CBSDataInline,],
-            BasicForm.STATE_10: [COCDataInline,],
+            BasicFormExport.STATE_2: [TransferRelocationFormDataInline, ],
+            BasicFormExport.STATE_4: [SSMODataInline,],
+            BasicFormExport.STATE_5: [SmrcNoObjectionDataInline,],
+            BasicFormExport.STATE_6: [MmAceptanceDataInline,],
+            BasicFormExport.STATE_8: [MOCSDataInline,],
+            BasicFormExport.STATE_9: [CBSDataInline,],
+            BasicFormExport.STATE_10: [COCDataInline,],
         }
 
         if state_inline_mapping.get(state,None):

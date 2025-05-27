@@ -4,20 +4,7 @@ from django.utils.translation import gettext_lazy as _
 from django.conf import settings
 
 from gold_travel.models import LkpOwner,AppMoveGold
-
-class LoggingModel(models.Model):
-    """
-    An abstract base class model that provides self-
-    updating ``created_at`` and ``updated_at`` fields for respons959034able user.
-    """
-    created_at = models.DateTimeField(_("created_at"),auto_now_add=True,editable=False,)
-    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT,related_name="+",editable=False,verbose_name=_("created_by")) 
-    
-    updated_at = models.DateTimeField(_("updated_at"),auto_now=True,editable=False)
-    updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT,related_name="+",editable=False,verbose_name=_("updated_by"))
-    
-    class Meta:
-        abstract = True
+from workflow.model_utils import WorkFlowModel,LoggingModel
 
 class CompanyDetails(LoggingModel):
     """Stores company and surrogate information"""
@@ -28,14 +15,34 @@ class CompanyDetails(LoggingModel):
     surrogate_id_phone = models.CharField(_("Contact Phone"), max_length=50)
     total_weight = models.FloatField(_("الوزن الكلي"),default=0)
     total_count = models.IntegerField(_("عدد السبائك"),default=0)
-    basic_form = models.OneToOneField(
-        'BasicForm',
+    basic_form_export = models.OneToOneField(
+        'BasicFormExport',
         on_delete=models.PROTECT,
-        related_name='company_details',
+        related_name='company_details_export',
         verbose_name=_("SSWG Basic Form"),
+        null=True,
+        blank=True,
     )
 
-    def __str__(self):
+    basic_form_reexport = models.OneToOneField(
+        'BasicFormReExport',
+        on_delete=models.PROTECT,
+        related_name='company_details_reexport',
+        verbose_name=_("SSWG Basic Form"),
+        null=True,
+        blank=True,
+    )
+
+    basic_form_silver = models.OneToOneField(
+        'BasicFormSilver',
+        on_delete=models.PROTECT,
+        related_name='company_details_silver',
+        verbose_name=_("SSWG Basic Form"),
+        null=True,
+        blank=True,
+    )
+
+    def __str__(self): #
         return f"{self.name} - {self.surrogate_name}"
 
     class Meta:
@@ -46,22 +53,37 @@ class CompanyDetails(LoggingModel):
 class TransferRelocationFormData(LoggingModel):
     """Stores SMRC-related measurements"""
     def attachment_path(self, filename):
-        company = self.basic_form.id
         date = self.created_at.date()
-        return "company_{0}/sswg/{1}/{2}".format(company,date, filename)    
+        return "sswg/{0}/{1}".format(date, filename)    
 
     # form_type = models.IntegerField(_("form_type"), choices=AppMoveGold.FORM_TYPE_CHOICES, default=AppMoveGold.FORM_TYPE_GOLD_EXPORT)
     form = models.ForeignKey(AppMoveGold, on_delete=models.PROTECT,verbose_name=_("Move Gold"))
 
     raw_weight = models.FloatField(_("Raw Weight"), validators=[MinValueValidator(0.0)])
     allow_count = models.PositiveIntegerField(_("Allow Count"))
-    basic_form = models.ForeignKey(
-        'BasicForm',
+    basic_form_export = models.ForeignKey(
+        'BasicFormExport',
         on_delete=models.PROTECT,
-        related_name='smrc_data',
+        related_name='smrc_data_export',
+        verbose_name=_("SSWG Basic Form"),
         null=True,
         blank=True,
+    )
+    basic_form_reexport = models.ForeignKey(
+        'BasicFormReExport',
+        on_delete=models.PROTECT,
+        related_name='smrc_data_reexport',
         verbose_name=_("SSWG Basic Form"),
+        null=True,
+        blank=True,
+    )
+    basic_form_silver = models.ForeignKey(
+        'BasicFormSilver',
+        on_delete=models.PROTECT,
+        related_name='smrc_data_silver',
+        verbose_name=_("SSWG Basic Form"),
+        null=True,
+        blank=True,
     )
 
     smrc_file = models.FileField(_("smrc_file"), upload_to=attachment_path)  #,null=True,blank=True
@@ -76,9 +98,8 @@ class TransferRelocationFormData(LoggingModel):
 class SSMOData(LoggingModel):
     """Stores SSMO-related measurements and certificate"""
     def attachment_path(self, filename):
-        company = self.basic_form.id
         date = self.created_at.date()
-        return "company_{0}/sswg/{1}/{2}".format(company,date, filename)    
+        return "sswg/{0}/{1}".format(date, filename)    
 
     raw_weight = models.FloatField(_("Raw Weight"), validators=[MinValueValidator(0.0)])
     net_weight = models.FloatField(_("Net Weight"), validators=[MinValueValidator(0.0)])
@@ -86,11 +107,29 @@ class SSMOData(LoggingModel):
     certificate_id = models.CharField(_("Certificate ID"), max_length=20) 
     return_weight = models.FloatField(_("الذهب الراجع"),help_text=_("في حال التصنيع والإعادة"),default=0, validators=[MinValueValidator(0.0)])
 
-    basic_form = models.OneToOneField(
-        'BasicForm',
+    basic_form_export = models.OneToOneField(
+        'BasicFormExport',
         on_delete=models.PROTECT,
-        related_name='ssmo_data',
+        related_name='ssmo_data_export',
         verbose_name=_("SSWG Basic Form"),
+        null=True,
+        blank=True,
+    )
+    basic_form_reexport = models.OneToOneField(
+        'BasicFormReExport',
+        on_delete=models.PROTECT,
+        related_name='ssmo_data_reexport',
+        verbose_name=_("SSWG Basic Form"),
+        null=True,
+        blank=True,
+    )
+    basic_form_silver = models.OneToOneField(
+        'BasicFormSilver',
+        on_delete=models.PROTECT,
+        related_name='ssmo_data_silver',
+        verbose_name=_("SSWG Basic Form"),
+        null=True,
+        blank=True,
     )
     ssmo_file = models.FileField(_("ssmo_file"), upload_to=attachment_path)  #,null=True,blank=True
 
@@ -104,15 +143,32 @@ class SSMOData(LoggingModel):
 class SmrcNoObjectionData(LoggingModel):
     """Stores SSMO-related measurements and certificate"""
     def attachment_path(self, filename):
-        company = self.basic_form.id
         date = self.created_at.date()
-        return "company_{0}/sswg/{1}/{2}".format(company,date, filename)    
+        return "sswg/{0}/{1}".format(date, filename)    
 
-    basic_form = models.OneToOneField(
-        'BasicForm',
+    basic_form_export = models.OneToOneField(
+        'BasicFormExport',
         on_delete=models.PROTECT,
-        related_name='smrc_no_objection_data',
+        related_name='smrc_no_objection_data_export',
         verbose_name=_("SSWG Basic Form"),
+        null=True,
+        blank=True,
+    )
+    basic_form_reexport = models.OneToOneField(
+        'BasicFormReExport',
+        on_delete=models.PROTECT,
+        related_name='smrc_no_objection_data_reexport',
+        verbose_name=_("SSWG Basic Form"),
+        null=True,
+        blank=True,
+    )
+    basic_form_silver = models.OneToOneField(
+        'BasicFormSilver',
+        on_delete=models.PROTECT,
+        related_name='smrc_no_objection_data_silver',
+        verbose_name=_("SSWG Basic Form"),
+        null=True,
+        blank=True,
     )
 
     smrc_no_objection_file = models.FileField(
@@ -130,15 +186,32 @@ class SmrcNoObjectionData(LoggingModel):
 class MmAceptanceData(LoggingModel):
     """Stores SSMO-related measurements and certificate"""
     def attachment_path(self, filename):
-        company = self.basic_form.id
         date = self.created_at.date()
-        return "company_{0}/sswg/{1}/{2}".format(company,date, filename)    
+        return "sswg/{0}/{1}".format(date, filename)    
 
-    basic_form = models.OneToOneField(
-        'BasicForm',
+    basic_form_export = models.OneToOneField(
+        'BasicFormExport',
         on_delete=models.PROTECT,
-        related_name='mm_aceptance_data',
+        related_name='mm_aceptance_data_export',
         verbose_name=_("SSWG Basic Form"),
+        null=True,
+        blank=True,
+    )
+    basic_form_reexport = models.OneToOneField(
+        'BasicFormReExport',
+        on_delete=models.PROTECT,
+        related_name='mm_aceptance_data_reexport',
+        verbose_name=_("SSWG Basic Form"),
+        null=True,
+        blank=True,
+    )
+    basic_form_silver = models.OneToOneField(
+        'BasicFormSilver',
+        on_delete=models.PROTECT,
+        related_name='mm_aceptance_data_silver',
+        verbose_name=_("SSWG Basic Form"),
+        null=True,
+        blank=True,
     )
 
     mm_aceptance_file = models.FileField(
@@ -156,9 +229,8 @@ class MmAceptanceData(LoggingModel):
 class MOCSData(LoggingModel):
     """Stores Ministry of Commerce and Supply related data"""
     def attachment_path(self, filename):
-        company = self.basic_form.id
         date = self.created_at.date()
-        return "company_{0}/sswg/{1}/{2}".format(company,date, filename)    
+        return "sswg/{0}/{1}".format(date, filename)    
 
     contract_number = models.CharField(_("Contract Number"), max_length=20)
     exporters_importers_registry_number = models.CharField(_("Exporters/Importers Registry Number"), max_length=20)
@@ -169,11 +241,29 @@ class MOCSData(LoggingModel):
     main_bank_name = models.CharField(_("Main Bank Name"), max_length=150)
     subsidiary_bank_name = models.CharField(_("Subsidiary Bank Name"), max_length=150)
     contract_expiration_date = models.DateField(_("Contract Expiration Date"))
-    basic_form = models.OneToOneField(
-        'BasicForm',
+    basic_form_export = models.OneToOneField(
+        'BasicFormExport',
         on_delete=models.PROTECT,
-        related_name='mocs_data',
+        related_name='mocs_data_export',
         verbose_name=_("SSWG Basic Form"),
+        null=True,
+        blank=True,
+    )
+    basic_form_reexport = models.OneToOneField(
+        'BasicFormReExport',
+        on_delete=models.PROTECT,
+        related_name='mocs_data_reexport',
+        verbose_name=_("SSWG Basic Form"),
+        null=True,
+        blank=True,
+    )
+    basic_form_silver = models.OneToOneField(
+        'BasicFormSilver',
+        on_delete=models.PROTECT,
+        related_name='mocs_data_silver',
+        verbose_name=_("SSWG Basic Form"),
+        null=True,
+        blank=True,
     )
     mocs1_file = models.FileField(_("mocs1_file"), upload_to=attachment_path)  #,null=True,blank=True
     # mocs2_file = models.FileField(_("mocs2_file"), upload_to=attachment_path)  #,null=True,blank=True
@@ -188,15 +278,32 @@ class MOCSData(LoggingModel):
 class COCSData(LoggingModel):
     """Stores Chamber of Commerce related data"""
     def attachment_path(self, filename):
-        company = self.basic_form.id
         date = self.created_at.date()
-        return "company_{0}/sswg/{1}/{2}".format(company,date, filename)    
+        return "sswg/{0}/{1}".format(date, filename)    
 
-    basic_form = models.OneToOneField(
-        'BasicForm',
+    basic_form_export = models.OneToOneField(
+        'BasicFormExport',
         on_delete=models.PROTECT,
-        related_name='coc_data',
+        related_name='coc_data_export',
         verbose_name=_("SSWG Basic Form"),
+        null=True,
+        blank=True,
+    )
+    basic_form_reexport = models.OneToOneField(
+        'BasicFormReExport',
+        on_delete=models.PROTECT,
+        related_name='coc_data_reexport',
+        verbose_name=_("SSWG Basic Form"),
+        null=True,
+        blank=True,
+    )
+    basic_form_silver = models.OneToOneField(
+        'BasicFormSilver',
+        on_delete=models.PROTECT,
+        related_name='coc_data_silver',
+        verbose_name=_("SSWG Basic Form"),
+        null=True,
+        blank=True,
     )
     cocs_file = models.FileField(_("mocs2_file"), upload_to=attachment_path)
 
@@ -210,9 +317,8 @@ class COCSData(LoggingModel):
 class CBSData(LoggingModel):
     """Stores Central Bank of Sudan related data"""
     def attachment_path(self, filename):
-        company = self.basic_form.id
         date = self.created_at.date()
-        return "company_{0}/sswg/{1}/{2}".format(company,date, filename)    
+        return "sswg/{0}/{1}".format(date, filename)    
 
     PAYMENT_METHOD_CHOICES = (
         ('cash', _('دفع مقدم')),
@@ -225,11 +331,29 @@ class CBSData(LoggingModel):
     commercial_bank_name = models.CharField(_("Commercial Bank Name"), max_length=150)
     issued_amount = models.FloatField(_("Issued Amount"))
     payment_method = models.CharField(_("Payment Method"), max_length=20, choices=PAYMENT_METHOD_CHOICES)
-    basic_form = models.OneToOneField(
-        'BasicForm',
+    basic_form_export = models.OneToOneField(
+        'BasicFormExport',
         on_delete=models.PROTECT,
-        related_name='cbs_data',
+        related_name='cbs_data_export',
         verbose_name=_("SSWG Basic Form"),
+        null=True,
+        blank=True,
+    )
+    basic_form_reexport = models.OneToOneField(
+        'BasicFormReExport',
+        on_delete=models.PROTECT,
+        related_name='cbs_data_reexport',
+        verbose_name=_("SSWG Basic Form"),
+        null=True,
+        blank=True,
+    )
+    basic_form_silver = models.OneToOneField(
+        'BasicFormSilver',
+        on_delete=models.PROTECT,
+        related_name='cbs_data_silver',
+        verbose_name=_("SSWG Basic Form"),
+        null=True,
+        blank=True,
     )
 
     cbs_file = models.FileField(_("cbs_file"), upload_to=attachment_path)  #,null=True,blank=True
@@ -241,7 +365,7 @@ class CBSData(LoggingModel):
         verbose_name = _("SSWG CBS")
         verbose_name_plural = _("SSWG CBS")
 
-class BasicForm(LoggingModel):
+class BasicFormExport(WorkFlowModel):
     """Main form storing all related data"""
 
     STATE_1 = 1 
@@ -278,8 +402,8 @@ class BasicForm(LoggingModel):
         return f"{self.sn_no} - {self.date}"
 
     class Meta:
-        verbose_name = _("SSWG Basic Form")
-        verbose_name_plural = _("SSWG Basic Forms")
+        verbose_name = _("ترحيل ذهب صادر")
+        verbose_name_plural = _("ترحيل ذهب صادر")
         ordering = ['-date']
 
     def get_next_states(self, user):
@@ -355,30 +479,267 @@ class BasicForm(LoggingModel):
 
         return self
 
+class BasicFormReExport(WorkFlowModel):
+    """Main form storing all related data"""
 
-    # def get_next_state(self):
-    #     if self.state < len(self.STATE_CHOICES):
-    #         return self.state + 1
-        
-    #     # return self.state
+    STATE_1 = 1 
+    STATE_2 = 2
+    STATE_3 = 3
+    STATE_4 = 4
+    STATE_5 = 5
+    STATE_6 = 6
+    STATE_7 = 7
+    STATE_8 = 8
+    STATE_9 = 9
+    STATE_10 = 10
+    STATE_11 = 11
+
+    STATE_CHOICES = {
+        STATE_1:_("SSWG State 1"), 
+        STATE_2:_("SSWG State 2"), 
+        STATE_3:_("SSWG State 3"),
+        STATE_4:_("SSWG State 4"),
+        STATE_5:_("SSWG State 5"),
+        STATE_6:_("SSWG State 6"),
+        STATE_7:_("SSWG State 7"),
+        STATE_8:_("SSWG State 8"),
+        STATE_9:_("SSWG State 9"),
+        STATE_10:_("SSWG State 10"),
+        STATE_11:_("SSWG State 11"),
+    }
+
+    date = models.DateField(_("Form Date"))
+    sn_no = models.CharField(_("Serial Number"), max_length=15, unique=True)
+    state = models.IntegerField(_("record_state"), choices=STATE_CHOICES, default=STATE_1)
     
-    # def get_next_state_display(self):
-    #     curr_index = self.get_next_state()
+    def __str__(self):
+        return f"{self.sn_no} - {self.date}"
 
-    #     if curr_index:
-    #         return self.STATE_CHOICES[curr_index]
+    class Meta:
+        verbose_name = _("ترحيل ذهب صادر بغرض التصنيع وإعادة التصنيع")
+        verbose_name_plural = _("ترحيل ذهب صادر بغرض التصنيع وإعادة التصنيع")
+        ordering = ['-date']
+
+    def get_next_states(self, user):
+        """
+        Determine the next possible states based on the current state and user's role.
+        """
+        # user = self.updated_by
+        user_groups = list(user.groups.values_list('name', flat=True))
+
+        states = []
+
+        if 'sswg_secretary' in user_groups:
+            if self.state == self.STATE_1:
+                states.append((self.STATE_2, self.STATE_CHOICES[self.STATE_2]))
+
+        if 'sswg_economic_security' in user_groups:
+            if self.state == self.STATE_2:
+                states.append((self.STATE_3, self.STATE_CHOICES[self.STATE_3]))
+
+        if 'sswg_ssmo' in user_groups:
+            if self.state == self.STATE_3:
+                states.append((self.STATE_4, self.STATE_CHOICES[self.STATE_4]))
+
+        if 'sswg_smrc' in user_groups:
+            if self.state == self.STATE_4:
+                states.append((self.STATE_5, self.STATE_CHOICES[self.STATE_5]))
+
+        if 'sswg_mm' in user_groups:
+            if self.state == self.STATE_5:
+                states.append((self.STATE_6, self.STATE_CHOICES[self.STATE_6]))
+
+        if 'sswg_military_intelligence' in user_groups:
+            if self.state == self.STATE_6:
+                states.append((self.STATE_7, self.STATE_CHOICES[self.STATE_7]))
+
+        if 'sswg_moc' in user_groups:
+            if self.state == self.STATE_7:
+                states.append((self.STATE_8, self.STATE_CHOICES[self.STATE_8]))
+
+        if 'sswg_cbs' in user_groups:
+            if self.state == self.STATE_8:
+                states.append((self.STATE_9, self.STATE_CHOICES[self.STATE_9]))
+
+        if 'sswg_coc' in user_groups:
+            if self.state == self.STATE_9:
+                states.append((self.STATE_10, self.STATE_CHOICES[self.STATE_10]))
+
+        if 'sswg_custom_force' in user_groups:
+            if self.state == self.STATE_10:
+                states.append((self.STATE_11, self.STATE_CHOICES[self.STATE_11]))
+
+        return states
+
+    def can_transition_to_next_state(self, user, state):
+        """
+        Check if the given user can transition to the specified state.
+        """
+        if state[0] in map(lambda x: x[0], self.get_next_states(user)):
+            return True
+
+        return False
+
+    def transition_to_next_state(self, user, state):
+        """
+        Transitions the workflow to the given state, after checking user permissions.
+        """
+        if self.can_transition_to_next_state(user, state):
+            self.state = state[0]
+            self.updated_by = user
+            self.save()
+        else:
+            raise Exception(f"User {user.username} cannot transition to state {state} from state {self.state}")
+
+        return self
+
+class BasicFormSilver(WorkFlowModel):
+    """Main form storing all related data"""
+
+    STATE_1 = 1 
+    STATE_2 = 2
+    STATE_3 = 3
+    STATE_4 = 4
+    STATE_5 = 5
+    STATE_6 = 6
+    STATE_7 = 7
+    STATE_8 = 8
+    STATE_9 = 9
+    STATE_10 = 10
+    STATE_11 = 11
+
+    STATE_CHOICES = {
+        STATE_1:_("SSWG State 1"), 
+        STATE_2:_("SSWG State 2"), 
+        STATE_3:_("SSWG State 3"),
+        STATE_4:_("SSWG State 4"),
+        STATE_5:_("SSWG State 5"),
+        STATE_6:_("SSWG State 6"),
+        STATE_7:_("SSWG State 7"),
+        STATE_8:_("SSWG State 8"),
+        STATE_9:_("SSWG State 9"),
+        STATE_10:_("SSWG State 10"),
+        STATE_11:_("SSWG State 11"),
+    }
+
+    date = models.DateField(_("Form Date"))
+    sn_no = models.CharField(_("Serial Number"), max_length=15, unique=True)
+    state = models.IntegerField(_("record_state"), choices=STATE_CHOICES, default=STATE_1)
+    
+    def __str__(self):
+        return f"{self.sn_no} - {self.date}"
+
+    class Meta:
+        verbose_name = _("ترحيل فضة صادر")
+        verbose_name_plural = _("ترحيل فضة صادر")
+        ordering = ['-date']
+
+    def get_next_states(self, user):
+        """
+        Determine the next possible states based on the current state and user's role.
+        """
+        # user = self.updated_by
+        user_groups = list(user.groups.values_list('name', flat=True))
+
+        states = []
+
+        if 'sswg_secretary' in user_groups:
+            if self.state == self.STATE_1:
+                states.append((self.STATE_2, self.STATE_CHOICES[self.STATE_2]))
+
+        if 'sswg_economic_security' in user_groups:
+            if self.state == self.STATE_2:
+                states.append((self.STATE_3, self.STATE_CHOICES[self.STATE_3]))
+
+        if 'sswg_ssmo' in user_groups:
+            if self.state == self.STATE_3:
+                states.append((self.STATE_4, self.STATE_CHOICES[self.STATE_4]))
+
+        if 'sswg_smrc' in user_groups:
+            if self.state == self.STATE_4:
+                states.append((self.STATE_5, self.STATE_CHOICES[self.STATE_5]))
+
+        if 'sswg_mm' in user_groups:
+            if self.state == self.STATE_5:
+                states.append((self.STATE_6, self.STATE_CHOICES[self.STATE_6]))
+
+        if 'sswg_military_intelligence' in user_groups:
+            if self.state == self.STATE_6:
+                states.append((self.STATE_7, self.STATE_CHOICES[self.STATE_7]))
+
+        if 'sswg_moc' in user_groups:
+            if self.state == self.STATE_7:
+                states.append((self.STATE_8, self.STATE_CHOICES[self.STATE_8]))
+
+        if 'sswg_cbs' in user_groups:
+            if self.state == self.STATE_8:
+                states.append((self.STATE_9, self.STATE_CHOICES[self.STATE_9]))
+
+        if 'sswg_coc' in user_groups:
+            if self.state == self.STATE_9:
+                states.append((self.STATE_10, self.STATE_CHOICES[self.STATE_10]))
+
+        if 'sswg_custom_force' in user_groups:
+            if self.state == self.STATE_10:
+                states.append((self.STATE_11, self.STATE_CHOICES[self.STATE_11]))
+
+        return states
+
+    def can_transition_to_next_state(self, user, state):
+        """
+        Check if the given user can transition to the specified state.
+        """
+        if state[0] in map(lambda x: x[0], self.get_next_states(user)):
+            return True
+
+        return False
+
+    def transition_to_next_state(self, user, state):
+        """
+        Transitions the workflow to the given state, after checking user permissions.
+        """
+        if self.can_transition_to_next_state(user, state):
+            self.state = state[0]
+            self.updated_by = user
+            self.save()
+        else:
+            raise Exception(f"User {user.username} cannot transition to state {state} from state {self.state}")
+
+        return self
 
 from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 
-@receiver(pre_save, sender=BasicForm)
-def update_basic_form_state(sender, instance, **kwargs):
+@receiver(pre_save, sender=BasicFormExport)
+def update_basic_form_export_state(sender, instance, **kwargs):
     if instance.pk:
-        obj = BasicForm.objects.get(pk=instance.pk)
+        obj = BasicFormExport.objects.get(pk=instance.pk)
 
-        if obj.state != instance.state and instance.state == BasicForm.STATE_2:
+        if obj.state != instance.state and instance.state == BasicFormExport.STATE_2:
             # update state
-            for t in obj.smrc_data.all():
+            for t in obj.smrc_data_export.all():
+                t.form.state = AppMoveGold.STATE_SSMO
+                t.form.save()
+
+@receiver(pre_save, sender=BasicFormReExport)
+def update_basic_form_export_state(sender, instance, **kwargs):
+    if instance.pk:
+        obj = BasicFormReExport.objects.get(pk=instance.pk)
+
+        if obj.state != instance.state and instance.state == BasicFormReExport.STATE_2:
+            # update state
+            for t in obj.smrc_data_reexport.all():
+                t.form.state = AppMoveGold.STATE_SSMO
+                t.form.save()
+
+@receiver(pre_save, sender=BasicFormSilver)
+def update_basic_form_export_state(sender, instance, **kwargs):
+    if instance.pk:
+        obj = BasicFormSilver.objects.get(pk=instance.pk)
+
+        if obj.state != instance.state and instance.state == BasicFormSilver.STATE_2:
+            # update state
+            for t in obj.smrc_data_silver.all():
                 t.form.state = AppMoveGold.STATE_SSMO
                 t.form.save()
 
@@ -398,30 +759,76 @@ def update_smrc_data(sender, instance, **kwargs):
 @receiver(post_save, sender=TransferRelocationFormData)
 def create_company_details(sender, instance, **kwargs):
     """Automatically create CompanyDetails when SMRCData is created"""
+    obj = None
+
     if instance.form:
         # Get the owner name from the related AppMoveGold instance
         owner_name = instance.form.owner_name_lst
 
-        qs = CompanyDetails.objects.filter(basic_form=instance.basic_form)
-        if qs.exists():
+        if instance.basic_form_export:
+            qs = CompanyDetails.objects.filter(basic_form_export=instance.basic_form_export)
+            print('qs1',qs,instance,instance.basic_form_export)
+
+        if instance.basic_form_reexport:
+            qs = CompanyDetails.objects.filter(basic_form_reexport=instance.basic_form_reexport)
+            print('qs2',qs)
+
+        if instance.basic_form_silver:
+            qs = CompanyDetails.objects.filter(basic_form_silver=instance.basic_form_silver)
+            print('qs3',qs)
+        
+        if qs and qs.exists():
             obj = qs.first()
-        else:
-            obj = CompanyDetails.objects.create(
-                name=owner_name,
-                basic_form=instance.basic_form,
-                surrogate_name=instance.form.repr_name,
-                surrogate_id_type=instance.form.repr_identity_type,
-                surrogate_id_val=instance.form.repr_identity,
-                surrogate_id_phone=instance.form.repr_phone,
-                created_by=instance.created_by,
-                updated_by=instance.updated_by,
-            )
-
+            
         ##### update totals
-        all_forms = obj.basic_form.smrc_data.all()
-        total_weight = all_forms.aggregate(sum=models.Sum('raw_weight'))['sum']
-        total_count = all_forms.aggregate(sum=models.Sum('allow_count'))['sum']
+        if instance.basic_form_export:
+            if not obj:
+                obj = CompanyDetails.objects.create(
+                    name=owner_name,
+                    basic_form_export=instance.basic_form_export,
+                    surrogate_name=instance.form.repr_name,
+                    surrogate_id_type=instance.form.repr_identity_type,
+                    surrogate_id_val=instance.form.repr_identity,
+                    surrogate_id_phone=instance.form.repr_phone,
+                    created_by=instance.created_by,
+                    updated_by=instance.updated_by,
+                )
 
-        obj.total_weight=total_weight
-        obj.total_count=total_count
-        obj.save()
+            all_forms = obj.basic_form_export.smrc_data_export.all()
+
+        if instance.basic_form_reexport:
+            if not obj:
+                obj = CompanyDetails.objects.create(
+                    name=owner_name,
+                    basic_form_reexport=instance.basic_form_reexport,
+                    surrogate_name=instance.form.repr_name,
+                    surrogate_id_type=instance.form.repr_identity_type,
+                    surrogate_id_val=instance.form.repr_identity,
+                    surrogate_id_phone=instance.form.repr_phone,
+                    created_by=instance.created_by,
+                    updated_by=instance.updated_by,
+                )
+
+            all_forms = obj.basic_form_reexport.smrc_data_reexport.all()
+
+        if instance.basic_form_silver:
+            if not obj:
+                obj = CompanyDetails.objects.create(
+                    name=owner_name,
+                    basic_form_silver=instance.basic_form_silver,
+                    surrogate_name=instance.form.repr_name,
+                    surrogate_id_type=instance.form.repr_identity_type,
+                    surrogate_id_val=instance.form.repr_identity,
+                    surrogate_id_phone=instance.form.repr_phone,
+                    created_by=instance.created_by,
+                    updated_by=instance.updated_by,
+                )
+            all_forms = obj.basic_form_silver.smrc_data_silver.all()
+
+        if all_forms:
+            total_weight = all_forms.aggregate(sum=models.Sum('raw_weight'))['sum']
+            total_count = all_forms.aggregate(sum=models.Sum('allow_count'))['sum']
+
+            obj.total_weight=total_weight
+            obj.total_count=total_count
+            obj.save()
