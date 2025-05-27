@@ -447,7 +447,7 @@ class DailyWardHajr(LoggingModel):
     daily_report = models.ForeignKey(DailyReport, on_delete=models.PROTECT, verbose_name=_("daily_report"))
     soag = models.ForeignKey(LkpSoag, on_delete=models.PROTECT, verbose_name=_("السوق"))
     hajr_type = models.IntegerField(_("نوع الحجر"), choices=HAJR_TYPE_CHOICES,default=HAJR_TYPE_TOAHIN)
-    hajr_count = models.IntegerField(_("عدد الجوالات"))
+    hajr_count = models.FloatField(_("عدد الجوالات"))
 
     def __str__(self):
         return f"{self.soag.name} ({self.get_hajr_type_display()})"
