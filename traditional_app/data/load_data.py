@@ -46,6 +46,8 @@ def import_daily_report(state_id=1,file_name='daily_rn.csv'):
                         soag=soug,
                         hajr_type=models.HAJR_TYPE_TOAHIN,
                         hajr_count=haj_toahin,
+                        created_by=admin_user,
+                        updated_by=admin_user,
                     )
 
                     models.DailyWardHajr.objects.create(
@@ -53,6 +55,8 @@ def import_daily_report(state_id=1,file_name='daily_rn.csv'):
                         soag=soug,
                         hajr_type=models.HAJR_TYPE_BOLIMAL,
                         hajr_count=haj_bolimal,
+                        created_by=admin_user,
+                        updated_by=admin_user,
                     )
 
                     models.DailyIncome.objects.create(
@@ -60,6 +64,8 @@ def import_daily_report(state_id=1,file_name='daily_rn.csv'):
                         soag=soug,
                         hajr_type=models.HAJR_TYPE_TOAHIN,
                         amount=income_toahin_amount,
+                        created_by=admin_user,
+                        updated_by=admin_user,
                     )
 
                     models.DailyIncome.objects.create(
@@ -67,6 +73,8 @@ def import_daily_report(state_id=1,file_name='daily_rn.csv'):
                         soag=soug,
                         hajr_type=models.HAJR_TYPE_BOLIMAL,
                         amount=income_bolimal_amount,
+                        created_by=admin_user,
+                        updated_by=admin_user,
                     )
 
                     models.DailyTahsilForm.objects.create(
@@ -74,13 +82,17 @@ def import_daily_report(state_id=1,file_name='daily_rn.csv'):
                         soag=soug,
                         form_count=form_count,
                         gold_in_gram=form_amount_gram,
+                        created_by=admin_user,
+                        updated_by=admin_user,
                     )
 
                     models.DailyKartaMor7alaf.objects.create(
                         daily_report=daily_report,
                         soag=soug,
                         galabat_count=galabat_count,
-                        destination='غير معروف'
+                        destination='غير معروف',
+                        created_by=admin_user,
+                        updated_by=admin_user,
                     )
  
             except Exception as e:
