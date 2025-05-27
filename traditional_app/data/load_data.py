@@ -1,5 +1,6 @@
 import csv
 
+from datetime import datetime
 from pathlib import Path
 from django.contrib.gis.geos import Point
 from django.contrib.gis.db.models.functions import Transform
@@ -11,6 +12,79 @@ from company_profile.models import LkpLocality, LkpState
 from django.contrib.auth import get_user_model
 
 admin_user = get_user_model().objects.get(id=1)
+
+def import_daily_report(state_id=1,file_name='daily_rn.csv'):
+    with open('./traditional_app/data/'+file_name, newline='') as csvfile:
+        reader = csv.reader(csvfile, delimiter=',')
+        next(reader, None)  # skip the headers
+        for row in reader:
+            try:
+                date = datetime.strptime(row[9].strip(), "%d/%m/%Y").date()
+                soug=int(row[10].strip())
+                haj_toahin=int(row[7].strip())
+                haj_bolimal=int(row[6].strip())
+                income_toahin_amount=float(row[5].strip())
+                income_bolimal_amount=float(row[4].strip())
+                form_count=int(row[1].strip())
+                form_amount_gram=float(row[2].strip())
+                galabat_count=int(row[0].strip())
+
+
+                daily_report = models.DailyReport.objects.create(
+                    date=date,
+                    source_state=LkpState.objects.get(id=state_id),
+                    state=models.DailyReport.STATE_APPROVED,
+                    created_by=admin_user,
+                    updated_by=admin_user,
+                )
+
+                if soug > 0:
+                    models.DailyWardHajr.objects.create(
+                        daily_report=daily_report,
+                        soag=soug,
+                        hajr_type=models.HAJR_TYPE_TOAHIN,
+                        hajr_count=haj_toahin,
+                    )
+
+                    models.DailyWardHajr.objects.create(
+                        daily_report=daily_report,
+                        soag=soug,
+                        hajr_type=models.HAJR_TYPE_BOLIMAL,
+                        hajr_count=haj_bolimal,
+                    )
+
+                    models.DailyIncome.objects.create(
+                        daily_report=daily_report,
+                        soag=soug,
+                        hajr_type=models.HAJR_TYPE_TOAHIN,
+                        amount=income_toahin_amount,
+                    )
+
+                    models.DailyIncome.objects.create(
+                        daily_report=daily_report,
+                        soag=soug,
+                        hajr_type=models.HAJR_TYPE_BOLIMAL,
+                        amount=income_bolimal_amount,
+                    )
+
+                    models.DailyTahsilForm.objects.create(
+                        daily_report=daily_report,
+                        soag=soug,
+                        form_count=form_count,
+                        gold_in_gram=form_amount_gram,
+                    )
+
+                    models.DailyKartaMor7alaf.objects.create(
+                        daily_report=daily_report,
+                        soag=soug,
+                        galabat_count=galabat_count,
+                        destination='غير معروف'
+                    )
+ 
+            except Exception as e:
+                print(f'Exception: {e}')
+
+
 
 def import_employees(file_name='employee_list.csv'):
     state_code = {
