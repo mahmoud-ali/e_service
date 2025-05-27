@@ -31,6 +31,8 @@ def delete_daily_report(state_id=1):
         d.delete()
 
 def import_daily_report(state_id=1,file_name='daily_rn.csv'):
+    old_date = None
+    old_daily_report = None
     with open('./traditional_app/data/'+file_name, newline='') as csvfile:
         reader = csv.reader(csvfile, delimiter=',')
         next(reader, None)  # skip the headers
@@ -46,14 +48,20 @@ def import_daily_report(state_id=1,file_name='daily_rn.csv'):
                 form_amount_gram=float(row[2].strip())
                 galabat_count=int(row[0].strip())
 
+                if old_date != date:
+                    old_date = date
 
-                daily_report = models.DailyReport.objects.create(
-                    date=date,
-                    source_state=LkpState.objects.get(id=state_id),
-                    state=models.DailyReport.STATE_APPROVED,
-                    created_by=admin_user,
-                    updated_by=admin_user,
-                )
+                    daily_report = models.DailyReport.objects.create(
+                        date=date,
+                        source_state=LkpState.objects.get(id=state_id),
+                        state=models.DailyReport.STATE_APPROVED,
+                        created_by=admin_user,
+                        updated_by=admin_user,
+                    )
+
+                    old_daily_report = daily_report
+                else:
+                    daily_report = old_daily_report
 
                 if soug_id > 0:
                     soug = models.LkpSoag.objects.get(id=soug_id)
