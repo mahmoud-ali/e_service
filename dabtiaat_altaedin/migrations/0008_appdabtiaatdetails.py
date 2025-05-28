@@ -3,10 +3,10 @@
 import django.db.models.deletion
 from django.db import migrations, models
 
-from ..data import load_data
+# from ..data import load_data
 
-def migrate_data(apps, schema_editor):
-    load_data.migrate_master_to_details()
+# def migrate_data(apps, schema_editor):
+#     load_data.migrate_master_to_details()
 
 class Migration(migrations.Migration):
 
@@ -25,5 +25,5 @@ class Migration(migrations.Migration):
                 ('app_dabtiaat', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='dabtiaat_altaedin.appdabtiaat', verbose_name='app_dabtiaat')),
             ],
         ),
-        migrations.RunPython(migrate_data),
+        # migrations.RunPython(migrate_data),
     ]

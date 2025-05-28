@@ -713,13 +713,16 @@ from django.dispatch import receiver
 @receiver(pre_save, sender=BasicFormExport)
 def update_basic_form_export_state(sender, instance, **kwargs):
     if instance.pk:
-        obj = BasicFormExport.objects.get(pk=instance.pk)
+        try:
+            obj = BasicFormExport.objects.get(pk=instance.pk)
 
-        if obj.state != instance.state and instance.state == BasicFormExport.STATE_2:
-            # update state
-            for t in obj.smrc_data_export.all():
-                t.form.state = AppMoveGold.STATE_SSMO
-                t.form.save()
+            if obj.state != instance.state and instance.state == BasicFormExport.STATE_2:
+                # update state
+                for t in obj.smrc_data_export.all():
+                    t.form.state = AppMoveGold.STATE_SSMO
+                    t.form.save()
+        except:
+            pass
 
 @receiver(pre_save, sender=BasicFormReExport)
 def update_basic_form_export_state(sender, instance, **kwargs):
@@ -760,70 +763,88 @@ def update_smrc_data(sender, instance, **kwargs):
 def create_company_details(sender, instance, **kwargs):
     """Automatically create CompanyDetails when SMRCData is created"""
     obj = None
+    qs = None
+    all_forms = None
 
     if instance.form:
         # Get the owner name from the related AppMoveGold instance
         owner_name = instance.form.owner_name_lst
 
-        if instance.basic_form_export:
-            qs = CompanyDetails.objects.filter(basic_form_export=instance.basic_form_export)
-            print('qs1',qs,instance,instance.basic_form_export)
+        try:
+            if instance.basic_form_export:
+                qs = CompanyDetails.objects.filter(basic_form_export=instance.basic_form_export)
+        except:
+            pass
 
-        if instance.basic_form_reexport:
-            qs = CompanyDetails.objects.filter(basic_form_reexport=instance.basic_form_reexport)
-            print('qs2',qs)
+        try:
+            if instance.basic_form_reexport:
+                qs = CompanyDetails.objects.filter(basic_form_reexport=instance.basic_form_reexport)
+        except:
+            pass
 
-        if instance.basic_form_silver:
-            qs = CompanyDetails.objects.filter(basic_form_silver=instance.basic_form_silver)
-            print('qs3',qs)
-        
+        try:
+            if instance.basic_form_silver:
+                qs = CompanyDetails.objects.filter(basic_form_silver=instance.basic_form_silver)
+        except:
+            pass
+
         if qs and qs.exists():
-            obj = qs.first()
-            
+            obj = qs.first()                
+
+
         ##### update totals
-        if instance.basic_form_export:
-            if not obj:
-                obj = CompanyDetails.objects.create(
-                    name=owner_name,
-                    basic_form_export=instance.basic_form_export,
-                    surrogate_name=instance.form.repr_name,
-                    surrogate_id_type=instance.form.repr_identity_type,
-                    surrogate_id_val=instance.form.repr_identity,
-                    surrogate_id_phone=instance.form.repr_phone,
-                    created_by=instance.created_by,
-                    updated_by=instance.updated_by,
-                )
+        try:
+            if instance.basic_form_export:
+                if not obj:
+                    obj = CompanyDetails.objects.create(
+                        name=owner_name,
+                        basic_form_export=instance.basic_form_export,
+                        surrogate_name=instance.form.repr_name,
+                        surrogate_id_type=instance.form.repr_identity_type,
+                        surrogate_id_val=instance.form.repr_identity,
+                        surrogate_id_phone=instance.form.repr_phone,
+                        created_by=instance.created_by,
+                        updated_by=instance.updated_by,
+                    )
 
-            all_forms = obj.basic_form_export.smrc_data_export.all()
+                all_forms = obj.basic_form_export.smrc_data_export.all()
+        except:
+            pass
+    
+        try:
+            if instance.basic_form_reexport:
+                if not obj:
+                    obj = CompanyDetails.objects.create(
+                        name=owner_name,
+                        basic_form_reexport=instance.basic_form_reexport,
+                        surrogate_name=instance.form.repr_name,
+                        surrogate_id_type=instance.form.repr_identity_type,
+                        surrogate_id_val=instance.form.repr_identity,
+                        surrogate_id_phone=instance.form.repr_phone,
+                        created_by=instance.created_by,
+                        updated_by=instance.updated_by,
+                    )
 
-        if instance.basic_form_reexport:
-            if not obj:
-                obj = CompanyDetails.objects.create(
-                    name=owner_name,
-                    basic_form_reexport=instance.basic_form_reexport,
-                    surrogate_name=instance.form.repr_name,
-                    surrogate_id_type=instance.form.repr_identity_type,
-                    surrogate_id_val=instance.form.repr_identity,
-                    surrogate_id_phone=instance.form.repr_phone,
-                    created_by=instance.created_by,
-                    updated_by=instance.updated_by,
-                )
-
-            all_forms = obj.basic_form_reexport.smrc_data_reexport.all()
-
-        if instance.basic_form_silver:
-            if not obj:
-                obj = CompanyDetails.objects.create(
-                    name=owner_name,
-                    basic_form_silver=instance.basic_form_silver,
-                    surrogate_name=instance.form.repr_name,
-                    surrogate_id_type=instance.form.repr_identity_type,
-                    surrogate_id_val=instance.form.repr_identity,
-                    surrogate_id_phone=instance.form.repr_phone,
-                    created_by=instance.created_by,
-                    updated_by=instance.updated_by,
-                )
-            all_forms = obj.basic_form_silver.smrc_data_silver.all()
+                all_forms = obj.basic_form_reexport.smrc_data_reexport.all()
+        except:
+            pass
+    
+        try:
+            if instance.basic_form_silver:
+                if not obj:
+                    obj = CompanyDetails.objects.create(
+                        name=owner_name,
+                        basic_form_silver=instance.basic_form_silver,
+                        surrogate_name=instance.form.repr_name,
+                        surrogate_id_type=instance.form.repr_identity_type,
+                        surrogate_id_val=instance.form.repr_identity,
+                        surrogate_id_phone=instance.form.repr_phone,
+                        created_by=instance.created_by,
+                        updated_by=instance.updated_by,
+                    )
+                all_forms = obj.basic_form_silver.smrc_data_silver.all()
+        except:
+            pass
 
         if all_forms:
             total_weight = all_forms.aggregate(sum=models.Sum('raw_weight'))['sum']
