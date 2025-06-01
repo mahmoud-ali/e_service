@@ -58,7 +58,7 @@ class LogMixin:
                 states = request.user.gold_production_state_user.state.values_list('id',flat=True)
 
                 return qs.filter(
-                    company__company_type__in= [company_type],
+                    license__company__company_type__in= [company_type],
                     license__state__in=states
                 )
             except Exception as e:
