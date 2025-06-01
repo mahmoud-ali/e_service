@@ -171,9 +171,12 @@ class SmrcNoObjectionData(LoggingModel):
         blank=True,
     )
 
+    cert_no = models.CharField(_("رقم الشهادة"), max_length=20, null=True, blank=True)
     smrc_no_objection_file = models.FileField(
         _("SMRC No Objection File"), 
         upload_to=attachment_path,
+        null=True,
+        blank=True,
     )
 
     def __str__(self):
@@ -214,9 +217,12 @@ class MmAceptanceData(LoggingModel):
         blank=True,
     )
 
+    cert_no = models.CharField(_("رقم الشهادة"), max_length=20, null=True, blank=True)
     mm_aceptance_file = models.FileField(
         _("Ministry of Minerals Acceptance File"), 
         upload_to=attachment_path,
+        null=True,
+        blank=True,
     )
 
     def __str__(self):
@@ -240,7 +246,7 @@ class MOCSData(LoggingModel):
     port_of_arrival = models.CharField(_("Port of Arrival"), max_length=150)
     main_bank_name = models.CharField(_("Main Bank Name"), max_length=150)
     subsidiary_bank_name = models.CharField(_("Subsidiary Bank Name"), max_length=150)
-    contract_expiration_date = models.DateField(_("Contract Expiration Date"))
+    contract_expiration_date = models.DateField(_("Contract Expiration Date"),null=True,blank=True)
     basic_form_export = models.OneToOneField(
         'BasicFormExport',
         on_delete=models.PROTECT,
@@ -265,7 +271,7 @@ class MOCSData(LoggingModel):
         null=True,
         blank=True,
     )
-    mocs1_file = models.FileField(_("mocs1_file"), upload_to=attachment_path)  #,null=True,blank=True
+    mocs1_file = models.FileField(_("mocs1_file"), upload_to=attachment_path,null=True,blank=True) 
     # mocs2_file = models.FileField(_("mocs2_file"), upload_to=attachment_path)  #,null=True,blank=True
 
     def __str__(self):
@@ -326,9 +332,9 @@ class CBSData(LoggingModel):
         # ('cheque', _('Cheque')),
     )
 
-    customer_account_number = models.CharField(_("Customer Account Number"), max_length=20)
+    customer_account_number = models.CharField(_("Customer Account Number"), max_length=20, null=True,blank=True)
     ex_form_number = models.CharField(_("EX-Form Number"), max_length=20)
-    commercial_bank_name = models.CharField(_("Commercial Bank Name"), max_length=150)
+    commercial_bank_name = models.CharField(_("Commercial Bank Name"), max_length=150, null=True,blank=True)
     issued_amount = models.FloatField(_("Issued Amount"))
     payment_method = models.CharField(_("Payment Method"), max_length=20, choices=PAYMENT_METHOD_CHOICES)
     basic_form_export = models.OneToOneField(
@@ -356,7 +362,7 @@ class CBSData(LoggingModel):
         blank=True,
     )
 
-    cbs_file = models.FileField(_("cbs_file"), upload_to=attachment_path)  #,null=True,blank=True
+    cbs_file = models.FileField(_("cbs_file"), upload_to=attachment_path,null=True,blank=True)  #,null=True,blank=True
 
     def __str__(self):
         return f"CBS-{self.customer_account_number}"
@@ -404,7 +410,7 @@ class BasicFormExport(WorkFlowModel):
     class Meta:
         verbose_name = _("ترحيل ذهب صادر")
         verbose_name_plural = _("ترحيل ذهب صادر")
-        ordering = ['-date']
+        ordering = ['-sn_no','-date']
 
     def get_next_states(self, user):
         """
