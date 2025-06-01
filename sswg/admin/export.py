@@ -108,7 +108,7 @@ report_main_class = {
         'sswg_ssmo':{
             'permissions': {
                 #BasicFormExport.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                BasicFormExport.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                # BasicFormExport.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 BasicFormExport.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 BasicFormExport.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 BasicFormExport.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -123,8 +123,8 @@ report_main_class = {
         'sswg_smrc':{
             'permissions': {
                 #BasicFormExport.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                BasicFormExport.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                BasicFormExport.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                # BasicFormExport.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                # BasicFormExport.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 BasicFormExport.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 BasicFormExport.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 BasicFormExport.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -138,9 +138,9 @@ report_main_class = {
         'sswg_mm':{
             'permissions': {
                 #BasicFormExport.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                BasicFormExport.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                BasicFormExport.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                BasicFormExport.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                # BasicFormExport.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                # BasicFormExport.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                # BasicFormExport.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 BasicFormExport.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 BasicFormExport.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 BasicFormExport.STATE_7: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -153,10 +153,10 @@ report_main_class = {
         'sswg_military_intelligence':{
             'permissions': {
                 #BasicFormExport.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                BasicFormExport.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                BasicFormExport.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                BasicFormExport.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                BasicFormExport.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                # BasicFormExport.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                # BasicFormExport.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                # BasicFormExport.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                # BasicFormExport.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 BasicFormExport.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 BasicFormExport.STATE_7: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 BasicFormExport.STATE_8: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -168,11 +168,11 @@ report_main_class = {
         'sswg_moc':{
             'permissions': {
                 #BasicFormExport.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                BasicFormExport.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                BasicFormExport.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                BasicFormExport.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                BasicFormExport.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                BasicFormExport.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                # BasicFormExport.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                # BasicFormExport.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                # BasicFormExport.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                # BasicFormExport.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                # BasicFormExport.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 BasicFormExport.STATE_7: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 BasicFormExport.STATE_8: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 BasicFormExport.STATE_9: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -183,12 +183,12 @@ report_main_class = {
         'sswg_cbs':{
             'permissions': {
                 #BasicFormExport.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                BasicFormExport.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                BasicFormExport.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                BasicFormExport.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                BasicFormExport.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                BasicFormExport.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                BasicFormExport.STATE_7: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                # BasicFormExport.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                # BasicFormExport.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                # BasicFormExport.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                # BasicFormExport.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                # BasicFormExport.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                # BasicFormExport.STATE_7: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 BasicFormExport.STATE_8: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 BasicFormExport.STATE_9: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 BasicFormExport.STATE_10: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -198,13 +198,13 @@ report_main_class = {
         'sswg_coc':{
             'permissions': {
                 #BasicFormExport.STATE_1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                BasicFormExport.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                BasicFormExport.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                BasicFormExport.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                BasicFormExport.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                BasicFormExport.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                BasicFormExport.STATE_7: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                BasicFormExport.STATE_8: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                # BasicFormExport.STATE_2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                # BasicFormExport.STATE_3: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                # BasicFormExport.STATE_4: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                # BasicFormExport.STATE_5: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                # BasicFormExport.STATE_6: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                # BasicFormExport.STATE_7: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                # BasicFormExport.STATE_8: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 BasicFormExport.STATE_9: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 BasicFormExport.STATE_10: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 BasicFormExport.STATE_11: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
