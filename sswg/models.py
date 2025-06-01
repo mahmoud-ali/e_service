@@ -524,7 +524,7 @@ class BasicFormReExport(WorkFlowModel):
     class Meta:
         verbose_name = _("ترحيل ذهب صادر بغرض التصنيع وإعادة التصنيع")
         verbose_name_plural = _("ترحيل ذهب صادر بغرض التصنيع وإعادة التصنيع")
-        ordering = ['-date']
+        ordering = ['-sn_no','-date']
 
     def get_next_states(self, user):
         """
@@ -638,7 +638,7 @@ class BasicFormSilver(WorkFlowModel):
     class Meta:
         verbose_name = _("ترحيل فضة صادر")
         verbose_name_plural = _("ترحيل فضة صادر")
-        ordering = ['-date']
+        ordering = ['-sn_no','-date']
 
     def get_next_states(self, user):
         """
