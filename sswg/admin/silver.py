@@ -589,7 +589,7 @@ report_inline_classes = {
         'kwargs': {
             'extra': 0,
             'min_num': 1,
-            'exclude':('basic_form_export','basic_form_reexport','return_weight'),
+            'exclude':('basic_form_export_emtiaz','basic_form_export','basic_form_reexport','return_weight'),
         },
         'groups': {
             'sswg_manager':{
@@ -765,7 +765,7 @@ report_inline_classes = {
         'kwargs': {
             'extra': 0,
             'min_num': 1,
-            'exclude':('basic_form_export','basic_form_reexport',),
+            'exclude':('basic_form_export_emtiaz','basic_form_export','basic_form_reexport',),
         },
         'groups': {
             'sswg_manager':{
@@ -941,7 +941,7 @@ report_inline_classes = {
         'kwargs': {
             'extra': 0,
             'min_num': 1,
-            'exclude':('basic_form_export','basic_form_reexport',),
+            'exclude':('basic_form_export_emtiaz','basic_form_export','basic_form_reexport',),
         },
         'groups': {
             'sswg_manager':{
@@ -1117,7 +1117,7 @@ report_inline_classes = {
         'kwargs': {
             'extra': 0,
             'min_num': 1,
-            'exclude':('basic_form_export','basic_form_reexport',),
+            'exclude':('basic_form_export_emtiaz','basic_form_export','basic_form_reexport',),
         },
         'groups': {
             'sswg_manager':{
@@ -1293,7 +1293,7 @@ report_inline_classes = {
         'kwargs': {
             'extra': 0,
             'min_num': 1,
-            'exclude':('basic_form_export','basic_form_reexport',),
+            'exclude':('basic_form_export_emtiaz','basic_form_export','basic_form_reexport',),
         },
         'groups': {
             'sswg_manager':{
@@ -1469,7 +1469,7 @@ report_inline_classes = {
         'kwargs': {
             'extra': 0,
             'min_num': 1,
-            'exclude':('basic_form_export','basic_form_reexport',),
+            'exclude':('basic_form_export_emtiaz','basic_form_export','basic_form_reexport',),
         },
         'groups': {
             'sswg_manager':{

@@ -3,6 +3,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.utils.translation import gettext_lazy as _
 from django.conf import settings
 
+from company_profile.models import TblCompany, TblCompanyProduction
 from gold_travel.models import LkpOwner,AppMoveGold
 from workflow.model_utils import WorkFlowModel,LoggingModel
 
@@ -49,6 +50,44 @@ class CompanyDetails(LoggingModel):
         verbose_name = _("SSWG CompanyDetails")
         verbose_name_plural = _("SSWG CompanyDetails")
 
+class ProductionCompanyManager(models.Manager):
+    def get_queryset(self):
+       return super().get_queryset().filter(company_type=TblCompany.COMPANY_TYPE_ENTAJ)
+
+class ProductionCompany(TblCompanyProduction):
+    objects = ProductionCompanyManager()
+    default_manager = objects
+
+    class Meta:
+        proxy = True
+        verbose_name = _("شركة امتياز منتجة")
+        verbose_name_plural = _("شركات الامتياز المنتجة")
+
+class CompanyDetailsEmtiaz(LoggingModel):
+    """Stores company and surrogate information"""
+    name = models.ForeignKey(ProductionCompany, on_delete=models.PROTECT,verbose_name=_("Company Name"))
+    surrogate_name = models.CharField(_("Surrogate Name"), max_length=255)
+    surrogate_id_type = models.IntegerField(_("ID Type"), choices=AppMoveGold.IDENTITY_CHOICES)
+    surrogate_id_val = models.CharField(_("ID Value"), max_length=50)
+    surrogate_id_phone = models.CharField(_("Contact Phone"), max_length=50)
+    total_weight = models.FloatField(_("الوزن الكلي"),default=0)
+    total_count = models.IntegerField(_("عدد السبائك"),default=0)
+
+    basic_form_export_emtiaz = models.OneToOneField(
+        'BasicFormExportCompany',
+        on_delete=models.PROTECT,
+        related_name='company_details_export_emtiaz',
+        verbose_name=_("SSWG Basic Form"),
+        null=True,
+        blank=True,
+    )
+
+    def __str__(self): #
+        return f"{self.name} - {self.surrogate_name}"
+
+    class Meta:
+        verbose_name = _("SSWG CompanyDetails")
+        verbose_name_plural = _("SSWG CompanyDetails")
 
 class TransferRelocationFormData(LoggingModel):
     """Stores SMRC-related measurements"""
@@ -115,6 +154,14 @@ class SSMOData(LoggingModel):
         null=True,
         blank=True,
     )
+    basic_form_export_emtiaz = models.OneToOneField(
+        'BasicFormExportCompany',
+        on_delete=models.PROTECT,
+        related_name='ssmo_data_export_emtiaz',
+        verbose_name=_("SSWG Basic Form"),
+        null=True,
+        blank=True,
+    )
     basic_form_reexport = models.OneToOneField(
         'BasicFormReExport',
         on_delete=models.PROTECT,
@@ -150,6 +197,14 @@ class SmrcNoObjectionData(LoggingModel):
         'BasicFormExport',
         on_delete=models.PROTECT,
         related_name='smrc_no_objection_data_export',
+        verbose_name=_("SSWG Basic Form"),
+        null=True,
+        blank=True,
+    )
+    basic_form_export_emtiaz = models.OneToOneField(
+        'BasicFormExportCompany',
+        on_delete=models.PROTECT,
+        related_name='smrc_no_objection_data_export_emtiaz',
         verbose_name=_("SSWG Basic Form"),
         null=True,
         blank=True,
@@ -196,6 +251,14 @@ class MmAceptanceData(LoggingModel):
         'BasicFormExport',
         on_delete=models.PROTECT,
         related_name='mm_aceptance_data_export',
+        verbose_name=_("SSWG Basic Form"),
+        null=True,
+        blank=True,
+    )
+    basic_form_export_emtiaz = models.OneToOneField(
+        'BasicFormExportCompany',
+        on_delete=models.PROTECT,
+        related_name='mm_aceptance_data_export_emtiaz',
         verbose_name=_("SSWG Basic Form"),
         null=True,
         blank=True,
@@ -255,6 +318,14 @@ class MOCSData(LoggingModel):
         null=True,
         blank=True,
     )
+    basic_form_export_emtiaz = models.OneToOneField(
+        'BasicFormExportCompany',
+        on_delete=models.PROTECT,
+        related_name='mocs_data_export_emtiaz',
+        verbose_name=_("SSWG Basic Form"),
+        null=True,
+        blank=True,
+    )
     basic_form_reexport = models.OneToOneField(
         'BasicFormReExport',
         on_delete=models.PROTECT,
@@ -291,6 +362,14 @@ class COCSData(LoggingModel):
         'BasicFormExport',
         on_delete=models.PROTECT,
         related_name='coc_data_export',
+        verbose_name=_("SSWG Basic Form"),
+        null=True,
+        blank=True,
+    )
+    basic_form_export_emtiaz = models.OneToOneField(
+        'BasicFormExportCompany',
+        on_delete=models.PROTECT,
+        related_name='coc_data_export_emtiaz',
         verbose_name=_("SSWG Basic Form"),
         null=True,
         blank=True,
@@ -341,6 +420,14 @@ class CBSData(LoggingModel):
         'BasicFormExport',
         on_delete=models.PROTECT,
         related_name='cbs_data_export',
+        verbose_name=_("SSWG Basic Form"),
+        null=True,
+        blank=True,
+    )
+    basic_form_export_emtiaz = models.OneToOneField(
+        'BasicFormExportCompany',
+        on_delete=models.PROTECT,
+        related_name='cbs_data_export_emtiaz',
         verbose_name=_("SSWG Basic Form"),
         null=True,
         blank=True,
@@ -408,8 +495,122 @@ class BasicFormExport(WorkFlowModel):
         return f"{self.sn_no} - {self.date}"
 
     class Meta:
-        verbose_name = _("ترحيل ذهب صادر")
-        verbose_name_plural = _("ترحيل ذهب صادر")
+        verbose_name = _("صادر ذهب حر")
+        verbose_name_plural = _("صادر ذهب حر")
+        ordering = ['-sn_no','-date']
+
+    def get_next_states(self, user):
+        """
+        Determine the next possible states based on the current state and user's role.
+        """
+        # user = self.updated_by
+        user_groups = list(user.groups.values_list('name', flat=True))
+
+        states = []
+
+        if 'sswg_secretary' in user_groups:
+            if self.state == self.STATE_1:
+                states.append((self.STATE_2, self.STATE_CHOICES[self.STATE_2]))
+
+        if 'sswg_economic_security' in user_groups:
+            if self.state == self.STATE_2:
+                states.append((self.STATE_3, self.STATE_CHOICES[self.STATE_3]))
+
+        if 'sswg_ssmo' in user_groups:
+            if self.state == self.STATE_3:
+                states.append((self.STATE_4, self.STATE_CHOICES[self.STATE_4]))
+
+        if 'sswg_smrc' in user_groups:
+            if self.state == self.STATE_4:
+                states.append((self.STATE_5, self.STATE_CHOICES[self.STATE_5]))
+
+        if 'sswg_mm' in user_groups:
+            if self.state == self.STATE_5:
+                states.append((self.STATE_6, self.STATE_CHOICES[self.STATE_6]))
+
+        if 'sswg_military_intelligence' in user_groups:
+            if self.state == self.STATE_6:
+                states.append((self.STATE_7, self.STATE_CHOICES[self.STATE_7]))
+
+        if 'sswg_moc' in user_groups:
+            if self.state == self.STATE_7:
+                states.append((self.STATE_8, self.STATE_CHOICES[self.STATE_8]))
+
+        if 'sswg_cbs' in user_groups:
+            if self.state == self.STATE_8:
+                states.append((self.STATE_9, self.STATE_CHOICES[self.STATE_9]))
+
+        if 'sswg_coc' in user_groups:
+            if self.state == self.STATE_9:
+                states.append((self.STATE_10, self.STATE_CHOICES[self.STATE_10]))
+
+        if 'sswg_custom_force' in user_groups:
+            if self.state == self.STATE_10:
+                states.append((self.STATE_11, self.STATE_CHOICES[self.STATE_11]))
+
+        return states
+
+    def can_transition_to_next_state(self, user, state):
+        """
+        Check if the given user can transition to the specified state.
+        """
+        if state[0] in map(lambda x: x[0], self.get_next_states(user)):
+            return True
+
+        return False
+
+    def transition_to_next_state(self, user, state):
+        """
+        Transitions the workflow to the given state, after checking user permissions.
+        """
+        if self.can_transition_to_next_state(user, state):
+            self.state = state[0]
+            self.updated_by = user
+            self.save()
+        else:
+            raise Exception(f"User {user.username} cannot transition to state {state} from state {self.state}")
+
+        return self
+
+class BasicFormExportCompany(WorkFlowModel):
+    """Main form storing all related data"""
+
+    STATE_1 = 1 
+    STATE_2 = 2
+    STATE_3 = 3
+    STATE_4 = 4
+    STATE_5 = 5
+    STATE_6 = 6
+    STATE_7 = 7
+    STATE_8 = 8
+    STATE_9 = 9
+    STATE_10 = 10
+    STATE_11 = 11
+
+    STATE_CHOICES = {
+        STATE_1:_("SSWG State 1"), 
+        STATE_2:_("SSWG State 2"), 
+        STATE_3:_("SSWG State 3"),
+        STATE_4:_("SSWG State 4"),
+        STATE_5:_("SSWG State 5"),
+        STATE_6:_("SSWG State 6"),
+        STATE_7:_("SSWG State 7"),
+        STATE_8:_("SSWG State 8"),
+        STATE_9:_("SSWG State 9"),
+        STATE_10:_("SSWG State 10"),
+        STATE_11:_("SSWG State 11"),
+    }
+
+    date = models.DateField(_("Form Date"))
+    sn_no = models.CharField(_("Serial Number"), max_length=15, unique=True)
+    state = models.IntegerField(_("record_state"), choices=STATE_CHOICES, default=STATE_1)
+    
+    def __str__(self):
+        return f"{self.sn_no} - {self.date}"
+
+    class Meta:
+        verbose_name = _("صادر ذهب شركات امتياز")
+        verbose_name_plural = _("صادر ذهب شركات امتياز")
         ordering = ['-sn_no','-date']
 
     def get_next_states(self, user):
@@ -522,8 +723,8 @@ class BasicFormReExport(WorkFlowModel):
         return f"{self.sn_no} - {self.date}"
 
     class Meta:
-        verbose_name = _("ترحيل ذهب صادر بغرض التصنيع وإعادة التصنيع")
-        verbose_name_plural = _("ترحيل ذهب صادر بغرض التصنيع وإعادة التصنيع")
+        verbose_name = _("صادر ذهب بغرض التصنيع وإعادة التصنيع")
+        verbose_name_plural = _("صادر ذهب بغرض التصنيع وإعادة التصنيع")
         ordering = ['-sn_no','-date']
 
     def get_next_states(self, user):
@@ -636,8 +837,8 @@ class BasicFormSilver(WorkFlowModel):
         return f"{self.sn_no} - {self.date}"
 
     class Meta:
-        verbose_name = _("ترحيل فضة صادر")
-        verbose_name_plural = _("ترحيل فضة صادر")
+        verbose_name = _("صادر فضة")
+        verbose_name_plural = _("صادر فضة")
         ordering = ['-sn_no','-date']
 
     def get_next_states(self, user):

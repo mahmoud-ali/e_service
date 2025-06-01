@@ -6,7 +6,7 @@ from django.contrib.contenttypes.models import ContentType
 from gold_travel.models import AppMoveGold
 from sswg.models import BasicFormExport, CBSData, COCSData, CompanyDetails, MOCSData, MmAceptanceData, SSMOData, SmrcNoObjectionData, TransferRelocationFormData
 from workflow.data_utils import create_master_details_groups,create_model_groups
-from sswg.admin import export,reexport,silver
+from sswg.admin import export,reexport,silver,export_emtiaz
 
 from django.contrib.auth import get_user_model
 
@@ -14,14 +14,16 @@ admin_user = get_user_model().objects.get(id=1)
 
 def create_groups():
     create_master_details_groups('sswg','basicformexport',export.report_main_class,export.report_inline_classes)
-    create_master_details_groups('sswg','basicformexport',reexport.report_main_class,reexport.report_inline_classes)
-    create_master_details_groups('sswg','basicformexport',silver.report_main_class,silver.report_inline_classes)
+    create_master_details_groups('sswg','basicformexportcompany',export_emtiaz.report_main_class,export.report_inline_classes)
+    create_master_details_groups('sswg','basicformreexport',reexport.report_main_class,reexport.report_inline_classes)
+    create_master_details_groups('sswg','basicformsilver',silver.report_main_class,silver.report_inline_classes)
 
     #other apps 
     arr = [
         ('gold_travel','appmovegold'),
         ('gold_travel','appmovegolddetails'),
         ('gold_travel','lkpowner'),
+        ('sswg','productioncompany'),
     ]
 
     groups = ['sswg_manager','sswg_secretary','sswg_economic_security','sswg_ssmo','sswg_smrc','sswg_mm','sswg_moc','sswg_coc','sswg_military_intelligence','sswg_cbs','sswg_custom_force',]
