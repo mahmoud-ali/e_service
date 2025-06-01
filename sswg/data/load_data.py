@@ -4,7 +4,7 @@ from django.contrib.auth.models import Group, Permission
 from django.contrib.contenttypes.models import ContentType
 
 from gold_travel.models import AppMoveGold
-from sswg.models import BasicFormExport, CBSData, MOCSData, MmAceptanceData, SSMOData, SmrcNoObjectionData, TransferRelocationFormData
+from sswg.models import BasicFormExport, CBSData, COCSData, CompanyDetails, MOCSData, MmAceptanceData, SSMOData, SmrcNoObjectionData, TransferRelocationFormData
 from workflow.data_utils import create_master_details_groups,create_model_groups
 from sswg.admin import export,reexport,silver
 
@@ -346,4 +346,36 @@ def import_tra_export(file_name='import_data.csv'):
             except Exception as e:
                 print(f"Error importing license with ID: {id}. Error: {e}")
 
+def delete_tra_export(sn_no):
+    obj = BasicFormExport.objects.get(
+        sn_no = sn_no,
+    )
 
+    CompanyDetails.objects.filter(
+        basic_form_export=obj,
+    ).delete()
+    TransferRelocationFormData.objects.filter(
+        basic_form_export=obj,
+    ).delete()
+    SSMOData.objects.filter(
+        basic_form_export=obj,
+    ).delete()
+    SmrcNoObjectionData.objects.filter(
+        basic_form_export=obj,
+    ).delete()
+    MmAceptanceData.objects.filter(
+        basic_form_export=obj,
+    ).delete()
+    MOCSData.objects.filter(
+        basic_form_export=obj,
+    ).delete()
+    COCSData.objects.filter(
+        basic_form_export=obj,
+    ).delete()
+    CBSData.objects.filter(
+        basic_form_export=obj,
+    ).delete()
+    obj.delete()
+    print(f"Deleted BasicFormExport with sn_no: {sn_no}")
+    return True
+    
