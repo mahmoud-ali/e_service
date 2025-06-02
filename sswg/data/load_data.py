@@ -549,3 +549,26 @@ def delete_emtiaz_export_all():
     for obj in BasicFormExportCompany.objects.all():
         delete_emtiaz_export(obj.sn_no)
         print(f"Deleted BasicFormExportCompany with sn_no: {obj.sn_no}")
+
+
+def check_export():
+    with open('./sswg/data/exp_list.csv', newline='') as csvfile:
+        reader = csv.reader(csvfile, delimiter=',')
+        next(reader, None)  # skip the headers
+        for row in reader:
+            sn_no = row[0].strip()
+
+            try:
+
+                obj = BasicFormExport.objects.get(
+                    sn_no = sn_no,
+                )
+
+            except:
+                try:
+                    obj = BasicFormExportCompany.objects.get(
+                        sn_no = sn_no,
+                    )
+                except Exception as e:
+                    print(f"SN: {sn_no} not exists: {e}")
+
