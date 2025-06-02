@@ -517,27 +517,31 @@ def delete_emtiaz_export(sn_no):
     )
 
     CompanyDetailsEmtiaz.objects.filter(
-        basic_form_export=obj,
+        basic_form_export_emtiaz=obj,
     ).delete()
     SSMOData.objects.filter(
-        basic_form_export=obj,
+        basic_form_export_emtiaz=obj,
     ).delete()
     SmrcNoObjectionData.objects.filter(
-        basic_form_export=obj,
+        basic_form_export_emtiaz=obj,
     ).delete()
     MmAceptanceData.objects.filter(
-        basic_form_export=obj,
+        basic_form_export_emtiaz=obj,
     ).delete()
     MOCSData.objects.filter(
-        basic_form_export=obj,
+        basic_form_export_emtiaz=obj,
     ).delete()
     COCSData.objects.filter(
-        basic_form_export=obj,
+        basic_form_export_emtiaz=obj,
     ).delete()
     CBSData.objects.filter(
-        basic_form_export=obj,
+        basic_form_export_emtiaz=obj,
     ).delete()
     obj.delete()
     print(f"Deleted BasicFormExport with sn_no: {sn_no}")
     return True
     
+def delete_emtiaz_export_all():
+    for obj in BasicFormExportCompany.objects.all():
+        delete_emtiaz_export(obj.sn_no)
+        print(f"Deleted BasicFormExportCompany with sn_no: {obj.sn_no}")
