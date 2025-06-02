@@ -146,7 +146,7 @@ def import_gold_travel(row,main_obj_export=None,main_obj_reexport=None,main_obj_
         gold_travel_qs = AppMoveGold.objects.filter(code__in=gold_travel_list)
 
         if gold_travel_qs.count() != len(gold_travel_list):
-            print(f"Warning: Some gold travel codes not found for ID: {row[1]}. Expected: {len(gold_travel_list)}, Found: {gold_travel_qs.count()}")
+            print(f"Warning: Some gold travel codes not found for ID: {row[1]} ({gold_travel_str}). Expected: {len(gold_travel_list)}, Found: {gold_travel_qs.count()}")
             return False
 
         for form_obj in gold_travel_qs:
