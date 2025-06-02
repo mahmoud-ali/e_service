@@ -70,8 +70,10 @@ class CompanyDetailsEmtiaz(LoggingModel):
     surrogate_id_type = models.IntegerField(_("ID Type"), choices=AppMoveGold.IDENTITY_CHOICES)
     surrogate_id_val = models.CharField(_("ID Value"), max_length=50)
     surrogate_id_phone = models.CharField(_("Contact Phone"), max_length=50)
+    travel_cert_no = models.CharField(_("رقم استمارة الترحيل"), max_length=50)
     total_weight = models.FloatField(_("الوزن الكلي"),default=0)
     total_count = models.IntegerField(_("عدد السبائك"),default=0)
+    alloy_description = models.CharField(_("وصف السبائك"), max_length=255, null=True, blank=True)
 
     basic_form_export_emtiaz = models.OneToOneField(
         'BasicFormExportCompany',
@@ -344,6 +346,14 @@ class MOCSData(LoggingModel):
     )
     mocs1_file = models.FileField(_("mocs1_file"), upload_to=attachment_path,null=True,blank=True) 
     # mocs2_file = models.FileField(_("mocs2_file"), upload_to=attachment_path)  #,null=True,blank=True
+
+    @property
+    def net_weight(self):
+        try:
+            obj = SSMOData.objects.get(basic_form_export=self.basic_form_export, basic_form_export_emtiaz=self.basic_form_export_emtiaz, basic_form_reexport=self.basic_form_reexport, basic_form_silver=self.basic_form_silver) 
+            return obj.net_weight
+        except:
+            return 0
 
     def __str__(self):
         return f"MOCS-{self.contract_number}"
@@ -1060,3 +1070,7 @@ def create_company_details(sender, instance, **kwargs):
             obj.total_weight=total_weight
             obj.total_count=total_count
             obj.save()
+
+@receiver(pre_save, sender=MOCSData)
+def calculate_total_contract_value(sender, instance, **kwargs):
+    instance.total_contract_value = round(instance.net_weight * instance.unit_price_in_grams,2)

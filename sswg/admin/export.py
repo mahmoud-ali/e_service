@@ -1118,6 +1118,7 @@ report_inline_classes = {
             'extra': 0,
             'min_num': 1,
             'exclude':('basic_form_export_emtiaz','basic_form_reexport','basic_form_silver',),
+            'readonly_fields' : ['total_contract_value',],
         },
         'groups': {
             'sswg_manager':{
