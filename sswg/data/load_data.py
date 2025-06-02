@@ -416,6 +416,10 @@ def delete_tra_export(sn_no):
     print(f"Deleted BasicFormExport with sn_no: {sn_no}")
     return True
     
+def delete_tra_export_all():
+    for obj in BasicFormExport.objects.all():
+        delete_tra_export(obj.sn_no)
+        print(f"Deleted BasicFormExportCompany with sn_no: {obj.sn_no}")
 #############################
 
 def import_emtiaz_company(row,main_obj_emtiaz):
