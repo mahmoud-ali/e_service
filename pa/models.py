@@ -464,6 +464,12 @@ class TblCompanyRequestDetail(models.Model):
     amount = models.FloatField(_("amount"))
 
     def get_commitment_item_amount(self):
+        if not hasattr(self.request_master,"commitment"):
+            return 0
+        
+        if not hasattr(self,"item"):
+            return 0
+        
         qs =  self.request_master.commitment.tblcompanycommitmentdetail_set \
                .filter(item=self.item)
         
