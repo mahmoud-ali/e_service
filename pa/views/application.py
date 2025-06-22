@@ -447,7 +447,7 @@ class ApplicationDeleteMasterDetailView(LoginRequiredMixin,UserPermissionMixin,S
 
             for detail in self.details_formset:
                 formset = detail['formset'](request.POST,request.FILES,instance=obj)
-                for f in formset:
+                for f in formset.forms:
                     if f.can_delete and f._should_delete_form():
                         if f.instance.pk:
                             f.instance.delete()
