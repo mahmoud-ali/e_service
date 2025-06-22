@@ -86,12 +86,12 @@ class TblCompanyPaymentCreateView(ApplicationMasterDetailCreateView):
 
         for detail in self.details_formset:
             if detail.get('id') == 1:
-                d_obj = [
-                        {'item':c.item,'amount':c.amount-c.get_item_payed_amount()} \
-                        for c in obj.tblcompanyrequestdetail_set.all()
-                ]
-                detail['formset'].extra=len(d_obj)-1
-                formset = detail['formset'](initial=d_obj)
+                # d_obj = [
+                #         {'item':c.item,'amount':c.amount-c.get_item_payed_amount()} \
+                #         for c in obj.tblcompanyrequestdetail_set.filter(amount__gt=0)
+                # ]
+                # detail['formset'].extra=len(d_obj)-1
+                formset = detail['formset']() #(initial=d_obj)
                 detail['formset'] = formset
                 
                 TblCompanyPaymentDetailFormWithCompanyType=TblCompanyPaymentDetailForm

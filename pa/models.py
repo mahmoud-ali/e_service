@@ -314,10 +314,10 @@ class TblCompanyRequestMaster(LoggingModel):
     
     @property
     def total(self):   
-        return self.tblcompanyrequestdetail_set.aggregate(total=Sum('amount'))['total'] or 0
+        return round(self.tblcompanyrequestdetail_set.aggregate(total=Sum('amount'))['total'],2) or 0
     
     def __str__(self):
-        return self.commitment.__str__()+" ("+str(self.total)+" "+CURRENCY_TYPE_CHOICES[self.currency]+")" #+" ("+str(self.from_dt)+" - "+str(self.to_dt)+") "
+        return self.commitment.__str__()+" ("+str(round(self.total,2))+" "+CURRENCY_TYPE_CHOICES[self.currency]+")" #+" ("+str(self.from_dt)+" - "+str(self.to_dt)+") "
         
     def get_absolute_url(self): 
         return reverse('pa:request_show',args=[str(self.id)])                
@@ -337,16 +337,13 @@ class TblCompanyRequestMaster(LoggingModel):
             qs = qs.filter(state=STATE_TYPE_CONFIRM)
 
         for p in qs:
-            if p.currency == self.currency:
-                sum += p.total
-            else:
-                sum += p.total*p.exchange_rate
+            sum += p.total/p.exchange_rate
 
         return sum
 
     @property
     def sum_of_confirmed_payment(self,exclude=0):
-        return self.sum_of_payment(exclude,confirmed_only=True)
+        return round(self.sum_of_payment(exclude,confirmed_only=True),2)
 
     def update_payment_state(self):
         if self.state == STATE_TYPE_DRAFT:
@@ -427,23 +424,23 @@ class TblCompanyRequestMaster(LoggingModel):
                     {"to_dt":_("to_dt should be great or equal than from_dt")}
                 )
         
-            if qs.filter(from_dt__lte=self.from_dt, to_dt__gte=self.from_dt,currency=self.currency).count() > 0:
-                raise ValidationError(
-                    {"from_dt":_("conflicted date")}
-                )
+            # if qs.filter(from_dt__lte=self.from_dt, to_dt__gte=self.from_dt,currency=self.currency).count() > 0:
+            #     raise ValidationError(
+            #         {"from_dt":_("conflicted date")}
+            #     )
             
-            if qs.filter(from_dt__lte=self.to_dt, to_dt__gte=self.to_dt,currency=self.currency).count() > 0:
-                raise ValidationError(
-                    {"to_dt":_("conflicted date")}
-                )
+            # if qs.filter(from_dt__lte=self.to_dt, to_dt__gte=self.to_dt,currency=self.currency).count() > 0:
+            #     raise ValidationError(
+            #         {"to_dt":_("conflicted date")}
+            #     )
             
-            if qs.filter(from_dt__gte=self.from_dt, to_dt__lte=self.to_dt,currency=self.currency).count() > 0:
-                raise ValidationError(
-                    {
-                        "from_dt":_("conflicted date"),
-                        "to_dt":_("conflicted date"),
-                    }
-                )
+            # if qs.filter(from_dt__gte=self.from_dt, to_dt__lte=self.to_dt,currency=self.currency).count() > 0:
+            #     raise ValidationError(
+            #         {
+            #             "from_dt":_("conflicted date"),
+            #             "to_dt":_("conflicted date"),
+            #         }
+            #     )
 
     class Meta:
         ordering = ["-id"]
@@ -532,7 +529,7 @@ class TblCompanyPaymentMaster(LoggingModel):
     
     @property
     def total(self):   
-        return self.tblcompanypaymentdetail_set.aggregate(total=Sum('amount'))['total'] or 0
+        return round(self.tblcompanypaymentdetail_set.aggregate(total=Sum('amount'))['total'],2) or 0
 
     def __str__(self):
         return _("Financial payment") +" ("+str(self.id)+")"
@@ -603,28 +600,28 @@ class TblCompanyPaymentDetail(models.Model):
 
         return sum
     
-    def clean(self):
-        if not hasattr(self.payment_master,"request"):
-            return 
+    # def clean(self):
+    #     if not hasattr(self.payment_master,"request"):
+    #         return 
         
-        if not self.id and self.payment_master.state == STATE_TYPE_CONFIRM:
-            raise ValidationError(
-                {"item":_("payment already confirmed!")}
-            )
-        request_item_amount = self.get_request_item_amount()
+    #     if not self.id and self.payment_master.state == STATE_TYPE_CONFIRM:
+    #         raise ValidationError(
+    #             {"item":_("payment already confirmed!")}
+    #         )
+    #     request_item_amount = self.get_request_item_amount()
         
-        payment_id = self.id or 0
-        payment_item_total_amount = self.amount or 0
-        payment_item_total_amount += self.get_payment_item_total(exclude=payment_id)
+    #     payment_id = self.id or 0
+    #     payment_item_total_amount = self.amount or 0
+    #     payment_item_total_amount += self.get_payment_item_total(exclude=payment_id)
 
-        if request_item_amount == 0:
-            raise ValidationError(
-                {"item":_("item not exists in request")}
-            )
-        if payment_item_total_amount > request_item_amount:
-            raise ValidationError(
-                {"amount":_("sum of payments more than request amount: ")+" "+str(request_item_amount)+ "/" +str(payment_item_total_amount)+ " "+CURRENCY_TYPE_CHOICES[self.payment_master.request.currency]}
-            )
+    #     if request_item_amount == 0:
+    #         raise ValidationError(
+    #             {"item":_("item not exists in request")}
+    #         )
+    #     if payment_item_total_amount > request_item_amount:
+    #         raise ValidationError(
+    #             {"amount":_("sum of payments more than request amount: ")+" "+str(request_item_amount)+ "/" +str(payment_item_total_amount)+ " "+CURRENCY_TYPE_CHOICES[self.payment_master.request.currency]}
+    #         )
 
 class LkpPaymentMethod(models.Model):
     name = models.CharField(_("payment_method_name"),max_length=25)
