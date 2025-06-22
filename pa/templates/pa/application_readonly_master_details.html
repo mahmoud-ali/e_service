@@ -43,12 +43,14 @@
     <br/>
     {% endfor %}        	
     
-    {% if object.id and object.state == 'draft' %}
+    {% if object.id %}
+    {% if object.state == 'draft' or request.user|has_group:"pa_manager" %}
 
     <a class="btn btn-success" href="{% url menu_edit_name object.id%}" role="button">
         <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
         {% translate "edit_btn" %}
     </a>
+    {% endif %}
     {% if request.user|has_group:"pa_manager" %}
     <a class="btn btn-danger" href="{% url menu_delete_name object.id%}" role="button">
         <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>

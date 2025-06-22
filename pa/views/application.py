@@ -253,7 +253,7 @@ class ApplicationMasterDetailUpdateView(LoginRequiredMixin,UserPermissionMixin,S
         return super().dispatch(request,*args, **kwargs)                    
     def get_queryset(self):
         query = super().get_queryset()        
-        return query.filter(state=STATE_TYPE_DRAFT)
+        return query #.filter(state=STATE_TYPE_DRAFT)
 
     def get(self,request, *args, **kwargs):        
         # obj = self.model.objects.get(id=pk)
@@ -269,6 +269,11 @@ class ApplicationMasterDetailUpdateView(LoginRequiredMixin,UserPermissionMixin,S
         return render(request, self.template_name, self.extra_context)
     
     def post(self, request,pk, *args, **kwargs):
+        obj = self.get_object()
+        if obj:
+            obj.state='draft'
+            obj.save()
+            
         form = self.form_class(request.POST,request.FILES,instance=self.model.objects.get(id=pk))
         self.extra_context["form"] = form
         form.id = pk
