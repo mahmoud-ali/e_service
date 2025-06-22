@@ -441,15 +441,24 @@ class ApplicationDeleteMasterDetailView(LoginRequiredMixin,UserPermissionMixin,S
 
     def post(self,request,*args, **kwargs):     
         obj = self.get_object()
-        for detail in self.details_formset:
-            formset = detail['formset'](request.POST,request.FILES,instance=obj)
-            if formset.is_valid():
-                for form in formset:
-                    o = form.save(commit=False)
-                    o.delete()
+        form = self.form_class(request.POST,request.FILES,instance=obj)
+        if form.is_valid():
+            for detail in self.details_formset:
+                formset = detail['formset'](request.POST,request.FILES,instance=obj)
+                if formset.is_valid():
+                    for form in formset:
+                        o = form.save(commit=False)
+                        o.delete()
 
-        obj.delete()
+            obj.delete()
 
-        self.success_url = reverse_lazy(self.menu_name)    
-        messages.add_message(self.request,messages.SUCCESS,_("Record removed successfully."))
-        return HttpResponseRedirect(self.success_url)
+            self.success_url = reverse_lazy(self.menu_name)    
+            messages.add_message(self.request,messages.SUCCESS,_("Record removed successfully."))
+            return HttpResponseRedirect(self.success_url)
+        else:
+            self.extra_context["form"] = form
+            self.extra_context["object"] = obj
+            for detail in self.details_formset:
+                formset = detail['formset'](instance=obj)
+                detail['formset'] = formset
+            return render(request, self.template_name, self.extra_context)
