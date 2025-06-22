@@ -461,9 +461,9 @@ class ApplicationDeleteMasterDetailView(LoginRequiredMixin,UserPermissionMixin,S
                 messages.add_message(self.request,messages.SUCCESS,_("Record removed successfully."))
                 return HttpResponseRedirect(self.success_url)
 
-        # self.extra_context["form"] = form
+        self.extra_context["form"] = form
         # self.extra_context["object"] = obj
-        # for detail in self.details_formset:
-        #     formset = detail['formset'](instance=obj)
-        #     detail['formset'] = formset
+        for detail in self.details_formset:
+            formset = detail['formset'](instance=obj,form=detail)
+            detail['formset'] = formset
         return render(request, self.template_name, self.extra_context)
