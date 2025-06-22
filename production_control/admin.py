@@ -46,7 +46,7 @@ class LogMixin:
                 company_type = request.user.gold_production_sector_user.company_type
                 sector = request.user.gold_production_sector_user.sector
                 return qs.filter(
-                    company__company_type__in= [company_type],
+                    license__company__company_type__in= [company_type],
                     license__state__sector=sector
                 )
             except Exception as e:
@@ -148,8 +148,8 @@ production_main_class = {
         'production_control_sector_mgr':{
             'permissions': {
                 # GoldProductionForm.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
-                # GoldProductionForm.STATE_REVIEW_REQUIRED: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
-                # GoldProductionForm.STATE_CONFIRMED1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                GoldProductionForm.STATE_REVIEW_REQUIRED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                GoldProductionForm.STATE_CONFIRMED1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 GoldProductionForm.STATE_CONFIRMED2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 GoldProductionForm.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
             },
@@ -189,8 +189,8 @@ production_inline_classes = {
             'production_control_sector_mgr':{
                 'permissions': {
                     # GoldProductionForm.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
-                    # GoldProductionForm.STATE_REVIEW_REQUIRED: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
-                    # GoldProductionForm.STATE_CONFIRMED1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    GoldProductionForm.STATE_REVIEW_REQUIRED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    GoldProductionForm.STATE_CONFIRMED1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     GoldProductionForm.STATE_CONFIRMED2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     GoldProductionForm.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
