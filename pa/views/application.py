@@ -443,10 +443,10 @@ class ApplicationDeleteMasterDetailView(LoginRequiredMixin,UserPermissionMixin,S
         obj = self.get_object()
         for detail in self.details_formset:
             formset = detail['formset'](request.POST,request.FILES,instance=obj)
-            formset.is_valid()
-            for form in formset:
-                o = form.save(commit=False)
-                o.delete()
+            if formset.is_valid():
+                for form in formset:
+                    o = form.save(commit=False)
+                    o.delete()
 
         obj.delete()
 
