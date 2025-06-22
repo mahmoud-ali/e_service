@@ -464,6 +464,6 @@ class ApplicationDeleteMasterDetailView(LoginRequiredMixin,UserPermissionMixin,S
         self.extra_context["form"] = form
         # self.extra_context["object"] = obj
         for detail in self.details_formset:
-            formset = detail['formset'](instance=obj,form=detail)
+            formset = detail['formset'](detail)
             detail['formset'] = formset
         return render(request, self.template_name, self.extra_context)
