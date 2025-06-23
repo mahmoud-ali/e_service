@@ -75,6 +75,9 @@ class Payroll():
         k = Settings.SETTINGS_AADOA+'_daraja_' + str(employee.draja_wazifia)
         aadoa = self.hr_settings.get_code_as_float(k)
 
+        k2 = Settings.SETTINGS_MOKAF2T_ADA2+'_daraja_' + str(employee.draja_wazifia)
+        mokaf2at_2da2 = self.hr_settings.get_code_as_float(k2)
+
         enable_sandog = self.hr_settings.get_code_as_boolean(Settings.SETTINGS_ENABLE_SANDOG_KAHRABA)
 
         enable_youm_algoat = self.hr_settings.get_code_as_boolean(Settings.SETTINGS_ENABLE_YOUM_ALGOAT_ALMOSALAHA)
@@ -88,6 +91,7 @@ class Payroll():
                 draj_obj.galaa_m3isha,
                 shakhsia=draj_obj.shakhsia,
                 aadoa=aadoa,
+                mokaf2at_2da2=mokaf2at_2da2,
                 gasima=gasima,
                 atfal=(employee.atfal *self.hr_settings.get_code_as_float(Settings.SETTINGS_ATFAL)),
                 moahil=self.hr_settings.get_code_as_float(moahil),
@@ -130,6 +134,7 @@ class Payroll():
             emp_payroll.galaa_m3isha,
             shakhsia=emp_payroll.shakhsia,
             aadoa=emp_payroll.aadoa,
+            mokaf2at_2da2=emp_payroll.mokaf2at_2da2,
             gasima=emp_payroll.gasima,
             atfal=emp_payroll.atfal,
             moahil=emp_payroll.moahil,
@@ -238,6 +243,7 @@ class Payroll():
                         galaa_m3isha = badalat.galaa_m3isha*factor,
                         shakhsia = badalat.shakhsia*factor,
                         aadoa = badalat.aadoa*factor,
+                        mokaf2at_2da2 = badalat.mokaf2at_2da2*factor,
                         gasima = badalat.ajtima3ia_gasima*factor,
                         atfal = badalat.ajtima3ia_atfal*factor,
                         moahil = badalat.moahil*factor,
@@ -349,6 +355,7 @@ class MobasharaSheet():
                             emp_payroll.galaa_m3isha,
                             shakhsia=emp_payroll.shakhsia,
                             aadoa=emp_payroll.aadoa,
+                            mokaf2at_2da2=emp_payroll.mokaf2at_2da2,
                             gasima=emp_payroll.gasima,
                             atfal=emp_payroll.atfal,
                             moahil=emp_payroll.moahil,
@@ -409,6 +416,7 @@ class Mokaf2Sheet():
             emp_payroll.galaa_m3isha,
             shakhsia=emp_payroll.shakhsia,
             aadoa=emp_payroll.aadoa,
+            mokaf2at_2da2=emp_payroll.mokaf2at_2da2,
             gasima=emp_payroll.gasima,
             atfal=emp_payroll.atfal,
             moahil=emp_payroll.moahil,
@@ -456,6 +464,7 @@ class MoratabMokaf2Sheet():
             emp_payroll.galaa_m3isha,
             shakhsia=emp_payroll.shakhsia,
             aadoa=emp_payroll.aadoa,
+            mokaf2at_2da2=emp_payroll.mokaf2at_2da2,
             gasima=emp_payroll.gasima,
             atfal=emp_payroll.atfal,
             moahil=emp_payroll.moahil,
@@ -528,6 +537,9 @@ class M2moriaSheet():
         k = Settings.SETTINGS_AADOA+'_daraja_' + str(employee.draja_wazifia)
         aadoa = self.hr_settings.get_code_as_float(k)
 
+        k2 = Settings.SETTINGS_MOKAF2T_ADA2+'_daraja_' + str(employee.draja_wazifia)
+        mokaf2at_2da2 = self.hr_settings.get_code_as_float(k2)
+
         try:
             draj_obj = Drajat3lawat.objects.get(draja_wazifia=employee.draja_wazifia,alawa_sanawia=employee.alawa_sanawia)
             badal = Badalat_3lawat(
@@ -535,6 +547,7 @@ class M2moriaSheet():
                 draj_obj.galaa_m3isha,
                 shakhsia=draj_obj.shakhsia,
                 aadoa=aadoa,
+                mokaf2at_2da2=mokaf2at_2da2,
                 gasima=gasima,
                 atfal=(employee.atfal *self.hr_settings.get_code_as_float(Settings.SETTINGS_ATFAL)),
                 moahil=self.hr_settings.get_code_as_float(moahil),
@@ -637,6 +650,7 @@ class Wi7datMosa3idaMokaf2tFarigMoratabPayroll():
         aadoa = 0
         atfal = 0
         moahil = 0
+        mokaf2at_2da2 = 0
 
         try:
             draj_obj = Drajat3lawat.objects.get(draja_wazifia=employee.draja_wazifia,alawa_sanawia=employee.alawa_sanawia)
@@ -645,6 +659,7 @@ class Wi7datMosa3idaMokaf2tFarigMoratabPayroll():
                 draj_obj.galaa_m3isha,
                 shakhsia=draj_obj.shakhsia,
                 aadoa=aadoa,
+                mokaf2at_2da2=mokaf2at_2da2,
                 gasima=gasima,
                 atfal=atfal,
                 moahil=moahil,
@@ -677,6 +692,7 @@ class Wi7datMosa3idaMokaf2tFarigMoratabPayroll():
             emp_payroll.galaa_m3isha,
             shakhsia=emp_payroll.shakhsia,
             aadoa=0,
+            mokaf2at_2da2=0,
             gasima=0,
             atfal=0,
             moahil=0,
@@ -822,6 +838,7 @@ class Wi7datMosa3idaMokaf2tPayroll():
             emp_payroll.galaa_m3isha,
             shakhsia=emp_payroll.shakhsia,
             aadoa=0,
+            mokaf2at_2da2=0,
             gasima=0,
             atfal=0,
             moahil=0,
@@ -1302,6 +1319,7 @@ class TasoiaPayroll():
 
         total_ma3adin = 0
         total_aadoa = 0
+        total_mokaf2at_2da2 = 0
         total_gasima = 0
         total_atfal = 0
         total_moahil = 0
@@ -1329,6 +1347,7 @@ class TasoiaPayroll():
             total_mihna += badalat.mihna
             total_ma3adin += badalat.ma3adin
             total_aadoa += badalat.aadoa
+            total_mokaf2at_2da2 += badalat.mokaf2at_2da2
             total_gasima += badalat.ajtima3ia_gasima
             total_atfal += badalat.ajtima3ia_atfal
             total_moahil += badalat.moahil
@@ -1359,6 +1378,7 @@ class TasoiaPayroll():
                 total_mihna = total_mihna,
                 total_ma3adin = total_ma3adin,
                 total_aadoa = total_aadoa,
+                total_mokaf2at_2da2 = total_mokaf2at_2da2,
                 total_ajtima3ia = ajtima3ia,
                 total_moahil = total_moahil,
                 total_shakhsia = total_shakhsia,

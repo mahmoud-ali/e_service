@@ -216,6 +216,8 @@ class Settings(LoggingModel):
 
     SETTINGS_MODIR_3AM_ASAI = 'modir_3am_asai'
 
+    SETTINGS_MOKAF2T_ADA2 = 'mokaf2t_ada2'
+
     SETTINGS_CHOICES = {
         SETTINGS_ZAKA_KAFAF: _('SETTINGS_ZAKAT_KAFAF'),
         SETTINGS_ZAKA_NISAB: _('SETTINGS_ZAKAT_NISAB'),
@@ -251,8 +253,10 @@ class Settings(LoggingModel):
         SETTINGS_CHOICES[key] = _('2sti7gag 2lmobashara')+' '+MOSAMA_CATEGORY_CHOICES[mosama]
 
     for draja in Drajat3lawat.DRAJAT_CHOICES:
-        key = SETTINGS_AADOA+'_daraja_' + str(draja)
-        SETTINGS_CHOICES[key] = _('SETTINGS_AADOA')+' '+Drajat3lawat.DRAJAT_CHOICES[draja]
+        key_aadoa = SETTINGS_AADOA+'_daraja_' + str(draja)
+        key_mokaf2t_ada2 = SETTINGS_MOKAF2T_ADA2+'_daraja_' + str(draja)
+        SETTINGS_CHOICES[key_aadoa] = _('SETTINGS_AADOA')+' '+Drajat3lawat.DRAJAT_CHOICES[draja]
+        SETTINGS_CHOICES[key_mokaf2t_ada2] = _('SETTINGS_MOKAF2T_2DA2')+' '+Drajat3lawat.DRAJAT_CHOICES[draja]
 
     code = models.CharField(_("code"), choices=SETTINGS_CHOICES,max_length=30)
     value = models.CharField(_("value"),max_length=255)
@@ -979,6 +983,7 @@ class PayrollDetailHikalRatibiAbstract(PayrollDetailAbstract):
 
 class PayrollDetail(PayrollDetailHikalRatibiAbstract):
     aadoa = models.FloatField(_("aadoa"),default=0)
+    mokaf2at_2da2 = models.FloatField(_("mokaf2at_2da2"),default=0)
     gasima = models.FloatField(_("gasima"),default=0)
     atfal = models.FloatField(_("atfal"),default=0)
     moahil = models.FloatField(_("moahil"),default=0)
@@ -1045,6 +1050,7 @@ class PayrollTasoia(models.Model):
     total_mihna = models.FloatField(_("mihna"),default=0)
     total_ma3adin = models.FloatField(_("ma3adin"),default=0)
     total_aadoa = models.FloatField(_("aadoa"),default=0)
+    total_mokaf2at_2da2 = models.FloatField(_("aadoa"),default=0)
     total_ajtima3ia = models.FloatField(_("ajtima3ia"),default=0)
     total_moahil = models.FloatField(_("moahil"),default=0)
     total_shakhsia = models.FloatField(_("shakhsia"),default=0)

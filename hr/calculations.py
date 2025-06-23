@@ -4,7 +4,7 @@ from collections import namedtuple
 from django.utils import timezone
 
 class Badalat_3lawat():
-    def __init__(self,abtdai,galaa_m3isha,gasima=0,atfal=0,moahil=0,shakhsia=0,ma3adin=0,aadoa=0,month=1,year=1970):
+    def __init__(self,abtdai,galaa_m3isha,gasima=0,atfal=0,moahil=0,shakhsia=0,ma3adin=0,aadoa=0,mokaf2at_2da2=0,month=1,year=1970):
         self._abtdai = abtdai
         self._galaa_m3isha = galaa_m3isha
         self._asasi = (self._abtdai +self._galaa_m3isha)
@@ -14,6 +14,7 @@ class Badalat_3lawat():
         self._shakhsia = shakhsia
         self._ma3adin = ma3adin
         self._aadoa = aadoa
+        self._mokaf2at_2da2 = mokaf2at_2da2
         self._month = month
         self._year = year
 
@@ -54,6 +55,10 @@ class Badalat_3lawat():
         return self._aadoa
 
     @property
+    def mokaf2at_2da2(self):
+        return self._mokaf2at_2da2
+
+    @property
     def ajtima3ia_gasima(self):
         return self._gasima
     
@@ -80,7 +85,7 @@ class Badalat_3lawat():
     @property
     def ajmali_almoratab(self):
         return (self._asasi +self.tabi3at_3mal +self.tamtheel +self.mihna +self.ma3adin \
-                 +self.makhatir +self.aadoa +self.ajtima3ia_gasima +self.ajtima3ia_atfal \
+                 +self.makhatir +self.aadoa +self.mokaf2at_2da2 +self.ajtima3ia_gasima +self.ajtima3ia_atfal \
                  +self.moahil +self.shakhsia)
 
     def __iter__(self):
@@ -94,6 +99,7 @@ class Badalat_3lawat():
             ('ma3adin',self.ma3adin),
             ('makhatir',self.makhatir),
             ('aadoa',self.aadoa),
+            ('mokaf2at_2da2',self.mokaf2at_2da2),
             ('ajtima3ia_gasima',self.ajtima3ia_gasima),
             ('ajtima3ia_atfal',self.ajtima3ia_atfal),
             ('moahil',self.moahil),
@@ -162,7 +168,7 @@ class Khosomat():
                 
         return ((self.Badalat.ajmali_almoratab -self.Badalat.shakhsia -self.Badalat.moahil \
                  -self.Badalat.ajtima3ia_atfal -self.Badalat.ajtima3ia_gasima -self.Badalat.makhatir \
-                 -1200 -115 -self.tameen_ajtima3i -self.m3ash -self.Badalat.aadoa) *0.15) +2.5
+                 -1200 -115 -self.tameen_ajtima3i -self.m3ash -self.Badalat.aadoa -self.Badalat.mokaf2at_2da2*0.05) *0.15) +2.5
     
     @property
     def damga(self):
