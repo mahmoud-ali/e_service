@@ -8,7 +8,7 @@ from bootstrap_datepicker_plus.widgets import DatePickerInput
 from ..models import LkpItem, TblCompanyCommitmentMaster, TblCompanyCommitmentSchedular, TblCompanyRequestDetail,TblCompanyRequestMaster,STATE_TYPE_CONFIRM,STATE_TYPE_DRAFT
 
 commitment_none = TblCompanyCommitmentMaster.objects.none()
-commitment_all_qs = TblCompanyCommitmentMaster.objects.prefetch_related("company")
+commitment_all_qs = TblCompanyCommitmentMaster.objects.prefetch_related("company","license")
 commitment_confirmed_qs = commitment_all_qs.filter(state=STATE_TYPE_CONFIRM)
 commitment_confirmed_manual_qs = commitment_confirmed_qs \
     .filter(
