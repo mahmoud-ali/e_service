@@ -59,7 +59,7 @@ class TblCompanyPaymentListView(ApplicationListView):
     title = _("List of payments")
 
     def get_queryset(self):                
-        query = super().get_queryset()
+        query = super().get_queryset().select_related("request__commitment","request__commitment__company")
         query = query.filter(request__commitment__company__company_type__in=get_company_types_from_groups(self.request.user))
         return query
     
