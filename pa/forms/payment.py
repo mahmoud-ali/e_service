@@ -7,6 +7,7 @@ from bootstrap_datepicker_plus.widgets import DatePickerInput
 from ..models import LkpItem, TblCompanyPaymentDetail, TblCompanyRequestMaster,TblCompanyPaymentMaster,STATE_TYPE_CONFIRM
 
 request_all_qs = TblCompanyRequestMaster.objects.prefetch_related("commitment","commitment__company")
+request_none_qs = TblCompanyRequestMaster.objects.none()
 
 item_none = LkpItem.objects.none()
 item_all_qs = LkpItem.objects.all()
@@ -23,7 +24,7 @@ class TblCompanyPaymentAdminForm(ModelForm):
 
 class TblCompanyPaymentShowEditForm(TblCompanyPaymentAdminForm):
     layout = [["request",""],["payment_dt",""],["currency","exchange_rate","total_payment"],["note"],["exchange_attachement_file","attachement_file"]]
-    request = forms.ModelChoiceField(queryset=request_all_qs,disabled=True, label=_("request"))
+    request = forms.ModelChoiceField(queryset=request_none_qs,disabled=True, label=_("request"))
     total_payment = forms.FloatField(label=_('payments total'),disabled=True)
     
     def __init__(self, *args, **kwargs):        
@@ -37,6 +38,7 @@ class TblCompanyPaymentShowEditForm(TblCompanyPaymentAdminForm):
             self.fields["request"].queryset = request_all_qs.filter(id=pk)
             self.fields["total_payment"].initial = round(kwargs['instance'].total,2)
         else:
+            self.fields["request"].queryset = request_all_qs.all()
             self.fields["total_payment"].initial = 0
 
     class Meta:
