@@ -8,6 +8,7 @@ from pa.views.commitment_schedular import TblCompanyCommitmentScheduleCreateView
 from pa.views.daily import PaDailyView
 from pa.views.payment import TblCompanyPaymentDeleteView, TblCompanyPaymentUpdateView
 from pa.views.request import TblCompanyRequestDeleteView, TblCompanyRequestUpdateView
+from pa.views.request_status import RequestStatusView
 
 from .views import LkpLicenseSelectView, TblCompanyOpenningBalanceListView,TblCompanyOpenningBalanceCreateView,TblCompanyOpenningBalanceReadonlyView,TblCompanyOpenningBalanceUpdateView,TblCompanyOpenningBalanceDeleteView, \
                    TblCompanyCommitmentListView,TblCompanyCommitmentCreateView,TblCompanyCommitmentReadonlyView, \
@@ -57,5 +58,6 @@ urlpatterns = [
     path('payment/add/', TblCompanyPaymentCreateView.as_view(), name='payment_add'),
 
     path('daily/', PaDailyView.as_view(), name='daily_list'),
+    path('request_status/', RequestStatusView.as_view(), name='request_status'),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
