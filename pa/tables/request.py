@@ -18,11 +18,12 @@ class TblCompanyRequestTable(BaseTable):
     relation_fields = ["commitment","commitment__company"]
     total = tables.Column(verbose_name= _('request_total'),orderable=False)
     sum_of_confirmed_payment = tables.Column(verbose_name= _('payments total'),orderable=False)
+    remain_payment = tables.Column(verbose_name= _('remain payment'),orderable=False)
 
     class Meta:
         model = TblCompanyRequestMaster
         template_name = "django_tables2/bootstrap.html"
-        fields = ("commitment","from_dt","to_dt","currency","payment_state","total","sum_of_confirmed_payment","state")
+        fields = ("commitment","from_dt","to_dt","payment_state","currency","total","sum_of_confirmed_payment","remain_payment","state")
         empty_text = _("No records.")        
 
     def render_commitment(self,value,record):
@@ -37,11 +38,12 @@ class TblCompanyRequestCompanyTable(BaseTable):
     relation_fields = ["commitment","commitment__company"]
     total = tables.Column(verbose_name= _('request_total'),orderable=False)
     sum_of_confirmed_payment = tables.Column(verbose_name= _('payments total'),orderable=False)
+    remain_payment = tables.Column(verbose_name= _('remain payment'),orderable=False)
 
     class Meta:
         model = TblCompanyRequestMaster
         template_name = "django_tables2/bootstrap.html"
-        fields = ("from_dt","to_dt","currency","total","sum_of_confirmed_payment","payment_state")
+        fields = ("from_dt","to_dt","currency","total","sum_of_confirmed_payment","remain_payment","payment_state")
         empty_text = _("No records.")        
 
     def render_from_dt(self,value,record):

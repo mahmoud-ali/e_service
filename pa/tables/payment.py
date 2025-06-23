@@ -15,12 +15,13 @@ class BaseTable(tables.Table):
 class TblCompanyPaymentTable(BaseTable):
     menu_name = "pa:payment_show"
     relation_fields = ["request","request__commitment","request__commitment__company"]
-
+    total = tables.Column(verbose_name= _('اجمالي السداد'),orderable=False)
+    total_request_currency = tables.Column(verbose_name= _('اجمالي السداد بعملة المطالبة'),orderable=False)
 
     class Meta:
         model = TblCompanyPaymentMaster
         template_name = "django_tables2/bootstrap.html"
-        fields = ("request","payment_dt","currency","exchange_rate","state")
+        fields = ("request","payment_dt","currency","total","exchange_rate","total_request_currency","state")
         empty_text = _("No records.")        
     
     def render_request(self,value,record):

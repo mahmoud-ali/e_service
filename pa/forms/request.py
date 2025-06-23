@@ -39,9 +39,11 @@ class TblCompanyRequestAdminForm(ModelForm):
         fields = ["commitment","from_dt","to_dt","currency","note","attachement_file"] #,"state"
         
 class TblCompanyRequestShowEditForm(TblCompanyRequestAdminForm):
-    layout = ["commitment",["from_dt","to_dt"],["currency","total_payment"],"note","attachement_file"]
+    layout = ["commitment",["from_dt","to_dt"],["currency","request_value","total_payment","remain_payment"],"note","attachement_file"]
     commitment = forms.ModelChoiceField(queryset=commitment_none,disabled=True, label=_("commitment"))
+    request_value = forms.FloatField(label=_('request_value'),disabled=True)
     total_payment = forms.FloatField(label=_('payments total'),disabled=True)
+    remain_payment = forms.FloatField(label=_('remain_payment'),disabled=True)
     def __init__(self, *args, **kwargs):        
         super().__init__(*args, **kwargs)
         pk = None
@@ -51,9 +53,13 @@ class TblCompanyRequestShowEditForm(TblCompanyRequestAdminForm):
         
         if pk:
             self.fields["commitment"].queryset = commitment_all_qs.filter(id=pk)
-            self.fields["total_payment"].initial = kwargs['instance'].sum_of_payment()
+            self.fields["request_value"].initial = round(kwargs['instance'].total,2)
+            self.fields["total_payment"].initial = round(kwargs['instance'].sum_of_payment(),2)
+            self.fields["remain_payment"].initial = kwargs['instance'].remain_payment
         else:
+            self.fields["request_value"].initial = 0.0
             self.fields["total_payment"].initial = 0.0
+            self.fields["remain_payment"].initial = 0.0
 
     class Meta:
         model = TblCompanyRequestMaster

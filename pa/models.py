@@ -337,13 +337,18 @@ class TblCompanyRequestMaster(LoggingModel):
             qs = qs.filter(state=STATE_TYPE_CONFIRM)
 
         for p in qs:
-            sum += p.total/p.exchange_rate
+            if p.exchange_rate != 0:
+                sum += p.total/p.exchange_rate
 
         return sum
 
     @property
     def sum_of_confirmed_payment(self,exclude=0):
         return round(self.sum_of_payment(exclude,confirmed_only=True),2)
+
+    @property
+    def remain_payment(self):
+        return round(self.total -self.sum_of_confirmed_payment,2) #(0, confirmed_only=False)
 
     def update_payment_state(self):
         if self.state == STATE_TYPE_DRAFT:
@@ -530,6 +535,10 @@ class TblCompanyPaymentMaster(LoggingModel):
     @property
     def total(self):   
         return round(self.tblcompanypaymentdetail_set.aggregate(total=Sum('amount'))['total'],2) or 0
+
+    @property
+    def total_request_currency(self):   
+        return round(self.tblcompanypaymentdetail_set.aggregate(total=Sum('amount'))['total']/self.exchange_rate,2) or 0
 
     def __str__(self):
         return _("Financial payment") +" ("+str(self.id)+")"

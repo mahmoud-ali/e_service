@@ -22,9 +22,10 @@ class TblCompanyPaymentAdminForm(ModelForm):
             self.fields["request"].queryset = request_all_qs.filter(id=request_id)
 
 class TblCompanyPaymentShowEditForm(TblCompanyPaymentAdminForm):
-    layout = [["request",""],["payment_dt",""],["currency","exchange_rate"],["note"],["exchange_attachement_file","attachement_file"]]
+    layout = [["request",""],["payment_dt",""],["currency","exchange_rate","total_payment"],["note"],["exchange_attachement_file","attachement_file"]]
     request = forms.ModelChoiceField(queryset=request_all_qs,disabled=True, label=_("request"))
-
+    total_payment = forms.FloatField(label=_('payments total'),disabled=True)
+    
     def __init__(self, *args, **kwargs):        
         super().__init__(*args, **kwargs)
         pk = None
@@ -34,6 +35,9 @@ class TblCompanyPaymentShowEditForm(TblCompanyPaymentAdminForm):
         
         if pk:
             self.fields["request"].queryset = request_all_qs.filter(id=pk)
+            self.fields["total_payment"].initial = round(kwargs['instance'].total,2)
+        else:
+            self.fields["total_payment"].initial = 0
 
     class Meta:
         model = TblCompanyPaymentMaster

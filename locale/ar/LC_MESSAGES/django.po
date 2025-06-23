@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-24 11:35+0200\n"
+"POT-Creation-Date: 2025-06-23 15:20+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -142,7 +142,7 @@ msgid "company_type"
 msgstr "نوع الشركة"
 
 #: company_profile/admin.py:374 dabtiaat_altaedin/admin.py:339
-#: gold_travel/admin.py:424 gold_travel_traditional/admin.py:331
+#: gold_travel/admin.py:429 gold_travel_traditional/admin.py:331
 msgid "Export data"
 msgstr "تصدير البيانات"
 
@@ -195,7 +195,7 @@ msgstr ""
 #: hse_companies/models/incidents.py:66
 #: hse_companies/models/performance_report.py:27 pa/forms/commitment.py:80
 #: pa/forms/daily.py:9 pa/models.py:93 pa/models.py:133 pa/tables/payment.py:33
-#: pa/tables/request.py:51 pa/templates/pa/pa_daily.html:46
+#: pa/tables/request.py:53 pa/templates/pa/pa_daily.html:46
 #: planning/forms.py:24 planning/forms.py:38 planning/models.py:483
 #: planning/models.py:526 planning/models.py:546 planning/models.py:556
 #: planning/models.py:727 planning/models.py:744 planning/models.py:781
@@ -371,7 +371,7 @@ msgstr "ديسمبر"
 #: gold_travel_traditional/models.py:8 help_request/models.py:11
 #: hr_portal/models.py:89 hse_traditional/models.py:47 mokhalafat/models.py:6
 #: pa/models.py:46 planning/models.py:183 revenu_dist/models.py:53
-#: sswg/models.py:13 traditional_api/models.py:10 traditional_app/models.py:40
+#: traditional_api/models.py:10 traditional_app/models.py:40
 #: workflow/model_utils.py:9 workflow/model_utils.py:71
 msgid "created_at"
 msgstr "تاريخ الانشاء"
@@ -382,7 +382,7 @@ msgstr "تاريخ الانشاء"
 #: gold_travel_traditional/models.py:9 help_request/models.py:13
 #: hr_portal/models.py:90 hse_traditional/models.py:48 mokhalafat/models.py:7
 #: pa/models.py:47 planning/models.py:184 revenu_dist/models.py:54
-#: sswg/models.py:14 traditional_api/models.py:11 traditional_app/models.py:41
+#: traditional_api/models.py:11 traditional_app/models.py:41
 #: workflow/model_utils.py:10 workflow/model_utils.py:72
 msgid "created_by"
 msgstr "المستخدم المسئول عن الانشاء"
@@ -396,7 +396,7 @@ msgstr "المستخدم المسئول عن الانشاء"
 #: gold_travel_traditional/models.py:11 help_request/models.py:12
 #: hr_portal/models.py:92 hse_traditional/models.py:50 mokhalafat/models.py:9
 #: pa/models.py:49 planning/models.py:185 revenu_dist/models.py:56
-#: sswg/models.py:16 traditional_api/models.py:13 traditional_app/models.py:43
+#: traditional_api/models.py:13 traditional_app/models.py:43
 #: workflow/model_utils.py:12 workflow/model_utils.py:74
 msgid "updated_at"
 msgstr "تاريخ اخر تعديل"
@@ -407,7 +407,7 @@ msgstr "تاريخ اخر تعديل"
 #: gold_travel_traditional/models.py:12 help_request/models.py:14
 #: hr_portal/models.py:93 hse_traditional/models.py:51 mokhalafat/models.py:10
 #: pa/models.py:50 planning/models.py:186 revenu_dist/models.py:57
-#: sswg/models.py:17 traditional_api/models.py:14 traditional_app/models.py:44
+#: traditional_api/models.py:14 traditional_app/models.py:44
 #: workflow/model_utils.py:13 workflow/model_utils.py:75
 msgid "updated_by"
 msgstr "المستخدم المسئول عن التعديل"
@@ -517,7 +517,7 @@ msgstr "امتياز استكشاف"
 msgid "sageer"
 msgstr "تعدين صغير"
 
-#: company_profile/models.py:165 gold_travel/admin.py:431
+#: company_profile/models.py:165 gold_travel/admin.py:436
 #: gold_travel/models.py:23 gold_travel/models.py:137
 #: gold_travel_traditional/admin.py:338 gold_travel_traditional/models.py:94
 #: mokhalafat/models.py:16 planning/models.py:223
@@ -1664,7 +1664,7 @@ msgid "requirements_master"
 msgstr ""
 
 #: company_profile/models.py:949 pa/forms/commitment.py:65
-#: pa/forms/payment.py:60 pa/forms/request.py:83
+#: pa/forms/payment.py:60 pa/forms/request.py:89
 msgid "item"
 msgstr "البند"
 
@@ -1722,8 +1722,8 @@ msgstr "تعليق مختصر عن الدراسة"
 #: company_profile/models.py:1000 company_profile/models.py:1026
 #: company_profile/models.py:1109 company_profile/models.py:1201
 #: dabtiaat_altaedin/models.py:93 gold_travel/models.py:153
-#: gold_travel_traditional/models.py:114 pa/models.py:313 pa/models.py:525
-#: pa/models.py:644
+#: gold_travel_traditional/models.py:114 pa/models.py:313 pa/models.py:533
+#: pa/models.py:652
 msgid "attachement_file"
 msgstr "المرفقات"
 
@@ -3092,7 +3092,7 @@ msgstr "الموضوع"
 #: company_profile/templates/company_profile/application_readonly.html:25
 #: company_profile/templates/company_profile/application_readonly_master_details2.html:61
 #: pa/templates/pa/application_readonly.html:40
-#: pa/templates/pa/application_readonly_master_details.html:64
+#: pa/templates/pa/application_readonly_master_details.html:66
 msgid "whom_attachement_file"
 msgstr "ملف شهادة لمن يهمه الامر"
 
@@ -3187,7 +3187,7 @@ msgstr "تفاصيل استمارة الانتاج"
 #: company_profile_exploration/tables/workplan.py:22
 #: hse_companies/tables/incident.py:22 pa/tables/commitment.py:26
 #: pa/tables/commitment_schedule.py:22 pa/tables/openning_balance.py:22
-#: pa/tables/payment.py:24 pa/tables/request.py:26 pa/tables/request.py:45
+#: pa/tables/payment.py:24 pa/tables/request.py:27 pa/tables/request.py:47
 msgid "No records."
 msgstr "لايوجد سجل."
 
@@ -3218,14 +3218,14 @@ msgstr "لقد تم رفض طلبك للاتي: "
 #: company_profile_exploration/templates/company_profile_exploration/application_readonly_master_details.html:48
 #: company_profile_exploration/templates/company_profile_exploration/application_readonly_master_details.html:59
 #: pa/templates/pa/application_readonly.html:26
-#: pa/templates/pa/application_readonly_master_details.html:50
+#: pa/templates/pa/application_readonly_master_details.html:51
 msgid "edit_btn"
 msgstr "تعديل سجل"
 
 #: company_profile/templates/company_profile/application_readonly_master_details2.html:52
 #: company_profile_exploration/templates/company_profile_exploration/application_readonly_master_details.html:53
 #: pa/templates/pa/application_readonly.html:31
-#: pa/templates/pa/application_readonly_master_details.html:55
+#: pa/templates/pa/application_readonly_master_details.html:57
 msgid "delete_btn"
 msgstr "حذف سجل"
 
@@ -3314,7 +3314,7 @@ msgstr "اضافة طلب حركة اجنبي"
 #: company_profile_exploration/views/application.py:237
 #: hse_companies/views/application.py:137
 #: hse_companies/views/application.py:237 pa/views/application.py:166
-#: pa/views/application.py:305
+#: pa/views/application.py:310
 msgid "Application sent successfully."
 msgstr "تم ارسال الطلب بنجاح."
 
@@ -3871,7 +3871,7 @@ msgstr "الاتفاقية/العقد"
 
 #: company_profile_exploration/models/work_plan.py:63
 #: hse_companies/models/incidents.py:216 pa/forms/daily.py:10 pa/models.py:94
-#: pa/models.py:135 pa/models.py:309 pa/models.py:520
+#: pa/models.py:135 pa/models.py:309 pa/models.py:528
 #: pa/templates/pa/pa_daily.html:47 pa/templates/pa/pa_daily.html:77
 #: revenu_dist/models.py:112
 msgid "currency"
@@ -3880,8 +3880,8 @@ msgstr "العملة"
 #: company_profile_exploration/models/work_plan.py:64
 #: dabtiaat_altaedin/admin.py:346 dabtiaat_altaedin/models.py:92
 #: dabtiaat_altaedin/models.py:205 executive_office/models.py:88
-#: executive_office/models.py:149 gold_travel/admin.py:432
-#: gold_travel/admin.py:473 gold_travel/models.py:74 gold_travel/models.py:152
+#: executive_office/models.py:149 gold_travel/admin.py:437
+#: gold_travel/admin.py:478 gold_travel/models.py:74 gold_travel/models.py:152
 #: gold_travel/models.py:270 gold_travel_traditional/admin.py:339
 #: gold_travel_traditional/models.py:112
 #: hse_companies/models/corrective_actions.py:30
@@ -3891,11 +3891,11 @@ msgstr "العملة"
 #: hse_traditional/models.py:238 hse_traditional/models.py:401
 #: hse_traditional/models.py:484 it/models.py:37 it/models.py:168
 #: pa/models.py:95 pa/models.py:137 pa/models.py:201 pa/models.py:311
-#: pa/models.py:523 pa/tables/payment.py:34 pa/tables/request.py:53
+#: pa/models.py:531 pa/tables/payment.py:34 pa/tables/request.py:55
 #: planning/models.py:333 planning/models.py:436 planning/models.py:459
 #: production_control/models.py:53 production_control/models.py:131
-#: production_control/models.py:243 sswg/models.py:271
-#: traditional_app/models.py:386
+#: production_control/models.py:243 sswg/models.py:502 sswg/models.py:616
+#: sswg/models.py:730 sswg/models.py:844 traditional_app/models.py:386
 msgid "record_state"
 msgstr "الحالة"
 
@@ -4198,7 +4198,10 @@ msgstr "التوصية"
 #: production_control/templates/admin/production_control/goldproductionform/pagination.html:17
 #: production_control/templates/admin/production_control/old_submit_line.html:4
 #: production_control/templates/admin/production_control/submit_line.html:5
-#: sswg/templates/admin/sswg/basicform/submit_line.html:4
+#: sswg/templates/admin/sswg/basicformexport/submit_line.html:5
+#: sswg/templates/admin/sswg/basicformexportcompany/submit_line.html:5
+#: sswg/templates/admin/sswg/basicformreexport/submit_line.html:5
+#: sswg/templates/admin/sswg/basicformsilver/submit_line.html:5
 #: traditional_app/templates/admin/traditional_app/submit_line.html:5
 msgid "Save"
 msgstr "حفظ"
@@ -4211,7 +4214,10 @@ msgstr "حفظ"
 #: pa/templates/admin/pa/submit_line.html:8
 #: production_control/templates/admin/production_control/old_submit_line.html:8
 #: production_control/templates/admin/production_control/submit_line.html:15
-#: sswg/templates/admin/sswg/basicform/submit_line.html:8
+#: sswg/templates/admin/sswg/basicformexport/submit_line.html:15
+#: sswg/templates/admin/sswg/basicformexportcompany/submit_line.html:15
+#: sswg/templates/admin/sswg/basicformreexport/submit_line.html:15
+#: sswg/templates/admin/sswg/basicformsilver/submit_line.html:15
 #: traditional_app/templates/admin/traditional_app/submit_line.html:15
 msgid "Close"
 msgstr "إغلاق"
@@ -4224,7 +4230,10 @@ msgstr "إغلاق"
 #: pa/templates/admin/pa/submit_line.html:12
 #: production_control/templates/admin/production_control/old_submit_line.html:12
 #: production_control/templates/admin/production_control/submit_line.html:19
-#: sswg/templates/admin/sswg/basicform/submit_line.html:12
+#: sswg/templates/admin/sswg/basicformexport/submit_line.html:19
+#: sswg/templates/admin/sswg/basicformexportcompany/submit_line.html:19
+#: sswg/templates/admin/sswg/basicformreexport/submit_line.html:19
+#: sswg/templates/admin/sswg/basicformsilver/submit_line.html:19
 #: traditional_app/templates/admin/traditional_app/submit_line.html:19
 msgid "Delete"
 msgstr "حذف السجل"
@@ -4264,8 +4273,8 @@ msgid "New record"
 msgstr "سجل جديد"
 
 #: company_profile_exploration/views/application.py:358
-#: hse_companies/views/application.py:358 pa/views/application.py:397
-#: pa/views/application.py:454
+#: hse_companies/views/application.py:358 pa/views/application.py:402
+#: pa/views/application.py:463
 msgid "Record removed successfully."
 msgstr "تم حذف السجل بنجاح."
 
@@ -4281,57 +4290,57 @@ msgstr "قائمة طلبات خطة عمل"
 msgid "Delete work plan"
 msgstr "اضافة طلب خطة عمل"
 
-#: dabtiaat_altaedin/admin.py:133 gold_travel/admin.py:126
+#: dabtiaat_altaedin/admin.py:133 gold_travel/admin.py:127
 msgid "Any date"
 msgstr "أي تاريخ"
 
-#: dabtiaat_altaedin/admin.py:135 gold_travel/admin.py:128
+#: dabtiaat_altaedin/admin.py:135 gold_travel/admin.py:129
 msgid "Today"
 msgstr "اليوم"
 
-#: dabtiaat_altaedin/admin.py:142 gold_travel/admin.py:135
+#: dabtiaat_altaedin/admin.py:142 gold_travel/admin.py:136
 msgid "Past 7 days"
 msgstr "الايام السبعة الاخيرة"
 
-#: dabtiaat_altaedin/admin.py:149 gold_travel/admin.py:142
+#: dabtiaat_altaedin/admin.py:149 gold_travel/admin.py:143
 msgid "Past 30 days"
 msgstr "الايام الثلاثين الاخيرة"
 
-#: dabtiaat_altaedin/admin.py:156 gold_travel/admin.py:149
+#: dabtiaat_altaedin/admin.py:156 gold_travel/admin.py:150
 msgid "This month"
 msgstr "هذا الشهر"
 
-#: dabtiaat_altaedin/admin.py:163 gold_travel/admin.py:156
+#: dabtiaat_altaedin/admin.py:163 gold_travel/admin.py:157
 msgid "Last month"
 msgstr "الشهر السابق"
 
-#: dabtiaat_altaedin/admin.py:170 gold_travel/admin.py:163
+#: dabtiaat_altaedin/admin.py:170 gold_travel/admin.py:164
 msgid "This year"
 msgstr "هذا العام"
 
-#: dabtiaat_altaedin/admin.py:177 gold_travel/admin.py:170
+#: dabtiaat_altaedin/admin.py:177 gold_travel/admin.py:171
 msgid "Last year"
 msgstr "العام السابق"
 
 #: dabtiaat_altaedin/admin.py:194 dabtiaat_altaedin/admin.py:232
-#: gold_travel/admin.py:187 gold_travel/admin.py:225
+#: gold_travel/admin.py:188 gold_travel/admin.py:226
 #: traditional_app/admin.py:90
 msgid "All"
 msgstr "الكل"
 
-#: dabtiaat_altaedin/admin.py:295 gold_travel/admin.py:371
-#: gold_travel/admin.py:649 gold_travel/admin.py:659
+#: dabtiaat_altaedin/admin.py:295 gold_travel/admin.py:376
+#: gold_travel/admin.py:654 gold_travel/admin.py:664
 msgid "Confirm application"
 msgstr "اعتماد الطلب"
 
 #: dabtiaat_altaedin/admin.py:304 dabtiaat_altaedin/models.py:74
-#: dabtiaat_altaedin/models.py:197 gold_travel/admin.py:380
+#: dabtiaat_altaedin/models.py:197 gold_travel/admin.py:385
 #: gold_travel/models.py:110
 msgid "state_smrc"
 msgstr "اعتماد ممثل الشركة السودانية بالولاية"
 
 #: dabtiaat_altaedin/admin.py:308 dabtiaat_altaedin/admin.py:325
-#: gold_travel/admin.py:384 gold_travel/admin.py:663 sswg/admin.py:265
+#: gold_travel/admin.py:389 gold_travel/admin.py:668 sswg/__admin.py:272
 #: workflow/admin_utils.py:258
 msgid "application confirmed successfully!"
 msgstr "تم إعتماد الطلب بنجاح."
@@ -4345,20 +4354,20 @@ msgid "state_approved"
 msgstr "مصدقة"
 
 #: dabtiaat_altaedin/admin.py:329 dabtiaat_altaedin/admin.py:336
-#: gold_travel/admin.py:415 gold_travel/admin.py:421 gold_travel/admin.py:667
-#: gold_travel/admin.py:673
+#: gold_travel/admin.py:420 gold_travel/admin.py:426 gold_travel/admin.py:672
+#: gold_travel/admin.py:678
 msgid "return_to_draft"
 msgstr "إرجاع إلى مسودة"
 
-#: dabtiaat_altaedin/admin.py:337 gold_travel/admin.py:395
-#: gold_travel/admin.py:404 gold_travel/admin.py:413 gold_travel/admin.py:422
-#: gold_travel/admin.py:674 gold_travel/admin.py:683
+#: dabtiaat_altaedin/admin.py:337 gold_travel/admin.py:400
+#: gold_travel/admin.py:409 gold_travel/admin.py:418 gold_travel/admin.py:427
+#: gold_travel/admin.py:679 gold_travel/admin.py:688
 #: gold_travel_traditional/admin.py:200 gold_travel_traditional/admin.py:237
 msgid "application changed successfully!"
 msgstr "تم تعديل الطلب بنجاح."
 
 #: dabtiaat_altaedin/admin.py:346 dabtiaat_altaedin/models.py:87
-#: dabtiaat_altaedin/models.py:202 gold_travel/admin.py:431
+#: dabtiaat_altaedin/models.py:202 gold_travel/admin.py:436
 #: gold_travel/models.py:138 gold_travel/models.py:266 it/models.py:31
 #: mokhalafat/models.py:17 pa/templates/pa/pa_daily.html:75
 #: production_control/models.py:128 production_control/models.py:240
@@ -4379,7 +4388,7 @@ msgstr ""
 msgid "koli_amount"
 msgstr "المبلغ الكلي"
 
-#: dabtiaat_altaedin/admin.py:346 gold_travel/admin.py:432
+#: dabtiaat_altaedin/admin.py:346 gold_travel/admin.py:437
 #: gold_travel_traditional/admin.py:339 hse_traditional/models.py:237
 #: hse_traditional/models.py:400 hse_traditional/models.py:483
 msgid "source_state"
@@ -4473,8 +4482,8 @@ msgstr "الممثلين بالولاية"
 msgid "state_draft"
 msgstr "مسودة"
 
-#: dabtiaat_altaedin/models.py:80 gold_travel/admin.py:406
-#: gold_travel/admin.py:412 gold_travel/models.py:116
+#: dabtiaat_altaedin/models.py:80 gold_travel/admin.py:411
+#: gold_travel/admin.py:417 gold_travel/models.py:116
 msgid "state_canceled"
 msgstr "تم الإلغاء"
 
@@ -4498,7 +4507,7 @@ msgstr "رقم السبيكة"
 
 #: dabtiaat_altaedin/models.py:173
 #: dabtiaat_altaedin/templates/admin/dabtiaat_altaedin/appdabtiaat/pagination.html:13
-#: gold_travel/admin.py:431 gold_travel/admin.py:456 gold_travel/models.py:268
+#: gold_travel/admin.py:436 gold_travel/admin.py:461 gold_travel/models.py:268
 #: gold_travel/templates/admin/gold_travel/appmovegold/pagination.html:13
 #: gold_travel/templates/admin/gold_travel/appmovegoldreexportgold/pagination.html:13
 #: gold_travel_traditional/admin.py:338 gold_travel_traditional/models.py:106
@@ -4530,8 +4539,8 @@ msgstr "انواع التسويات"
 msgid "settlement_type"
 msgstr "نوع التسوية"
 
-#: dabtiaat_altaedin/models.py:203 pa/models.py:114 pa/models.py:464
-#: pa/models.py:573 pa/models.py:641 planning/models.py:802
+#: dabtiaat_altaedin/models.py:203 pa/models.py:114 pa/models.py:466
+#: pa/models.py:581 pa/models.py:649 planning/models.py:802
 #: revenu_dist/models.py:111 revenu_dist/models.py:149
 #: traditional_api/models.py:57 traditional_app/models.py:467
 #: traditional_app/models.py:533 traditional_app/models.py:549
@@ -4588,8 +4597,8 @@ msgstr "المكتب التنفيذي"
 msgid "state_processing"
 msgstr "قيد الاجراء"
 
-#: executive_office/models.py:15 gold_travel/admin.py:676
-#: gold_travel/admin.py:682 gold_travel/models.py:263
+#: executive_office/models.py:15 gold_travel/admin.py:681
+#: gold_travel/admin.py:687 gold_travel/models.py:263
 msgid "state_done"
 msgstr "تم التنفيذ"
 
@@ -4688,31 +4697,31 @@ msgstr "مهمة"
 msgid "inbox tasks"
 msgstr "قائمة المهام"
 
-#: gold_travel/admin.py:266
+#: gold_travel/admin.py:267
 msgid "owner data"
 msgstr "بيانات المالك"
 
-#: gold_travel/admin.py:272
+#: gold_travel/admin.py:273
 msgid "representative data"
 msgstr "بيانات الناقل"
 
-#: gold_travel/admin.py:284
+#: gold_travel/admin.py:285
 msgid "attachments"
 msgstr "المرفقات"
 
-#: gold_travel/admin.py:388
+#: gold_travel/admin.py:393
 msgid "Arrived to SSMO"
 msgstr "وصل للمواصفات والمقاييس"
 
-#: gold_travel/admin.py:394 gold_travel/models.py:114
+#: gold_travel/admin.py:399 gold_travel/models.py:114
 msgid "state_ssmo"
 msgstr "إكتملت اجراءات الصادر"
 
-#: gold_travel/admin.py:397 gold_travel/admin.py:403 gold_travel/models.py:115
+#: gold_travel/admin.py:402 gold_travel/admin.py:408 gold_travel/models.py:115
 msgid "state_waived"
 msgstr "تم التنازل"
 
-#: gold_travel/admin.py:431 gold_travel/admin.py:461
+#: gold_travel/admin.py:436 gold_travel/admin.py:466
 #: gold_travel/templates/admin/gold_travel/appmovegold/pagination.html:14
 #: gold_travel/templates/admin/gold_travel/appmovegoldexportsilver/pagination.html:14
 #: gold_travel/templates/admin/gold_travel/appmovegoldreexportgold/pagination.html:14
@@ -4720,12 +4729,12 @@ msgstr "تم التنازل"
 msgid "gold_alloy_count"
 msgstr "عدد السبائك"
 
-#: gold_travel/admin.py:431 gold_travel/models.py:139
+#: gold_travel/admin.py:436 gold_travel/models.py:139
 #: traditional_app/models.py:499 traditional_app/models.py:517
 msgid "destination"
 msgstr "الوجهة"
 
-#: gold_travel/admin.py:431 gold_travel/admin.py:452 gold_travel/models.py:81
+#: gold_travel/admin.py:436 gold_travel/admin.py:457 gold_travel/models.py:81
 #: gold_travel/models.py:82 gold_travel/models.py:141 gold_travel/models.py:267
 #: traditional_app/models.py:247 traditional_app/models.py:265
 #: traditional_app/models.py:282 traditional_app/models.py:298
@@ -4734,36 +4743,36 @@ msgstr "الوجهة"
 msgid "owner_name"
 msgstr "اسم المالك"
 
-#: gold_travel/admin.py:431 gold_travel/models.py:142
+#: gold_travel/admin.py:436 gold_travel/models.py:142
 msgid "owner_address"
 msgstr "عنوان المالك"
 
-#: gold_travel/admin.py:432 gold_travel/models.py:143
+#: gold_travel/admin.py:437 gold_travel/models.py:143
 msgid "repr_name"
 msgstr "اسم الناقل"
 
-#: gold_travel/admin.py:432 gold_travel/models.py:144
+#: gold_travel/admin.py:437 gold_travel/models.py:144
 msgid "repr_address"
 msgstr "عنوان الناقل"
 
-#: gold_travel/admin.py:432 gold_travel/models.py:145
+#: gold_travel/admin.py:437 gold_travel/models.py:145
 msgid "repr_phone"
 msgstr "تلفون الناقل"
 
-#: gold_travel/admin.py:432 gold_travel/models.py:146
+#: gold_travel/admin.py:437 gold_travel/models.py:146
 msgid "repr_identity_type"
 msgstr "نوع اثبات هوية الناقل"
 
-#: gold_travel/admin.py:432 gold_travel/models.py:147
+#: gold_travel/admin.py:437 gold_travel/models.py:147
 msgid "repr_identity"
 msgstr "اثبات هوية الناقل"
 
-#: gold_travel/admin.py:432 gold_travel/models.py:148
+#: gold_travel/admin.py:437 gold_travel/models.py:148
 msgid "repr_identity_issue_date"
 msgstr "تاريخ اصدار هوية الناقل"
 
-#: gold_travel/admin.py:466 gold_travel/admin.py:469 gold_travel/admin.py:620
-#: gold_travel/admin.py:623 production_control/__admin.py:255
+#: gold_travel/admin.py:471 gold_travel/admin.py:474 gold_travel/admin.py:625
+#: gold_travel/admin.py:628 production_control/__admin.py:255
 #: production_control/__admin.py:258 production_control/__admin.py:361
 #: production_control/__admin.py:364 production_control/admin.py:98
 #: production_control/admin.py:101 production_control/admin.py:214
@@ -4871,8 +4880,8 @@ msgstr "رخصة قيادة"
 msgid "form_type"
 msgstr "نوع الاستمارة"
 
-#: gold_travel/models.py:189 gold_travel/models.py:190 sswg/forms.py:13
-#: sswg/models.py:52
+#: gold_travel/models.py:189 gold_travel/models.py:190 sswg/forms.py:17
+#: sswg/forms.py:32 sswg/forms.py:47 sswg/models.py:101
 msgid "Move Gold"
 msgstr "استمارة ترحيل ذهب صادر"
 
@@ -5561,12 +5570,12 @@ msgstr ""
 msgid "Employee Moahil"
 msgstr ""
 
-#: hse_companies/admin.py:842 hse_companies/models/corrective_actions.py:27
+#: hse_companies/admin.py:865 hse_companies/models/corrective_actions.py:27
 #: hse_companies/models/corrective_actions.py:103
 msgid "الإجراء التصحيحي"
 msgstr ""
 
-#: hse_companies/admin.py:846
+#: hse_companies/admin.py:869
 msgid "تقرير / حادث / مأمورية"
 msgstr ""
 
@@ -6604,12 +6613,12 @@ msgstr "ملاحظات"
 msgid "AppMokhalafatRecommendation"
 msgstr "التوصيات"
 
-#: pa/admin.py:162 pa/tables/request.py:19 pa/tables/request.py:38
+#: pa/admin.py:162 pa/tables/request.py:19 pa/tables/request.py:39
 msgid "request_total"
 msgstr "مجموع المطالبة"
 
-#: pa/admin.py:166 pa/forms/request.py:44 pa/tables/request.py:20
-#: pa/tables/request.py:39
+#: pa/admin.py:166 pa/forms/request.py:45 pa/tables/request.py:20
+#: pa/tables/request.py:40
 msgid "payments total"
 msgstr "مجموع السداد"
 
@@ -6617,8 +6626,8 @@ msgstr "مجموع السداد"
 msgid "Production Accounting"
 msgstr "حسابات الانتاج"
 
-#: pa/forms/commitment.py:91 pa/forms/request.py:43 pa/forms/request.py:68
-#: pa/forms/request.py:97 pa/models.py:197 pa/models.py:306
+#: pa/forms/commitment.py:91 pa/forms/request.py:43 pa/forms/request.py:74
+#: pa/forms/request.py:103 pa/models.py:197 pa/models.py:306
 msgid "commitment"
 msgstr "التزام"
 
@@ -6627,9 +6636,17 @@ msgid "all"
 msgstr "الكل"
 
 #: pa/forms/payment.py:26 pa/forms/payment.py:47 pa/forms/payment.py:74
-#: pa/models.py:518
+#: pa/models.py:526
 msgid "request"
 msgstr "المطالبة"
+
+#: pa/forms/request.py:44
+msgid "request_value"
+msgstr "قيمة المطالبة"
+
+#: pa/forms/request.py:46
+msgid "remain_payment"
+msgstr "متبقي المطالبة"
 
 #: pa/models.py:24 revenu_dist/models.py:43
 msgid "sdg"
@@ -6687,7 +6704,7 @@ msgstr "الرصيد الافتتاحي"
 msgid "Openning balances"
 msgstr "الارصدة الافتتاحية"
 
-#: pa/models.py:113 pa/models.py:173 pa/models.py:463 pa/models.py:572
+#: pa/models.py:113 pa/models.py:173 pa/models.py:465 pa/models.py:580
 #: pa/templates/pa/pa_daily.html:76
 msgid "financial item"
 msgstr "البند"
@@ -6704,7 +6721,7 @@ msgstr "تفاصيل الارصدة الافتتاحية"
 msgid "item type should match company type"
 msgstr "اختر بند مناسب لنوع الشركة"
 
-#: pa/models.py:136 pa/models.py:312 pa/models.py:524 revenu_dist/models.py:109
+#: pa/models.py:136 pa/models.py:312 pa/models.py:532 revenu_dist/models.py:109
 msgid "note"
 msgstr "البيان"
 
@@ -6764,12 +6781,11 @@ msgstr "جدولة التزامات مالية"
 msgid "field is required"
 msgstr "ادخال الحقل اجباري"
 
-#: pa/models.py:245 pa/models.py:427
+#: pa/models.py:245 pa/models.py:429
 msgid "to_dt should be great or equal than from_dt"
 msgstr "حقل تاريخ النهاية يجب ان يكون اكبر او يساوي حقل تاريخ البداية"
 
-#: pa/models.py:252 pa/models.py:432 pa/models.py:437 pa/models.py:443
-#: pa/models.py:444
+#: pa/models.py:252
 msgid "conflicted date"
 msgstr "تاريخ متضارب"
 
@@ -6785,93 +6801,85 @@ msgstr "مدفوع جزئياً"
 msgid "full_payment"
 msgstr "مدفوع كلياً"
 
-#: pa/models.py:310 pa/tables/request.py:52
+#: pa/models.py:310 pa/tables/request.py:54
 msgid "payment_state"
 msgstr "موقف السداد"
 
-#: pa/models.py:382
+#: pa/models.py:384
 msgid "Request wait for payment"
 msgstr "المطالبة بإنتظار السداد"
 
-#: pa/models.py:388
+#: pa/models.py:390
 msgid "Request paied"
 msgstr "تم سداد المطالبة"
 
-#: pa/models.py:450
+#: pa/models.py:452
 msgid "Financial request"
 msgstr "مطالبة مالية"
 
-#: pa/models.py:451
+#: pa/models.py:453
 msgid "Financial requests"
 msgstr "مطالبات مالية"
 
-#: pa/models.py:492
+#: pa/models.py:500
 msgid "request already confirmed!"
 msgstr "لايمكن تعديل مطالبة مؤكدة"
 
-#: pa/models.py:499
+#: pa/models.py:507
 msgid "request amount should match commitment amount: "
 msgstr "قيمة المطالبة يجب ان تساوي قيمة الالتزام"
 
-#: pa/models.py:504
+#: pa/models.py:512
 msgid "receive_dt"
 msgstr "تاريخ الاستلام"
 
-#: pa/models.py:505
+#: pa/models.py:513
 msgid "receiver_name"
 msgstr "اسم المستلم"
 
-#: pa/models.py:519
+#: pa/models.py:527
 msgid "payment_dt"
 msgstr "تاريخ السداد"
 
-#: pa/models.py:521 pa/templates/pa/pa_daily.html:78
+#: pa/models.py:529 pa/templates/pa/pa_daily.html:78
 msgid "exchange_rate"
 msgstr "سعر الصرف"
 
-#: pa/models.py:522
+#: pa/models.py:530
 msgid "exchange_attachement_file"
 msgstr "مرفق سعر الصرف"
 
-#: pa/models.py:532 pa/models.py:559
+#: pa/models.py:540 pa/models.py:567
 msgid "Financial payment"
 msgstr "السداد"
 
-#: pa/models.py:540
+#: pa/models.py:548
 msgid "payment currency equal to request currency"
 msgstr "عملة السداد مساوية لعملة الدفع"
 
-#: pa/models.py:544
+#: pa/models.py:552
 msgid "attach document"
 msgstr "ملف المرفقات"
 
-#: pa/models.py:560
+#: pa/models.py:568
 msgid "Financial payments"
 msgstr "السداد"
 
-#: pa/models.py:606
-msgid "payment already confirmed!"
-msgstr "لايمكن تعديل مطالبة مؤكدة"
-
-#: pa/models.py:616
-msgid "item not exists in request"
-msgstr "البند غير موجود في المطالبة"
-
-#: pa/models.py:620
-msgid "sum of payments more than request amount: "
-msgstr "مجموع قيم السداد اكبر من قيمة المطالبة"
-
-#: pa/models.py:624
+#: pa/models.py:632
 msgid "payment_method_name"
 msgstr "طريقة السداد"
 
-#: pa/models.py:628 pa/models.py:629 pa/models.py:642
+#: pa/models.py:636 pa/models.py:637 pa/models.py:650
 msgid "Payment method"
 msgstr "طريقة السداد"
 
-#: pa/models.py:643
+#: pa/models.py:651
 msgid "reference_key"
 msgstr "الرقم المرجعي"
+
+#: pa/tables/request.py:21 pa/tables/request.py:41
+msgid "remain payment"
+msgstr "متبقي المطالبة"
 
 #: pa/templates/pa/application_choose.html:15
 msgid "Choose"
@@ -8027,13 +8035,13 @@ msgstr "تفاصيل توزيع الايرادات"
 msgid "Revenu distribution details"
 msgstr "تفاصيل توزيع الايرادات"
 
-#: sswg/admin.py:264
+#: sswg/__admin.py:271
 #, fuzzy
 #| msgid "SSWG State 1"
 msgid "SSWG State "
 msgstr "مسودة"
 
-#: sswg/admin.py:299 workflow/admin_utils.py:210
+#: sswg/__admin.py:306 workflow/admin_utils.py:210
 msgid "application not confirmed!"
 msgstr "لم يتم إعتماد الطلب، الرجاء التأكد من اكتمال البيانات."
 
@@ -8041,233 +8049,284 @@ msgstr "لم يتم إعتماد الطلب، الرجاء التأكد من ا�
 msgid "SSWG App"
 msgstr "النافذة السودانية الموحدة لصادر الذهب"
 
-#: sswg/forms.py:14
+#: sswg/forms.py:18 sswg/forms.py:33 sswg/forms.py:48
 msgid "Select SMRC Code"
 msgstr ""
 
-#: sswg/models.py:24
+#: sswg/models.py:12 sswg/models.py:68
 msgid "Company Name"
 msgstr "اسم الشركة"
 
-#: sswg/models.py:25
+#: sswg/models.py:13 sswg/models.py:69
 msgid "Surrogate Name"
 msgstr "اسم المندوب"
 
-#: sswg/models.py:26
+#: sswg/models.py:14 sswg/models.py:70
 msgid "ID Type"
 msgstr "نوع الهوية"
 
-#: sswg/models.py:27
+#: sswg/models.py:15 sswg/models.py:71
 msgid "ID Value"
 msgstr "رقم الهوية"
 
-#: sswg/models.py:28
+#: sswg/models.py:16 sswg/models.py:72
 msgid "Contact Phone"
 msgstr "هاتف التواصل"
 
-#: sswg/models.py:33 sswg/models.py:62 sswg/models.py:89 sswg/models.py:111
-#: sswg/models.py:137 sswg/models.py:172 sswg/models.py:195 sswg/models.py:228
-#: sswg/models.py:277
+#: sswg/models.py:17 sswg/models.py:74
+msgid "الوزن الكلي"
+msgstr ""
+
+#: sswg/models.py:18 sswg/models.py:75
+msgid "عدد السبائك"
+msgstr ""
+
+#: sswg/models.py:23 sswg/models.py:32 sswg/models.py:41 sswg/models.py:82
+#: sswg/models.py:109 sswg/models.py:117 sswg/models.py:125 sswg/models.py:155
+#: sswg/models.py:163 sswg/models.py:171 sswg/models.py:179 sswg/models.py:202
+#: sswg/models.py:210 sswg/models.py:218 sswg/models.py:226 sswg/models.py:256
+#: sswg/models.py:264 sswg/models.py:272 sswg/models.py:280 sswg/models.py:319
+#: sswg/models.py:327 sswg/models.py:335 sswg/models.py:343 sswg/models.py:375
+#: sswg/models.py:383 sswg/models.py:391 sswg/models.py:399 sswg/models.py:433
+#: sswg/models.py:441 sswg/models.py:449 sswg/models.py:457
 msgid "SSWG Basic Form"
 msgstr "الإستمارة الموحدة لحركة الذهب داخل النافذة"
 
-#: sswg/models.py:40 sswg/models.py:41
+#: sswg/models.py:50 sswg/models.py:51 sswg/models.py:91 sswg/models.py:92
 msgid "SSWG CompanyDetails"
 msgstr "بيانات الشركة المصدرة"
 
-#: sswg/models.py:54 sswg/models.py:81
+#: sswg/models.py:63
+msgid "شركة امتياز منتجة"
+msgstr ""
+
+#: sswg/models.py:64
+msgid "شركات الامتياز المنتجة"
+msgstr ""
+
+#: sswg/models.py:73
+msgid "رقم استمارة الترحيل"
+msgstr ""
+
+#: sswg/models.py:76
+msgid "وصف السبائك"
+msgstr ""
+
+#: sswg/models.py:103 sswg/models.py:145
 msgid "Raw Weight"
 msgstr "وزن السبائك الكلي"
 
-#: sswg/models.py:55 sswg/models.py:83
+#: sswg/models.py:104 sswg/models.py:147
 msgid "Allow Count"
 msgstr "عدد السبائك"
 
-#: sswg/models.py:65
+#: sswg/models.py:130
 msgid "smrc_file"
 msgstr "مرفق استمارة ترحيل الذهب بغرض الصادر"
 
-#: sswg/models.py:71 sswg/models.py:72
+#: sswg/models.py:136 sswg/models.py:137
 msgid "SSWG SMRCData"
 msgstr "استمارة ترحيل الذهب بغرض الصادر"
 
-#: sswg/models.py:82
+#: sswg/models.py:146
 msgid "Net Weight"
 msgstr "كمية صادر الذهب الصافي"
 
-#: sswg/models.py:84
+#: sswg/models.py:148
 msgid "Certificate ID"
 msgstr "رقم شهادة التحليل"
 
-#: sswg/models.py:91
+#: sswg/models.py:149
+msgid "الذهب الراجع"
+msgstr ""
+
+#: sswg/models.py:149
+msgid "في حال التصنيع والإعادة"
+msgstr ""
+
+#: sswg/models.py:183
 msgid "ssmo_file"
 msgstr "شهادة التحليل"
 
-#: sswg/models.py:97 sswg/models.py:98
+#: sswg/models.py:189 sswg/models.py:190
 msgid "SSWG SSMOData"
 msgstr "الهيئة السودانية للمواصفات والمقاييس - شهادة تحليل"
 
-#: sswg/models.py:115
+#: sswg/models.py:231 sswg/models.py:285
+msgid "رقم الشهادة"
+msgstr ""
+
+#: sswg/models.py:233
 msgid "SMRC No Objection File"
 msgstr "شهادة عدم الممانعة"
 
-#: sswg/models.py:123 sswg/models.py:124 sswg/tests/test_models.py:205
-#: sswg/tests/test_models.py:209
+#: sswg/models.py:243 sswg/models.py:244
 msgid "SSWG SmrcNoObjectionData"
 msgstr "شهادة عدم الممانعة من الشركة السودانية للموارد المعدنية"
 
-#: sswg/models.py:141
+#: sswg/models.py:287
 msgid "Ministry of Minerals Acceptance File"
 msgstr "تصديق وزارة المعادن"
 
-#: sswg/models.py:149 sswg/models.py:150 sswg/tests/test_models.py:245
-#: sswg/tests/test_models.py:249
+#: sswg/models.py:297 sswg/models.py:298
 msgid "SSWG MmAceptanceData"
 msgstr "تصديق وزارة المعادن"
 
-#: sswg/models.py:159
+#: sswg/models.py:306
 msgid "Contract Number"
 msgstr "رقم عقد الصادر"
 
-#: sswg/models.py:160
+#: sswg/models.py:307
 msgid "Exporters/Importers Registry Number"
 msgstr "رقم سجل المصدرين/المستوردين"
 
-#: sswg/models.py:161
+#: sswg/models.py:308
 msgid "Unit Price (grams)"
 msgstr "سعر الوحدة بالجرام"
 
-#: sswg/models.py:162
+#: sswg/models.py:309
 msgid "Total Contract Value"
 msgstr "القيمة الإجمالية للعقد"
 
-#: sswg/models.py:163
+#: sswg/models.py:310
 msgid "Port of Shipment"
 msgstr "ميناء الشحن"
 
-#: sswg/models.py:164
+#: sswg/models.py:311
 msgid "Port of Arrival"
 msgstr "ميناء الوصول"
 
-#: sswg/models.py:165
+#: sswg/models.py:312
 msgid "Main Bank Name"
 msgstr "البنك الرئيسي"
 
-#: sswg/models.py:166
+#: sswg/models.py:313
 msgid "Subsidiary Bank Name"
 msgstr "البنك الفرعي"
 
-#: sswg/models.py:167
+#: sswg/models.py:314
 msgid "Contract Expiration Date"
 msgstr "تاريخ انتهاء العقد"
 
-#: sswg/models.py:174
+#: sswg/models.py:347
 msgid "mocs1_file"
 msgstr "عقد الصادر"
 
-#: sswg/models.py:181 sswg/models.py:182
+#: sswg/models.py:362 sswg/models.py:363
 msgid "SSWG MOCSData"
 msgstr "وزارة التجارة والتموين"
 
-#: sswg/models.py:197
+#: sswg/models.py:403
 msgid "mocs2_file"
 msgstr "شهادة المنشأ"
 
-#: sswg/models.py:203 sswg/models.py:204
+#: sswg/models.py:409 sswg/models.py:410
 msgid "الغرفة التجارية"
 msgstr ""
 
-#: sswg/models.py:214
+#: sswg/models.py:419
 msgid "دفع مقدم"
 msgstr ""
 
-#: sswg/models.py:215
+#: sswg/models.py:420
 msgid "تحويل انصبة"
 msgstr ""
 
-#: sswg/models.py:219
+#: sswg/models.py:424
 msgid "Customer Account Number"
 msgstr "رقم حساب العميل"
 
-#: sswg/models.py:220
+#: sswg/models.py:425
 msgid "EX-Form Number"
 msgstr "رقم استمارة الصادر (Ex-Form)"
 
-#: sswg/models.py:221
+#: sswg/models.py:426
 msgid "Commercial Bank Name"
 msgstr "اسم البنك التجاري"
 
-#: sswg/models.py:222
+#: sswg/models.py:427
 msgid "Issued Amount"
 msgstr "مبلغ حصيلة الصادر"
 
-#: sswg/models.py:223
+#: sswg/models.py:428
 msgid "Payment Method"
 msgstr "طريقة الدفع"
 
-#: sswg/models.py:231
+#: sswg/models.py:462
 msgid "cbs_file"
 msgstr "استمارة الصادر EX-Form"
 
-#: sswg/models.py:237 sswg/models.py:238
+#: sswg/models.py:468 sswg/models.py:469
 msgid "SSWG CBS"
 msgstr "بنك السودان المركزي - شهادة صادر"
 
-#: sswg/models.py:256
+#: sswg/models.py:487 sswg/models.py:601 sswg/models.py:715 sswg/models.py:829
 msgid "SSWG State 1"
 msgstr "مسودة"
 
-#: sswg/models.py:257
+#: sswg/models.py:488 sswg/models.py:602 sswg/models.py:716 sswg/models.py:830
 msgid "SSWG State 2"
 msgstr "إعتماد سكرتارية النافذة"
 
-#: sswg/models.py:258
+#: sswg/models.py:489 sswg/models.py:603 sswg/models.py:717 sswg/models.py:831
 msgid "SSWG State 3"
 msgstr "إعتماد الأمن الاقتصادي"
 
-#: sswg/models.py:259
+#: sswg/models.py:490 sswg/models.py:604 sswg/models.py:718 sswg/models.py:832
 msgid "SSWG State 4"
 msgstr "إعتماد الهيئة السودانية للمواصفات والمقاييس"
 
-#: sswg/models.py:260
+#: sswg/models.py:491 sswg/models.py:605 sswg/models.py:719 sswg/models.py:833
 msgid "SSWG State 5"
 msgstr "إعتماد الشركة السودانية للموارد المعدنية"
 
-#: sswg/models.py:261
+#: sswg/models.py:492 sswg/models.py:606 sswg/models.py:720 sswg/models.py:834
 msgid "SSWG State 6"
 msgstr "إعتماد وزارة المعادن"
 
-#: sswg/models.py:262
+#: sswg/models.py:493 sswg/models.py:607 sswg/models.py:721 sswg/models.py:835
 msgid "SSWG State 7"
 msgstr "إعتماد الاستخبارات العسكرية"
 
-#: sswg/models.py:263
+#: sswg/models.py:494 sswg/models.py:608 sswg/models.py:722 sswg/models.py:836
 msgid "SSWG State 8"
 msgstr "إعتماد وزارة التجارة والتموين"
 
-#: sswg/models.py:264
+#: sswg/models.py:495 sswg/models.py:609 sswg/models.py:723 sswg/models.py:837
 msgid "SSWG State 9"
 msgstr "إعتماد بنك السودان المركزي"
 
-#: sswg/models.py:265
+#: sswg/models.py:496 sswg/models.py:610 sswg/models.py:724 sswg/models.py:838
 msgid "SSWG State 10"
 msgstr "إعتماد الغرفة التجارية"
 
-#: sswg/models.py:266
+#: sswg/models.py:497 sswg/models.py:611 sswg/models.py:725 sswg/models.py:839
 msgid "SSWG State 11"
 msgstr "إعتماد قوات الجمارك"
 
-#: sswg/models.py:269
+#: sswg/models.py:500 sswg/models.py:614 sswg/models.py:728 sswg/models.py:842
 msgid "Form Date"
 msgstr "تاريخ النموذج"
 
-#: sswg/models.py:270
+#: sswg/models.py:501 sswg/models.py:615 sswg/models.py:729 sswg/models.py:843
 msgid "Serial Number"
 msgstr "الرقم التسلسلي"
 
-#: sswg/models.py:278
-msgid "SSWG Basic Forms"
-msgstr "الإستمارات الموحدة لحركة الذهب داخل النافذة"
+#: sswg/models.py:508 sswg/models.py:509
+msgid "صادر ذهب حر"
+msgstr ""
+
+#: sswg/models.py:622 sswg/models.py:623
+msgid "صادر ذهب شركات امتياز"
+msgstr ""
+
+#: sswg/models.py:736 sswg/models.py:737
+msgid "صادر ذهب بغرض التصنيع وإعادة التصنيع"
+msgstr ""
+
+#: sswg/models.py:850 sswg/models.py:851
+msgid "صادر فضة"
+msgstr ""
 
 #: templates/account/login.html:6
 msgid "Log In page"
@@ -8854,6 +8913,18 @@ msgstr "تفاصيل السبائك"
 #: workflow/admin_utils.py:257
 msgid "Transition to"
 msgstr ""
+
+#~ msgid "payment already confirmed!"
+#~ msgstr "لايمكن تعديل مطالبة مؤكدة"
+
+#~ msgid "item not exists in request"
+#~ msgstr "البند غير موجود في المطالبة"
+
+#~ msgid "sum of payments more than request amount: "
+#~ msgstr "مجموع قيم السداد اكبر من قيمة المطالبة"
+
+#~ msgid "SSWG Basic Forms"
+#~ msgstr "الإستمارات الموحدة لحركة الذهب داخل النافذة"
 
 #~ msgid "factory_type"
 #~ msgstr "نوع المصنع"
