@@ -468,6 +468,93 @@ class CBSData(LoggingModel):
         verbose_name = _("SSWG CBS")
         verbose_name_plural = _("SSWG CBS")
 
+class UnifiedTeamData(LoggingModel):
+    basic_form_export = models.OneToOneField(
+        'BasicFormExport',
+        on_delete=models.PROTECT,
+        related_name='unified_team_data_export',
+        verbose_name=_("SSWG Basic Form"),
+        null=True,
+        blank=True,
+    )
+    basic_form_export_emtiaz = models.OneToOneField(
+        'BasicFormExportCompany',
+        on_delete=models.PROTECT,
+        related_name='unified_team_data_export_emtiaz',
+        verbose_name=_("SSWG Basic Form"),
+        null=True,
+        blank=True,
+    )
+    basic_form_reexport = models.OneToOneField(
+        'BasicFormReExport',
+        on_delete=models.PROTECT,
+        related_name='unified_team_data_reexport',
+        verbose_name=_("SSWG Basic Form"),
+        null=True,
+        blank=True,
+    )
+    basic_form_silver = models.OneToOneField(
+        'BasicFormSilver',
+        on_delete=models.PROTECT,
+        related_name='unified_team_data_silver',
+        verbose_name=_("SSWG Basic Form"),
+        null=True,
+        blank=True,
+    )
+    airline_name = models.CharField("عبر طيران", max_length=150)
+    flight_number = models.CharField("رقم الرحلة", max_length=50)
+    flight_datetime = models.DateTimeField("زمن الرحلة")
+    destination = models.CharField("وجهة الرحلة", max_length=150)
+    
+    def __str__(self):
+        return f"UN-{self.id}"
+
+    class Meta:
+        verbose_name = _("فريق الترحيل الموحد")
+        verbose_name_plural = _("فريق الترحيل الموحد")
+
+class CustomForceAirportData(LoggingModel):
+    basic_form_export = models.OneToOneField(
+        'BasicFormExport',
+        on_delete=models.PROTECT,
+        related_name='cfa_data_export',
+        verbose_name=_("SSWG Basic Form"),
+        null=True,
+        blank=True,
+    )
+    basic_form_export_emtiaz = models.OneToOneField(
+        'BasicFormExportCompany',
+        on_delete=models.PROTECT,
+        related_name='cfa_data_export_emtiaz',
+        verbose_name=_("SSWG Basic Form"),
+        null=True,
+        blank=True,
+    )
+    basic_form_reexport = models.OneToOneField(
+        'BasicFormReExport',
+        on_delete=models.PROTECT,
+        related_name='cfa_data_reexport',
+        verbose_name=_("SSWG Basic Form"),
+        null=True,
+        blank=True,
+    )
+    basic_form_silver = models.OneToOneField(
+        'BasicFormSilver',
+        on_delete=models.PROTECT,
+        related_name='cfa_data_silver',
+        verbose_name=_("SSWG Basic Form"),
+        null=True,
+        blank=True,
+    )
+    comment = models.TextField("إفادة ضابط الجمارك بمنفذ الصادر")
+    
+    def __str__(self):
+        return f"CFA-{self.id}"
+
+    class Meta:
+        verbose_name = _("قوة الجمارك بمنفذ الصادر")
+        verbose_name_plural = _("قوة الجمارك بمنفذ الصادر")
+
 class BasicFormExport(WorkFlowModel):
     """Main form storing all related data"""
 
@@ -483,6 +570,8 @@ class BasicFormExport(WorkFlowModel):
     STATE_10 = 10
     STATE_11 = 11
     STATE_12 = 12
+    STATE_13 = 13
+    STATE_14 = 14
 
     STATE_CHOICES = {
         STATE_1:_("SSWG State 1"), 
@@ -497,6 +586,8 @@ class BasicFormExport(WorkFlowModel):
         STATE_10:_("SSWG State 10"),
         STATE_11:_("SSWG State 11"),
         STATE_12:_("SSWG State 12"),
+        STATE_13:_("SSWG State 13"),
+        STATE_14:_("SSWG State 14"),
     }
 
     date = models.DateField(_("Form Date"))
@@ -564,6 +655,14 @@ class BasicFormExport(WorkFlowModel):
             if self.state == self.STATE_11:
                 states.append((self.STATE_12, self.STATE_CHOICES[self.STATE_12]))
 
+        if 'sswg_unified_team' in user_groups:
+            if self.state == self.STATE_12:
+                states.append((self.STATE_13, self.STATE_CHOICES[self.STATE_13]))
+
+        if 'sswg_custom_force_airport' in user_groups:
+            if self.state == self.STATE_13:
+                states.append((self.STATE_14, self.STATE_CHOICES[self.STATE_14]))
+
         return states
 
     def can_transition_to_next_state(self, user, state):
@@ -603,6 +702,8 @@ class BasicFormExportCompany(WorkFlowModel):
     STATE_10 = 10
     STATE_11 = 11
     STATE_12 = 12
+    STATE_13 = 13
+    STATE_14 = 14
 
     STATE_CHOICES = {
         STATE_1:_("SSWG State 1"), 
@@ -617,6 +718,8 @@ class BasicFormExportCompany(WorkFlowModel):
         STATE_10:_("SSWG State 10"),
         STATE_11:_("SSWG State 11"),
         STATE_12:_("SSWG State 12"),
+        STATE_13:_("SSWG State 13"),
+        STATE_14:_("SSWG State 14"),
     }
 
     date = models.DateField(_("Form Date"))
@@ -684,6 +787,14 @@ class BasicFormExportCompany(WorkFlowModel):
             if self.state == self.STATE_11:
                 states.append((self.STATE_12, self.STATE_CHOICES[self.STATE_12]))
 
+        if 'sswg_unified_team' in user_groups:
+            if self.state == self.STATE_12:
+                states.append((self.STATE_13, self.STATE_CHOICES[self.STATE_13]))
+
+        if 'sswg_custom_force_airport' in user_groups:
+            if self.state == self.STATE_13:
+                states.append((self.STATE_14, self.STATE_CHOICES[self.STATE_14]))
+
         return states
 
     def can_transition_to_next_state(self, user, state):
@@ -723,6 +834,8 @@ class BasicFormReExport(WorkFlowModel):
     STATE_10 = 10
     STATE_11 = 11
     STATE_12 = 12
+    STATE_13 = 13
+    STATE_14 = 14
 
     STATE_CHOICES = {
         STATE_1:_("SSWG State 1"), 
@@ -737,6 +850,8 @@ class BasicFormReExport(WorkFlowModel):
         STATE_10:_("SSWG State 10"),
         STATE_11:_("SSWG State 11"),
         STATE_12:_("SSWG State 12"),
+        STATE_13:_("SSWG State 13"),
+        STATE_14:_("SSWG State 14"),
     }
 
     date = models.DateField(_("Form Date"))
@@ -804,6 +919,14 @@ class BasicFormReExport(WorkFlowModel):
             if self.state == self.STATE_11:
                 states.append((self.STATE_12, self.STATE_CHOICES[self.STATE_12]))
 
+        if 'sswg_unified_team' in user_groups:
+            if self.state == self.STATE_12:
+                states.append((self.STATE_13, self.STATE_CHOICES[self.STATE_13]))
+
+        if 'sswg_custom_force_airport' in user_groups:
+            if self.state == self.STATE_13:
+                states.append((self.STATE_14, self.STATE_CHOICES[self.STATE_14]))
+
         return states
 
     def can_transition_to_next_state(self, user, state):
@@ -843,6 +966,8 @@ class BasicFormSilver(WorkFlowModel):
     STATE_10 = 10
     STATE_11 = 11
     STATE_12 = 12
+    STATE_13 = 13
+    STATE_14 = 14
 
     STATE_CHOICES = {
         STATE_1:_("SSWG State 1"), 
@@ -857,6 +982,8 @@ class BasicFormSilver(WorkFlowModel):
         STATE_10:_("SSWG State 10"),
         STATE_11:_("SSWG State 11"),
         STATE_12:_("SSWG State 12"),
+        STATE_13:_("SSWG State 13"),
+        STATE_14:_("SSWG State 14"),
     }
 
     date = models.DateField(_("Form Date"))
@@ -923,6 +1050,14 @@ class BasicFormSilver(WorkFlowModel):
         if 'sswg_economic_security2' in user_groups:
             if self.state == self.STATE_11:
                 states.append((self.STATE_12, self.STATE_CHOICES[self.STATE_12]))
+
+        if 'sswg_unified_team' in user_groups:
+            if self.state == self.STATE_12:
+                states.append((self.STATE_13, self.STATE_CHOICES[self.STATE_13]))
+
+        if 'sswg_custom_force_airport' in user_groups:
+            if self.state == self.STATE_13:
+                states.append((self.STATE_14, self.STATE_CHOICES[self.STATE_14]))
 
         return states
 

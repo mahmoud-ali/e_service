@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-24 10:27+0200\n"
+"POT-Creation-Date: 2025-06-24 15:42+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -3897,8 +3897,8 @@ msgstr "العملة"
 #: pa/models.py:531 pa/tables/payment.py:35 pa/tables/request.py:55
 #: planning/models.py:333 planning/models.py:436 planning/models.py:459
 #: production_control/models.py:53 production_control/models.py:131
-#: production_control/models.py:243 sswg/models.py:504 sswg/models.py:624
-#: sswg/models.py:744 sswg/models.py:864 traditional_app/models.py:386
+#: production_control/models.py:243 sswg/models.py:595 sswg/models.py:727
+#: sswg/models.py:859 sswg/models.py:991 traditional_app/models.py:386
 msgid "record_state"
 msgstr "الحالة"
 
@@ -8100,7 +8100,9 @@ msgstr ""
 #: sswg/models.py:264 sswg/models.py:272 sswg/models.py:280 sswg/models.py:319
 #: sswg/models.py:327 sswg/models.py:335 sswg/models.py:343 sswg/models.py:375
 #: sswg/models.py:383 sswg/models.py:391 sswg/models.py:399 sswg/models.py:433
-#: sswg/models.py:441 sswg/models.py:449 sswg/models.py:457
+#: sswg/models.py:441 sswg/models.py:449 sswg/models.py:457 sswg/models.py:476
+#: sswg/models.py:484 sswg/models.py:492 sswg/models.py:500 sswg/models.py:521
+#: sswg/models.py:529 sswg/models.py:537 sswg/models.py:545
 msgid "SSWG Basic Form"
 msgstr "الإستمارة الموحدة لحركة الذهب داخل النافذة"
 
@@ -8272,75 +8274,91 @@ msgstr "استمارة الصادر EX-Form"
 msgid "SSWG CBS"
 msgstr "بنك السودان المركزي - شهادة صادر"
 
-#: sswg/models.py:488 sswg/models.py:608 sswg/models.py:728 sswg/models.py:848
+#: sswg/models.py:513 sswg/models.py:514
+msgid "فريق الترحيل الموحد"
+msgstr ""
+
+#: sswg/models.py:555 sswg/models.py:556
+msgid "قوة الجمارك بمنفذ الصادر"
+msgstr ""
+
+#: sswg/models.py:577 sswg/models.py:709 sswg/models.py:841 sswg/models.py:973
 msgid "SSWG State 1"
 msgstr "مسودة"
 
-#: sswg/models.py:489 sswg/models.py:609 sswg/models.py:729 sswg/models.py:849
+#: sswg/models.py:578 sswg/models.py:710 sswg/models.py:842 sswg/models.py:974
 msgid "SSWG State 2"
 msgstr "إعتماد سكرتارية النافذة"
 
-#: sswg/models.py:490 sswg/models.py:610 sswg/models.py:730 sswg/models.py:850
+#: sswg/models.py:579 sswg/models.py:711 sswg/models.py:843 sswg/models.py:975
 msgid "SSWG State 3"
 msgstr "إعتماد الأمن الاقتصادي"
 
-#: sswg/models.py:491 sswg/models.py:611 sswg/models.py:731 sswg/models.py:851
+#: sswg/models.py:580 sswg/models.py:712 sswg/models.py:844 sswg/models.py:976
 msgid "SSWG State 4"
 msgstr "إعتماد الهيئة السودانية للمواصفات والمقاييس"
 
-#: sswg/models.py:492 sswg/models.py:612 sswg/models.py:732 sswg/models.py:852
+#: sswg/models.py:581 sswg/models.py:713 sswg/models.py:845 sswg/models.py:977
 msgid "SSWG State 5"
 msgstr "إعتماد الشركة السودانية للموارد المعدنية"
 
-#: sswg/models.py:493 sswg/models.py:613 sswg/models.py:733 sswg/models.py:853
+#: sswg/models.py:582 sswg/models.py:714 sswg/models.py:846 sswg/models.py:978
 msgid "SSWG State 6"
 msgstr "إعتماد وزارة المعادن"
 
-#: sswg/models.py:494 sswg/models.py:614 sswg/models.py:734 sswg/models.py:854
+#: sswg/models.py:583 sswg/models.py:715 sswg/models.py:847 sswg/models.py:979
 msgid "SSWG State 7"
 msgstr "إعتماد الاستخبارات العسكرية"
 
-#: sswg/models.py:495 sswg/models.py:615 sswg/models.py:735 sswg/models.py:855
+#: sswg/models.py:584 sswg/models.py:716 sswg/models.py:848 sswg/models.py:980
 msgid "SSWG State 8"
 msgstr "إعتماد وزارة التجارة والتموين"
 
-#: sswg/models.py:496 sswg/models.py:616 sswg/models.py:736 sswg/models.py:856
+#: sswg/models.py:585 sswg/models.py:717 sswg/models.py:849 sswg/models.py:981
 msgid "SSWG State 9"
 msgstr "إعتماد بنك السودان المركزي"
 
-#: sswg/models.py:497 sswg/models.py:617 sswg/models.py:737 sswg/models.py:857
+#: sswg/models.py:586 sswg/models.py:718 sswg/models.py:850 sswg/models.py:982
 msgid "SSWG State 10"
 msgstr "إعتماد الغرفة التجارية"
 
-#: sswg/models.py:498 sswg/models.py:618 sswg/models.py:738 sswg/models.py:858
+#: sswg/models.py:587 sswg/models.py:719 sswg/models.py:851 sswg/models.py:983
 msgid "SSWG State 11"
 msgstr "إعتماد قوات الجمارك"
 
-#: sswg/models.py:499 sswg/models.py:619 sswg/models.py:739 sswg/models.py:859
+#: sswg/models.py:588 sswg/models.py:720 sswg/models.py:852 sswg/models.py:984
 msgid "SSWG State 12"
-msgstr "إعتماد الأمن الاقتصادي"
+msgstr "إعتماد الأمن الاقتصادي2"
 
-#: sswg/models.py:502 sswg/models.py:622 sswg/models.py:742 sswg/models.py:862
+#: sswg/models.py:589 sswg/models.py:721 sswg/models.py:853 sswg/models.py:985
+msgid "SSWG State 13"
+msgstr "إعتماد الفريق الموحد"
+
+#: sswg/models.py:590 sswg/models.py:722 sswg/models.py:854 sswg/models.py:986
+msgid "SSWG State 14"
+msgstr "إعتماد قوة الجمارك بالمطار"
+
+#: sswg/models.py:593 sswg/models.py:725 sswg/models.py:857 sswg/models.py:989
 msgid "Form Date"
 msgstr "تاريخ النموذج"
 
-#: sswg/models.py:503 sswg/models.py:623 sswg/models.py:743 sswg/models.py:863
+#: sswg/models.py:594 sswg/models.py:726 sswg/models.py:858 sswg/models.py:990
 msgid "Serial Number"
 msgstr "الرقم التسلسلي"
 
-#: sswg/models.py:510 sswg/models.py:511
+#: sswg/models.py:601 sswg/models.py:602
 msgid "صادر ذهب حر"
 msgstr ""
 
-#: sswg/models.py:630 sswg/models.py:631
+#: sswg/models.py:733 sswg/models.py:734
 msgid "صادر ذهب شركات امتياز"
 msgstr ""
 
-#: sswg/models.py:750 sswg/models.py:751
+#: sswg/models.py:865 sswg/models.py:866
 msgid "صادر ذهب بغرض التصنيع وإعادة التصنيع"
 msgstr ""
 
-#: sswg/models.py:870 sswg/models.py:871
+#: sswg/models.py:997 sswg/models.py:998
 msgid "صادر فضة"
 msgstr ""
 

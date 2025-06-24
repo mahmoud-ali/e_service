@@ -26,7 +26,7 @@ def create_groups():
         ('sswg','productioncompany'),
     ]
 
-    groups = ['sswg_manager','sswg_secretary','sswg_economic_security','sswg_ssmo','sswg_smrc','sswg_mm','sswg_moc','sswg_coc','sswg_military_intelligence','sswg_cbs','sswg_custom_force','sswg_economic_security2']
+    groups = ['sswg_manager','sswg_secretary','sswg_economic_security','sswg_ssmo','sswg_smrc','sswg_mm','sswg_moc','sswg_coc','sswg_military_intelligence','sswg_cbs','sswg_custom_force','sswg_economic_security2','sswg_unified_team','sswg_custom_force_airport']
 
     for app,model_name in arr:
         print("Create groups for model",model_name)
@@ -49,84 +49,98 @@ def create_app_groups():
             'add':[], 
             'change':[], 
             'delete':[],
-            'view':['BasicFormExport','BasicFormReExport','BasicFormSilver','CompanyDetails', 'TransferRelocationFormData', 'SSMOData', 'SmrcNoObjectionData', 'MmAceptanceData', 'MOCSData', 'CBSData',], 
+            'view':['BasicFormExport','BasicFormReExport','BasicFormSilver','CompanyDetails', 'TransferRelocationFormData', 'SSMOData', 'SmrcNoObjectionData', 'MmAceptanceData', 'MOCSData', 'CBSData', 'CBSData','UnifiedTeamData','CustomForceAirportData',], 
         },
         {
             'group':'sswg_secretary',
             'add':['BasicFormExport','BasicFormReExport','BasicFormSilver', 'TransferRelocationFormData'], 
             'change':['BasicFormExport','BasicFormReExport','BasicFormSilver', 'TransferRelocationFormData'], 
             'delete':['BasicFormExport','BasicFormReExport','BasicFormSilver'],
-            'view':['BasicFormExport','BasicFormReExport','BasicFormSilver','CompanyDetails', 'TransferRelocationFormData', 'SSMOData', 'SmrcNoObjectionData', 'MmAceptanceData', 'MOCSData', 'CBSData',], 
+            'view':['BasicFormExport','BasicFormReExport','BasicFormSilver','CompanyDetails', 'TransferRelocationFormData', 'SSMOData', 'SmrcNoObjectionData', 'MmAceptanceData', 'MOCSData', 'CBSData', 'CBSData','UnifiedTeamData','CustomForceAirportData',], 
         },
         {
             'group':'sswg_economic_security',
             'add':[], 
             'change':['BasicFormExport','BasicFormReExport','BasicFormSilver'], 
             'delete':[],
-            'view':['BasicFormExport','BasicFormReExport','BasicFormSilver','CompanyDetails', 'TransferRelocationFormData', 'SSMOData', 'SmrcNoObjectionData', 'MmAceptanceData', 'MOCSData', 'CBSData',], 
+            'view':['BasicFormExport','BasicFormReExport','BasicFormSilver','CompanyDetails', 'TransferRelocationFormData', 'SSMOData', 'SmrcNoObjectionData', 'MmAceptanceData', 'MOCSData', 'CBSData', 'CBSData','UnifiedTeamData','CustomForceAirportData',], 
         },
         {
             'group':'sswg_ssmo',
             'add':['SSMOData', 'CompanyDetails'], 
             'change':['BasicFormExport','BasicFormReExport','BasicFormSilver','SSMOData', 'CompanyDetails'], 
             'delete':[],
-            'view':['BasicFormExport','BasicFormReExport','BasicFormSilver','CompanyDetails', 'TransferRelocationFormData', 'SSMOData', 'SmrcNoObjectionData', 'MmAceptanceData', 'MOCSData', 'CBSData',], 
+            'view':['BasicFormExport','BasicFormReExport','BasicFormSilver','CompanyDetails', 'TransferRelocationFormData', 'SSMOData', 'SmrcNoObjectionData', 'MmAceptanceData', 'MOCSData', 'CBSData', 'CBSData','UnifiedTeamData','CustomForceAirportData',], 
         },
         {
             'group':'sswg_smrc',
             'add':['SmrcNoObjectionData'], 
             'change':['BasicFormExport','BasicFormReExport','BasicFormSilver','SmrcNoObjectionData'], 
             'delete':[],
-            'view':['BasicFormExport','BasicFormReExport','BasicFormSilver','CompanyDetails', 'TransferRelocationFormData', 'SSMOData', 'SmrcNoObjectionData', 'MmAceptanceData', 'MOCSData', 'CBSData',], 
+            'view':['BasicFormExport','BasicFormReExport','BasicFormSilver','CompanyDetails', 'TransferRelocationFormData', 'SSMOData', 'SmrcNoObjectionData', 'MmAceptanceData', 'MOCSData', 'CBSData', 'CBSData','UnifiedTeamData','CustomForceAirportData',], 
         },
         {
             'group':'sswg_mm',
             'add':['MmAceptanceData'], 
             'change':['BasicFormExport','BasicFormReExport','BasicFormSilver','MmAceptanceData'], 
             'delete':[],
-            'view':['BasicFormExport','BasicFormReExport','BasicFormSilver','CompanyDetails', 'TransferRelocationFormData', 'SSMOData', 'SmrcNoObjectionData', 'MmAceptanceData', 'MOCSData', 'CBSData',], 
+            'view':['BasicFormExport','BasicFormReExport','BasicFormSilver','CompanyDetails', 'TransferRelocationFormData', 'SSMOData', 'SmrcNoObjectionData', 'MmAceptanceData', 'MOCSData', 'CBSData', 'CBSData','UnifiedTeamData','CustomForceAirportData',], 
         },  
         {
             'group':'sswg_moc',
             'add':['MOCSData'], 
             'change':['BasicFormExport','BasicFormReExport','BasicFormSilver','MOCSData'], 
             'delete':[],
-            'view':['BasicFormExport','BasicFormReExport','BasicFormSilver','CompanyDetails', 'TransferRelocationFormData', 'SSMOData', 'SmrcNoObjectionData', 'MmAceptanceData', 'MOCSData', 'CBSData',], 
+            'view':['BasicFormExport','BasicFormReExport','BasicFormSilver','CompanyDetails', 'TransferRelocationFormData', 'SSMOData', 'SmrcNoObjectionData', 'MmAceptanceData', 'MOCSData', 'CBSData', 'CBSData','UnifiedTeamData','CustomForceAirportData',], 
         },
         {
             'group':'sswg_coc',
             'add':['MOCSData'], 
             'change':['BasicFormExport','BasicFormReExport','BasicFormSilver','COCSData'], 
             'delete':[],
-            'view':['BasicFormExport','BasicFormReExport','BasicFormSilver','CompanyDetails', 'TransferRelocationFormData', 'SSMOData', 'SmrcNoObjectionData', 'MmAceptanceData', 'MOCSData', 'CBSData',], 
+            'view':['BasicFormExport','BasicFormReExport','BasicFormSilver','CompanyDetails', 'TransferRelocationFormData', 'SSMOData', 'SmrcNoObjectionData', 'MmAceptanceData', 'MOCSData', 'CBSData', 'CBSData','UnifiedTeamData','CustomForceAirportData',], 
         },
         {
             'group':'sswg_military_intelligence',
             'add':[], 
             'change':['BasicFormExport','BasicFormReExport','BasicFormSilver',], 
             'delete':[],
-            'view':['BasicFormExport','BasicFormReExport','BasicFormSilver','CompanyDetails', 'TransferRelocationFormData', 'SSMOData', 'SmrcNoObjectionData', 'MmAceptanceData', 'MOCSData', 'CBSData',], 
+            'view':['BasicFormExport','BasicFormReExport','BasicFormSilver','CompanyDetails', 'TransferRelocationFormData', 'SSMOData', 'SmrcNoObjectionData', 'MmAceptanceData', 'MOCSData', 'CBSData', 'CBSData','UnifiedTeamData','CustomForceAirportData',], 
         },
         {
             'group':'sswg_cbs',
             'add':['CBSData'], 
             'change':['BasicFormExport','BasicFormReExport','BasicFormSilver','CBSData'], 
             'delete':[],
-            'view':['BasicFormExport','BasicFormReExport','BasicFormSilver','CompanyDetails', 'TransferRelocationFormData', 'SSMOData', 'SmrcNoObjectionData', 'MmAceptanceData', 'MOCSData', 'CBSData',], 
+            'view':['BasicFormExport','BasicFormReExport','BasicFormSilver','CompanyDetails', 'TransferRelocationFormData', 'SSMOData', 'SmrcNoObjectionData', 'MmAceptanceData', 'MOCSData', 'CBSData', 'CBSData','UnifiedTeamData','CustomForceAirportData',], 
         },
         {
             'group':'sswg_custom_force',
             'add':[], 
             'change':['BasicFormExport','BasicFormReExport','BasicFormSilver',], 
             'delete':[],
-            'view':['BasicFormExport','BasicFormReExport','BasicFormSilver','CompanyDetails', 'TransferRelocationFormData', 'SSMOData', 'SmrcNoObjectionData', 'MmAceptanceData', 'MOCSData', 'CBSData',], 
+            'view':['BasicFormExport','BasicFormReExport','BasicFormSilver','CompanyDetails', 'TransferRelocationFormData', 'SSMOData', 'SmrcNoObjectionData', 'MmAceptanceData', 'MOCSData', 'CBSData', 'CBSData','UnifiedTeamData','CustomForceAirportData',], 
         },
         {
             'group':'sswg_economic_security2',
             'add':[], 
             'change':['BasicFormExport','BasicFormReExport','BasicFormSilver',], 
             'delete':[],
-            'view':['BasicFormExport','BasicFormReExport','BasicFormSilver','CompanyDetails', 'TransferRelocationFormData', 'SSMOData', 'SmrcNoObjectionData', 'MmAceptanceData', 'MOCSData', 'CBSData',], 
+            'view':['BasicFormExport','BasicFormReExport','BasicFormSilver','CompanyDetails', 'TransferRelocationFormData', 'SSMOData', 'SmrcNoObjectionData', 'MmAceptanceData', 'MOCSData', 'CBSData', 'CBSData','UnifiedTeamData','CustomForceAirportData',], 
+        },
+        {
+            'group':'sswg_unified_team',
+            'add':['UnifiedTeamData',], 
+            'change':['BasicFormExport','BasicFormReExport','BasicFormSilver','UnifiedTeamData',], 
+            'delete':[],
+            'view':['BasicFormExport','BasicFormReExport','BasicFormSilver','CompanyDetails', 'TransferRelocationFormData', 'SSMOData', 'SmrcNoObjectionData', 'MmAceptanceData', 'MOCSData', 'CBSData','UnifiedTeamData','CustomForceAirportData',], 
+        },
+        {
+            'group':'sswg_custom_force_airport',
+            'add':['CustomForceAirportData',], 
+            'change':['BasicFormExport','BasicFormReExport','BasicFormSilver','CustomForceAirportData',], 
+            'delete':[],
+            'view':['BasicFormExport','BasicFormReExport','BasicFormSilver','CompanyDetails', 'TransferRelocationFormData', 'SSMOData', 'SmrcNoObjectionData', 'MmAceptanceData', 'MOCSData', 'CBSData','UnifiedTeamData','CustomForceAirportData',], 
         },
     ]
 
