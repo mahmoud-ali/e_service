@@ -26,7 +26,7 @@ def create_groups():
         ('sswg','productioncompany'),
     ]
 
-    groups = ['sswg_manager','sswg_secretary','sswg_economic_security','sswg_ssmo','sswg_smrc','sswg_mm','sswg_moc','sswg_coc','sswg_military_intelligence','sswg_cbs','sswg_custom_force',]
+    groups = ['sswg_manager','sswg_secretary','sswg_economic_security','sswg_ssmo','sswg_smrc','sswg_mm','sswg_moc','sswg_coc','sswg_military_intelligence','sswg_cbs','sswg_custom_force','sswg_economic_security2']
 
     for app,model_name in arr:
         print("Create groups for model",model_name)
@@ -116,6 +116,13 @@ def create_app_groups():
         },
         {
             'group':'sswg_custom_force',
+            'add':[], 
+            'change':['BasicFormExport','BasicFormReExport','BasicFormSilver',], 
+            'delete':[],
+            'view':['BasicFormExport','BasicFormReExport','BasicFormSilver','CompanyDetails', 'TransferRelocationFormData', 'SSMOData', 'SmrcNoObjectionData', 'MmAceptanceData', 'MOCSData', 'CBSData',], 
+        },
+        {
+            'group':'sswg_economic_security2',
             'add':[], 
             'change':['BasicFormExport','BasicFormReExport','BasicFormSilver',], 
             'delete':[],

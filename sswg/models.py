@@ -482,6 +482,7 @@ class BasicFormExport(WorkFlowModel):
     STATE_9 = 9
     STATE_10 = 10
     STATE_11 = 11
+    STATE_12 = 12
 
     STATE_CHOICES = {
         STATE_1:_("SSWG State 1"), 
@@ -495,6 +496,7 @@ class BasicFormExport(WorkFlowModel):
         STATE_9:_("SSWG State 9"),
         STATE_10:_("SSWG State 10"),
         STATE_11:_("SSWG State 11"),
+        STATE_12:_("SSWG State 12"),
     }
 
     date = models.DateField(_("Form Date"))
@@ -558,6 +560,10 @@ class BasicFormExport(WorkFlowModel):
             if self.state == self.STATE_10:
                 states.append((self.STATE_11, self.STATE_CHOICES[self.STATE_11]))
 
+        if 'sswg_economic_security2' in user_groups:
+            if self.state == self.STATE_11:
+                states.append((self.STATE_12, self.STATE_CHOICES[self.STATE_12]))
+
         return states
 
     def can_transition_to_next_state(self, user, state):
@@ -596,6 +602,7 @@ class BasicFormExportCompany(WorkFlowModel):
     STATE_9 = 9
     STATE_10 = 10
     STATE_11 = 11
+    STATE_12 = 12
 
     STATE_CHOICES = {
         STATE_1:_("SSWG State 1"), 
@@ -609,6 +616,7 @@ class BasicFormExportCompany(WorkFlowModel):
         STATE_9:_("SSWG State 9"),
         STATE_10:_("SSWG State 10"),
         STATE_11:_("SSWG State 11"),
+        STATE_12:_("SSWG State 12"),
     }
 
     date = models.DateField(_("Form Date"))
@@ -672,6 +680,10 @@ class BasicFormExportCompany(WorkFlowModel):
             if self.state == self.STATE_10:
                 states.append((self.STATE_11, self.STATE_CHOICES[self.STATE_11]))
 
+        if 'sswg_economic_security2' in user_groups:
+            if self.state == self.STATE_11:
+                states.append((self.STATE_12, self.STATE_CHOICES[self.STATE_12]))
+
         return states
 
     def can_transition_to_next_state(self, user, state):
@@ -710,6 +722,7 @@ class BasicFormReExport(WorkFlowModel):
     STATE_9 = 9
     STATE_10 = 10
     STATE_11 = 11
+    STATE_12 = 12
 
     STATE_CHOICES = {
         STATE_1:_("SSWG State 1"), 
@@ -723,6 +736,7 @@ class BasicFormReExport(WorkFlowModel):
         STATE_9:_("SSWG State 9"),
         STATE_10:_("SSWG State 10"),
         STATE_11:_("SSWG State 11"),
+        STATE_12:_("SSWG State 12"),
     }
 
     date = models.DateField(_("Form Date"))
@@ -786,6 +800,10 @@ class BasicFormReExport(WorkFlowModel):
             if self.state == self.STATE_10:
                 states.append((self.STATE_11, self.STATE_CHOICES[self.STATE_11]))
 
+        if 'sswg_economic_security2' in user_groups:
+            if self.state == self.STATE_11:
+                states.append((self.STATE_12, self.STATE_CHOICES[self.STATE_12]))
+
         return states
 
     def can_transition_to_next_state(self, user, state):
@@ -824,6 +842,7 @@ class BasicFormSilver(WorkFlowModel):
     STATE_9 = 9
     STATE_10 = 10
     STATE_11 = 11
+    STATE_12 = 12
 
     STATE_CHOICES = {
         STATE_1:_("SSWG State 1"), 
@@ -837,6 +856,7 @@ class BasicFormSilver(WorkFlowModel):
         STATE_9:_("SSWG State 9"),
         STATE_10:_("SSWG State 10"),
         STATE_11:_("SSWG State 11"),
+        STATE_12:_("SSWG State 12"),
     }
 
     date = models.DateField(_("Form Date"))
@@ -899,6 +919,10 @@ class BasicFormSilver(WorkFlowModel):
         if 'sswg_custom_force' in user_groups:
             if self.state == self.STATE_10:
                 states.append((self.STATE_11, self.STATE_CHOICES[self.STATE_11]))
+
+        if 'sswg_economic_security2' in user_groups:
+            if self.state == self.STATE_11:
+                states.append((self.STATE_12, self.STATE_CHOICES[self.STATE_12]))
 
         return states
 
