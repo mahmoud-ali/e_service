@@ -130,7 +130,7 @@ class TransferRelocationFormData(LoggingModel):
     smrc_file = models.FileField(_("smrc_file"), upload_to=attachment_path)  #,null=True,blank=True
 
     def __str__(self):
-        return f"{self.form}"
+        return f"TR-{self.id}"
 
     class Meta:
         verbose_name = _("SSWG SMRCData")
@@ -183,7 +183,7 @@ class SSMOData(LoggingModel):
     ssmo_file = models.FileField(_("ssmo_file"), upload_to=attachment_path)  #,null=True,blank=True
 
     def __str__(self):
-        return f"SSMO-{self.certificate_id}"
+        return f"SSMO-{self.id}"
 
     class Meta:
         verbose_name = _("SSWG SSMOData")
@@ -237,7 +237,7 @@ class SmrcNoObjectionData(LoggingModel):
     )
 
     def __str__(self):
-        return str(self.id)
+        return f"SMRC-{self.id}"
 
     class Meta:
         verbose_name = _("SSWG SmrcNoObjectionData")
@@ -291,8 +291,8 @@ class MmAceptanceData(LoggingModel):
     )
 
     def __str__(self):
-        return str(self.id)
-
+        return f"MM-{self.id}"
+    
     class Meta:
         verbose_name = _("SSWG MmAceptanceData")
         verbose_name_plural = _("SSWG MmAceptanceData")
@@ -356,7 +356,7 @@ class MOCSData(LoggingModel):
             return 0
 
     def __str__(self):
-        return f"MOCS-{self.contract_number}"
+        return f"MOCS-{self.id}"
 
     class Meta:
         verbose_name = _("SSWG MOCSData")
@@ -462,7 +462,7 @@ class CBSData(LoggingModel):
     cbs_file = models.FileField(_("cbs_file"), upload_to=attachment_path,null=True,blank=True)  #,null=True,blank=True
 
     def __str__(self):
-        return f"CBS-{self.customer_account_number}"
+        return f"CBS-{self.id}"
     
     class Meta:
         verbose_name = _("SSWG CBS")
