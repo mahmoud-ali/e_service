@@ -83,7 +83,7 @@
 				{%for req in qs %}
 				<tr>
                     <th>{{ forloop.counter }}</th>
-					<td>{{req.commitment.company}}</td>
+					<td>{{req.commitment.license}}</td>
 					<td>{{req.total|floatformat:2|intcomma}}</td>
 					<td>{{req.sum_of_confirmed_payment|floatformat:2|intcomma}}</td>
 					<td>{{req.remain_payment|floatformat:2|intcomma}}</td>
