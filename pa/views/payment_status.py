@@ -60,7 +60,9 @@ class PaymentStatusView(LoginRequiredMixin,UserPermissionMixin,TranslationMixin,
 
             qs = qs.values("item__name").annotate(
                 total=Sum("amount", output_field=FloatField()),
-            )
+            ).filter(
+                total__gt=0,
+            ).order_by("item__name")
 
             # print(qs)
             sum_payment = 0
