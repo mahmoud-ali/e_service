@@ -1481,7 +1481,7 @@ class Tasoia(LoginRequiredMixin,UserPermissionMixin,View):
         # print(obj)
         total_2ltizam_t2min17 = round((obj.total_tameen_ajtima3i / 8)*17,2)
         total_band_2wal = round((obj.total_abtdai + obj.total_galaa_m3isha),2)
-        total_band_tani = round((obj.total_tabi3at_3mal+obj.total_tamtheel+obj.total_mihna+obj.total_ma3adin+obj.total_aadoa+obj.total_ajtima3ia+obj.total_moahil+obj.total_shakhsia+obj.total_makhatir+total_2ltizam_t2min17),2)
+        total_band_tani = round((obj.total_tabi3at_3mal+obj.total_tamtheel+obj.total_mihna+obj.total_ma3adin+obj.total_aadoa+obj.total_mokaf2at_2da2+obj.total_ajtima3ia+obj.total_moahil+obj.total_shakhsia+obj.total_makhatir+total_2ltizam_t2min17),2)
         total_band_2wal_tani = round((total_band_2wal+total_band_tani),2)
         total_2manat = (obj.total_dariba+obj.total_damga+obj.total_m3ash+obj.total_tameen_ajtima3i+obj.total_sandog+obj.total_zakat+obj.total_youm_algoat_almosalaha+obj.total_jazaat+obj.total_salafiat_sandog+total_2ltizam_t2min17)
         total_2manat_salafiat = round(total_2manat+obj.total_salafiat,2)
