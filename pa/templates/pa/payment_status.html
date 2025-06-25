@@ -47,8 +47,8 @@
 		<label>{%translate "currency"%}:</label> {% translate form.currency.value%}
 	</div>
 	<div class="filter">
-		<label>{%translate "from_dt"%}:</label> {{form.from_dt.value}}
-		<label>{%translate "to_dt"%}:</label> {{form.to_dt.value}}
+		<label>{%translate "from_dt"%}:</label> {{form.cleaned_data.from_dt|date:"Y/m/d"}}
+		<label>{%translate "to_dt"%}:</label> {{form.cleaned_data.to_dt|date:"Y/m/d"}}
 	</div>
 </div>
 
