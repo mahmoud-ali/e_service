@@ -19,7 +19,7 @@ from .views import LkpLicenseSelectView, TblCompanyOpenningBalanceListView,TblCo
 
 app_name = "pa"
 urlpatterns = [                                                        
-    path('', PaDailyView.as_view(), name='home'),
+    path('', PaymentStatusView.as_view(), name='home'),
 
     path('lkp_license/<int:master_id>/<int:dependent_id>/', LkpLicenseSelectView.as_view(), name='lkp_license_select'),
 

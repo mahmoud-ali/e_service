@@ -13,7 +13,7 @@ from ..models import TblCompanyOpenningBalanceDetail, TblCompanyOpenningBalanceM
 class PaymentStatusView(LoginRequiredMixin,UserPermissionMixin,TranslationMixin,View):
     form = PaDailyForm
     menu_name = "pa:payment_status"
-    title = "مديونية الشركات"
+    title = "إيرادات الشركات"
     template_name = "pa/payment_status.html"     
     user_groups = ['pa_data_entry','pa_manager']
 
