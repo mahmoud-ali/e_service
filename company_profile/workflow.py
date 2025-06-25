@@ -4,6 +4,9 @@ from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 
+from django.core.mail import EmailMessage
+import threading
+
 from django.contrib.auth import get_user_model
 from django.contrib.sites.models import Site
 
@@ -18,7 +21,11 @@ STATE_CHOICES = { SUBMITTED: _("Submitted state"),
                                         ACCEPTED: _("Accepted state"),
                                         APPROVED: _("Approved state"),
                                         REJECTED: _("Rejected state"),}
-                                        
+
+def send_async_email(subject, message, from_email, recipient_list):
+    email = EmailMessage(subject, message, from_email, recipient_list)
+    threading.Thread(target=email.send).start()
+
 def get_state_choices(state):
     if not state:
         return { SUBMITTED: "Submitted"}
@@ -58,14 +65,16 @@ def send_transition_email(state,email,url,lang):
         message = render_to_string('company_profile/email/rejected_email_{0}.html'.format(lang),{'url':url,'logo':logo_url}) 
         
     try:
-        send_mail(
+        # send_mail(
+        send_async_email(
             subject,
-            strip_tags(message),
+            # strip_tags(message),
+            message,
             None,
             [email],
-            html_message=message,
-            fail_silently=False,
-        )        
+            # html_message=message,
+            # fail_silently=False,
+        )
     except:
         print("Error sending email",sys.stderr)
         
