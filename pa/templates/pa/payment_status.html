@@ -73,28 +73,22 @@
 			<thead>
 				<tr>
 					<th>#</th>
-					<th>الشركة</th>
-					<th>المديونية</th>
-					<th>السداد</th>
-					<th>المتبقي</th>
+					<th>البند</th>
+					<th>اجمالي السداد</th>
 				</tr>
 			</thead>
 			<tbody>
 				{%for obj in qs %}
 				<tr>
                     <th>{{ forloop.counter }}</th>
-					<td>{{obj.commitment.license}}</td>
+					<td>{{obj.item__name}}</td>
 					<td>{{obj.total|floatformat:2|intcomma}}</td>
-					<td>{{obj.sum_of_confirmed_payment|floatformat:2|intcomma}}</td>
-					<td>{{obj.remain_payment|floatformat:2|intcomma}}</td>
 				</tr>
 				{%endfor%}
 				<tr>
 					<th>&nbsp;</th>
 					<th>&nbsp;</th>
-					<th>{{sum_request|floatformat:2|intcomma}}</th>
 					<th>{{sum_payment|floatformat:2|intcomma}}</th>
-					<th>{{sum_remain|floatformat:2|intcomma}}</th>
 				</tr>
 			</tbody>
 		</table>
