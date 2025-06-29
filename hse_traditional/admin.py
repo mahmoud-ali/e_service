@@ -590,7 +590,7 @@ near_miss_main_class = {
             'permissions': {
                 HseTraditionalNearMiss.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
                 HseTraditionalNearMiss.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                # HseTraditionalNearMiss.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                HseTraditionalNearMiss.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
             },
         },
         'hse_tra_manager':{
@@ -704,7 +704,7 @@ corrective_action_main_class = {
             'permissions': {
                 HseTraditionalCorrectiveAction.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
                 HseTraditionalCorrectiveAction.STATE_CONFIRMED1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                # HseTraditionalCorrectiveAction.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                HseTraditionalCorrectiveAction.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
             },
         },
         'hse_tra_manager':{
