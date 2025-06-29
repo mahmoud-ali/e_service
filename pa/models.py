@@ -135,12 +135,21 @@ class TblCompanyCommitmentMaster(LoggingModel):
     currency = models.CharField(_("currency"),max_length=10, choices=CURRENCY_TYPE_CHOICES, default=CURRENCY_TYPE_EURO)
     note = models.CharField(_("note"),max_length=100, blank=True, null=True)
     state = models.CharField(_("record_state"),max_length=10, choices=STATE_TYPE_CHOICES, default=STATE_TYPE_DRAFT)
+
+    _cached_name = models.CharField(max_length=150, blank=True, null=True, default="")
     
-    def __str__(self):
+    def generate_cached_name(self):
         if self.license:
-            return self.license.__str__()+"/"+self.get_currency_display()
-        
-        return self.company.__str__()+"/"+self.get_currency_display()
+            return self.license.__str__()+"/"+self.get_currency_display()        
+
+        self.company.__str__()+"/"+self.get_currency_display()
+
+    def save(self, *args, **kwargs):
+        self._cached_name = self.generate_cached_name()
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return self._cached_name
         
     def get_absolute_url(self): 
         return reverse('pa:commitment_show',args=[str(self.id)])                
