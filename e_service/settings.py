@@ -328,9 +328,9 @@ if not DEBUG:
     SERVER_EMAIL = "system@mineralsgate.com"  # ditto (default from-email for Django errors)
 
     EMAIL_HOST = "smtp.zeptomail.com"
-    EMAIL_PORT = 587
-    EMAIL_USE_TLS = True
-    EMAIL_USE_SSL = False
+    EMAIL_PORT = 465 #587
+    EMAIL_USE_TLS = False
+    EMAIL_USE_SSL = True
     EMAIL_HOST_USER = config('EMAIL_HOST_USER')
     EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 
