@@ -14,7 +14,14 @@ from django.template.loader import render_to_string
 from django.contrib.auth import get_user_model
 from django.contrib.sites.models import Site
 
+from django.core.mail import EmailMessage
+import threading
+
 from company_profile.models import TblCompany,TblCompanyProduction, TblCompanyProductionLicense, TblCompanyProductionUserRole
+
+def send_async_email(subject, message, from_email, recipient_list):
+    email = EmailMessage(subject, message, from_email, recipient_list)
+    threading.Thread(target=email.send).start()
 
 CURRENCY_TYPE_SDG = "sdg"
 CURRENCY_TYPE_EURO = "euro"
@@ -403,14 +410,15 @@ class TblCompanyRequestMaster(LoggingModel):
                 }) 
             
             if subject and message:
-                send_mail(
-                    subject,
-                    strip_tags(message),
-                    None,
-                    [email],
-                    html_message=message,
-                    fail_silently=False,
-                )        
+                send_async_email(subject, message, None, [email])
+                # send_mail(
+                #     subject,
+                #     strip_tags(message),
+                #     None,
+                #     [email],
+                #     html_message=message,
+                #     fail_silently=False,
+                # )        
         except:
             pass #if no email sent logic should get here
 
