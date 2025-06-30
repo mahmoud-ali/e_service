@@ -333,7 +333,7 @@ class TblCompanyRequestMaster(LoggingModel):
         return round(self.tblcompanyrequestdetail_set.aggregate(total=Sum('amount'))['total'],2) or 0
     
     def __str__(self):
-        return self.commitment.__str__()+" ("+str(round(self.total,2))+" "+CURRENCY_TYPE_CHOICES[self.currency]+")" #+" ("+str(self.from_dt)+" - "+str(self.to_dt)+") "
+        return self.commitment.__str__()+" ("+str(self.total)+" "+CURRENCY_TYPE_CHOICES[self.currency]+")" #+" ("+str(self.from_dt)+" - "+str(self.to_dt)+") "
         
     def get_absolute_url(self): 
         return reverse('pa:request_show',args=[str(self.id)])                
