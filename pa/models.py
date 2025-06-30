@@ -330,7 +330,7 @@ class TblCompanyRequestMaster(LoggingModel):
     
     @property
     def total(self):   
-        return round(self.tblcompanyrequestdetail_set.aggregate(total=Sum('amount'))['total'],2) or 0
+        return round((self.tblcompanyrequestdetail_set.aggregate(total=Sum('amount'))['total'] or 0),2)
     
     def __str__(self):
         return self.commitment.__str__()+" ("+str(self.total)+" "+CURRENCY_TYPE_CHOICES[self.currency]+")" #+" ("+str(self.from_dt)+" - "+str(self.to_dt)+") "
