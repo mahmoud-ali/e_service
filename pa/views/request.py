@@ -134,7 +134,7 @@ class TblCompanyRequestReadonlyView(ApplicationReadonlyView):
 
     def get(self,request,*args, **kwargs):        
         obj = self.get_object()
-        license = TblCompanyProductionLicense.objects.filter(company=obj.commitment.company).first()
+        license = obj.commitment.license #TblCompanyProductionLicense.objects.filter(company=obj.commitment.company).first()
         self.extra_context['company'] = get_company_details(obj.commitment)
 
         for detail in self.details_formset:
