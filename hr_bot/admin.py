@@ -150,14 +150,18 @@ class EmployeeTelegramRegistrationAdmin(FlowMixin,admin.ModelAdmin):
             obj.save()
             self.log_change(request,obj,"تحويل الطلب إلى "+"مقبول")
 
-            EmployeeTelegram.objects.update_or_create(
-                employee=obj.employee,
-                user_id=obj.user_id,
-                phone=obj.phone,
-                created_by=request.user,
-                updated_by=request.user,
-            )
-            self.message_user(request,_('application accepted!'))
+
+            try:
+                emp, bool =EmployeeTelegram.objects.update_or_create(
+                    employee=obj.employee,
+                    user_id=obj.user_id,
+                    phone=obj.phone,
+                    created_by=request.user,
+                    updated_by=request.user,
+                )
+                self.message_user(request,_('application accepted!'))
+            except:
+                pass
 
             username = obj.employee.email
 
