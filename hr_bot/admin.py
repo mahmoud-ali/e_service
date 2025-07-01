@@ -159,24 +159,24 @@ class EmployeeTelegramRegistrationAdmin(FlowMixin,admin.ModelAdmin):
             )
             self.message_user(request,_('application accepted!'))
 
-        username = obj.employee.email
+            username = obj.employee.email
 
-        obj.employee.phone = obj.phone
-        obj.employee.save()
+            obj.employee.phone = obj.phone
+            obj.employee.save()
 
-        if User.objects.filter(username=username).exists():
-            # user = User.objects.get(username=username)
-            message = f"الآن يمكنك الدخول لبوابة الموارد البشرية عبر الرابط التالي\n {portal_url} \n باسم المستخدم {username}"
+            if User.objects.filter(username=username).exists():
+                # user = User.objects.get(username=username)
+                message = f"الآن يمكنك الدخول لبوابة الموارد البشرية عبر الرابط التالي\n {portal_url} \n باسم المستخدم {username}"
 
-        else:
-            password = f"{int(random.random()*1000000)}"
+            else:
+                password = f"{int(random.random()*1000000)}"
 
-            user = create_user(username, username, password)
+                user = create_user(username, username, password)
 
-            message = f"الآن يمكنك الدخول لبوابة الموارد البشرية عبر الرابط التالي\n {portal_url} \n باسم المستخدم {username} \n وكلمة المرور {password}"
-            self.log_change(request,obj,"اعتماد مستخدم جديد")
+                message = f"الآن يمكنك الدخول لبوابة الموارد البشرية عبر الرابط التالي\n {portal_url} \n باسم المستخدم {username} \n وكلمة المرور {password}"
+                self.log_change(request,obj,"اعتماد مستخدم جديد")
 
-        send_message(TOKEN_ID, obj.user_id, message)
+            send_message(TOKEN_ID, obj.user_id, message)
 
     @admin.action(description=_('إعادة تعيين كلمة مرور الموظف'))
     def reset_password(self, request, queryset):
