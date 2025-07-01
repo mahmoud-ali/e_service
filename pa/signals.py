@@ -4,7 +4,8 @@ def commitment_generate_request(sender, **kwargs):
 
 def send_email_after_add_request(sender, **kwargs):
     if not kwargs['raw']:
-        kwargs['instance'].send_email() #instance = request instance
+        # kwargs['instance'].send_email() #instance = request instance
+        pass
 
 def update_request_payment_state(sender, **kwargs):
     if not kwargs['raw']:
