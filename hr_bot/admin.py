@@ -141,6 +141,9 @@ class EmployeeTelegramRegistrationAdmin(FlowMixin,admin.ModelAdmin):
     #     return False
 
     def has_delete_permission(self, request, obj=None):
+        if request.user.is_superuser:
+            return True
+        
         return False
 
     @admin.action(description=_('Accept'))
