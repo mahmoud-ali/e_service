@@ -581,10 +581,20 @@ class AppHSEPerformanceReportAdminForm(ModelForm):
 
     class Meta:
         model = AppHSEPerformanceReport
-        fields = ["company","year","month","state"] #,"attachement_file"
+        fields = ["company","license","year","month","state"] #,"attachement_file"
         
 class AppHSEPerformanceReportForm(AppHSEPerformanceReportAdminForm):
-    company = None
+    license = forms.ModelChoiceField(queryset=TblCompanyProductionLicense.objects.none(), label=_("license"))
+
+    def __init__(self, *args,company_id = None, **kwargs):        
+        super().__init__(*args, **kwargs)
+
+        if kwargs.get('company_id'):
+            company_id = kwargs.get('company_id')
+
+        if company_id:
+            self.fields["license"].queryset = TblCompanyProductionLicense.objects.filter(company__id=company_id)
+
     class Meta:
         model = AppHSEPerformanceReport
         exclude = ["company","state"]

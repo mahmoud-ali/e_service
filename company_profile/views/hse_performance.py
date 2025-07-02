@@ -106,6 +106,8 @@ class AppHSEPerformanceReportCreateView(LoginRequiredMixin,View):
         return super().dispatch(*args, **kwargs)                    
 
     def get(self,request):        
+        form = self.extra_context['form'](company_id=self.request.user.pro_company.company.id)
+        self.extra_context['form'] = form
         return render(request, self.template_name, self.extra_context)
 
     def post(self, request, *args, **kwargs):

@@ -61,10 +61,10 @@ report_main_class = {
     'model': AppHSEPerformanceReport,
     'mixins': [],
     'kwargs': {
-        'list_display': ("company", "year", "month","state"), #,"ask_ai_link"
+        'list_display': ("company","license", "year", "month","state"), #,"ask_ai_link"
         'list_filter': ('year', 'month','state'),
-        'readonly_fields':('company',),
-        'fields': ("company", "year", "month","album",),
+        'readonly_fields':('company','license'),
+        'fields': ("company","license", "year", "month","album",),
         'save_as_continue': False,
         'view_on_site': False,
     },

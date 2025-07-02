@@ -8,7 +8,7 @@ from django.db import models
 
 from workflow.model_utils import LoggingModel
 
-from company_profile.models import MONTH_CHOICES, TblCompanyProduction
+from company_profile.models import MONTH_CHOICES, TblCompanyProduction, TblCompanyProductionLicense
 
 def company_applications_path(instance, filename):
     return "company_{0}/hse/{1}".format(instance.company.id, filename)    
@@ -24,7 +24,8 @@ class AppHSEPerformanceReport(LoggingModel):
         STATE_STATE_MNGR_APPROVAL:_("إعتماد مشرف الولاية"),
     }
    
-    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"),related_name="hse_performance_report")    
+    company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"),related_name="hse_performance_report") 
+    license  = models.ForeignKey(TblCompanyProductionLicense, on_delete=models.PROTECT,verbose_name=_("license"),null=True,blank=True)       
     year = models.PositiveIntegerField(_("year"), validators=[MinValueValidator(limit_value=2015),MaxValueValidator(limit_value=2100)])
     month = models.PositiveIntegerField(verbose_name=_("month"), choices=MONTH_CHOICES)
     album = models.FileField(_('album'),upload_to=company_applications_path,blank=True,null=True)
@@ -42,7 +43,7 @@ class AppHSEPerformanceReport(LoggingModel):
         verbose_name = _("Application: HSE Performance Report")
         verbose_name_plural = _("Application: HSE Performance Report")
         constraints = [
-            models.UniqueConstraint(fields=['year', 'month','company'], name='unique_report_per_month')
+            models.UniqueConstraint(fields=['year', 'month','company','license'], name='unique_report_per_month')
         ]
 
     def get_next_states(self, user):
