@@ -96,6 +96,8 @@ class FlowMixin:
                 try:
                     user_id = obj.employee.employeetelegramregistration_set.first().user_id
                     send_message(TOKEN_ID, user_id, message)
+
+                    obj.delete()
                 except:
                     pass
             
