@@ -15,3 +15,58 @@ h1, h2, h3, h4, h5, h6 {
 input[type="search"] {
     font-family: 'Tajawal', 'Roboto', sans-serif !important;
 }
+
+/* Header bar */
+#header {
+    background-color: #1f2937 !important; /* dark navy gray */
+    color: white;
+    border-bottom: none;
+}
+
+#header a {
+    color: white !important;
+}
+
+#branding h1 {
+    font-weight: 600;
+    font-size: 22px;
+}
+
+/* Module titles */
+.module h2 {
+    background-color: #e5e7eb; /* soft gray */
+    color: #111827;
+}
+
+/* Buttons */
+.button, .submit-row input, .submit-row input.default {
+    background-color: #2563eb !important; /* blue-600 */
+    color: white !important;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 14px;
+    font-weight: 500;
+}
+
+.button:hover, .submit-row input:hover {
+    background-color: #1d4ed8 !important; /* blue-700 */
+}
+
+/* Table header and rows */
+table thead th {
+    background-color: #f1f5f9;
+    color: #374151;
+}
+
+table tbody tr:nth-child(odd) {
+    background-color: #ffffff;
+}
+table tbody tr:nth-child(even) {
+    background-color: #f9fafb;
+}
+
+/* Sidebar nav (for newer Django versions) */
+#nav-sidebar {
+    background-color: #f1f5f9;
+    border-right: 1px solid #d1d5db;
+}
