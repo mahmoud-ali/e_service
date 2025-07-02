@@ -584,7 +584,7 @@ class AppHSEPerformanceReportAdminForm(ModelForm):
         fields = ["company","license","year","month","state"] #,"attachement_file"
         
 class AppHSEPerformanceReportForm(AppHSEPerformanceReportAdminForm):
-    license = forms.ModelChoiceField(queryset=TblCompanyProductionLicense.objects.none(), label=_("license"))
+    license = forms.ModelChoiceField(queryset=TblCompanyProductionLicense.objects.none(), label=_("license"),empty_label=None)
 
     def __init__(self, *args,company_id = None, **kwargs):        
         super().__init__(*args, **kwargs)
