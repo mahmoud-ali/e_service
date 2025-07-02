@@ -328,8 +328,8 @@ class AppDabtiaatAdmin(LogAdminMixin,admin.ModelAdmin):
 
     @admin.action(description=_('return_to_draft'))
     def return_to_draft(self, request, queryset):
-        for obj in queryset and request.user.is_superuser:
-            if obj.state == AppDabtiaat.STATE_SMRC:
+        for obj in queryset:
+            if obj.state == AppDabtiaat.STATE_SMRC and request.user.is_superuser:
                 obj.state = AppDabtiaat.STATE_DRAFT
                 obj.updated_by = request.user
                 obj.save()
