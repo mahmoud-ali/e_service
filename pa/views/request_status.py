@@ -64,13 +64,14 @@ class RequestStatusView(LoginRequiredMixin,UserPermissionMixin,TranslationMixin,
             sum_remain = 0
 
             for req in qs:
-                sum_request += req.total
-                sum_payment += req.sum_of_confirmed_payment
-                sum_remain += req.remain_payment
+                sum_request += req.total or 0
+                sum_payment += req.sum_of_confirmed_payment or 0
+                sum_remain += req.remain_payment or 0
+
+            self.extra_context["qs"] = qs
+            self.extra_context["sum_request"] = sum_request
+            self.extra_context["sum_payment"] = sum_payment
+            self.extra_context["sum_remain"] = sum_remain
 
         self.extra_context["form"] = form
-        self.extra_context["qs"] = qs
-        self.extra_context["sum_request"] = sum_request
-        self.extra_context["sum_payment"] = sum_payment
-        self.extra_context["sum_remain"] = sum_remain
         return render(request, self.template_name, self.extra_context)

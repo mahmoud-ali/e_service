@@ -70,7 +70,8 @@ class PaymentStatusView(LoginRequiredMixin,UserPermissionMixin,TranslationMixin,
             for obj in qs:
                 sum_payment += obj.get('total', 0)
 
+            self.extra_context["qs"] = qs
+            self.extra_context["sum_payment"] = sum_payment
+
         self.extra_context["form"] = form
-        self.extra_context["qs"] = qs
-        self.extra_context["sum_payment"] = sum_payment
         return render(request, self.template_name, self.extra_context)
