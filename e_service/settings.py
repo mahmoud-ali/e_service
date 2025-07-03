@@ -47,6 +47,8 @@ CSRF_COOKIE_SECURE = config("CSRF_COOKIE_SECURE", default=True, cast=bool)
 # Application definition
 
 INSTALLED_APPS = [
+    # "admin_interface",
+    # "colorfield",    
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
