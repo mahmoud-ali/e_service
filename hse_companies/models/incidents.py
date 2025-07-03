@@ -114,7 +114,7 @@ class IncidentInfo(LoggingModel):
 
         states = []
 
-        if 'hse_cmpny_auditor' in user_groups:
+        if 'production_control_auditor' in user_groups:
             if self.state == self.STATE_SUBMITTED:
                 states.append((self.STATE_AUDITOR_APPROVAL, self.STATE_CHOICES[self.STATE_AUDITOR_APPROVAL]))
 

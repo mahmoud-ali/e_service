@@ -3,12 +3,14 @@ from django.urls import reverse
 from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
 
+from company_profile.models import TblCompanyProductionLicense
 from hse_companies.forms import TblStateRepresentativeForm
 from hse_companies.models.incidents import ContributingFactor, FactorsAssessment, IncidentAnalysis, IncidentCost, IncidentInfo, IncidentInjuredPerson,IncidentInjuredPPE,IncidentInjuredDetails, IncidentPhoto, IncidentProperty, IncidentWitness, LeasonLearnt
 from workflow.admin_utils import create_main_form
 
 from hse_companies.models import AppHSECorrectiveAction, AppHSECorrectiveActionFeedback, AppHSEPerformanceReport, AppHSEPerformanceReportActivities, AppHSEPerformanceReportAuditorComment, AppHSEPerformanceReportBillsOfQuantities, AppHSEPerformanceReportCadastralOperations, AppHSEPerformanceReportCadastralOperationsTwo, AppHSEPerformanceReportCatering, AppHSEPerformanceReportChemicalUsed, AppHSEPerformanceReportCyanideCNStorageSpecification, AppHSEPerformanceReportCyanideTable, AppHSEPerformanceReportDiseasesForWorkers, AppHSEPerformanceReportExplosivesUsed, AppHSEPerformanceReportExplosivesUsedSpecification, AppHSEPerformanceReportFireFighting, AppHSEPerformanceReportManPower, AppHSEPerformanceReportOilUsed, AppHSEPerformanceReportOtherChemicalUsed, AppHSEPerformanceReportProactiveIndicators, AppHSEPerformanceReportStatisticalData, AppHSEPerformanceReportTherapeuticUnit, AppHSEPerformanceReportWasteDisposal, AppHSEPerformanceReportWaterUsed, AppHSEPerformanceReportWorkEnvironment, TblStateRepresentative
 
+from production_control.models import STATE_CONFIRMED as PRODUCTION_STATE_CONFIRMED
 class LogMixin:
     def save_model(self, request, obj, form, change):
         try:
@@ -33,12 +35,30 @@ class LogMixin:
     def get_queryset(self, request):
         qs = super().get_queryset(request)
 
-        try:
-            source_state = request.user.hse_cmpny_state.state
-            qs = qs.filter(source_state=source_state)
-        except:
-            pass
-        return qs
+        if request.user.is_superuser:
+            return qs
+
+        if request.user.groups.filter(name__in=("hse_cmpny_state_mngr",)).exists():
+            try:
+                # company_type = request.user.gold_production_state_user.company_type
+                original_state = request.user.hse_cmpny_state.state
+                companies = TblCompanyProductionLicense.objects.filter(state=original_state).values_list('company',flat=True)
+                   
+                return qs.filter(
+                    # license__company__company_type__in= [company_type],
+                    company__in=companies
+                )
+            except Exception as e:
+                print(e)
+
+        if request.user.groups.filter(name__in=("production_control_auditor",)).exists():
+            try:
+                company_lst = request.user.moragib_list.moragib_distribution.goldproductionuserdetail_set.filter(master__state=PRODUCTION_STATE_CONFIRMED).values_list('company',flat=True)
+                return qs.filter(company__id__in=company_lst)
+            except Exception as e:
+                print(request.user,e)
+
+        return qs.none() #super().get_queryset(request)
 
 class TblStateRepresentativeAdmin(admin.ModelAdmin):
     model = TblStateRepresentative
