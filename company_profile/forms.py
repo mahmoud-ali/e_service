@@ -578,19 +578,17 @@ class AppHSEAccidentReportForm(AppHSEAccidentReportAdminForm):
 
 class AppHSEPerformanceReportAdminForm(ModelForm):
     company = forms.ModelChoiceField(queryset=TblCompanyProduction.objects.all(), disabled=True, label=_("company"))
-
+    license = forms.ModelChoiceField(queryset=TblCompanyProductionLicense.objects.none(), label=_("license"),empty_label=None)
     class Meta:
         model = AppHSEPerformanceReport
         fields = ["company","license","year","month","state"] #,"attachement_file"
         
 class AppHSEPerformanceReportForm(AppHSEPerformanceReportAdminForm):
+    company = None
     license = forms.ModelChoiceField(queryset=TblCompanyProductionLicense.objects.none(), label=_("license"),empty_label=None)
-
+    company_id = None
     def __init__(self, *args,company_id = None, **kwargs):        
         super().__init__(*args, **kwargs)
-
-        if kwargs.get('company_id'):
-            company_id = kwargs.get('company_id')
 
         if company_id:
             self.fields["license"].queryset = TblCompanyProductionLicense.objects.filter(company__id=company_id)

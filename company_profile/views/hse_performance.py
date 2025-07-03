@@ -111,7 +111,7 @@ class AppHSEPerformanceReportCreateView(LoginRequiredMixin,View):
         return render(request, self.template_name, self.extra_context)
 
     def post(self, request, *args, **kwargs):
-        form = self.form_class(request.POST,request.FILES)
+        form = self.form_class(request.POST,request.FILES,company_id=self.request.user.pro_company.company.id)
         self.extra_context["form"] = form
         
         if form.is_valid():
@@ -171,7 +171,8 @@ class AppHSEPerformanceReportReadonlyView(LoginRequiredMixin,DetailView):
 
     def get(self,request,pk=0):        
         obj = self.get_object()
-        self.extra_context["form"] = self.form_class(instance=obj)
+        form = self.extra_context['form'](company_id = self.request.user.pro_company.company.id,instance=obj)
+        self.extra_context["form"] =form
         self.extra_context["detail_formset"] = [formset(instance=obj) for formset in self.detail_formset]
 
         return render(request, self.template_name, self.extra_context)
