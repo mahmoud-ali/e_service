@@ -105,6 +105,7 @@ MIDDLEWARE = [
     
     #3rd party
     'allauth.account.middleware.AccountMiddleware',
+    'rollbar.contrib.django.middleware.RollbarNotifierMiddleware',
 
     # Debug
     'debug_toolbar.middleware.DebugToolbarMiddleware',
@@ -305,4 +306,11 @@ SHOW_REQUESTS_URL = "profile:pa_request_show"
 
 BOOTSTRAP3 = {
     "form_renderers": {"default": "e_service.renderers.FormRenderer"},
+}
+
+ROLLBAR = {
+    'access_token': '2d46042a948fbea1137117132e20a349',
+    'environment': 'development' if DEBUG else 'production',
+    'code_version': '1.0',
+    'root': BASE_DIR,
 }

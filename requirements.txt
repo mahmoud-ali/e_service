@@ -18,3 +18,4 @@ django-mptt
 python-telegram-bot
 requests
 # django-admin-interface
+rollbar
