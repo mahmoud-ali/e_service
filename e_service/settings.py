@@ -104,7 +104,7 @@ INSTALLED_APPS = [
     'mokhalafat',
     'production_control',
     'gold_travel_traditional',
-    'executive_office',
+    # 'executive_office',
     'planning',
     'dabtiaat_altaedin',
     'sswg',
