@@ -170,6 +170,11 @@ class EmployeeTelegramRegistrationAdmin(FlowMixin,admin.ModelAdmin):
 
             username = obj.employee.email
 
+            if not username:
+                message = f"لاتمتلك بريداً إلكترونياً. الرجاء مراجعة إدارة الموارد البشرية لتخصيص بريد إلكتروني لك."
+                send_message(TOKEN_ID, obj.user_id, message)
+                return
+
             obj.employee.phone = obj.phone
             obj.employee.save()
 
