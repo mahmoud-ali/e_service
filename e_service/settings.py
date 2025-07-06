@@ -309,7 +309,7 @@ BOOTSTRAP3 = {
 }
 
 ROLLBAR = {
-    'access_token': '2d46042a948fbea1137117132e20a349',
+    'access_token': config('ROLLBAR_TOKEN'),
     'environment': 'development' if DEBUG else 'production',
     'code_version': '1.0',
     'root': BASE_DIR,
