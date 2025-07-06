@@ -8,14 +8,15 @@ class EmployeeSolarSystemMixin:
         if request.user.groups.filter(name__in=["hr_employee",]).exists():
             try:
                 employee = EmployeeBasic.objects.get(email=request.user.email)
-                print("emp",employee)
-                try:
-                    employee.solar_system_category_choice
-                    return False
-                except:
-                    print("no solor system")
-
-                    return True
+                return True
+                # print("emp",employee)
+                # try:
+                #     employee.solar_system_category_choice
+                #     return False
+                # except:
+                #     print("no solor system")
+                #     return True
+                
             except Exception as e:
                 print("no employee",e)
                 return False
