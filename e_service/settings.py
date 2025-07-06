@@ -133,6 +133,7 @@ MIDDLEWARE = [
     
     #3rd party
     'allauth.account.middleware.AccountMiddleware',
+    'rollbar.contrib.django.middleware.RollbarNotifierMiddleware',
 
     # Debug
     'debug_toolbar.middleware.DebugToolbarMiddleware',
@@ -427,6 +428,13 @@ LEAFLET_CONFIG = {
         },
     }
 
+}
+
+ROLLBAR = {
+    'access_token': config('ROLLBAR_TOKEN'),
+    'environment': 'development' if DEBUG else 'production',
+    'code_version': '1.0',
+    'root': BASE_DIR,
 }
 
 TESTING = 'test' in sys.argv[1:]

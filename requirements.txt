@@ -27,3 +27,4 @@ qrcode
 ipython
 django-autocomplete-light
 django-leaflet
+rollbar
