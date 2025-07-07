@@ -198,6 +198,7 @@ details = [
 class AppWorkPlanListView(ApplicationListView):
     model = model_master
     table_class = AppWorkPlanTable
+    user_groups = []
     # filterset_class = CommitmentFilter
     menu_name = "exploration:workplan_list"
     title = _("List of work plans")
@@ -212,6 +213,7 @@ class AppWorkPlanCreateView(ApplicationMasterDetailCreateView):
     model = model_master
     form_class = form_master
     details = details
+    user_groups = []
     menu_name = "exploration:workplan_list"
     title = _("Add new work plan")            
     template_name = "company_profile_exploration/application_add_master_details.html"     
@@ -223,6 +225,7 @@ class AppWorkPlanUpdateView(ApplicationMasterDetailUpdateView):
     model = model_master
     form_class = form_master
     details = details
+    user_groups = []
     menu_name = "exploration:workplan_list"
     menu_show_name = "exploration:workplan_show"
     title = _("Edit work plan")
@@ -246,6 +249,7 @@ class AppWorkPlanReadonlyView(ApplicationReadonlyView):
     model = model_master
     form_class = form_master
     details = details
+    user_groups = []
     menu_name = "exploration:workplan_list"
     menu_edit_name = "exploration:workplan_edit"
     menu_delete_name = "exploration:workplan_delete"
@@ -265,6 +269,7 @@ class AppWorkPlanDeleteView(ApplicationDeleteMasterDetailView):
     model = model_master
     form_class = form_master
     details = details
+    user_groups = []
     menu_name = "exploration:workplan_list"
     title = _("Delete work plan")
     template_name = "company_profile_exploration/application_delete_master_detail.html"     

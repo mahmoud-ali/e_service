@@ -34,6 +34,9 @@ class UserPermissionMixin(UserPassesTestMixin):
     user_groups = []
 
     def test_func(self):
+        if not self.user_groups:
+            return True
+
         return self.request.user.groups.filter(name__in=self.user_groups).exists()
     
     def test_group(self,group):
