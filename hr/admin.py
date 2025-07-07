@@ -478,7 +478,7 @@ class EmployeeBasicAdmin(admin.ModelAdmin):
             headers={"Content-Disposition": f'attachment; filename="contacts.csv"'},
         )
         header = [
-                    "First Name","E-mail Address","Business Phone","Job Title","Department"
+                    "Code","First Name","E-mail Address","Business Phone","Job Title","Department"
         ]
 
         # BOM
@@ -504,7 +504,7 @@ class EmployeeBasicAdmin(admin.ModelAdmin):
                 account_no = account.account_no
 
             row = [
-                    emp.name,str(emp.email).lower(),emp.phone,emp.mosama_wazifi.name,emp.edara_3ama
+                    emp.code,emp.name,str(emp.email).lower(),emp.phone,emp.mosama_wazifi.name,emp.edara_3ama
             ]
             writer.writerow(row)
 
