@@ -296,8 +296,8 @@ def import_bank_accounts():
             except Exception as e:
                 print('not imported',code,emp,e)
 
-def import_email():    
-    with open(f'./hr/data/email.csv', newline='') as csvfile:
+def import_email(filename='email.csv'):    
+    with open(f'./hr/data/'+filename, newline='') as csvfile:
         reader = csv.reader(csvfile, delimiter=',')
         next(reader, None)  # skip the headers
         for row in reader:
