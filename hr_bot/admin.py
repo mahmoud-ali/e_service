@@ -128,7 +128,7 @@ class EmployeeTelegramRegistrationAdmin(FlowMixin,admin.ModelAdmin):
     model = EmployeeTelegramRegistration
     exclude = ["created_at","created_by","updated_at","updated_by","state"] #,"user_id"
     list_display = ["employee","name","phone","state"]        
-    list_filter = ["state"]
+    list_filter = ["created_at","state"]
     actions = ['accept','reject','reset_password']
     view_on_site = False
     search_fields = ["employee__name","phone","name"]
@@ -206,9 +206,9 @@ class EmployeeTelegramRegistrationAdmin(FlowMixin,admin.ModelAdmin):
 @admin.register(EmployeeTelegramFamily)
 class EmployeeTelegramFamilyAdmin(PermissionMixin,FlowMixin,admin.ModelAdmin):
     model = EmployeeTelegramFamily
-    exclude = ["created_at","created_by","updated_at","updated_by","state","tarikh_el2dafa"] #,"user_id"
+    exclude = ["created_at","created_by","updated_at","updated_by","state"] #,"user_id"
     list_display = ["employee","name","relation","attachement_file","state"]        
-    list_filter = ["state"]
+    list_filter = ["created_at","state"]
     autocomplete_fields = ["employee"]
     view_on_site = False
     search_fields = ["employee__name","employee__code"]
@@ -229,7 +229,7 @@ class EmployeeTelegramFamilyAdmin(PermissionMixin,FlowMixin,admin.ModelAdmin):
                     employee=obj.employee,
                     relation=obj.relation,
                     name=obj.name,
-                    tarikh_el2dafa=timezone.now(),
+                    tarikh_el2dafa=obj.tarikh_el2dafa,
                     attachement_file=obj.attachement_file,
 
                     created_by=request.user,
@@ -250,7 +250,7 @@ class EmployeeTelegramMoahilAdmin(PermissionMixin,FlowMixin,admin.ModelAdmin):
     model = EmployeeTelegramMoahil
     exclude = ["created_at","created_by","updated_at","updated_by","state","tarikh_el2dafa"] #,"user_id"
     list_display = ["employee","moahil","university","graduate_dt","state"]        
-    list_filter = ["moahil","state"]
+    list_filter = ["created_at","moahil","state"]
     autocomplete_fields = ["employee"]
     view_on_site = False
     search_fields = ["employee__name","employee__code"]
@@ -294,7 +294,7 @@ class EmployeeTelegramBankAccountAdmin(PermissionMixin,FlowMixin,admin.ModelAdmi
     model = EmployeeTelegramBankAccount
     exclude = ["created_at","created_by","updated_at","updated_by","state"] #,"user_id"
     list_display = ["employee","bank","account_no","active","state"]        
-    list_filter = ["bank","state"]
+    list_filter = ["created_at","bank","state"]
     autocomplete_fields = ["employee"]
     view_on_site = False
     search_fields = ["employee__name","employee__code"]

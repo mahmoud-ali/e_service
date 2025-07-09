@@ -1,4 +1,5 @@
 from django.db import models
+from django.forms import ValidationError
 from django.utils.translation import gettext_lazy as _
 from hr import models as hr_models
 from hr.models import MOAHIL_CHOICES, EmployeeBankAccount, EmployeeBasic, LoggingModel,EmployeeFamily
@@ -79,7 +80,7 @@ class EmployeeTelegramFamily(LoggingModel):
     employee = models.ForeignKey(EmployeeBasic, on_delete=models.PROTECT,verbose_name=_("employee_name"))
     relation = models.CharField(_("relation"), choices=EmployeeFamily.FAMILY_RELATION_CHOICES,max_length=10)
     name = models.CharField(_("name"),max_length=100)
-    tarikh_el2dafa = models.DateField(_("tarikh_el2dafa"),blank=True,null=True)
+    tarikh_el2dafa = models.DateField(_("تاريخ صدور الشهادة"),blank=True,null=True)
     attachement_file = models.FileField(_("attachement"),upload_to=hr_models.attachement_path)
     state = models.IntegerField(_("record_state"), choices=STATE_CHOICES, default=STATE_DRAFT)
 
@@ -91,6 +92,13 @@ class EmployeeTelegramFamily(LoggingModel):
     #     return f'{self.employee.name} ({self.get_relation_display()})'
     def __str__(self) -> str:
         return f'بيانات الاسرة: {self.name}({self.get_relation_display()})'
+    
+    def clean(self):
+        if not self.tarikh_el2dafa:
+            raise ValidationError({
+                'tarikh_el2dafa':_("الرجاء إدخال تاريخ صدور الشهادة"),
+            })
+        return super().clean()
 
 
 class EmployeeTelegramMoahil(LoggingModel):
@@ -159,6 +167,18 @@ class EmployeeTelegramBankAccount(LoggingModel):
     def __str__(self) -> str:
         return f'رقم حساب: {self.account_no} - ({EmployeeBankAccount.BANK_CHOICES[self.bank]})'
 
+    def clean(self):
+        if (self.bank == EmployeeBankAccount.BANK_KHARTOUM and len(self.account_no) != 16):
+            raise ValidationError({
+                'account_no':_("الرجاء إدخال حساب مكون من 16 خانة"),
+            })
+        
+        if (self.bank == EmployeeBankAccount.BANK_OMDURMAN and (len(self.account_no) != 5 and len(self.account_no) != 6 and len(self.account_no) != 7)):
+            raise ValidationError({
+                'account_no':_("الرجاء إدخال حساب مكون من 5 - 7 خانات"),
+            })
+        
+        return super().clean()
 
 class EmployeeBasicProxy(hr_models.EmployeeBasic):
     class Meta:
