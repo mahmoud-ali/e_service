@@ -4,8 +4,8 @@ from django.utils.translation import gettext_lazy as _
 from hr import models as hr_models
 from hr.models import MOAHIL_CHOICES, EmployeeBankAccount, EmployeeBasic, LoggingModel,EmployeeFamily
 
-import utils
-import admin
+import hr_bot.utils as utils
+import hr_bot.admin as admin
 STATE_DRAFT = 1
 STATE_ACCEPTED = 2
 STATE_REJECTED = 3
