@@ -3,9 +3,12 @@ from django.forms import ValidationError
 from django.utils.translation import gettext_lazy as _
 from hr import models as hr_models
 from hr.models import MOAHIL_CHOICES, EmployeeBankAccount, EmployeeBasic, LoggingModel,EmployeeFamily
+from django.contrib.auth.models import  Group
 
-import hr_bot.utils as utils
-import hr_bot.admin as admin
+import requests
+
+TOKEN_ID = "7872004783:AAGtyQS8FB2ARgEU_fY32YlSHsnMJ4kXm5w"
+
 STATE_DRAFT = 1
 STATE_ACCEPTED = 2
 STATE_REJECTED = 3
@@ -15,6 +18,23 @@ STATE_CHOICES = {
     STATE_ACCEPTED: _('state_accepted'),
     STATE_REJECTED: _('state_rejected'),
 }
+
+def send_message(TOKEN_ID, user_id, message):
+    telegram_url = f"https://api.telegram.org/bot{TOKEN_ID}/sendMessage?chat_id={int(user_id)}&text={message}"
+    return requests.get(telegram_url)
+
+def send_notifications(TOKEN_ID,message):
+    group = Group.objects.get(name='hr_manpower')
+    for user in group.user_set.all():  # Get all users in the group
+        try:
+            employee = EmployeeBasic.objects.get(email= user.email)
+            user_id = employee.employeetelegramregistration_set.first().user_id
+
+            # print(TOKEN_ID, user_id, message)
+            send_message(TOKEN_ID, user_id, message)
+        except Exception as e:
+            print(e)
+
 
 class EmployeeTelegram(LoggingModel):
     """
@@ -64,7 +84,7 @@ class EmployeeTelegramRegistration(LoggingModel):
         verbose_name_plural = _("Employee Registration")
 
     def save(self, *args, **kwargs):
-        utils.send_notifications(TOKEN_ID=admin.TOKEN_ID,message=f"قام الموظف {self.employee.name} بالتسجيل")
+        send_notifications(TOKEN_ID=TOKEN_ID,message=f"قام الموظف {self.employee.name} بالتسجيل")
         return super().save(*args, **kwargs)
 
 class EmployeeTelegramFamily(LoggingModel):
@@ -107,7 +127,7 @@ class EmployeeTelegramFamily(LoggingModel):
         return super().clean()
 
     def save(self, *args, **kwargs):
-        utils.send_notifications(TOKEN_ID=admin.TOKEN_ID,message=f"قام الموظف {self.employee.name} بإضافة بيانات اسرة")
+        send_notifications(TOKEN_ID=TOKEN_ID,message=f"قام الموظف {self.employee.name} بإضافة بيانات اسرة")
         return super().save(*args, **kwargs)
 
 class EmployeeTelegramMoahil(LoggingModel):
@@ -147,7 +167,7 @@ class EmployeeTelegramMoahil(LoggingModel):
         return f'بيانات المؤهل: {self.get_moahil_display()}'
 
     def save(self, *args, **kwargs):
-        utils.send_notifications(TOKEN_ID=admin.TOKEN_ID,message=f"قام الموظف {self.employee.name} بإضافة بيانات مؤهل")
+        send_notifications(TOKEN_ID=TOKEN_ID,message=f"قام الموظف {self.employee.name} بإضافة بيانات مؤهل")
         return super().save(*args, **kwargs)
 
 class EmployeeTelegramBankAccount(LoggingModel):
@@ -194,7 +214,7 @@ class EmployeeTelegramBankAccount(LoggingModel):
         return super().clean()
 
     def save(self, *args, **kwargs):
-        utils.send_notifications(TOKEN_ID=admin.TOKEN_ID,message=f"قام الموظف {self.employee.name} بإضافة بيانات حساب بنكي")
+        send_notifications(TOKEN_ID=TOKEN_ID,message=f"قام الموظف {self.employee.name} بإضافة بيانات حساب بنكي")
         return super().save(*args, **kwargs)
 
 class EmployeeBasicProxy(hr_models.EmployeeBasic):

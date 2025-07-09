@@ -59,13 +59,3 @@ def reject_cause(model, obj):
 
     return msg
 
-def send_notifications(TOKEN_ID,message):
-    group = Group.objects.get(name='hr_manpower')
-    for user in group.user_set.all():  # Get all users in the group
-        try:
-            employee = EmployeeBasic.objects.get(email= user.email)
-            user_id = employee.employeetelegramregistration_set.first().user_id
-            print(TOKEN_ID, user_id, message)
-            # send_message(TOKEN_ID, user_id, message)
-        except Exception as e:
-            print(e)
