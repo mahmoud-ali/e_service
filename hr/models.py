@@ -325,6 +325,9 @@ class HikalWazifi(MPTTModel):
     name = models.CharField(max_length=150, unique=True)
     parent = TreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children')
     elmostoa_eltanzimi = models.IntegerField(_("elmostoa_eltanzimi"), choices=ELMOSTOA_ELTANZIMI_CHOICES,default=ELMOSTOA_ELTANZIMI_WI7DA)
+    edara_3ama = TreeForeignKey("HikalWazifi", on_delete=models.PROTECT,verbose_name=_("edara_3ama"),related_name="+",blank=True,null=True,editable=False)
+    edara_far3ia = TreeForeignKey("HikalWazifi", on_delete=models.PROTECT,verbose_name=_("edara_far3ia"),related_name="+",blank=True,null=True,editable=False)
+    gisim = TreeForeignKey("HikalWazifi", on_delete=models.PROTECT,verbose_name=_("gasima"),related_name="+",blank=True,null=True,editable=False)
 
     class MPTTMeta:
         order_insertion_by = ['name']
@@ -336,6 +339,42 @@ class HikalWazifi(MPTTModel):
     def __str__(self) -> str:
         return self.name
 
+    def save(self, *args, **kwargs):
+        self.edara_3ama = self.edara_3ama_calc
+        self.edara_far3ia = self.edara_far3ia_calc
+        self.gisim = self.gisim_calc
+
+        super().save(*args, **kwargs)
+
+    def traverse_hikal_wazifi(self,level):
+        job = None
+        try:
+            job = self.get_ancestors(include_self=True).get(elmostoa_eltanzimi=level)
+        except:
+            pass
+        return job
+    
+    @property
+    @admin.display(description=_("edara_3ama"))
+    def edara_3ama_calc(self):
+        job = self.traverse_hikal_wazifi(HikalWazifi.ELMOSTOA_ELTANZIMI_2DARA_3AMA)
+        if not job:
+            job = self.traverse_hikal_wazifi(HikalWazifi.ELMOSTOA_ELTANZIMI_MOSA3ID_MODIR_3AM)
+            if not job:
+                job = self.get_root()
+
+        return job
+
+    @property
+    @admin.display(description=_("edara_far3ia"))
+    def edara_far3ia_calc(self):
+        return self.traverse_hikal_wazifi(HikalWazifi.ELMOSTOA_ELTANZIMI_2DARA_FAR3IA)
+
+    @property
+    @admin.display(description=_("gisim"))
+    def gisim_calc(self):
+        return self.traverse_hikal_wazifi(HikalWazifi.ELMOSTOA_ELTANZIMI_GISIM)
+    
 class Edara3ama(models.Model):
     TAB3IA_EDARIA_MODIR3AM = 1
     TAB3IA_EDARIA_FANI = 2
@@ -521,35 +560,22 @@ class EmployeeBasic(LoggingModel):
         ordering = ["code"]
         verbose_name = _("Employee data")
         verbose_name_plural = _("Employee data")
-
-    def traverse_hikal_wazifi(self,level):
-        job = None
-        try:
-            job = self.hikal_wazifi.get_ancestors(include_self=True).get(elmostoa_eltanzimi=level)
-        except:
-            pass
-        return job
     
     @property
     @admin.display(description=_("edara_3ama"))
     def edara_3ama(self):
-        job = self.traverse_hikal_wazifi(HikalWazifi.ELMOSTOA_ELTANZIMI_2DARA_3AMA)
-        if self.hikal_wazifi and not job:
-            job = self.traverse_hikal_wazifi(HikalWazifi.ELMOSTOA_ELTANZIMI_MOSA3ID_MODIR_3AM)
-            if not job:
-                job = self.hikal_wazifi.get_root()
+        return self.hikal_wazifi.edara_3ama
 
-        return job
 
     @property
     @admin.display(description=_("edara_far3ia"))
     def edara_far3ia(self):
-        return self.traverse_hikal_wazifi(HikalWazifi.ELMOSTOA_ELTANZIMI_2DARA_FAR3IA)
+        return self.hikal_wazifi.edara_far3ia
 
     @property
     @admin.display(description=_("gisim"))
     def gisim(self):
-        return self.traverse_hikal_wazifi(HikalWazifi.ELMOSTOA_ELTANZIMI_GISIM)
+        return self.hikal_wazifi.gisim
 
     @property
     @admin.display(description=_("wi7da"))
