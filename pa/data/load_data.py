@@ -236,12 +236,15 @@ def remove_request_with_zero_total():
 
 def remove_mokhalafat_requests():
     for request in TblCompanyRequestMaster.objects.filter(commitment__company__company_type=TblCompany.COMPANY_TYPE_MOKHALFAT):
-        print("request will be deleted:",request.id)
-        request.tblcompanyrequestdetail_set.all().delete()
-        request.commitment.tblcompanycommitmentdetail_set.all().delete()
-        commitment = request.commitment
-        request.delete()
-        commitment.delete()
+        try:
+            print("request will be deleted:",request.id)
+            commitment = request.commitment
+            request.tblcompanyrequestdetail_set.all().delete()
+            commitment.tblcompanycommitmentdetail_set.all().delete()
+            request.delete()
+            commitment.delete()
+        except:
+            print("Not deleted:",request.id)
 
 def import_mokhalafat_request(file_name='request_mokhalafat.csv',currency="sdg"):
     with open('./pa/data/'+file_name, newline='') as csvfile:
