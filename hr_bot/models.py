@@ -4,6 +4,8 @@ from django.utils.translation import gettext_lazy as _
 from hr import models as hr_models
 from hr.models import MOAHIL_CHOICES, EmployeeBankAccount, EmployeeBasic, LoggingModel,EmployeeFamily
 
+import utils
+import admin
 STATE_DRAFT = 1
 STATE_ACCEPTED = 2
 STATE_REJECTED = 3
@@ -61,6 +63,10 @@ class EmployeeTelegramRegistration(LoggingModel):
         verbose_name = _("Employee Registration")
         verbose_name_plural = _("Employee Registration")
 
+    def save(self, *args, **kwargs):
+        utils.send_notifications(TOKEN_ID=admin.TOKEN_ID,message=f"قام الموظف {self.employee.name} بالتسجيل")
+        return super().save(*args, **kwargs)
+
 class EmployeeTelegramFamily(LoggingModel):
     """
     Model representing family member information for employees using the Telegram system.
@@ -100,6 +106,9 @@ class EmployeeTelegramFamily(LoggingModel):
             })
         return super().clean()
 
+    def save(self, *args, **kwargs):
+        utils.send_notifications(TOKEN_ID=admin.TOKEN_ID,message=f"قام الموظف {self.employee.name} بإضافة بيانات اسرة")
+        return super().save(*args, **kwargs)
 
 class EmployeeTelegramMoahil(LoggingModel):
     """
@@ -136,6 +145,10 @@ class EmployeeTelegramMoahil(LoggingModel):
     #     return f'{self.employee.name} ({self.get_moahil_display()})'
     def __str__(self) -> str:
         return f'بيانات المؤهل: {self.get_moahil_display()}'
+
+    def save(self, *args, **kwargs):
+        utils.send_notifications(TOKEN_ID=admin.TOKEN_ID,message=f"قام الموظف {self.employee.name} بإضافة بيانات مؤهل")
+        return super().save(*args, **kwargs)
 
 class EmployeeTelegramBankAccount(LoggingModel):
     """
@@ -179,6 +192,10 @@ class EmployeeTelegramBankAccount(LoggingModel):
             })
         
         return super().clean()
+
+    def save(self, *args, **kwargs):
+        utils.send_notifications(TOKEN_ID=admin.TOKEN_ID,message=f"قام الموظف {self.employee.name} بإضافة بيانات حساب بنكي")
+        return super().save(*args, **kwargs)
 
 class EmployeeBasicProxy(hr_models.EmployeeBasic):
     class Meta:

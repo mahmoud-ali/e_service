@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import  Group
 
-from hr.models import EmployeeFamily
+from hr.models import EmployeeFamily ,EmployeeBasic
 from hr_bot.models import EmployeeTelegramBankAccount, EmployeeTelegramFamily, EmployeeTelegramMoahil,ApplicationRequirement
 
 import requests
@@ -58,3 +58,14 @@ def reject_cause(model, obj):
             msg += "\n - ".join(qs.values_list("requirement",flat=True))
 
     return msg
+
+def send_notifications(TOKEN_ID,message):
+    group = Group.objects.get(name='hr_manpower')
+    for user in group.user_set.all():  # Get all users in the group
+        try:
+            employee = EmployeeBasic.objects.get(email= user.email)
+            user_id = employee.employeetelegramregistration_set.first().user_id
+            print(TOKEN_ID, user_id, message)
+            # send_message(TOKEN_ID, user_id, message)
+        except Exception as e:
+            print(e)
