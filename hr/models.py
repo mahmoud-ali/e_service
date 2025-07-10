@@ -576,7 +576,7 @@ class EmployeeBasic(LoggingModel):
     @property
     @admin.display(description=_("gisim"))
     def gisim(self):
-        return self.hikal_wazifi.gisim
+        return self.hikal_wazifi.gisim if self.hikal_wazifi else None
 
     @property
     @admin.display(description=_("wi7da"))
