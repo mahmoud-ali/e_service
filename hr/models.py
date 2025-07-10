@@ -564,13 +564,14 @@ class EmployeeBasic(LoggingModel):
     @property
     @admin.display(description=_("edara_3ama"))
     def edara_3ama(self):
-        return self.hikal_wazifi.edara_3ama
+        return self.hikal_wazifi.edara_3ama if self.hikal_wazifi else None
+
 
 
     @property
     @admin.display(description=_("edara_far3ia"))
     def edara_far3ia(self):
-        return self.hikal_wazifi.edara_far3ia
+        return self.hikal_wazifi.edara_far3ia if self.hikal_wazifi else None
 
     @property
     @admin.display(description=_("gisim"))
