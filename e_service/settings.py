@@ -314,3 +314,6 @@ ROLLBAR = {
     'code_version': '1.0',
     'root': BASE_DIR,
 }
+
+TELEGRAM_TOKEN_ID = config('TELEGRAM_TOKEN_ID')
+TELEGRAM_DEVELOPER_CHAT_ID = config('TELEGRAM_DEVELOPER_CHAT_ID')

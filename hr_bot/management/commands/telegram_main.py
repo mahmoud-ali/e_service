@@ -5,6 +5,7 @@ import traceback
 import html
 import json
 
+from django.conf import settings
 from telegram import KeyboardButton, MenuButton, MenuButtonCommands, ReplyKeyboardMarkup, ReplyKeyboardRemove, Update,File
 from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, ContextTypes, ConversationHandler, filters
 from telegram.constants import ParseMode
@@ -34,9 +35,9 @@ logger = logging.getLogger(__name__)
 
 # You can use the /start command of this bot to see your chat id.
 
-DEVELOPER_CHAT_ID = 5624823325
+DEVELOPER_CHAT_ID = settings.TELEGRAM_DEVELOPER_CHAT_ID
 
-TOKEN_ID = "7872004783:AAGtyQS8FB2ARgEU_fY32YlSHsnMJ4kXm5w"
+TOKEN_ID = settings.TELEGRAM_TOKEN_ID
 
 def compare_phone(phone1,phone2):
     return (re.sub(r'\D', '', phone1) == re.sub(r'\D', '', phone2))
@@ -363,7 +364,7 @@ def main():
         entry_points=[CommandHandler("start", start)],
         states={
             GET_NAME:[MessageHandler(filters.TEXT, get_name)],
-            GET_CODE: [MessageHandler(filters.Regex("\d+"), get_code)],
+            GET_CODE: [MessageHandler(filters.Regex(r'\d+'), get_code)],
             GET_CONTACT: [MessageHandler(filters.CONTACT, get_contact)],
             # CHOOSING: [MessageHandler(filters.Regex("^("+MENU_CHOICE1+"|"+MENU_CHOICE2+")$"), get_choise)],
             # GET_CHILDREN:[MessageHandler(filters.TEXT, get_children)],
