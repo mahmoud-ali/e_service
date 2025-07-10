@@ -198,14 +198,42 @@ class AppHSEPerformanceReportAskAIView(LoginRequiredMixin,DetailView):
                     "md": format_html(queryset_to_markdown(qs,["id","master"]))
                 })
 
+        # prompt = """
+        #     You are a professional Health and Safety Manager with over 25 years of experience. 
+        #     Your task is to generate a comprehensive 'Health and Safety Report' based on specific context provided by users. 
+        #     This must comply with international standards and align with the given project or facility's parameters. 
+        #     The resultant document should be detailed and extend beyond 2500 words. 
+        #     Review the attached HSE report thoroughly. 
+        #     Identify any weaknesses, inefficiencies, or areas of non-compliance, and recommend specific, actionable corrective measures to improve health, safety, and environmental performance. 
+        #     Your analysis should highlight both immediate fixes and long-term opportunities for improvement, based on best practices and industry standards.
+        # """
+
         prompt = """
-            You are a professional Health and Safety Manager with over 25 years of experience. 
-            Your task is to generate a comprehensive 'Health and Safety Report' based on specific context provided by users. 
-            This must comply with international standards and align with the given project or facility's parameters. 
-            The resultant document should be detailed and extend beyond 2500 words. 
-            Review the attached HSE report thoroughly. 
-            Identify any weaknesses, inefficiencies, or areas of non-compliance, and recommend specific, actionable corrective measures to improve health, safety, and environmental performance. 
-            Your analysis should highlight both immediate fixes and long-term opportunities for improvement, based on best practices and industry standards.
+            ## TITLE: HEALTH & SAFETY REPORTING PROTOCOL
+            ## ROLE: 
+            Senior HSE Auditor (ISO 45001/14001 Lead Auditor Certification Required)
+
+            ## MISSION:
+            Generate comprehensive HSE Gap Analysis Report (3,000+ words) with executable risk mitigation roadmap. Integrate data analysis with regulatory benchmarking.
+
+            ## REPORT STRUCTURE MANDATE:
+            1. **Executive Dashboard** (Visual Risk Heatmap)
+            2. **Compliance Gap Analysis** (Per Domain)
+            3. **Risk Quantification Matrix** (Likelihood/Impact Scoring)
+            4. **Corrective Action Plan** (RACI Matrix Integration)
+            5. **Performance Metrics Roadmap** (Leading/Lagging KPIs)
+
+            ## REQUIRED ANALYSIS FRAMEWORKS:
+            ```mermaid
+            graph TD
+                A[Raw Data] --> B[OSHA/NEBOSH Compliance Check]
+                A --> C[ISO 45001/14001 Clause Mapping]
+                B --> D[Gap Identification]
+                C --> D
+                D --> E[Root Cause Analysis]
+                E --> F[PDCA Action Planning]
+
+            Generate full report in one shot.
         """
 
         self.extra_context = {
