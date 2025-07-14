@@ -55,9 +55,9 @@ class AppHSEPerformanceReportMixin(LogMixin):
         if request.user.is_superuser:
             return qs
 
-        print("User groups",request.user.groups.all())
+        # print("User groups",request.user.groups.all())
         if request.user.groups.filter(name__in=("hse_cmpny_department_mngr","hse_cmpny_gm",)).exists():
-            print("has group hse_cmpny_department_mngr or hse_cmpny_gm")
+            # print("has group hse_cmpny_department_mngr or hse_cmpny_gm")
             return qs
         
         if request.user.groups.filter(name__in=("hse_cmpny_state_mngr",)).exists():
