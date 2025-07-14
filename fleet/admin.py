@@ -15,7 +15,6 @@ class LogMixin(admin.ModelAdmin):
         obj.updated_by = request.user
         super().save_model(request, obj, form, change)
 
-
 class VehicleCertificateInline(admin.TabularInline):
     model = models.VehicleCertificate
     fields = ('cert_type','start_date','end_date','attachments','notes')
@@ -33,7 +32,6 @@ class VehicleDriverInline(admin.TabularInline):
     model = models.VehicleDriver
     extra = 1
     # readonly_fields = ('created_at', 'created_by', 'updated_at', 'updated_by')
-
 
 @admin.register(models.Vehicle)
 class VehicleAdmin(LogMixin):
@@ -64,13 +62,11 @@ class VehicleAdmin(LogMixin):
 class VehicleMakeAdmin(admin.ModelAdmin):
     search_fields = ('name',)
 
-
 @admin.register(models.VehicleModel)
 class VehicleModelAdmin(admin.ModelAdmin):
     list_display = ('name', 'make')
     list_filter = ('make',)
     search_fields = ('name', 'make__name')
-
 
 @admin.register(models.Driver)
 class DriverAdmin(LogMixin):
@@ -79,13 +75,11 @@ class DriverAdmin(LogMixin):
 
     list_filter = ('license_type',)
 
-
 # @admin.register(models.VehicleAssignment)
 # class VehicleAssignmentAdmin(LogMixin):
 #     list_display = ('vehicle', 'assign_to', 'start_date', 'end_date')
 #     list_filter = ('vehicle',)
 #     search_fields = ('assign_to', 'vehicle__license_plate')
-
 
 # @admin.register(models.VehicleCertificate)
 # class VehicleCertificateAdmin(LogMixin):
@@ -93,13 +87,11 @@ class DriverAdmin(LogMixin):
 #     list_filter = ('cert_type', 'vehicle')
 #     search_fields = ('vehicle__license_plate',)
 
-
 # @admin.register(models.VehicleDriver)
 # class VehicleDriverAdmin(LogMixin):
 #     list_display = ('vehicle', 'driver', 'start_date', 'end_date')
 #     # list_filter = ('vehicle', 'driver')
 #     search_fields = ('vehicle__license_plate', 'driver__name')
-
 
 # Register simple models without customization
 # admin.site.register(models.VehicleFuelType)
