@@ -13,7 +13,7 @@ class LoggingModel(models.Model):
         abstract = True
 
 #Vehicle Information  
-class VehicleMake(LoggingModel):
+class VehicleMake(models.Model):
     name = models.CharField(_("الاسم"),max_length=100)
 
     def __str__(self) -> str:
@@ -23,7 +23,7 @@ class VehicleMake(LoggingModel):
         verbose_name = _("الشركة المصنعة")
         verbose_name_plural = _("الشركات المصنعة")
 
-class VehicleModel(LoggingModel):
+class VehicleModel(models.Model):
     make = models.ForeignKey(VehicleMake, on_delete=models.PROTECT,verbose_name=_("make"))
     name = models.CharField(_("الاسم"),max_length=100)
 
@@ -34,7 +34,7 @@ class VehicleModel(LoggingModel):
         verbose_name = _("موديل المركبة")
         verbose_name_plural = _("موديلات المركبات")
 
-class VehicleFuelType(LoggingModel):
+class VehicleFuelType(models.Model):
     name = models.CharField(_("الاسم"),max_length=100)
 
     def __str__(self) -> str:
@@ -44,7 +44,7 @@ class VehicleFuelType(LoggingModel):
         verbose_name = _("نوع الوقود")
         verbose_name_plural = _("انواع الوقود")
 
-class VehicleStatus(LoggingModel):
+class VehicleStatus(models.Model):
     name = models.CharField(_("الاسم"),max_length=100)
 
     def __str__(self) -> str:
@@ -71,7 +71,7 @@ class Vehicle(LoggingModel):
         verbose_name_plural = _("المركبات")
 
 #Drivers info
-class DriverLicenseType(LoggingModel):
+class DriverLicenseType(models.Model):
     name = models.CharField(_("الاسم"),max_length=100)
 
     def __str__(self) -> str:
@@ -123,7 +123,7 @@ class VehicleAssignment(LoggingModel):
         verbose_name_plural = _("الجهات/الموظفين المخصص له")
 
 #License management
-class VehicleCertificateType(LoggingModel):
+class VehicleCertificateType(models.Model):
     name = models.CharField(_("الاسم"),max_length=100)
 
     def __str__(self) -> str:
