@@ -38,7 +38,23 @@ class LogMixin:
         if request.user.is_superuser:
             return qs
 
-        if request.user.groups.filter(name__in=("hse_cmpny_department_mngr","hse_cmpny_gm")).exists():
+class TblStateRepresentativeAdmin(admin.ModelAdmin):
+    model = TblStateRepresentative
+    form = TblStateRepresentativeForm
+    list_display = ["state", "name", "user"]
+    list_filter = ["state"]
+    
+admin.site.register(TblStateRepresentative,TblStateRepresentativeAdmin)
+
+class AppHSEPerformanceReportMixin:
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+
+        if request.user.is_superuser:
+            return qs
+
+        if request.user.groups.filter(name__in=("hse_cmpny_department_mngr","hse_cmpny_gm",)).exists():
+            print("has group hse_cmpny_department_mngr or hse_cmpny_gm")
             return qs
         
         if request.user.groups.filter(name__in=("hse_cmpny_state_mngr",)).exists():
@@ -63,15 +79,6 @@ class LogMixin:
 
         return qs.none() #super().get_queryset(request)
 
-class TblStateRepresentativeAdmin(admin.ModelAdmin):
-    model = TblStateRepresentative
-    form = TblStateRepresentativeForm
-    list_display = ["state", "name", "user"]
-    list_filter = ["state"]
-    
-admin.site.register(TblStateRepresentative,TblStateRepresentativeAdmin)
-
-class AppHSEPerformanceReportMixin:
     @admin.display(description=_('Ask AI'))
     def ask_ai_link(self, obj):
         url = reverse('profile:app_hse_performance_ai',args=[obj.id])
