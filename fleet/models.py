@@ -64,7 +64,7 @@ class Vehicle(LoggingModel):
     status = models.ForeignKey(VehicleStatus, on_delete=models.PROTECT,verbose_name=_("الحالة"))
 
     def __str__(self) -> str:
-        return f'{self.model.name} - {self.year}'
+        return f'{self.model.name} - {self.year}({self.license_plate})'
 
     class Meta:
         verbose_name = _("المركبة")
@@ -86,7 +86,6 @@ class Driver(LoggingModel):
     license_no = models.CharField(_("رقم الرخصة"),max_length=100)
     license_type = models.ForeignKey(DriverLicenseType, on_delete=models.PROTECT,verbose_name=_("نوع الرخصة"))
     expiry_date = models.DateField(_("تاريخ انتهاء الرخصة"))
-    assigned_vehicle = models.ForeignKey(Vehicle, on_delete=models.PROTECT,verbose_name=_("المركبة المخصصة"),blank=True,null=True)
     phone = models.CharField(_("رقم الهاتف"),max_length=100)
 
     def __str__(self) -> str:
@@ -142,7 +141,7 @@ class VehicleCertificate(LoggingModel):
     attachments = models.FileField(_("المرفقات"),blank=True,null=True)
 
     def __str__(self) -> str:
-        return f'{self.vehicle.model.name} ({self.vehicle.license_plate}) - {self.license_type.name} {self.end_date}'
+        return f'{self.vehicle.model.name} ({self.vehicle.license_plate}) - {self.cert_type.name} {self.end_date}'
 
     class Meta:
         verbose_name = _("شهادة المركبة")
