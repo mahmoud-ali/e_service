@@ -35,7 +35,7 @@ class VehicleDriverInline(admin.TabularInline):
 
 @admin.register(models.Vehicle)
 class VehicleAdmin(LogMixin):
-    list_display = ('model', 'year', 'license_plate', 'status', 'fuel_type')
+    list_display = ('model', 'year', 'license_plate', 'status', 'fuel_type',)
     list_filter = ('status', 'fuel_type','year', 'model__make','model__name')
     search_fields = ('license_plate', 'model__name', 'model__make__name', 'year')
     inlines = [
@@ -75,11 +75,12 @@ class DriverAdmin(LogMixin):
 
     list_filter = ('license_type',)
 
-# @admin.register(models.VehicleAssignment)
-# class VehicleAssignmentAdmin(LogMixin):
-#     list_display = ('vehicle', 'assign_to', 'start_date', 'end_date')
-#     list_filter = ('vehicle',)
-#     search_fields = ('assign_to', 'vehicle__license_plate')
+@admin.register(models.VehicleAssignment)
+class VehicleAssignmentAdmin(LogMixin):
+    list_display = ('vehicle', 'assign_to', 'start_date', 'end_date')
+    list_filter = ('vehicle__model',)
+    search_fields = ('assign_to', 'vehicle__license_plate')
+    autocomplete_fields = ["vehicle"]
 
 # @admin.register(models.VehicleCertificate)
 # class VehicleCertificateAdmin(LogMixin):

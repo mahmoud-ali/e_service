@@ -119,7 +119,7 @@ class VehicleAssignment(LoggingModel):
 
     class Meta:
         verbose_name = _("الجهة/الموظف المخصصة له")
-        verbose_name_plural = _("الجهات/الموظفين المخصص له")
+        verbose_name_plural = _("الجهات/الموظفين المخصص لهم")
 
 #License management
 class VehicleCertificateType(models.Model):
