@@ -18,19 +18,19 @@ class LogMixin(admin.ModelAdmin):
 class VehicleCertificateInline(admin.TabularInline):
     model = models.VehicleCertificate
     fields = ('cert_type','start_date','end_date','attachments','notes')
-    extra = 1
+    extra = 0
     # readonly_fields = ('created_at', 'created_by', 'updated_at', 'updated_by')
 
 
 class VehicleAssignmentInline(admin.TabularInline):
     model = models.VehicleAssignment
-    extra = 1
+    extra = 0
     # readonly_fields = ('created_at', 'created_by', 'updated_at', 'updated_by')
 
 
 class VehicleDriverInline(admin.TabularInline):
     model = models.VehicleDriver
-    extra = 1
+    extra = 0
     # readonly_fields = ('created_at', 'created_by', 'updated_at', 'updated_by')
 
 @admin.register(models.Vehicle)
