@@ -37,6 +37,8 @@ class LogMixin:
 
         if request.user.is_superuser:
             return qs
+        
+        return qs
 
 class TblStateRepresentativeAdmin(admin.ModelAdmin):
     model = TblStateRepresentative
@@ -46,7 +48,7 @@ class TblStateRepresentativeAdmin(admin.ModelAdmin):
     
 admin.site.register(TblStateRepresentative,TblStateRepresentativeAdmin)
 
-class AppHSEPerformanceReportMixin:
+class AppHSEPerformanceReportMixin(LogMixin):
     def get_queryset(self, request):
         qs = super().get_queryset(request)
 
@@ -69,7 +71,7 @@ class AppHSEPerformanceReportMixin:
                     company__in=companies
                 )
             except Exception as e:
-                print(e)
+                print("Error",e)
 
         if request.user.groups.filter(name__in=("production_control_auditor",)).exists():
             try:
@@ -87,7 +89,7 @@ class AppHSEPerformanceReportMixin:
                     url=url
                 )
 
-report_main_mixins = [AppHSEPerformanceReportMixin,LogMixin]
+report_main_mixins = [AppHSEPerformanceReportMixin,]
 report_main_class = {
     'model': AppHSEPerformanceReport,
     'mixins': [],
