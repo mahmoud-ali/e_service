@@ -24,7 +24,7 @@ class VehicleMake(models.Model):
         verbose_name_plural = _("الشركات المصنعة")
 
 class VehicleModel(models.Model):
-    make = models.ForeignKey(VehicleMake, on_delete=models.PROTECT,verbose_name=_("make"))
+    make = models.ForeignKey(VehicleMake, on_delete=models.PROTECT,verbose_name=_("الشركة المصنعة"))
     name = models.CharField(_("الاسم"),max_length=100)
 
     def __str__(self) -> str:
@@ -110,7 +110,7 @@ class VehicleDriver(LoggingModel):
 
 class VehicleAssignment(LoggingModel):
     vehicle = models.ForeignKey(Vehicle, on_delete=models.PROTECT,verbose_name=_("المركبة"))
-    assign_to = models.CharField(_("اسم الموظف/الجهة المخصص لها"),max_length=100)
+    assign_to = models.CharField(_("اسم الموظف او الجهة المخصص لها"),max_length=100)
     start_date = models.DateField(_("تاريخ البدء"))
     end_date = models.DateField(_("تاريخ الانتهاء"),blank=True,null=True)
 
@@ -118,8 +118,8 @@ class VehicleAssignment(LoggingModel):
         return f'{self.vehicle.model.name}({self.vehicle.license_plate}) - {self.assign_to}'
 
     class Meta:
-        verbose_name = _("الجهة/الموظف المخصصة له")
-        verbose_name_plural = _("الجهات/الموظفين المخصص لهم")
+        verbose_name = _("الجهة او الموظف المخصصة له")
+        verbose_name_plural = _("الجهات او الموظفين المخصص لهم")
 
 #License management
 class VehicleCertificateType(models.Model):

@@ -78,7 +78,7 @@ class DriverAdmin(LogMixin):
 @admin.register(models.VehicleAssignment)
 class VehicleAssignmentAdmin(LogMixin):
     list_display = ('vehicle', 'assign_to', 'start_date', 'end_date')
-    list_filter = ('vehicle__model',)
+    list_filter = ('vehicle__model__make','vehicle__model','vehicle__year')
     search_fields = ('assign_to', 'vehicle__license_plate')
     autocomplete_fields = ["vehicle"]
 
