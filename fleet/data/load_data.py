@@ -3,11 +3,14 @@ from datetime import datetime
 
 from django.contrib.auth import get_user_model
 
-from fleet.models import Vehicle, VehicleAssignment, VehicleCertificate, VehicleCertificateType, VehicleMake, VehicleModel, VehicleStatus
+from fleet.models import Vehicle, VehicleAssignment, VehicleCertificate, VehicleCertificateType, VehicleFuelType, VehicleMake, VehicleModel, VehicleStatus
 
 admin_user = get_user_model().objects.get(id=1)
 
 def get_last_year(date_str):
+    if not date_str:
+        return None
+    
     date = datetime.fromisoformat(date_str).date()
 
     try:
@@ -20,9 +23,18 @@ def get_last_year(date_str):
     return last_year
 
 def import_vehicles():
-    cert_insuranse_ejbari = VehicleCertificateType.objects.create(name="تأمين اجباري")
-    cert_insuranse_shamel = VehicleCertificateType.objects.create(name="تأمين شامل")
-    cert_license = VehicleCertificateType.objects.create(name="ترخيص")
+    VehicleCertificate.objects.all().delete()
+    VehicleAssignment.objects.all().delete()
+    Vehicle.objects.all().delete()
+
+
+    cert_insuranse_ejbari,created = VehicleCertificateType.objects.get_or_create(name="تأمين اجباري")
+    cert_insuranse_shamel,created = VehicleCertificateType.objects.get_or_create(name="تأمين شامل")
+    cert_license,created = VehicleCertificateType.objects.get_or_create(name="ترخيص")
+
+    fuel_type_jaz,created = VehicleFuelType.objects.get_or_create(name="جاز")
+    fuel_type_binzeen,created = VehicleFuelType.objects.get_or_create(name="بنزين")
+
     with open('./fleet/data/vehicle.csv', newline='') as csvfile:
         reader = csv.reader(csvfile, delimiter=',')
         next(reader, None)  # skip the headers
@@ -40,6 +52,12 @@ def import_vehicles():
             is_jiha = row[9].strip()
             # print(maker,model,year,license_plate,assign_to,geo,status,license_date,insuranse_date,is_jiha)
 
+            if not license_date:
+                license_date = None
+
+            if not insuranse_date:
+                insuranse_date = None
+
             maker_obj, created = VehicleMake.objects.get_or_create(name=maker)
             model_obj, created = VehicleModel.objects.get_or_create(make=maker_obj,name=model)
             status_obj, created = VehicleStatus.objects.get_or_create(name=status)
@@ -47,11 +65,14 @@ def import_vehicles():
             vehicle_obj = Vehicle.objects.create(
                 model=model_obj,
                 year=year,
+                fuel_type=fuel_type_binzeen,
                 license_plate=license_plate,
                 status=status_obj,
                 created_by=admin_user,
                 updated_by=admin_user
             )
+
+            print("Vehicle",vehicle_obj)
 
             VehicleAssignment.objects.create(
                 vehicle=vehicle_obj,
@@ -61,27 +82,30 @@ def import_vehicles():
                 updated_by=admin_user
             )
 
-            VehicleCertificate.objects.get_or_create(
-                vehicle=vehicle_obj,
-                cert_type=cert_insuranse_ejbari,
-                start_date=get_last_year(insuranse_date),
-                end_date=insuranse_date,
-                created_by=admin_user,
-                updated_by=admin_user
-            )
-            VehicleCertificate.objects.get_or_create(
-                vehicle=vehicle_obj,
-                cert_type=cert_insuranse_shamel,
-                start_date=get_last_year(insuranse_date),
-                end_date=insuranse_date,
-                created_by=admin_user,
-                updated_by=admin_user
-            )
-            VehicleCertificate.objects.get_or_create(
-                vehicle=vehicle_obj,
-                cert_type=cert_license,
-                start_date=get_last_year(license_date),
-                end_date=license_date,
-                created_by=admin_user,
-                updated_by=admin_user
-            )
+            if insuranse_date:
+                VehicleCertificate.objects.create(
+                    vehicle=vehicle_obj,
+                    cert_type=cert_insuranse_ejbari,
+                    start_date=get_last_year(insuranse_date),
+                    end_date=insuranse_date,
+                    created_by=admin_user,
+                    updated_by=admin_user
+                )
+                VehicleCertificate.objects.create(
+                    vehicle=vehicle_obj,
+                    cert_type=cert_insuranse_shamel,
+                    start_date=get_last_year(insuranse_date),
+                    end_date=insuranse_date,
+                    created_by=admin_user,
+                    updated_by=admin_user
+                )
+
+            if license_date:
+                VehicleCertificate.objects.create(
+                    vehicle=vehicle_obj,
+                    cert_type=cert_license,
+                    start_date=get_last_year(license_date),
+                    end_date=license_date,
+                    created_by=admin_user,
+                    updated_by=admin_user
+                )
