@@ -38,6 +38,9 @@ class LogMixin:
         if request.user.is_superuser:
             return qs
 
+        if request.user.groups.filter(name__in=("hse_cmpny_department_mngr","hse_cmpny_gm")).exists():
+            return qs
+        
         if request.user.groups.filter(name__in=("hse_cmpny_state_mngr",)).exists():
             try:
                 # company_type = request.user.gold_production_state_user.company_type
