@@ -33,16 +33,36 @@ class VehicleDriverInline(admin.TabularInline):
     extra = 0
     # readonly_fields = ('created_at', 'created_by', 'updated_at', 'updated_by')
 
+class VehicleGPSDeviceInline(admin.TabularInline):
+    model = models.VehicleGPSDevice
+    # fields = ('cert_type','start_date','end_date','attachments','notes')
+    extra = 0
+    # readonly_fields = ('created_at', 'created_by', 'updated_at', 'updated_by')
+
 @admin.register(models.Vehicle)
 class VehicleAdmin(LogMixin):
-    list_display = ('model', 'year', 'license_plate', 'status', 'fuel_type',)
+    list_display = ('model', 'year', 'license_plate', 'status', 'fuel_type','last_position',)
     list_filter = ('status', 'fuel_type','year', 'model__make','model__name')
     search_fields = ('license_plate', 'model__name', 'model__make__name', 'year')
     inlines = [
         VehicleCertificateInline,
         VehicleAssignmentInline,
         VehicleDriverInline,
+        VehicleGPSDeviceInline,
     ]
+
+    @admin.display(description="اخر موقع")
+    def last_position(self, obj):
+        try:
+            tc_device_pos_id = models.VehicleGPSDevice.objects.get(vehicle=obj).gps.positionid
+            print("pos_id",tc_device_pos_id)
+            tc_position = models.TcPositions.objects.get(id=tc_device_pos_id)
+            return tc_position
+        except Exception as e:
+            # print('****',e)
+            pass
+
+        return '-'
 
     def save_formset(self, request, form, formset, change):
         """
