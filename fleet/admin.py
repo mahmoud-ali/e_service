@@ -1,4 +1,6 @@
 from django.contrib import admin
+from django.utils.html import format_html
+
 from . import models
 
 
@@ -57,12 +59,12 @@ class VehicleAdmin(LogMixin):
             tc_device_pos_id = models.VehicleGPSDevice.objects.get(vehicle=obj).gps.positionid
             print("pos_id",tc_device_pos_id)
             tc_position = models.TcPositions.objects.get(id=tc_device_pos_id)
-            return tc_position
+            return format_html(f'<a href="https://www.google.com/maps?q={tc_position.latitude},{tc_position.longitude}">عرض الخريطة</a>')
         except Exception as e:
             # print('****',e)
             pass
 
-        return '-'
+        return format_html(f'<a href="https://www.google.com/maps?q=X,Y">عرض الخريطة</a>')
 
     def save_formset(self, request, form, formset, change):
         """
