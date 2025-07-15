@@ -176,3 +176,20 @@ class VehicleCertificate(LoggingModel):
 #     class Meta:
 #         verbose_name = _("عداد المسافة")
 #         verbose_name_plural = _("عداد المسافة")
+
+class Mission(LoggingModel):
+    vehicle = models.ForeignKey(Vehicle, on_delete=models.PROTECT,verbose_name=_("المركبة"))
+    driver = models.ForeignKey(Driver, on_delete=models.PROTECT,verbose_name=_("السائق"))
+    destination = models.CharField(_("الوجهة"),max_length=100)
+    requested_by = models.CharField(_("الجهة الطالبة"),max_length=100)
+    start_date = models.DateField(_("تاريخ البدء"))
+    end_date = models.DateField(_("تاريخ الانتهاء"),blank=True,null=True)
+    notes = models.TextField(_("ملاحظات"),blank=True,null=True)
+    attachments = models.FileField(_("المرفقات"),blank=True,null=True)
+
+    def __str__(self) -> str:
+        return f'{self.requested_by}({self.destination}) {self.start_date} - {self.end_date}'
+
+    class Meta:
+        verbose_name = _("مأمورية")
+        verbose_name_plural = _("مأموريات")
