@@ -78,6 +78,11 @@ class TblRevenuAdmin(LoggingAdminMixin,admin.ModelAdmin):
 
     def save_formset(self, request, form, formset, change):
         super().save_formset(request, form, formset, change)
+        for form in formset.forms:
+            if form.cleaned_data.get('DELETE', False):
+                if form.instance.pk:
+                    form.instance.delete()
+
         obj = form.save(commit=False)
         if not change:       
             obj.distributeAmount()

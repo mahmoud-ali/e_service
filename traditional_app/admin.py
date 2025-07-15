@@ -17,6 +17,11 @@ class LogMixin:
         super().save_model(request, obj, form, change)
 
     def save_formset(self, request, form, formset, change):
+        for form in formset.forms:
+            if form.cleaned_data.get('DELETE', False):
+                if form.instance.pk:
+                    form.instance.delete()
+
         instances = formset.save(commit=False)
         for instance in instances:
             if not instance.pk:  # New inline object
