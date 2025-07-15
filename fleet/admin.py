@@ -37,6 +37,7 @@ class VehicleDriverInline(admin.TabularInline):
 
 class VehicleGPSDeviceInline(admin.TabularInline):
     model = models.VehicleGPSDevice
+    autocomplete_fields = ["vehicle",]
     # fields = ('cert_type','start_date','end_date','attachments','notes')
     extra = 0
     # readonly_fields = ('created_at', 'created_by', 'updated_at', 'updated_by')
@@ -57,7 +58,6 @@ class VehicleAdmin(LogMixin):
     def last_position(self, obj):
         try:
             tc_device_pos_id = models.VehicleGPSDevice.objects.get(vehicle=obj).gps.positionid
-            print("pos_id",tc_device_pos_id)
             tc_position = models.TcPositions.objects.get(id=tc_device_pos_id)
             return format_html(f'<a target="_blank" href="https://www.google.com/maps?q={tc_position.latitude},{tc_position.longitude}">الخريطة ({tc_position.servertime})</a>')
         except Exception as e:
@@ -71,6 +71,12 @@ class VehicleAdmin(LogMixin):
         Given an inline formset, save it to the database, setting the
         user on each object.
         """
+        for form in formset.forms:
+            if form.cleaned_data.get('DELETE', False):
+                if form.instance.pk:
+                    form.instance.delete()
+
+
         instances = formset.save(commit=False)
         for instance in instances:
             if not instance.pk:

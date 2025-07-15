@@ -4,8 +4,8 @@ from .fleet import *
 from .traccar import *
 
 class VehicleGPSDevice(LoggingModel):
-    vehicle = models.OneToOneField(Vehicle, on_delete=models.PROTECT,verbose_name=_("المركبة"))
-    gps = models.OneToOneField(TcDevices, on_delete=models.PROTECT,verbose_name=_("جهاز التتبع"))
+    vehicle = models.OneToOneField(Vehicle, on_delete=models.CASCADE,verbose_name=_("المركبة"))
+    gps = models.OneToOneField(TcDevices, on_delete=models.CASCADE,verbose_name=_("جهاز التتبع"))
 
     def __str__(self) -> str:
         return f'{self.vehicle} => {self.gps.name}'
