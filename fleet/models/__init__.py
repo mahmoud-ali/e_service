@@ -16,8 +16,8 @@ class VehicleGPSDevice(LoggingModel):
             self.gps.phone = driver.phone
             self.gps.model = self.vehicle.model.name
             self.gps.save()
-        except:
-            pass
+        except Exception as e:
+            print("Unable to update gps device",e)
 
 
         super().save(*args, **kwargs)
