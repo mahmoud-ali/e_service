@@ -40,4 +40,4 @@ def link_gps_device_with_users(sender, instance, **kwargs):
 
     with connection.cursor() as cursor:
         for tc_user in traccar.TcUsers.objects.filter(email__in=users_emails):
-            cursor.execute(f"INSERT INTO tc_user_driver (userid,driverid) VALUES ({tc_user.id},{instance.id})") #,[tc_user.id,tc_driver.id]")
+            cursor.execute(f"INSERT INTO tc_user_device (userid,deviceid) VALUES ({tc_user.id},{instance.id})") #,[tc_user.id,tc_driver.id]")
