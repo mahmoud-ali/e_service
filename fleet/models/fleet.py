@@ -191,5 +191,5 @@ class Mission(LoggingModel):
         return f'{self.requested_by}({self.destination}) {self.start_date} - {self.end_date}'
 
     class Meta:
-        verbose_name = _("مأمورية")
-        verbose_name_plural = _("مأموريات")
+        verbose_name = _("المأمورية")
+        verbose_name_plural = _("المأموريات")
