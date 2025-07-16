@@ -101,7 +101,7 @@ class Driver(LoggingModel):
             tc_user = traccar.TcUsers.objects.first()
 
             with connection.cursor() as cursor:
-                cursor.execute(f"INSERT INTO traccar_user_driver (userid,driverid) VALUES ({tc_user.id},{tc_driver.id})") #,[tc_user.id,tc_driver.id]")
+                cursor.execute(f"INSERT INTO tc_user_driver (userid,driverid) VALUES ({tc_user.id},{tc_driver.id})") #,[tc_user.id,tc_driver.id]")
 
             #traccar.TcUserDriver.objects.create(userid=tc_user,driverid=tc_driver)
 
