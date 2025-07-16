@@ -95,11 +95,8 @@ class Driver(LoggingModel):
         return self.name
 
     def save(self, *args, **kwargs):
-        traccar.TcDrivers.objects.update_or_create(
-            uniqueid=self.license_no,
-            name=self.name,
-            attributes=f'{{"phone":"{self.phone}"}}',
-        )
+        if not traccar.TcDrivers.objects.filter(uniqueid=self.license_no).exists():
+            tc_driver = traccar.TcDrivers.objects.create(name=self.name,uniqueid=self.license_no,attributes=f'{{"phone":"{self.phone}"}}')
 
         super().save(*args, **kwargs)
 
