@@ -21,7 +21,7 @@ class VehicleMake(models.Model):
 
     class Meta:
         verbose_name = _("الشركة المصنعة")
-        verbose_name_plural = _("الشركات المصنعة")
+        verbose_name_plural = _("قائمة الشركات المصنعة")
 
 class VehicleModel(models.Model):
     make = models.ForeignKey(VehicleMake, on_delete=models.PROTECT,verbose_name=_("الشركة المصنعة"))
@@ -32,7 +32,7 @@ class VehicleModel(models.Model):
 
     class Meta:
         verbose_name = _("موديل المركبة")
-        verbose_name_plural = _("موديلات المركبات")
+        verbose_name_plural = _("قائمة موديلات المركبات")
 
 class VehicleFuelType(models.Model):
     name = models.CharField(_("الاسم"),max_length=100)
@@ -42,7 +42,7 @@ class VehicleFuelType(models.Model):
 
     class Meta:
         verbose_name = _("نوع الوقود")
-        verbose_name_plural = _("انواع الوقود")
+        verbose_name_plural = _("قائمة انواع الوقود")
 
 class VehicleStatus(models.Model):
     name = models.CharField(_("الاسم"),max_length=100)
@@ -52,7 +52,7 @@ class VehicleStatus(models.Model):
 
     class Meta:
         verbose_name = _("حالة المركبة")
-        verbose_name_plural = _("حالات المركبات")
+        verbose_name_plural = _("قائمة حالات المركبات")
 
 class Vehicle(LoggingModel):
     model = models.ForeignKey(VehicleModel, on_delete=models.PROTECT,verbose_name=_("نوع العربة"))
@@ -68,7 +68,7 @@ class Vehicle(LoggingModel):
 
     class Meta:
         verbose_name = _("المركبة")
-        verbose_name_plural = _("المركبات")
+        verbose_name_plural = _("إدارة المركبات")
 
 #Drivers info
 class DriverLicenseType(models.Model):
@@ -79,7 +79,7 @@ class DriverLicenseType(models.Model):
 
     class Meta:
         verbose_name = _("نوع الرخصة")
-        verbose_name_plural = _("انواع الرخص")
+        verbose_name_plural = _("قائمة انواع الرخص")
 
 class Driver(LoggingModel):
     name = models.CharField(_("الاسم"),max_length=100)
@@ -93,7 +93,7 @@ class Driver(LoggingModel):
 
     class Meta:
         verbose_name = _("السائق")
-        verbose_name_plural = _("السائقين")
+        verbose_name_plural = _("قائمة السائقين")
 
 class VehicleDriver(LoggingModel):
     vehicle = models.ForeignKey(Vehicle, on_delete=models.PROTECT,verbose_name=_("المركبة"))
@@ -105,8 +105,8 @@ class VehicleDriver(LoggingModel):
         return f'{self.vehicle.model.name}({self.vehicle.license_plate}) - {self.driver.name}'
 
     class Meta:
-        verbose_name = _("السائق/المركبة")
-        verbose_name_plural = _("السائقين/المركبات")
+        verbose_name = _("سائق مركبة")
+        verbose_name_plural = _("سائقي المركبات")
 
 class VehicleAssignment(LoggingModel):
     vehicle = models.ForeignKey(Vehicle, on_delete=models.PROTECT,verbose_name=_("المركبة"))
@@ -119,7 +119,7 @@ class VehicleAssignment(LoggingModel):
 
     class Meta:
         verbose_name = _("تخصيص مركبة")
-        verbose_name_plural = _("تخصيص المركبات")
+        verbose_name_plural = _("إدارة تخصيص المركبات")
 
 #License management
 class VehicleCertificateType(models.Model):
@@ -130,7 +130,7 @@ class VehicleCertificateType(models.Model):
 
     class Meta:
         verbose_name = _("نوع شهادة مركبة")
-        verbose_name_plural = _("انواع شهادات المركبات")
+        verbose_name_plural = _("قائمة انواع شهادات المركبات")
 
 class VehicleCertificate(LoggingModel):
     vehicle = models.ForeignKey(Vehicle, on_delete=models.PROTECT,verbose_name=_("المركبة"))
@@ -145,7 +145,7 @@ class VehicleCertificate(LoggingModel):
 
     class Meta:
         verbose_name = _("شهادة المركبة")
-        verbose_name_plural = _("شهادات المركبات")
+        verbose_name_plural = _("قائمة شهادات المركبات")
 
 #Maintenance
 # class VehicleMaintenance(LoggingModel):
@@ -192,4 +192,4 @@ class Mission(LoggingModel):
 
     class Meta:
         verbose_name = _("المأمورية")
-        verbose_name_plural = _("المأموريات")
+        verbose_name_plural = _("إدارة المأموريات")
