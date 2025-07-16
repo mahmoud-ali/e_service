@@ -112,8 +112,8 @@ class VehicleAssignmentAdmin(LogMixin):
 
 @admin.register(models.Mission)
 class MissionAdmin(LogMixin):
-    list_display = ('vehicle', 'driver','requested_by','destination', 'start_date', 'end_date')
-    list_filter = ('vehicle__model__make','vehicle__model','vehicle__year','start_date', 'end_date','requested_by')
+    list_display = ('vehicle', 'driver','requested_by','destination', 'planned_start_date', 'end_date')
+    list_filter = ('vehicle__model__make','vehicle__model','vehicle__year','planned_start_date', 'end_date','requested_by')
     search_fields = ('driver__name', 'vehicle__license_plate')
     autocomplete_fields = ["vehicle","driver"]
 

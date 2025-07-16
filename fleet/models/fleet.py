@@ -1,3 +1,4 @@
+from datetime import timedelta
 from django.db import models
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
@@ -182,13 +183,20 @@ class Mission(LoggingModel):
     driver = models.ForeignKey(Driver, on_delete=models.PROTECT,verbose_name=_("السائق"))
     destination = models.CharField(_("الوجهة"),max_length=100)
     requested_by = models.CharField(_("الجهة الطالبة"),max_length=100)
-    start_date = models.DateField(_("تاريخ البدء"))
-    end_date = models.DateField(_("تاريخ الانتهاء"),blank=True,null=True)
+    planned_start_date = models.DateField(_("تاريخ البدء المخطط"))
+    actual_start_date = models.DateField(_("تاريخ البدء الفعلي"),blank=True,null=True)
+    no_of_days = models.IntegerField(_("عدد الأيام"),)
+    end_date = models.DateField(_("تاريخ الانتهاء"),blank=True,null=True,editable=False)
     notes = models.TextField(_("ملاحظات"),blank=True,null=True)
     attachments = models.FileField(_("المرفقات"),blank=True,null=True)
 
     def __str__(self) -> str:
-        return f'{self.requested_by}({self.destination}) {self.start_date} - {self.end_date}'
+        return f'{self.requested_by}({self.destination}) {self.planned_start_date} - {self.no_of_days}'
+    
+    def save(self, *args, **kwargs):
+        self.end_date = self.planned_start_date + timedelta(days=self.no_of_days)
+        super().save(*args, **kwargs)
+
 
     class Meta:
         verbose_name = _("المأمورية")
