@@ -118,8 +118,8 @@ class VehicleAssignment(LoggingModel):
         return f'{self.vehicle.model.name}({self.vehicle.license_plate}) - {self.assign_to}'
 
     class Meta:
-        verbose_name = _("الجهة او الموظف المخصصة له")
-        verbose_name_plural = _("الجهات او الموظفين المخصص لهم")
+        verbose_name = _("تخصيص مركبة")
+        verbose_name_plural = _("تخصيص المركبات")
 
 #License management
 class VehicleCertificateType(models.Model):
