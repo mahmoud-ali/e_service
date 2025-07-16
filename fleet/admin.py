@@ -44,7 +44,7 @@ class VehicleGPSDeviceInline(admin.TabularInline):
 
 @admin.register(models.Vehicle)
 class VehicleAdmin(LogMixin):
-    list_display = ('model', 'year', 'license_plate', 'status', 'fuel_type','last_position',)
+    list_display = ('model', 'year', 'license_plate', 'status', 'fuel_type',) #,'last_position'
     list_filter = ('status', 'fuel_type','year', 'model__make','model__name')
     search_fields = ('license_plate', 'model__name', 'model__make__name', 'year')
     inlines = [
