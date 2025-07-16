@@ -10,6 +10,18 @@ class VehicleGPSDevice(LoggingModel):
     def __str__(self) -> str:
         return f'{self.vehicle} => {self.gps.name}'
 
+    def save(self, *args, **kwargs):
+        try:
+            driver = VehicleDriver.objects.filter(vehicle=self.vehicle,end_date__isnull=True).first().driver
+            self.gps.phone = driver.phone
+            self.gps.model = self.vehicle.model.name
+            self.gps.save()
+        except:
+            pass
+
+
+        super().save(*args, **kwargs)
+
     class Meta:
         verbose_name = _("جهاز تتبع مركبة")
         verbose_name_plural = _("اجهزة تتبع المركبات")
