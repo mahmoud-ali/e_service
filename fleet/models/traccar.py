@@ -131,8 +131,8 @@ class TcDeviceReport(models.Model):
 
 
 class TcDevices(models.Model):
-    name = models.CharField(max_length=128)
-    uniqueid = models.CharField(unique=True, max_length=128)
+    name = models.CharField("الاسم",max_length=128)
+    uniqueid = models.CharField("الرقم التعريفي",unique=True, max_length=128)
     lastupdate = models.DateTimeField(blank=True, null=True)
     positionid = models.IntegerField(blank=True, null=True)
     groupid = models.ForeignKey('TcGroups', models.DO_NOTHING, db_column='groupid', blank=True, null=True)
@@ -159,7 +159,8 @@ class TcDevices(models.Model):
     class Meta:
         managed = False
         db_table = 'tc_devices'
-
+        verbose_name = "جهاز تتبع"
+        verbose_name_plural = "قائمة اجهزة التتبع"
 
 class TcDrivers(models.Model):
     name = models.CharField(max_length=128)

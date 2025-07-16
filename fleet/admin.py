@@ -111,6 +111,15 @@ class VehicleAssignmentAdmin(LogMixin):
     search_fields = ('assign_to', 'vehicle__license_plate')
     autocomplete_fields = ["vehicle"]
 
+@admin.register(models.TcDevices)
+class TcDevicesAdmin(LogMixin):
+    fields = ('name', 'uniqueid', )
+    list_display = ('name', 'uniqueid', )
+    search_fields = ('name', 'uniqueid')
+
+    verbose_name= "قائمة اجهزة التتبع"
+    
+
 @admin.register(models.Mission)
 class MissionAdmin(LogMixin):
     fields = ('vehicle','driver','destination','requested_by',('planned_start_date','actual_start_date'),'no_of_days',('planned_end_date','actual_end_date'),'notes','attachments')
