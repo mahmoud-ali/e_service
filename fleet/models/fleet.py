@@ -98,6 +98,7 @@ class Driver(LoggingModel):
         traccar.TcDrivers.objects.update_or_create(
             uniqueid=self.license_no,
             name=self.name,
+            attributes=f'{{"phone":"{self.phone}"}}',
         )
 
         super().save(*args, **kwargs)
