@@ -186,7 +186,8 @@ class Mission(LoggingModel):
     planned_start_date = models.DateField(_("تاريخ البدء المخطط"))
     actual_start_date = models.DateField(_("تاريخ البدء الفعلي"),blank=True,null=True)
     no_of_days = models.IntegerField(_("عدد الأيام"),)
-    end_date = models.DateField(_("تاريخ الانتهاء"),blank=True,null=True,editable=False)
+    planned_end_date = models.DateField(_("تاريخ الانتهاء المخطط"),blank=True,null=True,editable=False)
+    actual_end_date = models.DateField(_("تاريخ الانتهاء الفعلي"),blank=True,null=True,editable=False)
     notes = models.TextField(_("ملاحظات"),blank=True,null=True)
     attachments = models.FileField(_("المرفقات"),blank=True,null=True)
 
@@ -194,7 +195,11 @@ class Mission(LoggingModel):
         return f'{self.requested_by}({self.destination}) {self.planned_start_date} - {self.no_of_days}'
     
     def save(self, *args, **kwargs):
-        self.end_date = self.planned_start_date + timedelta(days=self.no_of_days)
+        self.planned_end_date = self.planned_start_date + timedelta(days=self.no_of_days)
+        if self.actual_start_date:
+            self.actual_end_date = self.actual_start_date + timedelta(days=self.no_of_days)
+        else:
+            self.actual_end_date = None
         super().save(*args, **kwargs)
 
 
