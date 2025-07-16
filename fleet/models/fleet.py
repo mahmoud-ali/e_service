@@ -2,6 +2,7 @@ from datetime import timedelta
 from django.db import models
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
+from django.db import connection
 
 import fleet.models.traccar as traccar
 
@@ -99,7 +100,10 @@ class Driver(LoggingModel):
             tc_driver = traccar.TcDrivers.objects.create(name=self.name,uniqueid=self.license_no,attributes=f'{{"phone":"{self.phone}"}}')
             tc_user = traccar.TcUsers.objects.first()
 
-            traccar.TcUserDriver.objects.create(userid=tc_user,driverid=tc_driver)
+            with connection.cursor() as cursor:
+                cursor.execute(f"INSERT INTO traccar_user_driver (userid,driverid) VALUES ({tc_user.id},{tc_driver.id})") #,[tc_user.id,tc_driver.id]")
+
+            #traccar.TcUserDriver.objects.create(userid=tc_user,driverid=tc_driver)
 
         super().save(*args, **kwargs)
 
