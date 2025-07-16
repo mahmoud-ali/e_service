@@ -99,7 +99,7 @@ class Driver(LoggingModel):
             tc_driver = traccar.TcDrivers.objects.create(name=self.name,uniqueid=self.license_no,attributes=f'{{"phone":"{self.phone}"}}')
             tc_user = traccar.TcUsers.objects.first()
 
-            traccar.TcUserDriver.objects.create(userid=tc_user,deviceid=tc_driver)
+            traccar.TcUserDriver.objects.create(userid=tc_user,driverid=tc_driver)
 
         super().save(*args, **kwargs)
 
