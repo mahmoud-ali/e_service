@@ -12,8 +12,12 @@ class VehicleGPSDevice(LoggingModel):
 
     def save(self, *args, **kwargs):
         try:
-            driver = VehicleDriver.objects.filter(vehicle=self.vehicle,end_date__isnull=True).first().driver
-            self.gps.phone = driver.phone
+            try:
+                driver = VehicleDriver.objects.filter(vehicle=self.vehicle,end_date__isnull=True).first().driver
+                self.gps.phone = driver.phone
+            except:
+                pass
+            
             self.gps.model = self.vehicle.model.name
             self.gps.save()
         except Exception as e:
