@@ -4,7 +4,12 @@ from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 from django.db import connection
 
+from django.contrib.auth.models import Group
+from django.contrib.auth import get_user_model
+
 import fleet.models.traccar as traccar
+
+User = get_user_model()
 
 class LoggingModel(models.Model):
     created_at = models.DateTimeField(_("created_at"),auto_now_add=True,editable=False,)
@@ -98,10 +103,13 @@ class Driver(LoggingModel):
     def save(self, *args, **kwargs):
         if not traccar.TcDrivers.objects.filter(uniqueid=self.license_no).exists():
             tc_driver = traccar.TcDrivers.objects.create(name=self.name,uniqueid=self.license_no,attributes=f'{{"phone":"{self.phone}"}}')
-            tc_user = traccar.TcUsers.objects.first()
+
+            groups = Group.objects.filter(name__in=['fleet_employee', ])
+            users_emails = User.objects.filter(groups__in=groups).distinct().values_list('email', flat=True)
 
             with connection.cursor() as cursor:
-                cursor.execute(f"INSERT INTO tc_user_driver (userid,driverid) VALUES ({tc_user.id},{tc_driver.id})") #,[tc_user.id,tc_driver.id]")
+                for tc_user in traccar.TcUsers.objects.filter(email__in=users_emails):
+                    cursor.execute(f"INSERT INTO tc_user_driver (userid,driverid) VALUES ({tc_user.id},{tc_driver.id})") #,[tc_user.id,tc_driver.id]")
 
             #traccar.TcUserDriver.objects.create(userid=tc_user,driverid=tc_driver)
 
