@@ -1,6 +1,7 @@
 from datetime import timedelta
 from django.db import models
 from django.conf import settings
+from django.forms import ValidationError
 from django.utils.translation import gettext_lazy as _
 from django.db import connection
 
@@ -230,3 +231,93 @@ class Mission(LoggingModel):
     class Meta:
         verbose_name = _("المأمورية")
         verbose_name_plural = _("إدارة المأموريات")
+
+
+#maintenance
+class ServiceType(models.Model):
+    name = models.CharField(_("الاسم"),max_length=100)
+    periodic = models.BooleanField(_("خدمة دورية؟"),default=False)
+    no_of_days = models.IntegerField(_("عدد الأيام"),blank=True,null=True)
+
+
+    def __str__(self) -> str:
+        return self.name
+    
+    def clean(self):
+        if self.periodic and self.no_of_days is None:
+            raise ValidationError(
+                    {"no_of_days":_("حدد عدد الأيام للصيانة/الخدمة القادمة")}
+                ) 
+        
+        return super().clean()
+
+    class Meta:
+        verbose_name = _("نوع الصيانة")
+        verbose_name_plural = _("قائمة انواع الصيانة")
+
+class ServiceProvider(models.Model):
+    name = models.CharField(_("الاسم"),max_length=100)
+    phone = models.CharField(_("رقم الهاتف"),max_length=100)
+    address = models.TextField(_("العنوان"))
+    notes = models.TextField(_("ملاحظات"),blank=True,null=True)
+
+    def __str__(self) -> str:
+        return self.name
+
+    class Meta:
+        verbose_name = _("مقدم الخدمة")
+        verbose_name_plural = _("قائمة مقدمي الخدمات")
+
+class VehicleMaintenance(LoggingModel):
+    vehicle = models.ForeignKey(Vehicle, on_delete=models.PROTECT,verbose_name=_("المركبة"))
+    service_type = models.ForeignKey(ServiceType, on_delete=models.PROTECT,verbose_name=_("نوع الصيانة"))
+    service_date = models.DateField(_("تاريخ الصيانة"))
+    next_service_due = models.DateField(_("تاريخ الصيانة التالية"),help_text=_("في حال الصيانة/الخدمة الدورية"),blank=True,null=True,editable=False)
+    odometer_km = models.FloatField(_("قراءة عداد المسافة (كم)"))
+    service_provider = models.ForeignKey(ServiceProvider, on_delete=models.PROTECT,verbose_name=_("مقدم الخدمة"))
+    service_cost = models.DecimalField(_("التكلفة (جنيه)"),max_digits=10, decimal_places=2)
+    downtime_hrs = models.FloatField(_("وقت التوقف (ساعات)"),blank=True,null=True)
+    notes = models.TextField(_("ملاحظات"),blank=True,null=True)
+
+    def __str__(self) -> str:
+        return f'{self.vehicle.license_plate} - {self.service_type.name} on {self.service_date}'
+
+    def save(self, *args, **kwargs):
+        if self.service_type.periodic:
+            self.next_service_due = self.service_date + timedelta(days=self.service_type.no_of_days)
+        else:
+            self.next_service_due = None
+
+        super().save(*args, **kwargs)
+
+    class Meta:
+        verbose_name = _("صيانة المركبة")
+        verbose_name_plural = _("إدارة صيانة المركبات")
+
+# class VehicleSparePart(models.Model):
+#     name = models.CharField(_("الاسم"),max_length=100)
+
+#     def __str__(self) -> str:
+#         return self.name
+    
+#     class Meta:
+#         verbose_name = _("اسبير مركبة")
+#         verbose_name_plural = _("اسبيرات المركبات")
+
+class VehicleMaintenancePart(models.Model):
+    maintenance = models.ForeignKey(VehicleMaintenance, on_delete=models.PROTECT,verbose_name=_("صيانة"))
+    part = models.CharField(_("الاسبير"),max_length=100)
+    quantity = models.IntegerField(_("الكمية"))
+    unit_price = models.DecimalField(_("سعر الوحدة (جنيه)"),max_digits=10, decimal_places=2)
+    notes = models.TextField(_("ملاحظات"),blank=True,null=True)
+
+    def __str__(self):
+        return f'{self.maintenance.vehicle.license_plate} - {self.part.name}'
+    
+    @property
+    def total_price(self):
+        return self.quantity * self.unit_price
+    
+    class Meta:
+        verbose_name = _("اسبير مركبة")
+        verbose_name_plural = _("اسبيرات المركبات")

@@ -129,6 +129,22 @@ class MissionAdmin(LogMixin):
     readonly_fields = ('planned_end_date','actual_end_date',)
     autocomplete_fields = ["vehicle","driver"]
 
+class VehicleMaintenancePartInline(admin.TabularInline):
+    model = models.VehicleMaintenancePart
+    extra = 0
+
+@admin.register(models.VehicleMaintenance)
+class VehicleMaintenanceAdmin(LogMixin):
+    list_display = ('vehicle', 'service_date','next_service_due','odometer_km', 'service_type', 'service_provider','service_cost')
+    list_filter = ('vehicle__model__make','vehicle__model','vehicle__year','service_date', 'service_type','service_provider')
+    search_fields = ('vehicle__license_plate',)
+    autocomplete_fields = ["vehicle",]
+    inlines = [
+        VehicleMaintenancePartInline,
+    ]
+
+
+
 # @admin.register(models.VehicleCertificate)
 # class VehicleCertificateAdmin(LogMixin):
 #     list_display = ('vehicle', 'cert_type', 'start_date', 'end_date')
@@ -146,3 +162,6 @@ class MissionAdmin(LogMixin):
 # admin.site.register(models.VehicleStatus)
 admin.site.register(models.DriverLicenseType)
 admin.site.register(models.VehicleCertificateType)
+admin.site.register(models.ServiceType)
+admin.site.register(models.ServiceProvider)
+# admin.site.register(models.VehicleSparePart)
