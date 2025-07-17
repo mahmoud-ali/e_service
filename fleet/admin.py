@@ -162,6 +162,24 @@ class VehicleMaintenanceAdmin(LogMixin):
 # admin.site.register(models.VehicleStatus)
 admin.site.register(models.DriverLicenseType)
 admin.site.register(models.VehicleCertificateType)
-admin.site.register(models.ServiceType)
+# admin.site.register(models.ServiceType)
 admin.site.register(models.ServiceProvider)
 # admin.site.register(models.VehicleSparePart)
+
+@admin.register(models.ServiceType)
+class ServiceTypeAdmin(LogMixin):
+    fieldsets = (
+        (None, {
+            "fields": (
+                'name',
+            ),
+        }),
+        ('الخدمة او الصيانة الدزرية', {
+            "fields": (
+                'periodic','no_of_days',
+            ),
+        }),
+    )
+    list_display = ('name', 'periodic','no_of_days',)
+    list_filter = ('periodic',)
+    search_fields = ('name',)
