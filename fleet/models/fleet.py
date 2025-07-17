@@ -248,7 +248,12 @@ class ServiceType(models.Model):
             raise ValidationError(
                     {"no_of_days":_("حدد عدد الأيام للصيانة/الخدمة القادمة")}
                 ) 
-        
+
+        if self.periodic and self.no_of_days is not None and self.no_of_days <= 0:
+            raise ValidationError(
+                    {"no_of_days":_("عدد الأيام يجب ان يكون اكبر من صفر")}
+                ) 
+
         return super().clean()
 
     class Meta:
