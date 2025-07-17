@@ -312,7 +312,7 @@ class VehicleMaintenancePart(models.Model):
     notes = models.TextField(_("ملاحظات"),blank=True,null=True)
 
     def __str__(self):
-        return f'{self.maintenance.vehicle.license_plate} - {self.part.name}'
+        return f'{self.maintenance.vehicle.license_plate} - {self.part}'
     
     @property
     def total_price(self):
