@@ -275,7 +275,7 @@ class VehicleMaintenance(LoggingModel):
     next_service_due = models.DateField(_("تاريخ الصيانة التالية"),help_text=_("في حال الصيانة/الخدمة الدورية"),blank=True,null=True,editable=False)
     odometer_km = models.FloatField(_("قراءة عداد المسافة (كم)"))
     service_provider = models.ForeignKey(ServiceProvider, on_delete=models.PROTECT,verbose_name=_("مقدم الخدمة"))
-    service_total_cost = models.DecimalField(_("التكلفة (جنيه)"),max_digits=10, decimal_places=2)
+    service_total_cost = models.DecimalField(_("التكلفة الكلية (جنيه)"),max_digits=10, decimal_places=2)
     downtime_hrs = models.FloatField(_("وقت التوقف (ساعات)"),blank=True,null=True)
     notes = models.TextField(_("ملاحظات"),blank=True,null=True)
 
