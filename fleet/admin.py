@@ -145,4 +145,4 @@ class MissionAdmin(LogMixin):
 # admin.site.register(models.VehicleFuelType)
 # admin.site.register(models.VehicleStatus)
 admin.site.register(models.DriverLicenseType)
-# admin.site.register(models.VehicleCertificateType)
+admin.site.register(models.VehicleCertificateType)
