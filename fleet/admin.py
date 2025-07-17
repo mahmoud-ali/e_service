@@ -135,7 +135,7 @@ class VehicleMaintenancePartInline(admin.TabularInline):
 
 @admin.register(models.VehicleMaintenance)
 class VehicleMaintenanceAdmin(LogMixin):
-    list_display = ('vehicle', 'service_date','next_service_due','odometer_km', 'service_type', 'service_provider','service_cost')
+    list_display = ('vehicle', 'service_date','next_service_due','odometer_km', 'service_type', 'service_provider','service_total_cost')
     list_filter = ('vehicle__model__make','vehicle__model','vehicle__year','service_date', 'service_type','service_provider')
     search_fields = ('vehicle__license_plate',)
     autocomplete_fields = ["vehicle",]
