@@ -8,6 +8,10 @@ class EmployeeSolarSystemMixin:
         if request.user.groups.filter(name__in=["hr_employee",]).exists():
             try:
                 employee = EmployeeBasic.objects.get(email=request.user.email)
+                print("***",employee)
+                if EmployeeSolarSystem.objects.filter(employee=employee).count() > 0:
+                    return False
+                
                 return True
                 # print("emp",employee)
                 # try:
@@ -18,7 +22,7 @@ class EmployeeSolarSystemMixin:
                 #     return True
                 
             except Exception as e:
-                print("no employee",e)
+                print("not an employee",e)
                 return False
 
         return False
@@ -54,3 +58,14 @@ class EmployeeSolarSystemAdmin(EmployeeSolarSystemMixin,admin.ModelAdmin):
 @admin.register(LkpSolarSystemCategory)
 class LkpSolarSystemCategoryAdmin(admin.ModelAdmin):
     model = LkpSolarSystemCategory
+    def has_add_permission(self, request):
+        if request.user.groups.filter(name__in=["hr_employee",]).exists():
+            return False
+        
+        return super().has_add_permission(request)
+
+    def has_change_permission(self, request, obj=None):
+        if request.user.groups.filter(name__in=["hr_employee",]).exists():
+            return False
+
+        return super().has_change_permission(request,obj)
