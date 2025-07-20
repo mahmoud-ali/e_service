@@ -555,7 +555,11 @@ class TblCompanyPaymentMaster(LoggingModel):
 
     @property
     def total_request_currency(self):   
-        return round(self.tblcompanypaymentdetail_set.aggregate(total=Sum('amount'))['total']/self.exchange_rate,2) or 0
+        total = self.tblcompanypaymentdetail_set.aggregate(total=Sum('amount'))['total']
+        if total:
+            return round(total/self.exchange_rate,2)
+        
+        return 0
 
     def __str__(self):
         return _("Financial payment") +" ("+str(self.id)+")"
