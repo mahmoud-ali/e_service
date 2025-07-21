@@ -245,7 +245,7 @@ class HseTraditionalAccident(LoggingModel):
         verbose_name_plural = _("Hse Traditional Accidents")
 
     def __str__(self):
-        return f"{self.ACCIDENT_TYPE_CHOICES[self.type]}/{self.what}"
+        return f"{self.get_type_display()}/{self.what}"
 
     def send_notifications(self):
         subject = 'بلاغ حادث' #f"{self.ACCIDENT_TYPE_CHOICES[self.type]}/{self.what}"
