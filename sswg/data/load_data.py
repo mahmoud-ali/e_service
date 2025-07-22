@@ -2,9 +2,10 @@ import csv
 from datetime import datetime
 from django.contrib.auth.models import Group, Permission
 from django.contrib.contenttypes.models import ContentType
+from django.utils import timezone
 
 from gold_travel.models import AppMoveGold
-from sswg.models import BasicFormExport, BasicFormExportCompany, CBSData, COCSData, CompanyDetails, CompanyDetailsEmtiaz, MOCSData, MmAceptanceData, ProductionCompany, SSMOData, SmrcNoObjectionData, TransferRelocationFormData
+from sswg.models import BasicFormExport, BasicFormExportCompany, CBSData, COCSData, CompanyDetails, CompanyDetailsEmtiaz, CustomForceAirportData, MOCSData, MmAceptanceData, ProductionCompany, SSMOData, SmrcNoObjectionData, TransferRelocationFormData, UnifiedTeamData
 from workflow.data_utils import create_master_details_groups,create_model_groups
 from sswg.admin import export,reexport,silver,export_emtiaz
 
@@ -593,3 +594,44 @@ def check_export():
                 except Exception as e:
                     print(f"SN: {sn_no} not exists: {e}")
 
+
+def update_tra_export_to_complete(file_name='import_data.csv'):
+    UnifiedTeamData.objects.all().delete()
+    with open('./sswg/data/'+file_name, newline='') as csvfile:
+        reader = csv.reader(csvfile, delimiter=',')
+        next(reader, None)  # skip the headers
+        for row in reader:
+            id = row[1].strip()
+
+            try:
+                travel_date_str = row[30].strip()
+                if travel_date_str:
+                    date = timezone.make_aware(datetime.strptime(travel_date_str, "%m/%d/%Y"))
+
+                    obj = BasicFormExport.objects.get(
+                        sn_no = id,
+                    )
+
+                    UnifiedTeamData.objects.create(
+                        basic_form_export=obj,
+                        airline_name='',
+                        flight_number='',
+                        flight_datetime=date,
+                        destination='',
+                        created_by=admin_user,
+                        updated_by=admin_user
+                    )
+
+                    CustomForceAirportData.objects.create(
+                        basic_form_export=obj,
+                        comment='exported data',
+                        created_by=admin_user,
+                        updated_by=admin_user
+                    )
+
+                    obj.state = 14
+                    obj.save()
+
+                    # print("*",date,obj)
+            except Exception as e:
+                print(f"Error {id}",e)
