@@ -460,8 +460,8 @@ class EmployeeBasic(LoggingModel):
     NO3_2LERTIBAT_2L7ag = '2l7ag'
     NO3_2LERTIBAT_2NTEDAB = '2ntedab'
     NO3_2LERTIBAT_TAKLEEF = 'takleef'
-    NO3_2LERTIBAT_TA3AGOD = 'ta3agod_mosimi'
-    NO3_2LERTIBAT_TA3AGOD_MOSIMI = 'ta3agod'
+    NO3_2LERTIBAT_TA3AGOD = 'ta3agod'
+    NO3_2LERTIBAT_TA3AGOD_MOSIMI =  'ta3agod_mosimi'
     NO3_2LERTIBAT_MASHRO3 = 'mashro3'
     NO3_2LERTIBAT_MAJLIS_EL2DARA = 'majlis_el2dara'
 
