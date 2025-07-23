@@ -71,7 +71,7 @@ class Vehicle(LoggingModel):
     license_plate = models.CharField(_("رقم اللوحة"),max_length=100,unique=True)
     machine_number = models.CharField(_("رقم المكنة"),max_length=100,blank=True,null=True)
     chassis_number = models.CharField(_("رقم الشاسي"),max_length=100,blank=True,null=True)
-    book_value = models.CharField(_("القيمة التقديرية"),max_length=100,default=0)
+    book_value = models.FloatField(_("القيمة التقديرية"),default=0)
     status = models.ForeignKey(VehicleStatus, on_delete=models.PROTECT,verbose_name=_("الحالة"))
 
     def __str__(self) -> str:
