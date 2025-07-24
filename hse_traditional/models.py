@@ -233,7 +233,18 @@ class HseTraditionalAccident(LoggingModel):
         STATE_APPROVED: _("approved"),
     }
 
+    CATEGORY_DEATH = 1
+    CATEGORY_INJURY = 2
+    CATEGORY_MACHINARY = 3
+
+    CATEGORY_CHOICES = {
+        CATEGORY_DEATH: _("وفاة"),
+        CATEGORY_INJURY: _("اصابة"),
+        CATEGORY_MACHINARY: _("مركبات/اليات"),
+    }
+
     type = models.CharField(_("accident_type"), max_length=20, choices=ACCIDENT_TYPE_CHOICES.items())
+    category = models.IntegerField(_("تصنيف الحادث"), choices=CATEGORY_CHOICES.items(), default=CATEGORY_INJURY)   
     source_state = models.ForeignKey(LkpState, on_delete=models.PROTECT, verbose_name=_("source_state"))
     state = models.IntegerField(_("record_state"), choices=STATE_CHOICES.items(), default=STATE_DRAFT)
     what = models.TextField(_("what - ماذا"))
