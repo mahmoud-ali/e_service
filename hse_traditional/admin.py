@@ -323,8 +323,8 @@ accident_main_class = {
     'model': HseTraditionalAccident,
     'mixins': [],
     'kwargs': {
-        'list_display': ('type', 'what','source_state','state'),
-        'list_filter': ('type', 'source_state','state'),
+        'list_display': ('type', 'what','category','source_state','state'),
+        'list_filter': ('type','category', 'source_state','state'),
         'exclude': ('state','source_state'),
         'save_as_continue': False,
     },
