@@ -14,7 +14,7 @@ from django.contrib.auth import get_user_model
 admin_user = get_user_model().objects.get(id=1)
 
 def create_groups():
-    create_master_details_groups('sswg','basicformexport',export.report_main_class,export.report_inline_classes)
+    create_master_details_groups('sswg','basicformexport',export.export_report_main_class,export.export_report_inline_classes)
     create_master_details_groups('sswg','basicformexportcompany',export_emtiaz.report_main_class,export_emtiaz.report_inline_classes)
     create_master_details_groups('sswg','basicformreexport',reexport.report_main_class,reexport.report_inline_classes)
     create_master_details_groups('sswg','basicformsilver',silver.report_main_class,silver.report_inline_classes)

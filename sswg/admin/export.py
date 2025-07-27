@@ -53,7 +53,7 @@ class SswgManagerMixin:
 
 
 report_main_mixins = [LogMixin,]
-report_main_class = {
+export_report_main_class = {
     'model': BasicFormExport,
     'mixins': [],
     'kwargs': {
@@ -302,7 +302,7 @@ report_main_class = {
     },
 }
 
-report_inline_classes = {
+export_report_inline_classes = {
     'TransferRelocationFormData': {
         'model': TransferRelocationFormData,
         'mixins': [admin.TabularInline,],
@@ -2727,6 +2727,6 @@ report_inline_classes = {
 
 }
 
-model_admin, inlines = create_main_form(report_main_class,report_inline_classes,report_main_mixins)
+model_admin, inlines = create_main_form(export_report_main_class,export_report_inline_classes,report_main_mixins)
 
 admin.site.register(model_admin.model,model_admin)
