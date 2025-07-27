@@ -78,6 +78,9 @@ report_main_class = {
                 BasicFormExport.STATE_9: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 BasicFormExport.STATE_10: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 BasicFormExport.STATE_11: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                BasicFormExport.STATE_12: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                BasicFormExport.STATE_13: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                BasicFormExport.STATE_14: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
             },
         },
         'sswg_secretary':{
@@ -93,6 +96,9 @@ report_main_class = {
                 BasicFormExport.STATE_9: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 BasicFormExport.STATE_10: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 BasicFormExport.STATE_11: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                BasicFormExport.STATE_12: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                BasicFormExport.STATE_13: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                BasicFormExport.STATE_14: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
             },
         },
         'sswg_economic_security':{
@@ -108,6 +114,9 @@ report_main_class = {
                 BasicFormExport.STATE_9: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 BasicFormExport.STATE_10: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 BasicFormExport.STATE_11: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                BasicFormExport.STATE_12: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                BasicFormExport.STATE_13: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                BasicFormExport.STATE_14: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
             },
         },
         'sswg_ssmo':{
@@ -123,6 +132,9 @@ report_main_class = {
                 BasicFormExport.STATE_9: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 BasicFormExport.STATE_10: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 BasicFormExport.STATE_11: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                BasicFormExport.STATE_12: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                BasicFormExport.STATE_13: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                BasicFormExport.STATE_14: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
             },
         },
         'sswg_smrc':{
@@ -138,6 +150,9 @@ report_main_class = {
                 BasicFormExport.STATE_9: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 BasicFormExport.STATE_10: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 BasicFormExport.STATE_11: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                BasicFormExport.STATE_12: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                BasicFormExport.STATE_13: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                BasicFormExport.STATE_14: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
             },
         },
         'sswg_mm':{
@@ -153,6 +168,9 @@ report_main_class = {
                 BasicFormExport.STATE_9: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 BasicFormExport.STATE_10: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 BasicFormExport.STATE_11: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                BasicFormExport.STATE_12: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                BasicFormExport.STATE_13: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                BasicFormExport.STATE_14: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
             },
         },
         'sswg_military_intelligence':{
@@ -168,6 +186,9 @@ report_main_class = {
                 BasicFormExport.STATE_9: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 BasicFormExport.STATE_10: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 BasicFormExport.STATE_11: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                BasicFormExport.STATE_12: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                BasicFormExport.STATE_13: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                BasicFormExport.STATE_14: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
             },
         },
         'sswg_moc':{
@@ -183,6 +204,9 @@ report_main_class = {
                 BasicFormExport.STATE_9: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 BasicFormExport.STATE_10: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 BasicFormExport.STATE_11: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                BasicFormExport.STATE_12: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                BasicFormExport.STATE_13: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                BasicFormExport.STATE_14: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
             },
         },
         'sswg_cbs':{
@@ -198,6 +222,9 @@ report_main_class = {
                 BasicFormExport.STATE_9: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 BasicFormExport.STATE_10: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 BasicFormExport.STATE_11: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                BasicFormExport.STATE_12: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                BasicFormExport.STATE_13: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                BasicFormExport.STATE_14: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
             },
         },
         'sswg_coc':{
@@ -213,6 +240,9 @@ report_main_class = {
                 BasicFormExport.STATE_9: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 BasicFormExport.STATE_10: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 BasicFormExport.STATE_11: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                BasicFormExport.STATE_12: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                BasicFormExport.STATE_13: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                BasicFormExport.STATE_14: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
             },
         },
         'sswg_custom_force':{
@@ -228,6 +258,9 @@ report_main_class = {
                 # BasicFormExport.STATE_9: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 BasicFormExport.STATE_10: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 BasicFormExport.STATE_11: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                BasicFormExport.STATE_12: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                BasicFormExport.STATE_13: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                BasicFormExport.STATE_14: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
             },
         },
         'sswg_unified_team':{
