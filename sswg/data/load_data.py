@@ -184,7 +184,7 @@ def import_gold_travel(row,main_obj_export=None,main_obj_reexport=None,main_obj_
             )
 
     except Exception as e:
-        print(f"Error: {e}")
+        print(f"import_gold_travel - Error: {e}")
         return False
 
     return True
@@ -213,7 +213,7 @@ def import_ssmo(row,main_obj_export=None,main_obj_emtiaz=None,main_obj_reexport=
         )
 
     except Exception as e:
-        print(f"Error: {e}")
+        print(f"import_ssmo - Error: {e}")
         return False
 
     return True
@@ -247,7 +247,7 @@ def import_mm_smrc(row,main_obj_export=None,main_obj_emtiaz=None,main_obj_reexpo
         )
 
     except Exception as e:
-        print(f"Error: {e}")
+        print(f"import_mm_smrc - Error: {e}")
         return False
 
     return True
@@ -284,7 +284,7 @@ def import_mocs(row,main_obj_export=None,main_obj_emtiaz=None,main_obj_reexport=
         )
 
     except Exception as e:
-        print(f"Error: {e}")
+        print(f"import_mocs - Error: {e}")
         return False
 
     return True
@@ -316,7 +316,7 @@ def import_cbs(row,main_obj_export=None,main_obj_emtiaz=None,main_obj_reexport=N
             updated_by=admin_user
         )
     except Exception as e:
-        print(f"Error: {e}")
+        print(f"import_cbs - Error: {e}")
         return False
 
     return True
@@ -335,12 +335,12 @@ def import_cf(row,main_obj_export=None,main_obj_emtiaz=None,main_obj_reexport=No
         return False
 
     except Exception as e:
-        print(f"Error: {e}")
+        print(f"import_cf - Error: {e}")
         return False
 
     return True
 
-def import_tra_export(file_name='import_data.csv'):
+def import_tra_export(file_name='import_data2.csv'):
     with open('./sswg/data/'+file_name, newline='') as csvfile:
         reader = csv.reader(csvfile, delimiter=',')
         next(reader, None)  # skip the headers
@@ -351,52 +351,51 @@ def import_tra_export(file_name='import_data.csv'):
 
                 date = datetime.strptime(row[2].strip(), "%m/%d/%Y").date()
 
-                obj,_ = BasicFormExport.objects.get_or_create(
+                if BasicFormExport.objects.filter(sn_no = id).exists():
+                    delete_tra_export(id)
+
+                obj = BasicFormExport.objects.create(
                     date = date,
                     sn_no = id,
                     created_by=admin_user,
                     updated_by=admin_user
                 )
-
                 
-                if obj.state < 3 and import_gold_travel(row,main_obj_export=obj):
-                    obj.state = 3
-                    obj.save()
-                else:
-                    if obj.state == 1:
-                        obj.delete()
-                    continue
+                import_gold_travel(row,main_obj_export=obj)
+                import_ssmo(row,main_obj_export=obj)
+                import_mm_smrc(row,main_obj_export=obj)
+                import_mocs(row,main_obj_export=obj)
+                import_cbs(row,main_obj_export=obj)
+                import_cf(row,main_obj_export=obj)
+                
+                travel_date_str = row[30].strip()
+                if travel_date_str:
+                    flight_date = timezone.make_aware(datetime.strptime(travel_date_str, "%m/%d/%Y"))
 
-                if obj.state < 4 and import_ssmo(row,main_obj_export=obj):
-                    obj.state = 4
-                    obj.save()
-                else:
-                    continue
+                    UnifiedTeamData.objects.create(
+                        basic_form_export=obj,
+                        airline_name='',
+                        flight_number='',
+                        flight_datetime=flight_date,
+                        destination='',
+                        created_by=admin_user,
+                        updated_by=admin_user
+                    )
 
-                if obj.state < 6 and import_mm_smrc(row,main_obj_export=obj):
-                    obj.state = 6
-                    obj.save()
-                else:
-                    continue
+                    CustomForceAirportData.objects.create(
+                        basic_form_export=obj,
+                        comment='exported data',
+                        created_by=admin_user,
+                        updated_by=admin_user
+                    )
 
-                if obj.state < 8 and import_mocs(row,main_obj_export=obj):
-                    obj.state = 8
+                    obj.state = 14
                     obj.save()
-                else:
-                    continue
 
-                if obj.state < 9 and import_cbs(row,main_obj_export=obj):
-                    obj.state = 9
-                    obj.save()
                 else:
-                    continue
-
-                if obj.state < 11 and import_cf(row,main_obj_export=obj):
                     obj.state = 11
                     obj.save()
-                else:
-                    continue
-
+                
                 #print(f"cf_cert_no: {cf_cert_no}, cf_policy_no: {cf_policy_no}, cf_dep_dt: {cf_dep_dt}")
                 
                 #print(f"Importing license with ID: {id}, Date: {date}, Gold Travel List: {gold_travel_list}")
@@ -405,7 +404,7 @@ def import_tra_export(file_name='import_data.csv'):
             except Exception as e:
                 print(f"Error importing license with ID: {id}. Error: {e}")
 
-def delete_tra_export(sn_no):
+def delete_tra_export(sn_no,delete_main=True):
     obj = BasicFormExport.objects.get(
         sn_no = sn_no,
     )
@@ -434,8 +433,21 @@ def delete_tra_export(sn_no):
     CBSData.objects.filter(
         basic_form_export=obj,
     ).delete()
-    obj.delete()
-    print(f"Deleted BasicFormExport with sn_no: {sn_no}")
+
+    UnifiedTeamData.objects.filter(
+        basic_form_export=obj,
+    ).delete()
+    CustomForceAirportData.objects.filter(
+        basic_form_export=obj,
+    ).delete()
+
+
+    if delete_main:
+        obj.delete()
+        print(f"Deleted BasicFormExport with sn_no: {sn_no}")
+    else:
+        print(f"Deleted details of BasicFormExport with sn_no: {sn_no}")
+
     return True
     
 def delete_tra_export_all():
