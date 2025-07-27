@@ -53,7 +53,7 @@ class SswgManagerMixin:
 
 
 report_main_mixins = [LogMixin,]
-report_main_class = {
+emtiaz_report_main_class = {
     'model': BasicFormExportCompany,
     'mixins': [],
     'kwargs': {
@@ -302,7 +302,7 @@ report_main_class = {
     },
 }
 
-report_inline_classes = {
+emtiaz_report_inline_classes = {
     'CompanyDetailsEmtiaz': {
         'model': CompanyDetailsEmtiaz,
         'mixins': [admin.StackedInline,],
@@ -2512,6 +2512,6 @@ report_inline_classes = {
 
 }
 
-model_admin, inlines = create_main_form(report_main_class,report_inline_classes,report_main_mixins)
+model_admin, inlines = create_main_form(emtiaz_report_main_class,emtiaz_report_inline_classes,report_main_mixins)
 
 admin.site.register(model_admin.model,model_admin)
