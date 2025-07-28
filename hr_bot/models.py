@@ -203,6 +203,11 @@ class EmployeeTelegramBankAccount(LoggingModel):
         return f'رقم حساب: {self.account_no} - ({EmployeeBankAccount.BANK_CHOICES[self.bank]})'
 
     def clean(self):
+        if EmployeeBankAccount.objects.filter(account_no=self.account_no).exists():
+            raise ValidationError({
+                'account_no':_("رقم الحساب مدخل مسبقاً"),
+            })
+        
         if (self.bank == EmployeeBankAccount.BANK_KHARTOUM and len(self.account_no) != 16):
             raise ValidationError({
                 'account_no':_("الرجاء إدخال حساب مكون من 16 خانة"),
