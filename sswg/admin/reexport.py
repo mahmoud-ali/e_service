@@ -58,7 +58,7 @@ reexport_report_main_class = {
     'mixins': [],
     'kwargs': {
         'list_display': ('sn_no', 'date','state'),
-        'list_filter': ('state',),
+        'list_filter': ('date','state',),
         'search_fields': ('sn_no',),
         'exclude':('state',),
         'save_as_continue': False,
