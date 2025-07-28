@@ -289,7 +289,7 @@ $(document).ready(function(){
 				<a href="{% url 'profile:app_restart_activity_list' %}">{% translate "Application: Restart Activity" %}</a>
 		 	</li>
 			 {% endif %}
-			 {% if user.pro_company.company.company_type == 'mokhalfat' %}
+			 {% if user.pro_company.company.company_type == 'mokhalfat' or user.pro_company.company.company_type == 'sageer' %}
 			 <li class="{% if menu_name == 'profile:app_renewal_contract_list' %}active{% endif %} ">  
 				<a href="{% url 'profile:app_renewal_contract_list' %}">{% translate "Application: Renewal Contract" %}</a>
 		 	</li>
