@@ -190,12 +190,15 @@ class SettlementType(models.Model):
 
 class RevenueSettlement(LoggingModel):
     STATE_DRAFT = 1
-    STATE_CONFIRMED = 2
+    STATE_SMRC = 2
+    STATE_APPROVED = 3
+    STATE_CANCELED = 8
 
     STATE_CHOICES = {
         STATE_DRAFT: _('state_draft'),
-        STATE_CONFIRMED: _('state_smrc'),
-
+        STATE_SMRC: _('state_smrc'),
+        STATE_APPROVED: _('state_approved'),
+        STATE_CANCELED: _('state_canceled'),
     }
 
     settlement_type = models.ForeignKey(SettlementType, on_delete=models.PROTECT,verbose_name=_("settlement_type"))

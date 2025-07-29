@@ -432,8 +432,67 @@ admin.site.register(AppDabtiaat, AppDabtiaatAdmin)
 class RevenueSettlementAdmin(LogAdminMixin,admin.ModelAdmin):
     model = RevenueSettlement
     exclude = ["created_at","created_by","updated_at","updated_by","state","source_state"]
-    list_display = ["date","settlement_type","amount"]        
+    list_display = ["date","settlement_type","amount","state","source_state"]        
     list_filter = [("date",DateFieldListFilterWithLast30days),("state",ChoicesFieldListFilterNotEmpty),("source_state",RelatedOnlyFieldListFilterNotEmpty)]
+    actions = ['approve_app','confirm_app','return_to_draft',]
+
+    def get_actions(self, request):
+        actions = super().get_actions(request)
+
+        if request.user.groups.filter(name='dabtiaat_altaedin_manager').count() > 0:
+            if "confirm_app" in actions:
+                del actions['confirm_app']
+
+        elif request.user.groups.filter(name='dabtiaat_altaedin_state').count() > 0:
+            if "approve_app" in actions:
+                del actions['approve_app']
+                del actions['return_to_draft']
+
+        return actions
+
+    @admin.action(description=_('تأكيد الطلب'))
+    def confirm_app(self, request, queryset):
+        try:
+            change_flag = False
+            for obj in queryset:
+                if obj.state==RevenueSettlement.STATE_DRAFT:
+                    obj.state = RevenueSettlement.STATE_SMRC
+                    obj.updated_by = request.user
+                    obj.save()
+                    self.log_change(request,obj,_('state_smrc'))
+                    change_flag = True
+
+            if change_flag:
+                self.message_user(request,_('application confirmed successfully!'))
+        except:
+            pass
+
+    @admin.action(description=_('إعتماد الطلب'))
+    def approve_app(self, request, queryset):
+        try:
+            change_flag = False
+            for obj in queryset:
+                if obj.state==RevenueSettlement.STATE_SMRC:
+                    obj.state = RevenueSettlement.STATE_APPROVED
+                    obj.updated_by = request.user
+                    obj.save()
+                    self.log_change(request,obj,_('state_approved'))
+                    change_flag = True
+
+            if change_flag:
+                self.message_user(request,_('application confirmed successfully!'))
+        except:
+            pass
+
+    @admin.action(description=_('return_to_draft'))
+    def return_to_draft(self, request, queryset):
+        for obj in queryset:
+            if obj.state == RevenueSettlement.STATE_SMRC or request.user.is_superuser:
+                obj.state = RevenueSettlement.STATE_DRAFT
+                obj.updated_by = request.user
+                obj.save()
+                self.log_change(request,obj,_('return_to_draft'))
+                self.message_user(request,_('application changed successfully!'))
 
 admin.site.register(SettlementType)
 admin.site.register(RevenueSettlement, RevenueSettlementAdmin)
