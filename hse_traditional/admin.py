@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
 
 from hse_traditional.forms import HseTraditionalCorrectiveActionForm, TblStateRepresentativeForm
-from hse_traditional.models import Achievement, ArrangementOfMarkets, EnvironmentalInspection, EnvironmentalRequirements, HseTraditionalAccident, HseTraditionalAccidentDamage, HseTraditionalAccidentInjury, HseTraditionalAccidentManagerComment, HseTraditionalAccidentWho, HseTraditionalAccidentWhy, HseTraditionalCorrectiveAction, HseTraditionalCorrectiveActionFinalDecision, HseTraditionalCorrectiveActionReccomendation, HseTraditionalNearMiss, HseTraditionalNearMissWho, HseTraditionalNearMissWhy, HseTraditionalReport, ImmediateAction, QuickEmergencyTeam, TblStateRepresentative, TrainingAwareness, WasteManagement
+from hse_traditional.models import Achievement, ArrangementOfMarkets, EnvironmentalInspection, EnvironmentalRequirements, HseTraditionalAccident, HseTraditionalAccidentDamage, HseTraditionalAccidentInjury, HseTraditionalAccidentManagerComment, HseTraditionalAccidentWho, HseTraditionalAccidentWhy, HseTraditionalCorrectiveAction, HseTraditionalCorrectiveActionFinalDecision, HseTraditionalCorrectiveActionReccomendation, HseTraditionalNearMiss, HseTraditionalNearMissWho, HseTraditionalNearMissWhy, HseTraditionalReport, ImmediateAction, NotifiedUser, QuickEmergencyTeam, TblStateRepresentative, TrainingAwareness, WasteManagement
 from workflow.admin_utils import create_main_form
 
 class LogMixin:
@@ -802,3 +802,4 @@ corrective_action_inline_classes = {
 model_admin, inlines = create_main_form(corrective_action_main_class, corrective_action_inline_classes, corrective_action_main_mixins)
 
 admin.site.register(model_admin.model, model_admin)
+admin.site.register(NotifiedUser)

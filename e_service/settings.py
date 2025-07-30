@@ -437,6 +437,8 @@ ROLLBAR = {
     'root': BASE_DIR,
 }
 
+TELEGRAM_HSE_ACCIDENTS_ACCESS_KEY = config('TELEGRAM_HSE_ACCIDENTS_ACCESS_KEY')
+
 TESTING = 'test' in sys.argv[1:]
 if TESTING:
     print('=========================')

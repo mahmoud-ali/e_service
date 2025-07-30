@@ -8,6 +8,8 @@ from django.utils.html import strip_tags
 from django.template.loader import render_to_string
 from django.contrib.sites.models import Site
 
+import requests
+
 from company_profile.models import LkpState
 from hse_traditional.utils import get_user_emails_by_groups
 
@@ -68,6 +70,10 @@ class TblStateRepresentative(models.Model):
 
         verbose_name = _("state representative")
         verbose_name_plural = _("state representatives")
+
+class NotifiedUser(models.Model):
+    name = models.CharField(_("name"),max_length=100)
+    telegram_user_id = models.FloatField(_("Telegram user id"))
 
 class HseTraditionalReport(LoggingModel):
     STATE_DRAFT = 1
@@ -259,45 +265,26 @@ class HseTraditionalAccident(LoggingModel):
         return f"{self.get_type_display()}/{self.what}"
 
     def send_notifications(self):
-        subject = 'بلاغ حادث' #f"{self.ACCIDENT_TYPE_CHOICES[self.type]}/{self.what}"
-        # message = f"""
-        #     <div dir="rtl">
-        #         <h3>الإدارة العامة للبيئة والسلامة / إدارة التعدين التقليدي</h3>
-        #         <p><b>الولاية</b>: {self.source_state}</p>
-        #         <p><b>ماذا حدث</b>: {self.what}</p>
-        #         <p><b>متى حدث</b>: {self.when}</p>
-        #         <p><b>اين حدث</b>: {self.where}</p>
-
-        #         <p>رابط التفاصيل: <a href="https://mineralsgate.com/app/managers/hse_traditional/hsetraditionalaccident/{self.id}/change/">اضغط هنا</a></p>
-        #     </div>
-        # """
+        subject = 'بلاغ حادث' 
         url = f"https://mineralsgate.com/app/managers/hse_traditional/hsetraditionalaccident/{self.id}/change/"
-        logo_url = "https://"+Site.objects.get_current().domain+"/app/static/company_profile/img/smrc_logo.png"
+        # logo_url = "https://"+Site.objects.get_current().domain+"/app/static/company_profile/img/smrc_logo.png"
 
         message_html = render_to_string( 
-            'hse_traditional/email/accident.html', 
+            'hse_traditional/telegram/accident.html', 
             { 
                 'url':url, 
-                'logo':logo_url,
+                # 'logo':logo_url,
                 'subject':subject,
                 'title':"الإدارة العامة للبيئة والسلامة",
-                'sub_title':"إدارة التعدين التقليدي",
+                'sub_title':"إدارة البيئة والسلامة بالتعدين التقليدي",
                 'data':self,
             },
         ) 
 
-        emails = get_user_emails_by_groups(['hse_tra_manager','hse_tra_gm']) + ['mohammed.653@smrc.sd','osman.suliman@smrc.sd','omer.awad@smrc.sd',]
-        try:
-            send_mail(
-                subject,
-                strip_tags(message_html),
-                None,
-                emails,
-                html_message=message_html,
-                fail_silently=False,
-            )        
-        except:
-            print("Error sending email",sys.stderr)
+        for user in NotifiedUser.objects.all():
+            telegram_url = f"https://api.telegram.org/bot{settings.TELEGRAM_HSE_ACCIDENTS_ACCESS_KEY}/sendMessage?chat_id={int(user.telegram_user_id)}&text={message_html}&parse_mode=HTML"
+            # print(telegram_url)
+            requests.get(telegram_url)
 
     def get_next_states(self, user):
         """
@@ -576,7 +563,7 @@ from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 
 @receiver(pre_save, sender=HseTraditionalAccident)
-def send_notifications(sender, instance, **kwargs):
+def send_notifications_event(sender, instance, **kwargs):
     if instance.pk:
         try:
             obj = HseTraditionalAccident.objects.get(pk=instance.pk)
