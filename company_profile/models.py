@@ -4,10 +4,13 @@ from django.forms import DateInput, ValidationError
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from django.core.validators import MaxValueValidator, MinValueValidator
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
 
 from django.contrib.gis.db import models as gis_models
 
 from django_fsm import FSMField, transition
+import requests
 
 from .workflow import *
 
@@ -1205,11 +1208,42 @@ class AppHSEAccidentReport(WorkflowModel):
         
     def get_absolute_url(self): 
         return reverse('profile:app_hse_accident_show',args=[str(self.id)])                
-    
+
+    def send_notifications(self):
+        subject = 'بلاغ حادث' 
+        url = f"https://mineralsgate.com/app/managers/company_profile/apphseaccidentreport/{self.id}/change/"
+        # logo_url = "https://"+Site.objects.get_current().domain+"/app/static/company_profile/img/smrc_logo.png"
+
+        message_html = render_to_string( 
+            'hse_companies/telegram/accident.html', 
+            { 
+                'url':url, 
+                # 'logo':logo_url,
+                'subject':subject,
+                'title':"الإدارة العامة للبيئة والسلامة",
+                'sub_title':"إدارة البيئة والسلامة بالتعدين المنظم",
+                'data':self,
+            },
+        ) 
+
+        if 'NotifiedUser' not in sys.modules:
+            from hse_traditional.models import NotifiedUser
+
+
+        for user in NotifiedUser.objects.all():
+            telegram_url = f"https://api.telegram.org/bot{settings.TELEGRAM_HSE_ACCIDENTS_ACCESS_KEY}/sendMessage?chat_id={int(user.telegram_user_id)}&text={message_html}&parse_mode=HTML"
+            # print(telegram_url)
+            requests.get(telegram_url)
+
     class Meta:
         ordering = ["-id"]
         verbose_name = _("Application: HSE Accident Report")
         verbose_name_plural = _("Application: HSE Accident Report")
+
+@receiver(pre_save, sender=AppHSEAccidentReport)
+def send_notifications_event(sender, instance, **kwargs):
+    if not instance.pk:
+        instance.send_notifications()
 
 class AppHSEPerformanceReport(WorkflowModel):
     company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
