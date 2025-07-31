@@ -802,4 +802,9 @@ corrective_action_inline_classes = {
 model_admin, inlines = create_main_form(corrective_action_main_class, corrective_action_inline_classes, corrective_action_main_mixins)
 
 admin.site.register(model_admin.model, model_admin)
-admin.site.register(NotifiedUser)
+
+class NotifiedUserAdmin(admin.ModelAdmin):
+    model = NotifiedUser
+    list_display = ["name", ]
+
+admin.site.register(NotifiedUser,NotifiedUserAdmin)
