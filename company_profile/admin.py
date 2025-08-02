@@ -16,6 +16,18 @@ from django.contrib.messages import constants as message_constants
 from import_export.admin import ExportActionMixin
 from django.db.utils import IntegrityError
 
+from django.contrib.contenttypes.models import ContentType
+from django.shortcuts import redirect
+from django.urls import reverse
+from django.utils.translation import gettext_lazy as _
+from django.contrib import messages
+from django.contrib.admin.utils import (
+    flatten_fieldsets,
+    unquote,
+)
+from django.contrib.admin.options import TO_FIELD_VAR
+from django.forms.formsets import DELETION_FIELD_NAME, all_valid
+
 from leaflet.admin import LeafletGeoAdmin
 
 from .models import AppCyanideCertificate, AppExplosivePermission, AppFuelPermission, AppFuelPermissionDetail, AppGoldProduction, AppGoldProductionDetail, AppHSEAccidentReport, AppHSEPerformanceReport, AppHSEPerformanceReportActivities, AppHSEPerformanceReportBillsOfQuantities, AppHSEPerformanceReportCadastralOperations, AppHSEPerformanceReportCadastralOperationsTwo, AppHSEPerformanceReportCatering, AppHSEPerformanceReportChemicalUsed, AppHSEPerformanceReportCyanideCNStorageSpecification, AppHSEPerformanceReportCyanideTable, AppHSEPerformanceReportDiseasesForWorkers, AppHSEPerformanceReportExplosivesUsed, AppHSEPerformanceReportExplosivesUsedSpecification, AppHSEPerformanceReportFireFighting, AppHSEPerformanceReportManPower, AppHSEPerformanceReportOilUsed, AppHSEPerformanceReportOtherChemicalUsed, AppHSEPerformanceReportProactiveIndicators, AppHSEPerformanceReportStatisticalData, AppHSEPerformanceReportTherapeuticUnit, AppHSEPerformanceReportWasteDisposal, AppHSEPerformanceReportWaterUsed, AppHSEPerformanceReportWorkEnvironment, AppImportPermission, AppImportPermissionDetail, AppLocalPurchase, AppRenewalContract, AppRestartActivity, AppTemporaryExemption, AppWhomConcern, LkpAccidentType, LkpNationality, LkpSector,LkpState,LkpLocality,LkpMineral,LkpCompanyProductionStatus,LkpForeignerProcedureType,TblCompanyProduction, \
@@ -62,8 +74,8 @@ class WorkflowAdminMixin:
         js = ('admin/js/jquery.init.js',"company_profile/js/state_control.js",)
 
     def has_change_permission(self, request, obj=None):
-#        if obj and obj.state in[APPROVED,REJECTED]:
-#            return False
+        if obj and obj.state in[APPROVED,REJECTED]:
+           return False
 #        
         return super().has_change_permission(request, obj)
 
@@ -79,6 +91,17 @@ class WorkflowAdminMixin:
         if not obj or obj.state == SUBMITTED:
             fields += ['reject_comments']
         
+        return fields
+    
+    def get_readonly_fields(self,request, obj=None):
+        fields = list(super().get_readonly_fields(request, obj) or [])
+
+        if not obj or obj.state == ACCEPTED:
+            fields += ['recommendation_comments']
+
+        if not obj or obj.state == REJECTED:
+            fields += ['reject_comments','recommendation_comments']
+
         return fields
 
     def get_queryset(self, request):
@@ -144,7 +167,114 @@ class WorkflowAdminMixin:
 
         except:
             print(f"Error: Unable to send email to {email} {obj}")
+
+    def rerender_change_form(self,request,object_id, form_url='', extra_context=None):
+        add = object_id is None
+        to_field = request.POST.get(TO_FIELD_VAR, request.GET.get(TO_FIELD_VAR))
+
+        obj = self.get_object(request, unquote(object_id), to_field)
+        fieldsets = self.get_fieldsets(request, obj)
+        ModelForm = self.get_form(
+            request, obj, change=not add, fields=flatten_fieldsets(fieldsets)
+        )                
+        form = ModelForm(instance=obj)
+        formsets, inline_instances = self._create_formsets(
+            request, obj, change=not add
+        )                
+        inline_formsets = self.get_inline_formsets(
+            request, formsets, inline_instances, obj
+        )
+        readonly_fields = self.get_readonly_fields(request, obj) #flatten_fieldsets(fieldsets)
+
+        admin_form = admin.helpers.AdminForm(
+            form,
+            list(fieldsets),
+            # Clear prepopulated fields on a view-only form to avoid a crash.
+            (
+                self.get_prepopulated_fields(request, obj)
+                if add or self.has_change_permission(request, obj)
+                else {}
+            ),
+            readonly_fields,
+            model_admin=self,
+        )
+        context = self.admin_site.each_context(request)
+        context['original'] = obj
+        context["inline_admin_formsets"] = inline_formsets
+        context["adminform"] = admin_form
+
+        self.message_user(request,_('application not confirmed!'),level=messages.ERROR)
+
+        return self.render_change_form(
+            request, context, add=add, change=not add, obj=obj, form_url=form_url
+        )
+    
+    def _check_form(self,request,object_id):
+        to_field = request.POST.get(TO_FIELD_VAR, request.GET.get(TO_FIELD_VAR))
+        obj = self.get_object(request, unquote(object_id), to_field)
+        fieldsets = self.get_fieldsets(request, obj)
+        ModelForm = self.get_form(
+            request, obj, change=True, fields=flatten_fieldsets(fieldsets)
+        )
+        form = ModelForm(request.POST, request.FILES, instance=obj)
+        formsets, inline_instances = self._create_formsets(
+            request,
+            form.instance,
+            change=True,
+        )
+
+        if form.is_valid() and all_valid(formsets):
+            return True
         
+        return False
+
+
+    def change_view(self,request,object_id, form_url='', extra_context=None):
+        to_field = request.POST.get(TO_FIELD_VAR, request.GET.get(TO_FIELD_VAR))
+        obj = self.get_object(request, unquote(object_id), to_field)
+        obj_type = ContentType.objects.get_for_model(obj)
+        form_url = reverse(f"admin:{obj_type.app_label}_{obj_type.model}_change", args=(object_id,))
+        response = super().change_view(request,object_id, form_url, extra_context)
+        obj = self.get_object(request, unquote(object_id), to_field)
+
+        if not obj:
+            # normal save
+            return response
+        
+        for next_state in obj.get_next_states(request.user):
+            if request.POST.get('_save_state_'+str(next_state[0]),None):
+
+                try:
+                    if obj.can_transition_to_next_state(request.user, next_state,obj):
+                        try:                            
+                            if self.has_change_permission(request, obj):
+                                #response = super().change_view(request,object_id, form_url, extra_context)
+
+                                if not self._check_form(request,object_id):
+                                    return response
+
+                            obj = self.get_object(request, unquote(object_id), to_field)
+                            obj.transition_to_next_state(request.user, next_state)
+                            self.log_change(request,obj,_("Transition to")+" "+next_state[1])
+                            
+                            self.message_user(request,f"تم {next_state[1]} بنجاح")
+                            if not obj.get_next_states(request.user):                                
+                                form_url = reverse(f"admin:{obj_type.app_label}_{obj_type.model}_changelist")
+                                return redirect(form_url)
+                            
+
+                            return redirect(form_url)
+                        except Exception as e:
+                            self.message_user(request,str(e),level=messages.ERROR)
+                            return self.rerender_change_form(request,object_id, form_url, extra_context)
+                        
+                except forms.ValidationError as e:
+                    #response = super().change_view(request,object_id, form_url, extra_context)
+                    self.message_user(request,f"لايمكن الانتقال إلى {next_state[1]} وذلك بسبب الاتي: "+"،".join(e),level=messages.ERROR)
+                    return self.rerender_change_form(request,object_id, form_url, extra_context)
+        # normal save
+        return response #super().change_view(request,object_id, form_url, extra_context)
+
 class LicenseCountFilter(admin.SimpleListFilter):
     title = _("license_count")    
     parameter_name = "license_count"

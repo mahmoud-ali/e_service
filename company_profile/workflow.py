@@ -94,38 +94,39 @@ def can_do_transition(instance, user):
     return True
       
 class WorkflowFormMixin:
+    pass
 
-    def clean(self):
-        cleaned_data = super().clean()
-        new_state = cleaned_data.get("state")        
+    # def clean(self):
+    #     cleaned_data = super().clean()
+    #     new_state = cleaned_data.get("state")        
         
-        self.instance.notify = False        
+    #     self.instance.notify = False        
         
-        if not self.instance.id:
-            return
+    #     if not self.instance.id:
+    #         return
                                     
-        if self.instance.state == new_state:
-            return
+    #     if self.instance.state == new_state:
+    #         return
 
-        if new_state ==SUBMITTED:                
-            if self.instance.pk:        
-                self.add_error('state', _('Wrong transition path. You can reach submitted state only when creating a new application.'))      
-        elif new_state ==ACCEPTED:
-            if not can_proceed(self.instance.accept):
-                self.add_error('state', _('Wrong transition path. You can reach accepted state only from submitted state.'))                                
-            # elif not has_transition_perm(self.instance.accept, self.request.user):
-                # raise PermissionDenied                
-        elif new_state ==APPROVED:
-            if not can_proceed(self.instance.approve):
-                self.add_error('state', _('Wrong transition path. You can reach approved state only from accepted state.'))        
-            # elif not has_transition_perm(self.instance.approve, self.request.user):
-                # raise PermissionDenied                
-        elif new_state ==REJECTED:
-            if not can_proceed(self.instance.reject):
-                self.add_error('state', _('Wrong transition path. You can reach rejected state only from accepted state.'))        
-            # elif not has_transition_perm(self.instance.reject, self.request.user):
-                # raise PermissionDenied                
-        else:
-            self.add_error('state', _('Wrong transition path.'))
+    #     if new_state ==SUBMITTED:                
+    #         if self.instance.pk:        
+    #             self.add_error('state', _('Wrong transition path. You can reach submitted state only when creating a new application.'))      
+    #     elif new_state ==ACCEPTED:
+    #         if not can_proceed(self.instance.accept):
+    #             self.add_error('state', _('Wrong transition path. You can reach accepted state only from submitted state.'))                                
+    #         # elif not has_transition_perm(self.instance.accept, self.request.user):
+    #             # raise PermissionDenied                
+    #     elif new_state ==APPROVED:
+    #         if not can_proceed(self.instance.approve):
+    #             self.add_error('state', _('Wrong transition path. You can reach approved state only from accepted state.'))        
+    #         # elif not has_transition_perm(self.instance.approve, self.request.user):
+    #             # raise PermissionDenied                
+    #     elif new_state ==REJECTED:
+    #         if not can_proceed(self.instance.reject):
+    #             self.add_error('state', _('Wrong transition path. You can reach rejected state only from accepted state.'))        
+    #         # elif not has_transition_perm(self.instance.reject, self.request.user):
+    #             # raise PermissionDenied                
+    #     else:
+    #         self.add_error('state', _('Wrong transition path.'))
             
-        self.instance.notify = True        
+    #     self.instance.notify = True        

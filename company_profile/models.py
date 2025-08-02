@@ -1,3 +1,4 @@
+import sys
 from django.db import models
 from django.conf import settings
 from django.forms import DateInput, ValidationError
@@ -6,13 +7,16 @@ from django.utils.translation import gettext_lazy as _
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
+from django.template.loader import render_to_string
 
 from django.contrib.gis.db import models as gis_models
 
-from django_fsm import FSMField, transition
+# from django_fsm import FSMField, transition
 import requests
 
-from .workflow import *
+from workflow.model_utils import WorkFlowModel
+
+from .workflow import SUBMITTED,ACCEPTED,APPROVED,REJECTED,STATE_CHOICES
 
 MONTH_JAN = 1
 MONTH_FEB = 2
@@ -62,37 +66,72 @@ class LoggingModelGis(gis_models.Model):
     class Meta:
         abstract = True
     
-class WorkflowModel(LoggingModel):
+class WorkflowModel(WorkFlowModel):
+    recommendation_comments = models.TextField(_("التوصية"),max_length=256,blank=True)
     reject_comments = models.TextField(_("reject_comments"),max_length=256,blank=True)
-    state = FSMField(_("application_state"),default=SUBMITTED, choices=STATE_CHOICES)
+    state = models.CharField(_("application_state"),max_length=20,default=SUBMITTED, choices=STATE_CHOICES)
     notify = models.BooleanField(_("notify_user"),default=False,editable=False)
 
-    def clean(self):
-        if self.state == REJECTED and not self.reject_comments:
-            raise ValidationError(
-                {"reject_comments":_("reject_comments")}
-            )
-           
-    def can_accept(instance):
-        return True
-        
-    @transition(field=state, source=SUBMITTED, target=ACCEPTED, permission=can_do_transition, conditions=[can_accept])
-    def accept(self):
+    def get_next_states(self, user):
         """
-        This function may contain side-effects,
-        like updating caches, notifying users, etc.
-        The return value will be discarded.
+        Determine the next possible states based on the current state and user's role.
         """
-        pass
-        
-    @transition(field=state, source=ACCEPTED, target=APPROVED)
-    def approve(self):
-        pass
+        # user = self.updated_by
+        user_groups = list(user.groups.values_list('name', flat=True))
 
-    @transition(field=state, source=ACCEPTED, target=REJECTED)
-    def reject(self):
-        pass
+        states = []
+        # if 'hse_tra_state_employee' in user_groups:
+        if self.state == SUBMITTED:
+            states.append((ACCEPTED, STATE_CHOICES[ACCEPTED]))
+
+        if self.state == ACCEPTED:
+            states.append((APPROVED, STATE_CHOICES[APPROVED]))
+            states.append((REJECTED, STATE_CHOICES[REJECTED]))
+
+        return states
+
+    def can_transition_to_next_state(self, user, state,obj=None):
+        """
+        Check if the given user can transition to the specified state.
+        """
         
+        if state[0] in map(lambda x: x[0], self.get_next_states(user)):
+            if obj and state[0] == ACCEPTED and not obj.recommendation_comments:
+                raise ValidationError(_("الرجاء كتابة التوصية"))
+            
+            if obj and state[0] == REJECTED and not obj.reject_comments:
+                raise ValidationError(_("الرجاء كتابة سبب الرفض"))
+            
+            return True
+
+        return False
+
+    def transition_to_next_state(self, user, state):
+        """
+        Transitions the workflow to the given state, after checking user permissions.
+        """
+        if self.can_transition_to_next_state(user, state):
+            self.state = state[0]
+            self.updated_by = user
+            self.save()
+        else:
+            raise Exception(f"User {user.username} cannot transition to state {state} from state {self.state}")
+
+        return self
+
+    def clean(self):
+        print("***",self.state,self.recommendation_comments)
+        if self.id:
+            if self.state == ACCEPTED and not self.recommendation_comments:
+                raise ValidationError(
+                    {"recommendation_comments":_("الرجاء كتابة التوصية")}
+                )
+            
+            if self.state == REJECTED and not self.reject_comments:
+                raise ValidationError(
+                    {"reject_comments":_("reject_comments")}
+                )
+                   
     class Meta:
         abstract = True        
                 
