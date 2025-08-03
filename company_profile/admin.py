@@ -51,7 +51,7 @@ from .forms import AppCyanideCertificateAdminForm, AppExplosivePermissionAdminFo
                    AppForeignerProcedureAdminForm,AppAifaaJomrkiAdminForm,AppReexportEquipmentsAdminForm, AppRequirementsListAdminForm, \
                    AppVisibityStudyAdminForm
 
-from .workflow import SUBMITTED, get_state_choices,send_transition_email,ACCEPTED,APPROVED,REJECTED
+from .workflow import REVIEW_ACCEPTANCE, SUBMITTED, get_state_choices,send_transition_email,ACCEPTED,APPROVED,REJECTED
 # import django_otp
 
 # admin.site.__class__ =  django_otp.admin.OTPAdminSite #
@@ -88,7 +88,7 @@ class WorkflowAdminMixin:
     def get_exclude(self,request, obj=None):
         fields = list(super().get_exclude(request, obj) or [])
 
-        if not obj or obj.state == SUBMITTED:
+        if not obj or obj.state == SUBMITTED or obj.state == REVIEW_ACCEPTANCE:
             fields += ['reject_comments']
         
         return fields
@@ -110,7 +110,7 @@ class WorkflowAdminMixin:
         company_types = []
 
         if request.user.groups.filter(name__in=["pro_company_application_accept","hse_accept"]).exists():
-            filter += ["submitted"]
+            filter += ["submitted","review_accept"]
         if request.user.groups.filter(name__in=["pro_company_application_approve","hse_approve"]).exists():
             filter += ["accepted","approved","rejected"]
 
@@ -230,28 +230,29 @@ class WorkflowAdminMixin:
 
 
     def change_view(self,request,object_id, form_url='', extra_context=None):
+        response = super().change_view(request,object_id, form_url, extra_context)
         to_field = request.POST.get(TO_FIELD_VAR, request.GET.get(TO_FIELD_VAR))
         obj = self.get_object(request, unquote(object_id), to_field)
-        obj_type = ContentType.objects.get_for_model(obj)
-        form_url = reverse(f"admin:{obj_type.app_label}_{obj_type.model}_change", args=(object_id,))
-        response = super().change_view(request,object_id, form_url, extra_context)
-        obj = self.get_object(request, unquote(object_id), to_field)
-
+        
         if not obj:
-            # normal save
             return response
         
+        obj_type = ContentType.objects.get_for_model(obj)
+        form_url = reverse(f"admin:{obj_type.app_label}_{obj_type.model}_change", args=(object_id,))
+        obj = self.get_object(request, unquote(object_id), to_field)
+
+        if self.has_change_permission(request, obj):
+            #response = super().change_view(request,object_id, form_url, extra_context)
+
+            if not self._check_form(request,object_id):
+                return response
+
         for next_state in obj.get_next_states(request.user):
             if request.POST.get('_save_state_'+str(next_state[0]),None):
 
                 try:
                     if obj.can_transition_to_next_state(request.user, next_state,obj):
                         try:                            
-                            if self.has_change_permission(request, obj):
-                                #response = super().change_view(request,object_id, form_url, extra_context)
-
-                                if not self._check_form(request,object_id):
-                                    return response
 
                             obj = self.get_object(request, unquote(object_id), to_field)
                             obj.transition_to_next_state(request.user, next_state)
@@ -270,7 +271,7 @@ class WorkflowAdminMixin:
                         
                 except forms.ValidationError as e:
                     #response = super().change_view(request,object_id, form_url, extra_context)
-                    self.message_user(request,f"لايمكن الانتقال إلى {next_state[1]} وذلك بسبب الاتي: "+"،".join(e),level=messages.ERROR)
+                    self.message_user(request,f"لايمكن الانتقال إلى {next_state[1]} وذلك بسبب الاتي: {"،".join(e)}",level=messages.ERROR)
                     return self.rerender_change_form(request,object_id, form_url, extra_context)
         # normal save
         return response #super().change_view(request,object_id, form_url, extra_context)
@@ -1055,7 +1056,7 @@ class AppHSEPerformanceReportAdmin(admin.ModelAdmin):
         company_types = []
 
         if request.user.groups.filter(name__in=["hse_accept"]).exists():
-            filter += ["submitted"]
+            filter += ["submitted","review_accept"]
         if request.user.groups.filter(name__in=["hse_approve"]).exists():
             filter += ["accepted","approved","rejected"]
 

@@ -14,13 +14,17 @@ from django_fsm import can_proceed,get_available_FIELD_transitions
 
 SUBMITTED = "submitted"
 ACCEPTED = "accepted"
+REVIEW_ACCEPTANCE = "review_accept"
 APPROVED = "approved"
 REJECTED = "rejected"
 
-STATE_CHOICES = { SUBMITTED: _("Submitted state"),
-                                        ACCEPTED: _("Accepted state"),
-                                        APPROVED: _("Approved state"),
-                                        REJECTED: _("Rejected state"),}
+STATE_CHOICES = { 
+    SUBMITTED: _("Submitted state"),
+    ACCEPTED: _("Accepted state"),
+    REVIEW_ACCEPTANCE: _("Review acceptance state"),
+    APPROVED: _("Approved state"),
+    REJECTED: _("Rejected state"),
+}
 
 def send_async_email(subject, message, from_email, recipient_list):
     email = EmailMessage(subject, message, from_email, recipient_list)

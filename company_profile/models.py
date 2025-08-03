@@ -16,7 +16,7 @@ import requests
 
 from workflow.model_utils import WorkFlowModel
 
-from .workflow import SUBMITTED,ACCEPTED,APPROVED,REJECTED,STATE_CHOICES
+from .workflow import REVIEW_ACCEPTANCE, SUBMITTED,ACCEPTED,APPROVED,REJECTED,STATE_CHOICES
 
 MONTH_JAN = 1
 MONTH_FEB = 2
@@ -68,7 +68,7 @@ class LoggingModelGis(gis_models.Model):
     
 class WorkflowModel(WorkFlowModel):
     recommendation_comments = models.TextField(_("التوصية"),max_length=256,blank=True)
-    reject_comments = models.TextField(_("reject_comments"),max_length=256,blank=True)
+    reject_comments = models.TextField(_("سبب الرفض/المراجعة"),max_length=256,blank=True)
     state = models.CharField(_("application_state"),max_length=20,default=SUBMITTED, choices=STATE_CHOICES)
     notify = models.BooleanField(_("notify_user"),default=False,editable=False)
 
@@ -80,13 +80,15 @@ class WorkflowModel(WorkFlowModel):
         user_groups = list(user.groups.values_list('name', flat=True))
 
         states = []
-        # if 'hse_tra_state_employee' in user_groups:
-        if self.state == SUBMITTED:
-            states.append((ACCEPTED, STATE_CHOICES[ACCEPTED]))
+        if 'pro_company_application_accept' in user_groups:
+            if self.state == SUBMITTED or self.state == REVIEW_ACCEPTANCE:
+                states.append((ACCEPTED, STATE_CHOICES[ACCEPTED]))
 
-        if self.state == ACCEPTED:
-            states.append((APPROVED, STATE_CHOICES[APPROVED]))
-            states.append((REJECTED, STATE_CHOICES[REJECTED]))
+        if 'pro_company_application_approve' in user_groups:
+            if self.state == ACCEPTED:
+                states.append((APPROVED, STATE_CHOICES[APPROVED]))
+                states.append((REJECTED, STATE_CHOICES[REJECTED]))
+                states.append((REVIEW_ACCEPTANCE, STATE_CHOICES[REVIEW_ACCEPTANCE]))
 
         return states
 
@@ -99,8 +101,8 @@ class WorkflowModel(WorkFlowModel):
             if obj and state[0] == ACCEPTED and not obj.recommendation_comments:
                 raise ValidationError(_("الرجاء كتابة التوصية"))
             
-            if obj and state[0] == REJECTED and not obj.reject_comments:
-                raise ValidationError(_("الرجاء كتابة سبب الرفض"))
+            if obj and (state[0] == REJECTED or state[0] == REVIEW_ACCEPTANCE) and not obj.reject_comments:
+                raise ValidationError(_("الرجاء كتابة سبب الرفض/المراجعة"))
             
             return True
 
