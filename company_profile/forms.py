@@ -40,7 +40,7 @@ class TblCompanyProductionForm(ModelForm):
              
     def clean(self):
         cleaned_data = super().clean()
-        state = cleaned_data.get("state","recommendation_comments","reject_comments")        
+        state = cleaned_data.get("state")        
         locality = cleaned_data.get("locality") 
 
         # print(cleaned_data)
