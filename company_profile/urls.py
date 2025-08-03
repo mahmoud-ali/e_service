@@ -3,6 +3,7 @@ from django.conf.urls.static import static
 
 from django.conf import settings
 
+from company_profile.views.fuel_permission import FuelCertificate
 from company_profile.views.hse_performance import AppHSEPerformanceReportAskAIView
 from company_profile.views.pa_request import AppRequestListView, AppRequestReadonlyView
 
@@ -212,6 +213,7 @@ urlpatterns = [
     path('app_fuel_permission/<int:type>/', AppFuelPermissionListView.as_view(), name='app_fuel_permission_list'),
     path('app_fuel_permission/<int:pk>/show/', AppFuelPermissionReadonlyView.as_view(), name='app_fuel_permission_show'),    
     path('app_fuel_permission/add/', AppFuelPermissionCreateView.as_view(), name='app_fuel_permission_add'),
+    path('app_fuel_permission/fuel_cert/', FuelCertificate.as_view(), name='app_fuel_permission_cert'),    
 
     path('app_hse_accident/', AppHSEAccidentReportListView.as_view(), name='app_hse_accident_list'),
     path('app_hse_accident/<int:type>/', AppHSEAccidentReportListView.as_view(), name='app_hse_accident_list'),

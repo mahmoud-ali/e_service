@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import View,ListView,CreateView
 from django.http import HttpResponseRedirect, HttpResponse
@@ -8,8 +8,10 @@ from django.utils import translation
 from django.conf import settings
 
 from django.contrib import messages
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+
 from django.contrib.sites.models import Site
+from django.views.generic import TemplateView
 
 from django_tables2 import SingleTableView
 from django_tables2.paginators import LazyPaginator
@@ -86,3 +88,19 @@ class AppFuelPermissionReadonlyView(ApplicationMasterDetailReadonlyView):
     detail_formset = None
     menu_name = "profile:app_fuel_permission_list"
     title = _("Show Fuel Permission")
+
+class FuelCertificate(LoginRequiredMixin,UserPassesTestMixin,TemplateView):
+    template_name = 'company_profile/fuel_cert.html'
+
+    def test_func(self):
+        return self.request.user.groups.filter(name="fuel_permission").exists()
+
+    def get(self,*args,**kwargs):
+        id = int(self.request.GET['id'])
+        obj = get_object_or_404(AppFuelPermission,pk=id)
+        self.extra_context = {
+            'object': obj,
+            'license':obj.company.tblcompanyproductionlicense_set.first(),
+            'total': obj.appfuelpermissiondetail_set.first().fuel_actual_qty
+        }
+        return render(self.request, self.template_name, self.extra_context)    

@@ -1,0 +1,72 @@
+{% extends 'gold_travel/report_base.html' %}
+{% load i18n %}
+{% load bootstrap3 %}
+{% load auth_extras %}
+{% load humanize %}
+
+{% block content %}
+  <center>
+    <p style="text-align: right;font-size:12px !important">التاريخ: {{object.updated_at|date:"Y/m/d"}}م</p>
+    <p style="font-weight: bold !important;text-decoration: underline !important;">
+    إستمارة وقود تعدين شركات
+    {%if object.state != 'approved' %}
+  &nbsp;(مسودة)
+    {%endif%}
+    </p>
+  </center>
+  <br/>
+
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <tr>
+                <th width="15%" class="active">الولاية</th>
+                <td>{{license.state}}</td>
+                <th width="15%" class="active">المحلية</th>
+                <td>{{license.locality}}</td>
+                <th width="15%" class="active">المنطقة</th>
+                <td>{{license.location}}</td>
+            </tr>
+            <tr>
+                <th class="active">اسم الشركة</th>
+                <td colspan=5>{{object.company.name_ar}}</td>
+            </tr>
+            <tr>
+                <th class="active">التصنيف</th>
+                <td colspan=5>{{object.company.get_company_type_display}}</td>
+            </tr>
+            <tr>
+                <th class="active">الكمية المطلوبة (لتر)</th>
+                <td colspan=5>{{total}}</td>
+            </tr>
+            <tr>
+                <th class="active">مقدم الطلب</th>
+                <td colspan=5>{{object.company.rep_name}}</td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <tr class="active">
+                <th style="text-align: center;">إعتماد الشركة السودانية للموارد المعدنية <br> ولايةالبحر الأحمر</th>
+                <th style="text-align: center;">إعتماد أمن إقتصاديات المعادن <br> ولايةالبحر الأحمر</th>
+                <th style="text-align: center;">إعتماد رئيس لجنة الوقود <br> ولايةالبحر الأحمر</th>
+                <th style="text-align: center;">إعتماد ممثل شعبة الاستخبارات <br> ولايةالبحر الأحمر</th>
+                <th style="text-align: center;">إعتماد ادارة البترول <br> ولايةالبحر الأحمر</th>
+            </tr>
+            <tr>
+                <th height="90px" >&nbsp;</th>
+                <th height="90px" >&nbsp;</th>
+                <th height="90px" >&nbsp;</th>
+                <th height="90px" >&nbsp;</th>
+                <th height="90px" >&nbsp;</th>
+            </tr>
+        </table>
+    </div>
+
+  <br/><br/>
+  <br/><br/>
+  <br/><br/>
+
+
+{% endblock content %}

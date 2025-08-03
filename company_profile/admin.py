@@ -930,10 +930,23 @@ class AppFuelPermissionAdmin(WorkflowAdminMixin,admin.ModelAdmin):
     form = AppFuelPermissionAdminForm
     inlines = [AppFuelPermissionDetailDetailInline]
 
-    list_display = ["company", "created_at", "created_by","updated_at", "updated_by"]        
+    list_display = ["company","show_certificate_link", "created_at", "created_by","updated_at", "updated_by"]        
     list_filter = ["company__company_type","updated_at",]
     view_on_site = False
-    
+
+    def get_list_display(self,request):
+        if request.user.groups.filter(name="fuel_permission").exists():
+            return ["company","show_certificate_link", "created_at", "created_by","updated_at", "updated_by"]    
+
+        return ["company", "created_at", "created_by","updated_at", "updated_by"]    
+
+    @admin.display(description=_('Show certificate'))
+    def show_certificate_link(self, obj):
+        url = reverse('profile:app_fuel_permission_cert')
+        return format_html('<a target="_blank" class="viewlink" href="{url}?id={id}">'+_('Show certificate')+'</a>',
+                    url=url,id=obj.id
+                )
+
 admin.site.register(AppFuelPermission, AppFuelPermissionAdmin)
 
 class AppHSEAccidentReportAdmin(WorkflowAdminMixin,admin.ModelAdmin):
