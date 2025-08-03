@@ -10,7 +10,7 @@ import threading
 from django.contrib.auth import get_user_model
 from django.contrib.sites.models import Site
 
-from django_fsm import can_proceed,get_available_FIELD_transitions
+# from django_fsm import can_proceed,get_available_FIELD_transitions
 
 SUBMITTED = "submitted"
 ACCEPTED = "accepted"

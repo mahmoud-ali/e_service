@@ -66,7 +66,7 @@ INSTALLED_APPS = [
     'allauth.account', 
     'allauth.socialaccount',     
     
-    'django_fsm',
+    # 'django_fsm',
     
     'bootstrap3',    
     

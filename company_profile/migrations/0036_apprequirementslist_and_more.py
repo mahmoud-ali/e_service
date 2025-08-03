@@ -2,7 +2,7 @@
 
 import company_profile.models
 import django.db.models.deletion
-import django_fsm
+# import django_fsm
 from django.conf import settings
 from django.db import migrations, models
 
@@ -21,7 +21,7 @@ class Migration(migrations.Migration):
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('created_at', models.DateTimeField(auto_now_add=True, verbose_name='created_at')),
                 ('updated_at', models.DateTimeField(auto_now=True, verbose_name='updated_at')),
-                ('state', django_fsm.FSMField(choices=[('submitted', 'Submitted state'), ('accepted', 'Accepted state'), ('approved', 'Approved state'), ('rejected', 'Rejected state')], default='submitted', max_length=50, verbose_name='application_state')),
+                ('state', models.CharField(choices=[('submitted', 'Submitted state'), ('accepted', 'Accepted state'), ('approved', 'Approved state'), ('rejected', 'Rejected state')], default='submitted', max_length=50, verbose_name='application_state')),
                 ('notify', models.BooleanField(default=False, editable=False, verbose_name='notify_user')),
                 ('approved_work_plan_file', models.FileField(upload_to=company_profile.models.company_applications_path, verbose_name='approved_work_plan_file')),
                 ('initial_voucher_file', models.FileField(upload_to=company_profile.models.company_applications_path, verbose_name='initial_voucher_file')),

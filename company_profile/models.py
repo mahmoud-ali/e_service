@@ -121,18 +121,18 @@ class WorkflowModel(WorkFlowModel):
 
         return self
 
-    def clean(self):
-        # print("***",self.state,self.recommendation_comments)
-        if self.id:
-            if self.state == ACCEPTED and not self.recommendation_comments:
-                raise ValidationError(
-                    {"recommendation_comments":_("الرجاء كتابة التوصية")}
-                )
+    # def clean(self):
+    #     # print("***",self.state,self.recommendation_comments)
+    #     if self.id:
+    #         if self.state == ACCEPTED and not self.recommendation_comments:
+    #             raise ValidationError(
+    #                 {"recommendation_comments":_("الرجاء كتابة التوصية")}
+    #             )
             
-            if self.state == REJECTED and not self.reject_comments:
-                raise ValidationError(
-                    {"reject_comments":_("reject_comments")}
-                )
+    #         if self.state == REJECTED and not self.reject_comments:
+    #             raise ValidationError(
+    #                 {"reject_comments":_("reject_comments")}
+    #             )
                    
     class Meta:
         abstract = True        

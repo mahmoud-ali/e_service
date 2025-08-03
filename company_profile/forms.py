@@ -4,7 +4,7 @@ from django.utils.translation import gettext_lazy as _
 
 from bootstrap_datepicker_plus.widgets import DatePickerInput
 
-from django_fsm import can_proceed
+# from django_fsm import can_proceed
 
 from .workflow import SUBMITTED,ACCEPTED,APPROVED,REJECTED,WorkflowFormMixin
 
