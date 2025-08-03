@@ -43,7 +43,7 @@ class TblCompanyProductionForm(ModelForm):
         state = cleaned_data.get("state","recommendation_comments","reject_comments")        
         locality = cleaned_data.get("locality") 
 
-        print(cleaned_data)
+        # print(cleaned_data)
         
         # if state.id != locality.state.id:
         #     self.add_error('locality', _('locality not belong to right state.')+' ('+state.name+')')

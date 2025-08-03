@@ -122,7 +122,7 @@ class WorkflowModel(WorkFlowModel):
         return self
 
     def clean(self):
-        print("***",self.state,self.recommendation_comments)
+        # print("***",self.state,self.recommendation_comments)
         if self.id:
             if self.state == ACCEPTED and not self.recommendation_comments:
                 raise ValidationError(
