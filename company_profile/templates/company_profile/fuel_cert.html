@@ -6,7 +6,14 @@
 
 {% block content %}
   <center>
-    <p style="text-align: right;font-size:12px !important">التاريخ: {{object.updated_at|date:"Y/m/d"}}م</p>
+
+    <table border="0" width="100%">
+        <tr>
+            <td><p style="text-align: right;font-size:12px !important">التاريخ: {{object.updated_at|date:"Y/m/d"}}م</p></td>
+            <td><p style="text-align: left;font-size:12px !important">الرقم المتسلسل: RSF/{{object.id}}</p></td>
+        </tr>
+    </table>
+
     <p style="font-weight: bold !important;text-decoration: underline !important;">
     إستمارة وقود تعدين شركات
     {%if object.state != 'approved' %}
