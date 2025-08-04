@@ -1,4 +1,5 @@
 from django.db import models
+from django.forms import ValidationError
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
@@ -8,6 +9,10 @@ from workflow.model_utils import WorkFlowModel
 def company_applications_path(instance, filename):
     # file will be uploaded to MEDIA_ROOT/company_<id>/applications/<filename>
     return "company_{0}/applications/{1}".format(instance.company.id, filename)    
+
+def company_applications_path_certificates(instance, filename):
+    # file will be uploaded to MEDIA_ROOT/company_<id>/applications/<filename>
+    return "company_{0}/applications/{1}".format(instance.foreigner_record.company.id, filename)    
 
 class TblCompanyEntajManager(models.Manager):
     def get_queryset(self):
@@ -34,13 +39,17 @@ class ForeignerRecord(WorkFlowModel):
     }
 
     company = models.ForeignKey(TblCompanyEntaj, related_name="foreigner_company", on_delete=models.PROTECT,verbose_name=_("company"))    
-    name = models.CharField(max_length=150)
-    position = models.CharField(max_length=150)
-    department = models.CharField(max_length=150)
-    salary = models.DecimalField(max_digits=10, decimal_places=2)
-    employment_history = models.TextField()
-    cv = models.FileField(upload_to=company_applications_path,null=True,blank=True)
+    name = models.CharField("الاسم",max_length=150)
+    position = models.CharField("الوظيفة",max_length=150)
+    department = models.CharField("الادارة",max_length=150)
+    salary = models.DecimalField("المرتب",max_digits=10, decimal_places=2)
+    employment_history = models.TextField("السجل الوظيفي")
+    cv = models.FileField("السيرة الذاتية",upload_to=company_applications_path,null=True,blank=True)
     state = models.IntegerField(_("record_state"), choices=STATE_CHOICES.items(), default=STATE_DRAFT)
+
+    class Meta:
+        verbose_name = "سجل اجنبي"
+        verbose_name_plural = "سجلات اجانب"
 
     def __str__(self):
         return self.name
@@ -82,8 +91,19 @@ class ForeignerRecord(WorkFlowModel):
 
         return self
 
+class ForeignerPermissionType(models.Model):
+    name =  models.CharField("نوع الوثيقة",max_length=50)
+    minimum_no_months =  models.IntegerField("نوع الوثيقة",default=0)
+
+    class Meta:
+        verbose_name = "نوع الوثيقة"
+        verbose_name_plural = "نوع الوثيقة"
+
+    def __str__(self):
+        return f"{self.name}"
+
 class ForeignerPermission(WorkFlowModel):
-    foreigner_record = models.ForeignKey(ForeignerRecord, on_delete=models.CASCADE, related_name='permissions')
+    foreigner_record = models.ForeignKey(ForeignerRecord, on_delete=models.PROTECT, related_name='permissions',verbose_name="اسم اجنبي")
     permission_type_choices = [
         ('passport', 'Passport'),
         ('visa', 'Visa'),
@@ -101,14 +121,18 @@ class ForeignerPermission(WorkFlowModel):
         STATE_APPROVED: _("اعتماد الطلب"),
     }
 
-    permission_type = models.CharField(max_length=50, choices=permission_type_choices)
-    type_id = models.CharField(max_length=50)
-    validity_due_date = models.DateField()
-    attachment = models.FileField(upload_to=company_applications_path)
+    permission_type = models.ForeignKey(ForeignerPermissionType, on_delete=models.PROTECT,verbose_name="نوع الوثيقة")
+    type_id = models.CharField("رقم الوثيقة",max_length=50)
+    validity_due_date = models.DateField("صالحة حتى")
+    attachment = models.FileField("مرفق الوثيقة",upload_to=company_applications_path_certificates)
     state = models.IntegerField(_("record_state"), choices=STATE_CHOICES.items(), default=STATE_DRAFT)
 
+    class Meta:
+        verbose_name = "وثائق اجنبي"
+        verbose_name_plural = "وثائق اجنبي"
+
     def __str__(self):
-        return f"{self.foreigner_record.name} - {self.get_permission_type_display()}"
+        return f"{self.foreigner_record.name} - {self.permission_type}"
 
     def get_next_states(self, user):
         """
@@ -147,7 +171,7 @@ class ForeignerPermission(WorkFlowModel):
 
         return self
 
-class AppForeignerProcedure(WorkFlowModel):
+class ForeignerProcedure(WorkFlowModel):
     STATE_DRAFT = 1
     STATE_CONFIRMED = 2
     STATE_APPROVED = 3
@@ -161,10 +185,9 @@ class AppForeignerProcedure(WorkFlowModel):
     company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
     procedure_type = models.ForeignKey(LkpForeignerProcedureType, on_delete=models.PROTECT,verbose_name=_("procedure_type"))    
     procedure_from = models.DateField(_("procedure_from"), help_text="Ex: 2025-01-31")
-    procedure_to = models.DateField(_("procedure_to"), help_text="Ex: 2025-01-31")
+    procedure_to = models.DateField(_("procedure_to"), help_text="Ex: 2025-12-31")
     procedure_cause = models.TextField(_("procedure_cause"),max_length=1000)
     state = models.IntegerField(_("record_state"), choices=STATE_CHOICES.items(), default=STATE_DRAFT)
-
 
     def __str__(self):
         return _("Foreigner Procedure") +" ("+str(self.id)+")"
@@ -176,7 +199,7 @@ class AppForeignerProcedure(WorkFlowModel):
         ordering = ["-id"]
         verbose_name = _("Application: Foreigner procedure")
         verbose_name_plural = _("Application: Foreigner procedure")
-
+    
     def get_next_states(self, user):
         """
         Determine the next possible states based on the current state and user's role.
@@ -213,3 +236,65 @@ class AppForeignerProcedure(WorkFlowModel):
             raise Exception(f"User {user.username} cannot transition to state {state} from state {self.state}")
 
         return self
+
+class ForeignerProcedureApproved(models.Model):
+    master = models.ForeignKey(ForeignerProcedure, on_delete=models.PROTECT)
+    foreigner_record = models.ForeignKey(ForeignerRecord, on_delete=models.PROTECT, verbose_name="الاجنبي")
+
+    def __str__(self):
+        return f"{self.id}"
+    
+    class Meta:
+        verbose_name = "اجنبي معتمد"
+        verbose_name_plural = "اجانب معتمدين"
+
+    def clean(self):
+        try:
+            ##### permissions
+            errors = []
+            req = ForeignerProcedureRequirements.objects.get(child_procedure_type=self.master.procedure_type)
+            for cert in req.cert_type.all():
+                permissions = ForeignerPermission.objects.filter(foreigner_record=self.foreigner_record)
+                # print(cert,permissions)
+                if not permissions.filter(permission_type=cert).exists(): # not xxx:
+                    errors.append(cert.name)
+
+            ##### procedures
+            req = ForeignerProcedureRequirements.objects.get(child_procedure_type=self.master.procedure_type)
+            for proc in req.parent_procedure_type.all():
+                company_procedures = ForeignerProcedure.objects.filter(procedure_type=proc)
+                foreigner_procedures = ForeignerProcedureApproved.objects.filter(master__in=company_procedures,foreigner_record=self.foreigner_record)
+                # print(cert,permissions)
+                if proc and not foreigner_procedures.exists(): # not xxx:
+                    errors.append(proc.name)
+
+            if len(errors) > 0:
+                raise ValidationError(
+                    {"foreigner_record":f"الرجاء التحقق من توفر/سريان الاتي: {"، ".join(errors)}"}
+                )
+
+        except ForeignerProcedureRequirements.DoesNotExist as e:
+            pass
+
+        return super().clean()
+
+class ForeignerProcedureOther(models.Model):
+    master = models.ForeignKey(ForeignerProcedure, on_delete=models.PROTECT)
+    foreigner_record = models.CharField("الاجنبي",max_length=100)
+    reason = models.CharField("سبب الطلب",max_length=150)
+
+    def __str__(self):
+        return f"{self.id}"
+    
+    class Meta:
+        verbose_name = "اجنبي غير مضاف في السجلات"
+        verbose_name_plural = "اجانب غير مضافين في السجلات"
+
+class ForeignerProcedureRequirements(models.Model):
+    child_procedure_type = models.ForeignKey(LkpForeignerProcedureType, on_delete=models.PROTECT,verbose_name=_("procedure_type"))    
+    cert_type = models.ManyToManyField(ForeignerPermissionType,verbose_name="الوثيقة")
+    parent_procedure_type = models.ManyToManyField(LkpForeignerProcedureType,related_name="+",verbose_name="الاجراءات اللازمة")
+
+    class Meta:
+        verbose_name = "متطلبات اجراء اجنبي"
+        verbose_name_plural = "متطلبات اجراء اجنبي"

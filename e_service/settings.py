@@ -115,6 +115,7 @@ INSTALLED_APPS = [
     'company_profile_exploration',
     'hse_companies',
     'khatabat',
+    'company_profile_entaj',
 
     # Debug
     'debug_toolbar',
