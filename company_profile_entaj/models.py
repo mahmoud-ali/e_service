@@ -6,6 +6,17 @@ from django.utils.translation import gettext_lazy as _
 from company_profile.models import LkpForeignerProcedureType, TblCompanyProduction
 from workflow.model_utils import WorkFlowModel
 
+from django.utils import timezone
+from datetime import datetime
+import calendar
+
+def add_months(source_date, months):
+    month = source_date.month - 1 + months
+    year = source_date.year + month // 12
+    month = month % 12 + 1
+    day = min(source_date.day, calendar.monthrange(year, month)[1])
+    return source_date.replace(year=year, month=month, day=day)
+
 def company_applications_path(instance, filename):
     # file will be uploaded to MEDIA_ROOT/company_<id>/applications/<filename>
     return "company_{0}/applications/{1}".format(instance.company.id, filename)    
@@ -93,7 +104,7 @@ class ForeignerRecord(WorkFlowModel):
 
 class ForeignerPermissionType(models.Model):
     name =  models.CharField("نوع الوثيقة",max_length=50)
-    minimum_no_months =  models.IntegerField("نوع الوثيقة",default=0)
+    minimum_no_months =  models.IntegerField("عدد الشهور الادنى لتعتبر الوثيقة سارية",default=0,help_text="مثلاً الجواز يعتبر ساري اذا كان عدد الشهور المتبقي اكثر من 8 شهور")
 
     class Meta:
         verbose_name = "نوع الوثيقة"
@@ -252,9 +263,10 @@ class ForeignerProcedureApproved(models.Model):
         try:
             ##### permissions
             errors = []
+            now = timezone.now()
             req = ForeignerProcedureRequirements.objects.get(child_procedure_type=self.master.procedure_type)
             for cert in req.cert_type.all():
-                permissions = ForeignerPermission.objects.filter(foreigner_record=self.foreigner_record)
+                permissions = ForeignerPermission.objects.filter(foreigner_record=self.foreigner_record,validity_due_date__gte=add_months(now,cert.minimum_no_months)) 
                 # print(cert,permissions)
                 if not permissions.filter(permission_type=cert).exists(): # not xxx:
                     errors.append(cert.name)
