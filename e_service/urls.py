@@ -37,7 +37,7 @@ urlpatterns = [
     path('production/', include('production_control.urls')), 
     path('traditional/', include('traditional_app.urls')),
 
-    path('', include('user_sessions.urls', 'user_sessions')),
+    # path('', include('user_sessions.urls', 'user_sessions')),
     path('', include('company_profile.urls')),
     path('', include('company_profile_exploration.urls')),
     path('', include('hse_companies.urls')),
