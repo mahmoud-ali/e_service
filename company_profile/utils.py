@@ -4,7 +4,7 @@ from django.urls import reverse_lazy
 from .models import TblCompanyProduction
 
 def get_app_metrics(fields={},filter={},related=[],order=[]):
-    from .models import AppCyanideCertificate, AppExplosivePermission, AppFuelPermission, AppImportPermission, \
+    from .models import AppCyanideCertificate, AppExplosivePermission, AppFuelPermission, AppImportPermission, AppRenewalContract, \
                         AppBorrowMaterial,AppWorkPlan,AppTechnicalFinancialReport, \
                         AppChangeCompanyName, AppExplorationTime, AppAddArea,AppRemoveArea, AppTnazolShraka, \
                         AppTajeelTnazol, AppTajmeed,AppTakhali,AppTamdeed,AppTaaweed,AppMda,AppChangeWorkProcedure, \
@@ -17,7 +17,8 @@ def get_app_metrics(fields={},filter={},related=[],order=[]):
         AppChangeCompanyName, AppExplorationTime, AppAddArea,AppRemoveArea, AppTnazolShraka, 
         AppTajeelTnazol, AppTajmeed,AppTakhali,AppTamdeed,AppTaaweed,AppMda,AppChangeWorkProcedure, 
         AppExportGold,AppExportGoldRaw,AppSendSamplesForAnalysis,AppForeignerProcedure,AppAifaaJomrki,
-        AppVisibityStudy,AppReexportEquipments,AppRequirementsList,AppWhomConcern, AppLocalPurchase
+        AppVisibityStudy,AppReexportEquipments,AppRequirementsList,AppWhomConcern, AppLocalPurchase,
+        AppRenewalContract
     ] # ,AppHSEAccidentReport, AppHSEPerformanceReport
 
     profile_show_urls = {
@@ -52,6 +53,7 @@ def get_app_metrics(fields={},filter={},related=[],order=[]):
         # "apphseaccidentreport":"app_hse_accident_show",
         # "apphseperformancereport":"app_hse_performance_show",
         "applocalpurchase":"app_local_purchase_show",
+        "apprenewalcontract":"app_renewal_contract_show",
     }
 
     qs_list = [
