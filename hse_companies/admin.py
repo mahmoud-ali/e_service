@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.urls import reverse
 from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
+from django.db.models import Q
 
 from company_profile.models import TblCompanyProductionLicense
 from hse_companies.forms import TblStateRepresentativeForm
@@ -36,14 +37,6 @@ class LogMixin:
             instance.updated_by = request.user
             instance.save()
         formset.save_m2m()
-
-    def get_queryset(self, request):
-        qs = super().get_queryset(request)
-
-        if request.user.is_superuser:
-            return qs
-        
-        return qs
 
 class TblStateRepresentativeAdmin(admin.ModelAdmin):
     model = TblStateRepresentative
@@ -900,6 +893,40 @@ admin.site.register(report_model_admin.model,report_model_admin)
 
 ##############Corrective actions######################
 class AppHSECorrectiveActionMixin:
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+
+        if request.user.is_superuser:
+            return qs
+
+        # print("User groups",request.user.groups.all())
+        if request.user.groups.filter(name__in=("hse_cmpny_department_mngr","hse_cmpny_gm",)).exists():
+            # print("has group hse_cmpny_department_mngr or hse_cmpny_gm")
+            return qs
+        
+        if request.user.groups.filter(name__in=("hse_cmpny_state_mngr",)).exists():
+            try:
+                # company_type = request.user.gold_production_state_user.company_type
+                original_state = request.user.hse_cmpny_state.state
+                companies = TblCompanyProductionLicense.objects.filter(state=original_state).values_list('company',flat=True)
+                   
+                return qs.filter(
+                    Q(report__company__in=companies) | Q(incident__company__in=companies)
+                )
+            except Exception as e:
+                print("Error",e)
+
+        if request.user.groups.filter(name__in=("production_control_auditor",)).exists():
+            try:
+                company_lst = request.user.moragib_list.moragib_distribution.goldproductionuserdetail_set.filter(master__state=PRODUCTION_STATE_CONFIRMED).values_list('company',flat=True)
+                return qs.filter(
+                    Q(report__company__in=company_lst) | Q(incident__company__in=company_lst)
+                    )
+            except Exception as e:
+                print(request.user,e)
+
+        return qs.none() #super().get_queryset(request)
+
     @admin.display(description=_('الإجراء التصحيحي'))
     def corrective_action_summary(self, obj):
         return obj.corrective_action[:50]
@@ -967,9 +994,41 @@ admin.site.register(corrective_model_admin.model,corrective_model_admin)
 
 ##########################Corrective actions feedback############
 class AppHSECorrectiveActionFeedbackMixin:
-    pass
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
 
-corrective_action_feedback_main_mixins = [LogMixin]
+        if request.user.is_superuser:
+            return qs
+
+        # print("User groups",request.user.groups.all())
+        if request.user.groups.filter(name__in=("hse_cmpny_department_mngr","hse_cmpny_gm",)).exists():
+            # print("has group hse_cmpny_department_mngr or hse_cmpny_gm")
+            return qs
+        
+        if request.user.groups.filter(name__in=("hse_cmpny_state_mngr",)).exists():
+            try:
+                # company_type = request.user.gold_production_state_user.company_type
+                original_state = request.user.hse_cmpny_state.state
+                companies = TblCompanyProductionLicense.objects.filter(state=original_state).values_list('company',flat=True)
+                   
+                return qs.filter(
+                    Q(corrective_action__report__company__in=companies) | Q(corrective_action__incident__company__in=companies)
+                )
+            except Exception as e:
+                print("Error",e)
+
+        if request.user.groups.filter(name__in=("production_control_auditor",)).exists():
+            try:
+                company_lst = request.user.moragib_list.moragib_distribution.goldproductionuserdetail_set.filter(master__state=PRODUCTION_STATE_CONFIRMED).values_list('company',flat=True)
+                return qs.filter(
+                    Q(corrective_action__report__company__in=company_lst) | Q(corrective_action__incident__company__in=company_lst)
+                    )
+            except Exception as e:
+                print(request.user,e)
+
+        return qs.none() #super().get_queryset(request)
+
+corrective_action_feedback_main_mixins = [AppHSECorrectiveActionFeedbackMixin,LogMixin]
 corrective_action_feedback_main_class = {
     'model': AppHSECorrectiveActionFeedback,
     'mixins': [],
@@ -1018,7 +1077,42 @@ admin.site.register(corrective_action_feedback_model_admin.model,corrective_acti
 
 
 ###############Incidents#####################
-incident_main_mixins = [LogMixin]
+class IncidentInfoMixin:
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+
+        if request.user.is_superuser:
+            return qs
+
+        # print("User groups",request.user.groups.all())
+        if request.user.groups.filter(name__in=("hse_cmpny_department_mngr","hse_cmpny_gm",)).exists():
+            # print("has group hse_cmpny_department_mngr or hse_cmpny_gm")
+            return qs
+        
+        if request.user.groups.filter(name__in=("hse_cmpny_state_mngr",)).exists():
+            try:
+                # company_type = request.user.gold_production_state_user.company_type
+                original_state = request.user.hse_cmpny_state.state
+                companies = TblCompanyProductionLicense.objects.filter(state=original_state).values_list('company',flat=True)
+                   
+                return qs.filter(
+                    incident__company__in=companies
+                )
+            except Exception as e:
+                print("Error",e)
+
+        if request.user.groups.filter(name__in=("production_control_auditor",)).exists():
+            try:
+                company_lst = request.user.moragib_list.moragib_distribution.goldproductionuserdetail_set.filter(master__state=PRODUCTION_STATE_CONFIRMED).values_list('company',flat=True)
+                return qs.filter(
+                    incident__company__in=company_lst
+                    )
+            except Exception as e:
+                print(request.user,e)
+
+        return qs.none() #super().get_queryset(request)
+
+incident_main_mixins = [IncidentInfoMixin,LogMixin]
 incident_main_class = {
     'model': IncidentInfo,
     'mixins': [],
