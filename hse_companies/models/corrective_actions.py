@@ -24,7 +24,7 @@ class AppHSECorrectiveAction(LoggingModel):
 
     report = models.ForeignKey(AppHSEPerformanceReport, on_delete=models.PROTECT,null=True,blank=True,verbose_name=_("Application: HSE Performance Report"))    
     incident = models.ForeignKey(IncidentInfo, on_delete=models.PROTECT,null=True,blank=True,verbose_name=_("تقرير حادث Incident report"))    
-    corrective_action = models.CharField(_("الإجراء التصحيحي"))
+    corrective_action = models.TextField(_("الإجراء التصحيحي"))
     from_dt = models.DateField(_("من"))
     to_dt = models.DateField(_("إلى"))
     state = models.IntegerField(_("record_state"), choices=STATE_CHOICES.items(), default=STATE_STATE_MNGR_SUBMIT)
