@@ -49,11 +49,22 @@ class ForeignerRecord(WorkFlowModel):
         STATE_APPROVED: _("اعتماد الطلب"),
     }
 
+    EMPLOYMENT_EMPLOYEE = 1
+    EMPLOYMENT_CONTRACTOR = 2
+    EMPLOYMENT_GUEST = 3
+
+    EMPLOYMENT_CHOICES = {
+        EMPLOYMENT_EMPLOYEE: _("موظف دائم"),
+        EMPLOYMENT_CONTRACTOR: _("مقاول"),
+        EMPLOYMENT_GUEST: _("زيارة"),
+    }
+
     company = models.ForeignKey(TblCompanyEntaj, related_name="foreigner_company", on_delete=models.PROTECT,verbose_name=_("company"))    
     name = models.CharField("الاسم",max_length=150)
     position = models.CharField("الوظيفة",max_length=150)
     department = models.CharField("الادارة",max_length=150)
     salary = models.DecimalField("المرتب",max_digits=10, decimal_places=2)
+    employment_type = models.IntegerField(_("نوع التوظيف"), choices=EMPLOYMENT_CHOICES.items(), default=EMPLOYMENT_EMPLOYEE)
     employment_history = models.TextField("السجل الوظيفي")
     cv = models.FileField("السيرة الذاتية",upload_to=company_applications_path,null=True,blank=True)
     state = models.IntegerField(_("record_state"), choices=STATE_CHOICES.items(), default=STATE_DRAFT)
@@ -305,7 +316,7 @@ class ForeignerProcedureOther(models.Model):
 class ForeignerProcedureRequirements(models.Model):
     child_procedure_type = models.ForeignKey(LkpForeignerProcedureType, on_delete=models.PROTECT,verbose_name=_("procedure_type"))    
     cert_type = models.ManyToManyField(ForeignerPermissionType,verbose_name="الوثيقة")
-    parent_procedure_type = models.ManyToManyField(LkpForeignerProcedureType,related_name="+",verbose_name="الاجراءات اللازمة")
+    parent_procedure_type = models.ManyToManyField(LkpForeignerProcedureType,blank=True,related_name="+",verbose_name="الاجراءات اللازمة")
 
     class Meta:
         verbose_name = "متطلبات اجراء اجنبي"
