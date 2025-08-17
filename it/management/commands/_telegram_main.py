@@ -97,7 +97,7 @@ async def chat(update: Update, context: ContextTypes.DEFAULT_TYPE):
         # print("request---------------------------------------------------------------------------------------",context.user_data.get("user_history"))
 
         response = client.chat.completions.create(
-            model="openai/gpt-5-chat",
+            model="google/gemini-2.5-flash-lite", #"openai/gpt-5-chat",
             messages=context.user_data.get("user_history"),
         )
         answer = response.choices[0].message.content
