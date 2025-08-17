@@ -36,6 +36,7 @@ urlpatterns = [
     # path("about/", flatpages_views.flatpage, {"url": "/about/"}, name="about"),
     # path('pa/', include('pa.urls')), 
     path('hr/', include('hr.urls')), 
+    path('it/', include('it.urls')), 
     # path('help/', include('help_request.urls')), 
     path('', redirect_to_home),
 
