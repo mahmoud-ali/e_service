@@ -469,6 +469,7 @@ class TblCompanyProductionLicenseAdmin(LoggingAdminMixin,LeafletGeoAdmin): #admi
     list_display = ["company","license_no","license_type", "start_date", "end_date","license_count","state","sheet_no","area_initial","area","contract_status","date","company_type"]        
     list_filter = ["company__company_type","license_type","state","mineral","contract_status",("contract_file",admin.EmptyFieldListFilter),"created_at",("geom",admin.EmptyFieldListFilter)]
     search_fields = ["company__name_ar","company__name_en","sheet_no","license_no"]
+    filter_horizontal = ("mineral",)  # nice widget for M2M
     autocomplete_fields = ["company"]
     actions = ['export_as_csv']
     view_on_site = False
