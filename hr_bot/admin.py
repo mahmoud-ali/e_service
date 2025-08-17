@@ -10,7 +10,7 @@ from django.contrib.auth import get_user_model
 
 from hr.admin import SalafiatForm
 from hr.models import EmployeeBankAccount, EmployeeFamily, EmployeeMoahil
-from hr_bot.management.commands.telegram_main import TOKEN_ID
+from hr_bot.management.commands._telegram_main import TOKEN_ID
 from hr_bot.models import STATE_ACCEPTED, STATE_DRAFT, STATE_REJECTED, ApplicationRequirement, EmployeeBankAccountProxy, EmployeeBasicProxy, EmployeeFamilyProxy, EmployeeMoahilProxy, EmployeeTelegram, EmployeeTelegramBankAccount, EmployeeTelegramFamily, EmployeeTelegramMoahil, EmployeeTelegramRegistration, JazaatProxy, SalafiatProxy
 from hr_bot.utils import create_user, reject_cause, reset_user_password, send_message
 

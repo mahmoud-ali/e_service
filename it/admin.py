@@ -8,6 +8,7 @@ from .models import (
     Application,
     ComputerTemplate,
     Computer,
+    Conversation,
     NetworkAdapter,
     Peripheral,
     AccessPoint,
@@ -52,6 +53,7 @@ class EmployeeComputerInline(admin.TabularInline):
     model = EmployeeComputer
     extra = 1
     max_num = 1
+    autocomplete_fields = ["employee",]
 
 
 @admin.register(Computer)
@@ -80,16 +82,30 @@ class ComputerAdmin(admin.ModelAdmin):
 #     list_display = ("name", "model", "computer")
 #     search_fields = ("name", "model")
 
+class ConversationInline(admin.TabularInline):
+    model = Conversation
+    readonly_fields = ("created_at","question","answer")
+    extra = 0
+    
+    def has_add_permission(self, *args,**kwargs):
+        return False
+
+    def has_change_permission(self, *args,**kwargs):
+        return False
+    
+    def has_delete_permission(self, *args,**kwargs):
+        return False
 
 @admin.register(EmployeeComputer)
 class EmployeeComputerAdmin(admin.ModelAdmin):
-    list_display = ("employee","computer","ask_ai_link")
+    list_display = ("employee","computer") #,"ask_ai_link"
     list_filter = ("employee", )
     autocomplete_fields = ["employee","computer"]
+    inlines = [ConversationInline]
 
-    @admin.display(description=_('Ask AI'))
-    def ask_ai_link(self, obj):
-        url = reverse('it:ai_prompt',args=[obj.id])
-        return format_html('<a target="_blank" class="viewlink" href="{url}">'+_('Ask AI')+'</a>',
-                    url=url
-                )
+    # @admin.display(description=_('Ask AI'))
+    # def ask_ai_link(self, obj):
+    #     url = reverse('it:ai_prompt',args=[obj.id])
+    #     return format_html('<a target="_blank" class="viewlink" href="{url}">'+_('Ask AI')+'</a>',
+    #                 url=url
+    #             )

@@ -89,3 +89,9 @@ class EmployeeComputer(models.Model):
 
     def __str__(self):
         return f"{self.employee}({self.computer})"
+
+class Conversation(models.Model):
+    master = models.ForeignKey(EmployeeComputer, on_delete=models.PROTECT)
+    created_at = models.DateTimeField(_("created_at"),auto_now_add=True,editable=False,)
+    question = models.TextField()
+    answer = models.TextField()    
