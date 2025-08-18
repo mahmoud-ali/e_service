@@ -1,5 +1,4 @@
 import logging
-import os
 import traceback
 import html
 import json
@@ -7,7 +6,7 @@ import json
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
 from telegram.constants import ParseMode
-
+from telegram.helpers import escape_markdown
 from asgiref.sync import sync_to_async
 
 from django.conf import settings
@@ -95,21 +94,21 @@ async def chat(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
 
         # print("request---------------------------------------------------------------------------------------",context.user_data.get("user_history"))
-
+        await context.bot.send_chat_action(chat_id=update.effective_chat.id, action="typing")
         response = client.chat.completions.create(
-            model="google/gemini-2.5-flash-lite", #"openai/gpt-5-chat",
+            model="openai/gpt-5-mini", #"openai/o1-mini", #"openai/gpt-4.1", #"openai/gpt-5-chat",
             messages=context.user_data.get("user_history"),
         )
-        answer = response.choices[0].message.content
-        context.user_data.update({'user_history': previous_messages+[{"role":"assistant","content":answer}]})
-        await addConversation(context.user_data.get('employeeComputerId'),user_message,answer)
+        final_answer = response.choices[0].message.content
+
+        await update.message.reply_text(escape_markdown(final_answer, version=2),parse_mode=ParseMode.MARKDOWN_V2)
+
+        await addConversation(context.user_data.get('employeeComputerId'),user_message,final_answer)
     except Exception as e:
-        answer = f"لايمكنني الرد عليك، الرجاء الاتصال بإدارة تقنية المعلومات {e}"
-
-        # print("***********************************",answer)
+        final_answer = f"لايمكنني الرد عليك، الرجاء الاتصال بإدارة تقنية المعلومات {e}"
+        await update.message.reply_markdown(final_answer)
+  
     
-    await update.message.reply_markdown(answer)
-
 async def error_handler(update: object, context: ContextTypes.DEFAULT_TYPE) -> None:
 
     """Log the error and send a telegram message to notify the developer."""
