@@ -3,13 +3,13 @@ from django.views.generic import DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.html import format_html
 
-from it.models import AccessPoint, EmployeeComputer, NetworkAdapter, Peripheral
+from it.models import AccessPoint, EmployeeComputer, Peripheral #, NetworkAdapter
 from it.utils import AI,queryset_to_markdown
 
 
 class EmployeeComputerAskAIView(LoginRequiredMixin,DetailView):
     model = EmployeeComputer
-    model_details = [NetworkAdapter, Peripheral, AccessPoint]
+    model_details = [Peripheral, AccessPoint] #NetworkAdapter,
     template_name = "it/ai_prompt.html"
 
     def get(self,request,pk):        

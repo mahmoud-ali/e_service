@@ -9,7 +9,7 @@ from .models import (
     ComputerTemplate,
     Computer,
     Conversation,
-    NetworkAdapter,
+    # NetworkAdapter,
     Peripheral,
     AccessPoint,
     EmployeeComputer,
@@ -34,9 +34,9 @@ class ComputerTemplateAdmin(admin.ModelAdmin):
     exclude = ("applications",)  # handled by inline
 
 
-class NetworkAdapterInline(admin.TabularInline):
-    model = NetworkAdapter
-    extra = 1
+# class NetworkAdapterInline(admin.TabularInline):
+#     model = NetworkAdapter
+#     extra = 1
 
 
 class PeripheralInline(admin.TabularInline):
@@ -61,7 +61,7 @@ class ComputerAdmin(admin.ModelAdmin):
     list_display = ("code", "type", "template") #
     list_filter = ("type", "template__os_type")
     search_fields = ("code",)
-    inlines = [EmployeeComputerInline,NetworkAdapterInline, PeripheralInline, AccessPointInline]
+    inlines = [EmployeeComputerInline, PeripheralInline, AccessPointInline] #,NetworkAdapterInline
 
 # @admin.register(NetworkAdapter)
 # class NetworkAdapterAdmin(admin.ModelAdmin):

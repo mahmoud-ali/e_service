@@ -1,3 +1,4 @@
+import re
 import logging
 import traceback
 import html
@@ -13,9 +14,10 @@ from django.conf import settings
 # from django.utils.html import format_html
 
 from openai import OpenAI
+import markdown2
 
 from hr_bot.models import EmployeeTelegram
-from it.models import AccessPoint, Conversation, EmployeeComputer, NetworkAdapter, Peripheral
+from it.models import AccessPoint, Conversation, EmployeeComputer, Peripheral
 from it.utils import AI, queryset_to_markdown
 # Set your API keys
 DEVELOPER_CHAT_ID = settings.TELEGRAM_DEVELOPER_CHAT_ID
@@ -31,6 +33,31 @@ logging.basicConfig(
 logging.getLogger("httpx").setLevel(logging.WARNING)
 logger = logging.getLogger(__name__)
 
+def markdown_to_telegram_html(md_text: str) -> str:
+    """
+    Convert Markdown into Telegram-safe HTML.
+    Keeps only tags that Telegram supports.
+    """
+
+    # Convert Markdown to HTML first
+    html = markdown2.markdown(md_text)
+
+    # Remove unsupported tags (like <p>, <h1>, etc.)
+    html = re.sub(r'</?p>', '', html)
+    html = re.sub(r'<h[1-6]>', '<b>', html)
+    html = re.sub(r'</h[1-6]>', '</b>', html)
+    html = re.sub(r'</?ul>', '', html)
+    html = re.sub(r'<ol>', '- ', html)
+    html = re.sub(r'</ol>', '', html)
+    html = re.sub(r'<li>', '* ', html)
+    html = re.sub(r'</li>', '', html)
+    html = re.sub(r'<br\s*/?>', '\n', html)
+
+    # Optional: collapse multiple newlines
+    html = re.sub(r'\n{3,}', '\n\n', html)
+
+    return html.strip()
+
 @sync_to_async
 def addConversation(employee_computer_id,question,answer):
     Conversation.objects.create(
@@ -45,35 +72,37 @@ def getEmployeeComputer(user_id):
     return EmployeeComputer.objects.filter(employee=employeeTelegram.employee).first()
 
 @sync_to_async
-def getUserSetup(employee_computer):
+def getUserPrompt(employee_computer):
     user_setup = f"""
         OS type: {employee_computer.computer.template.os_type} {employee_computer.computer.template.os_version}
         Installed applications: {", ".join(employee_computer.computer.template.applications.all().values_list('name',flat=True))}
 
         """
-    for model in [NetworkAdapter, Peripheral, AccessPoint]:
+    for model in [Peripheral, AccessPoint]:
         qs = model.objects.filter(computer=employee_computer.computer)
         if qs.count() > 0:
             user_setup += f"""## {qs[0]._meta.verbose_name}
                 {queryset_to_markdown(qs,["id","computer"])}
             """
-    return user_setup
-            
-async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    employeeComputerObj = await getEmployeeComputer(update.effective_user.id)
-    context.user_data.update({'employeeComputerId': employeeComputerObj.id})
-    try:
-        system_prompt = f"""
+
+    return f"""
             # PROMPT:
             {AI.get("prompt")}
             # CONTEXT:
             ** Network Setup: **
             {AI.get("network_setup")}
             ** User setup: **
-            {await getUserSetup(employeeComputerObj)}
+            {user_setup}
             ** FAQ (Samples): **
             {AI.get("faq")}
-        """
+        """            
+            
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    try:
+        employeeComputerObj = await getEmployeeComputer(update.effective_user.id)
+        context.user_data.update({'employeeComputerId': employeeComputerObj.id})
+
+        system_prompt = await getUserPrompt(employeeComputerObj)
 
         context.user_data.update({'user_history': [{"role": "system", "content": system_prompt}]})
         answer  = "السلام عليكم، انا مساعدك التقني. كيف يمكنني مساعدتك؟"
@@ -85,6 +114,14 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def chat(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_message = update.message.text
     previous_messages = context.user_data.get("user_history",[])
+
+    if not previous_messages:
+        return await start(update,context)
+    
+    previous_messages = [previous_messages[0] + previous_messages[-8:]] if previous_messages[0] != previous_messages[-8:][0] else previous_messages[-8:]
+    for msg in previous_messages[1:]:
+        msg["role"] = "assistant"   # update attribute
+
     context.user_data.update({'user_history': previous_messages+[{"role":"user","content":user_message}]})
     
     try:
@@ -98,10 +135,13 @@ async def chat(update: Update, context: ContextTypes.DEFAULT_TYPE):
         response = client.chat.completions.create(
             model="openai/gpt-5-mini", #"openai/o1-mini", #"openai/gpt-4.1", #"openai/gpt-5-chat",
             messages=context.user_data.get("user_history"),
+            timeout=60,
         )
-        final_answer = response.choices[0].message.content
+        final_answer = markdown_to_telegram_html(response.choices[0].message.content)
+        
+        context.user_data.update({'user_history': previous_messages+[{"role":"assistant","content":final_answer}]})
 
-        await update.message.reply_text(escape_markdown(final_answer, version=2),parse_mode=ParseMode.MARKDOWN_V2)
+        await update.message.reply_text(final_answer,parse_mode=ParseMode.HTML)
 
         await addConversation(context.user_data.get('employeeComputerId'),user_message,final_answer)
     except Exception as e:

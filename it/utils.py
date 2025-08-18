@@ -8,8 +8,8 @@ AI = {
             - Always reply with the most likely fix first.  
             - Show steps in order of priority.  
             - If unresolved, advise escalation to IT department.
-            - Answer in user language
-            - Answer in markdown format appropriate for Telegram bot
+            - Answer in user language.
+            - Answer in markdown format appropriate for Telegram bot.
             """,
     "network_setup": f"""
             - Firewall (fg-smrc1) manages DHCP for 192.168.12.0/24 (1-week leases).

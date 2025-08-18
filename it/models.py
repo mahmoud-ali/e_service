@@ -41,18 +41,18 @@ class Computer(models.Model):
         return f"{self.code} ({self.get_type_display()})"
 
 
-class NetworkAdapter(models.Model):
-    CONNECTIVITY_TYPES = [
-        ("wired", "Wired"),
-        ("wireless", "Wireless"),
-    ]
+# class NetworkAdapter(models.Model):
+#     CONNECTIVITY_TYPES = [
+#         ("wired", "Wired"),
+#         ("wireless", "Wireless"),
+#     ]
 
-    computer = models.ForeignKey(Computer, on_delete=models.CASCADE, related_name="network_adapters")
-    model = models.CharField(max_length=100)
-    connectivity_type = models.CharField(max_length=20, choices=CONNECTIVITY_TYPES)
+#     computer = models.ForeignKey(Computer, on_delete=models.CASCADE, related_name="network_adapters")
+#     model = models.CharField(max_length=100)
+#     connectivity_type = models.CharField(max_length=20, choices=CONNECTIVITY_TYPES)
 
-    def __str__(self):
-        return f"{self.model} ({self.get_connectivity_type_display()})"
+#     def __str__(self):
+#         return f"{self.model} ({self.get_connectivity_type_display()})"
 
 
 class Peripheral(models.Model):
@@ -65,6 +65,7 @@ class Peripheral(models.Model):
         ("memory", "Memory"),
         ("hard_drive", "Hard drive"),
         ("graphics_card", "Graphics card"),
+        ("network_adapter", "Network adapter"),
         ("other", "Other"),
     ]
 

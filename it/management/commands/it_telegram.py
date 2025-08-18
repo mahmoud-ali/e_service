@@ -9,9 +9,8 @@ class Command(BaseCommand):
         pass
     def handle(self, *args, **options):
         try:
-            while True:
-                bot_main()
-                sleep(300)
+            bot_main()
+            
             # self.stdout.write(
             #     self.style.SUCCESS('Hello from hr_bot')
             # )
