@@ -1,3 +1,4 @@
+import asyncio
 import re
 import logging
 import traceback
@@ -135,17 +136,43 @@ async def chat(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
         # print("request---------------------------------------------------------------------------------------",context.user_data.get("user_history"))
         await context.bot.send_chat_action(chat_id=update.effective_chat.id, action="typing")
-        response = client.chat.completions.create(
-            model="openai/gpt-5-mini", #"openai/o1-mini", #"openai/gpt-4.1", #"openai/gpt-5-chat",
-            messages=context.user_data.get("user_history"),
-            timeout=60,
-            prompt_cache_key=hashlib.md5(str(update.effective_chat.id).encode()).hexdigest(),
-        )
-        final_answer = markdown_to_telegram_html(response.choices[0].message.content)
-        
-        context.user_data.update({'user_history': previous_messages+[{"role":"assistant","content":final_answer}]})
 
-        await update.message.reply_text(final_answer,parse_mode=ParseMode.HTML)
+        sent_message = await update.message.reply_text("🤖 ...")  # placeholder message
+
+        await context.bot.send_chat_action(chat_id=update.effective_chat.id, action="typing")
+
+        def generate():
+            return client.chat.completions.create(
+                model="openai/gpt-5-mini", #"openai/o1-mini", #"openai/gpt-4.1", #"openai/gpt-5-chat",
+                messages=context.user_data.get("user_history"),
+                stream=True,
+                timeout=120,
+                prompt_cache_key=hashlib.md5(str(update.effective_chat.id).encode()).hexdigest(),
+            )
+        
+        stream = await asyncio.to_thread(generate)
+
+        final_answer = ""
+        
+        # Process streamed chunks
+        for chunk in stream:
+            delta = chunk.choices[0].delta.content
+            if delta:
+                final_answer += delta
+
+                # Edit progressively (limit update frequency)
+                if len(final_answer) % 50 == 0:  # update every ~50 chars
+                    try:
+                        await sent_message.edit_text(final_answer,parse_mode=None)
+                        await asyncio.sleep(0.2)  # avoid hitting Telegram API too fast
+                    except Exception:
+                        pass  # ignore rate limit errors
+
+
+        # Final update
+        await sent_message.edit_text(final_answer,parse_mode=None)
+
+        context.user_data.update({'user_history': previous_messages+[{"role":"assistant","content":final_answer}]})
 
         await addConversation(context.user_data.get('employeeComputerId'),user_message,final_answer)
     except Exception as e:
