@@ -138,7 +138,7 @@ async def chat(update: Update, context: ContextTypes.DEFAULT_TYPE):
             model="openai/gpt-5-mini", #"openai/o1-mini", #"openai/gpt-4.1", #"openai/gpt-5-chat",
             messages=context.user_data.get("user_history"),
             timeout=60,
-            prompt_cache_key=hashlib.md5(str(update.effective_chat.id).encode()).hexdigest(),
+            prompt_cache_key=hashlib.md5(str(update.effective_chat.id).encode()).digest(),
         )
         final_answer = markdown_to_telegram_html(response.choices[0].message.content)
         
