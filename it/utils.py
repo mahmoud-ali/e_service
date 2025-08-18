@@ -13,9 +13,7 @@ AI = {
             """,
     "network_setup": f"""
             - Firewall (fg-smrc1) manages DHCP for 192.168.12.0/24 (1-week leases).
-
             - All traffic is allowed except YouTube, TikTok, and Facebook.
-            
             - Antivirus: Kaspersky Endpoint Security (KSC).
             """,
     "faq": f"""
