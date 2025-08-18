@@ -36,8 +36,8 @@ def clone_computer(employee:EmployeeBasic,src:Computer):
     return obj
 
 def import_employees_computer(filename='emp_mobasher.csv'):    
-    laptop_obj = Computer.objects.get(id=120)
-    desktop_obj = Computer.objects.get(id=120)
+    laptop_obj = Computer.objects.get(id=2)
+    desktop_obj = Computer.objects.get(id=3)
     with open(f'./it/data/'+filename, newline='') as csvfile:
         reader = csv.reader(csvfile, delimiter=',')
         next(reader, None)  # skip the headers
