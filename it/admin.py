@@ -99,7 +99,7 @@ class ConversationInline(admin.TabularInline):
 @admin.register(EmployeeComputer)
 class EmployeeComputerAdmin(admin.ModelAdmin):
     list_display = ("employee","computer") #,"ask_ai_link"
-    search_fields = ("employee", )
+    search_fields = ("employee__name", "employee__code",)
     autocomplete_fields = ["employee","computer"]
     inlines = [ConversationInline]
 
