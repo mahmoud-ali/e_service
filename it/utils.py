@@ -9,6 +9,7 @@ AI = {
             - Show steps in order of priority.  
             - If unresolved, advise escalation to IT department.
             - Answer in user language.
+            - Answer only questions relevent to IT and technical support.
             - Answer in markdown format appropriate for Telegram bot.
             """,
     "network_setup": f"""
