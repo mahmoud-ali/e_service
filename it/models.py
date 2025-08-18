@@ -57,18 +57,22 @@ class NetworkAdapter(models.Model):
 
 class Peripheral(models.Model):
     PERIPHERAL_TYPES = [
-        ("display", "Display"),
+        ("display", "External display"),
         ("keyboard", "Keyboard"),
         ("mouse", "Mouse"),
         ("printer", "Printer"),
+        ("processor", "Processor"),
+        ("memory", "Memory"),
+        ("hard_drive", "Hard drive"),
+        ("graphics_card", "Graphics card"),
         ("other", "Other"),
     ]
 
     computer = models.ForeignKey(Computer, on_delete=models.CASCADE, related_name="peripherals")
     type = models.CharField(max_length=20, choices=PERIPHERAL_TYPES)
-    connectivity_type = models.CharField(max_length=20)
-    model = models.CharField(max_length=100, blank=True, null=True)
     name = models.CharField(max_length=100, blank=True, null=True)
+    connectivity_type = models.CharField(max_length=20, blank=True, null=True)
+    specifications = models.TextField(blank=True, null=True)
 
     def __str__(self):
         return f"{self.name or self.type} ({self.connectivity_type})"
