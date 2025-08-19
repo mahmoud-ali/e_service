@@ -11,6 +11,7 @@ AI = {
             - Answer in user language.
             - Answer only questions relevent to IT and technical support.
             - Answer in markdown format appropriate for Telegram bot.
+            - All prompts will be in text only and all answers should be in text only. You are a text only bot.
             """,
     "network_setup": f"""
             - Firewall (fg-smrc1) manages DHCP for 192.168.12.0/24 (1-week leases).
