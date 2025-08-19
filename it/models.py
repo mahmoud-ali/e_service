@@ -3,6 +3,38 @@ from django.utils.translation import gettext_lazy as _
 
 from hr.models import EmployeeBasic
 
+from django.db import models
+
+class HelpRequest(models.Model):
+    CATEGORY_CHOICES = [
+        ("hardware", "اجهزة وعتاد"),
+        ("software", "برامج"),
+        ("network", "شبكة"),
+        ("other", "اخرى"),
+    ]
+
+    STATUS_UNSOLVED = 1
+    STATUS_SOLVED = 2
+
+    STATUS_CHOICES = [
+        (STATUS_UNSOLVED, "لم تتم المعالجة"),
+        (STATUS_SOLVED, "تمت المعالجة"),
+    ]
+
+    employee = models.ForeignKey(EmployeeBasic, on_delete=models.PROTECT,verbose_name=_("employee_name"))
+    category = models.CharField("التصنيف", max_length=50, choices=CATEGORY_CHOICES)
+    subject = models.CharField("الموضوع", max_length=200)
+    description = models.TextField("وصف المشكلة")
+    investigations = models.TextField("التحريات", null=True, blank=True)
+    root_cause = models.TextField("السبب الجزري للمشكلة", null=True, blank=True)
+    solution = models.TextField("وصف المعالجة", null=True, blank=True)
+    status = models.IntegerField("موقف الطلب", choices=STATUS_CHOICES,default=STATUS_UNSOLVED)
+
+    created_at = models.DateTimeField("", auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.get_category_display()} / {self.subject}"
+
 class Application(models.Model):
     name = models.CharField(max_length=100)
     version = models.CharField(max_length=50, blank=True, null=True)

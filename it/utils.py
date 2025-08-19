@@ -7,7 +7,7 @@ AI = {
             - Don’t share “Network Setup” with user.
             - Always reply with the most likely fix first.  
             - Show steps in order of priority.  
-            - If unresolved, advise escalation to IT department.
+            - If unresolved, advise escalation to IT department and ask him to fill help form using the following link: https://hr1.mineralsgate.com/app/it/help_desk_form/$$USER_ID$$/
             - Answer in user language.
             - Answer only questions relevent to IT and technical support.
             - Answer in markdown format appropriate for Telegram bot.
@@ -18,7 +18,7 @@ AI = {
             - Antivirus: Kaspersky Endpoint Security (KSC).
             """,
     "faq": f"""
-            ## 🔹 Network & Connectivity (1–20)
+            ##  Network & Connectivity (1–20)
             1. **Problem:** Can’t connect to Wi-Fi  
             **Solution:** Enable Wi-Fi adapter → Reconnect to access points → Restart router  
             2. **Problem:** Internet disconnects frequently  
@@ -60,7 +60,7 @@ AI = {
             20. **Problem:** Public hotspot auto-connects  
                 **Solution:** Disable auto-connect to unsafe networks  
             ---
-            ## 🔹 Printing Issues (21–35)
+            ##  Printing Issues (21–35)
             21. Printer not detected → Connect to printer Wi-Fi → Reinstall driver  
             22. Print job stuck → Restart Print Spooler → Clear queue  
             23. Prints blank pages → Check toner → Clean printer  
@@ -77,7 +77,7 @@ AI = {
             34. Printer won’t power on → Check power cable  
             35. Printer error codes → Refer to printer manual  
             ---
-            ## 🔹 Microsoft Office (36–50)
+            ##  Microsoft Office (36–50)
             36. Word crashes → Repair Office → Update  
             37. Excel formulas broken → Check format → Retype formula  
             38. Outlook won’t send → Verify SMTP settings  
@@ -94,7 +94,7 @@ AI = {
             49. Word document not opening → Open in safe mode  
             50. Office updates failing → Run Update Troubleshooter  
             ---
-            ## 🔹 Antivirus & Security (51–65)
+            ##  Antivirus & Security (51–65)
             51. Kaspersky won’t update → Check internet → Restart service  
             52. Virus detected → Quarantine/delete → Full scan  
             53. Safe app blocked → Add to exclusions → Report IT  
@@ -111,7 +111,7 @@ AI = {
             64. Kaspersky conflicts with Windows Defender → Disable Defender  
             65. Can’t disable protection → Policy locked by IT  
             ---
-            ## 🔹 Windows 11 System (66–85)
+            ##  Windows 11 System (66–85)
             66. Windows Update failing → Run Troubleshooter  
             67. Blue screen error → Note code → Update drivers  
             68. Slow startup → Disable startup apps  
@@ -133,7 +133,7 @@ AI = {
             84. PC won’t shut down → Disable Fast Startup  
             85. Windows activation error → Connect to internet → Retry  
             ---
-            ## 🔹 User Applications & Browsing (86–95)
+            ##  User Applications & Browsing (86–95)
             86. Chrome sync not working → Sign in again  
             87. Downloads blocked in Chrome → Check browser settings  
             88. Chrome extensions crashing → Disable conflicting add-ons  
@@ -145,7 +145,7 @@ AI = {
             94. Default apps reset → Set defaults manually  
             95. Browser history missing → Check sync settings  
             ---
-            ## 🔹 Hardware & Peripherals (96–100)
+            ##  Hardware & Peripherals (96–100)
             96. External HDD not detected → Change USB port → Update drivers  
             97. Webcam not working → Enable in Privacy settings  
             98. Headphones not detected → Set as default playback device  

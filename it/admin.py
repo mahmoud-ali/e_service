@@ -5,6 +5,7 @@ from django.utils.translation import gettext_lazy as _
 from django.contrib import admin
 
 from .models import (
+    HelpRequest,
     Application,
     ComputerTemplate,
     Computer,
@@ -14,6 +15,15 @@ from .models import (
     AccessPoint,
     EmployeeComputer,
 )
+
+@admin.register(HelpRequest)
+class HelpRequestAdmin(admin.ModelAdmin):
+    fields = ("employee","category","subject","description","investigations","root_cause","solution","status",)
+    list_display = ("subject", "category","employee","created_at")
+    list_filter = ("category", "created_at")
+    search_fields = ("employee__name","subject", "description", )
+    readonly_fields = ("employee","category","subject","description",)
+    ordering = ("-created_at",)
 
 
 @admin.register(Application)

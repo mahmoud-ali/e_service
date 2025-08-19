@@ -1,0 +1,30 @@
+{% extends "it/base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <p>مرحباً {{employee.name}}</p>
+
+    <h2>طلب دعم فني</h2>
+    
+    <form method="post" novalidate>
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+        <div class="mb-3">
+            {{ form.category.label_tag }}
+            {{ form.category }}
+            {{ form.category.errors }}
+        </div>
+        <div class="mb-3">
+            {{ form.subject.label_tag }}
+            {{ form.subject }}
+            {{ form.subject.errors }}
+        </div>
+        <div class="mb-3">
+            {{ form.description.label_tag }}
+            {{ form.description }}
+            {{ form.description.errors }}
+        </div>
+        <button type="submit" class="btn btn-primary">ارسل الطلب</button>
+    </form>
+</div>
+{% endblock %}
