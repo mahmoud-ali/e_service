@@ -18,10 +18,15 @@ from django.conf import settings
 
 from openai import OpenAI
 import markdown2
+import telegramify_markdown
+from telegramify_markdown import customize
 
 from hr_bot.models import EmployeeTelegram
 from it.models import AccessPoint, Conversation, EmployeeComputer, Peripheral
 from it.utils import AI, queryset_to_markdown
+
+# customize.strict_markdown = True
+
 # Set your API keys
 DEVELOPER_CHAT_ID = settings.TELEGRAM_DEVELOPER_CHAT_ID
 
@@ -35,32 +40,6 @@ logging.basicConfig(
 
 logging.getLogger("httpx").setLevel(logging.WARNING)
 logger = logging.getLogger(__name__)
-
-def markdown_to_telegram_html(md_text: str) -> str:
-    """
-    Convert Markdown into Telegram-safe HTML.
-    Keeps only tags that Telegram supports.
-    """
-
-    # Convert Markdown to HTML first
-    html = markdown2.markdown(md_text)
-
-    # Remove unsupported tags (like <p>, <h1>, etc.)
-    html = re.sub(r'</?p>', '', html)
-    html = re.sub(r'</?hr>', '', html)
-    html = re.sub(r'<h[1-6]>', '<b>', html)
-    html = re.sub(r'</h[1-6]>', '</b>', html)
-    html = re.sub(r'</?ul>', '', html)
-    html = re.sub(r'<ol>', '- ', html)
-    html = re.sub(r'</ol>', '', html)
-    html = re.sub(r'<li>', '* ', html)
-    html = re.sub(r'</li>', '', html)
-    html = re.sub(r'<br\s*/?>', '\n', html)
-
-    # Optional: collapse multiple newlines
-    html = re.sub(r'\n{3,}', '\n\n', html)
-
-    return html.strip()
 
 @sync_to_async
 def addConversation(employee_computer_id,question,answer):
@@ -108,7 +87,7 @@ def getUserPrompt(employee_computer):
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     try:
         employeeComputerObj = await getEmployeeComputer(update.effective_user.id)
-        context.user_data.update({'employeeComputerId': employeeComputerObj.id})
+        context.user_data.update({'employeeComputerId': employeeComputerObj.id,'employeeComputerUUID': employeeComputerObj.uuid})
 
         system_prompt = await getUserPrompt(employeeComputerObj)
 
@@ -147,7 +126,7 @@ async def chat(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
         def generate():
             return client.chat.completions.create(
-                model="openai/gpt-5-mini", #"openai/o1-mini", #"openai/gpt-4.1", #"openai/gpt-5-chat",
+                model="deepseek/deepseek-chat-v3-0324", #"openai/gpt-5-mini",  #"anthropic/claude-3.5-haiku-20241022",#"deepseek/deepseek-chat", #"openai/gpt-oss-120b", #"openai/gpt-5-mini", #"openai/o1-mini", #"openai/gpt-4.1", #"openai/gpt-5-chat",
                 messages=context.user_data.get("user_history"),
                 stream=True,
                 timeout=120,
@@ -162,6 +141,7 @@ async def chat(update: Update, context: ContextTypes.DEFAULT_TYPE):
         for chunk in stream:
             delta = chunk.choices[0].delta.content
             if delta:
+                delta = re.sub('__USER_ID__', str(context.user_data.get("employeeComputerUUID")), delta) 
                 final_answer += delta
 
                 # Edit progressively (limit update frequency)
@@ -174,7 +154,12 @@ async def chat(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
         # Final update
-        await sent_message.edit_text(final_answer,parse_mode=None)
+        final_answer = telegramify_markdown.markdownify(
+            final_answer,
+            max_line_length=None,  # If you want to change the max line length for links, images, set it to the desired value.
+            normalize_whitespace=False
+        )
+        await sent_message.edit_text(final_answer,parse_mode=ParseMode.MARKDOWN_V2)
 
         context.user_data.update({'user_history': previous_messages+[{"role":"assistant","content":final_answer}]})
 
