@@ -47,19 +47,19 @@ class HelpdeskTelegramUser(DetailView):
     # template_name = "it/ai_prompt.html"
 
     def get(self,request,user_id):        
-        employeeTelegram = EmployeeTelegram.objects.filter(user_id=user_id).first()
+        employeeComputer = EmployeeComputer.objects.filter(id=user_id).first()
         form = HelpRequestForm()
 
-        return render(request, "it/help_form.html", {"employee":employeeTelegram.employee,"form": form})
+        return render(request, "it/help_form.html", {"employee":employeeComputer.employee,"form": form})
 
     def post(self,request,user_id):        
-        employeeTelegram = EmployeeTelegram.objects.filter(user_id=user_id).first()
+        employeeComputer = EmployeeComputer.objects.filter(id=user_id).first()
         form = HelpRequestForm(request.POST)
         if form.is_valid():
             obj = form.save(commit=False)
-            obj.employee = employeeTelegram.employee
+            obj.employee = employeeComputer.employee
             obj.save()
-            
+
             return render(request, "it/success.html")  # confirmation page
         
         return render(request, "it/help_form.html", {"form": form})

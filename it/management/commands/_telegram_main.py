@@ -89,7 +89,7 @@ def getUserPrompt(employee_computer):
                 {queryset_to_markdown(qs,["id","computer"])}
             """
 
-    return f"""
+    prompt= f"""
             # PROMPT:
             {AI.get("prompt")}
             # CONTEXT:
@@ -100,7 +100,9 @@ def getUserPrompt(employee_computer):
             ** FAQ (Samples): **
             {AI.get("faq")}
         """            
-            
+    prompt = re.sub(r'$$USER_ID$$', '', employee_computer.id) 
+    return prompt
+
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     try:
         employeeComputerObj = await getEmployeeComputer(update.effective_user.id)
