@@ -1,3 +1,4 @@
+import uuid
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
@@ -21,6 +22,11 @@ class HelpRequest(models.Model):
         (STATUS_SOLVED, "تمت المعالجة"),
     ]
 
+    id = models.UUIDField(
+        primary_key=True,
+        default=uuid.uuid4,
+        editable=False
+    )
     employee = models.ForeignKey(EmployeeBasic, on_delete=models.PROTECT,verbose_name=_("employee_name"))
     category = models.CharField("التصنيف", max_length=50, choices=CATEGORY_CHOICES)
     subject = models.CharField("الموضوع", max_length=200)
@@ -121,6 +127,13 @@ class AccessPoint(models.Model):
 
 
 class EmployeeComputer(models.Model):
+    uuid = models.UUIDField(
+        auto_created=True,
+        default=uuid.uuid4,
+        editable=False,
+        unique=True
+    )
+
     employee = models.ForeignKey(EmployeeBasic, on_delete=models.PROTECT,verbose_name=_("employee_name"))
     computer = models.ForeignKey(Computer, on_delete=models.CASCADE, related_name="employee_computers")
 

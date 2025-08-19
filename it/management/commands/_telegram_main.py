@@ -100,7 +100,7 @@ def getUserPrompt(employee_computer):
             ** FAQ (Samples): **
             {AI.get("faq")}
         """            
-    prompt = re.sub('__USER_ID__', str(employee_computer.id), prompt) 
+    prompt = re.sub('__USER_ID__', str(employee_computer.uuid), prompt) 
     print(prompt)
     return prompt
 

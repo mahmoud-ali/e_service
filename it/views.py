@@ -47,13 +47,13 @@ class HelpdeskTelegramUser(DetailView):
     # template_name = "it/ai_prompt.html"
 
     def get(self,request,user_id):        
-        employeeComputer = get_object_or_404(EmployeeComputer,pk=user_id)
+        employeeComputer = get_object_or_404(EmployeeComputer,uuid=user_id)
         form = HelpRequestForm(request.GET)
 
         return render(request, "it/help_form.html", {"employee":employeeComputer.employee,"form": form})
 
     def post(self,request,user_id):        
-        employeeComputer = get_object_or_404(EmployeeComputer,pk=user_id)
+        employeeComputer = get_object_or_404(EmployeeComputer,uuid=user_id)
         form = HelpRequestForm(request.POST)
         if form.is_valid():
             obj = form.save(commit=False)
