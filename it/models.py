@@ -71,7 +71,7 @@ class Computer(models.Model):
         ("laptop", "Laptop"),
     ]
 
-    code = models.CharField(max_length=50, unique=True)
+    code = models.CharField("Computer name", max_length=50, unique=True)
     type = models.CharField(max_length=20, choices=COMPUTER_TYPES)
     template = models.ForeignKey(ComputerTemplate, on_delete=models.CASCADE, related_name="computers")
 
