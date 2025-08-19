@@ -20,7 +20,7 @@ from .models import (
 class HelpRequestAdmin(admin.ModelAdmin):
     fields = ("employee","category","subject","description","investigations","root_cause","solution","status",)
     list_display = ("subject", "category","employee","created_at")
-    list_filter = ("category", "created_at")
+    list_filter = ("status","category", "created_at")
     search_fields = ("employee__name","subject", "description", )
     readonly_fields = ("employee","category","subject","description",)
     ordering = ("-created_at",)

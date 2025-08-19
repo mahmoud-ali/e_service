@@ -48,7 +48,7 @@ class HelpdeskTelegramUser(DetailView):
 
     def get(self,request,user_id):        
         employeeComputer = get_object_or_404(EmployeeComputer,pk=user_id)
-        form = HelpRequestForm()
+        form = HelpRequestForm(request.GET)
 
         return render(request, "it/help_form.html", {"employee":employeeComputer.employee,"form": form})
 
