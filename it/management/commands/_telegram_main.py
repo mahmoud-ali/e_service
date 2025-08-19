@@ -100,7 +100,8 @@ def getUserPrompt(employee_computer):
             ** FAQ (Samples): **
             {AI.get("faq")}
         """            
-    prompt = re.sub(r'$$USER_ID$$', '', employee_computer.id) 
+    prompt = re.sub('__USER_ID__', str(employee_computer.id), prompt) 
+    print(prompt)
     return prompt
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -113,7 +114,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         context.user_data.update({'user_history': [{"role": "system", "content": system_prompt}]})
         answer  = "السلام عليكم، انا مساعدك التقني. كيف يمكنني مساعدتك؟"
     except Exception as e:
-        answer = f"لايمكنني الرد عليك، الرجاء الاتصال بإدارة تقنية المعلومات"
+        answer = f"لايمكنني الرد عليك، الرجاء الاتصال بإدارة تقنية المعلومات {e}"
 
     await update.message.reply_text(answer)
 

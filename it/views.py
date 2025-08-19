@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render,get_object_or_404
 from django.views.generic import DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.html import format_html
@@ -47,13 +47,13 @@ class HelpdeskTelegramUser(DetailView):
     # template_name = "it/ai_prompt.html"
 
     def get(self,request,user_id):        
-        employeeComputer = EmployeeComputer.objects.filter(id=user_id).first()
+        employeeComputer = get_object_or_404(EmployeeComputer,pk=user_id)
         form = HelpRequestForm()
 
         return render(request, "it/help_form.html", {"employee":employeeComputer.employee,"form": form})
 
     def post(self,request,user_id):        
-        employeeComputer = EmployeeComputer.objects.filter(id=user_id).first()
+        employeeComputer = get_object_or_404(EmployeeComputer,pk=user_id)
         form = HelpRequestForm(request.POST)
         if form.is_valid():
             obj = form.save(commit=False)
