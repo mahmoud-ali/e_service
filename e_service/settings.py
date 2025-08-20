@@ -213,6 +213,7 @@ STORAGES = {
             "region_name": "sfo3",
             "endpoint_url": "https://mineralsgate-space.sfo3.digitaloceanspaces.com",
             "file_overwrite": False,
+            "default_acl": "public-read",
             "querystring_auth": False,
             "access_key": config('S3_ACCESS_KEY'),
             "secret_key": config('S3_SECRET_KEY'),
