@@ -459,7 +459,7 @@ class TblCompanyProductionFactoryAdmin(LoggingAdminMixin,admin.ModelAdmin):
 
 class TblCompanyProductionLicenseAdmin(LoggingAdminMixin,LeafletGeoAdmin): #admin.ModelAdmin
     fieldsets = [
-        (None, {"fields": ["company",("license_no","license_type","license_count","geom")]}),
+        (None, {"fields": ["company",("license_no","license_type","license_count")]}), #,"geom"
         (_("General information"), {"fields": ["date",("start_date","end_date")]}),
         (_("Location information"), {"fields": [("state","locality","location","sheet_no")]}),
         (_("Contract information"), {"fields": ["mineral","area_initial","area","reserve","royalty","zakat","annual_rent","gov_rep","rep_percent","com_percent","business_profit","social_responsibility","contract_status","contract_file"]}),
