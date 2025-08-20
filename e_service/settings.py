@@ -206,9 +206,9 @@ STORAGES = {
         },
     },
     "staticfiles": {
-        "BACKEND": "static",
+        "BACKEND": "storages.backends.s3.S3Storage",
         "OPTIONS": {
-            "bucket_name": "mineralsgate-space",
+            "bucket_name": "static",
             "region_name": "sfo3",
             "endpoint_url": "https://mineralsgate-space.sfo3.digitaloceanspaces.com",
             "file_overwrite": False,
