@@ -8,7 +8,7 @@ import json
 import hashlib
 
 from telegram import Update
-from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
+from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes, ConversationHandler
 from telegram.constants import ParseMode
 from telegram.helpers import escape_markdown
 from asgiref.sync import sync_to_async
@@ -32,6 +32,8 @@ DEVELOPER_CHAT_ID = settings.TELEGRAM_DEVELOPER_CHAT_ID
 
 TOKEN_ID = settings.TELEGRAM_IT_TOKEN_ID
 
+CHECK_COMPUTER, GET_COMPUTER, CHAT, COMPUTER_NOT_EXISTS = 1, 2, 3, 4
+
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
 )
@@ -50,9 +52,17 @@ def addConversation(employee_computer_id,question,answer):
     )
 
 @sync_to_async
-def getEmployeeComputer(user_id):
+def getEmployeeComputerList(user_id):
     employeeTelegram = EmployeeTelegram.objects.filter(user_id=user_id).first()
-    return EmployeeComputer.objects.filter(employee=employeeTelegram.employee).first()
+    computers = list(EmployeeComputer.objects.filter(employee=employeeTelegram.employee).values_list("id","computer__code"))
+    return computers
+
+@sync_to_async
+def getEmployeeComputer(user_id,index):
+    # employeeTelegram = EmployeeTelegram.objects.filter(user_id=user_id).first()
+    obj = EmployeeComputer.objects.get(id=index) #,employee=employeeTelegram.employee
+
+    return obj
 
 @sync_to_async
 def getUserPrompt(employee_computer):
@@ -81,22 +91,70 @@ def getUserPrompt(employee_computer):
             {AI.get("faq")}
         """            
     prompt = re.sub('__USER_ID__', str(employee_computer.uuid), prompt) 
-    print(prompt)
+    # print(prompt)
     return prompt
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    try:
-        employeeComputerObj = await getEmployeeComputer(update.effective_user.id)
-        context.user_data.update({'employeeComputerId': employeeComputerObj.id,'employeeComputerUUID': employeeComputerObj.uuid})
-
-        system_prompt = await getUserPrompt(employeeComputerObj)
-
-        context.user_data.update({'user_history': [{"role": "system", "content": system_prompt}]})
-        answer  = "السلام عليكم، انا مساعدك التقني. كيف يمكنني مساعدتك؟"
-    except Exception as e:
-        answer = f"لايمكنني الرد عليك، الرجاء الاتصال بإدارة تقنية المعلومات {e}"
+    answer  = "السلام عليكم، انا مساعدك التقني."
 
     await update.message.reply_text(answer)
+
+    return await check_computer(update,context)
+
+async def check_computer(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    user_id = update.effective_user.id
+    code = update.message.text
+
+    computers = await getEmployeeComputerList(user_id)
+    computers_count = len(computers)
+
+
+    if computers_count > 1:
+        i=1
+        choices = {}
+        await update.message.reply_text("ادخل رقم الجهاز: \n")
+        for (id,computer_code) in computers:
+            await update.message.reply_text(f"{i}- {computer_code}\n")
+            choices[i] = id
+            i = i+1
+
+        context.user_data.update({'user_computer_list': choices})
+
+        return GET_COMPUTER
+    elif computers_count == 1:
+        return await get_computer(update,context)
+    else:
+        return await computer_not_exists(update,context)
+
+async def get_computer(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    user_id = update.effective_user.id
+    computer_index = update.message.text
+    
+    try:
+        computer_index = int(computer_index)
+    except:
+        computer_index = 1
+
+    computers = context.user_data.get('user_computer_list')
+
+    employeeComputerObj = await getEmployeeComputer(update.effective_user.id,computers.get(computer_index))
+
+    if not employeeComputerObj:
+        await update.message.reply_text("الرقم غير صحيح.")
+        return await check_computer(update,context)
+    
+    context.user_data.update({'employeeComputerId': employeeComputerObj.id,'employeeComputerUUID': employeeComputerObj.uuid})
+
+    system_prompt = await getUserPrompt(employeeComputerObj)
+
+    context.user_data.update({'user_history': [{"role": "system", "content": system_prompt}]})
+
+    await update.message.reply_text("كيف يمكنني المساعدة؟")
+
+    return CHAT
+async def computer_not_exists(update: Update, context: ContextTypes.DEFAULT_TYPE):
+        await update.message.reply_text(f'لم يتم ادخال بيانات اجهزة الكمبيوتر الخاصة بك. الرجاء مراجعة ادارة تقنية المعلومات')
+        return ConversationHandler.END
 
 async def chat(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_message = update.message.text
@@ -167,6 +225,8 @@ async def chat(update: Update, context: ContextTypes.DEFAULT_TYPE):
     except Exception as e:
         final_answer = f"لايمكنني الرد عليك، الرجاء الاتصال بإدارة تقنية المعلومات {e}"
         await update.message.reply_markdown(final_answer)
+
+    return CHAT
   
     
 async def error_handler(update: object, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -220,9 +280,21 @@ async def error_handler(update: object, context: ContextTypes.DEFAULT_TYPE) -> N
 def main():
     app = Application.builder().token(TOKEN_ID).build()
 
-    app.add_handler(CommandHandler("start", start))
-    app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, chat))
+    # app.add_handler(CommandHandler("start", start))
+    # app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, chat))
 
+    conv_handler = ConversationHandler(
+        entry_points=[CommandHandler("start", start)],
+        states={
+            # CHECK_COMPUTER:[MessageHandler(filters.TEXT, check_computer)],
+            GET_COMPUTER:[MessageHandler(filters.Regex(r'\d+'), get_computer)],
+            CHAT: [MessageHandler(filters.TEXT & ~filters.COMMAND, chat)],
+            # COMPUTER_NOT_EXISTS: [MessageHandler(filters.TEXT, computer_not_exists)],
+        },
+        fallbacks=[CommandHandler("start", start),],
+    )
+
+    app.add_handler(conv_handler)
     app.add_error_handler(error_handler) #for exceptions
 
     print("Bot is running...")
