@@ -122,6 +122,7 @@ async def check_computer(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
         return GET_COMPUTER
     elif computers_count == 1:
+        context.user_data.update({'user_computer_list': {1:computers[0][0]}})
         return await get_computer(update,context)
     else:
         return await computer_not_exists(update,context)
