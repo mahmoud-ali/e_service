@@ -519,7 +519,7 @@ def import_lkp_state_cordinates(file_name='lkp_state_cord.csv'):
 from django.contrib.gis.gdal import DataSource
 from django.contrib.gis.geos import MultiPolygon, Polygon
 
-def import_license_shapefile(filename='./company_profile/data/geo/export1.shp'):
+def import_license_shapefile(filename='./company_profile/data/geo/export1.shp',id_column='id2'):
     # Load the shapefile
     ds = DataSource(filename)
 
@@ -532,28 +532,25 @@ def import_license_shapefile(filename='./company_profile/data/geo/export1.shp'):
     # Loop through each feature in the layer
     for feature in layer:
         try:
+            id_value = int(feature.get(id_column))
+            if id_value > 0:
+                im_geom = feature.geom.geos  # GEOSGeometry
 
-            im_geom = feature.geom.geos  # GEOSGeometry
+                #if im_geom.geom_type == 'Polygon':
+                try:
+                    im_geom = MultiPolygon(im_geom)
+                except Exception as e:
+                    print("not converted",e)
 
-            #if im_geom.geom_type == 'Polygon':
-            try:
-                im_geom = MultiPolygon(im_geom)
-            except Exception as e:
-                print("not converted",e)
+                obj = TblCompanyProductionLicense.objects.get(
+                    id=id_value
+                )
 
-            obj = TblCompanyProductionLicense.objects.get(
-                id=int(feature.get('id2'))
-            )
-
-            if obj.geom:
-                #new_geom = obj.geom.union(im_geom)
-                new_geom = MultiPolygon(*(list(obj.geom) + list(im_geom)))
-            else:
                 new_geom = im_geom
 
-            # Save back to the model
-            obj.geom = new_geom
-            obj.save()
+                # Save back to the model
+                obj.geom = new_geom
+                obj.save()
 
         except Exception as e:
-            print("Error",feature.get('id2'),e)
+            print("Error",feature.get(id_column),e)
