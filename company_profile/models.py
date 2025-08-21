@@ -223,7 +223,7 @@ class TblCompany(LoggingModel):
         abstract = True    
         
     def __str__(self):
-        return self.name_ar        
+        return f"{self.name_ar} ({self.get_company_type_display()})"
     
 class LkpCompanyProductionStatus(models.Model):
     name = models.CharField(_("name"),max_length=100)    
