@@ -544,7 +544,7 @@ class TblCompanyProductionLicenseAdmin(LoggingAdminMixin,LeafletGeoAdmin): #admi
         
         # Create a temporary directory
         with tempfile.TemporaryDirectory() as tmp_dir:
-            shapefile_path = os.path.join(tmp_dir, 'export.shp')
+            shapefile_path = os.path.join(tmp_dir, 'license.shp')
             
             # Create a shapefile writer
             w = shapefile.Writer(shapefile_path)
@@ -621,13 +621,13 @@ class TblCompanyProductionLicenseAdmin(LoggingAdminMixin,LeafletGeoAdmin): #admi
             w.close()
             
             # Create a PRJ file (projection information)
-            prj_path = os.path.join(tmp_dir, 'export.prj')
+            prj_path = os.path.join(tmp_dir, 'license.prj')
             with open(prj_path, 'w') as prj_file:
                 # Use WGS84 projection (EPSG:4326)
                 prj_file.write('GEOGCS["GCS_WGS_1984",DATUM["D_WGS_1984",SPHEROID["WGS_1984",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["Degree",0.017453292519943295]]')
                 
             # Create a zip file with all shapefile components
-            zip_path = os.path.join(tmp_dir, 'spatial_data.zip')
+            zip_path = os.path.join(tmp_dir, 'license_data.zip')
             base_name = os.path.splitext(shapefile_path)[0]
             with zipfile.ZipFile(zip_path, 'w') as zipf:
                 for ext in ['.shp', '.shx', '.dbf', '.prj', '.cpg']:
@@ -638,7 +638,7 @@ class TblCompanyProductionLicenseAdmin(LoggingAdminMixin,LeafletGeoAdmin): #admi
             # Prepare response
             with open(zip_path, 'rb') as f:
                 response = HttpResponse(f.read(), content_type='application/zip')
-                response['Content-Disposition'] = 'attachment; filename=spatial_data.zip'
+                response['Content-Disposition'] = 'attachment; filename=license_data.zip'
                 return response
                     
 admin.site.register(LkpNationality)
