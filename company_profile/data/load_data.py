@@ -542,9 +542,9 @@ def import_license_shapefile(filename='./company_profile/data/geo/export1.shp',i
                 except Exception as e:
                     print("not converted",e)
 
-                obj = TblCompanyProductionLicense.objects.get(
+                obj = TblCompanyProductionLicense.objects.filter(
                     id=id_value
-                )
+                ).first()
 
                 new_geom = im_geom
 
