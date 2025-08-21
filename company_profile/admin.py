@@ -52,7 +52,12 @@ from .forms import AppCyanideCertificateAdminForm, AppExplosivePermissionAdminFo
                    AppVisibityStudyAdminForm
 
 from .workflow import REVIEW_ACCEPTANCE, SUBMITTED, get_state_choices,send_transition_email,ACCEPTED,APPROVED,REJECTED
-# import django_otp
+
+# from django.contrib.gis.db import gis_models
+import tempfile
+import os
+import zipfile
+import shapefile
 
 # admin.site.__class__ =  django_otp.admin.OTPAdminSite #
 admin.site.title = _("Site header")
@@ -459,7 +464,7 @@ class TblCompanyProductionFactoryAdmin(LoggingAdminMixin,admin.ModelAdmin):
 
 class TblCompanyProductionLicenseAdmin(LoggingAdminMixin,LeafletGeoAdmin): #admin.ModelAdmin
     fieldsets = [
-        (None, {"fields": ["company",("license_no","license_type","license_count")]}), #,"geom"
+        (None, {"fields": ["company",("license_no","license_type","license_count","geom")]}), #,"geom"
         (_("General information"), {"fields": ["date",("start_date","end_date")]}),
         (_("Location information"), {"fields": [("state","locality","location","sheet_no")]}),
         (_("Contract information"), {"fields": ["mineral","area_initial","area","reserve","royalty","zakat","annual_rent","gov_rep","rep_percent","com_percent","business_profit","social_responsibility","contract_status","contract_file"]}),
@@ -471,7 +476,7 @@ class TblCompanyProductionLicenseAdmin(LoggingAdminMixin,LeafletGeoAdmin): #admi
     search_fields = ["company__name_ar","company__name_en","sheet_no","license_no"]
     filter_horizontal = ("mineral",)  # nice widget for M2M
     autocomplete_fields = ["company"]
-    actions = ['export_as_csv']
+    actions = ['export_as_csv','export_as_shapefile']
     view_on_site = False
 
     formfield_overrides = {
@@ -530,6 +535,112 @@ class TblCompanyProductionLicenseAdmin(LoggingAdminMixin,LeafletGeoAdmin): #admi
 
         return response
 
+    @admin.action(description=_('Export shapefile'))
+    def export_as_shapefile(self, request, queryset):
+        """Custom admin action to export selected records as Shapefile"""
+        if not queryset.exists():
+            self.message_user(request, "No items selected.")
+            return
+        
+        # Create a temporary directory
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            shapefile_path = os.path.join(tmp_dir, 'export.shp')
+            
+            # Create a shapefile writer
+            w = shapefile.Writer(shapefile_path)
+            
+            # Add fields
+            w.field('company', 'C', 100)
+            w.field('company_type', 'C', 255)
+            w.field('license_type', 'C', 255)
+            w.field('license_no', 'C', 255)
+            w.field('start_date', 'D')
+            w.field('end_date', 'D')
+            w.field('minerals', 'C', 255)
+            # w.field('geom_type', 'C', 20)
+            # w.field('created_at', 'C', 50)
+            
+            # Determine geometry type from first object
+            first_obj = queryset.filter(geom__isempty=0).first()
+
+            if not first_obj:
+                self.message_user(request, "No geo data.")
+                return
+            
+            geom_type = first_obj.geom.geom_type
+          
+            # Add records
+            for obj in queryset:
+                if not obj.geom:
+                    continue
+
+                # Add geometry based on type
+                if geom_type == 'Point':
+                    w.point(obj.geom.x, obj.geom.y)
+                elif geom_type == 'LineString':
+                    # Convert LineString to list of points
+                    points = []
+                    for coord in obj.geom.coords:
+                        points.append([coord[0], coord[1]])
+                    w.line([points])
+                # elif geom_type == 'Polygon':
+                elif geom_type == 'Polygon':
+                    # Convert Polygon to list of rings
+                    rings = []
+                    for ring in obj.geom.coords:
+                        points = []
+                        for coord in ring:
+                            points.append([coord[0], coord[1]])
+                        rings.append(points)
+                    w.poly(rings)
+                elif geom_type == 'MultiPolygon':
+                    # Convert Mult-Polygon to Polygon to list of rings
+                    rings = []
+                    for polygon in obj.geom.coords:
+                        for ring in polygon:
+                            points = []
+                            for coord in ring:
+                                points.append([coord[0], coord[1]])
+                            rings.append(points)
+                    w.poly(rings)
+                
+                # Add attributes
+                w.record(
+                    obj.company,
+                    obj.company.get_company_type_display(),
+                    obj.get_license_type_display(),
+                    obj.license_no,
+                    obj.start_date,
+                    obj.end_date,
+                    "، ".join(obj.mineral.all().values_list('name',flat=True)),
+                    # obj.geometry_type,
+                    # obj.created_at.strftime('%Y-%m-%d %H:%M:%S')
+                )
+            
+            # Close the writer to save files
+            w.close()
+            
+            # Create a PRJ file (projection information)
+            prj_path = os.path.join(tmp_dir, 'export.prj')
+            with open(prj_path, 'w') as prj_file:
+                # Use WGS84 projection (EPSG:4326)
+                prj_file.write('GEOGCS["GCS_WGS_1984",DATUM["D_WGS_1984",SPHEROID["WGS_1984",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["Degree",0.017453292519943295]]')
+                
+            # Create a zip file with all shapefile components
+            zip_path = os.path.join(tmp_dir, 'spatial_data.zip')
+            base_name = os.path.splitext(shapefile_path)[0]
+            with zipfile.ZipFile(zip_path, 'w') as zipf:
+                for ext in ['.shp', '.shx', '.dbf', '.prj', '.cpg']:
+                    file_path = base_name + ext
+                    if os.path.exists(file_path):
+                        zipf.write(file_path, os.path.basename(file_path))
+            
+            # Prepare response
+            with open(zip_path, 'rb') as f:
+                response = HttpResponse(f.read(), content_type='application/zip')
+                response['Content-Disposition'] = 'attachment; filename=spatial_data.zip'
+                return response
+                    
 admin.site.register(LkpNationality)
 admin.site.register(LkpSector)
 admin.site.register(LkpState)

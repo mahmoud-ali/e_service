@@ -526,8 +526,8 @@ def import_license_shapefile(filename='./company_profile/data/geo/export1.shp',i
     # Get the first layer (most shapefiles have one)
     layer = ds[0]
 
-    # remove old data
-    TblCompanyProductionLicense.objects.all().update(geom=None)
+    # # remove old data
+    # TblCompanyProductionLicense.objects.all().update(geom=None)
 
     # Loop through each feature in the layer
     for feature in layer:
@@ -538,7 +538,7 @@ def import_license_shapefile(filename='./company_profile/data/geo/export1.shp',i
 
                 #if im_geom.geom_type == 'Polygon':
                 try:
-                    im_geom = MultiPolygon(im_geom)
+                    im_geom = MultiPolygon(im_geom,srid=4326)
                 except Exception as e:
                     print("not converted",e)
 
@@ -546,10 +546,8 @@ def import_license_shapefile(filename='./company_profile/data/geo/export1.shp',i
                     id=id_value
                 ).first()
 
-                new_geom = im_geom
-
                 # Save back to the model
-                obj.geom = new_geom
+                obj.geom = im_geom
                 obj.save()
 
         except Exception as e:

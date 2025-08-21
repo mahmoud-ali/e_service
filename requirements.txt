@@ -29,3 +29,4 @@ django-autocomplete-light
 django-leaflet
 rollbar
 django-storages[s3]
+pyshp
