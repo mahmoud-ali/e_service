@@ -135,7 +135,7 @@ async def get_computer(update: Update, context: ContextTypes.DEFAULT_TYPE):
     except:
         computer_index = 1
 
-    computers = context.user_data.get('user_computer_list')
+    computers = context.user_data.get('user_computer_list',{})
 
     employeeComputerObj = await getEmployeeComputer(update.effective_user.id,computers.get(computer_index))
 
