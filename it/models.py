@@ -5,7 +5,7 @@ from django.utils.translation import gettext_lazy as _
 from hr.models import EmployeeBasic
 
 from django.db import models
-
+from multiselectfield import MultiSelectField
 class HelpRequest(models.Model):
     CATEGORY_CHOICES = [
         ("hardware", "اجهزة وعتاد"),
@@ -119,10 +119,16 @@ class Peripheral(models.Model):
 
 
 class AccessPoint(models.Model):
+    NETWORK_PURPOSE = [
+        ('INTERNET', 'INTERNET'),
+        ('LOCAL NETWORK', 'LOCAL NETWORK'),
+        ('PRINTER', 'PRINTER'),
+    ]
+
     computer = models.ForeignKey(Computer, on_delete=models.CASCADE, related_name="access_points")
     name = models.CharField(max_length=100)
     model = models.CharField(max_length=100, blank=True, null=True)
-    purpose = models.TextField(default="Internet, Local network",blank=True, null=True)
+    purpose = MultiSelectField(choices=NETWORK_PURPOSE,blank=True, null=True,max_length=100)
 
     def __str__(self):
         return f"{self.name} ({self.model})"
