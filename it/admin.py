@@ -32,7 +32,7 @@ class ApplicationAdmin(admin.ModelAdmin):
     search_fields = ("name", "version")
 
 
-class ApplicationInline(admin.TabularInline):
+class TemplateApplicationInline(admin.TabularInline):
     model = ComputerTemplate.applications.through
     extra = 1
 
@@ -40,7 +40,7 @@ class ApplicationInline(admin.TabularInline):
 @admin.register(ComputerTemplate)
 class ComputerTemplateAdmin(admin.ModelAdmin):
     list_display = ("os_type",)
-    inlines = [ApplicationInline]
+    inlines = [TemplateApplicationInline]
     exclude = ("applications",)  # handled by inline
 
 
@@ -65,13 +65,13 @@ class EmployeeComputerInline(admin.TabularInline):
     max_num = 1
     autocomplete_fields = ["employee",]
 
-
 @admin.register(Computer)
 class ComputerAdmin(admin.ModelAdmin):
     list_display = ("code", "type", "template") #
     list_filter = ("type", "template__os_type")
     search_fields = ("code",)
-    inlines = [EmployeeComputerInline, PeripheralInline, AccessPointInline] #,NetworkAdapterInline
+    filter_horizontal = ("applications",)
+    inlines = [EmployeeComputerInline, PeripheralInline, AccessPointInline,] #,NetworkAdapterInline
 
 # @admin.register(NetworkAdapter)
 # class NetworkAdapterAdmin(admin.ModelAdmin):

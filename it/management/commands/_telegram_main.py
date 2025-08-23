@@ -80,15 +80,17 @@ def getUserPrompt(employee_computer):
             """
 
     prompt= f"""
-            # PROMPT:
+            <PROMPT>
             {AI.get("prompt")}
-            # CONTEXT:
-            ** Network Setup: **
-            {AI.get("network_setup")}
-            ** User setup: **
-            {user_setup}
-            ** FAQ (Samples): **
-            {AI.get("faq")}
+            </PROMPT>
+            <CONTEXT>
+                <NETWORK_SETUP>
+                {AI.get("network_setup")}
+                </NETWORK_SETUP>
+                <USER_SETUP> 
+                {user_setup}
+                </USER_SETUP>
+            </CONTEXT>
         """            
     prompt = re.sub('__USER_ID__', str(employee_computer.uuid), prompt) 
     # print(prompt)
@@ -158,13 +160,24 @@ async def computer_not_exists(update: Update, context: ContextTypes.DEFAULT_TYPE
         return ConversationHandler.END
 
 async def chat(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    def generate(user_id,msgs):
+        def x():
+            return client.chat.completions.create(
+                model="deepseek/deepseek-chat-v3.1", #"openai/gpt-5-mini",  #"anthropic/claude-3.5-haiku-20241022",#"deepseek/deepseek-chat", #"openai/gpt-oss-120b", #"openai/gpt-5-mini", #"openai/o1-mini", #"openai/gpt-4.1", #"openai/gpt-5-chat",
+                messages=msgs,
+                stream=True,
+                timeout=120,
+                prompt_cache_key=hashlib.md5(str(user_id).encode()).hexdigest(),
+            )
+        return x
+
     user_message = update.message.text
     previous_messages = context.user_data.get("user_history",[])
 
     if not previous_messages:
         return await start(update,context)
     
-    previous_messages = [previous_messages[0] + previous_messages[-8:]] if previous_messages[0] != previous_messages[-8:][0] else previous_messages[-8:]
+    previous_messages = [previous_messages[0]] + previous_messages[-4:] if previous_messages[0] != previous_messages[-4:][0] else previous_messages[-4:]
     for msg in previous_messages[1:]:
         msg["role"] = "assistant"   # update attribute
 
@@ -182,17 +195,13 @@ async def chat(update: Update, context: ContextTypes.DEFAULT_TYPE):
         sent_message = await update.message.reply_text("🤖 ...")  # placeholder message
 
         await context.bot.send_chat_action(chat_id=update.effective_chat.id, action="typing")
-
-        def generate():
-            return client.chat.completions.create(
-                model="deepseek/deepseek-chat-v3-0324", #"openai/gpt-5-mini",  #"anthropic/claude-3.5-haiku-20241022",#"deepseek/deepseek-chat", #"openai/gpt-oss-120b", #"openai/gpt-5-mini", #"openai/o1-mini", #"openai/gpt-4.1", #"openai/gpt-5-chat",
-                messages=context.user_data.get("user_history"),
-                stream=True,
-                timeout=120,
-                prompt_cache_key=hashlib.md5(str(update.effective_chat.id).encode()).hexdigest(),
-            )
         
-        stream = await asyncio.to_thread(generate)
+        stream = await asyncio.to_thread(
+            generate(
+                update.effective_chat.id,
+                context.user_data.get("user_history",[])
+            )
+        )
 
         final_answer = ""
         
@@ -213,14 +222,14 @@ async def chat(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
         # Final update
+        context.user_data.update({'user_history': context.user_data.get('user_history',[])+[{"role":"assistant","content":final_answer}]})
+
         final_answer = telegramify_markdown.markdownify(
             final_answer,
             max_line_length=None,  # If you want to change the max line length for links, images, set it to the desired value.
             normalize_whitespace=False
         )
         await sent_message.edit_text(final_answer,parse_mode=ParseMode.MARKDOWN_V2)
-
-        context.user_data.update({'user_history': previous_messages+[{"role":"assistant","content":final_answer}]})
 
         await addConversation(context.user_data.get('employeeComputerId'),user_message,final_answer)
     except Exception as e:
