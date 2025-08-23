@@ -74,7 +74,7 @@ class Computer(models.Model):
     code = models.CharField("Computer name", max_length=50, unique=True)
     type = models.CharField(max_length=20, choices=COMPUTER_TYPES)
     template = models.ForeignKey(ComputerTemplate, on_delete=models.CASCADE, related_name="computers")
-    applications = models.ManyToManyField(Application, related_name="computers", verbose_name="Other applications",null=True, blank=True)
+    applications = models.ManyToManyField(Application, related_name="computers", verbose_name="Other applications", blank=True)
 
     def __str__(self):
         return f"{self.code} ({self.get_type_display()})"
@@ -121,7 +121,8 @@ class Peripheral(models.Model):
 class AccessPoint(models.Model):
     computer = models.ForeignKey(Computer, on_delete=models.CASCADE, related_name="access_points")
     name = models.CharField(max_length=100)
-    model = models.CharField(max_length=100)
+    model = models.CharField(max_length=100, blank=True, null=True)
+    more_info = models.TextField(blank=True, null=True)
 
     def __str__(self):
         return f"{self.name} ({self.model})"
