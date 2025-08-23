@@ -122,7 +122,7 @@ class AccessPoint(models.Model):
     computer = models.ForeignKey(Computer, on_delete=models.CASCADE, related_name="access_points")
     name = models.CharField(max_length=100)
     model = models.CharField(max_length=100, blank=True, null=True)
-    more_info = models.TextField(blank=True, null=True)
+    purpose = models.TextField(default="Internet, Local network",blank=True, null=True)
 
     def __str__(self):
         return f"{self.name} ({self.model})"
