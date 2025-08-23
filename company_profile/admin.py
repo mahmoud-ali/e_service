@@ -58,6 +58,7 @@ import tempfile
 import os
 import zipfile
 import shapefile
+from django.contrib.gis.geos import GEOSGeometry
 
 # admin.site.__class__ =  django_otp.admin.OTPAdminSite #
 admin.site.title = _("Site header")
@@ -528,7 +529,7 @@ class TblCompanyProductionLicenseAdmin(LoggingAdminMixin,LeafletGeoAdmin): #admi
         for license in queryset.order_by("company"):
 
             row = [
-                    license.id,license.company,license.company.get_company_type_display(),license.license_no,license.get_license_type_display(),license.start_date,license.end_date,license.license_count,license.state,license.locality,\
+                    license.id,license.company.name_ar,license.company.get_company_type_display(),license.license_no,license.get_license_type_display(),license.start_date,license.end_date,license.license_count,license.state,license.locality,\
                     license.sheet_no,"، ".join(license.mineral.all().values_list('name',flat=True)),license.contract_status
             ]
             writer.writerow(row)
@@ -550,6 +551,7 @@ class TblCompanyProductionLicenseAdmin(LoggingAdminMixin,LeafletGeoAdmin): #admi
             w = shapefile.Writer(shapefile_path)
             
             # Add fields
+            w.field('id', 'C', 10)
             w.field('company', 'C', 100)
             w.field('company_type', 'C', 255)
             w.field('license_type', 'C', 255)
@@ -563,16 +565,16 @@ class TblCompanyProductionLicenseAdmin(LoggingAdminMixin,LeafletGeoAdmin): #admi
             # Determine geometry type from first object
             first_obj = queryset.filter(geom__isempty=0).first()
 
-            if not first_obj:
-                self.message_user(request, "No geo data.")
-                return
-            
-            geom_type = first_obj.geom.geom_type
+            geom_type = 'MultiPolygon'
+
+            if first_obj:
+                geom_type = first_obj.geom.geom_type
           
             # Add records
             for obj in queryset:
                 if not obj.geom:
-                    continue
+                    obj.geom =GEOSGeometry('MultiPolygon (((34.50947277499250987 22.53822845240997452, 35.59123004035124893 22.55232300961334602, 35.57361184384703279 22.05901350749535439, 34.51299641429334741 22.05901350749535439, 34.50947277499250987 22.53822845240997452)))')
+                    obj.save()
 
                 # Add geometry based on type
                 if geom_type == 'Point':
@@ -606,7 +608,8 @@ class TblCompanyProductionLicenseAdmin(LoggingAdminMixin,LeafletGeoAdmin): #admi
                 
                 # Add attributes
                 w.record(
-                    obj.company,
+                    obj.id,
+                    obj.company.name_ar,
                     obj.company.get_company_type_display(),
                     obj.get_license_type_display(),
                     obj.license_no,
