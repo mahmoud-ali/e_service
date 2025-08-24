@@ -66,10 +66,11 @@ def getEmployeeComputer(user_id,index):
 
 @sync_to_async
 def getUserPrompt(employee_computer):
+    apps = employee_computer.computer.applications.all().values_list('name',flat=True) + employee_computer.computer.template.applications.all().values_list('name',flat=True)
     user_setup = f"""
         Computer name: {employee_computer.computer.code}
         OS type: {employee_computer.computer.template.os_type} {employee_computer.computer.template.os_version}
-        Installed applications: {", ".join(employee_computer.computer.template.applications.all().values_list('name',flat=True))}
+        Installed applications: {", ".join(apps)}
 
         """
     for model in [Peripheral, AccessPoint]:
