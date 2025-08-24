@@ -66,7 +66,7 @@ def getEmployeeComputer(user_id,index):
 
 @sync_to_async
 def getUserPrompt(employee_computer):
-    apps = employee_computer.computer.applications.all().values_list('name',flat=True) + employee_computer.computer.template.applications.all().values_list('name',flat=True)
+    apps = list(employee_computer.computer.applications.all().values_list('name',flat=True)) + list(employee_computer.computer.template.applications.all().values_list('name',flat=True))
     user_setup = f"""
         Computer name: {employee_computer.computer.code}
         OS type: {employee_computer.computer.template.os_type} {employee_computer.computer.template.os_version}
