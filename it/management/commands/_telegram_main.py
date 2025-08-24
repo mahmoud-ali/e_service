@@ -68,9 +68,9 @@ def getEmployeeComputer(user_id,index):
 def getUserPrompt(employee_computer):
     apps = list(employee_computer.computer.applications.all().values_list('name',flat=True)) + list(employee_computer.computer.template.applications.all().values_list('name',flat=True))
     user_setup = f"""
-        Computer name: {employee_computer.computer.code}
-        OS type: {employee_computer.computer.template.os_type} {employee_computer.computer.template.os_version}
-        Installed applications: {", ".join(apps)}
+        Computer name: {employee_computer.computer.code} \n
+        OS type: {employee_computer.computer.template.os_type} {employee_computer.computer.template.os_version} \n
+        Installed applications: {", ".join(apps)} \n
 
         """
     for model in [Peripheral, AccessPoint]:
