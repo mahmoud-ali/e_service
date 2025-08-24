@@ -67,34 +67,22 @@ def getEmployeeComputer(user_id,index):
 @sync_to_async
 def getUserPrompt(employee_computer):
     apps = list(employee_computer.computer.applications.all().values_list('name',flat=True)) + list(employee_computer.computer.template.applications.all().values_list('name',flat=True))
-    user_setup = f"""
-        Computer name: {employee_computer.computer.code} \n
-        OS type: {employee_computer.computer.template.os_type} {employee_computer.computer.template.os_version} \n
-        Installed applications: {", ".join(apps)} \n
-
-        """
+    more_data = ""
     for model in [Peripheral, AccessPoint]:
         qs = model.objects.filter(computer=employee_computer.computer)
         if qs.count() > 0:
-            user_setup += f"""## {qs[0]._meta.verbose_name}
-                {queryset_to_markdown(qs,["id","computer"])}
+            more_data += f"""### {qs[0]._meta.verbose_name}
+                {queryset_to_markdown(qs,["id","computer"],newline="\n\n")}
             """
 
-    prompt= f"""
-            <PROMPT>
-            {AI.get("prompt")}
-            </PROMPT>
-            <CONTEXT>
-                <NETWORK_SETUP>
-                {AI.get("network_setup")}
-                </NETWORK_SETUP>
-                <USER_SETUP> 
-                {user_setup}
-                </USER_SETUP>
-            </CONTEXT>
-        """            
+    prompt= AI.get("prompt")       
+
     prompt = re.sub('__USER_ID__', str(employee_computer.uuid), prompt) 
-    # print(prompt)
+    prompt = re.sub('___COMPUTER_NAME___', str(employee_computer.computer.code), prompt) 
+    prompt = re.sub('___OS_TYPE___', str(employee_computer.computer.template.os_type+" "+employee_computer.computer.template.os_version), prompt) 
+    prompt = re.sub('___INSTALLED_APPLICATIONS___', ", ".join(apps), prompt) 
+    prompt = re.sub('___MORE_DATA___', more_data, prompt) 
+    print(prompt)
     return prompt
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
