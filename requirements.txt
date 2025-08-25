@@ -19,7 +19,7 @@ django-bootstrap-datepicker-plus
 djangorestframework
 djangorestframework-simplejwt
 #djoser
-# gunicorn
+gunicorn
 django-user-sessions
 setuptools
 django-otp

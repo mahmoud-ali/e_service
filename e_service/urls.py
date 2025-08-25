@@ -44,14 +44,16 @@ urlpatterns = [
         # path('', include('pwa.urls')),  # You MUST use an empty string as the URL prefix    
 ]
 
-if settings.DEBUG:
-    urlpatterns = [path('app/', include(urlpatterns))]
+urlpatterns = [path('app/', include(urlpatterns))]
 
-    from django.urls import reverse
-    from django.shortcuts import redirect
-    def redirect_to_home(request):
-        return redirect(reverse('profile:home'))
+# if settings.DEBUG:
+#     urlpatterns = [path('app/', include(urlpatterns))]
+
+#     from django.urls import reverse
+#     from django.shortcuts import redirect
+#     def redirect_to_home(request):
+#         return redirect(reverse('profile:home'))
     
-    urlpatterns.append(
-        path('', redirect_to_home)
-    )
+#     urlpatterns.append(
+#         path('', redirect_to_home)
+#     )
