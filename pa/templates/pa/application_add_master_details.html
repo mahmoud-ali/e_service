@@ -106,11 +106,11 @@ $(document).ready(function(){
     {% endfor %}
 
     
-    $('div.bootstrap3-multi-input').find("a").each(function(i,e){
+    {% comment %} $('div.bootstrap3-multi-input').find("a").each(function(i,e){
         var a = '<a target="_blank" href="/app/media/'+$(e).text()+'">'+$(e).text()+'</a>'
         $(e).parent().html(a)
 
-    });
+    }); {% endcomment %}
 
 });
 </script>
