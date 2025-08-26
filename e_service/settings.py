@@ -186,6 +186,7 @@ DATABASES = {
         # "CONN_MAX_AGE": 15,
         "CONN_HEALTH_CHECKS": True,
         "ATOMIC_REQUESTS": True,
+        "DISABLE_SERVER_SIDE_CURSORS": True,
         "OPTIONS": {
             # "pool": True,
         },
