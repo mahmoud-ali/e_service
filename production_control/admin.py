@@ -55,7 +55,8 @@ class LogMixin:
                     license__state__sector=sector
                 )
             except Exception as e:
-                print(e)
+                # print(e)
+                pass
 
         if request.user.groups.filter(name__in=("production_control_state_mgr",)).exists():
             try:
@@ -67,13 +68,15 @@ class LogMixin:
                     license__state__in=states
                 )
             except Exception as e:
-                print(e)
+                # print(e)
+                pass
         
         try:
             license_lst = request.user.moragib_list.moragib_distribution.goldproductionuserdetail_set.filter(master__state=STATE_CONFIRMED).values_list('license',flat=True)
             return qs.filter(license__id__in=license_lst)
         except Exception as e:
-            print(request.user,e)
+            # print(request.user,e)
+            pass
 
         return qs.none() #super().get_queryset(request)
     

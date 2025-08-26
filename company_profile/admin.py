@@ -172,7 +172,8 @@ class WorkflowAdminMixin:
                 obj.save()
 
         except:
-            print(f"Error: Unable to send email to {email} {obj}")
+            # print(f"Error: Unable to send email to {email} {obj}")
+            pass
 
     def rerender_change_form(self,request,object_id, form_url='', extra_context=None):
         add = object_id is None
