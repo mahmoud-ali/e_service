@@ -69,16 +69,16 @@ def send_transition_email(state,email,url,lang):
         message = render_to_string('company_profile/email/rejected_email_{0}.html'.format(lang),{'url':url,'logo':logo_url}) 
         
     try:
-        # send_mail(
-        send_async_email(
-            subject,
-            # strip_tags(message),
-            message,
-            None,
-            [email],
-            # html_message=message,
-            # fail_silently=False,
-        )
+        print("Email not sent")
+        # send_async_email(
+        #     subject,
+        #     # strip_tags(message),
+        #     message,
+        #     None,
+        #     [email],
+        #     # html_message=message,
+        #     # fail_silently=False,
+        # )
     except:
         print("Error sending email",sys.stderr)
         
