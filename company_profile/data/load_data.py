@@ -552,3 +552,26 @@ def import_license_shapefile(filename='./company_profile/data/geo/export1.shp',i
 
         except Exception as e:
             print("Error",feature.get(id_column),e)
+
+def approve_all(company_type='mokhalfat',from_date='2025-06-01'):
+    from company_profile.models import AppCyanideCertificate, AppExplosivePermission, AppFuelPermission, AppImportPermission, AppRenewalContract, \
+                        AppBorrowMaterial,AppWorkPlan,AppTechnicalFinancialReport, \
+                        AppChangeCompanyName, AppExplorationTime, AppAddArea,AppRemoveArea, AppTnazolShraka, \
+                        AppTajeelTnazol, AppTajmeed,AppTakhali,AppTamdeed,AppTaaweed,AppMda,AppChangeWorkProcedure, \
+                        AppExportGold,AppExportGoldRaw,AppSendSamplesForAnalysis,AppForeignerProcedure,AppAifaaJomrki, \
+                        AppVisibityStudy,AppReexportEquipments,AppRequirementsList,TblCompany,AppWhomConcern,AppHSEAccidentReport, AppHSEPerformanceReport, AppLocalPurchase
+
+    models = [
+        AppCyanideCertificate, AppExplosivePermission, AppFuelPermission, AppImportPermission, 
+        AppBorrowMaterial,AppWorkPlan,AppTechnicalFinancialReport,
+        AppChangeCompanyName, AppExplorationTime, AppAddArea,AppRemoveArea, AppTnazolShraka, 
+        AppTajeelTnazol, AppTajmeed,AppTakhali,AppTamdeed,AppTaaweed,AppMda,AppChangeWorkProcedure, 
+        AppExportGold,AppExportGoldRaw,AppSendSamplesForAnalysis,AppForeignerProcedure,AppAifaaJomrki,
+        AppVisibityStudy,AppReexportEquipments,AppRequirementsList,AppWhomConcern, AppLocalPurchase,
+        AppRenewalContract
+    ]
+
+    for model in models:
+        model.objects \
+            .filter(company__company_type__exact=company_type,created_at__lt=from_date,state__in=['submitted','accepted']) \
+            .update(state='approved')
