@@ -1069,7 +1069,7 @@ class AppHSEAccidentReportAdmin(WorkflowAdminMixin,admin.ModelAdmin):
     form = AppHSEAccidentReportAdminForm
     
     list_display = ["company","accident_dt","accident_place","accident_type","accident_class", "created_at", "created_by","updated_at", "updated_by"]        
-    list_filter = ["company","accident_dt","accident_type","accident_class"]
+    list_filter = ["accident_dt","accident_type","accident_class"]
     view_on_site = False
 
 admin.site.register(AppHSEAccidentReport, AppHSEAccidentReportAdmin)
