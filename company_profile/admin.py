@@ -1082,10 +1082,13 @@ class AppFuelPermissionAdmin(WorkflowAdminMixin,admin.ModelAdmin):
 
     @admin.display(description=_('Show certificate'))
     def show_certificate_link(self, obj):
-        url = reverse('profile:app_fuel_permission_cert')
-        return format_html('<a target="_blank" class="viewlink" href="{url}?id={id}">'+_('Show certificate')+'</a>',
-                    url=url,id=obj.id
-                )
+        if obj.state == ACCEPTED:
+            url = reverse('profile:app_fuel_permission_cert')
+            return format_html('<a target="_blank" class="viewlink" href="{url}?id={id}">'+_('Show certificate')+'</a>',
+                        url=url,id=obj.id
+                    )
+        
+        return '-'
 
 admin.site.register(AppFuelPermission, AppFuelPermissionAdmin)
 
