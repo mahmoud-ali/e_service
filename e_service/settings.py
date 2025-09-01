@@ -155,7 +155,8 @@ DATABASES = {
         "PORT": config('DB_PORT'),
         "CONN_MAX_AGE": 300,
         "CONN_HEALTH_CHECKS": True,
-        "ATOMIC_REQUESTS": True
+        "ATOMIC_REQUESTS": True,
+        "DISABLE_SERVER_SIDE_CURSORS": True,
     }    
 }
 
