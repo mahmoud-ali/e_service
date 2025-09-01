@@ -1,4 +1,5 @@
 from django import template
+from django.utils.safestring import mark_safe
 
 register = template.Library()
 
@@ -27,7 +28,7 @@ def show_notification_count(request,app,admin_model):
         if has_field(Model,"state"):
             count = Model.objects.filter(state__in=filter).count()
             if count:
-                return f"{admin_model.get('name')} ({count})"
+                return mark_safe(f'{admin_model.get('name')} (<span style="color:#afa38d">{count}</span>)')
     except:
         pass
 
