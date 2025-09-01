@@ -4,6 +4,7 @@ from django.views.generic import View,ListView,CreateView
 from django.http import HttpResponseRedirect, HttpResponse
 from django.utils.translation import gettext_lazy as _
 from django.utils import translation
+from django.db.models import Sum
 
 from django.conf import settings
 
@@ -98,9 +99,11 @@ class FuelCertificate(LoginRequiredMixin,UserPassesTestMixin,TemplateView):
     def get(self,*args,**kwargs):
         id = int(self.request.GET['id'])
         obj = get_object_or_404(AppFuelPermission,pk=id)
+
+        total_fuel = obj.appfuelpermissiondetail_set.aggregate(total=Sum('fuel_actual_qty'))['total'] or 0
         self.extra_context = {
             'object': obj,
             'license':obj.company.tblcompanyproductionlicense_set.first(),
-            'total': obj.appfuelpermissiondetail_set.first().fuel_actual_qty
+            'total': total_fuel
         }
         return render(self.request, self.template_name, self.extra_context)    
