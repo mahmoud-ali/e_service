@@ -1,4 +1,5 @@
 {% load i18n %}
+{% load notifications %}
 
 {% if app_list %}
   {% for app in app_list %}
@@ -10,7 +11,9 @@
         {% for model in app.models %}
           <tr class="model-{{ model.object_name|lower }}{% if model.admin_url in request.path|urlencode %} current-model{% endif %}">
             {% if model.admin_url %}
-              <th scope="row"><a href="{{ model.admin_url }}{% if model.object_name|lower == 'appmovegold' %}?date__gte={% now 'Y' %}-01-01{% endif %}"{% if model.admin_url in request.path|urlencode %} aria-current="page"{% endif %}>{{ model.name }}</a></th>
+              <th scope="row"><a href="{{ model.admin_url }}{% if model.object_name|lower == 'appmovegold' %}?date__gte={% now 'Y' %}-01-01{% endif %}"{% if model.admin_url in request.path|urlencode %} aria-current="page"{% endif %}>
+                {% show_notification_count request app model%}
+              </a></th>
             {% else %}
               <th scope="row">{{ model.name }}</th>
             {% endif %}
