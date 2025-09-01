@@ -30,6 +30,8 @@ from django.forms.formsets import DELETION_FIELD_NAME, all_valid
 
 from leaflet.admin import LeafletGeoAdmin
 
+from production_control.models import STATE_CONFIRMED as PRODUCTION_STATE_CONFIRMED
+
 from .models import AppCyanideCertificate, AppExplosivePermission, AppFuelPermission, AppFuelPermissionDetail, AppGoldProduction, AppGoldProductionDetail, AppHSEAccidentReport, AppHSEPerformanceReport, AppHSEPerformanceReportActivities, AppHSEPerformanceReportBillsOfQuantities, AppHSEPerformanceReportCadastralOperations, AppHSEPerformanceReportCadastralOperationsTwo, AppHSEPerformanceReportCatering, AppHSEPerformanceReportChemicalUsed, AppHSEPerformanceReportCyanideCNStorageSpecification, AppHSEPerformanceReportCyanideTable, AppHSEPerformanceReportDiseasesForWorkers, AppHSEPerformanceReportExplosivesUsed, AppHSEPerformanceReportExplosivesUsedSpecification, AppHSEPerformanceReportFireFighting, AppHSEPerformanceReportManPower, AppHSEPerformanceReportOilUsed, AppHSEPerformanceReportOtherChemicalUsed, AppHSEPerformanceReportProactiveIndicators, AppHSEPerformanceReportStatisticalData, AppHSEPerformanceReportTherapeuticUnit, AppHSEPerformanceReportWasteDisposal, AppHSEPerformanceReportWaterUsed, AppHSEPerformanceReportWorkEnvironment, AppImportPermission, AppImportPermissionDetail, AppLocalPurchase, AppRenewalContract, AppRestartActivity, AppTemporaryExemption, AppWhomConcern, LkpAccidentType, LkpNationality, LkpSector,LkpState,LkpLocality,LkpMineral,LkpCompanyProductionStatus,LkpForeignerProcedureType,TblCompanyProduction, \
                                       LkpCompanyProductionFactoryType,TblCompanyProductionFactory,LkpCompanyProductionLicenseStatus, TblCompanyProductionFactoryVAT, \
                                       TblCompanyProductionLicense,AppForignerMovement,TblCompanyProductionUserRole, \
@@ -90,7 +92,14 @@ class WorkflowAdminMixin:
 
     def has_add_permission(self, request, obj=None):
         return False
-    
+
+    def has_change_permission(self, request, obj=None):
+        if self.model == AppFuelPermission:
+            if request.user.groups.filter(name__in=["pro_company_application_accept"]).exists() and obj and obj.state != SUBMITTED:
+                return False
+            
+        return super().has_change_permission(request,obj)
+
     def get_exclude(self,request, obj=None):
         fields = list(super().get_exclude(request, obj) or [])
 
@@ -124,8 +133,10 @@ class WorkflowAdminMixin:
             if request.user.groups.filter(name__in=["fuel_permission"]).exists():
                 filter += ["accepted",]
                 qs = qs.filter(state__in=filter)
-
                 return qs
+
+            if request.user.groups.filter(name__in=["pro_company_application_accept"]).exists():
+                filter += ["accepted","approved","rejected"]
 
         if request.user.groups.filter(name="company_type_entaj").exists():
             company_types += [TblCompany.COMPANY_TYPE_ENTAJ]
@@ -136,6 +147,19 @@ class WorkflowAdminMixin:
         if request.user.groups.filter(name="company_type_sageer").exists():
             company_types += [TblCompany.COMPANY_TYPE_SAGEER]
 
+        if self.model == AppFuelPermission:
+            if request.user.groups.filter(name__in=["pro_company_application_approve"]).exists():
+                return qs.none()
+            
+            if request.user.groups.filter(name__in=["production_control_auditor"]).exists():
+                try:
+                    companies_lst = request.user.moragib_list.moragib_distribution.goldproductionuserdetail_set.filter(master__state=PRODUCTION_STATE_CONFIRMED).values_list('company',flat=True)
+                    # print("***",companies_lst)
+                    if companies_lst:
+                        qs = qs.filter(state="approved",company__in=companies_lst)
+                        return qs
+                except:
+                    pass
 
         qs = qs.filter(state__in=filter)
         qs = qs.filter(company__company_type__in=company_types)
@@ -1047,7 +1071,7 @@ class AppFuelPermissionAdmin(WorkflowAdminMixin,admin.ModelAdmin):
     inlines = [AppFuelPermissionDetailDetailInline]
 
     list_display = ["company","show_certificate_link", "created_at", "created_by","updated_at", "updated_by"]        
-    list_filter = ["company__company_type","updated_at",]
+    list_filter = ["company__company_type","updated_at","state"]
     view_on_site = False
 
     def get_list_display(self,request):

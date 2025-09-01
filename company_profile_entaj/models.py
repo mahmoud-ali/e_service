@@ -63,9 +63,9 @@ class ForeignerRecord(WorkFlowModel):
     name = models.CharField("الاسم",max_length=150)
     position = models.CharField("الوظيفة",max_length=150)
     department = models.CharField("الادارة",max_length=150)
-    salary = models.DecimalField("المرتب",max_digits=10, decimal_places=2)
+    salary = models.DecimalField("المرتب",max_digits=10, decimal_places=2,default=0)
     employment_type = models.IntegerField(_("نوع التوظيف"), choices=EMPLOYMENT_CHOICES.items(), default=EMPLOYMENT_EMPLOYEE)
-    employment_history = models.TextField("السجل الوظيفي")
+    # employment_history = models.TextField("السجل الوظيفي")
     cv = models.FileField("السيرة الذاتية",upload_to=company_applications_path,null=True,blank=True)
     state = models.IntegerField(_("record_state"), choices=STATE_CHOICES.items(), default=STATE_DRAFT)
 

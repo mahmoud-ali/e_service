@@ -35,6 +35,8 @@ def in_progress_apps(request):
             ["-updated_at"] #order_by
         )
         for r in qs:
+            if r.app == 'Application: Fuel Permission' and r.state != 'submitted':
+                continue
             key1 = r.company.__str__()
             company_count[key1] += 1 
 
