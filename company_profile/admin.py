@@ -1082,7 +1082,7 @@ class AppFuelPermissionAdmin(WorkflowAdminMixin,admin.ModelAdmin):
 
     @admin.display(description=_('Show certificate'))
     def show_certificate_link(self, obj):
-        if obj.state != SUBMITTED:
+        if obj.state != SUBMITTED and obj.state != REJECTED:
             url = reverse('profile:app_fuel_permission_cert')
             return format_html('<a target="_blank" class="viewlink" href="{url}?id={id}">'+_('Show certificate')+'</a>',
                         url=url,id=obj.id
