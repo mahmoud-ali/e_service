@@ -119,3 +119,16 @@ class EmployeeComputerAdmin(admin.ModelAdmin):
     #     return format_html('<a target="_blank" class="viewlink" href="{url}">'+_('Ask AI')+'</a>',
     #                 url=url
     #             )
+
+@admin.register(Conversation)
+class ConversationAdmin(admin.ModelAdmin):
+    list_display = ("created_at","master","question") #,"ask_ai_link"
+
+    def has_add_permission(self, *args,**kwargs):
+        return False
+
+    def has_change_permission(self, *args,**kwargs):
+        return False
+    
+    def has_delete_permission(self, *args,**kwargs):
+        return False
