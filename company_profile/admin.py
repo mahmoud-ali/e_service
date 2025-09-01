@@ -704,7 +704,7 @@ class AppForignerMovementAdmin(WorkflowAdminMixin,admin.ModelAdmin):
     form = AppForignerMovementAdminForm
     
     list_display = ["company","period_from","period_to", "nationality", "created_at", "created_by","updated_at", "updated_by"]        
-    list_filter = ["company"]
+    list_filter = ["company__company_type","state",]
     view_on_site = False
     
 admin.site.register(AppForignerMovement, AppForignerMovementAdmin)
@@ -719,7 +719,7 @@ class AppBorrowMaterialAdmin(WorkflowAdminMixin,admin.ModelAdmin):
     inlines = [AppBorrowMaterialDetailInline]     
     
     list_display = ["company","company_from","borrow_date", "created_at", "created_by","updated_at", "updated_by"]        
-    list_filter = ["borrow_date"]
+    list_filter = ["company__company_type","state","borrow_date"]
     view_on_site = False
 
     def save_model(self, request, obj, form, change):
@@ -731,7 +731,7 @@ class AppWorkPlanAdmin(WorkflowAdminMixin,admin.ModelAdmin):
     form = AppWorkPlanAdminForm
     
     list_display = ["company","plan_from","plan_to", "created_at", "created_by","updated_at", "updated_by"]        
-    list_filter = ["company"]
+    list_filter = ["company__company_type","state",]
     view_on_site = False
     
 admin.site.register(AppWorkPlan, AppWorkPlanAdmin)
@@ -740,7 +740,7 @@ class AppTechnicalFinancialReportAdmin(WorkflowAdminMixin,admin.ModelAdmin):
     form = AppTechnicalFinancialReportAdminForm
     
     list_display = ["company","report_from","report_to","report_type", "created_at", "created_by","updated_at", "updated_by"]        
-    list_filter = ["company"]
+    list_filter = ["company__company_type","state",]
     view_on_site = False
     
 admin.site.register(AppTechnicalFinancialReport, AppTechnicalFinancialReportAdmin)
@@ -749,7 +749,7 @@ class AppChangeCompanyNameAdmin(WorkflowAdminMixin,admin.ModelAdmin):
     form = AppChangeCompanyNameAdminForm
     
     list_display = ["company","new_name", "created_at", "created_by","updated_at", "updated_by"]        
-    list_filter = ["company"]
+    list_filter = ["company__company_type","state",]
     view_on_site = False
     
 admin.site.register(AppChangeCompanyName, AppChangeCompanyNameAdmin)
@@ -758,7 +758,7 @@ class AppExplorationTimeAdmin(WorkflowAdminMixin,admin.ModelAdmin):
     form = AppExplorationTimeAdminForm
     
     list_display = ["company","expo_from","expo_to", "created_at", "created_by","updated_at", "updated_by"]        
-    list_filter = ["company"]
+    list_filter = ["company__company_type","state",]
     view_on_site = False
     
 admin.site.register(AppExplorationTime, AppExplorationTimeAdmin)
@@ -767,7 +767,7 @@ class AppAddAreaAdmin(WorkflowAdminMixin,admin.ModelAdmin):
     form = AppAddAreaAdminForm
     
     list_display = ["company","area_in_km2", "created_at", "created_by","updated_at", "updated_by"]        
-    list_filter = ["company"]
+    list_filter = ["company__company_type","state",]
     view_on_site = False
     
 admin.site.register(AppAddArea, AppAddAreaAdmin)
@@ -776,7 +776,7 @@ class AppRemoveAreaAdmin(WorkflowAdminMixin,admin.ModelAdmin):
     form = AppRemoveAreaAdminForm
     
     list_display = ["company","remove_type","area_in_km2","area_percent_from_total", "created_at", "created_by","updated_at", "updated_by"]        
-    list_filter = ["company"]
+    list_filter = ["company__company_type","state",]
     view_on_site = False
     
 admin.site.register(AppRemoveArea, AppRemoveAreaAdmin)
@@ -785,7 +785,7 @@ class AppTnazolShrakaAdmin(WorkflowAdminMixin,admin.ModelAdmin):
     form = AppTnazolShrakaAdminForm
     
     list_display = ["company","tnazol_type","tnazol_for", "created_at", "created_by","updated_at", "updated_by"]        
-    list_filter = ["company"]
+    list_filter = ["company__company_type","state",]
     view_on_site = False
     
 admin.site.register(AppTnazolShraka, AppTnazolShrakaAdmin)
@@ -794,7 +794,7 @@ class AppTajeelTnazolAdmin(WorkflowAdminMixin,admin.ModelAdmin):
     form = AppTajeelTnazolAdminForm
     
     list_display = ["company","tnazol_type", "created_at", "created_by","updated_at", "updated_by"]        
-    list_filter = ["company"]
+    list_filter = ["company__company_type","state",]
     view_on_site = False
     
 admin.site.register(AppTajeelTnazol, AppTajeelTnazolAdmin)
@@ -803,7 +803,7 @@ class AppTajmeedAdmin(WorkflowAdminMixin,admin.ModelAdmin):
     form = AppTajmeedAdminForm
     
     list_display = ["company","tajmeed_from","tajmeed_to", "created_at", "created_by","updated_at", "updated_by"]        
-    list_filter = ["company"]
+    list_filter = ["company__company_type","state",]
     view_on_site = False
     
 admin.site.register(AppTajmeed, AppTajmeedAdmin)
@@ -812,7 +812,7 @@ class AppTakhaliAdmin(WorkflowAdminMixin,admin.ModelAdmin):
     form = AppTakhaliAdminForm
     
     list_display = ["company","technical_presentation_date", "created_at", "created_by","updated_at", "updated_by"]        
-    list_filter = ["company"]
+    list_filter = ["company__company_type","state",]
     view_on_site = False
     
 admin.site.register(AppTakhali, AppTakhaliAdmin)
@@ -821,7 +821,7 @@ class AppTamdeedAdmin(WorkflowAdminMixin,admin.ModelAdmin):
     form = AppTamdeedAdminForm
     
     list_display = ["company","tamdeed_from","tamdeed_to", "created_at", "created_by","updated_at", "updated_by"]        
-    list_filter = ["company"]
+    list_filter = ["company__company_type","state",]
     view_on_site = False
     
 admin.site.register(AppTamdeed, AppTamdeedAdmin)
@@ -830,7 +830,7 @@ class AppTaaweedAdmin(WorkflowAdminMixin,admin.ModelAdmin):
     form = AppTaaweedAdminForm
     
     list_display = ["company","taaweed_from","taaweed_to", "created_at", "created_by","updated_at", "updated_by"]        
-    list_filter = ["company"]
+    list_filter = ["company__company_type","state",]
     view_on_site = False
     
 admin.site.register(AppTaaweed, AppTaaweedAdmin)
@@ -839,7 +839,7 @@ class AppMdaAdmin(WorkflowAdminMixin,admin.ModelAdmin):
     form = AppMdaAdminForm
     
     list_display = ["company","mda_from","mda_to", "created_at", "created_by","updated_at", "updated_by"]        
-    list_filter = ["company"]
+    list_filter = ["company__company_type","state",]
     view_on_site = False
     
 admin.site.register(AppMda, AppMdaAdmin)
@@ -848,7 +848,7 @@ class AppChangeWorkProcedureAdmin(WorkflowAdminMixin,admin.ModelAdmin):
     form = AppChangeWorkProcedureAdminForm
     
     list_display = ["company","reason_for_change","purpose_for_change","rational_reason", "created_at", "created_by","updated_at", "updated_by"]        
-    list_filter = ["company"]
+    list_filter = ["company__company_type","state",]
     view_on_site = False
     
 admin.site.register(AppChangeWorkProcedure, AppChangeWorkProcedureAdmin)
@@ -857,7 +857,7 @@ class AppExportGoldAdmin(WorkflowAdminMixin,admin.ModelAdmin):
     form = AppExportGoldAdminForm
     
     list_display = ["company","total_in_gram","net_in_gram","zakat_in_gram", "awaad_jalila_in_gram","arbah_amal_in_gram","sold_for_bank_of_sudan_in_gram", "amount_to_export_in_gram","remain_in_gram", "created_at", "created_by","updated_at", "updated_by"]        
-    list_filter = ["company"]
+    list_filter = ["company__company_type","state",]
     view_on_site = False
     
 admin.site.register(AppExportGold, AppExportGoldAdmin)
@@ -866,7 +866,7 @@ class AppExportGoldRawAdmin(WorkflowAdminMixin,admin.ModelAdmin):
     form = AppExportGoldRawAdminForm
     
     list_display = ["mineral","license_type","amount_in_gram","sale_price","export_country","export_city", "created_at", "created_by","updated_at", "updated_by"]        
-    list_filter = ["company"]
+    list_filter = ["company__company_type","state",]
     view_on_site = False
     
 admin.site.register(AppExportGoldRaw, AppExportGoldRawAdmin)
@@ -881,7 +881,7 @@ class AppSendSamplesForAnalysisAdmin(WorkflowAdminMixin,admin.ModelAdmin):
     inlines = [AppSendSamplesForAnalysisDetailInline]
     
     list_display = ["company","lab_country","lab_city","lab_analysis_cost", "created_at", "created_by","updated_at", "updated_by"]        
-    list_filter = ["company"]
+    list_filter = ["company__company_type","state",]
     view_on_site = False
     
 admin.site.register(AppSendSamplesForAnalysis, AppSendSamplesForAnalysisAdmin)
@@ -896,7 +896,7 @@ class AppForeignerProcedureAdmin(WorkflowAdminMixin,admin.ModelAdmin):
     inlines = [AppForeignerProcedureDetailInline]
     
     list_display = ["company","procedure_type","procedure_from","procedure_to", "created_at", "created_by","updated_at", "updated_by"]        
-    list_filter = ["company"]
+    list_filter = ["company__company_type","state",]
     view_on_site = False
     
 admin.site.register(AppForeignerProcedure, AppForeignerProcedureAdmin)
@@ -911,7 +911,7 @@ class AppAifaaJomrkiAdmin(WorkflowAdminMixin,admin.ModelAdmin):
     inlines = [AppAifaaJomrkiDetailInline]
     
     list_display = ["company","license_type", "created_at", "created_by","updated_at", "updated_by"]        
-    list_filter = ["company"]
+    list_filter = ["company__company_type","state",]
     view_on_site = False
     
 admin.site.register(AppAifaaJomrki, AppAifaaJomrkiAdmin)
@@ -926,7 +926,7 @@ class AppReexportEquipmentsAdmin(WorkflowAdminMixin,admin.ModelAdmin):
     inlines = [AppReexportEquipmentsDetailInline]
     
     list_display = ["company","cause_for_equipments", "created_at", "created_by","updated_at", "updated_by"]        
-    list_filter = ["company"]
+    list_filter = ["company__company_type","state",]
     view_on_site = False
     
 admin.site.register(AppReexportEquipments, AppReexportEquipmentsAdmin)
@@ -971,7 +971,7 @@ class AppRequirementsListAdmin(WorkflowAdminMixin,admin.ModelAdmin):
     inlines = [AppRequirementsListMangamEquipmentsInline,AppRequirementsListFactoryEquipmentsInline, AppRequirementsListElectricityEquipmentsInline,  AppRequirementsListChemicalLabEquipmentsInline,AppRequirementsListChemicalEquipmentsInline, AppRequirementsListMotafjeratEquipmentsInline,AppRequirementsListVehiclesEquipmentsInline]
     
     list_display = ["company","created_at", "created_by","updated_at", "updated_by"]        
-    list_filter = ["company"]
+    list_filter = ["company__company_type","state",]
     view_on_site = False
     
 admin.site.register(AppRequirementsList, AppRequirementsListAdmin)
@@ -986,7 +986,7 @@ class AppVisibityStudyAdmin(WorkflowAdminMixin,admin.ModelAdmin):
     inlines = [AppVisibityStudyDetailInline]
     
     list_display = ["company","license_type", "created_at", "created_by","updated_at", "updated_by"]        
-    list_filter = ["company"]
+    list_filter = ["company__company_type","state",]
     view_on_site = False
 
 admin.site.register(AppVisibityStudy, AppVisibityStudyAdmin)
@@ -995,7 +995,7 @@ class AppTemporaryExemptionAdmin(WorkflowAdminMixin,admin.ModelAdmin):
     form = AppTemporaryExemptionAdminForm
     
     list_display = ["company", "created_at", "created_by","updated_at", "updated_by"]        
-    list_filter = ["company"]
+    list_filter = ["company__company_type","state",]
     view_on_site = False
     
 admin.site.register(AppTemporaryExemption, AppTemporaryExemptionAdmin)
@@ -1004,7 +1004,7 @@ class AppLocalPurchaseAdmin(WorkflowAdminMixin,admin.ModelAdmin):
     form = AppLocalPurchaseAdminForm
     
     list_display = ["company", "created_at", "created_by","updated_at", "updated_by"]        
-    list_filter = ["company"]
+    list_filter = ["company__company_type","state",]
     view_on_site = False
     
 admin.site.register(AppLocalPurchase, AppLocalPurchaseAdmin)
@@ -1013,7 +1013,7 @@ class AppCyanideCertificateAdmin(WorkflowAdminMixin,admin.ModelAdmin):
     form = AppCyanideCertificateAdminForm
     
     list_display = ["company", "created_at", "created_by","updated_at", "updated_by"]        
-    list_filter = ["company"]
+    list_filter = ["company__company_type","state",]
     view_on_site = False
     
 admin.site.register(AppCyanideCertificate, AppCyanideCertificateAdmin)
@@ -1022,7 +1022,7 @@ class AppExplosivePermissionAdmin(WorkflowAdminMixin,admin.ModelAdmin):
     form = AppExplosivePermissionAdminForm
     
     list_display = ["company", "created_at", "created_by","updated_at", "updated_by"]        
-    list_filter = ["company"]
+    list_filter = ["company__company_type","state",]
     view_on_site = False
     
 admin.site.register(AppExplosivePermission, AppExplosivePermissionAdmin)
@@ -1031,7 +1031,7 @@ class AppRestartActivityAdmin(WorkflowAdminMixin,admin.ModelAdmin):
     form = AppRestartActivityAdminForm
     
     list_display = ["company", "created_at", "created_by","updated_at", "updated_by"]        
-    list_filter = ["company"]
+    list_filter = ["company__company_type","state",]
     view_on_site = False
     
 admin.site.register(AppRestartActivity, AppRestartActivityAdmin)
@@ -1040,7 +1040,7 @@ class AppRenewalContractAdmin(WorkflowAdminMixin,admin.ModelAdmin):
     form = AppRenewalContractAdminForm
     
     list_display = ["company", "created_at", "created_by","updated_at", "updated_by"]        
-    list_filter = ["company"]
+    list_filter = ["company__company_type","state",]
     view_on_site = False
     
 admin.site.register(AppRenewalContract, AppRenewalContractAdmin)
@@ -1055,7 +1055,7 @@ class AppImportPermissionAdmin(WorkflowAdminMixin,admin.ModelAdmin):
     inlines = [AppImportPermissionDetailInline]
     
     list_display = ["company", "created_at", "created_by","updated_at", "updated_by"]        
-    list_filter = ["company"]
+    list_filter = ["company__company_type","state",]
     view_on_site = False
     
 admin.site.register(AppImportPermission, AppImportPermissionAdmin)
@@ -1093,7 +1093,7 @@ class AppHSEAccidentReportAdmin(WorkflowAdminMixin,admin.ModelAdmin):
     form = AppHSEAccidentReportAdminForm
     
     list_display = ["company","accident_dt","accident_place","accident_type","accident_class", "created_at", "created_by","updated_at", "updated_by"]        
-    list_filter = ["accident_dt","accident_type","accident_class"]
+    list_filter = ["company__company_type","state","accident_dt","accident_type","accident_class"]
     view_on_site = False
 
 admin.site.register(AppHSEAccidentReport, AppHSEAccidentReportAdmin)
@@ -1232,7 +1232,7 @@ class AppWhomConcernAdmin(WorkflowAdminMixin,admin.ModelAdmin):
     form = AppWhomConcernAdminForm
     
     list_display = ["company","whom_reason", "created_at", "created_by","updated_at", "updated_by"]        
-    list_filter = ["company"]
+    list_filter = ["company__company_type","state",]
     view_on_site = False
     
 admin.site.register(AppWhomConcern, AppWhomConcernAdmin)
@@ -1247,7 +1247,7 @@ class AppGoldProductionAdmin(WorkflowAdminMixin,admin.ModelAdmin):
     inlines = [AppGoldProductionDetailDetailInline]
 
     list_display = ["company","form_no", "created_at", "created_by","updated_at", "updated_by"]        
-    list_filter = ["company"]
+    list_filter = ["company__company_type","state",]
     view_on_site = False
     
 admin.site.register(AppGoldProduction, AppGoldProductionAdmin)
