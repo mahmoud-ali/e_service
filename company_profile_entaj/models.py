@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import UniqueConstraint
 from django.forms import ValidationError
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
@@ -114,7 +115,19 @@ class ForeignerRecord(WorkFlowModel):
         return self
 
 class ForeignerPermissionType(models.Model):
-    name =  models.CharField("نوع الوثيقة",max_length=50)
+    permission_type_choices = [
+        ('passport', 'جواز سفر'),
+        ('employment_contract', 'عقد عمل'),
+        ('experience_certificate', 'شهادة خبرة'),
+        ('curriculum_vitae', 'سيرة ذاتية'),
+        ('work_card', 'كرت عمل'),
+        ('annual_residence', 'إقامة سنوية'),
+        ('multiple_visa', 'تأشيرة خروج وعودة متعددة'),
+        ('entry_visa', 'تأشيرة دخول'),
+        ('movement_permit', 'إذن تحرك'),
+    ]
+
+    name =  models.CharField("نوع الوثيقة",max_length=50,choices=permission_type_choices)
     minimum_no_months =  models.IntegerField("عدد الشهور الادنى لتعتبر الوثيقة سارية",default=0,help_text="مثلاً الجواز يعتبر ساري اذا كان عدد الشهور المتبقي اكثر من 8 شهور")
 
     class Meta:
@@ -122,17 +135,9 @@ class ForeignerPermissionType(models.Model):
         verbose_name_plural = "نوع الوثيقة"
 
     def __str__(self):
-        return f"{self.name}"
+        return f"{self.get_name_display()}"
 
 class ForeignerPermission(WorkFlowModel):
-    foreigner_record = models.ForeignKey(ForeignerRecord, on_delete=models.PROTECT, related_name='permissions',verbose_name="اسم اجنبي")
-    permission_type_choices = [
-        ('passport', 'Passport'),
-        ('visa', 'Visa'),
-        ('residence', 'Residence'),
-        ('work_permit', 'Work Permit'),
-    ]
-
     STATE_DRAFT = 1
     STATE_CONFIRMED = 2
     STATE_APPROVED = 3
@@ -143,6 +148,7 @@ class ForeignerPermission(WorkFlowModel):
         STATE_APPROVED: _("اعتماد الطلب"),
     }
 
+    foreigner_record = models.ForeignKey(ForeignerRecord, on_delete=models.PROTECT, related_name='permissions',verbose_name="اسم اجنبي")
     permission_type = models.ForeignKey(ForeignerPermissionType, on_delete=models.PROTECT,verbose_name="نوع الوثيقة")
     type_id = models.CharField("رقم الوثيقة",max_length=50)
     validity_due_date = models.DateField("صالحة حتى")
@@ -152,6 +158,9 @@ class ForeignerPermission(WorkFlowModel):
     class Meta:
         verbose_name = "وثائق اجنبي"
         verbose_name_plural = "وثائق اجنبي"
+        constraints = [
+            UniqueConstraint(fields=['permission_type', 'type_id'], name='unique_permission',violation_error_message="الوثيقة بذات الرقم موجودة مسبقاً")
+        ]
 
     def __str__(self):
         return f"{self.foreigner_record.name} - {self.permission_type}"
@@ -259,7 +268,7 @@ class ForeignerProcedure(WorkFlowModel):
 
         return self
 
-class ForeignerProcedureApproved(models.Model):
+class ForeignerProcedurePermanent(models.Model):
     master = models.ForeignKey(ForeignerProcedure, on_delete=models.PROTECT)
     foreigner_record = models.ForeignKey(ForeignerRecord, on_delete=models.PROTECT, verbose_name="الاجنبي")
 
@@ -286,7 +295,7 @@ class ForeignerProcedureApproved(models.Model):
             req = ForeignerProcedureRequirements.objects.get(child_procedure_type=self.master.procedure_type)
             for proc in req.parent_procedure_type.all():
                 company_procedures = ForeignerProcedure.objects.filter(procedure_type=proc)
-                foreigner_procedures = ForeignerProcedureApproved.objects.filter(master__in=company_procedures,foreigner_record=self.foreigner_record)
+                foreigner_procedures = ForeignerProcedurePermanent.objects.filter(master__in=company_procedures,foreigner_record=self.foreigner_record)
                 # print(cert,permissions)
                 if proc and not foreigner_procedures.exists(): # not xxx:
                     errors.append(proc.name)
@@ -301,7 +310,7 @@ class ForeignerProcedureApproved(models.Model):
 
         return super().clean()
 
-class ForeignerProcedureOther(models.Model):
+class ForeignerProcedureVisitor(models.Model):
     master = models.ForeignKey(ForeignerProcedure, on_delete=models.PROTECT)
     foreigner_record = models.CharField("الاجنبي",max_length=100)
     reason = models.CharField("سبب الطلب",max_length=150)

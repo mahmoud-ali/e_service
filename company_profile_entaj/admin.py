@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django import forms
 
-from .models import ForeignerPermission, ForeignerPermissionType, ForeignerProcedure, ForeignerProcedureApproved, ForeignerProcedureOther, ForeignerProcedureRequirements, ForeignerRecord
+from .models import ForeignerPermission, ForeignerPermissionType, ForeignerProcedure, ForeignerProcedurePermanent, ForeignerProcedureVisitor, ForeignerProcedureRequirements, ForeignerRecord
 
 class LogAdminMixin:
     def save_model(self, request, obj, form, change):
@@ -44,16 +44,16 @@ class ForeignerPermissionAdmin(LogAdminMixin,admin.ModelAdmin):
     list_filter = ('permission_type', 'state')
     search_fields = ('foreigner_record__name', 'type_id')
 
-class ForeignerProcedureApprovedInline(admin.TabularInline):
-    model = ForeignerProcedureApproved
+class ForeignerProcedurePermanentInline(admin.TabularInline):
+    model = ForeignerProcedurePermanent
 
-class ForeignerProcedureOtherInline(admin.TabularInline):
-    model = ForeignerProcedureOther
+class ForeignerProcedureVisitorInline(admin.TabularInline):
+    model = ForeignerProcedureVisitor
 
 @admin.register(ForeignerProcedure)
 class ForeignerProcedureAdmin(LogAdminMixin,admin.ModelAdmin):
     exclude = ['state',]
-    inlines = [ForeignerProcedureApprovedInline,ForeignerProcedureOtherInline]
+    inlines = [ForeignerProcedurePermanentInline,ForeignerProcedureVisitorInline]
     list_display = ('company', 'procedure_type', 'procedure_from', 'procedure_to', 'state')
     list_filter = ('procedure_type', 'state')
     search_fields = ('company__company_name_en', 'procedure_type__name')
