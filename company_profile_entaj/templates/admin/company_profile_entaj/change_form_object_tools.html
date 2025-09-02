@@ -1,0 +1,13 @@
+{% extends "admin/change_form_object_tools.html" %}
+{% load i18n admin_urls %}
+{% block object-tools-items %}
+{{ block.super }}
+{% if original and original.state %}
+<li>
+    {% url opts|admin_urlname:'changelist' as changelist_url %}
+    <a href="#" style="background-color:var(--link-fg);color:var(--primary-fg)">
+        {{original.get_state_display}}
+    </a>
+</li>
+{% endif %}
+{% endblock %}
