@@ -13,6 +13,7 @@ admin_user = get_user_model().objects.get(id=1)
 
 def create_groups():
     create_master_details_groups('company_profile_entaj','foreignerrecord',admin.foreigner_record_main_class,admin.foreigner_record_inline_classes)
+    create_master_details_groups('company_profile_entaj','foreignerpermission',admin.foreigner_permission_main_class,admin.foreigner_permission_inline_classes)
 
 def import_foreign_data(file_name='foreign_data.csv'):
     date_format = '%d/%m/%Y'

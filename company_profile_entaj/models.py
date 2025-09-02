@@ -179,9 +179,14 @@ class ForeignerPermission(WorkFlowModel):
 
         states = []
 
-        # if 'sswg_secretary' in user_groups:
-        if self.state == self.STATE_DRAFT:
-            states.append((self.STATE_CONFIRMED, self.STATE_CHOICES[self.STATE_CONFIRMED]))
+        if 'entaj_section_head' in user_groups:
+            if self.state == self.STATE_DRAFT:
+                states.append((self.STATE_CONFIRMED, self.STATE_CHOICES[self.STATE_CONFIRMED]))
+
+        if 'entaj_department_head' in user_groups:
+            if self.state == self.STATE_CONFIRMED:
+                states.append((self.STATE_DRAFT, 'إرجاع إلى مسودة'))
+                states.append((self.STATE_APPROVED, self.STATE_CHOICES[self.STATE_APPROVED]))
 
         return states
 
