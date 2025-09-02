@@ -25,9 +25,12 @@ class Migration(migrations.Migration):
             name='name',
             field=models.CharField(choices=[('passport', 'جواز سفر'), ('employment_contract', 'عقد عمل'), ('experience_certificate', 'شهادة خبرة'), ('curriculum_vitae', 'سيرة ذاتية'), ('work_card', 'كرت عمل'), ('annual_residence', 'إقامة سنوية'), ('multiple_visa', 'تأشيرة خروج وعودة متعددة'), ('entry_visa', 'تأشيرة دخول'), ('movement_permit', 'إذن تحرك')], max_length=50, verbose_name='نوع الوثيقة'),
         ),
-        migrations.AlterConstraint(
+        migrations.RemoveConstraint(
             model_name='foreignerpermission',
             name='unique_permission',
+        ),
+        migrations.AddConstraint(
+            model_name='foreignerpermission',
             constraint=models.UniqueConstraint(fields=('permission_type', 'type_id'), name='unique_permission', violation_error_message='الوثيقة بذات الرقم موجودة مسبقاً'),
         ),
     ]
