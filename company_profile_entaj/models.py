@@ -75,7 +75,7 @@ class ForeignerRecord(WorkFlowModel):
         verbose_name_plural = "سجلات اجانب"
 
     def __str__(self):
-        return self.name
+        return f"{self.name}({self.company.name_ar})"
 
     def get_next_states(self, user):
         """
