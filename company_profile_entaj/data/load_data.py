@@ -11,12 +11,8 @@ from company_profile_entaj import admin
 
 admin_user = get_user_model().objects.get(id=1)
 
-# def create_groups():
-#     group, created = Group.objects.get_or_create(name="exploration_technical_development")
-#     group, created = Group.objects.get_or_create(name="exploration_technical_exploration")
-#     # group, created = Group.objects.get_or_create(name="exploration_secretary")
-
-#     create_master_details_groups('company_profile_exploration','appworkplan',admin.work_plan_main_class,admin.work_plan_inline_classes)
+def create_groups():
+    create_master_details_groups('company_profile_entaj','foreignerrecord',admin.foreigner_record_main_class,admin.foreigner_record_inline_classes)
 
 def import_foreign_data(file_name='foreign_data.csv'):
     date_format = '%d/%m/%Y'

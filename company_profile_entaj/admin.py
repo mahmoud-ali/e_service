@@ -1,6 +1,8 @@
 from django.contrib import admin
 from django import forms
 
+from workflow.admin_utils import create_main_form
+
 from .models import ForeignerPermission, ForeignerPermissionType, ForeignerProcedure, ForeignerProcedurePermanent, ForeignerProcedureVisitor, ForeignerProcedureRequirements, ForeignerRecord
 
 class LogAdminMixin:
@@ -25,17 +27,17 @@ class LogAdminMixin:
             instance.save()
         formset.save_m2m()
 
-class ForeignerPermissionInline(admin.TabularInline):
-    model = ForeignerPermission
-    exclude = ['state',]
+# class ForeignerPermissionInline(admin.TabularInline):
+#     model = ForeignerPermission
+#     exclude = ['state',]
 
-@admin.register(ForeignerRecord)
-class ForeignerRecordAdmin(LogAdminMixin,admin.ModelAdmin):
-    inlines = [ForeignerPermissionInline]
-    exclude = ['state',]
-    list_display = ('company', 'name', 'position', 'department', 'salary', 'state')
-    list_filter = ('state', 'company')
-    search_fields = ('name', 'company__company_name_en', 'position', 'department')
+# @admin.register(ForeignerRecord)
+# class ForeignerRecordAdmin(LogAdminMixin,admin.ModelAdmin):
+#     inlines = [ForeignerPermissionInline]
+#     exclude = ['state',]
+#     list_display = ('company', 'name', 'position', 'department', 'salary', 'state')
+#     list_filter = ('state', 'company')
+#     search_fields = ('name', 'company__company_name_en', 'position', 'department')
 
 @admin.register(ForeignerPermission)
 class ForeignerPermissionAdmin(LogAdminMixin,admin.ModelAdmin):
@@ -75,3 +77,80 @@ class ForeignerProcedureRequirementsAdmin(admin.ModelAdmin):
 @admin.register(ForeignerPermissionType)
 class ForeignerPermissionTypeAdmin(admin.ModelAdmin):
     list_display = ('name','minimum_no_months',)
+
+foreigner_record_main_mixins = [LogAdminMixin]
+foreigner_record_main_class = {
+    'model': ForeignerRecord,
+    'mixins': [],
+    # 'static_inlines': [],
+    'kwargs': {
+        'list_display': ('company', 'name', 'position', 'department', 'salary', 'state'),
+        'list_filter': ('state', 'employment_type', 'position', 'department'),
+        'search_fields': ('name', 'company__company_name_en', 'position', 'department'),
+        'exclude': ('state',),
+        'save_as_continue': False,
+    },
+    'groups': {
+        'entaj_section_head':{
+            'permissions': {
+                ForeignerRecord.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
+                # ForeignerRecord.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                # ForeignerRecord.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+            },
+        },
+        'entaj_department_head':{
+            'permissions': {
+                # ForeignerRecord.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
+                ForeignerRecord.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                ForeignerRecord.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+            },
+        },
+        # 'entaj_gm':{
+        #     'permissions': {
+        #         ForeignerRecord.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
+        #         ForeignerRecord.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+        #         ForeignerRecord.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+        #     },
+        # },
+
+    },
+}
+
+foreigner_record_inline_classes = {
+    'ForeignerPermission': {
+        'model': ForeignerPermission,
+        'mixins': [admin.TabularInline],
+        'kwargs': {
+            'extra': 0,
+            'min_num': 1,
+            'exclude': ['state',]
+        },
+        'groups': {
+            'entaj_section_head':{
+                'permissions': {
+                ForeignerRecord.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
+                # ForeignerRecord.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                # ForeignerRecord.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
+            'entaj_department_head':{
+                'permissions': {
+                # ForeignerRecord.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
+                ForeignerRecord.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                ForeignerRecord.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
+            # 'entaj_gm':{
+            #     'permissions': {
+            #     ForeignerRecord.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
+            #     ForeignerRecord.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+            #     ForeignerRecord.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+            #     },
+            # },
+        },
+    },
+}
+
+foreigner_record_admin, inlines = create_main_form(foreigner_record_main_class,foreigner_record_inline_classes,foreigner_record_main_mixins)
+
+admin.site.register(foreigner_record_admin.model,foreigner_record_admin)
