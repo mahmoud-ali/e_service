@@ -17,6 +17,8 @@ from django.views.generic import TemplateView
 from django_tables2 import SingleTableView
 from django_tables2.paginators import LazyPaginator
 
+from django.forms import inlineformset_factory
+
 from ..models import AppFuelPermission, AppFuelPermissionDetail
 from ..forms import AppFuelPermissionForm
 
@@ -43,7 +45,7 @@ class AppFuelPermissionListView(ApplicationListView):
         return query.filter(company__id=self.request.user.pro_company.company.id)
 
 
-class AppFuelPermissionCreateView(ApplicationMasterDetailCreateView):
+class AppFuelPermissionCreateView(LoginRequiredMixin,View):
     model = AppFuelPermission
     model_details = AppFuelPermissionDetail
     model_details_fields = ["fuel_type_name","fuel_qty"]
@@ -52,6 +54,22 @@ class AppFuelPermissionCreateView(ApplicationMasterDetailCreateView):
     menu_name = "profile:app_fuel_permission_list"
     title = _("Add Fuel Permission")
     template_name = "company_profile/application_add_master_details.html"
+
+    def dispatch(self, *args, **kwargs):         
+        self.detail_formset = inlineformset_factory(self.model, self.model_details, fields=self.model_details_fields,extra=0,can_delete=False,min_num=1,max_num=1, validate_min=True, validate_max=True)
+            
+        self.success_url = reverse_lazy(self.menu_name)    
+        self.extra_context = {
+                            "menu_name":self.menu_name,
+                            "title":self.title, 
+                            "form": self.form_class,
+                            "detail_formset": self.detail_formset,
+                            "detail_title":self.model_details._meta.verbose_name_plural,
+         }
+        return super().dispatch(*args, **kwargs)                    
+
+    def get(self,request):        
+        return render(request, self.template_name, self.extra_context)
 
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST,request.FILES)

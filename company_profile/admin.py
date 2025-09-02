@@ -1064,7 +1064,8 @@ class AppFuelPermissionDetailDetailInline(admin.TabularInline):
     model = AppFuelPermissionDetail
     form = AppFuelPermissionDetailForm
     exclude = ["created_at","created_by","updated_at","updated_by"]
-    extra = 1    
+    extra = 1
+    max_num =1   
 
 class AppFuelPermissionAdmin(WorkflowAdminMixin,admin.ModelAdmin):
     form = AppFuelPermissionAdminForm
