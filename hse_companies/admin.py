@@ -93,7 +93,7 @@ report_main_class = {
     'mixins': [],
     'kwargs': {
         'list_display': ("company","license", "year", "month","created_at","state","ask_ai_link"), #,"ask_ai_link"
-        'list_filter': ('year', 'month','state'),
+        'list_filter': ('year', 'month','state','created_at'),
         'readonly_fields':('company','license'),
         'fields': ("company","license", "year", "month","album",),
         'save_as_continue': False,
