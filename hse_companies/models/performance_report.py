@@ -47,7 +47,9 @@ class AppHSEPerformanceReport(LoggingModel):
         ]
 
     def clean(self):
-        if AppHSEPerformanceReport.objects.filter(year=self.year,month=self.month,license=self.license,).exists():
+        report_count = AppHSEPerformanceReport.objects.filter(year=self.year,month=self.month,license=self.license,).count()
+        # print("count: ",report_count,"-",self.pk)
+        if (not self.pk and report_count >0) or (self.pk and report_count >1):
             raise ValidationError({
                 'month':_("يوجد تقرير لنفس السنة، الشهر "),
             })
