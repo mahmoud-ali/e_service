@@ -46,6 +46,15 @@ class AppHSEPerformanceReport(LoggingModel):
             models.UniqueConstraint(fields=['year', 'month','company','license'], name='unique_report_per_month')
         ]
 
+    def clean(self):
+        if AppHSEPerformanceReport.objects.filter(year=self.year,month=self.month,license=self.license,).exists():
+            raise ValidationError({
+                'license':_("يوجد تقرير لنفس السنة، الشهر "),
+            })
+        
+        
+        return super().clean()
+
     def get_next_states(self, user):
         """
         Determine the next possible states based on the current state and user's role.
