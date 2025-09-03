@@ -198,7 +198,8 @@ if not DEBUG:
         "default": {
             "BACKEND": "storages.backends.s3.S3Storage",
             "OPTIONS": {
-                "bucket_name": "media",
+                "bucket_name": "mineralsgate-space",
+                "location": "media",
                 "region_name": "sfo3",
                 "endpoint_url": "https://mineralsgate-space.sfo3.digitaloceanspaces.com",
                 "file_overwrite": False,
@@ -210,7 +211,8 @@ if not DEBUG:
         "staticfiles": {
             "BACKEND": "storages.backends.s3.S3Storage",
             "OPTIONS": {
-                "bucket_name": "static",
+                "bucket_name": "mineralsgate-space",
+                "location": "static",
                 "region_name": "sfo3",
                 "endpoint_url": "https://mineralsgate-space.sfo3.digitaloceanspaces.com",
                 "file_overwrite": False,
