@@ -49,7 +49,7 @@ class AppHSEPerformanceReport(LoggingModel):
     def clean(self):
         if AppHSEPerformanceReport.objects.filter(year=self.year,month=self.month,license=self.license,).exists():
             raise ValidationError({
-                'license':_("يوجد تقرير لنفس السنة، الشهر "),
+                'month':_("يوجد تقرير لنفس السنة، الشهر "),
             })
         
         
