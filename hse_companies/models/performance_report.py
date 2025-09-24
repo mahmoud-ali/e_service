@@ -42,9 +42,9 @@ class AppHSEPerformanceReport(LoggingModel):
         ordering = ["-id"]
         verbose_name = _("Application: HSE Performance Report")
         verbose_name_plural = _("Application: HSE Performance Report")
-        # constraints = [
-        #     models.UniqueConstraint(fields=['year', 'month','company','license'], name='unique_report_per_month')
-        # ]
+        constraints = [
+            models.UniqueConstraint(fields=['year', 'month','company','license'], name='unique_report_per_month')
+        ]
 
     def clean(self):
         report_count = AppHSEPerformanceReport.objects.filter(year=self.year,month=self.month,license=self.license,).count()
