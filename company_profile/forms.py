@@ -597,7 +597,7 @@ class AppHSEPerformanceReportForm(AppHSEPerformanceReportAdminForm):
 
     class Meta:
         model = AppHSEPerformanceReport
-        exclude = ["company","state"]
+        exclude = ["company","state","year","month"]
         widgets = {}
 
 class AppWhomConcernAdminForm(WorkflowFormMixin,ModelForm):

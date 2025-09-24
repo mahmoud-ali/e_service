@@ -1,3 +1,5 @@
+from datetime import date
+
 from django.conf import settings
 from django.forms import ValidationError
 from django.utils.translation import gettext_lazy as _
@@ -9,6 +11,19 @@ from django.db import models
 from workflow.model_utils import LoggingModel
 
 from company_profile.models import MONTH_CHOICES, TblCompanyProduction, TblCompanyProductionLicense
+
+def get_previous_month():
+    today = date.today()
+    year, month = today.year, today.month
+
+    if month == 1:  # If current month is January, go to December of previous year
+        prev_month = 12
+        prev_year = year - 1
+    else:
+        prev_month = month - 1
+        prev_year = year
+
+    return prev_year, prev_month
 
 def company_applications_path(instance, filename):
     return "company_{0}/hse/{1}".format(instance.company.id, filename)    
@@ -56,6 +71,10 @@ class AppHSEPerformanceReport(LoggingModel):
         
         
         return super().clean()
+    
+    def save(self, *args,**kwargs):
+        self.year, self.month = get_previous_month()
+        return super().save(args,kwargs)
 
     def get_next_states(self, user):
         """

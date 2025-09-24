@@ -1,4 +1,5 @@
 import datetime
+from datetime import date
 from django.urls import reverse_lazy
 from django.views.generic import View,ListView,CreateView,DetailView
 from django.views.generic.detail import SingleObjectMixin
@@ -20,6 +21,15 @@ from hse_companies.models import AppHSEPerformanceReport
 
 from ..workflow import STATE_CHOICES,SUBMITTED,ACCEPTED,APPROVED,REJECTED,send_transition_email,get_sumitted_responsible
 
+def is_day_between_1_and_22(check_date=None):
+    """
+    Returns True if the day of the given date is between 1 and 22 (inclusive),
+    otherwise returns False.
+    If no date is provided, it checks today's date.
+    """
+    check_date = date.today()
+    
+    return 1 <= check_date.day <= 22
 class TranslationMixin:
     def dispatch(self,request,*args, **kwargs):  
         response = super().dispatch(request,*args, **kwargs)
@@ -67,14 +77,15 @@ class ApplicationHSEListView(LoginRequiredMixin,TranslationMixin,SingleTableView
     title = None
     menu_name = ""
     context_object_name = "apps"    
-    template_name = "company_profile/application_list.html"     
+    template_name = "company_profile/views/hse_list.html"     
     paginator_class = LazyPaginator
     
-    def dispatch(self, *args, **kwargs):         
+    def dispatch(self, *args, **kwargs):   
         self.extra_context = {
                             "type":kwargs.get("type",1),
                             "menu_name":self.menu_name,
                             "title":self.title,
+                            "can_add": is_day_between_1_and_22(),
          }
         return super().dispatch(*args, **kwargs)       
         
