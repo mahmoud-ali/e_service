@@ -153,6 +153,9 @@ class LkpSaigAdmin(LogMixin,SoagControlMixin, LeafletGeoAdmin):
     list_filter = [('soag',RelatedOnlyFieldListFilterNotEmpty),]
     exclude = ["created_at","created_by","updated_at","updated_by"]
 
+    class Media:
+        js = ("traditional_app/js/get_current_location.js",)
+
     @admin.display(description=_('الولاية'))
     def soag_state(self, obj):
         return f'{obj.soag.state}'
@@ -239,34 +242,34 @@ class VehicleAdmin(LogMixin,StateControlMixin, admin.ModelAdmin):
 
 admin.site.register(Vehicle, VehicleAdmin)
 
-class RentedApartmentAdmin(LogMixin,StateControlMixin, LeafletGeoAdmin):
+class RentedApartmentAdmin(LogMixin,StateControlMixin,admin.ModelAdmin):
     model = RentedApartment
     list_display = ['state', 'apartment_type','owner_name']
     search_fields = ('owner_name',)
     list_filter = ('state','apartment_type')
 
     class Media:
-        js = ('admin/js/jquery.init.js',"traditional_app/js/lkp_state_change.js",)
+        js = ('admin/js/jquery.init.js',"traditional_app/js/lkp_state_change.js","traditional_app/js/get_current_location.js",)
 
 admin.site.register(RentedApartment, RentedApartmentAdmin)
 
-class Lkp7ofrKabiraAdmin(LogMixin,StateControlMixin, LeafletGeoAdmin):
+class Lkp7ofrKabiraAdmin(LogMixin,StateControlMixin, admin.ModelAdmin):
     model = Lkp7ofrKabira
 
     class Media:
-        js = ('admin/js/jquery.init.js',"traditional_app/js/lkp_state_change.js",)
+        js = ('admin/js/jquery.init.js',"traditional_app/js/lkp_state_change.js","traditional_app/js/get_current_location.js")
 
 admin.site.register(Lkp7ofrKabira, Lkp7ofrKabiraAdmin)
 
-class Lkp2barAdmin(LogMixin,StateControlMixin, LeafletGeoAdmin):
+class Lkp2barAdmin(LogMixin,StateControlMixin, admin.ModelAdmin):
     model = Lkp2bar
     
     class Media:
-        js = ('admin/js/jquery.init.js',"traditional_app/js/lkp_state_change.js",)
+        js = ('admin/js/jquery.init.js',"traditional_app/js/lkp_state_change.js","traditional_app/js/get_current_location.js")
 
 admin.site.register(Lkp2bar, Lkp2barAdmin)
 
-class Lkp2jhizatBahthAdmin(LogMixin,StateControlMixin, LeafletGeoAdmin):
+class Lkp2jhizatBahthAdmin(LogMixin,StateControlMixin, admin.ModelAdmin):
     model = Lkp2jhizatBahth
     
     class Media:
@@ -274,35 +277,35 @@ class Lkp2jhizatBahthAdmin(LogMixin,StateControlMixin, LeafletGeoAdmin):
 
 admin.site.register(Lkp2jhizatBahth, Lkp2jhizatBahthAdmin)
 
-class LkpSosalGoldAdmin(LogMixin,StateControlMixin, LeafletGeoAdmin):
+class LkpSosalGoldAdmin(LogMixin,StateControlMixin, admin.ModelAdmin):
     model = LkpSosalGold
     
     class Media:
-        js = ('admin/js/jquery.init.js',"traditional_app/js/lkp_state_change.js",)
+        js = ('admin/js/jquery.init.js',"traditional_app/js/lkp_state_change.js","traditional_app/js/get_current_location.js")
 
 admin.site.register(LkpSosalGold, LkpSosalGoldAdmin)
 
-class LkpGrabeelAdmin(LogMixin,StateControlMixin, LeafletGeoAdmin):
+class LkpGrabeelAdmin(LogMixin,StateControlMixin, admin.ModelAdmin):
     model = LkpGrabeel
     
     class Media:
-        js = ('admin/js/jquery.init.js',"traditional_app/js/lkp_state_change.js",)
+        js = ('admin/js/jquery.init.js',"traditional_app/js/lkp_state_change.js","traditional_app/js/get_current_location.js")
 
 admin.site.register(LkpGrabeel, LkpGrabeelAdmin)
 
-class LkpKhalatatAdmin(LogMixin,StateControlMixin, LeafletGeoAdmin):
+class LkpKhalatatAdmin(LogMixin,StateControlMixin, admin.ModelAdmin):
     model = LkpKhalatat
     
     class Media:
-        js = ('admin/js/jquery.init.js',"traditional_app/js/lkp_state_change.js",)
+        js = ('admin/js/jquery.init.js',"traditional_app/js/lkp_state_change.js","traditional_app/js/get_current_location.js")
 
 admin.site.register(LkpKhalatat, LkpKhalatatAdmin)
 
-class LkpSmallProcessingUnitAdmin(LogMixin,StateControlMixin, LeafletGeoAdmin):
+class LkpSmallProcessingUnitAdmin(LogMixin,StateControlMixin, admin.ModelAdmin):
     model = LkpSmallProcessingUnit
     
     class Media:
-        js = ('admin/js/jquery.init.js',"traditional_app/js/lkp_state_change.js",)
+        js = ('admin/js/jquery.init.js',"traditional_app/js/lkp_state_change.js","traditional_app/js/get_current_location.js")
 
 admin.site.register(LkpSmallProcessingUnit, LkpSmallProcessingUnitAdmin)
 
