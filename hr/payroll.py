@@ -236,6 +236,8 @@ class Payroll():
                         delta = month_last - emp.tarikh_ta3in
                         factor = (delta.days+1)/(l_day-f_day+1)
 
+                    mokaf2at_2da2_fi_mokaf2 = self.hr_settings.get_code_as_boolean(Settings.SETTINGS_MOKAF2T_ADA2_FI_MOKAF2)
+
                     PayrollDetail.objects.create(
                         payroll_master = self.payroll_master,
                         employee = emp,
@@ -244,6 +246,7 @@ class Payroll():
                         shakhsia = badalat.shakhsia*factor,
                         aadoa = badalat.aadoa*factor,
                         mokaf2at_2da2 = badalat.mokaf2at_2da2*factor,
+                        mokaf2at_2da2_fi_mokaf2 = mokaf2at_2da2_fi_mokaf2,
                         gasima = badalat.ajtima3ia_gasima*factor,
                         atfal = badalat.ajtima3ia_atfal*factor,
                         moahil = badalat.moahil*factor,
@@ -411,12 +414,16 @@ class Mokaf2Sheet():
             # .exclude(employee__hikal_wazifi=self.hr_settings.get_code_as_float(Settings.SETTINGS_KHARJ_ELSHARIKA))\
 
     def employee_mokaf2_from_db(self,emp_payroll:PayrollDetail):
+        mokaf2at_2da2=0
+        if emp_payroll.mokaf2at_2da2_fi_mokaf2:
+            mokaf2at_2da2 = emp_payroll.mokaf2at_2da2
+
         badal = Badalat_3lawat(
             emp_payroll.abtdai,
             emp_payroll.galaa_m3isha,
             shakhsia=emp_payroll.shakhsia,
             aadoa=emp_payroll.aadoa,
-            mokaf2at_2da2=emp_payroll.mokaf2at_2da2,
+            mokaf2at_2da2=mokaf2at_2da2,
             gasima=emp_payroll.gasima,
             atfal=emp_payroll.atfal,
             moahil=emp_payroll.moahil,
@@ -459,7 +466,11 @@ class MoratabMokaf2Sheet():
             self.payroll_details = []
 
     def employee_from_db(self,emp_payroll:PayrollDetail):
-        badal = Badalat_3lawat(
+        mokaf2at_2da2=0
+        if emp_payroll.mokaf2at_2da2_fi_mokaf2:
+            mokaf2at_2da2 = emp_payroll.mokaf2at_2da2
+
+        badal_moratab = Badalat_3lawat(
             emp_payroll.abtdai,
             emp_payroll.galaa_m3isha,
             shakhsia=emp_payroll.shakhsia,
@@ -472,8 +483,23 @@ class MoratabMokaf2Sheet():
             month = emp_payroll.payroll_master.month,
             year = emp_payroll.payroll_master.year,
         )
+
+        badal_mokaf2 = Badalat_3lawat(
+            emp_payroll.abtdai,
+            emp_payroll.galaa_m3isha,
+            shakhsia=emp_payroll.shakhsia,
+            aadoa=emp_payroll.aadoa,
+            mokaf2at_2da2=mokaf2at_2da2,
+            gasima=emp_payroll.gasima,
+            atfal=emp_payroll.atfal,
+            moahil=emp_payroll.moahil,
+            ma3adin=emp_payroll.ma3adin,
+            month = emp_payroll.payroll_master.month,
+            year = emp_payroll.payroll_master.year,
+        )
+
         khosomat = Khosomat(
-            badal,self.payroll_master.zaka_kafaf,
+            badal_moratab,self.payroll_master.zaka_kafaf,
             self.payroll_master.zaka_nisab,
             damga=emp_payroll.damga,
             m3ash=emp_payroll.m3ash,
@@ -492,7 +518,7 @@ class MoratabMokaf2Sheet():
             dariba_mokaf2=self.hr_settings.get_code_as_float(Settings.SETTINGS_DARIBAT_2LMOKAFA),
         )
 
-        return (khosomat,Mokaf2(badal,emp_payroll.payroll_master.daribat_2lmokafa,emp_payroll.damga,khasm_salafiat_elsandog_min_elmokaf2=(not emp_payroll.payroll_master.khasm_salafiat_elsandog_min_elomoratab),salafiat_sandog=emp_payroll.salafiat_sandog,salafiat_3la_2lmokaf2=emp_payroll.salafiat_3la_2lmokaf2))
+        return (khosomat,Mokaf2(badal_mokaf2,emp_payroll.payroll_master.daribat_2lmokafa,emp_payroll.damga,khasm_salafiat_elsandog_min_elmokaf2=(not emp_payroll.payroll_master.khasm_salafiat_elsandog_min_elomoratab),salafiat_sandog=emp_payroll.salafiat_sandog,salafiat_3la_2lmokaf2=emp_payroll.salafiat_3la_2lmokaf2))
 
     def all_employees_from_db(self):
         for emp in self.payroll_details:

@@ -218,6 +218,8 @@ class Settings(LoggingModel):
 
     SETTINGS_MOKAF2T_ADA2 = 'mokaf2t_ada2'
 
+    SETTINGS_MOKAF2T_ADA2_FI_MOKAF2 = 'mokaf2t_ada2_fi_mokaf2'
+
     SETTINGS_CHOICES = {
         SETTINGS_ZAKA_KAFAF: _('SETTINGS_ZAKAT_KAFAF'),
         SETTINGS_ZAKA_NISAB: _('SETTINGS_ZAKAT_NISAB'),
@@ -242,6 +244,7 @@ class Settings(LoggingModel):
         SETTINGS_MAJLIS_EL2DARA_3ODO: _('SETTINGS_MAJLIS_EL2DARA_3ODO'),
 
         SETTINGS_MODIR_3AM_ASAI: _('SETTINGS_MODIR_3AM_ASAI'),
+        SETTINGS_MOKAF2T_ADA2_FI_MOKAF2: 'حساب مكافئة الاداء في المرتب',
     }
 
     for moahil in MOAHIL_CHOICES:
@@ -265,7 +268,7 @@ class Settings(LoggingModel):
         return f'{self.get_code_display()}: {self.value}'
     
     def clean(self) -> None:
-        if self.code in [self.SETTINGS_ENABLE_SANDOG_KAHRABA,self.SETTINGS_ENABLE_YOUM_ALGOAT_ALMOSALAHA]:
+        if self.code in [self.SETTINGS_ENABLE_SANDOG_KAHRABA,self.SETTINGS_ENABLE_YOUM_ALGOAT_ALMOSALAHA,self.SETTINGS_MOKAF2T_ADA2_FI_MOKAF2]:
             if not self.value or not is_float(self.value) or not int(self.value) in [0,1]:
                 raise ValidationError(
                     {"value":_("value should be 0 or 1")}
@@ -1011,6 +1014,7 @@ class PayrollDetailHikalRatibiAbstract(PayrollDetailAbstract):
 class PayrollDetail(PayrollDetailHikalRatibiAbstract):
     aadoa = models.FloatField(_("aadoa"),default=0)
     mokaf2at_2da2 = models.FloatField(_("mokaf2at_2da2"),default=0)
+    mokaf2at_2da2_fi_mokaf2 = models.BooleanField("حساب بدل المكافئة في كشف المكافئة",default=True)
     gasima = models.FloatField(_("gasima"),default=0)
     atfal = models.FloatField(_("atfal"),default=0)
     moahil = models.FloatField(_("moahil"),default=0)
