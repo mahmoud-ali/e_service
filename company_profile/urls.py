@@ -6,6 +6,7 @@ from django.conf import settings
 from company_profile.views.fuel_permission import FuelCertificate
 from company_profile.views.hse_performance import AppHSEPerformanceReportAskAIView
 from company_profile.views.pa_request import AppRequestListView, AppRequestReadonlyView
+from company_profile_entaj.views import AppForeignerPermissionCreateView, AppForeignerRecordCreateView, AppForeignerRecordListView, AppForeignerRecordReadonlyView
 
 from .views import CompanySummaryView,SetLanguageView, HomePageView, \
                    AppForignerMovementListView,AppForignerMovementCreateView,AppForignerMovementReadonlyView, \
@@ -153,6 +154,13 @@ urlpatterns = [
     path('app_foreigner_procedure/<int:type>/', AppForeignerProcedureListView.as_view(), name='app_foreigner_procedure_list'),
     path('app_foreigner_procedure/<int:pk>/show/', AppForeignerProcedureReadonlyView.as_view(), name='app_foreigner_procedure_show'),    
     path('app_foreigner_procedure/add/', AppForeignerProcedureCreateView.as_view(), name='app_foreigner_procedure_add'),
+
+    path('app_foreigner_record/', AppForeignerRecordListView.as_view(), name='app_foreigner_record_list'),
+    path('app_foreigner_record/add/', AppForeignerRecordCreateView.as_view(), name='app_foreigner_record_add'),
+    path('app_foreigner_record/<int:pk>/show/', AppForeignerRecordReadonlyView.as_view(), name='app_foreigner_record_show'),    
+
+    path('app_foreigner_permission_record/<int:id>/add/', AppForeignerPermissionCreateView.as_view(), name='app_foreigner_permission_record_add'),
+
 
     path('app_aifaa_jomrki/', AppAifaaJomrkiListView.as_view(), name='app_aifaa_jomrki_list'),
     path('app_aifaa_jomrki/<int:type>/', AppAifaaJomrkiListView.as_view(), name='app_aifaa_jomrki_list'),
