@@ -360,8 +360,8 @@ INTERNAL_IPS = [
 
 if not DEBUG:
     EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-    DEFAULT_FROM_EMAIL = "no-replay@mineralsgate.com"  # if you don't already have this in settings
-    SERVER_EMAIL = "no-replay@mineralsgate.com"  # ditto (default from-email for Django errors)
+    DEFAULT_FROM_EMAIL = "system@mineralsgate.com"  # if you don't already have this in settings
+    SERVER_EMAIL = "system@mineralsgate.com"  # ditto (default from-email for Django errors)
 
     EMAIL_HOST = "smtp.zeptomail.com"
     EMAIL_PORT = 587 #465
