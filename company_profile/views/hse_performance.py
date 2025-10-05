@@ -6,7 +6,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.utils.translation import gettext_lazy as _
 from django.utils import translation
 from django.utils.html import format_html
-
+from django.db import IntegrityError, transaction
 from django.conf import settings
 
 from django.contrib import messages
@@ -125,19 +125,24 @@ class AppHSEPerformanceReportCreateView(LoginRequiredMixin,View):
                 if not formset.is_valid():
                     return render(request, self.template_name, self.extra_context)
 
-            self.object.save()
-            for formset in self.extra_context["detail_formset"]:
-                formset.save()
-                
-            messages.add_message(request,messages.SUCCESS,_("Application sent successfully."))
-                
-            info = (self.object._meta.app_label, self.object._meta.model_name)
-            resp_user = get_sumitted_responsible('pro_company',self.object.company.company_type)
-            url = 'https://'+Site.objects.get_current().domain+reverse_lazy('admin:%s_%s_change' % info, args=(self.object.id,))
-            send_transition_email(SUBMITTED,resp_user.email,url,resp_user.lang.lower())
-                
-            return HttpResponseRedirect(self.success_url)            
-        
+            try:
+                with transaction.atomic():
+                    self.object.save()
+                    for formset in self.extra_context["detail_formset"]:
+                        formset.save()
+                        
+                    messages.add_message(request,messages.SUCCESS,_("Application sent successfully."))
+                        
+                    info = (self.object._meta.app_label, self.object._meta.model_name)
+                    resp_user = get_sumitted_responsible('pro_company',self.object.company.company_type)
+                    url = 'https://'+Site.objects.get_current().domain+reverse_lazy('admin:%s_%s_change' % info, args=(self.object.id,))
+                    send_transition_email(SUBMITTED,resp_user.email,url,resp_user.lang.lower())
+                        
+                    return HttpResponseRedirect(self.success_url)            
+            except IntegrityError:
+                messages.add_message(request,messages.ERROR,_("تقرير الشهر تم اضافته بالفعل!"))
+                # print("Duplicate report found — skipping creation.")
+
         return render(request, self.template_name, self.extra_context)
         
 class AppHSEPerformanceReportReadonlyView(LoginRequiredMixin,DetailView):
