@@ -299,11 +299,11 @@ AUTHENTICATION_BACKENDS = (
 AUTH_USER_MODEL = 'accounts.CustomUser'
 
 #ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_SIGNUP_FIELDS = ['email*', 'password1*']
+ACCOUNT_SIGNUP_FIELDS = ['email', 'password1']
 #ACCOUNT_USERNAME_REQUIRED = False
-ACCOUNT_SIGNUP_FIELDS = ['email*', 'password1*']
+ACCOUNT_SIGNUP_FIELDS = ['email', 'password1']
 #ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE = False
-ACCOUNT_SIGNUP_FIELDS = ['email*', 'password1*']
+ACCOUNT_SIGNUP_FIELDS = ['email', 'password1']
 ACCOUNT_SESSION_REMEMBER = True
 #ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_LOGIN_METHODS = {'email'}
@@ -364,9 +364,9 @@ if not DEBUG:
     SERVER_EMAIL = "no-replay@mineralsgate.com"  # ditto (default from-email for Django errors)
 
     EMAIL_HOST = "smtp.zeptomail.com"
-    EMAIL_PORT = 465 #587
-    EMAIL_USE_TLS = False
-    EMAIL_USE_SSL = True
+    EMAIL_PORT = 587 #465
+    EMAIL_USE_TLS = True #False
+    EMAIL_USE_SSL = False #True
     EMAIL_HOST_USER = config('EMAIL_HOST_USER')
     EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 
