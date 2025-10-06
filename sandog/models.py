@@ -9,6 +9,7 @@ class LkpSolarSystemCategory(models.Model):
         return self.name
 
     class Meta:
+        ordering = ['id']
         verbose_name = _("Solar System Category")
         verbose_name_plural = _("Solar System Category")
 
@@ -19,6 +20,7 @@ class LkpSolarSystemPaymentMethod(models.Model):
         return self.name
 
     class Meta:
+        ordering = ['id']
         verbose_name = _("طريقة الدفع")
         verbose_name_plural = _("طرق الدفع")
 
