@@ -45,7 +45,7 @@ class EmployeeSolarSystemMixin:
 class EmployeeSolarSystemAdmin(EmployeeSolarSystemMixin,admin.ModelAdmin):
     model = EmployeeSolarSystem
     fields = ["payment_method","category",]
-    list_display = ["employee","payment_method","category",]
+    list_display = ["payment_method","category","employee",]
 
 @admin.register(LkpSolarSystemCategory)
 class LkpSolarSystemCategoryAdmin(admin.ModelAdmin):
