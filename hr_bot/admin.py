@@ -139,8 +139,11 @@ class EmployeeTelegramRegistrationAdmin(FlowMixin,admin.ModelAdmin):
     def has_add_permission(self, request):
         return False
 
-    # def has_change_permission(self, request, obj=None):
-    #     return False
+    def has_change_permission(self, request, obj=None):
+        if obj.state == STATE_DRAFT:
+            return super().has_change_permission(request, obj)
+        
+        return False
 
     def has_delete_permission(self, request, obj=None):
         if request.user.is_superuser:
