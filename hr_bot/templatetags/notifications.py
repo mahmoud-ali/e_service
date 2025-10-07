@@ -9,6 +9,11 @@ SHOW_NOTIFICATIONS = [
     'employeetelegramregistration',
 ]
 
+@register.filter(name='has_any_group')
+def has_any_group(user, group_names):
+    group_list = group_names.split(',')
+    return user.groups.filter(name__in=group_list).exists()
+
 @register.filter(name="show_draft_count")
 def show_draft_count(admin_model):
     if not admin_model or admin_model.get('object_name').lower() not in SHOW_NOTIFICATIONS:

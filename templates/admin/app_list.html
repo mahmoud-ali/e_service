@@ -13,7 +13,9 @@
               <th scope="row">
                 <a 
                   href="{{ model.admin_url }}{% if model.object_name|lower == 'employeesalafiat' %}?month__exact={% now 'n' %}&year={% now 'Y' %} {% endif %}"{% if model.admin_url in request.path|urlencode %} aria-current="page"{% endif %}>{{ model.name }} 
+                  {% if user|has_any_group:"hr_manager,hr_manpower" %}
                     {{model|show_draft_count}}
+                  {%endif%}
                 </a>
               </th>
             {% else %}
