@@ -45,7 +45,13 @@ class EmployeeSolarSystemMixin:
 class EmployeeSolarSystemAdmin(EmployeeSolarSystemMixin,admin.ModelAdmin):
     model = EmployeeSolarSystem
     fields = ["payment_method","category",]
-    list_display = ["payment_method","category","employee",]
+    list_display = ["payment_method","category",]
+
+    def get_list_display(self, request):
+        if request.user.groups.filter(name__in=["hr_employee",]).exists():
+            return self.list_display
+        
+        return self.list_display + ["employee",]
 
 @admin.register(LkpSolarSystemCategory)
 class LkpSolarSystemCategoryAdmin(admin.ModelAdmin):
