@@ -8,8 +8,8 @@ class EmployeeSolarSystemMixin:
 
     def changelist_view(self, request, extra_context=None):
         if request.method == 'GET' and request.user.groups.filter(name__in=["hr_employee",]).exists():
-            messages.warning(request, "يمكن التسجيل لاكثر من  منظومة ولكن يشترط كفاية التمويل وإمكانية سداد الأقساط الشهرية")
-            messages.warning(request, "اخر يوم للتسجيل هو يوم 31/10/2025")
+            messages.warning(request, "يمكن التسجيل لاكثر من  منظومة ولكن يشترط كفاية التمويل وإمكانية سداد الأقساط الشهرية. ويعتبر التسجيل إقراراً بذلك.")
+            messages.warning(request, "اخر يوم للتسجيل هو يوم 31/10/2025.")
             
         return super().changelist_view(request, extra_context=extra_context)
 
