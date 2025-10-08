@@ -377,7 +377,7 @@ class TblCompanyProductionLicense(LoggingModelGis):
     geom = gis_models.MultiPolygonField(srid=4326,null=True,blank=True)
 
     def __str__(self):
-        return self.company.name_ar+"("+str(self.license_no)+")"
+        return self.company.name_ar+"("+str(self.license_no)+" "+self.location+")"
 
     class Meta:
         ordering = ["-date"]
