@@ -176,7 +176,7 @@ class TblCompanyProductionLicenseSelectView(LkpSelectView):
                 .filter(company__id = self.kwargs['master_id']) \
                 .annotate(
                     name=ExpressionWrapper(
-                        Concat(F('company__name_ar'),Value(" ("),F('license_no'),Value(")") ), output_field=models.CharField()
+                        Concat(F('company__name_ar'),Value(" ("),F('license_no'),Value(" "),F('location'),Value(")") ), output_field=models.CharField()
                     )
                 )
         return qs
