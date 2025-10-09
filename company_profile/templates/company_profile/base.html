@@ -40,7 +40,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
 
 {% load static  %}
-{% load help_request %}
+{% comment %} {% load help_request %} {% endcomment %}
 {% load company_user %}
 <!-- <link rel="stylesheet" type="text/css" href="{% static 'admin/css/base.css' %}" /> -->
 <link rel="stylesheet" type="text/css" href="{% static 'admin/css/widgets.css' %}" />
@@ -105,7 +105,7 @@ $(document).ready(function(){
 {% progressive_web_app_meta %} {% endcomment %}
 </head>
 <body>
-	{% help_model 'company_profile' %}
+	{% comment %} {% help_model 'company_profile' %} {% endcomment %}
     <nav class="navbar navbar-inverse navbar-fixed-top">
       <div class="container-fluid">
         <div class="navbar-header">
@@ -120,7 +120,7 @@ $(document).ready(function(){
         <div id="navbar" class="navbar-collapse collapse">
 		{% if user.is_authenticated %}	
           <ul class="nav navbar-nav {% if request.LANGUAGE_CODE == 'ar' %} navbar-left {% else %} navbar-right {% endif %}">
-            <li>{% help_link 'company_profile' %}</li>
+            {% comment %} <li>{% help_link 'company_profile' %}</li> {% endcomment %}
             <li><a href="{% url 'account_change_password'%}">{% translate "Change password" %}</a></li>
             <li><a href="{% url 'account_logout' %}">{% translate "Log Out" %}</a></li>
           </ul>
