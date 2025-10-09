@@ -1,10 +1,261 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Too Many Requests</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>429 Too Many Requests</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        }
+        
+        .error-container {
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+            padding: 40px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .error-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #ff9a00, #ff6b6b);
+        }
+        
+        .error-code {
+            font-size: 120px;
+            font-weight: 700;
+            color: #ff9a00;
+            line-height: 1;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 0 rgba(0,0,0,0.05);
+        }
+        
+        .error-title {
+            font-size: 32px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+        
+        .error-message {
+            font-size: 18px;
+            margin-bottom: 30px;
+            color: #7f8c8d;
+        }
+        
+        .error-icon {
+            font-size: 80px;
+            margin-bottom: 30px;
+            color: #ff9a00;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 28px;
+            background-color: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        .btn:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-secondary {
+            background-color: #95a5a6;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #7f8c8d;
+        }
+        
+        .btn-primary {
+            background-color: #ff9a00;
+        }
+        
+        .btn-primary:hover {
+            background-color: #e68a00;
+        }
+        
+        .error-details {
+            margin-top: 30px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 6px;
+            font-size: 14px;
+            color: #7f8c8d;
+            text-align: left;
+        }
+        
+        .error-details summary {
+            cursor: pointer;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .error-details p {
+            margin-top: 10px;
+        }
+        
+        .countdown {
+            margin-top: 20px;
+            font-size: 16px;
+            color: #ff9a00;
+            font-weight: 600;
+        }
+        
+        .progress-bar {
+            height: 6px;
+            background-color: #e9ecef;
+            border-radius: 3px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+        
+        .progress {
+            height: 100%;
+            background: linear-gradient(90deg, #ff9a00, #ff6b6b);
+            width: 0%;
+            transition: width 1s linear;
+        }
+        
+        @media (max-width: 600px) {
+            .error-code {
+                font-size: 80px;
+            }
+            
+            .error-title {
+                font-size: 24px;
+            }
+            
+            .error-message {
+                font-size: 16px;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
 </head>
 <body>
-    <h1>429 - Too Many Requests</h1>
-    <p>Please wait a moment before trying again.</p>
+    <div class="error-container">
+        <div class="error-icon">⏱️</div>
+        <div class="error-code">429</div>
+        <h1 class="error-title">Too Many Requests</h1>
+        <p class="error-message">
+            You've sent too many requests in a short period of time. Please slow down and try again later.
+        </p>
+        
+        <div class="countdown">
+            You can try again in: <span id="timer">60</span> seconds
+        </div>
+        <div class="progress-bar">
+            <div class="progress" id="progress-bar"></div>
+        </div>
+        
+        <div class="action-buttons">
+            <a href="https://mineralsgate.com/app/" class="btn btn-primary">Go Home</a>
+            <a href="javascript:history.back()" class="btn">Go Back</a>
+            <button onclick="location.reload()" class="btn btn-secondary" id="reload-btn" disabled="true">Try Again</button>
+        </div>
+        
+        <details class="error-details">
+            <summary>Technical Details</summary>
+            <p>
+                A 429 Too Many Requests error means you've exceeded the rate limit for this website or API. 
+                This is a protective measure to prevent abuse and ensure service availability for all users.
+            </p>
+            <ul style="margin-left: 20px; margin-top: 10px;">
+                <li>You've made too many requests in a short time period</li>
+                <li>The server is temporarily limiting your access</li>
+                <li>This is usually an automated protection mechanism</li>
+                <li>Rate limits typically reset after a certain time period</li>
+            </ul>
+            <p style="margin-top: 10px;">
+                Please wait for the timer to complete before trying again. If this problem persists, contact the website administrator.
+            </p>
+        </details>
+    </div>
+
+    <script>
+        // Countdown timer functionality
+        let timeLeft = 60;
+        const timerElement = document.getElementById('timer');
+        const progressBar = document.getElementById('progress-bar');
+        const reloadButton = document.getElementById('reload-btn');
+        
+        const countdown = setInterval(() => {
+            timeLeft--;
+            timerElement.textContent = timeLeft;
+            reloadButton.disabled = true;
+            
+            // Update progress bar
+            const progressPercent = 100 - (timeLeft / 60 * 100);
+            progressBar.style.width = progressPercent + '%';
+            
+            if (timeLeft <= 0) {
+                clearInterval(countdown);
+                timerElement.textContent = '0';
+                reloadButton.disabled = false;
+                reloadButton.textContent = 'Try Again';
+                reloadButton.classList.remove('btn-secondary');
+                reloadButton.classList.add('btn-primary');
+            }
+        }, 1000);
+    </script>
 </body>
 </html>

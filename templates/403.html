@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>403 Forbidden - Access Denied</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .error-container {
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+            padding: 40px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        }
+        
+        .error-code {
+            font-size: 120px;
+            font-weight: 700;
+            color: #e74c3c;
+            line-height: 1;
+            margin-bottom: 20px;
+        }
+        
+        .error-title {
+            font-size: 32px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+        
+        .error-message {
+            font-size: 18px;
+            margin-bottom: 30px;
+            color: #7f8c8d;
+        }
+        
+        .error-icon {
+            font-size: 80px;
+            margin-bottom: 30px;
+            color: #e74c3c;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 28px;
+            background-color: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        .btn:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-secondary {
+            background-color: #95a5a6;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #7f8c8d;
+        }
+        
+        .error-details {
+            margin-top: 30px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 6px;
+            font-size: 14px;
+            color: #7f8c8d;
+            text-align: left;
+        }
+        
+        .error-details summary {
+            cursor: pointer;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .error-details p {
+            margin-top: 10px;
+        }
+        
+        @media (max-width: 600px) {
+            .error-code {
+                font-size: 80px;
+            }
+            
+            .error-title {
+                font-size: 24px;
+            }
+            
+            .error-message {
+                font-size: 16px;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="error-container">
+        <div class="error-icon">🚫</div>
+        <div class="error-code">403</div>
+        <h1 class="error-title">Access Forbidden</h1>
+        <p class="error-message">
+            You don't have permission to access this resource on the server.
+        </p>
+        
+        <div class="action-buttons">
+            <a href="https://mineralsgate.com/app/" class="btn">Go Home</a>
+            <a href="javascript:history.back()" class="btn btn-secondary">Go Back</a>
+            <button onclick="location.reload()" class="btn btn-secondary">Reload Page</button>
+        </div>
+        
+        <details class="error-details">
+            <summary>Technical Details</summary>
+            <p>
+                A 403 Forbidden error means you don't have the necessary permissions to view this page or resource. 
+                This could be due to:
+            </p>
+            <ul style="margin-left: 20px; margin-top: 10px;">
+                <li>Insufficient user privileges</li>
+                <li>IP address restrictions</li>
+                <li>Directory browsing being disabled</li>
+                <li>Incorrect file or directory permissions</li>
+            </ul>
+            <p style="margin-top: 10px;">
+                If you believe this is an error, please contact the website administrator.
+            </p>
+        </details>
+    </div>
+</body>
+</html>
