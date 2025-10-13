@@ -8,7 +8,7 @@ from django.shortcuts import render
 from django.utils import translation
 from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
-
+from django.db.models import ProtectedError
 from django.forms import inlineformset_factory
 
 from django.contrib.auth.mixins import LoginRequiredMixin,UserPassesTestMixin
@@ -397,7 +397,11 @@ class ApplicationDeleteView(LoginRequiredMixin,UserPermissionMixin,UpdateView):
     
     def form_valid(self, form):
         self.object = form.save(commit=False)
-        self.object.delete()
+        try:
+            self.object.delete()
+        except ProtectedError as e:
+            messages.add_message(self.request,messages.ERROR,_("لايمكن حذف السجل لوجود سجلات اخرى معتمدة عليه"))
+            return render(self.request, self.template_name, self.extra_context)
 
         messages.add_message(self.request,messages.SUCCESS,_("Record removed successfully."))
                 
@@ -457,7 +461,11 @@ class ApplicationDeleteMasterDetailView(LoginRequiredMixin,UserPermissionMixin,S
                     if f.instance.pk:
                         f.instance.delete()
 
-            obj.delete()
+            try:
+                obj.delete()
+            except ProtectedError as e:
+                messages.add_message(self.request,messages.ERROR,_("لايمكن حذف السجل لوجود سجلات اخرى معتمدة عليه"))
+                return render(self.request, self.template_name, self.extra_context)
 
             self.success_url = reverse_lazy(self.menu_name)    
             messages.add_message(self.request,messages.SUCCESS,_("Record removed successfully."))

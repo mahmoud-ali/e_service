@@ -551,7 +551,8 @@ class TblCompanyPaymentMaster(LoggingModel):
     
     @property
     def total(self):   
-        return round(self.tblcompanypaymentdetail_set.aggregate(total=Sum('amount'))['total'],2) or 0
+        x = self.tblcompanypaymentdetail_set.aggregate(total=Sum('amount'))['total'] or 0
+        return round(x,2)
 
     @property
     def total_request_currency(self):   
