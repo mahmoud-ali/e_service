@@ -88,20 +88,20 @@ class MaktabTanfiziAdmin(admin.ModelAdmin):
             
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
-@admin.register(MaktabTanfiziJiha)
-class MaktabTanfiziJihaAdmin(MaktabTanfiziMixin, admin.ModelAdmin):
-    model = MaktabTanfiziJiha
-    exclude = ('maktab_tanfizi',)
-    list_display = ('name',)
+# @admin.register(MaktabTanfiziJiha)
+# class MaktabTanfiziJihaAdmin(MaktabTanfiziMixin, admin.ModelAdmin):
+#     model = MaktabTanfiziJiha
+#     exclude = ('maktab_tanfizi',)
+#     list_display = ('name',)
 
-    def save_model(self, request, obj, form, change):
-        try:
-            maktab = request.user.maktab_tanfizi_user
-            obj.maktab_tanfizi=maktab
-        except:
-            pass
+#     def save_model(self, request, obj, form, change):
+#         try:
+#             maktab = request.user.maktab_tanfizi_user
+#             obj.maktab_tanfizi=maktab
+#         except:
+#             pass
 
-        super().save_model(request, obj, form, change)
+#         super().save_model(request, obj, form, change)
 
 class HarkatKhatabatInline(admin.StackedInline):  # You can use StackedInline if you prefer vertical layout
     model = HarkatKhatabat
@@ -109,11 +109,10 @@ class HarkatKhatabatInline(admin.StackedInline):  # You can use StackedInline if
     extra = 0  # Number of empty forms to display
     show_change_link = True
 
-
 @admin.register(Khatabat)
 class KhatabatAdmin(MaktabTanfiziMixin,LogMixin,admin.ModelAdmin):
     exclude = ('maktab_tanfizi','created_by', 'updated_by')
-    list_display = ('letter_number', 'subject')
+    list_display = ('subject', 'letter_number',)
     search_fields = ('letter_number', 'subject')
     inlines = [HarkatKhatabatInline]
 
@@ -129,7 +128,7 @@ class KhatabatAdmin(MaktabTanfiziMixin,LogMixin,admin.ModelAdmin):
 @admin.register(HarkatKhatabat)
 class HarkatKhatabatAdmin(admin.ModelAdmin):
     model = HarkatKhatabat
-    list_display = ('letter_number', 'subject', 'movement_type', 'date', 'source_entity', 'procedure', 'delivery_date', 'followup_result')    
+    list_display = ('subject', 'letter_number', 'movement_type', 'date', 'source_entity', 'procedure', 'delivery_date', 'followup_result')    
     search_fields = ('letter__letter_number', 'letter__subject','note')
     list_filter = ('movement_type','date', 'source_entity', 'procedure', 'delivery_date', 'followup_result')
 

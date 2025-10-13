@@ -45,7 +45,7 @@ class Khatabat(LoggingModel):  # جدول_خطابات
     subject = models.TextField(verbose_name="موضوع الخطاب")
 
     def __str__(self):
-        return self.letter_number
+        return f'{self.subject} ({self.letter_number})'
 
     class Meta:
         ordering = ["-letter_number"]
