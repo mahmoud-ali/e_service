@@ -9,6 +9,7 @@ from django.utils import translation
 from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
 from django.db.models import ProtectedError
+from django.db import transaction
 from django.forms import inlineformset_factory
 
 from django.contrib.auth.mixins import LoginRequiredMixin,UserPassesTestMixin
@@ -454,18 +455,21 @@ class ApplicationDeleteMasterDetailView(LoginRequiredMixin,UserPermissionMixin,S
         if form.is_valid():
             flag = True
 
-            for detail in self.details_formset:
-                formset = detail['formset'](request.POST,request.FILES,instance=obj)
-                for f in formset.forms:
-                    # if formset.can_delete:
-                    if f.instance.pk:
-                        f.instance.delete()
-
             try:
-                obj.delete()
+                with transaction.atomic():            
+
+                    for detail in self.details_formset:
+                        formset = detail['formset'](request.POST,request.FILES,instance=obj)
+                        for f in formset.forms:
+                            # if formset.can_delete:
+                            if f.instance.pk:
+                                f.instance.delete()
+
+                    obj.delete()
+
             except ProtectedError as e:
                 messages.add_message(self.request,messages.ERROR,_("لايمكن حذف السجل لوجود سجلات اخرى معتمدة عليه"))
-                return render(self.request, self.template_name, self.extra_context)
+                return HttpResponseRedirect(self.success_url)
 
             self.success_url = reverse_lazy(self.menu_name)    
             messages.add_message(self.request,messages.SUCCESS,_("Record removed successfully."))
