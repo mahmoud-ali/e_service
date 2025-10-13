@@ -17,15 +17,15 @@ class BaseTable(tables.Table):
 
 class TblCompanyCommitmentTable(BaseTable):
     menu_name = "pa:commitment_show"
-    relation_fields = ["company"]
+    relation_fields = ["license"]
 
     class Meta:
         model = TblCompanyCommitmentMaster
         template_name = "django_tables2/bootstrap.html"
-        fields = ("company","currency","state")
+        fields = ("license","currency","state")
         empty_text = _("No records.")        
 
-    def render_company(self,value,record):
+    def render_license(self,value,record):
         return format_html("<a href={}>{}</a>",reverse_lazy(self.menu_name,args=(record.id,)),value)
 
     def render_state(self,value,record):
