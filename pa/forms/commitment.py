@@ -50,6 +50,7 @@ class TblCompanyShowEditCommitmentForm(TblCompanyCommitmentAdminForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        pk = None
         if kwargs.get('instance') and kwargs['instance'].pk:
             pk = kwargs['instance'].company.id
         
