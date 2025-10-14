@@ -584,11 +584,7 @@ class TblCompanyPaymentMaster(LoggingModel):
         return reverse('pa:payment_show',args=[str(self.id)])             
 
     def clean(self):
-        if self.currency == self.request.currency and self.exchange_rate != 1:
-            raise ValidationError(
-                {"exchange_rate":_("payment currency equal to request currency")}
-            )
-        elif self.currency != self.request.currency and not self.exchange_attachement_file:
+        if self.currency != self.request.currency and not self.exchange_attachement_file:
             raise ValidationError(
                 {"exchange_attachement_file":_("attach document")}
             )
