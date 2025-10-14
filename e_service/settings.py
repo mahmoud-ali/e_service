@@ -460,14 +460,15 @@ LEAFLET_CONFIG = {
 
 }
 
-ROLLBAR = {
-    'access_token': config('ROLLBAR_TOKEN'),
-    'environment': 'development' if DEBUG else 'production',
-    'code_version': '1.0',
-    'root': BASE_DIR,
-}
+if not DEBUG:
+    ROLLBAR = {
+        'access_token': config('ROLLBAR_TOKEN'),
+        'environment': 'development' if DEBUG else 'production',
+        'code_version': '1.0',
+        'root': BASE_DIR,
+    }
 
-TELEGRAM_HSE_ACCIDENTS_ACCESS_KEY = config('TELEGRAM_HSE_ACCIDENTS_ACCESS_KEY')
+    TELEGRAM_HSE_ACCIDENTS_ACCESS_KEY = config('TELEGRAM_HSE_ACCIDENTS_ACCESS_KEY')
 
 TESTING = 'test' in sys.argv[1:]
 if TESTING:
