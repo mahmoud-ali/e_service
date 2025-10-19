@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
 
-from hse_traditional.models import HseTraditionalAccident, HseTraditionalCorrectiveAction, HseTraditionalNearMiss, TblStateRepresentative
+from hse_traditional.models import HseTraditionalAccident, HseTraditionalCorrectiveAction, HseTraditionalNearMiss, HseTraditionalReport, TblStateRepresentative
 
 UserModel = get_user_model()
 
@@ -14,6 +14,7 @@ class TblStateRepresentativeForm(forms.ModelForm):
         fields = ["user","name","state"] 
 
 class HseTraditionalCorrectiveActionForm(forms.ModelForm):
+    source_report = forms.ModelChoiceField(queryset=HseTraditionalReport.objects.filter(state__gte=HseTraditionalReport.STATE_CONFIRMED), label=_("تقرير شهري"), required=False)
     source_accident = forms.ModelChoiceField(queryset=HseTraditionalAccident.objects.filter(state__gte=HseTraditionalAccident.STATE_CONFIRMED), label=_("source_accident"), required=False)
     source_near_miss = forms.ModelChoiceField(queryset=HseTraditionalNearMiss.objects.filter(state__gte=HseTraditionalNearMiss.STATE_CONFIRMED), label=_("source_near_miss"), required=False)
 
@@ -29,16 +30,18 @@ class HseTraditionalCorrectiveActionForm(forms.ModelForm):
         
         if kwargs.get('instance') and kwargs['instance'].pk:
             if kwargs['instance'].state in [HseTraditionalCorrectiveAction.STATE_DRAFT,HseTraditionalCorrectiveAction.STATE_CONFIRMED1]:
+                self.fields['source_report'].queryset =  self.fields['source_report'].queryset.filter(source_state = state)
                 self.fields['source_accident'].queryset =  self.fields['source_accident'].queryset.filter(source_state = state)
                 self.fields['source_near_miss'].queryset =  self.fields['source_near_miss'].queryset.filter(source_state = state)
 
         else:
+            self.fields['source_report'].queryset =  self.fields['source_report'].queryset.filter(source_state = state)
             self.fields['source_accident'].queryset =  self.fields['source_accident'].queryset.filter(source_state = state)
             self.fields['source_near_miss'].queryset =  self.fields['source_near_miss'].queryset.filter(source_state = state)
 
     class Meta:
         model = HseTraditionalCorrectiveAction
-        fields = ["source_accident","source_near_miss","when","corrective_action",] 
+        fields = ["source_report","source_accident","source_near_miss","when","corrective_action",] 
         widgets = {
             'when': forms.DateInput(attrs={'type': 'date'}),
         }
