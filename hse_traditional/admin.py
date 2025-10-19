@@ -698,8 +698,8 @@ corrective_action_main_class = {
     'model': HseTraditionalCorrectiveAction,
     'mixins': [],
     'kwargs': {
-        'list_display': ('source_accident','source_near_miss','source_state','state'),
-        'list_filter': ('source_accident','source_near_miss','source_state','state'),
+        'list_display': ('source_report','source_accident','source_near_miss','source_state','state'),
+        'list_filter': ('source_report','source_accident','source_near_miss','source_state','state'),
         'exclude': ('state','source_state'),
         'get_form': get_corrective_action_form,
         'save_as_continue': False,

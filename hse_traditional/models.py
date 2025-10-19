@@ -480,6 +480,7 @@ class HseTraditionalCorrectiveAction(LoggingModel):
 
     source_state = models.ForeignKey(LkpState, on_delete=models.PROTECT, verbose_name=_("source_state"))
     state = models.IntegerField(_("record_state"), choices=STATE_CHOICES.items(), default=STATE_DRAFT)
+    source_report = models.ForeignKey(HseTraditionalReport, on_delete=models.PROTECT, null=True, blank=True, related_name="corrective_actions", verbose_name=_("تقرير شهري"))
     source_accident = models.ForeignKey(HseTraditionalAccident, on_delete=models.PROTECT, null=True, blank=True, related_name="corrective_actions", verbose_name=_("source_accident"))
     source_near_miss = models.ForeignKey(HseTraditionalNearMiss, on_delete=models.PROTECT, null=True, blank=True, related_name="corrective_actions", verbose_name=_("source_near_miss"))
     # what = models.TextField(_("what"))
