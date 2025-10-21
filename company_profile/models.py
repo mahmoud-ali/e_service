@@ -1190,6 +1190,7 @@ class AppImportPermissionDetail(models.Model):
 
 class AppFuelPermission(WorkflowModel):
     company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
+    license_type = models.ForeignKey(TblCompanyProductionLicense, on_delete=models.PROTECT,verbose_name=_("license_type"),blank=True,null=True)    
 
     attachement_file = models.FileField(_("fuel_request_file"),upload_to=company_applications_path)
 

@@ -543,10 +543,22 @@ class AppImportPermissionForm(AppImportPermissionAdminForm):
 
 class AppFuelPermissionAdminForm(WorkflowFormMixin,ModelForm):
     company = forms.ModelChoiceField(queryset=TblCompanyProduction.objects.all(), disabled=True, label=_("company"))
+    license_type = forms.ModelChoiceField(queryset=None, label=_("license_type"))
+    
+    def __init__(self, *args,company_id = None, **kwargs):        
+        super().__init__(*args, **kwargs)
+
+        if kwargs.get('company_id'):
+            company_id = kwargs.get('company_id')
+        elif kwargs.get('instance') and kwargs['instance'].pk:
+            company_id = kwargs['instance'].company.id
+        
+        if company_id:
+            self.fields["license_type"].queryset = TblCompanyProductionLicense.objects.filter(company__id=company_id)
 
     class Meta:
         model = AppFuelPermission
-        fields = ["company","recommendation_comments","reject_comments","attachement_file"] 
+        fields = ["company","license_type","recommendation_comments","reject_comments","attachement_file"] 
         
 class AppFuelPermissionForm(AppFuelPermissionAdminForm):
     company = None

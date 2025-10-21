@@ -69,10 +69,13 @@ class AppFuelPermissionCreateView(LoginRequiredMixin,View):
         return super().dispatch(*args, **kwargs)                    
 
     def get(self,request):        
+        form = self.extra_context['form'](company_id=self.request.user.pro_company.company.id)
+        self.extra_context['form'] = form
+
         return render(request, self.template_name, self.extra_context)
 
     def post(self, request, *args, **kwargs):
-        form = self.form_class(request.POST,request.FILES)
+        form = self.form_class(request.POST,request.FILES,company_id=self.request.user.pro_company.company.id)
         self.extra_context["form"] = form
         
         if form.is_valid():
@@ -119,9 +122,12 @@ class FuelCertificate(LoginRequiredMixin,UserPassesTestMixin,TemplateView):
         obj = get_object_or_404(AppFuelPermission,pk=id)
 
         total_fuel = obj.appfuelpermissiondetail_set.aggregate(total=Sum('fuel_actual_qty'))['total'] or 0
+        license = obj.license_type
+        if not license:
+            license = obj.company.tblcompanyproductionlicense_set.first()
         self.extra_context = {
             'object': obj,
-            'license':obj.company.tblcompanyproductionlicense_set.first(),
+            'license': license,
             'total': total_fuel
         }
         return render(self.request, self.template_name, self.extra_context)    
