@@ -9,7 +9,7 @@ from django.conf import settings
 import json
 from hr_bot.models import EmployeeTelegramRegistration, EmployeeTelegramFamily, EmployeeTelegramMoahil, EmployeeTelegramBankAccount, STATE_DRAFT, STATE_ACCEPTED, STATE_REJECTED, EmployeeTelegram
 from hr_bot.utils import send_message, reject_cause, create_user, reset_user_password
-from hr.models import EmployeeFamily, EmployeeMoahil, EmployeeBankAccount, EmployeeBasic
+from hr.models import MOAHIL_CHOICES, EmployeeFamily, EmployeeMoahil, EmployeeBankAccount, EmployeeBasic
 from django.utils import timezone
 import random
 from django.contrib.auth import get_user_model
@@ -26,7 +26,11 @@ def admin_login_required(view_func):
 
 def index(request):
     template_name = 'hr_bot/index.html'
-    extra_context = {}
+    extra_context = {
+        'FAMILY_RELATION_CHOICES':EmployeeFamily.FAMILY_RELATION_CHOICES,
+        'MOAHIL_CHOICES':MOAHIL_CHOICES,
+        'BANK_CHOICES':EmployeeBankAccount.BANK_CHOICES,
+    }
     return render(request, template_name, extra_context)
 
 @admin_login_required
@@ -47,10 +51,12 @@ def api_logout(request):
     return JsonResponse({'error': 'Method not allowed'}, status=405)
 
 @admin_login_required
-def registrations_list(request):
+def registrations_list(request,state=STATE_DRAFT):
     if not request.user.groups.filter(name__in=['hr_manager', 'hr_manpower']).exists() and not request.user.is_superuser:
         return JsonResponse({'error': 'Permission denied'}, status=403)
-    registrations = EmployeeTelegramRegistration.objects.filter(state=STATE_DRAFT)
+    registrations = EmployeeTelegramRegistration.objects.all()
+    if state != 0:
+        registrations = registrations.filter(state=state)
     data = [{
         'id': r.id,
         'employee': r.employee.name,
@@ -128,7 +134,7 @@ def registration_reject(request, pk):
         try:
             user_id = obj.employee.employeetelegramregistration_set.first().user_id
             send_message(TOKEN_ID, user_id, message)
-            obj.delete()
+            # obj.delete()
         except:
             pass
     
@@ -166,7 +172,7 @@ def family_list(request):
         'employee': f.employee.name,
         'employee_code': f.employee.code,
         'name': f.name,
-        'relation': f.relation,
+        'relation': f.get_relation_display(),
         'tarikh_el2dafa': f.tarikh_el2dafa.strftime('%Y-%m-%d') if f.tarikh_el2dafa else '',
         'attachement_file': f.attachement_file.url if f.attachement_file else None,
         'state': f.state,
@@ -394,7 +400,7 @@ def bank_account_list(request):
         'id': b.id,
         'employee': b.employee.name,
         'employee_code': b.employee.code,
-        'bank': b.bank,
+        'bank': b.get_bank_display(),
         'account_no': b.account_no,
         'active': b.active,
         'state': b.state,

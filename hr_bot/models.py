@@ -200,7 +200,7 @@ class EmployeeTelegramBankAccount(LoggingModel):
     # def __str__(self) -> str:
     #     return f'{self.employee.name} ({EmployeeBankAccount.BANK_CHOICES[self.bank]})'# / {self.edara_3ama.name}'
     def __str__(self) -> str:
-        return f'رقم حساب: {self.account_no} - ({EmployeeBankAccount.BANK_CHOICES[self.bank]})'
+        return f'رقم حساب: {self.account_no} - ({self.get_bank_display()})'
 
     def clean(self):
         if EmployeeBankAccount.objects.filter(account_no=self.account_no).exists():

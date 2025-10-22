@@ -131,7 +131,7 @@
 
             useEffect(() => {
                 if (isManager) {
-                    fetch('/bot/api/registrations/', { credentials: 'same-origin' })
+                    fetch(`/bot/api/registrations/${STATE_DRAFT}/`, { credentials: 'same-origin' })
                         .then(res => res.json())
                         .then(data => setStats(prev => ({ ...prev, registrations: data.registrations.length })))
                         .catch(() => {});
@@ -211,9 +211,9 @@
             const [searchTerm, setSearchTerm] = useState('');
             const [stateFilter, setStateFilter] = useState(STATE_DRAFT);
 
-            const loadData = () => {
+            const loadData = (state=STATE_DRAFT) => {
                 setLoading(true);
-                fetch('/bot/api/registrations/', { credentials: 'same-origin' })
+                fetch(`/bot/api/registrations/${state}/`, { credentials: 'same-origin' })
                     .then(res => res.json())
                     .then(data => {
                         setRegistrations(data.registrations);
@@ -232,8 +232,7 @@
                     String(r.employee_code).includes(searchTerm) ||
                     r.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                     r.phone.includes(searchTerm)
-                const matchesState = stateFilter === '' || r.state === stateFilter;
-                return matchesSearch && matchesState;
+                return matchesSearch;
             });
 
             const accept = (id) => {
@@ -299,7 +298,7 @@
                     
                     <div className="mb-4 flex gap-4">
                         <input type="text" placeholder="بحث..." className="input input-bordered" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
-                        <select className="select select-bordered" value={stateFilter} onChange={(e) => setStateFilter(e.target.value === '' ? '' : parseInt(e.target.value))}>
+                        <select className="select select-bordered" value={stateFilter} onChange={(e) => {setStateFilter(e.target.value === '' ? '' : parseInt(e.target.value)); loadData(e.target.value === '' ? '0' : parseInt(e.target.value)); }}>
                             <option value="">جميع الحالات</option>
                             <option value={STATE_DRAFT}>مسودة</option>
                             <option value={STATE_ACCEPTED}>مقبول</option>
@@ -407,9 +406,9 @@
                                     required
                                 >
                                     <option value="">اختر العلاقة</option>
-                                    <option value="زوجة">زوجة</option>
-                                    <option value="ابن">ابن</option>
-                                    <option value="ابنة">ابنة</option>
+                                    {%for key, value in FAMILY_RELATION_CHOICES.items%}
+                                        <option value="{{key}}">{{value}}</option>
+                                    {% endfor %}
                                 </select>
                             </div>
                             
@@ -666,10 +665,9 @@
                                     required
                                 >
                                     <option value="">اختر المؤهل</option>
-                                    <option value="بكالوريوس">بكالوريوس</option>
-                                    <option value="ماجستير">ماجستير</option>
-                                    <option value="دكتوراه">دكتوراه</option>
-                                    <option value="دبلوم">دبلوم</option>
+                                    {% for key, value in MOAHIL_CHOICES.items%}
+                                    <option value="{{key}}">{{value}}</option>
+                                    {% endfor %}
                                 </select>
                             </div>
                             
@@ -937,10 +935,9 @@
                                     required
                                 >
                                     <option value="">اختر البنك</option>
-                                    <option value="الوحدة">الوحدة</option>
-                                    <option value="الجمهورية">الجمهورية</option>
-                                    <option value="التجاري">التجاري</option>
-                                    <option value="الصحاري">الصحاري</option>
+                                    {% for key,value in BANK_CHOICES.items%}
+                                    <option value="{{key}}">{{value}}</option>
+                                    {% endfor %}
                                 </select>
                             </div>
                             
