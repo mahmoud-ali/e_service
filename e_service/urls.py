@@ -37,6 +37,7 @@ urlpatterns = [
     # path('pa/', include('pa.urls')), 
     path('hr/', include('hr.urls')), 
     path('it/', include('it.urls')), 
+    path('bot/', include('hr_bot.urls')), 
     # path('help/', include('help_request.urls')), 
     path('', redirect_to_home),
 

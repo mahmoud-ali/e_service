@@ -4,3 +4,4 @@ e_service/.env
 media/*
 .DS_Store
 
+.aider*

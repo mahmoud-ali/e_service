@@ -59,7 +59,7 @@
             const [loading, setLoading] = useState(true);
 
             useEffect(() => {
-                fetch('/hr_bot/api/login-status/', { credentials: 'same-origin' })
+                fetch('/bot/api/login-status/', { credentials: 'same-origin' })
                     .then(res => {
                         if (!res.ok) throw new Error('Not authenticated');
                         return res.json();
@@ -68,17 +68,17 @@
                         if (data.is_authenticated) {
                             setUser(data);
                         } else {
-                            window.location.href = '/admin/login/?next=/hr_bot/';
+                            window.location.href = '/admin/login/?next=/bot/';
                         }
                     })
                     .catch(() => {
-                        window.location.href = '/admin/login/?next=/hr_bot/';
+                        window.location.href = '/admin/login/?next=/bot/';
                     })
                     .finally(() => setLoading(false));
             }, []);
 
             const logout = () => {
-                fetch('/hr_bot/api/logout/', { 
+                fetch('/bot/api/logout/', { 
                     method: 'POST', 
                     credentials: 'same-origin',
                     headers: {
@@ -142,22 +142,22 @@
 
             useEffect(() => {
                 if (isManager) {
-                    fetch('/hr_bot/api/registrations/', { credentials: 'same-origin' })
+                    fetch('/bot/api/registrations/', { credentials: 'same-origin' })
                         .then(res => res.json())
                         .then(data => setStats(prev => ({ ...prev, registrations: data.registrations.length })))
                         .catch(() => {});
                     
-                    fetch('/hr_bot/api/families/', { credentials: 'same-origin' })
+                    fetch('/bot/api/families/', { credentials: 'same-origin' })
                         .then(res => res.json())
                         .then(data => setStats(prev => ({ ...prev, families: data.families.filter(f => f.state === STATE_DRAFT).length })))
                         .catch(() => {});
                     
-                    fetch('/hr_bot/api/moahil/', { credentials: 'same-origin' })
+                    fetch('/bot/api/moahil/', { credentials: 'same-origin' })
                         .then(res => res.json())
                         .then(data => setStats(prev => ({ ...prev, moahil: data.moahil.filter(m => m.state === STATE_DRAFT).length })))
                         .catch(() => {});
                     
-                    fetch('/hr_bot/api/bank-accounts/', { credentials: 'same-origin' })
+                    fetch('/bot/api/bank-accounts/', { credentials: 'same-origin' })
                         .then(res => res.json())
                         .then(data => setStats(prev => ({ ...prev, bank_accounts: data.bank_accounts.filter(b => b.state === STATE_DRAFT).length })))
                         .catch(() => {});
@@ -236,7 +236,7 @@
 
             const loadData = () => {
                 setLoading(true);
-                fetch('/hr_bot/api/registrations/', { credentials: 'same-origin' })
+                fetch('/bot/api/registrations/', { credentials: 'same-origin' })
                     .then(res => res.json())
                     .then(data => {
                         setRegistrations(data.registrations);
@@ -252,7 +252,7 @@
             const accept = (id) => {
                 if (!confirm('هل أنت متأكد من قبول هذا الطلب؟')) return;
                 
-                fetch(`/hr_bot/api/registrations/${id}/accept/`, { 
+                fetch(`/bot/api/registrations/${id}/accept/`, { 
                     method: 'POST', 
                     credentials: 'same-origin',
                     headers: {
@@ -270,7 +270,7 @@
             const reject = (id) => {
                 if (!confirm('هل أنت متأكد من رفض هذا الطلب؟')) return;
                 
-                fetch(`/hr_bot/api/registrations/${id}/reject/`, { 
+                fetch(`/bot/api/registrations/${id}/reject/`, { 
                     method: 'POST', 
                     credentials: 'same-origin',
                     headers: {
@@ -288,7 +288,7 @@
             const resetPassword = (id) => {
                 if (!confirm('هل أنت متأكد من إعادة تعيين كلمة المرور؟')) return;
                 
-                fetch(`/hr_bot/api/registrations/${id}/reset-password/`, { 
+                fetch(`/bot/api/registrations/${id}/reset-password/`, { 
                     method: 'POST', 
                     credentials: 'same-origin',
                     headers: {
@@ -364,7 +364,7 @@
 
             const loadData = () => {
                 setLoading(true);
-                fetch('/hr_bot/api/families/', { credentials: 'same-origin' })
+                fetch('/bot/api/families/', { credentials: 'same-origin' })
                     .then(res => res.json())
                     .then(data => {
                         setFamilies(data.families);
@@ -380,7 +380,7 @@
             const accept = (id) => {
                 if (!confirm('هل أنت متأكد من قبول هذا الطلب؟')) return;
                 
-                fetch(`/hr_bot/api/families/${id}/accept/`, { 
+                fetch(`/bot/api/families/${id}/accept/`, { 
                     method: 'POST', 
                     credentials: 'same-origin',
                     headers: {
@@ -398,7 +398,7 @@
             const reject = (id) => {
                 if (!confirm('هل أنت متأكد من رفض هذا الطلب؟')) return;
                 
-                fetch(`/hr_bot/api/families/${id}/reject/`, { 
+                fetch(`/bot/api/families/${id}/reject/`, { 
                     method: 'POST', 
                     credentials: 'same-origin',
                     headers: {
@@ -501,7 +501,7 @@
                 data.append('tarikh_el2dafa', formData.tarikh_el2dafa);
                 if (file) data.append('attachement_file', file);
 
-                fetch('/hr_bot/api/families/create/', {
+                fetch('/bot/api/families/create/', {
                     method: 'POST',
                     credentials: 'same-origin',
                     headers: {
@@ -595,7 +595,7 @@
 
             const loadData = () => {
                 setLoading(true);
-                fetch('/hr_bot/api/moahil/', { credentials: 'same-origin' })
+                fetch('/bot/api/moahil/', { credentials: 'same-origin' })
                     .then(res => res.json())
                     .then(data => {
                         setMoahil(data.moahil);
@@ -611,7 +611,7 @@
             const accept = (id) => {
                 if (!confirm('هل أنت متأكد من قبول هذا الطلب؟')) return;
                 
-                fetch(`/hr_bot/api/moahil/${id}/accept/`, { 
+                fetch(`/bot/api/moahil/${id}/accept/`, { 
                     method: 'POST', 
                     credentials: 'same-origin',
                     headers: {
@@ -629,7 +629,7 @@
             const reject = (id) => {
                 if (!confirm('هل أنت متأكد من رفض هذا الطلب؟')) return;
                 
-                fetch(`/hr_bot/api/moahil/${id}/reject/`, { 
+                fetch(`/bot/api/moahil/${id}/reject/`, { 
                     method: 'POST', 
                     credentials: 'same-origin',
                     headers: {
@@ -736,7 +736,7 @@
                 data.append('graduate_dt', formData.graduate_dt);
                 if (file) data.append('attachement_file', file);
 
-                fetch('/hr_bot/api/moahil/create/', {
+                fetch('/bot/api/moahil/create/', {
                     method: 'POST',
                     credentials: 'same-origin',
                     headers: {
@@ -844,7 +844,7 @@
 
             const loadData = () => {
                 setLoading(true);
-                fetch('/hr_bot/api/bank-accounts/', { credentials: 'same-origin' })
+                fetch('/bot/api/bank-accounts/', { credentials: 'same-origin' })
                     .then(res => res.json())
                     .then(data => {
                         setBankAccounts(data.bank_accounts);
@@ -860,7 +860,7 @@
             const accept = (id) => {
                 if (!confirm('هل أنت متأكد من قبول هذا الطلب؟')) return;
                 
-                fetch(`/hr_bot/api/bank-accounts/${id}/accept/`, { 
+                fetch(`/bot/api/bank-accounts/${id}/accept/`, { 
                     method: 'POST', 
                     credentials: 'same-origin',
                     headers: {
@@ -878,7 +878,7 @@
             const reject = (id) => {
                 if (!confirm('هل أنت متأكد من رفض هذا الطلب؟')) return;
                 
-                fetch(`/hr_bot/api/bank-accounts/${id}/reject/`, { 
+                fetch(`/bot/api/bank-accounts/${id}/reject/`, { 
                     method: 'POST', 
                     credentials: 'same-origin',
                     headers: {
@@ -973,7 +973,7 @@
                 data.append('account_no', formData.account_no);
                 data.append('active', formData.active);
 
-                fetch('/hr_bot/api/bank-accounts/create/', {
+                fetch('/bot/api/bank-accounts/create/', {
                     method: 'POST',
                     credentials: 'same-origin',
                     headers: {
@@ -1054,7 +1054,7 @@
             const [loading, setLoading] = useState(true);
 
             useEffect(() => {
-                fetch('/hr_bot/api/employee-data/', { credentials: 'same-origin' })
+                fetch('/bot/api/employee-data/', { credentials: 'same-origin' })
                     .then(res => res.json())
                     .then(data => {
                         setData(data);

@@ -160,33 +160,35 @@ DATABASES = {
     }    
 }
 
-STORAGES = {
-    "default": {
-        "BACKEND": "storages.backends.s3.S3Storage",
-        "OPTIONS": {
-            "bucket_name": "media",
-            "region_name": "sfo3",
-            "endpoint_url": "https://hr1-mineralsgate-space.sfo3.digitaloceanspaces.com",
-            "file_overwrite": False,
-            "querystring_auth": True,
-            "access_key": config('S3_ACCESS_KEY'),
-            "secret_key": config('S3_SECRET_KEY'),
+if not DEBUG:
+
+    STORAGES = {
+        "default": {
+            "BACKEND": "storages.backends.s3.S3Storage",
+            "OPTIONS": {
+                "bucket_name": "media",
+                "region_name": "sfo3",
+                "endpoint_url": "https://hr1-mineralsgate-space.sfo3.digitaloceanspaces.com",
+                "file_overwrite": False,
+                "querystring_auth": True,
+                "access_key": config('S3_ACCESS_KEY'),
+                "secret_key": config('S3_SECRET_KEY'),
+            },
         },
-    },
-    "staticfiles": {
-        "BACKEND": "storages.backends.s3.S3Storage",
-        "OPTIONS": {
-            "bucket_name": "static",
-            "region_name": "sfo3",
-            "endpoint_url": "https://hr1-mineralsgate-space.sfo3.digitaloceanspaces.com",
-            "file_overwrite": False,
-            "default_acl": "public-read",
-            "querystring_auth": False,
-            "access_key": config('S3_ACCESS_KEY'),
-            "secret_key": config('S3_SECRET_KEY'),
-        },
+        "staticfiles": {
+            "BACKEND": "storages.backends.s3.S3Storage",
+            "OPTIONS": {
+                "bucket_name": "static",
+                "region_name": "sfo3",
+                "endpoint_url": "https://hr1-mineralsgate-space.sfo3.digitaloceanspaces.com",
+                "file_overwrite": False,
+                "default_acl": "public-read",
+                "querystring_auth": False,
+                "access_key": config('S3_ACCESS_KEY'),
+                "secret_key": config('S3_SECRET_KEY'),
+            },
+        }
     }
-}
 
 
 # Password validation
@@ -234,13 +236,13 @@ FORMAT_MODULE_PATH = [
 # USE_THOUSAND_SEPARATOR = True
 
 # Media configurations
-MEDIA_URL = 'media/'
+if DEBUG:
+    MEDIA_ROOT = config('MEDIA_ROOT') #os.path.join(BASE_DIR, 'media')
 # MEDIA_ROOT = config('MEDIA_ROOT') #os.path.join(BASE_DIR, 'media')
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.0/howto/static-files/
-
 STATIC_URL = 'static/'
+if DEBUG:
+    STATIC_ROOT = config('STATIC_ROOT')
 # STATIC_ROOT = config('STATIC_ROOT')
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
