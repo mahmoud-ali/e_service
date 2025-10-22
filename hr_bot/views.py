@@ -5,12 +5,15 @@ from django.contrib.auth import logout
 from django.shortcuts import get_object_or_404
 import json
 from hr_bot.models import EmployeeTelegramRegistration, EmployeeTelegramFamily, EmployeeTelegramMoahil, EmployeeTelegramBankAccount, STATE_DRAFT, STATE_ACCEPTED, STATE_REJECTED
-from hr_bot.utils import send_message, TOKEN_ID
+from hr_bot.utils import send_message
 from hr.models import EmployeeFamily, EmployeeMoahil, EmployeeBankAccount
 from django.utils import timezone
 import random
 from hr_bot.utils import create_user, reset_user_password
 from django.contrib.auth import get_user_model
+
+from hr_bot.management.commands._telegram_main import TOKEN_ID
+
 
 User = get_user_model()
 
