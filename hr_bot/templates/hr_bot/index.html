@@ -201,20 +201,6 @@
                             </div>
                         </div>
                     </div>
-
-                    {isEmployee && (
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <button className="btn btn-primary btn-lg" onClick={() => setView('families')}>
-                                إضافة بيانات عائلة
-                            </button>
-                            <button className="btn btn-primary btn-lg" onClick={() => setView('moahil')}>
-                                إضافة مؤهل علمي
-                            </button>
-                            <button className="btn btn-primary btn-lg" onClick={() => setView('bank_accounts')}>
-                                إضافة حساب بنكي
-                            </button>
-                        </div>
-                    )}
                 </div>
             );
         }
@@ -1118,7 +1104,7 @@
             );
         }
 
-        function EmployeeData({ user }) {
+        function EmployeeData({ user, setView, isEmployee }) {
             const [data, setData] = useState(null);
             const [loading, setLoading] = useState(true);
 
@@ -1144,6 +1130,20 @@
                 <div>
                     <h2 className="text-2xl font-bold mb-4">بياناتي الشخصية</h2>
                     
+                    {isEmployee && (
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                            <button className="btn btn-primary btn-lg" onClick={() => setView('families')}>
+                                إضافة بيانات عائلة
+                            </button>
+                            <button className="btn btn-primary btn-lg" onClick={() => setView('moahil')}>
+                                إضافة مؤهل علمي
+                            </button>
+                            <button className="btn btn-primary btn-lg" onClick={() => setView('bank_accounts')}>
+                                إضافة حساب بنكي
+                            </button>
+                        </div>
+                    )}
+                    
                     <div className="card bg-base-100 shadow-xl mb-4">
                         <div className="card-body">
                             <h3 className="card-title">البيانات الأساسية</h3>
@@ -1158,224 +1158,4 @@
                                     <span className="font-bold">الدرجة الوظيفية:</span> {data.employee.draja_wazifia}
                                 </div>
                                 <div>
-                                    <span className="font-bold">العلاوة السنوية:</span> {data.employee.alawa_sanawia}
-                                </div>
-                                <div>
-                                    <span className="font-bold">الهيكل الوظيفي:</span> {data.employee.hikal_wazifi}
-                                </div>
-                                <div>
-                                    <span className="font-bold">المسمى الوظيفي:</span> {data.employee.mosama_wazifi}
-                                </div>
-                                <div>
-                                    <span className="font-bold">الجنس:</span> {data.employee.sex}
-                                </div>
-                                <div>
-                                    <span className="font-bold">تاريخ الميلاد:</span> {data.employee.tarikh_milad}
-                                </div>
-                                <div>
-                                    <span className="font-bold">تاريخ التعيين:</span> {data.employee.tarikh_ta3in}
-                                </div>
-                                <div>
-                                    <span className="font-bold">تاريخ آخر ترقية:</span> {data.employee.tarikh_akhir_targia}
-                                </div>
-                                <div>
-                                    <span className="font-bold">القسيمة:</span> {data.employee.gasima}
-                                </div>
-                                <div>
-                                    <span className="font-bold">الأطفال:</span> {data.employee.atfal}
-                                </div>
-                                <div>
-                                    <span className="font-bold">المؤهل:</span> {data.employee.moahil}
-                                </div>
-                                <div>
-                                    <span className="font-bold">الهاتف:</span> {data.employee.phone}
-                                </div>
-                                <div>
-                                    <span className="font-bold">البريد الإلكتروني:</span> {data.employee.email}
-                                </div>
-                                <div>
-                                    <span className="font-bold">نوع الارتباط:</span> {data.employee.no3_2lertibat}
-                                </div>
-                                <div>
-                                    <span className="font-bold">سنوات الخبرة:</span> {data.employee.sanoat_2lkhibra}
-                                </div>
-                                <div>
-                                    <span className="font-bold">عدوى:</span> {data.employee.aadoa}
-                                </div>
-                                <div>
-                                    <span className="font-bold">المعاش:</span> {data.employee.m3ash}
-                                </div>
-                                <div>
-                                    <span className="font-bold">الحالة:</span> {data.employee.status}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="card bg-base-100 shadow-xl mb-4">
-                        <div className="card-body">
-                            <h3 className="card-title">بيانات العائلة</h3>
-                            {data.families.length > 0 ? (
-                                <div className="overflow-x-auto">
-                                    <table className="table table-zebra w-full">
-                                        <thead>
-                                            <tr>
-                                                <th>العلاقة</th>
-                                                <th>الاسم</th>
-                                                <th>تاريخ الشهادة</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {data.families.map((f, idx) => (
-                                                <tr key={idx}>
-                                                    <td>{f.relation}</td>
-                                                    <td>{f.name}</td>
-                                                    <td>{f.tarikh_el2dafa}</td>
-                                                </tr>
-                                            ))}
-                                        </tbody>
-                                    </table>
-                                </div>
-                            ) : (
-                                <p className="text-gray-500">لا توجد بيانات عائلة</p>
-                            )}
-                        </div>
-                    </div>
-
-                    <div className="card bg-base-100 shadow-xl mb-4">
-                        <div className="card-body">
-                            <h3 className="card-title">المؤهلات العلمية</h3>
-                            {data.moahil.length > 0 ? (
-                                <div className="overflow-x-auto">
-                                    <table className="table table-zebra w-full">
-                                        <thead>
-                                            <tr>
-                                                <th>المؤهل</th>
-                                                <th>الجامعة</th>
-                                                <th>التخصص</th>
-                                                <th>تاريخ التخرج</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {data.moahil.map((m, idx) => (
-                                                <tr key={idx}>
-                                                    <td>{m.moahil}</td>
-                                                    <td>{m.university}</td>
-                                                    <td>{m.takhasos}</td>
-                                                    <td>{m.graduate_dt}</td>
-                                                </tr>
-                                            ))}
-                                        </tbody>
-                                    </table>
-                                </div>
-                            ) : (
-                                <p className="text-gray-500">لا توجد مؤهلات علمية</p>
-                            )}
-                        </div>
-                    </div>
-
-                    <div className="card bg-base-100 shadow-xl mb-4">
-                        <div className="card-body">
-                            <h3 className="card-title">الحسابات البنكية</h3>
-                            {data.bank_accounts.length > 0 ? (
-                                <div className="overflow-x-auto">
-                                    <table className="table table-zebra w-full">
-                                        <thead>
-                                            <tr>
-                                                <th>البنك</th>
-                                                <th>رقم الحساب</th>
-                                                <th>نشط</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {data.bank_accounts.map((b, idx) => (
-                                                <tr key={idx}>
-                                                    <td>{b.bank}</td>
-                                                    <td>{b.account_no}</td>
-                                                    <td>{b.active ? <span className="badge badge-success">نعم</span> : <span className="badge badge-error">لا</span>}</td>
-                                                </tr>
-                                            ))}
-                                        </tbody>
-                                    </table>
-                                </div>
-                            ) : (
-                                <p className="text-gray-500">لا توجد حسابات بنكية</p>
-                            )}
-                        </div>
-                    </div>
-                </div>
-            );
-        }
-
-        function App() {
-            const [user, setUser] = useState(null);
-            const [view, setView] = useState('dashboard');
-            const [loading, setLoading] = useState(true);
-
-            useEffect(() => {
-                fetch('/bot/api/login-status/', { credentials: 'same-origin' })
-                    .then(res => {
-                        if (!res.ok) throw new Error('Not authenticated');
-                        return res.json();
-                    })
-                    .then(data => {
-                        if (data.is_authenticated) {
-                            setUser(data);
-                        } else {
-                            window.location.href = '/admin/login/?next=/bot/';
-                        }
-                    })
-                    .catch(() => {
-                        window.location.href = '/admin/login/?next=/bot/';
-                    })
-                    .finally(() => setLoading(false));
-            }, []);
-
-            const logout = () => {
-                fetch('/bot/api/logout/', { 
-                    method: 'POST', 
-                    credentials: 'same-origin',
-                    headers: {
-                        'X-CSRFToken': csrftoken,
-                    }
-                })
-                .then(() => window.location.href = '/admin/login/');
-            };
-
-            if (loading) {
-                return (
-                    <div className="flex items-center justify-center min-h-screen">
-                        <span className="loading loading-spinner loading-lg"></span>
-                    </div>
-                );
-            }
-
-            if (!user) return null;
-
-            const isManager = user.groups.includes('hr_manager') || user.groups.includes('hr_manpower') || user.is_superuser;
-            const isEmployee = user.groups.includes('hr_employee');
-
-            return (
-                <div className="min-h-screen">
-                    <Navbar user={user} logout={logout} setView={setView} />
-                    <Breadcrumb view={view} setView={setView} />
-                    <div className="container mx-auto p-4">
-                        {view === 'dashboard' && <Dashboard user={user} setView={setView} isManager={isManager} isEmployee={isEmployee} />}
-                        {view === 'registrations' && <RegistrationList user={user} isManager={isManager} />}
-                        {view === 'families' && <FamilyList user={user} isManager={isManager} isEmployee={isEmployee} />}
-                        {view === 'moahil' && <MoahilList user={user} isManager={isManager} isEmployee={isEmployee} />}
-                        {view === 'bank_accounts' && <BankAccountList user={user} isManager={isManager} isEmployee={isEmployee} />}
-                        {view === 'employee_data' && <EmployeeData user={user} />}
-                    </div>
-                </div>
-            );
-        }
-
-        // Wait for utils to load before rendering
-        waitForUtils().then(() => {
-            const root = ReactDOM.createRoot(document.getElementById('root'));
-            root.render(<App />);
-        });
-    </script>
-</body>
-</html>
+                                    <span className="font-bold">
