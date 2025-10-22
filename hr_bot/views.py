@@ -1,4 +1,5 @@
 from django.http import JsonResponse, HttpResponse
+from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
@@ -18,8 +19,10 @@ from hr_bot.management.commands._telegram_main import TOKEN_ID
 User = get_user_model()
 
 def index(request):
-    with open('hr_bot/frontend/index.html', 'r') as f:
-        return HttpResponse(f.read())
+    template_name = 'hr_bot/index.html'
+    extra_context = {}
+
+    return render(request, template_name, extra_context)
 
 @login_required
 def login_status(request):
@@ -41,7 +44,7 @@ def api_logout(request):
 def registrations_list(request):
     if not request.user.groups.filter(name__in=['hr_manager', 'hr_manpower']).exists() and not request.user.is_superuser:
         return JsonResponse({'error': 'Permission denied'}, status=403)
-    registrations = EmployeeTelegramRegistration.objects.all()
+    registrations = EmployeeTelegramRegistration.objects.filter(state=STATE_DRAFT)
     data = [{
         'id': r.id,
         'employee': r.employee.name,
