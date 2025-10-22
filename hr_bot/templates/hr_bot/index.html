@@ -205,7 +205,7 @@
             );
         }
 
-        function RegistrationList({ user, isManager }) {
+        function RegistrationList({ user, setView, isManager }) {
             const [registrations, setRegistrations] = useState([]);
             const [loading, setLoading] = useState(true);
             const [searchTerm, setSearchTerm] = useState('');
@@ -451,7 +451,7 @@
             );
         }
 
-        function FamilyList({ user, isManager, isEmployee, initialShowForm = false }) {
+        function FamilyList({ user, setView, isManager, isEmployee, initialShowForm = false }) {
             const [families, setFamilies] = useState([]);
             const [loading, setLoading] = useState(true);
             const [showForm, setShowForm] = useState(initialShowForm);
@@ -459,14 +459,18 @@
             const [stateFilter, setStateFilter] = useState(STATE_DRAFT);
 
             const loadData = () => {
-                setLoading(true);
-                fetch('/bot/api/families/', { credentials: 'same-origin' })
-                    .then(res => res.json())
-                    .then(data => {
-                        setFamilies(data.families);
-                        setLoading(false);
-                    })
-                    .catch(() => setLoading(false));
+                if(isManager){
+                    setLoading(true);
+                    fetch('/bot/api/families/', { credentials: 'same-origin' })
+                        .then(res => res.json())
+                        .then(data => {
+                            setFamilies(data.families);
+                            setLoading(false);
+                        })
+                        .catch(() => setLoading(false));
+                }else{
+                    setLoading(false)
+                }
             };
 
             useEffect(() => {
@@ -527,13 +531,8 @@
                 <div>
                     <div className="flex justify-between items-center mb-4">
                         <h2 className="text-2xl font-bold">بيانات العائلة</h2>
-                        {isEmployee && (
-                            <button className="btn btn-primary" onClick={() => setShowForm(!showForm)}>
-                                {showForm ? 'إلغاء' : 'إضافة فرد جديد'}
-                            </button>
-                        )}
                     </div>
-
+                    {!isEmployee && (
                     <div className="mb-4 flex gap-4">
                         <input type="text" placeholder="بحث..." className="input input-bordered" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
                         <select className="select select-bordered" value={stateFilter} onChange={(e) => setStateFilter(e.target.value === '' ? '' : parseInt(e.target.value))}>
@@ -543,11 +542,14 @@
                             <option value={STATE_REJECTED}>مرفوض</option>
                         </select>
                     </div>
+                    )}
 
                     {showForm && isEmployee && (
-                        <FamilyForm onSuccess={() => { setShowForm(false); loadData(); }} />
+                        <FamilyForm onSuccess={() => { setShowForm(false); setView('employee_data')}} />
                     )}
-                    
+
+                    {!isEmployee && (
+
                     <div className="overflow-x-auto mt-4">
                         <table className="table table-zebra w-full">
                             <thead>
@@ -594,6 +596,8 @@
                             <div className="text-center p-8 text-gray-500">لا توجد بيانات</div>
                         )}
                     </div>
+                    )}
+
                 </div>
             );
         }
@@ -720,7 +724,7 @@
             );
         }
 
-        function MoahilList({ user, isManager, isEmployee, initialShowForm = false }) {
+        function MoahilList({ user, setView, isManager, isEmployee, initialShowForm = false }) {
             const [moahil, setMoahil] = useState([]);
             const [loading, setLoading] = useState(true);
             const [showForm, setShowForm] = useState(initialShowForm);
@@ -728,18 +732,22 @@
             const [stateFilter, setStateFilter] = useState(STATE_DRAFT);
 
             const loadData = () => {
-                setLoading(true);
-                fetch('/bot/api/moahil/', { credentials: 'same-origin' })
-                    .then(res => res.json())
-                    .then(data => {
-                        setMoahil(data.moahil);
-                        setLoading(false);
-                    })
-                    .catch(() => setLoading(false));
+                    if(isManager){
+                    setLoading(true);
+                    fetch('/bot/api/moahil/', { credentials: 'same-origin' })
+                        .then(res => res.json())
+                        .then(data => {
+                            setMoahil(data.moahil);
+                            setLoading(false);
+                        })
+                        .catch(() => setLoading(false));
+                }else{
+                    setLoading(false);
+                }
             };
 
             useEffect(() => {
-                loadData();
+                loadData();               
             }, []);
 
             const filteredMoahil = moahil.filter(m => {
@@ -797,13 +805,9 @@
                 <div>
                     <div className="flex justify-between items-center mb-4">
                         <h2 className="text-2xl font-bold">المؤهلات العلمية</h2>
-                        {isEmployee && (
-                            <button className="btn btn-primary" onClick={() => setShowForm(!showForm)}>
-                                {showForm ? 'إلغاء' : 'إضافة مؤهل جديد'}
-                            </button>
-                        )}
                     </div>
 
+                    {showForm && isManager && (
                     <div className="mb-4 flex gap-4">
                         <input type="text" placeholder="بحث..." className="input input-bordered" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
                         <select className="select select-bordered" value={stateFilter} onChange={(e) => setStateFilter(e.target.value === '' ? '' : parseInt(e.target.value))}>
@@ -813,11 +817,13 @@
                             <option value={STATE_REJECTED}>مرفوض</option>
                         </select>
                     </div>
+                    )}
 
                     {showForm && isEmployee && (
-                        <MoahilForm onSuccess={() => { setShowForm(false); loadData(); }} />
+                        <MoahilForm onSuccess={() => { setShowForm(false); setView('employee_data'); }} />
                     )}
                     
+                    {showForm && isManager && (
                     <div className="overflow-x-auto mt-4">
                         <table className="table table-zebra w-full">
                             <thead>
@@ -866,6 +872,7 @@
                             <div className="text-center p-8 text-gray-500">لا توجد بيانات</div>
                         )}
                     </div>
+                    )}
                 </div>
             );
         }
@@ -963,7 +970,7 @@
             );
         }
 
-        function BankAccountList({ user, isManager, isEmployee, initialShowForm = false }) {
+        function BankAccountList({ user, setView, isManager, isEmployee, initialShowForm = false }) {
             const [bankAccounts, setBankAccounts] = useState([]);
             const [loading, setLoading] = useState(true);
             const [showForm, setShowForm] = useState(initialShowForm);
@@ -971,14 +978,19 @@
             const [stateFilter, setStateFilter] = useState(STATE_DRAFT);
 
             const loadData = () => {
-                setLoading(true);
-                fetch('/bot/api/bank-accounts/', { credentials: 'same-origin' })
-                    .then(res => res.json())
-                    .then(data => {
-                        setBankAccounts(data.bank_accounts);
-                        setLoading(false);
-                    })
-                    .catch(() => setLoading(false));
+                if (isManager){
+                    setLoading(true);
+                    fetch('/bot/api/bank-accounts/', { credentials: 'same-origin' })
+                        .then(res => res.json())
+                        .then(data => {
+                            setBankAccounts(data.bank_accounts);
+                            setLoading(false);
+                        })
+                        .catch(() => setLoading(false));
+                }else{
+                    setLoading(false)
+                }
+
             };
 
             useEffect(() => {
@@ -1039,13 +1051,9 @@
                 <div>
                     <div className="flex justify-between items-center mb-4">
                         <h2 className="text-2xl font-bold">الحسابات البنكية</h2>
-                        {isEmployee && (
-                            <button className="btn btn-primary" onClick={() => setShowForm(!showForm)}>
-                                {showForm ? 'إلغاء' : 'إضافة حساب جديد'}
-                            </button>
-                        )}
                     </div>
 
+                    {showForm && isManager && (
                     <div className="mb-4 flex gap-4">
                         <input type="text" placeholder="بحث..." className="input input-bordered" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
                         <select className="select select-bordered" value={stateFilter} onChange={(e) => setStateFilter(e.target.value === '' ? '' : parseInt(e.target.value))}>
@@ -1055,11 +1063,13 @@
                             <option value={STATE_REJECTED}>مرفوض</option>
                         </select>
                     </div>
+                    )}
 
                     {showForm && isEmployee && (
-                        <BankAccountForm onSuccess={() => { setShowForm(false); loadData(); }} />
+                        <BankAccountForm onSuccess={() => { setShowForm(false); setView('employee_data') }} />
                     )}
-                    
+
+                    {showForm && isManager && (
                     <div className="overflow-x-auto mt-4">
                         <table className="table table-zebra w-full">
                             <thead>
@@ -1100,6 +1110,7 @@
                             <div className="text-center p-8 text-gray-500">لا توجد بيانات</div>
                         )}
                     </div>
+                    )}
                 </div>
             );
         }
@@ -1361,10 +1372,10 @@
                     <Breadcrumb view={baseView} setView={setView} />
                     <div className="container mx-auto p-4">
                         {baseView === 'dashboard' && <Dashboard user={user} setView={setView} isManager={isManager} isEmployee={isEmployee} />}
-                        {baseView === 'registrations' && <RegistrationList user={user} isManager={isManager} />}
-                        {baseView === 'families' && <FamilyList user={user} isManager={isManager} isEmployee={isEmployee} initialShowForm={showForm} />}
-                        {baseView === 'moahil' && <MoahilList user={user} isManager={isManager} isEmployee={isEmployee} initialShowForm={showForm} />}
-                        {baseView === 'bank_accounts' && <BankAccountList user={user} isManager={isManager} isEmployee={isEmployee} initialShowForm={showForm} />}
+                        {baseView === 'registrations' && <RegistrationList user={user} setView={setView} isManager={isManager} />}
+                        {baseView === 'families' && <FamilyList user={user} setView={setView} isManager={isManager} isEmployee={isEmployee} initialShowForm={showForm} />}
+                        {baseView === 'moahil' && <MoahilList user={user} setView={setView} isManager={isManager} isEmployee={isEmployee} initialShowForm={showForm} />}
+                        {baseView === 'bank_accounts' && <BankAccountList user={user} setView={setView} isManager={isManager} isEmployee={isEmployee} initialShowForm={showForm} />}
                         {baseView === 'employee_data' && <EmployeeData user={user} setView={setView} isEmployee={isEmployee} />}
                     </div>
                 </div>
