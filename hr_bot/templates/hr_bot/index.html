@@ -233,6 +233,7 @@
         function RegistrationList({ user, isManager }) {
             const [registrations, setRegistrations] = useState([]);
             const [loading, setLoading] = useState(true);
+            const [searchTerm, setSearchTerm] = useState('');
 
             const loadData = () => {
                 setLoading(true);
@@ -248,6 +249,14 @@
             useEffect(() => {
                 loadData();
             }, []);
+
+            const filteredRegistrations = registrations.filter(r =>
+                searchTerm === '' ||
+                r.employee.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                r.employee_code.includes(searchTerm) ||
+                r.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                r.phone.includes(searchTerm)
+            );
 
             const accept = (id) => {
                 if (!confirm('هل أنت متأكد من قبول هذا الطلب؟')) return;
@@ -310,6 +319,10 @@
                 <div>
                     <h2 className="text-2xl font-bold mb-4">طلبات التسجيل</h2>
                     
+                    <div className="mb-4">
+                        <input type="text" placeholder="بحث..." className="input input-bordered" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+                    </div>
+                    
                     <div className="overflow-x-auto">
                         <table className="table table-zebra w-full">
                             <thead>
@@ -324,7 +337,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                {registrations.map(r => (
+                                {filteredRegistrations.map(r => (
                                     <tr key={r.id}>
                                         <td>{r.employee_code}</td>
                                         <td>{r.employee}</td>
@@ -349,7 +362,7 @@
                                 ))}
                             </tbody>
                         </table>
-                        {registrations.length === 0 && (
+                        {filteredRegistrations.length === 0 && (
                             <div className="text-center p-8 text-gray-500">لا توجد طلبات</div>
                         )}
                     </div>
@@ -361,6 +374,8 @@
             const [families, setFamilies] = useState([]);
             const [loading, setLoading] = useState(true);
             const [showForm, setShowForm] = useState(false);
+            const [searchTerm, setSearchTerm] = useState('');
+            const [stateFilter, setStateFilter] = useState(STATE_DRAFT);
 
             const loadData = () => {
                 setLoading(true);
@@ -376,6 +391,16 @@
             useEffect(() => {
                 loadData();
             }, []);
+
+            const filteredFamilies = families.filter(f => {
+                const matchesSearch = searchTerm === '' ||
+                    f.employee.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    f.employee_code.includes(searchTerm) ||
+                    f.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    f.relation.includes(searchTerm);
+                const matchesState = stateFilter === '' || f.state === stateFilter;
+                return matchesSearch && matchesState;
+            });
 
             const accept = (id) => {
                 if (!confirm('هل أنت متأكد من قبول هذا الطلب؟')) return;
@@ -428,6 +453,16 @@
                         )}
                     </div>
 
+                    <div className="mb-4 flex gap-4">
+                        <input type="text" placeholder="بحث..." className="input input-bordered" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+                        <select className="select select-bordered" value={stateFilter} onChange={(e) => setStateFilter(e.target.value === '' ? '' : parseInt(e.target.value))}>
+                            <option value="">جميع الحالات</option>
+                            <option value={STATE_DRAFT}>مسودة</option>
+                            <option value={STATE_ACCEPTED}>مقبول</option>
+                            <option value={STATE_REJECTED}>مرفوض</option>
+                        </select>
+                    </div>
+
                     {showForm && isEmployee && (
                         <FamilyForm onSuccess={() => { setShowForm(false); loadData(); }} />
                     )}
@@ -447,7 +482,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                {families.map(f => (
+                                {filteredFamilies.map(f => (
                                     <tr key={f.id}>
                                         <td>{f.employee_code}</td>
                                         <td>{f.employee}</td>
@@ -474,7 +509,7 @@
                                 ))}
                             </tbody>
                         </table>
-                        {families.length === 0 && (
+                        {filteredFamilies.length === 0 && (
                             <div className="text-center p-8 text-gray-500">لا توجد بيانات</div>
                         )}
                     </div>
@@ -592,6 +627,8 @@
             const [moahil, setMoahil] = useState([]);
             const [loading, setLoading] = useState(true);
             const [showForm, setShowForm] = useState(false);
+            const [searchTerm, setSearchTerm] = useState('');
+            const [stateFilter, setStateFilter] = useState(STATE_DRAFT);
 
             const loadData = () => {
                 setLoading(true);
@@ -607,6 +644,17 @@
             useEffect(() => {
                 loadData();
             }, []);
+
+            const filteredMoahil = moahil.filter(m => {
+                const matchesSearch = searchTerm === '' ||
+                    m.employee.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    m.employee_code.includes(searchTerm) ||
+                    m.moahil.includes(searchTerm) ||
+                    m.university.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    m.takhasos.toLowerCase().includes(searchTerm.toLowerCase());
+                const matchesState = stateFilter === '' || m.state === stateFilter;
+                return matchesSearch && matchesState;
+            });
 
             const accept = (id) => {
                 if (!confirm('هل أنت متأكد من قبول هذا الطلب؟')) return;
@@ -659,6 +707,16 @@
                         )}
                     </div>
 
+                    <div className="mb-4 flex gap-4">
+                        <input type="text" placeholder="بحث..." className="input input-bordered" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+                        <select className="select select-bordered" value={stateFilter} onChange={(e) => setStateFilter(e.target.value === '' ? '' : parseInt(e.target.value))}>
+                            <option value="">جميع الحالات</option>
+                            <option value={STATE_DRAFT}>مسودة</option>
+                            <option value={STATE_ACCEPTED}>مقبول</option>
+                            <option value={STATE_REJECTED}>مرفوض</option>
+                        </select>
+                    </div>
+
                     {showForm && isEmployee && (
                         <MoahilForm onSuccess={() => { setShowForm(false); loadData(); }} />
                     )}
@@ -679,7 +737,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                {moahil.map(m => (
+                                {filteredMoahil.map(m => (
                                     <tr key={m.id}>
                                         <td>{m.employee_code}</td>
                                         <td>{m.employee}</td>
@@ -707,7 +765,7 @@
                                 ))}
                             </tbody>
                         </table>
-                        {moahil.length === 0 && (
+                        {filteredMoahil.length === 0 && (
                             <div className="text-center p-8 text-gray-500">لا توجد بيانات</div>
                         )}
                     </div>
@@ -841,6 +899,8 @@
             const [bankAccounts, setBankAccounts] = useState([]);
             const [loading, setLoading] = useState(true);
             const [showForm, setShowForm] = useState(false);
+            const [searchTerm, setSearchTerm] = useState('');
+            const [stateFilter, setStateFilter] = useState(STATE_DRAFT);
 
             const loadData = () => {
                 setLoading(true);
@@ -856,6 +916,16 @@
             useEffect(() => {
                 loadData();
             }, []);
+
+            const filteredBankAccounts = bankAccounts.filter(b => {
+                const matchesSearch = searchTerm === '' ||
+                    b.employee.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    b.employee_code.includes(searchTerm) ||
+                    b.bank.includes(searchTerm) ||
+                    b.account_no.includes(searchTerm);
+                const matchesState = stateFilter === '' || b.state === stateFilter;
+                return matchesSearch && matchesState;
+            });
 
             const accept = (id) => {
                 if (!confirm('هل أنت متأكد من قبول هذا الطلب؟')) return;
@@ -908,6 +978,16 @@
                         )}
                     </div>
 
+                    <div className="mb-4 flex gap-4">
+                        <input type="text" placeholder="بحث..." className="input input-bordered" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+                        <select className="select select-bordered" value={stateFilter} onChange={(e) => setStateFilter(e.target.value === '' ? '' : parseInt(e.target.value))}>
+                            <option value="">جميع الحالات</option>
+                            <option value={STATE_DRAFT}>مسودة</option>
+                            <option value={STATE_ACCEPTED}>مقبول</option>
+                            <option value={STATE_REJECTED}>مرفوض</option>
+                        </select>
+                    </div>
+
                     {showForm && isEmployee && (
                         <BankAccountForm onSuccess={() => { setShowForm(false); loadData(); }} />
                     )}
@@ -926,7 +1006,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                {bankAccounts.map(b => (
+                                {filteredBankAccounts.map(b => (
                                     <tr key={b.id}>
                                         <td>{b.employee_code}</td>
                                         <td>{b.employee}</td>
@@ -948,7 +1028,7 @@
                                 ))}
                             </tbody>
                         </table>
-                        {bankAccounts.length === 0 && (
+                        {filteredBankAccounts.length === 0 && (
                             <div className="text-center p-8 text-gray-500">لا توجد بيانات</div>
                         )}
                     </div>
@@ -1076,126 +1156,3 @@
                     <h2 className="text-2xl font-bold mb-4">بياناتي الشخصية</h2>
                     
                     <div className="card bg-base-100 shadow-xl mb-4">
-                        <div className="card-body">
-                            <h3 className="card-title">البيانات الأساسية</h3>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div><strong>الكود:</strong> {data.employee.code}</div>
-                                <div><strong>الاسم:</strong> {data.employee.name}</div>
-                                <div><strong>الدرجة الوظيفية:</strong> {data.employee.draja_wazifia}</div>
-                                <div><strong>العلاوة السنوية:</strong> {data.employee.alawa_sanawia}</div>
-                                <div><strong>الهيكل الوظيفي:</strong> {data.employee.hikal_wazifi}</div>
-                                <div><strong>المسمى الوظيفي:</strong> {data.employee.mosama_wazifi}</div>
-                                <div><strong>الجنس:</strong> {data.employee.sex}</div>
-                                <div><strong>تاريخ الميلاد:</strong> {data.employee.tarikh_milad}</div>
-                                <div><strong>تاريخ التعيين:</strong> {data.employee.tarikh_ta3in}</div>
-                                <div><strong>تاريخ آخر ترقية:</strong> {data.employee.tarikh_akhir_targia}</div>
-                                <div><strong>القسيمة:</strong> {data.employee.gasima}</div>
-                                <div><strong>الأطفال:</strong> {data.employee.atfal}</div>
-                                <div><strong>المؤهل:</strong> {data.employee.moahil}</div>
-                                <div><strong>الهاتف:</strong> {data.employee.phone}</div>
-                                <div><strong>البريد الإلكتروني:</strong> {data.employee.email}</div>
-                                <div><strong>نوع الارتباط:</strong> {data.employee.no3_2lertibat}</div>
-                                <div><strong>سنوات الخبرة:</strong> {data.employee.sanoat_2lkhibra}</div>
-                                <div><strong>العضوية:</strong> {data.employee.aadoa}</div>
-                                <div><strong>المعاش:</strong> {data.employee.m3ash}</div>
-                                <div><strong>الحالة:</strong> {data.employee.status}</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="card bg-base-100 shadow-xl mb-4">
-                        <div className="card-body">
-                            <h3 className="card-title">بيانات العائلة</h3>
-                            <div className="overflow-x-auto">
-                                <table className="table table-zebra w-full">
-                                    <thead>
-                                        <tr>
-                                            <th>العلاقة</th>
-                                            <th>الاسم</th>
-                                            <th>تاريخ الإضافة</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {data.families.map((f, i) => (
-                                            <tr key={i}>
-                                                <td>{f.relation}</td>
-                                                <td>{f.name}</td>
-                                                <td>{f.tarikh_el2dafa}</td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                                {data.families.length === 0 && (
-                                    <div className="text-center p-4 text-gray-500">لا توجد بيانات</div>
-                                )}
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="card bg-base-100 shadow-xl mb-4">
-                        <div className="card-body">
-                            <h3 className="card-title">المؤهلات العلمية</h3>
-                            <div className="overflow-x-auto">
-                                <table className="table table-zebra w-full">
-                                    <thead>
-                                        <tr>
-                                            <th>المؤهل</th>
-                                            <th>الجامعة</th>
-                                            <th>التخصص</th>
-                                            <th>تاريخ التخرج</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {data.moahil.map((m, i) => (
-                                            <tr key={i}>
-                                                <td>{m.moahil}</td>
-                                                <td>{m.university}</td>
-                                                <td>{m.takhasos}</td>
-                                                <td>{m.graduate_dt}</td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                                {data.moahil.length === 0 && (
-                                    <div className="text-center p-4 text-gray-500">لا توجد بيانات</div>
-                                )}
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="card bg-base-100 shadow-xl mb-4">
-                        <div className="card-body">
-                            <h3 className="card-title">الحسابات البنكية</h3>
-                            <div className="overflow-x-auto">
-                                <table className="table table-zebra w-full">
-                                    <thead>
-                                        <tr>
-                                            <th>البنك</th>
-                                            <th>رقم الحساب</th>
-                                            <th>نشط</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {data.bank_accounts.map((b, i) => (
-                                            <tr key={i}>
-                                                <td>{b.bank}</td>
-                                                <td>{b.account_no}</td>
-                                                <td>{b.active ? <span className="badge badge-success">نعم</span> : <span className="badge badge-error">لا</span>}</td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                                {data.bank_accounts.length === 0 && (
-                                    <div className="text-center p-4 text-gray-500">لا توجد بيانات</div>
-                                )}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            );
-        }
-
-        ReactDOM.render(<App />, document.getElementById('root'));
-    </script>
-</body>
-</html>
