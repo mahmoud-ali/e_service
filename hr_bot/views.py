@@ -501,10 +501,10 @@ def employee_data(request):
             'employee': {
                 'code': employee.code,
                 'name': employee.name,
-                'draja_wazifia': employee.draja_wazifia,
+                'draja_wazifia': str(employee.draja_wazifia) if employee.draja_wazifia else '',
                 'alawa_sanawia': str(employee.alawa_sanawia) if employee.alawa_sanawia else '',
-                'hikal_wazifi': employee.hikal_wazifi,
-                'mosama_wazifi': employee.mosama_wazifi,
+                'hikal_wazifi': str(employee.hikal_wazifi) if employee.hikal_wazifi else '',
+                'mosama_wazifi': str(employee.mosama_wazifi) if employee.mosama_wazifi else '',
                 'sex': employee.sex,
                 'tarikh_milad': employee.tarikh_milad.strftime('%Y-%m-%d') if employee.tarikh_milad else '',
                 'tarikh_ta3in': employee.tarikh_ta3in.strftime('%Y-%m-%d') if employee.tarikh_ta3in else '',
