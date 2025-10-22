@@ -1,4 +1,4 @@
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
@@ -16,6 +16,10 @@ from hr_bot.management.commands._telegram_main import TOKEN_ID
 
 
 User = get_user_model()
+
+def index(request):
+    with open('hr_bot/frontend/index.html', 'r') as f:
+        return HttpResponse(f.read())
 
 @login_required
 def login_status(request):
