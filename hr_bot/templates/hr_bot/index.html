@@ -7,6 +7,8 @@
     <title>نظام إدارة الموارد البشرية</title>
     <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet" type="text/css" />
     <script src="https://cdn.tailwindcss.com"></script>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     
     <style>
@@ -20,22 +22,84 @@
 </head>
 <body class="bg-base-200">
     <div id="root"></div>
-    <script type="importmap">
-    {
-        "imports": {
-            "react": "https://esm.sh/react@18",
-            "react-dom": "https://esm.sh/react-dom@18",
-            "react-dom/client": "https://esm.sh/react-dom@18/client"
+    
+    <script type="text/babel" data-type="module">
+        import { csrftoken } from '{% static "hr_bot/js/utils.js" %}';
+        import Navbar from '{% static "hr_bot/js/components/Navbar.js" %}';
+        import Dashboard from '{% static "hr_bot/js/components/Dashboard.js" %}';
+        import RegistrationList from '{% static "hr_bot/js/components/RegistrationList.js" %}';
+        import FamilyList from '{% static "hr_bot/js/components/FamilyList.js" %}';
+        import MoahilList from '{% static "hr_bot/js/components/MoahilList.js" %}';
+        import BankAccountList from '{% static "hr_bot/js/components/BankAccountList.js" %}';
+        import EmployeeData from '{% static "hr_bot/js/components/EmployeeData.js" %}';
+
+        const { useState, useEffect } = React;
+
+        function App() {
+            const [user, setUser] = useState(null);
+            const [view, setView] = useState('dashboard');
+            const [loading, setLoading] = useState(true);
+
+            useEffect(() => {
+                fetch('/bot/api/login-status/', { credentials: 'same-origin' })
+                    .then(res => {
+                        if (!res.ok) throw new Error('Not authenticated');
+                        return res.json();
+                    })
+                    .then(data => {
+                        if (data.is_authenticated) {
+                            setUser(data);
+                        } else {
+                            window.location.href = '/admin/login/?next=/bot/';
+                        }
+                    })
+                    .catch(() => {
+                        window.location.href = '/admin/login/?next=/bot/';
+                    })
+                    .finally(() => setLoading(false));
+            }, []);
+
+            const logout = () => {
+                fetch('/bot/api/logout/', { 
+                    method: 'POST', 
+                    credentials: 'same-origin',
+                    headers: {
+                        'X-CSRFToken': csrftoken,
+                    }
+                })
+                .then(() => window.location.href = '/admin/login/');
+            };
+
+            if (loading) {
+                return (
+                    <div className="flex items-center justify-center min-h-screen">
+                        <span className="loading loading-spinner loading-lg"></span>
+                    </div>
+                );
+            }
+
+            if (!user) return null;
+
+            const isManager = user.groups.includes('hr_manager') || user.groups.includes('hr_manpower') || user.is_superuser;
+            const isEmployee = user.groups.includes('hr_employee');
+
+            return (
+                <div className="min-h-screen">
+                    <Navbar user={user} logout={logout} setView={setView} />
+                    <div className="container mx-auto p-4">
+                        {view === 'dashboard' && <Dashboard user={user} setView={setView} isManager={isManager} isEmployee={isEmployee} />}
+                        {view === 'registrations' && <RegistrationList user={user} isManager={isManager} />}
+                        {view === 'families' && <FamilyList user={user} isManager={isManager} isEmployee={isEmployee} />}
+                        {view === 'moahil' && <MoahilList user={user} isManager={isManager} isEmployee={isEmployee} />}
+                        {view === 'bank_accounts' && <BankAccountList user={user} isManager={isManager} isEmployee={isEmployee} />}
+                        {view === 'employee_data' && <EmployeeData user={user} />}
+                    </div>
+                </div>
+            );
         }
-    }
-    </script>
-    <script type="module">
-        import React from 'react';
-        import ReactDOM from 'react-dom/client';
-        import App from '{% static "hr_bot/js/App.js" %}';
 
         const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(React.createElement(App));
+        root.render(<App />);
     </script>
 </body>
 </html>
