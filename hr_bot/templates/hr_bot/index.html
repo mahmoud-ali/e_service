@@ -253,7 +253,7 @@
             const filteredRegistrations = registrations.filter(r =>
                 searchTerm === '' ||
                 r.employee.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                r.employee_code.includes(searchTerm) ||
+                String(r.employee_code).includes(searchTerm) ||
                 r.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                 r.phone.includes(searchTerm)
             );
@@ -395,7 +395,7 @@
             const filteredFamilies = families.filter(f => {
                 const matchesSearch = searchTerm === '' ||
                     f.employee.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                    f.employee_code.includes(searchTerm) ||
+                    String(f.employee_code).includes(searchTerm) ||
                     f.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                     f.relation.includes(searchTerm);
                 const matchesState = stateFilter === '' || f.state === stateFilter;
@@ -648,7 +648,7 @@
             const filteredMoahil = moahil.filter(m => {
                 const matchesSearch = searchTerm === '' ||
                     m.employee.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                    m.employee_code.includes(searchTerm) ||
+                    String(m.employee_code).includes(searchTerm) ||
                     m.moahil.includes(searchTerm) ||
                     m.university.toLowerCase().includes(searchTerm.toLowerCase()) ||
                     m.takhasos.toLowerCase().includes(searchTerm.toLowerCase());
@@ -920,7 +920,7 @@
             const filteredBankAccounts = bankAccounts.filter(b => {
                 const matchesSearch = searchTerm === '' ||
                     b.employee.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                    b.employee_code.includes(searchTerm) ||
+                    String(b.employee_code).includes(searchTerm) ||
                     b.bank.includes(searchTerm) ||
                     b.account_no.includes(searchTerm);
                 const matchesState = stateFilter === '' || b.state === stateFilter;
