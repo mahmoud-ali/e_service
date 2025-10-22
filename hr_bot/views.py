@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from django.shortcuts import get_object_or_404
 from django.core.files.storage import default_storage
+from django.conf import settings
 import json
 from hr_bot.models import EmployeeTelegramRegistration, EmployeeTelegramFamily, EmployeeTelegramMoahil, EmployeeTelegramBankAccount, STATE_DRAFT, STATE_ACCEPTED, STATE_REJECTED, EmployeeTelegram
 from hr_bot.utils import send_message, reject_cause, create_user, reset_user_password
@@ -18,12 +19,17 @@ from hr_bot.management.commands._telegram_main import TOKEN_ID
 
 User = get_user_model()
 
+# Custom login_required decorator that redirects to admin login
+def admin_login_required(view_func):
+    decorated_view_func = login_required(view_func, login_url='/admin/login/')
+    return decorated_view_func
+
 def index(request):
     template_name = 'hr_bot/index.html'
     extra_context = {}
     return render(request, template_name, extra_context)
 
-@login_required
+@admin_login_required
 def login_status(request):
     return JsonResponse({
         'is_authenticated': True,
@@ -33,14 +39,14 @@ def login_status(request):
     })
 
 @csrf_exempt
-@login_required
+@admin_login_required
 def api_logout(request):
     if request.method == 'POST':
         logout(request)
         return JsonResponse({'message': 'Logged out'})
     return JsonResponse({'error': 'Method not allowed'}, status=405)
 
-@login_required
+@admin_login_required
 def registrations_list(request):
     if not request.user.groups.filter(name__in=['hr_manager', 'hr_manpower']).exists() and not request.user.is_superuser:
         return JsonResponse({'error': 'Permission denied'}, status=403)
@@ -57,7 +63,7 @@ def registrations_list(request):
     return JsonResponse({'registrations': data})
 
 @csrf_exempt
-@login_required
+@admin_login_required
 def registration_accept(request, pk):
     if not request.user.groups.filter(name__in=['hr_manager', 'hr_manpower']).exists() and not request.user.is_superuser:
         return JsonResponse({'error': 'Permission denied'}, status=403)
@@ -105,7 +111,7 @@ def registration_accept(request, pk):
     return JsonResponse({'message': 'Accepted'})
 
 @csrf_exempt
-@login_required
+@admin_login_required
 def registration_reject(request, pk):
     if not request.user.groups.filter(name__in=['hr_manager', 'hr_manpower']).exists() and not request.user.is_superuser:
         return JsonResponse({'error': 'Permission denied'}, status=403)
@@ -129,7 +135,7 @@ def registration_reject(request, pk):
     return JsonResponse({'message': 'Rejected'})
 
 @csrf_exempt
-@login_required
+@admin_login_required
 def registration_reset_password(request, pk):
     if not request.user.groups.filter(name__in=['hr_manager', 'hr_manpower']).exists() and not request.user.is_superuser:
         return JsonResponse({'error': 'Permission denied'}, status=403)
@@ -145,7 +151,7 @@ def registration_reset_password(request, pk):
     
     return JsonResponse({'message': 'Password reset'})
 
-@login_required
+@admin_login_required
 def family_list(request):
     if not request.user.groups.filter(name__in=['hr_manager', 'hr_manpower', 'hr_employee']).exists() and not request.user.is_superuser:
         return JsonResponse({'error': 'Permission denied'}, status=403)
@@ -169,7 +175,7 @@ def family_list(request):
     return JsonResponse({'families': data})
 
 @csrf_exempt
-@login_required
+@admin_login_required
 def family_create(request):
     if request.method != 'POST':
         return JsonResponse({'error': 'Method not allowed'}, status=405)
@@ -201,7 +207,7 @@ def family_create(request):
     return JsonResponse({'message': 'Created', 'id': family.id})
 
 @csrf_exempt
-@login_required
+@admin_login_required
 def family_accept(request, pk):
     if not request.user.groups.filter(name__in=['hr_manager', 'hr_manpower']).exists() and not request.user.is_superuser:
         return JsonResponse({'error': 'Permission denied'}, status=403)
@@ -234,7 +240,7 @@ def family_accept(request, pk):
     return JsonResponse({'message': 'Accepted'})
 
 @csrf_exempt
-@login_required
+@admin_login_required
 def family_reject(request, pk):
     if not request.user.groups.filter(name__in=['hr_manager', 'hr_manpower']).exists() and not request.user.is_superuser:
         return JsonResponse({'error': 'Permission denied'}, status=403)
@@ -257,7 +263,7 @@ def family_reject(request, pk):
     
     return JsonResponse({'message': 'Rejected'})
 
-@login_required
+@admin_login_required
 def moahil_list(request):
     if not request.user.groups.filter(name__in=['hr_manager', 'hr_manpower', 'hr_employee']).exists() and not request.user.is_superuser:
         return JsonResponse({'error': 'Permission denied'}, status=403)
@@ -282,7 +288,7 @@ def moahil_list(request):
     return JsonResponse({'moahil': data})
 
 @csrf_exempt
-@login_required
+@admin_login_required
 def moahil_create(request):
     if request.method != 'POST':
         return JsonResponse({'error': 'Method not allowed'}, status=405)
@@ -316,7 +322,7 @@ def moahil_create(request):
     return JsonResponse({'message': 'Created', 'id': moahil_obj.id})
 
 @csrf_exempt
-@login_required
+@admin_login_required
 def moahil_accept(request, pk):
     if not request.user.groups.filter(name__in=['hr_manager', 'hr_manpower']).exists() and not request.user.is_superuser:
         return JsonResponse({'error': 'Permission denied'}, status=403)
@@ -351,7 +357,7 @@ def moahil_accept(request, pk):
     return JsonResponse({'message': 'Accepted'})
 
 @csrf_exempt
-@login_required
+@admin_login_required
 def moahil_reject(request, pk):
     if not request.user.groups.filter(name__in=['hr_manager', 'hr_manpower']).exists() and not request.user.is_superuser:
         return JsonResponse({'error': 'Permission denied'}, status=403)
@@ -374,7 +380,7 @@ def moahil_reject(request, pk):
     
     return JsonResponse({'message': 'Rejected'})
 
-@login_required
+@admin_login_required
 def bank_account_list(request):
     if not request.user.groups.filter(name__in=['hr_manager', 'hr_manpower', 'hr_employee']).exists() and not request.user.is_superuser:
         return JsonResponse({'error': 'Permission denied'}, status=403)
@@ -397,7 +403,7 @@ def bank_account_list(request):
     return JsonResponse({'bank_accounts': data})
 
 @csrf_exempt
-@login_required
+@admin_login_required
 def bank_account_create(request):
     if request.method != 'POST':
         return JsonResponse({'error': 'Method not allowed'}, status=405)
@@ -427,7 +433,7 @@ def bank_account_create(request):
     return JsonResponse({'message': 'Created', 'id': bank_account.id})
 
 @csrf_exempt
-@login_required
+@admin_login_required
 def bank_account_accept(request, pk):
     if not request.user.groups.filter(name__in=['hr_manager', 'hr_manpower']).exists() and not request.user.is_superuser:
         return JsonResponse({'error': 'Permission denied'}, status=403)
@@ -459,7 +465,7 @@ def bank_account_accept(request, pk):
     return JsonResponse({'message': 'Accepted'})
 
 @csrf_exempt
-@login_required
+@admin_login_required
 def bank_account_reject(request, pk):
     if not request.user.groups.filter(name__in=['hr_manager', 'hr_manpower']).exists() and not request.user.is_superuser:
         return JsonResponse({'error': 'Permission denied'}, status=403)
@@ -482,7 +488,7 @@ def bank_account_reject(request, pk):
     
     return JsonResponse({'message': 'Rejected'})
 
-@login_required
+@admin_login_required
 def employee_data(request):
     try:
         employee = EmployeeBasic.objects.get(email=request.user.email)
