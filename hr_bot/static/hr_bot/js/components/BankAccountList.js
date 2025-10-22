@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { csrftoken, STATE_DRAFT, STATE_ACCEPTED, STATE_REJECTED, getStateBadge } from '../utils.js';
+import { csrftoken, STATE_DRAFT, STATE_ACCEPTED, STATE_REJECTED, getStateInfo } from '../utils.js';
 import BankAccountForm from './BankAccountForm.js';
+
+function StateBadge({ state }) {
+    const info = getStateInfo(state);
+    return <span className={`badge ${info.className}`}>{info.label}</span>;
+}
 
 export default function BankAccountList({ user, isManager, isEmployee }) {
     const [bankAccounts, setBankAccounts] = useState([]);
@@ -120,7 +125,7 @@ export default function BankAccountList({ user, isManager, isEmployee }) {
                                 <td>{b.bank}</td>
                                 <td>{b.account_no}</td>
                                 <td>{b.active ? <span className="badge badge-success">نعم</span> : <span className="badge badge-error">لا</span>}</td>
-                                <td>{getStateBadge(b.state)}</td>
+                                <td><StateBadge state={b.state} /></td>
                                 {isManager && (
                                     <td>
                                         {b.state === STATE_DRAFT && (

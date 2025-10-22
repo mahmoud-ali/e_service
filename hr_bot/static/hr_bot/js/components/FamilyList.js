@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { csrftoken, STATE_DRAFT, STATE_ACCEPTED, STATE_REJECTED, getStateBadge } from '../utils.js';
+import { csrftoken, STATE_DRAFT, STATE_ACCEPTED, STATE_REJECTED, getStateInfo } from '../utils.js';
 import FamilyForm from './FamilyForm.js';
+
+function StateBadge({ state }) {
+    const info = getStateInfo(state);
+    return <span className={`badge ${info.className}`}>{info.label}</span>;
+}
 
 export default function FamilyList({ user, isManager, isEmployee }) {
     const [families, setFamilies] = useState([]);
@@ -126,7 +131,7 @@ export default function FamilyList({ user, isManager, isEmployee }) {
                                         <a href={f.attachement_file} target="_blank" className="btn btn-sm btn-ghost">عرض</a>
                                     )}
                                 </td>
-                                <td>{getStateBadge(f.state)}</td>
+                                <td><StateBadge state={f.state} /></td>
                                 {isManager && (
                                     <td>
                                         {f.state === STATE_DRAFT && (

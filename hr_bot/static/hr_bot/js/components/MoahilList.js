@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { csrftoken, STATE_DRAFT, STATE_ACCEPTED, STATE_REJECTED, getStateBadge } from '../utils.js';
+import { csrftoken, STATE_DRAFT, STATE_ACCEPTED, STATE_REJECTED, getStateInfo } from '../utils.js';
 import MoahilForm from './MoahilForm.js';
+
+function StateBadge({ state }) {
+    const info = getStateInfo(state);
+    return <span className={`badge ${info.className}`}>{info.label}</span>;
+}
 
 export default function MoahilList({ user, isManager, isEmployee }) {
     const [moahil, setMoahil] = useState([]);
@@ -129,7 +134,7 @@ export default function MoahilList({ user, isManager, isEmployee }) {
                                         <a href={m.attachement_file} target="_blank" className="btn btn-sm btn-ghost">عرض</a>
                                     )}
                                 </td>
-                                <td>{getStateBadge(m.state)}</td>
+                                <td><StateBadge state={m.state} /></td>
                                 {isManager && (
                                     <td>
                                         {m.state === STATE_DRAFT && (

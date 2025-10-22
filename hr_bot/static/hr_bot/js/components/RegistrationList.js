@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { csrftoken, STATE_DRAFT, getStateBadge } from '../utils.js';
+import { csrftoken, STATE_DRAFT, getStateInfo } from '../utils.js';
+
+function StateBadge({ state }) {
+    const info = getStateInfo(state);
+    return <span className={`badge ${info.className}`}>{info.label}</span>;
+}
 
 export default function RegistrationList({ user, isManager }) {
     const [registrations, setRegistrations] = useState([]);
@@ -115,7 +120,7 @@ export default function RegistrationList({ user, isManager }) {
                                 <td>{r.name}</td>
                                 <td>{r.phone}</td>
                                 <td>{r.created_at}</td>
-                                <td>{getStateBadge(r.state)}</td>
+                                <td><StateBadge state={r.state} /></td>
                                 {isManager && (
                                     <td>
                                         <div className="flex gap-2">

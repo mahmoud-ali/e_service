@@ -19,11 +19,11 @@ export const STATE_DRAFT = 1;
 export const STATE_ACCEPTED = 2;
 export const STATE_REJECTED = 3;
 
-export function getStateBadge(state) {
+export function getStateInfo(state) {
     switch(state) {
-        case STATE_DRAFT: return <span className="badge badge-warning">مسودة</span>;
-        case STATE_ACCEPTED: return <span className="badge badge-success">مقبول</span>;
-        case STATE_REJECTED: return <span className="badge badge-error">مرفوض</span>;
-        default: return <span className="badge">غير معروف</span>;
+        case STATE_DRAFT: return { label: 'مسودة', className: 'badge-warning' };
+        case STATE_ACCEPTED: return { label: 'مقبول', className: 'badge-success' };
+        case STATE_REJECTED: return { label: 'مرفوض', className: 'badge-error' };
+        default: return { label: 'غير معروف', className: '' };
     }
 }
