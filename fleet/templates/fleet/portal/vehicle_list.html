@@ -26,7 +26,7 @@
                 <select name="status" class="select select-bordered">
                     <option value="">الكل</option>
                     {% for status in statuses %}
-                    <option value="{{ status.id }}" {% if status_filter == status.id|stringformat:"s" %}selected{% endif %}>
+                    <option value="{{ status.id }}" {% if status_filter|stringformat:"s" == status.id|stringformat:"s" %}selected{% endif %}>
                         {{ status.name }}
                     </option>
                     {% endfor %}
