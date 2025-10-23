@@ -1,0 +1,76 @@
+{% extends 'hr_bot/portal/base.html' %}
+
+{% block title %}الرئيسية - بوابة الموارد البشرية{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <div class="card bg-primary text-primary-content shadow-xl">
+        <div class="card-body">
+            <h2 class="card-title text-3xl">
+                <i class="fas fa-hand-paper ml-2"></i>
+                مرحباً، {{ employee.name }}
+            </h2>
+            <p>الكود الوظيفي: {{ employee.code }}</p>
+            <p>المسمى الوظيفي: {{ employee.mosama_wazifi }}</p>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="stats shadow">
+            <div class="stat">
+                <div class="stat-figure text-primary">
+                    <i class="fas fa-users text-4xl"></i>
+                </div>
+                <div class="stat-title">أفراد العائلة</div>
+                <div class="stat-value text-primary">{{ family_count }}</div>
+                <div class="stat-desc">{{ pending_family }} طلب قيد المراجعة</div>
+            </div>
+        </div>
+
+        <div class="stats shadow">
+            <div class="stat">
+                <div class="stat-figure text-secondary">
+                    <i class="fas fa-graduation-cap text-4xl"></i>
+                </div>
+                <div class="stat-title">المؤهلات</div>
+                <div class="stat-value text-secondary">{{ moahil_count }}</div>
+                <div class="stat-desc">{{ pending_moahil }} طلب قيد المراجعة</div>
+            </div>
+        </div>
+
+        <div class="stats shadow">
+            <div class="stat">
+                <div class="stat-figure text-accent">
+                    <i class="fas fa-university text-4xl"></i>
+                </div>
+                <div class="stat-title">الحسابات البنكية</div>
+                <div class="stat-value text-accent">{{ bank_account_count }}</div>
+                <div class="stat-desc">{{ pending_bank }} طلب قيد المراجعة</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card bg-base-100 shadow-xl">
+        <div class="card-body">
+            <h2 class="card-title">
+                <i class="fas fa-bolt ml-2"></i>
+                الإجراءات السريعة
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+                <a href="{% url 'portal_family' %}" class="btn btn-outline btn-primary">
+                    <i class="fas fa-users ml-2"></i>
+                    إدارة بيانات العائلة
+                </a>
+                <a href="{% url 'portal_moahil' %}" class="btn btn-outline btn-secondary">
+                    <i class="fas fa-graduation-cap ml-2"></i>
+                    إدارة المؤهلات
+                </a>
+                <a href="{% url 'portal_bank_account' %}" class="btn btn-outline btn-accent">
+                    <i class="fas fa-university ml-2"></i>
+                    إدارة الحسابات البنكية
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,130 @@
+{% extends 'hr_bot/portal/base.html' %}
+
+{% block title %}الملف الشخصي - بوابة الموارد البشرية{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <div class="flex justify-between items-center">
+        <h1 class="text-3xl font-bold">
+            <i class="fas fa-user ml-2"></i>
+            الملف الشخصي
+        </h1>
+    </div>
+
+    <div class="card bg-base-100 shadow-xl">
+        <div class="card-body">
+            <h2 class="card-title text-2xl mb-4">
+                <i class="fas fa-id-card ml-2"></i>
+                البيانات الأساسية
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text font-bold">الكود الوظيفي</span>
+                    </label>
+                    <input type="text" value="{{ employee.code }}" class="input input-bordered" readonly />
+                </div>
+
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text font-bold">الاسم</span>
+                    </label>
+                    <input type="text" value="{{ employee.name }}" class="input input-bordered" readonly />
+                </div>
+
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text font-bold">الدرجة الوظيفية</span>
+                    </label>
+                    <input type="text" value="{{ employee.draja_wazifia }}" class="input input-bordered" readonly />
+                </div>
+
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text font-bold">المسمى الوظيفي</span>
+                    </label>
+                    <input type="text" value="{{ employee.mosama_wazifi }}" class="input input-bordered" readonly />
+                </div>
+
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text font-bold">الهيكل الوظيفي</span>
+                    </label>
+                    <input type="text" value="{{ employee.hikal_wazifi }}" class="input input-bordered" readonly />
+                </div>
+
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text font-bold">الجنس</span>
+                    </label>
+                    <input type="text" value="{{ employee.sex }}" class="input input-bordered" readonly />
+                </div>
+
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text font-bold">تاريخ الميلاد</span>
+                    </label>
+                    <input type="text" value="{{ employee.tarikh_milad|date:'Y-m-d' }}" class="input input-bordered" readonly />
+                </div>
+
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text font-bold">تاريخ التعيين</span>
+                    </label>
+                    <input type="text" value="{{ employee.tarikh_ta3in|date:'Y-m-d' }}" class="input input-bordered" readonly />
+                </div>
+
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text font-bold">رقم الهاتف</span>
+                    </label>
+                    <input type="text" value="{{ employee.phone }}" class="input input-bordered" readonly />
+                </div>
+
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text font-bold">البريد الإلكتروني</span>
+                    </label>
+                    <input type="text" value="{{ employee.email }}" class="input input-bordered" readonly />
+                </div>
+
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text font-bold">القسيمة</span>
+                    </label>
+                    <input type="text" value="{{ employee.gasima }}" class="input input-bordered" readonly />
+                </div>
+
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text font-bold">الأطفال</span>
+                    </label>
+                    <input type="text" value="{{ employee.atfal }}" class="input input-bordered" readonly />
+                </div>
+
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text font-bold">المؤهل</span>
+                    </label>
+                    <input type="text" value="{{ employee.moahil }}" class="input input-bordered" readonly />
+                </div>
+
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text font-bold">سنوات الخبرة</span>
+                    </label>
+                    <input type="text" value="{{ employee.sanoat_2lkhibra }}" class="input input-bordered" readonly />
+                </div>
+
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text font-bold">الحالة</span>
+                    </label>
+                    <input type="text" value="{{ employee.status }}" class="input input-bordered" readonly />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

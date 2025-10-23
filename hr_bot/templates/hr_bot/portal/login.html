@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل الدخول - بوابة الموارد البشرية</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.4.19/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-base-200">
+    <div class="hero min-h-screen">
+        <div class="hero-content flex-col lg:flex-row-reverse">
+            <div class="text-center lg:text-right">
+                <h1 class="text-5xl font-bold">بوابة الموارد البشرية</h1>
+                <p class="py-6">قم بتسجيل الدخول للوصول إلى بياناتك وخدماتك</p>
+            </div>
+            <div class="card flex-shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
+                <form method="post" class="card-body">
+                    {% csrf_token %}
+                    
+                    {% if form.errors %}
+                    <div class="alert alert-error">
+                        <span>اسم المستخدم أو كلمة المرور غير صحيحة</span>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text">اسم المستخدم (البريد الإلكتروني)</span>
+                        </label>
+                        <input type="text" name="username" placeholder="البريد الإلكتروني" class="input input-bordered" required />
+                    </div>
+                    
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text">كلمة المرور</span>
+                        </label>
+                        <input type="password" name="password" placeholder="كلمة المرور" class="input input-bordered" required />
+                    </div>
+                    
+                    <div class="form-control mt-6">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-sign-in-alt ml-2"></i>
+                            تسجيل الدخول
+                        </button>
+                    </div>
+                    
+                    <input type="hidden" name="next" value="{% url 'portal_home' %}" />
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
