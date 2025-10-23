@@ -12,10 +12,6 @@
 <body class="bg-base-200">
     <div class="hero min-h-screen">
         <div class="hero-content flex-col lg:flex-row-reverse">
-            <div class="text-center lg:text-right">
-                <h1 class="text-5xl font-bold">بوابة الموارد البشرية</h1>
-                <p class="py-6">قم بتسجيل الدخول للوصول إلى بياناتك وخدماتك</p>
-            </div>
             <div class="card flex-shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
                 <form method="post" class="card-body">
                     {% csrf_token %}
@@ -50,6 +46,11 @@
                     <input type="hidden" name="next" value="{% url 'portal_home' %}" />
                 </form>
             </div>
+            <div class="text-center lg:text-right">
+                <h1 class="text-5xl font-bold">بوابة الموارد البشرية</h1>
+                <p class="py-6">قم بتسجيل الدخول للوصول إلى بياناتك وخدماتك</p>
+            </div>
+
         </div>
     </div>
 </body>
