@@ -1,0 +1,43 @@
+{% extends "traditional_app/portal/base.html" %}
+
+{% block title %}الإعدادات - بوابة المدير{% endblock %}
+
+{% block content %}
+<div class="mb-6">
+    <h1 class="text-3xl font-bold">الإعدادات</h1>
+    <div class="breadcrumbs text-sm">
+        <ul>
+            <li><a href="{% url 'traditional_app:portal_dashboard' %}">لوحة التحكم</a></li>
+            <li>الإعدادات</li>
+        </ul>
+    </div>
+</div>
+
+<div class="card bg-base-100 shadow-xl">
+    <div class="card-body">
+        <h2 class="card-title mb-4">تغيير كلمة المرور</h2>
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-control mb-4">
+                <label class="label">
+                    <span class="label-text">كلمة المرور الحالية</span>
+                </label>
+                <input type="password" name="old_password" class="input input-bordered" required />
+            </div>
+            <div class="form-control mb-4">
+                <label class="label">
+                    <span class="label-text">كلمة المرور الجديدة</span>
+                </label>
+                <input type="password" name="new_password1" class="input input-bordered" required />
+            </div>
+            <div class="form-control mb-4">
+                <label class="label">
+                    <span class="label-text">تأكيد كلمة المرور الجديدة</span>
+                </label>
+                <input type="password" name="new_password2" class="input input-bordered" required />
+            </div>
+            <button type="submit" class="btn btn-primary">حفظ التغييرات</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,93 @@
+{% extends "traditional_app/portal/base.html" %}
+
+{% block title %}تفاصيل الموظف - بوابة المدير{% endblock %}
+
+{% block content %}
+<div class="mb-6">
+    <h1 class="text-3xl font-bold">تفاصيل الموظف</h1>
+    <div class="breadcrumbs text-sm">
+        <ul>
+            <li><a href="{% url 'traditional_app:portal_dashboard' %}">لوحة التحكم</a></li>
+            <li><a href="{% url 'traditional_app:portal_employees' %}">الموظفين</a></li>
+            <li>{{ employee.name }}</li>
+        </ul>
+    </div>
+</div>
+
+<div class="card bg-base-100 shadow-xl">
+    <div class="card-body">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="form-control">
+                <label class="label">
+                    <span class="label-text font-bold">الاسم</span>
+                </label>
+                <p class="text-lg">{{ employee.name }}</p>
+            </div>
+            <div class="form-control">
+                <label class="label">
+                    <span class="label-text font-bold">نوع التعاقد</span>
+                </label>
+                <p class="text-lg">
+                    <span class="badge badge-lg 
+                        {% if employee.no3_elta3god == 1 %}badge-primary
+                        {% elif employee.no3_elta3god == 2 %}badge-success
+                        {% elif employee.no3_elta3god == 3 %}badge-warning
+                        {% elif employee.no3_elta3god == 4 %}badge-info
+                        {% endif %}">
+                        {{ employee.get_no3_elta3god_display }}
+                    </span>
+                </p>
+            </div>
+            <div class="form-control">
+                <label class="label">
+                    <span class="label-text font-bold">الوظيفة</span>
+                </label>
+                <p class="text-lg">{{ employee.job }}</p>
+            </div>
+            <div class="form-control">
+                <label class="label">
+                    <span class="label-text font-bold">الفئة</span>
+                </label>
+                <p class="text-lg">{{ employee.category.name }}</p>
+            </div>
+            <div class="form-control">
+                <label class="label">
+                    <span class="label-text font-bold">الولاية</span>
+                </label>
+                <p class="text-lg">{{ employee.state.name }}</p>
+            </div>
+        </div>
+
+        {% if employee.no3_elta3god == 2 %}
+        {% if employee.employeeproject %}
+        <div class="divider">معلومات المشروع</div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="form-control">
+                <label class="label">
+                    <span class="label-text font-bold">موقع العمل</span>
+                </label>
+                <p class="text-lg">{{ employee.employeeproject.work_place }}</p>
+            </div>
+            <div class="form-control">
+                <label class="label">
+                    <span class="label-text font-bold">تاريخ بداية العقد</span>
+                </label>
+                <p class="text-lg">{{ employee.employeeproject.contract_start_date }}</p>
+            </div>
+            <div class="form-control">
+                <label class="label">
+                    <span class="label-text font-bold">تاريخ نهاية العقد</span>
+                </label>
+                <p class="text-lg">{{ employee.employeeproject.contract_end_date }}</p>
+            </div>
+        </div>
+        {% endif %}
+        {% endif %}
+
+        <div class="divider"></div>
+        <div class="flex gap-2">
+            <a href="{% url 'traditional_app:portal_employees' %}" class="btn btn-ghost">رجوع</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,116 @@
+{% extends "traditional_app/portal/base.html" %}
+
+{% block title %}لوحة التحكم - بوابة المدير{% endblock %}
+
+{% block content %}
+<div class="mb-6">
+    <h1 class="text-3xl font-bold">مرحباً، {{ request.user.traditional_app_user.name }}</h1>
+    <p class="text-gray-600">الولاية: {{ request.user.traditional_app_user.state.name }}</p>
+</div>
+
+<!-- Statistics Cards -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+    <div class="card bg-base-100 shadow-xl hover:shadow-2xl transition-shadow">
+        <div class="card-body">
+            <h2 class="card-title text-primary">التقارير اليومية</h2>
+            <p class="text-4xl font-bold">{{ stats.daily_reports_count }}</p>
+            <p class="text-sm text-gray-600">إجمالي التقارير</p>
+        </div>
+    </div>
+
+    <div class="card bg-base-100 shadow-xl hover:shadow-2xl transition-shadow">
+        <div class="card-body">
+            <h2 class="card-title text-success">الموظفين</h2>
+            <p class="text-4xl font-bold">{{ stats.employees_count }}</p>
+            <p class="text-sm text-gray-600">إجمالي الموظفين</p>
+        </div>
+    </div>
+
+    <div class="card bg-base-100 shadow-xl hover:shadow-2xl transition-shadow">
+        <div class="card-body">
+            <h2 class="card-title text-warning">الأسواق</h2>
+            <p class="text-4xl font-bold">{{ stats.sougs_count }}</p>
+            <p class="text-sm text-gray-600">عدد الأسواق</p>
+        </div>
+    </div>
+
+    <div class="card bg-base-100 shadow-xl hover:shadow-2xl transition-shadow">
+        <div class="card-body">
+            <h2 class="card-title text-error">المركبات</h2>
+            <p class="text-4xl font-bold">{{ stats.vehicles_count }}</p>
+            <p class="text-sm text-gray-600">إجمالي المركبات</p>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="card bg-base-100 shadow-xl mb-6">
+    <div class="card-body">
+        <h2 class="card-title mb-4">الإجراءات السريعة</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <a href="{% url 'traditional_app:portal_daily_reports' %}" class="btn btn-primary">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                التقارير اليومية
+            </a>
+            <a href="{% url 'traditional_app:portal_employees' %}" class="btn btn-success">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+                الموظفين
+            </a>
+            <a href="{% url 'traditional_app:portal_payroll' %}" class="btn btn-warning">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                المرتبات
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Daily Reports -->
+<div class="card bg-base-100 shadow-xl">
+    <div class="card-body">
+        <h2 class="card-title mb-4">آخر التقارير اليومية</h2>
+        <div class="overflow-x-auto">
+            <table class="table table-zebra">
+                <thead>
+                    <tr>
+                        <th>التاريخ</th>
+                        <th>الولاية</th>
+                        <th>الحالة</th>
+                        <th>الإجراءات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for report in recent_reports %}
+                    <tr>
+                        <td>{{ report.date }}</td>
+                        <td>{{ report.source_state.name }}</td>
+                        <td>
+                            <span class="badge 
+                                {% if report.state == 1 %}badge-warning
+                                {% elif report.state == 2 %}badge-info
+                                {% elif report.state == 3 %}badge-primary
+                                {% elif report.state == 4 %}badge-success
+                                {% endif %}">
+                                {{ report.get_state_display }}
+                            </span>
+                        </td>
+                        <td>
+                            <a href="{% url 'traditional_app:portal_daily_report_detail' report.id %}" class="btn btn-sm btn-ghost">عرض</a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" class="text-center text-gray-500">لا توجد تقارير</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

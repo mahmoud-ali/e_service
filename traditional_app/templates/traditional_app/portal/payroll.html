@@ -1,0 +1,113 @@
+{% extends "traditional_app/portal/base.html" %}
+
+{% block title %}المرتبات - بوابة المدير{% endblock %}
+
+{% block content %}
+<div class="mb-6">
+    <h1 class="text-3xl font-bold">المرتبات</h1>
+    <div class="breadcrumbs text-sm">
+        <ul>
+            <li><a href="{% url 'traditional_app:portal_dashboard' %}">لوحة التحكم</a></li>
+            <li>المرتبات</li>
+        </ul>
+    </div>
+</div>
+
+<!-- Filters -->
+<div class="card bg-base-100 shadow-xl mb-6">
+    <div class="card-body">
+        <h2 class="card-title mb-4">البحث والتصفية</h2>
+        <form method="get" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="form-control">
+                <label class="label">
+                    <span class="label-text">السنة</span>
+                </label>
+                <input type="number" name="year" value="{{ request.GET.year }}" placeholder="2024" class="input input-bordered" />
+            </div>
+            <div class="form-control">
+                <label class="label">
+                    <span class="label-text">الشهر</span>
+                </label>
+                <select name="month" class="select select-bordered">
+                    <option value="">الكل</option>
+                    {% for value, label in month_choices %}
+                    <option value="{{ value }}" {% if request.GET.month == value|stringformat:"s" %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-control">
+                <label class="label">
+                    <span class="label-text">&nbsp;</span>
+                </label>
+                <button type="submit" class="btn btn-primary">بحث</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Payroll Table -->
+<div class="card bg-base-100 shadow-xl">
+    <div class="card-body">
+        <div class="overflow-x-auto">
+            <table class="table table-zebra">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>السنة</th>
+                        <th>الشهر</th>
+                        <th>الحالة</th>
+                        <th>الإجراءات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for payroll in payrolls %}
+                    <tr class="hover">
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ payroll.year }}</td>
+                        <td>{{ payroll.get_month_display }}</td>
+                        <td>
+                            {% if payroll.confirmed %}
+                            <span class="badge badge-success">معتمد</span>
+                            {% else %}
+                            <span class="badge badge-warning">غير معتمد</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{% url 'traditional_app:portal_payroll_detail' payroll.id %}" class="btn btn-sm btn-ghost">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                </svg>
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center text-gray-500">لا توجد مرتبات</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        {% if is_paginated %}
+        <div class="flex justify-center mt-4">
+            <div class="join">
+                {% if page_obj.has_previous %}
+                <a href="?page=1" class="join-item btn">«</a>
+                <a href="?page={{ page_obj.previous_page_number }}" class="join-item btn">‹</a>
+                {% endif %}
+                
+                <button class="join-item btn btn-active">صفحة {{ page_obj.number }}</button>
+                
+                {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}" class="join-item btn">›</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}" class="join-item btn">»</a>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

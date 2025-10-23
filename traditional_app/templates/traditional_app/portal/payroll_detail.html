@@ -1,0 +1,82 @@
+{% extends "traditional_app/portal/base.html" %}
+
+{% block title %}تفاصيل المرتب - بوابة المدير{% endblock %}
+
+{% block content %}
+<div class="mb-6">
+    <h1 class="text-3xl font-bold">تفاصيل المرتب</h1>
+    <div class="breadcrumbs text-sm">
+        <ul>
+            <li><a href="{% url 'traditional_app:portal_dashboard' %}">لوحة التحكم</a></li>
+            <li><a href="{% url 'traditional_app:portal_payroll' %}">المرتبات</a></li>
+            <li>{{ payroll.get_month_display }} {{ payroll.year }}</li>
+        </ul>
+    </div>
+</div>
+
+<div class="card bg-base-100 shadow-xl mb-6">
+    <div class="card-body">
+        <div class="flex justify-between items-center">
+            <div>
+                <h2 class="card-title">{{ payroll.get_month_display }} {{ payroll.year }}</h2>
+            </div>
+            <div>
+                {% if payroll.confirmed %}
+                <span class="badge badge-lg badge-success">معتمد</span>
+                {% else %}
+                <span class="badge badge-lg badge-warning">غير معتمد</span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card bg-base-100 shadow-xl">
+    <div class="card-body">
+        <h2 class="card-title mb-4">البدلات والعلاوات</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="stat bg-base-200 rounded-lg">
+                <div class="stat-title">الأساسي</div>
+                <div class="stat-value text-primary">{{ payroll.asasi }}</div>
+            </div>
+            <div class="stat bg-base-200 rounded-lg">
+                <div class="stat-title">غلاء معيشة</div>
+                <div class="stat-value text-primary">{{ payroll.galaa_m3isha }}</div>
+            </div>
+            <div class="stat bg-base-200 rounded-lg">
+                <div class="stat-title">بدل سكن</div>
+                <div class="stat-value text-primary">{{ payroll.badel_sakan }}</div>
+            </div>
+            <div class="stat bg-base-200 rounded-lg">
+                <div class="stat-title">بدل ترحيل</div>
+                <div class="stat-value text-primary">{{ payroll.badel_tar7il }}</div>
+            </div>
+            <div class="stat bg-base-200 rounded-lg">
+                <div class="stat-title">طبيعة عمل</div>
+                <div class="stat-value text-primary">{{ payroll.tabi3at_3amal }}</div>
+            </div>
+            <div class="stat bg-base-200 rounded-lg">
+                <div class="stat-title">بدل لبن</div>
+                <div class="stat-value text-primary">{{ payroll.badel_laban }}</div>
+            </div>
+            <div class="stat bg-base-200 rounded-lg">
+                <div class="stat-title">بدل علاج</div>
+                <div class="stat-value text-primary">{{ payroll.badel_3laj }}</div>
+            </div>
+            <div class="stat bg-base-200 rounded-lg">
+                <div class="stat-title">دمغة</div>
+                <div class="stat-value text-primary">{{ payroll.damga }}</div>
+            </div>
+        </div>
+
+        <div class="divider"></div>
+        <div class="flex gap-2">
+            <a href="{% url 'traditional_app:portal_payroll' %}" class="btn btn-ghost">رجوع</a>
+            <a href="{% url 'traditional_app:payroll_t3agood' %}?year={{ payroll.year }}&month={{ payroll.month }}&state={{ request.user.traditional_app_user.state.id }}" 
+               target="_blank" class="btn btn-primary">عرض كشف المرتبات</a>
+            <a href="{% url 'traditional_app:payroll_t3agood' %}?year={{ payroll.year }}&month={{ payroll.month }}&state={{ request.user.traditional_app_user.state.id }}&format=csv" 
+               class="btn btn-success">تصدير CSV</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

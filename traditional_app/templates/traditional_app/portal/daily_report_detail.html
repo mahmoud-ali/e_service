@@ -1,0 +1,266 @@
+{% extends "traditional_app/portal/base.html" %}
+
+{% block title %}تفاصيل التقرير اليومي - بوابة المدير{% endblock %}
+
+{% block content %}
+<div class="mb-6">
+    <h1 class="text-3xl font-bold">تفاصيل التقرير اليومي</h1>
+    <div class="breadcrumbs text-sm">
+        <ul>
+            <li><a href="{% url 'traditional_app:portal_dashboard' %}">لوحة التحكم</a></li>
+            <li><a href="{% url 'traditional_app:portal_daily_reports' %}">التقارير اليومية</a></li>
+            <li>{{ report.date }}</li>
+        </ul>
+    </div>
+</div>
+
+<!-- Report Header -->
+<div class="card bg-base-100 shadow-xl mb-6">
+    <div class="card-body">
+        <div class="flex justify-between items-center mb-4">
+            <div>
+                <h2 class="card-title">التاريخ: {{ report.date }}</h2>
+                <p class="text-gray-600">الولاية: {{ report.source_state.name }}</p>
+            </div>
+            <div>
+                <span class="badge badge-lg 
+                    {% if report.state == 1 %}badge-warning
+                    {% elif report.state == 2 %}badge-info
+                    {% elif report.state == 3 %}badge-primary
+                    {% elif report.state == 4 %}badge-success
+                    {% endif %}">
+                    {{ report.get_state_display }}
+                </span>
+            </div>
+        </div>
+
+        <!-- Workflow Actions -->
+        {% if next_states %}
+        <div class="divider">إجراءات سير العمل</div>
+        <div class="flex gap-2">
+            {% for state_value, state_label in next_states %}
+            <form method="post" action="{% url 'traditional_app:portal_daily_report_transition' report.id %}">
+                {% csrf_token %}
+                <input type="hidden" name="next_state" value="{{ state_value }}">
+                <button type="submit" class="btn 
+                    {% if state_value == 2 %}btn-info
+                    {% elif state_value == 3 %}btn-primary
+                    {% elif state_value == 4 %}btn-success
+                    {% else %}btn-warning
+                    {% endif %}">
+                    تحويل إلى: {{ state_label }}
+                </button>
+            </form>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Ward Hajr -->
+{% if ward_hajr %}
+<div class="card bg-base-100 shadow-xl mb-6">
+    <div class="card-body">
+        <h2 class="card-title">وارد حجر</h2>
+        <div class="overflow-x-auto">
+            <table class="table table-zebra">
+                <thead>
+                    <tr>
+                        <th>السوق</th>
+                        <th>نوع الحجر</th>
+                        <th>عدد الجوالات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in ward_hajr %}
+                    <tr>
+                        <td>{{ item.soag.name }}</td>
+                        <td>{{ item.get_hajr_type_display }}</td>
+                        <td>{{ item.hajr_count }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Daily Income -->
+{% if daily_income %}
+<div class="card bg-base-100 shadow-xl mb-6">
+    <div class="card-body">
+        <h2 class="card-title">الإيراد اليومي</h2>
+        <div class="overflow-x-auto">
+            <table class="table table-zebra">
+                <thead>
+                    <tr>
+                        <th>السوق</th>
+                        <th>نوع الحجر</th>
+                        <th>المبلغ</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in daily_income %}
+                    <tr>
+                        <td>{{ item.soag.name }}</td>
+                        <td>{{ item.get_hajr_type_display }}</td>
+                        <td>{{ item.amount }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Tahsil Forms -->
+{% if tahsil_forms %}
+<div class="card bg-base-100 shadow-xl mb-6">
+    <div class="card-body">
+        <h2 class="card-title">استمارات التحصيل</h2>
+        <div class="overflow-x-auto">
+            <table class="table table-zebra">
+                <thead>
+                    <tr>
+                        <th>السوق</th>
+                        <th>عدد الإستمارات</th>
+                        <th>كمية الذهب بالجرام</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in tahsil_forms %}
+                    <tr>
+                        <td>{{ item.soag.name }}</td>
+                        <td>{{ item.form_count }}</td>
+                        <td>{{ item.gold_in_gram }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Karta Mor7ala -->
+{% if karta_mor7ala %}
+<div class="card bg-base-100 shadow-xl mb-6">
+    <div class="card-body">
+        <h2 class="card-title">الكرتة المرحلة</h2>
+        <div class="overflow-x-auto">
+            <table class="table table-zebra">
+                <thead>
+                    <tr>
+                        <th>السوق</th>
+                        <th>عدد القلابات</th>
+                        <th>الوجهة</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in karta_mor7ala %}
+                    <tr>
+                        <td>{{ item.soag.name }}</td>
+                        <td>{{ item.galabat_count }}</td>
+                        <td>{{ item.destination }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Grabeel -->
+{% if grabeel %}
+<div class="card bg-base-100 shadow-xl mb-6">
+    <div class="card-body">
+        <h2 class="card-title">غرابيل</h2>
+        <div class="overflow-x-auto">
+            <table class="table table-zebra">
+                <thead>
+                    <tr>
+                        <th>الغربال</th>
+                        <th>الوزن بالجرام</th>
+                        <th>المبلغ</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in grabeel %}
+                    <tr>
+                        <td>{{ item.grabeel.name }}</td>
+                        <td>{{ item.weight_in_gram }}</td>
+                        <td>{{ item.amount }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Hofr Kabira -->
+{% if hofr_kabira %}
+<div class="card bg-base-100 shadow-xl mb-6">
+    <div class="card-body">
+        <h2 class="card-title">حفر كبيرة</h2>
+        <div class="overflow-x-auto">
+            <table class="table table-zebra">
+                <thead>
+                    <tr>
+                        <th>الحفرة</th>
+                        <th>الوزن بالجرام</th>
+                        <th>المبلغ</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in hofr_kabira %}
+                    <tr>
+                        <td>{{ item.hofr_kabira.name }}</td>
+                        <td>{{ item.weight_in_gram }}</td>
+                        <td>{{ item.amount }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Small Processing Units -->
+{% if small_processing_units %}
+<div class="card bg-base-100 shadow-xl mb-6">
+    <div class="card-body">
+        <h2 class="card-title">وحدات المعالجة الصغيرة</h2>
+        <div class="overflow-x-auto">
+            <table class="table table-zebra">
+                <thead>
+                    <tr>
+                        <th>الوحدة</th>
+                        <th>الوزن بالجرام</th>
+                        <th>المبلغ</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in small_processing_units %}
+                    <tr>
+                        <td>{{ item.small_processing_unit.name }}</td>
+                        <td>{{ item.weight_in_gram }}</td>
+                        <td>{{ item.amount }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<div class="flex gap-2">
+    <a href="{% url 'traditional_app:portal_daily_reports' %}" class="btn btn-ghost">رجوع</a>
+</div>
+{% endblock %}

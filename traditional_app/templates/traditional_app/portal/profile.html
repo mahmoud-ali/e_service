@@ -1,0 +1,46 @@
+{% extends "traditional_app/portal/base.html" %}
+
+{% block title %}الملف الشخصي - بوابة المدير{% endblock %}
+
+{% block content %}
+<div class="mb-6">
+    <h1 class="text-3xl font-bold">الملف الشخصي</h1>
+    <div class="breadcrumbs text-sm">
+        <ul>
+            <li><a href="{% url 'traditional_app:portal_dashboard' %}">لوحة التحكم</a></li>
+            <li>الملف الشخصي</li>
+        </ul>
+    </div>
+</div>
+
+<div class="card bg-base-100 shadow-xl">
+    <div class="card-body">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="form-control">
+                <label class="label">
+                    <span class="label-text font-bold">اسم المستخدم</span>
+                </label>
+                <p class="text-lg">{{ request.user.username }}</p>
+            </div>
+            <div class="form-control">
+                <label class="label">
+                    <span class="label-text font-bold">الاسم</span>
+                </label>
+                <p class="text-lg">{{ request.user.traditional_app_user.name }}</p>
+            </div>
+            <div class="form-control">
+                <label class="label">
+                    <span class="label-text font-bold">الولاية</span>
+                </label>
+                <p class="text-lg">{{ request.user.traditional_app_user.state.name }}</p>
+            </div>
+            <div class="form-control">
+                <label class="label">
+                    <span class="label-text font-bold">البريد الإلكتروني</span>
+                </label>
+                <p class="text-lg">{{ request.user.email|default:"غير محدد" }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
