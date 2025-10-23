@@ -18,6 +18,23 @@
         .rtl-flip {
             transform: scaleX(-1);
         }
+        .navbar {
+            position: relative;
+            z-index: 50;
+        }
+        
+        .navbar details[open] summary ~ * {
+            z-index: 50;
+        }
+        .navbar details ul {
+            background-color: white;
+            color: gray;
+        }
+        
+        .navbar details ul li a:hover {
+            background-color: hsl(var(--p));
+            color: blue;
+        }
     </style>
     
     {% block extra_css %}{% endblock %}
