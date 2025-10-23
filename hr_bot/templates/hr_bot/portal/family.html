@@ -1,0 +1,252 @@
+{% extends 'hr_bot/portal/base.html' %}
+{% load static %}
+
+{% block title %}بيانات العائلة - بوابة الموارد البشرية{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- Page Header -->
+    <div class="flex justify-between items-center">
+        <h1 class="text-3xl font-bold">
+            <i class="fas fa-users ml-2"></i>
+            بيانات العائلة
+        </h1>
+        <button onclick="openAddModal()" class="btn btn-primary">
+            <i class="fas fa-plus ml-2"></i>
+            إضافة فرد جديد
+        </button>
+    </div>
+
+    <!-- Approved Family Members -->
+    <div class="card bg-base-100 shadow-xl">
+        <div class="card-body">
+            <h2 class="card-title">
+                <i class="fas fa-check-circle ml-2 text-success"></i>
+                أفراد العائلة المعتمدين
+            </h2>
+            
+            {% if approved_families %}
+            <div class="overflow-x-auto">
+                <table class="table table-zebra">
+                    <thead>
+                        <tr>
+                            <th>الصلة</th>
+                            <th>الاسم</th>
+                            <th>تاريخ الإضافة</th>
+                            <th>المرفق</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for family in approved_families %}
+                        <tr>
+                            <td>{{ family.relation }}</td>
+                            <td>{{ family.name }}</td>
+                            <td>{{ family.tarikh_el2dafa|date:'Y-m-d' }}</td>
+                            <td>
+                                {% if family.attachement_file %}
+                                <a href="{{ family.attachement_file.url }}" target="_blank" class="btn btn-sm btn-ghost">
+                                    <i class="fas fa-file-download"></i>
+                                </a>
+                                {% else %}
+                                -
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="alert alert-info">
+                <span>لا توجد بيانات معتمدة</span>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Pending Requests -->
+    <div class="card bg-base-100 shadow-xl">
+        <div class="card-body">
+            <h2 class="card-title">
+                <i class="fas fa-clock ml-2 text-warning"></i>
+                الطلبات قيد المراجعة
+            </h2>
+            
+            <div id="pending-families-container">
+                {% if pending_families %}
+                <div class="overflow-x-auto">
+                    <table class="table table-zebra">
+                        <thead>
+                            <tr>
+                                <th>الصلة</th>
+                                <th>الاسم</th>
+                                <th>تاريخ الإضافة</th>
+                                <th>الحالة</th>
+                                <th>الإجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="pending-families-tbody">
+                            {% for family in pending_families %}
+                            <tr data-id="{{ family.id }}">
+                                <td>{{ family.relation }}</td>
+                                <td>{{ family.name }}</td>
+                                <td>{{ family.tarikh_el2dafa|date:'Y-m-d' }}</td>
+                                <td>
+                                    {% if family.state == 1 %}
+                                    <span class="badge badge-warning">مسودة</span>
+                                    {% elif family.state == 2 %}
+                                    <span class="badge badge-success">مقبول</span>
+                                    {% elif family.state == 3 %}
+                                    <span class="badge badge-error">مرفوض</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if family.state == 1 %}
+                                    <button onclick="deleteFamily({{ family.id }})" class="btn btn-sm btn-error">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="alert alert-info">
+                    <span>لا توجد طلبات قيد المراجعة</span>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Family Modal -->
+<dialog id="add_family_modal" class="modal">
+    <div class="modal-box">
+        <h3 class="font-bold text-lg mb-4">
+            <i class="fas fa-user-plus ml-2"></i>
+            إضافة فرد جديد
+        </h3>
+        
+        <form id="add-family-form" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <div class="form-control mb-4">
+                <label class="label">
+                    <span class="label-text">الصلة</span>
+                </label>
+                <select name="relation" class="select select-bordered" required>
+                    <option value="">اختر الصلة</option>
+                    <option value="زوج">زوج</option>
+                    <option value="زوجة">زوجة</option>
+                    <option value="ابن">ابن</option>
+                    <option value="ابنة">ابنة</option>
+                    <option value="أب">أب</option>
+                    <option value="أم">أم</option>
+                </select>
+            </div>
+
+            <div class="form-control mb-4">
+                <label class="label">
+                    <span class="label-text">الاسم</span>
+                </label>
+                <input type="text" name="name" class="input input-bordered" required />
+            </div>
+
+            <div class="form-control mb-4">
+                <label class="label">
+                    <span class="label-text">تاريخ الإضافة</span>
+                </label>
+                <input type="date" name="tarikh_el2dafa" class="input input-bordered" />
+            </div>
+
+            <div class="form-control mb-4">
+                <label class="label">
+                    <span class="label-text">المرفق</span>
+                </label>
+                <input type="file" name="attachement_file" class="file-input file-input-bordered" />
+            </div>
+
+            <div class="modal-action">
+                <button type="button" onclick="closeAddModal()" class="btn">إلغاء</button>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save ml-2"></i>
+                    حفظ
+                </button>
+            </div>
+        </form>
+    </div>
+    <form method="dialog" class="modal-backdrop">
+        <button>close</button>
+    </form>
+</dialog>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function openAddModal() {
+        document.getElementById('add_family_modal').showModal();
+    }
+
+    function closeAddModal() {
+        document.getElementById('add_family_modal').close();
+        document.getElementById('add-family-form').reset();
+    }
+
+    document.getElementById('add-family-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const formData = new FormData(e.target);
+        
+        try {
+            const response = await fetch('{% url "api_family_create" %}', {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': csrftoken,
+                },
+                body: formData
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                showToast(data.message, 'success');
+                closeAddModal();
+                setTimeout(() => location.reload(), 1000);
+            } else {
+                showToast(data.error, 'error');
+            }
+        } catch (error) {
+            showToast('حدث خطأ أثناء الحفظ', 'error');
+        }
+    });
+
+    async function deleteFamily(id) {
+        if (!confirm('هل أنت متأكد من حذف هذا السجل؟')) {
+            return;
+        }
+        
+        try {
+            const response = await fetch(`/hr_bot/api/family/${id}/delete/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': csrftoken,
+                }
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                showToast(data.message, 'success');
+                document.querySelector(`tr[data-id="${id}"]`).remove();
+            } else {
+                showToast(data.error, 'error');
+            }
+        } catch (error) {
+            showToast('حدث خطأ أثناء الحذف', 'error');
+        }
+    }
+</script>
+{% endblock %}

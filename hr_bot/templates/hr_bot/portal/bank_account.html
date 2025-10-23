@@ -1,0 +1,246 @@
+{% extends 'hr_bot/portal/base.html' %}
+
+{% block title %}الحسابات البنكية - بوابة الموارد البشرية{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- Page Header -->
+    <div class="flex justify-between items-center">
+        <h1 class="text-3xl font-bold">
+            <i class="fas fa-university ml-2"></i>
+            الحسابات البنكية
+        </h1>
+        <button onclick="openAddModal()" class="btn btn-primary">
+            <i class="fas fa-plus ml-2"></i>
+            إضافة حساب جديد
+        </button>
+    </div>
+
+    <!-- Approved Bank Accounts -->
+    <div class="card bg-base-100 shadow-xl">
+        <div class="card-body">
+            <h2 class="card-title">
+                <i class="fas fa-check-circle ml-2 text-success"></i>
+                الحسابات المعتمدة
+            </h2>
+            
+            {% if approved_accounts %}
+            <div class="overflow-x-auto">
+                <table class="table table-zebra">
+                    <thead>
+                        <tr>
+                            <th>البنك</th>
+                            <th>رقم الحساب</th>
+                            <th>الحالة</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for account in approved_accounts %}
+                        <tr>
+                            <td>{{ account.bank }}</td>
+                            <td>{{ account.account_no }}</td>
+                            <td>
+                                {% if account.active %}
+                                <span class="badge badge-success">نشط</span>
+                                {% else %}
+                                <span class="badge badge-ghost">غير نشط</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="alert alert-info">
+                <span>لا توجد بيانات معتمدة</span>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Pending Requests -->
+    <div class="card bg-base-100 shadow-xl">
+        <div class="card-body">
+            <h2 class="card-title">
+                <i class="fas fa-clock ml-2 text-warning"></i>
+                الطلبات قيد المراجعة
+            </h2>
+            
+            <div id="pending-accounts-container">
+                {% if pending_accounts %}
+                <div class="overflow-x-auto">
+                    <table class="table table-zebra">
+                        <thead>
+                            <tr>
+                                <th>البنك</th>
+                                <th>رقم الحساب</th>
+                                <th>نشط</th>
+                                <th>الحالة</th>
+                                <th>الإجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="pending-accounts-tbody">
+                            {% for account in pending_accounts %}
+                            <tr data-id="{{ account.id }}">
+                                <td>{{ account.bank }}</td>
+                                <td>{{ account.account_no }}</td>
+                                <td>
+                                    {% if account.active %}
+                                    <span class="badge badge-success">نعم</span>
+                                    {% else %}
+                                    <span class="badge badge-ghost">لا</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if account.state == 1 %}
+                                    <span class="badge badge-warning">مسودة</span>
+                                    {% elif account.state == 2 %}
+                                    <span class="badge badge-success">مقبول</span>
+                                    {% elif account.state == 3 %}
+                                    <span class="badge badge-error">مرفوض</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if account.state == 1 %}
+                                    <button onclick="deleteBankAccount({{ account.id }})" class="btn btn-sm btn-error">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="alert alert-info">
+                    <span>لا توجد طلبات قيد المراجعة</span>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Bank Account Modal -->
+<dialog id="add_bank_account_modal" class="modal">
+    <div class="modal-box">
+        <h3 class="font-bold text-lg mb-4">
+            <i class="fas fa-university ml-2"></i>
+            إضافة حساب بنكي جديد
+        </h3>
+        
+        <form id="add-bank-account-form">
+            {% csrf_token %}
+            
+            <div class="form-control mb-4">
+                <label class="label">
+                    <span class="label-text">البنك</span>
+                </label>
+                <select name="bank" class="select select-bordered" required>
+                    <option value="">اختر البنك</option>
+                    <option value="الوحدة">الوحدة</option>
+                    <option value="الجمهورية">الجمهورية</option>
+                    <option value="الصحارى">الصحارى</option>
+                    <option value="التجارة والتنمية">التجارة والتنمية</option>
+                    <option value="الأمان">الأمان</option>
+                </select>
+            </div>
+
+            <div class="form-control mb-4">
+                <label class="label">
+                    <span class="label-text">رقم الحساب</span>
+                </label>
+                <input type="text" name="account_no" class="input input-bordered" required />
+            </div>
+
+            <div class="form-control mb-4">
+                <label class="label cursor-pointer">
+                    <span class="label-text">حساب نشط</span>
+                    <input type="checkbox" name="active" class="checkbox checkbox-primary" />
+                </label>
+            </div>
+
+            <div class="modal-action">
+                <button type="button" onclick="closeAddModal()" class="btn">إلغاء</button>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save ml-2"></i>
+                    حفظ
+                </button>
+            </div>
+        </form>
+    </div>
+    <form method="dialog" class="modal-backdrop">
+        <button>close</button>
+    </form>
+</dialog>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function openAddModal() {
+        document.getElementById('add_bank_account_modal').showModal();
+    }
+
+    function closeAddModal() {
+        document.getElementById('add_bank_account_modal').close();
+        document.getElementById('add-bank-account-form').reset();
+    }
+
+    document.getElementById('add-bank-account-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const formData = new FormData(e.target);
+        formData.set('active', formData.get('active') === 'on' ? 'true' : 'false');
+        
+        try {
+            const response = await fetch('{% url "api_bank_account_create" %}', {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': csrftoken,
+                },
+                body: formData
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                showToast(data.message, 'success');
+                closeAddModal();
+                setTimeout(() => location.reload(), 1000);
+            } else {
+                showToast(data.error, 'error');
+            }
+        } catch (error) {
+            showToast('حدث خطأ أثناء الحفظ', 'error');
+        }
+    });
+
+    async function deleteBankAccount(id) {
+        if (!confirm('هل أنت متأكد من حذف هذا السجل؟')) {
+            return;
+        }
+        
+        try {
+            const response = await fetch(`/hr_bot/api/bank-account/${id}/delete/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': csrftoken,
+                }
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                showToast(data.message, 'success');
+                document.querySelector(`tr[data-id="${id}"]`).remove();
+            } else {
+                showToast(data.error, 'error');
+            }
+        } catch (error) {
+            showToast('حدث خطأ أثناء الحذف', 'error');
+        }
+    }
+</script>
+{% endblock %}
