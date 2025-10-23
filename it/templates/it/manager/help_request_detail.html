@@ -1,0 +1,138 @@
+{% extends "it/manager/base.html" %}
+{% load i18n %}
+
+{% block title %}{{ help_request.subject }} - بوابة مدير تقنية المعلومات{% endblock %}
+
+{% block content %}
+<div class="mb-6">
+    <div class="flex justify-between items-center">
+        <div>
+            <h1 class="text-3xl font-bold">تفاصيل طلب المساعدة</h1>
+            <p class="text-gray-600">{{ help_request.subject }}</p>
+        </div>
+        <div class="flex gap-2">
+            <a href="{% url 'it:manager_help_request_list' %}" class="btn btn-outline">رجوع للقائمة</a>
+            <a href="{% url 'it:manager_help_request_update' help_request.pk %}" class="btn btn-primary">تحديث الطلب</a>
+        </div>
+    </div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <!-- Main Information -->
+    <div class="lg:col-span-2">
+        <div class="card bg-base-100 shadow-xl mb-6">
+            <div class="card-body">
+                <h2 class="card-title">معلومات الطلب</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="label">
+                            <span class="label-text font-bold">الموظف</span>
+                        </label>
+                        <p>{{ help_request.employee.name }}</p>
+                    </div>
+
+                    <div>
+                        <label class="label">
+                            <span class="label-text font-bold">التصنيف</span>
+                        </label>
+                        <p><span class="badge badge-outline">{{ help_request.get_category_display }}</span></p>
+                    </div>
+
+                    <div>
+                        <label class="label">
+                            <span class="label-text font-bold">الحالة</span>
+                        </label>
+                        <p>
+                            {% if help_request.status == help_request.STATUS_UNSOLVED %}
+                                <span class="badge badge-warning">{{ help_request.get_status_display }}</span>
+                            {% else %}
+                                <span class="badge badge-success">{{ help_request.get_status_display }}</span>
+                            {% endif %}
+                        </p>
+                    </div>
+
+                    <div>
+                        <label class="label">
+                            <span class="label-text font-bold">تاريخ الإنشاء</span>
+                        </label>
+                        <p>{{ help_request.created_at|date:"Y-m-d H:i" }}</p>
+                    </div>
+                </div>
+
+                <div class="divider"></div>
+
+                <div>
+                    <label class="label">
+                        <span class="label-text font-bold">الموضوع</span>
+                    </label>
+                    <p>{{ help_request.subject }}</p>
+                </div>
+
+                <div>
+                    <label class="label">
+                        <span class="label-text font-bold">وصف المشكلة</span>
+                    </label>
+                    <p class="whitespace-pre-wrap">{{ help_request.description }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Investigation and Solution -->
+        <div class="card bg-base-100 shadow-xl">
+            <div class="card-body">
+                <h2 class="card-title">التحريات والمعالجة</h2>
+                
+                <div>
+                    <label class="label">
+                        <span class="label-text font-bold">التحريات</span>
+                    </label>
+                    {% if help_request.investigations %}
+                        <p class="whitespace-pre-wrap">{{ help_request.investigations }}</p>
+                    {% else %}
+                        <p class="text-gray-500 italic">لم يتم إضافة تحريات بعد</p>
+                    {% endif %}
+                </div>
+
+                <div class="divider"></div>
+
+                <div>
+                    <label class="label">
+                        <span class="label-text font-bold">السبب الجذري للمشكلة</span>
+                    </label>
+                    {% if help_request.root_cause %}
+                        <p class="whitespace-pre-wrap">{{ help_request.root_cause }}</p>
+                    {% else %}
+                        <p class="text-gray-500 italic">لم يتم تحديد السبب الجذري بعد</p>
+                    {% endif %}
+                </div>
+
+                <div class="divider"></div>
+
+                <div>
+                    <label class="label">
+                        <span class="label-text font-bold">وصف المعالجة</span>
+                    </label>
+                    {% if help_request.solution %}
+                        <p class="whitespace-pre-wrap">{{ help_request.solution }}</p>
+                    {% else %}
+                        <p class="text-gray-500 italic">لم يتم إضافة معالجة بعد</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="lg:col-span-1">
+        <div class="card bg-base-100 shadow-xl">
+            <div class="card-body">
+                <h2 class="card-title">الإجراءات السريعة</h2>
+                <div class="flex flex-col gap-2">
+                    <a href="{% url 'it:manager_help_request_update' help_request.pk %}" class="btn btn-primary">تحديث الطلب</a>
+                    <a href="{% url 'admin:it_helprequest_change' help_request.pk %}" class="btn btn-secondary" target="_blank">فتح في لوحة الإدارة</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

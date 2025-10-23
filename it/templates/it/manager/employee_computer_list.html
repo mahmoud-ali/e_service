@@ -1,0 +1,82 @@
+{% extends "it/manager/base.html" %}
+{% load i18n %}
+
+{% block title %}أجهزة الموظفين - بوابة مدير تقنية المعلومات{% endblock %}
+
+{% block content %}
+<div class="mb-6">
+    <h1 class="text-3xl font-bold">أجهزة الموظفين</h1>
+    <p class="text-gray-600">عرض وإدارة أجهزة الموظفين</p>
+</div>
+
+<!-- Search -->
+<div class="card bg-base-100 shadow-xl mb-6">
+    <div class="card-body">
+        <form method="get" class="flex gap-4">
+            <div class="form-control flex-1">
+                <input type="text" name="search" value="{{ current_search }}" placeholder="ابحث عن موظف أو جهاز..." class="input input-bordered" />
+            </div>
+            <button type="submit" class="btn btn-primary">بحث</button>
+        </form>
+    </div>
+</div>
+
+<!-- Employee Computers Table -->
+<div class="card bg-base-100 shadow-xl">
+    <div class="card-body">
+        <div class="overflow-x-auto">
+            <table class="table table-zebra">
+                <thead>
+                    <tr>
+                        <th>الموظف</th>
+                        <th>رمز الموظف</th>
+                        <th>اسم الجهاز</th>
+                        <th>نوع الجهاز</th>
+                        <th>نظام التشغيل</th>
+                        <th>الإجراءات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ec in employee_computers %}
+                    <tr class="hover">
+                        <td>{{ ec.employee.name }}</td>
+                        <td>{{ ec.employee.code }}</td>
+                        <td>{{ ec.computer.code }}</td>
+                        <td>
+                            <span class="badge badge-outline">{{ ec.computer.get_type_display }}</span>
+                        </td>
+                        <td>{{ ec.computer.template.get_os_type_display }} {{ ec.computer.template.os_version }}</td>
+                        <td>
+                            <a href="{% url 'it:manager_employee_computer_detail' ec.pk %}" class="btn btn-sm btn-primary">عرض التفاصيل</a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center text-gray-500 py-8">لا توجد أجهزة مطابقة</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        {% if is_paginated %}
+        <div class="flex justify-center mt-6">
+            <div class="join">
+                {% if page_obj.has_previous %}
+                    <a href="?page=1{% if current_search %}&search={{ current_search }}{% endif %}" class="join-item btn">«</a>
+                    <a href="?page={{ page_obj.previous_page_number }}{% if current_search %}&search={{ current_search }}{% endif %}" class="join-item btn">‹</a>
+                {% endif %}
+
+                <button class="join-item btn btn-active">صفحة {{ page_obj.number }} من {{ page_obj.paginator.num_pages }}</button>
+
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}{% if current_search %}&search={{ current_search }}{% endif %}" class="join-item btn">›</a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}{% if current_search %}&search={{ current_search }}{% endif %}" class="join-item btn">»</a>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

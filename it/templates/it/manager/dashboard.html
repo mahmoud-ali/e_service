@@ -1,0 +1,129 @@
+{% extends "it/manager/base.html" %}
+{% load i18n %}
+
+{% block title %}لوحة التحكم - بوابة مدير تقنية المعلومات{% endblock %}
+
+{% block content %}
+<div class="mb-6">
+    <h1 class="text-3xl font-bold">لوحة التحكم</h1>
+    <p class="text-gray-600">نظرة عامة على طلبات المساعدة والإحصائيات</p>
+</div>
+
+<!-- Statistics Cards -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+    <div class="card bg-base-100 shadow-xl hover:shadow-2xl transition-shadow">
+        <div class="card-body">
+            <h2 class="card-title text-primary">إجمالي الطلبات</h2>
+            <p class="text-4xl font-bold">{{ total_requests }}</p>
+            <div class="card-actions justify-end">
+                <a href="{% url 'it:manager_help_request_list' %}" class="btn btn-primary btn-sm">عرض الكل</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="card bg-base-100 shadow-xl hover:shadow-2xl transition-shadow">
+        <div class="card-body">
+            <h2 class="card-title text-warning">الطلبات المعلقة</h2>
+            <p class="text-4xl font-bold">{{ unsolved_requests }}</p>
+            <div class="card-actions justify-end">
+                <a href="{% url 'it:manager_help_request_list' %}?status=1" class="btn btn-warning btn-sm">عرض المعلقة</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="card bg-base-100 shadow-xl hover:shadow-2xl transition-shadow">
+        <div class="card-body">
+            <h2 class="card-title text-success">الطلبات المحلولة</h2>
+            <p class="text-4xl font-bold">{{ solved_requests }}</p>
+            <div class="card-actions justify-end">
+                <a href="{% url 'it:manager_help_request_list' %}?status=2" class="btn btn-success btn-sm">عرض المحلولة</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Category Statistics -->
+<div class="card bg-base-100 shadow-xl mb-8">
+    <div class="card-body">
+        <h2 class="card-title">الطلبات حسب التصنيف</h2>
+        <div class="overflow-x-auto">
+            <table class="table table-zebra">
+                <thead>
+                    <tr>
+                        <th>التصنيف</th>
+                        <th>عدد الطلبات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for stat in category_stats %}
+                    <tr>
+                        <td>
+                            {% for choice_value, choice_label in help_requests.model.CATEGORY_CHOICES %}
+                                {% if choice_value == stat.category %}
+                                    {{ choice_label }}
+                                {% endif %}
+                            {% endfor %}
+                        </td>
+                        <td><span class="badge badge-primary">{{ stat.count }}</span></td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="2" class="text-center text-gray-500">لا توجد بيانات</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Help Requests -->
+<div class="card bg-base-100 shadow-xl">
+    <div class="card-body">
+        <h2 class="card-title">أحدث طلبات المساعدة</h2>
+        <div class="overflow-x-auto">
+            <table class="table table-zebra">
+                <thead>
+                    <tr>
+                        <th>الموضوع</th>
+                        <th>التصنيف</th>
+                        <th>الموظف</th>
+                        <th>الحالة</th>
+                        <th>التاريخ</th>
+                        <th>الإجراءات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for request in help_requests %}
+                    <tr>
+                        <td>{{ request.subject }}</td>
+                        <td>
+                            <span class="badge badge-outline">{{ request.get_category_display }}</span>
+                        </td>
+                        <td>{{ request.employee.name }}</td>
+                        <td>
+                            {% if request.status == request.STATUS_UNSOLVED %}
+                                <span class="badge badge-warning">{{ request.get_status_display }}</span>
+                            {% else %}
+                                <span class="badge badge-success">{{ request.get_status_display }}</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ request.created_at|date:"Y-m-d H:i" }}</td>
+                        <td>
+                            <a href="{% url 'it:manager_help_request_detail' request.pk %}" class="btn btn-sm btn-primary">عرض</a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center text-gray-500">لا توجد طلبات</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="card-actions justify-end mt-4">
+            <a href="{% url 'it:manager_help_request_list' %}" class="btn btn-primary">عرض جميع الطلبات</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

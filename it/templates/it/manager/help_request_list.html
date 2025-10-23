@@ -1,0 +1,124 @@
+{% extends "it/manager/base.html" %}
+{% load i18n %}
+
+{% block title %}طلبات المساعدة - بوابة مدير تقنية المعلومات{% endblock %}
+
+{% block content %}
+<div class="mb-6">
+    <h1 class="text-3xl font-bold">طلبات المساعدة</h1>
+    <p class="text-gray-600">إدارة ومتابعة جميع طلبات المساعدة</p>
+</div>
+
+<!-- Filters -->
+<div class="card bg-base-100 shadow-xl mb-6">
+    <div class="card-body">
+        <form method="get" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div class="form-control">
+                <label class="label">
+                    <span class="label-text">البحث</span>
+                </label>
+                <input type="text" name="search" value="{{ current_search }}" placeholder="ابحث عن موضوع أو موظف..." class="input input-bordered" />
+            </div>
+
+            <div class="form-control">
+                <label class="label">
+                    <span class="label-text">الحالة</span>
+                </label>
+                <select name="status" class="select select-bordered">
+                    <option value="">الكل</option>
+                    {% for value, label in status_choices %}
+                        <option value="{{ value }}" {% if current_status == value|stringformat:"s" %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-control">
+                <label class="label">
+                    <span class="label-text">التصنيف</span>
+                </label>
+                <select name="category" class="select select-bordered">
+                    <option value="">الكل</option>
+                    {% for value, label in category_choices %}
+                        <option value="{{ value }}" {% if current_category == value %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-control">
+                <label class="label">
+                    <span class="label-text">&nbsp;</span>
+                </label>
+                <button type="submit" class="btn btn-primary">تصفية</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Help Requests Table -->
+<div class="card bg-base-100 shadow-xl">
+    <div class="card-body">
+        <div class="overflow-x-auto">
+            <table class="table table-zebra">
+                <thead>
+                    <tr>
+                        <th>الموضوع</th>
+                        <th>التصنيف</th>
+                        <th>الموظف</th>
+                        <th>الحالة</th>
+                        <th>التاريخ</th>
+                        <th>الإجراءات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for request in help_requests %}
+                    <tr class="hover">
+                        <td>{{ request.subject }}</td>
+                        <td>
+                            <span class="badge badge-outline">{{ request.get_category_display }}</span>
+                        </td>
+                        <td>{{ request.employee.name }}</td>
+                        <td>
+                            {% if request.status == request.STATUS_UNSOLVED %}
+                                <span class="badge badge-warning">{{ request.get_status_display }}</span>
+                            {% else %}
+                                <span class="badge badge-success">{{ request.get_status_display }}</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ request.created_at|date:"Y-m-d H:i" }}</td>
+                        <td>
+                            <div class="flex gap-2">
+                                <a href="{% url 'it:manager_help_request_detail' request.pk %}" class="btn btn-sm btn-primary">عرض</a>
+                                <a href="{% url 'it:manager_help_request_update' request.pk %}" class="btn btn-sm btn-secondary">تحديث</a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center text-gray-500 py-8">لا توجد طلبات مطابقة</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        {% if is_paginated %}
+        <div class="flex justify-center mt-6">
+            <div class="join">
+                {% if page_obj.has_previous %}
+                    <a href="?page=1{% if current_search %}&search={{ current_search }}{% endif %}{% if current_status %}&status={{ current_status }}{% endif %}{% if current_category %}&category={{ current_category }}{% endif %}" class="join-item btn">«</a>
+                    <a href="?page={{ page_obj.previous_page_number }}{% if current_search %}&search={{ current_search }}{% endif %}{% if current_status %}&status={{ current_status }}{% endif %}{% if current_category %}&category={{ current_category }}{% endif %}" class="join-item btn">‹</a>
+                {% endif %}
+
+                <button class="join-item btn btn-active">صفحة {{ page_obj.number }} من {{ page_obj.paginator.num_pages }}</button>
+
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}{% if current_search %}&search={{ current_search }}{% endif %}{% if current_status %}&status={{ current_status }}{% endif %}{% if current_category %}&category={{ current_category }}{% endif %}" class="join-item btn">›</a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}{% if current_search %}&search={{ current_search }}{% endif %}{% if current_status %}&status={{ current_status }}{% endif %}{% if current_category %}&category={{ current_category }}{% endif %}" class="join-item btn">»</a>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,202 @@
+{% extends "it/manager/base.html" %}
+{% load i18n %}
+
+{% block title %}{{ employee_computer.employee.name }} - بوابة مدير تقنية المعلومات{% endblock %}
+
+{% block content %}
+<div class="mb-6">
+    <div class="flex justify-between items-center">
+        <div>
+            <h1 class="text-3xl font-bold">تفاصيل جهاز الموظف</h1>
+            <p class="text-gray-600">{{ employee_computer.employee.name }}</p>
+        </div>
+        <a href="{% url 'it:manager_employee_computer_list' %}" class="btn btn-outline">رجوع للقائمة</a>
+    </div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <!-- Main Information -->
+    <div class="lg:col-span-2">
+        <!-- Employee Info -->
+        <div class="card bg-base-100 shadow-xl mb-6">
+            <div class="card-body">
+                <h2 class="card-title">معلومات الموظف</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="label">
+                            <span class="label-text font-bold">الاسم</span>
+                        </label>
+                        <p>{{ employee_computer.employee.name }}</p>
+                    </div>
+
+                    <div>
+                        <label class="label">
+                            <span class="label-text font-bold">رمز الموظف</span>
+                        </label>
+                        <p>{{ employee_computer.employee.code }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Computer Info -->
+        <div class="card bg-base-100 shadow-xl mb-6">
+            <div class="card-body">
+                <h2 class="card-title">معلومات الجهاز</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="label">
+                            <span class="label-text font-bold">اسم الجهاز</span>
+                        </label>
+                        <p>{{ employee_computer.computer.code }}</p>
+                    </div>
+
+                    <div>
+                        <label class="label">
+                            <span class="label-text font-bold">نوع الجهاز</span>
+                        </label>
+                        <p><span class="badge badge-outline">{{ employee_computer.computer.get_type_display }}</span></p>
+                    </div>
+
+                    <div>
+                        <label class="label">
+                            <span class="label-text font-bold">نظام التشغيل</span>
+                        </label>
+                        <p>{{ employee_computer.computer.template.get_os_type_display }} {{ employee_computer.computer.template.os_version }}</p>
+                    </div>
+                </div>
+
+                <div class="divider"></div>
+
+                <div>
+                    <label class="label">
+                        <span class="label-text font-bold">البرامج المثبتة</span>
+                    </label>
+                    <div class="flex flex-wrap gap-2">
+                        {% for app in employee_computer.computer.template.applications.all %}
+                            <span class="badge badge-primary">{{ app }}</span>
+                        {% endfor %}
+                        {% for app in employee_computer.computer.applications.all %}
+                            <span class="badge badge-secondary">{{ app }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="divider"></div>
+
+                <div>
+                    <label class="label">
+                        <span class="label-text font-bold">الملحقات</span>
+                    </label>
+                    <div class="overflow-x-auto">
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>النوع</th>
+                                    <th>الاسم</th>
+                                    <th>نوع الاتصال</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for peripheral in employee_computer.computer.peripherals.all %}
+                                <tr>
+                                    <td>{{ peripheral.get_type_display }}</td>
+                                    <td>{{ peripheral.name|default:"-" }}</td>
+                                    <td>{{ peripheral.connectivity_type|default:"-" }}</td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="3" class="text-center text-gray-500">لا توجد ملحقات</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="divider"></div>
+
+                <div>
+                    <label class="label">
+                        <span class="label-text font-bold">نقاط الوصول</span>
+                    </label>
+                    <div class="overflow-x-auto">
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>الاسم</th>
+                                    <th>الموديل</th>
+                                    <th>الغرض</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for ap in employee_computer.computer.access_points.all %}
+                                <tr>
+                                    <td>{{ ap.name }}</td>
+                                    <td>{{ ap.model|default:"-" }}</td>
+                                    <td>{{ ap.purpose|default:"-" }}</td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="3" class="text-center text-gray-500">لا توجد نقاط وصول</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Conversation History -->
+        <div class="card bg-base-100 shadow-xl">
+            <div class="card-body">
+                <h2 class="card-title">سجل المحادثات</h2>
+                {% if conversations %}
+                    <div class="space-y-4">
+                        {% for conv in conversations %}
+                        <div class="border-l-4 border-primary pl-4">
+                            <div class="text-sm text-gray-500 mb-2">{{ conv.created_at|date:"Y-m-d H:i" }}</div>
+                            <div class="mb-2">
+                                <span class="font-bold">السؤال:</span>
+                                <p class="whitespace-pre-wrap">{{ conv.question }}</p>
+                            </div>
+                            <div>
+                                <span class="font-bold">الإجابة:</span>
+                                <p class="whitespace-pre-wrap">{{ conv.answer }}</p>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="text-gray-500 italic">لا توجد محادثات بعد</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="lg:col-span-1">
+        <div class="card bg-base-100 shadow-xl">
+            <div class="card-body">
+                <h2 class="card-title">الإجراءات السريعة</h2>
+                <div class="flex flex-col gap-2">
+                    <a href="{% url 'admin:it_employeecomputer_change' employee_computer.pk %}" class="btn btn-secondary" target="_blank">فتح في لوحة الإدارة</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="card bg-base-100 shadow-xl mt-6">
+            <div class="card-body">
+                <h2 class="card-title">معلومات إضافية</h2>
+                <div>
+                    <label class="label">
+                        <span class="label-text font-bold">UUID</span>
+                    </label>
+                    <p class="text-xs break-all">{{ employee_computer.uuid }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

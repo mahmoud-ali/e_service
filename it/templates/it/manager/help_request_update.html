@@ -1,0 +1,130 @@
+{% extends "it/manager/base.html" %}
+{% load i18n %}
+
+{% block title %}تحديث طلب المساعدة - بوابة مدير تقنية المعلومات{% endblock %}
+
+{% block content %}
+<div class="mb-6">
+    <div class="flex justify-between items-center">
+        <div>
+            <h1 class="text-3xl font-bold">تحديث طلب المساعدة</h1>
+            <p class="text-gray-600">{{ object.subject }}</p>
+        </div>
+        <a href="{% url 'it:manager_help_request_detail' object.pk %}" class="btn btn-outline">إلغاء</a>
+    </div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <!-- Update Form -->
+    <div class="lg:col-span-2">
+        <div class="card bg-base-100 shadow-xl">
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="form-control mb-4">
+                        <label class="label">
+                            <span class="label-text font-bold">التحريات</span>
+                        </label>
+                        <textarea name="investigations" rows="4" class="textarea textarea-bordered" placeholder="أضف التحريات التي قمت بها...">{{ form.investigations.value|default:'' }}</textarea>
+                        {% if form.investigations.errors %}
+                            <label class="label">
+                                <span class="label-text-alt text-error">{{ form.investigations.errors.0 }}</span>
+                            </label>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-control mb-4">
+                        <label class="label">
+                            <span class="label-text font-bold">السبب الجذري للمشكلة</span>
+                        </label>
+                        <textarea name="root_cause" rows="4" class="textarea textarea-bordered" placeholder="حدد السبب الجذري للمشكلة...">{{ form.root_cause.value|default:'' }}</textarea>
+                        {% if form.root_cause.errors %}
+                            <label class="label">
+                                <span class="label-text-alt text-error">{{ form.root_cause.errors.0 }}</span>
+                            </label>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-control mb-4">
+                        <label class="label">
+                            <span class="label-text font-bold">وصف المعالجة</span>
+                        </label>
+                        <textarea name="solution" rows="4" class="textarea textarea-bordered" placeholder="اشرح كيف تم حل المشكلة...">{{ form.solution.value|default:'' }}</textarea>
+                        {% if form.solution.errors %}
+                            <label class="label">
+                                <span class="label-text-alt text-error">{{ form.solution.errors.0 }}</span>
+                            </label>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-control mb-4">
+                        <label class="label">
+                            <span class="label-text font-bold">الحالة</span>
+                        </label>
+                        <select name="status" class="select select-bordered">
+                            {% for value, label in form.status.field.choices %}
+                                <option value="{{ value }}" {% if form.status.value == value %}selected{% endif %}>{{ label }}</option>
+                            {% endfor %}
+                        </select>
+                        {% if form.status.errors %}
+                            <label class="label">
+                                <span class="label-text-alt text-error">{{ form.status.errors.0 }}</span>
+                            </label>
+                        {% endif %}
+                    </div>
+
+                    <div class="card-actions justify-end mt-6">
+                        <a href="{% url 'it:manager_help_request_detail' object.pk %}" class="btn btn-outline">إلغاء</a>
+                        <button type="submit" class="btn btn-primary">حفظ التغييرات</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Original Request Info -->
+    <div class="lg:col-span-1">
+        <div class="card bg-base-100 shadow-xl">
+            <div class="card-body">
+                <h2 class="card-title">معلومات الطلب الأصلي</h2>
+                
+                <div>
+                    <label class="label">
+                        <span class="label-text font-bold">الموظف</span>
+                    </label>
+                    <p>{{ object.employee.name }}</p>
+                </div>
+
+                <div>
+                    <label class="label">
+                        <span class="label-text font-bold">التصنيف</span>
+                    </label>
+                    <p><span class="badge badge-outline">{{ object.get_category_display }}</span></p>
+                </div>
+
+                <div>
+                    <label class="label">
+                        <span class="label-text font-bold">الموضوع</span>
+                    </label>
+                    <p>{{ object.subject }}</p>
+                </div>
+
+                <div>
+                    <label class="label">
+                        <span class="label-text font-bold">وصف المشكلة</span>
+                    </label>
+                    <p class="text-sm whitespace-pre-wrap">{{ object.description }}</p>
+                </div>
+
+                <div>
+                    <label class="label">
+                        <span class="label-text font-bold">تاريخ الإنشاء</span>
+                    </label>
+                    <p>{{ object.created_at|date:"Y-m-d H:i" }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
