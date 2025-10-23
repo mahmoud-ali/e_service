@@ -1,0 +1,120 @@
+{% extends 'sandog/base.html' %}
+
+{% block title %}قائمة التسجيلات - بوابة منظومة الطاقة الشمسية{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- Page Header -->
+    <div class="card bg-base-100 shadow-xl">
+        <div class="card-body">
+            <h1 class="card-title text-3xl">قائمة التسجيلات</h1>
+            <p class="text-base-content/70">عرض وإدارة جميع تسجيلات منظومة الطاقة الشمسية</p>
+        </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="card bg-base-100 shadow-xl">
+        <div class="card-body">
+            <h2 class="card-title mb-4">تصفية النتائج</h2>
+            <form method="get" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">نوع المنظومة</span>
+                    </label>
+                    <select name="category" class="select select-bordered w-full">
+                        <option value="">الكل</option>
+                        {% for category in categories %}
+                        <option value="{{ category.id }}" {% if selected_category == category.id|stringformat:"s" %}selected{% endif %}>
+                            {{ category.name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">طريقة الدفع</span>
+                    </label>
+                    <select name="payment_method" class="select select-bordered w-full">
+                        <option value="">الكل</option>
+                        {% for method in payment_methods %}
+                        <option value="{{ method.id }}" {% if selected_payment_method == method.id|stringformat:"s" %}selected{% endif %}>
+                            {{ method.name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">بحث عن موظف</span>
+                    </label>
+                    <input type="text" name="search" value="{{ search }}" placeholder="اسم الموظف..." class="input input-bordered w-full" />
+                </div>
+
+                <div class="form-control md:col-span-3">
+                    <button type="submit" class="btn btn-primary">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                        بحث
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Results -->
+    <div class="card bg-base-100 shadow-xl">
+        <div class="card-body">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="card-title">النتائج ({{ registrations.count }})</h2>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="table table-zebra w-full">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>الموظف</th>
+                            <th>نوع المنظومة</th>
+                            <th>طريقة الدفع</th>
+                            <th>تاريخ التسجيل</th>
+                            <th>الإجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for registration in registrations %}
+                        <tr class="hover">
+                            <td>{{ forloop.counter }}</td>
+                            <td>
+                                <div class="font-bold">{{ registration.employee.name }}</div>
+                                <div class="text-sm opacity-50">{{ registration.employee.email }}</div>
+                            </td>
+                            <td>
+                                <div class="badge badge-primary badge-outline">{{ registration.category.name }}</div>
+                            </td>
+                            <td>{{ registration.payment_method.name }}</td>
+                            <td>{{ registration.created_at|date:"Y-m-d H:i" }}</td>
+                            <td>
+                                <a href="{% url 'sandog:registration_detail' registration.pk %}" class="btn btn-sm btn-info">
+                                    عرض التفاصيل
+                                </a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="6" class="text-center text-base-content/50 py-8">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto mb-4 opacity-30" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
+                                </svg>
+                                <p class="text-lg">لا توجد تسجيلات</p>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

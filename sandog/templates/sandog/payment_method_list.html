@@ -1,0 +1,70 @@
+{% extends 'sandog/base.html' %}
+
+{% block title %}طرق الدفع - بوابة منظومة الطاقة الشمسية{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- Page Header -->
+    <div class="card bg-base-100 shadow-xl">
+        <div class="card-body">
+            <div class="flex justify-between items-center">
+                <div>
+                    <h1 class="card-title text-3xl">طرق الدفع</h1>
+                    <p class="text-base-content/70">إدارة طرق الدفع المتاحة</p>
+                </div>
+                <a href="{% url 'admin:sandog_lkpsolarsystempaymentmethod_add' %}" class="btn btn-primary">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                    </svg>
+                    إضافة طريقة جديدة
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment Methods Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for method in payment_methods %}
+        <div class="card bg-base-100 shadow-xl hover:shadow-2xl transition-shadow">
+            <div class="card-body">
+                <h2 class="card-title text-secondary">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                    </svg>
+                    {{ method.name }}
+                </h2>
+                <div class="divider my-2"></div>
+                <div class="stats shadow">
+                    <div class="stat place-items-center">
+                        <div class="stat-title">عدد التسجيلات</div>
+                        <div class="stat-value text-secondary">{{ method.registration_count }}</div>
+                    </div>
+                </div>
+                <div class="card-actions justify-end mt-4">
+                    <a href="{% url 'admin:sandog_lkpsolarsystempaymentmethod_change' method.pk %}" class="btn btn-sm btn-outline btn-secondary">
+                        تعديل
+                    </a>
+                    <a href="{% url 'sandog:registration_list' %}?payment_method={{ method.id }}" class="btn btn-sm btn-info">
+                        عرض التسجيلات
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-span-full">
+            <div class="card bg-base-100 shadow-xl">
+                <div class="card-body text-center py-16">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24 mx-auto mb-4 opacity-30" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                    </svg>
+                    <p class="text-xl text-base-content/50">لا توجد طرق دفع</p>
+                    <a href="{% url 'admin:sandog_lkpsolarsystempaymentmethod_add' %}" class="btn btn-primary mt-4">
+                        إضافة طريقة جديدة
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
