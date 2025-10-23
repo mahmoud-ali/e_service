@@ -1,0 +1,1398 @@
+{% load static %}
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام إدارة الموارد البشرية</title>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .rtl {
+            direction: rtl;
+        }
+    </style>
+</head>
+<body class="bg-base-200">
+    <div id="root"></div>
+    
+    <script type="module">
+        import { getCookie, csrftoken, STATE_DRAFT, STATE_ACCEPTED, STATE_REJECTED, getStateInfo } from '{% static "hr_bot/js/utils.js" %}';
+        
+        // Make utilities available globally for Babel script
+        window.csrftoken = csrftoken;
+        window.STATE_DRAFT = STATE_DRAFT;
+        window.STATE_ACCEPTED = STATE_ACCEPTED;
+        window.STATE_REJECTED = STATE_REJECTED;
+        window.getStateInfo = getStateInfo;
+        
+        // Signal that utilities are loaded
+        window.utilsLoaded = true;
+        window.dispatchEvent(new Event('utilsLoaded'));
+    </script>
+    
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+        
+        // Wait for utilities to load
+        function waitForUtils() {
+            return new Promise((resolve) => {
+                if (window.utilsLoaded) {
+                    resolve();
+                } else {
+                    window.addEventListener('utilsLoaded', resolve, { once: true });
+                }
+            });
+        }
+        
+        // Get utilities from window
+        const csrftoken = window.csrftoken;
+        const STATE_DRAFT = window.STATE_DRAFT;
+        const STATE_ACCEPTED = window.STATE_ACCEPTED;
+        const STATE_REJECTED = window.STATE_REJECTED;
+        const getStateInfo = window.getStateInfo;
+
+        // View labels mapping
+        const VIEW_LABELS = {
+            'dashboard': 'لوحة التحكم',
+            'registrations': 'طلبات التسجيل',
+            'families': 'بيانات العائلة',
+            'moahil': 'المؤهلات العلمية',
+            'bank_accounts': 'الحسابات البنكية',
+            'employee_data': 'بياناتي الشخصية'
+        };
+
+        function StateBadge({ state }) {
+            const info = getStateInfo(state);
+            return <span className={`badge ${info.className}`}>{info.label}</span>;
+        }
+
+        function Breadcrumb({ view, setView }) {
+            const breadcrumbs = [
+                { view: 'dashboard', label: 'الرئيسية' }
+            ];
+
+            if (view !== 'dashboard') {
+                breadcrumbs.push({ view: view, label: VIEW_LABELS[view] || view });
+            }
+
+            return (
+                <div className="text-sm breadcrumbs bg-base-100 px-4 py-3 shadow-sm">
+                    <ul>
+                        {breadcrumbs.map((crumb, index) => (
+                            <li key={crumb.view}>
+                                {index === breadcrumbs.length - 1 ? (
+                                    <span className="font-semibold">{crumb.label}</span>
+                                ) : (
+                                    <a 
+                                        onClick={() => setView(crumb.view)} 
+                                        className="cursor-pointer hover:text-primary"
+                                    >
+                                        {crumb.label}
+                                    </a>
+                                )}
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            );
+        }
+
+        function Navbar({ user, logout, setView }) {
+            return (
+                <div className="navbar bg-primary text-primary-content shadow-lg">
+                    <div className="navbar-start">
+                        <button className="btn btn-ghost text-xl" onClick={() => setView('dashboard')}>
+                            نظام إدارة الموارد البشرية
+                        </button>
+                    </div>
+                    <div className="navbar-end gap-2">
+                        <span className="text-sm">مرحباً، {user.user}</span>
+                        <button className="btn btn-ghost btn-sm" onClick={logout}>تسجيل الخروج</button>
+                    </div>
+                </div>
+            );
+        }
+
+        function Dashboard({ user, setView, isManager, isEmployee }) {
+            const [stats, setStats] = useState({
+                registrations: 0,
+                families: 0,
+                moahil: 0,
+                bank_accounts: 0
+            });
+
+            useEffect(() => {
+                if (isManager) {
+                    fetch(`/bot/api/registrations/${STATE_DRAFT}/`, { credentials: 'same-origin' })
+                        .then(res => res.json())
+                        .then(data => setStats(prev => ({ ...prev, registrations: data.registrations.length })))
+                        .catch(() => {});
+                    
+                    fetch('/bot/api/families/', { credentials: 'same-origin' })
+                        .then(res => res.json())
+                        .then(data => setStats(prev => ({ ...prev, families: data.families.filter(f => f.state === STATE_DRAFT).length })))
+                        .catch(() => {});
+                    
+                    fetch('/bot/api/moahil/', { credentials: 'same-origin' })
+                        .then(res => res.json())
+                        .then(data => setStats(prev => ({ ...prev, moahil: data.moahil.filter(m => m.state === STATE_DRAFT).length })))
+                        .catch(() => {});
+                    
+                    fetch('/bot/api/bank-accounts/', { credentials: 'same-origin' })
+                        .then(res => res.json())
+                        .then(data => setStats(prev => ({ ...prev, bank_accounts: data.bank_accounts.filter(b => b.state === STATE_DRAFT).length })))
+                        .catch(() => {});
+                }
+            }, [isManager]);
+
+            return (
+                <div>
+                    <h1 className="text-3xl font-bold mb-6">لوحة التحكم</h1>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+                        {isManager && (
+                            <>
+                                <div className="card bg-base-100 shadow-xl hover:shadow-2xl transition-shadow cursor-pointer" onClick={() => setView('registrations')}>
+                                    <div className="card-body">
+                                        <h2 className="card-title">طلبات التسجيل</h2>
+                                        <p className="text-3xl font-bold text-primary">{stats.registrations}</p>
+                                        <p className="text-sm opacity-70">طلب قيد الانتظار</p>
+                                    </div>
+                                </div>
+                                
+                                <div className="card bg-base-100 shadow-xl hover:shadow-2xl transition-shadow cursor-pointer" onClick={() => setView('families')}>
+                                    <div className="card-body">
+                                        <h2 className="card-title">بيانات العائلة</h2>
+                                        <p className="text-3xl font-bold text-primary">{stats.families}</p>
+                                        <p className="text-sm opacity-70">طلب قيد الانتظار</p>
+                                    </div>
+                                </div>
+                                
+                                <div className="card bg-base-100 shadow-xl hover:shadow-2xl transition-shadow cursor-pointer" onClick={() => setView('moahil')}>
+                                    <div className="card-body">
+                                        <h2 className="card-title">المؤهلات العلمية</h2>
+                                        <p className="text-3xl font-bold text-primary">{stats.moahil}</p>
+                                        <p className="text-sm opacity-70">طلب قيد الانتظار</p>
+                                    </div>
+                                </div>
+                                
+                                <div className="card bg-base-100 shadow-xl hover:shadow-2xl transition-shadow cursor-pointer" onClick={() => setView('bank_accounts')}>
+                                    <div className="card-body">
+                                        <h2 className="card-title">الحسابات البنكية</h2>
+                                        <p className="text-3xl font-bold text-primary">{stats.bank_accounts}</p>
+                                        <p className="text-sm opacity-70">طلب قيد الانتظار</p>
+                                    </div>
+                                </div>
+                            </>
+                        )}
+                        
+                        <div className="card bg-base-100 shadow-xl hover:shadow-2xl transition-shadow cursor-pointer" onClick={() => setView('employee_data')}>
+                            <div className="card-body">
+                                <h2 className="card-title">بياناتي الشخصية</h2>
+                                <p className="text-sm opacity-70">عرض البيانات الشخصية</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        function RegistrationList({ user, setView, isManager }) {
+            const [registrations, setRegistrations] = useState([]);
+            const [loading, setLoading] = useState(true);
+            const [searchTerm, setSearchTerm] = useState('');
+            const [stateFilter, setStateFilter] = useState(STATE_DRAFT);
+
+            const loadData = (state=STATE_DRAFT) => {
+                setLoading(true);
+                fetch(`/bot/api/registrations/${state}/`, { credentials: 'same-origin' })
+                    .then(res => res.json())
+                    .then(data => {
+                        setRegistrations(data.registrations);
+                        setLoading(false);
+                    })
+                    .catch(() => setLoading(false));
+            };
+
+            useEffect(() => {
+                loadData();
+            }, []);
+
+            const filteredRegistrations = registrations.filter(r => {
+                const matchesSearch = searchTerm === '' ||
+                    r.employee.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    String(r.employee_code).includes(searchTerm) ||
+                    r.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    r.phone.includes(searchTerm)
+                return matchesSearch;
+            });
+
+            const accept = (id) => {
+                if (!confirm('هل أنت متأكد من قبول هذا الطلب؟')) return;
+                
+                fetch(`/bot/api/registrations/${id}/accept/`, { 
+                    method: 'POST', 
+                    credentials: 'same-origin',
+                    headers: {
+                        'X-CSRFToken': csrftoken,
+                    }
+                })
+                .then(res => res.json())
+                .then(() => {
+                    alert('تم قبول الطلب بنجاح');
+                    loadData();
+                })
+                .catch(() => alert('حدث خطأ'));
+            };
+
+            const reject = (id) => {
+                if (!confirm('هل أنت متأكد من رفض هذا الطلب؟')) return;
+                
+                fetch(`/bot/api/registrations/${id}/reject/`, { 
+                    method: 'POST', 
+                    credentials: 'same-origin',
+                    headers: {
+                        'X-CSRFToken': csrftoken,
+                    }
+                })
+                .then(res => res.json())
+                .then(() => {
+                    alert('تم رفض الطلب');
+                    loadData();
+                })
+                .catch(() => alert('حدث خطأ'));
+            };
+
+            const resetPassword = (id) => {
+                if (!confirm('هل أنت متأكد من إعادة تعيين كلمة المرور؟')) return;
+                
+                fetch(`/bot/api/registrations/${id}/reset-password/`, { 
+                    method: 'POST', 
+                    credentials: 'same-origin',
+                    headers: {
+                        'X-CSRFToken': csrftoken,
+                    }
+                })
+                .then(res => res.json())
+                .then(() => {
+                    alert('تم إعادة تعيين كلمة المرور بنجاح');
+                })
+                .catch(() => alert('حدث خطأ'));
+            };
+
+            if (loading) {
+                return <div className="flex justify-center p-8"><span className="loading loading-spinner loading-lg"></span></div>;
+            }
+
+            return (
+                <div>
+                    <h2 className="text-2xl font-bold mb-4">طلبات التسجيل</h2>
+                    
+                    <div className="mb-4 flex gap-4">
+                        <input type="text" placeholder="بحث..." className="input input-bordered" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+                        <select className="select select-bordered" value={stateFilter} onChange={(e) => {setStateFilter(e.target.value === '' ? '' : parseInt(e.target.value)); loadData(e.target.value === '' ? '0' : parseInt(e.target.value)); }}>
+                            <option value="">جميع الحالات</option>
+                            <option value={STATE_DRAFT}>مسودة</option>
+                            <option value={STATE_ACCEPTED}>مقبول</option>
+                            <option value={STATE_REJECTED}>مرفوض</option>
+                        </select>
+
+                    </div>
+                    
+                    <div className="overflow-x-auto">
+                        <table className="table table-zebra w-full">
+                            <thead>
+                                <tr>
+                                    <th>كود الموظف</th>
+                                    <th>الموظف</th>
+                                    <th>الاسم</th>
+                                    <th>الهاتف</th>
+                                    <th>تاريخ الإنشاء</th>
+                                    <th>الحالة</th>
+                                    {isManager && <th>الإجراءات</th>}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {filteredRegistrations.map(r => (
+                                    <tr key={r.id}>
+                                        <td>{r.employee_code}</td>
+                                        <td>{r.employee}</td>
+                                        <td>{r.name}</td>
+                                        <td>{r.phone}</td>
+                                        <td>{r.created_at}</td>
+                                        <td><StateBadge state={r.state} /></td>
+                                        {isManager && (
+                                            <td>
+                                                <div className="flex gap-2">
+                                                    {r.state === STATE_DRAFT && (
+                                                        <>
+                                                            <button className="btn btn-success btn-sm" onClick={() => accept(r.id)}>قبول</button>
+                                                            <button className="btn btn-error btn-sm" onClick={() => reject(r.id)}>رفض</button>
+                                                        </>
+                                                    )}
+                                                    <button className="btn btn-info btn-sm" onClick={() => resetPassword(r.id)}>إعادة تعيين</button>
+                                                </div>
+                                            </td>
+                                        )}
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                        {filteredRegistrations.length === 0 && (
+                            <div className="text-center p-8 text-gray-500">لا توجد طلبات</div>
+                        )}
+                    </div>
+                </div>
+            );
+        }
+
+        function FamilyForm({ onSuccess }) {
+            const [formData, setFormData] = useState({
+                relation: '',
+                name: '',
+                tarikh_el2dafa: ''
+            });
+            const [file, setFile] = useState(null);
+            const [submitting, setSubmitting] = useState(false);
+
+            const handleSubmit = (e) => {
+                e.preventDefault();
+                setSubmitting(true);
+                
+                const data = new FormData();
+                data.append('relation', formData.relation);
+                data.append('name', formData.name);
+                data.append('tarikh_el2dafa', formData.tarikh_el2dafa);
+                if (file) data.append('attachement_file', file);
+
+                fetch('/bot/api/families/create/', {
+                    method: 'POST',
+                    credentials: 'same-origin',
+                    headers: {
+                        'X-CSRFToken': csrftoken,
+                    },
+                    body: data
+                })
+                .then(res => res.json())
+                .then(() => {
+                    alert('تم إضافة البيانات بنجاح');
+                    onSuccess();
+                })
+                .catch(() => alert('حدث خطأ'))
+                .finally(() => setSubmitting(false));
+            };
+
+            return (
+                <div className="card bg-base-100 shadow-xl mb-4">
+                    <div className="card-body">
+                        <h3 className="card-title">إضافة فرد جديد</h3>
+                        <form onSubmit={handleSubmit}>
+                            <div className="form-control">
+                                <label className="label">
+                                    <span className="label-text">العلاقة</span>
+                                </label>
+                                <select 
+                                    className="select select-bordered" 
+                                    value={formData.relation}
+                                    onChange={(e) => setFormData({...formData, relation: e.target.value})}
+                                    required
+                                >
+                                    <option value="">اختر العلاقة</option>
+                                    {%for key, value in FAMILY_RELATION_CHOICES.items%}
+                                        <option value="{{key}}">{{value}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            
+                            <div className="form-control">
+                                <label className="label">
+                                    <span className="label-text">الاسم</span>
+                                </label>
+                                <input 
+                                    type="text" 
+                                    className="input input-bordered" 
+                                    value={formData.name}
+                                    onChange={(e) => setFormData({...formData, name: e.target.value})}
+                                    required
+                                />
+                            </div>
+                            
+                            <div className="form-control">
+                                <label className="label">
+                                    <span className="label-text">تاريخ الإضافة</span>
+                                </label>
+                                <input 
+                                    type="date" 
+                                    className="input input-bordered" 
+                                    value={formData.tarikh_el2dafa}
+                                    onChange={(e) => setFormData({...formData, tarikh_el2dafa: e.target.value})}
+                                    required
+                                />
+                            </div>
+                            
+                            <div className="form-control">
+                                <label className="label">
+                                    <span className="label-text">المرفق</span>
+                                </label>
+                                <input 
+                                    type="file" 
+                                    className="file-input file-input-bordered" 
+                                    onChange={(e) => setFile(e.target.files[0])}
+                                />
+                            </div>
+                            
+                            <div className="form-control mt-6">
+                                <button type="submit" className="btn btn-primary" disabled={submitting}>
+                                    {submitting ? 'جاري الحفظ...' : 'حفظ'}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            );
+        }
+
+        function FamilyList({ user, setView, isManager, isEmployee, initialShowForm = false }) {
+            const [families, setFamilies] = useState([]);
+            const [loading, setLoading] = useState(true);
+            const [showForm, setShowForm] = useState(initialShowForm);
+            const [searchTerm, setSearchTerm] = useState('');
+            const [stateFilter, setStateFilter] = useState(STATE_DRAFT);
+
+            const loadData = () => {
+                if(isManager){
+                    setLoading(true);
+                    fetch('/bot/api/families/', { credentials: 'same-origin' })
+                        .then(res => res.json())
+                        .then(data => {
+                            setFamilies(data.families);
+                            setLoading(false);
+                        })
+                        .catch(() => setLoading(false));
+                }else{
+                    setLoading(false)
+                }
+            };
+
+            useEffect(() => {
+                loadData();
+            }, []);
+
+            const filteredFamilies = families.filter(f => {
+                const matchesSearch = searchTerm === '' ||
+                    f.employee.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    String(f.employee_code).includes(searchTerm) ||
+                    f.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    f.relation.includes(searchTerm);
+                const matchesState = stateFilter === '' || f.state === stateFilter;
+                return matchesSearch && matchesState;
+            });
+
+            const accept = (id) => {
+                if (!confirm('هل أنت متأكد من قبول هذا الطلب؟')) return;
+                
+                fetch(`/bot/api/families/${id}/accept/`, { 
+                    method: 'POST', 
+                    credentials: 'same-origin',
+                    headers: {
+                        'X-CSRFToken': csrftoken,
+                    }
+                })
+                .then(res => res.json())
+                .then(() => {
+                    alert('تم قبول الطلب بنجاح');
+                    loadData();
+                })
+                .catch(() => alert('حدث خطأ'));
+            };
+
+            const reject = (id) => {
+                if (!confirm('هل أنت متأكد من رفض هذا الطلب؟')) return;
+                
+                fetch(`/bot/api/families/${id}/reject/`, { 
+                    method: 'POST', 
+                    credentials: 'same-origin',
+                    headers: {
+                        'X-CSRFToken': csrftoken,
+                    }
+                })
+                .then(res => res.json())
+                .then(() => {
+                    alert('تم رفض الطلب');
+                    loadData();
+                })
+                .catch(() => alert('حدث خطأ'));
+            };
+
+            if (loading) {
+                return <div className="flex justify-center p-8"><span className="loading loading-spinner loading-lg"></span></div>;
+            }
+
+            return (
+                <div>
+                    <div className="flex justify-between items-center mb-4">
+                        <h2 className="text-2xl font-bold">بيانات العائلة</h2>
+                    </div>
+                    {isManager && (
+                    <div className="mb-4 flex gap-4">
+                        <input type="text" placeholder="بحث..." className="input input-bordered" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+                        <select className="select select-bordered" value={stateFilter} onChange={(e) => setStateFilter(e.target.value === '' ? '' : parseInt(e.target.value))}>
+                            <option value="">جميع الحالات</option>
+                            <option value={STATE_DRAFT}>مسودة</option>
+                            <option value={STATE_ACCEPTED}>مقبول</option>
+                            <option value={STATE_REJECTED}>مرفوض</option>
+                        </select>
+                    </div>
+                    )}
+
+                    {showForm && isEmployee && (
+                        <FamilyForm onSuccess={() => { setShowForm(false); setView('employee_data')}} />
+                    )}
+
+                    {isManager && (
+
+                    <div className="overflow-x-auto mt-4">
+                        <table className="table table-zebra w-full">
+                            <thead>
+                                <tr>
+                                    <th>كود الموظف</th>
+                                    <th>الموظف</th>
+                                    <th>الاسم</th>
+                                    <th>العلاقة</th>
+                                    <th>تاريخ الإضافة</th>
+                                    <th>المرفق</th>
+                                    <th>الحالة</th>
+                                    {isManager && <th>الإجراءات</th>}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {filteredFamilies.map(f => (
+                                    <tr key={f.id}>
+                                        <td>{f.employee_code}</td>
+                                        <td>{f.employee}</td>
+                                        <td>{f.name}</td>
+                                        <td>{f.relation}</td>
+                                        <td>{f.tarikh_el2dafa}</td>
+                                        <td>
+                                            {f.attachement_file && (
+                                                <a href={f.attachement_file} target="_blank" className="btn btn-sm btn-ghost">عرض</a>
+                                            )}
+                                        </td>
+                                        <td><StateBadge state={f.state} /></td>
+                                        {isManager && (
+                                            <td>
+                                                {f.state === STATE_DRAFT && (
+                                                    <div className="flex gap-2">
+                                                        <button className="btn btn-success btn-sm" onClick={() => accept(f.id)}>قبول</button>
+                                                        <button className="btn btn-error btn-sm" onClick={() => reject(f.id)}>رفض</button>
+                                                    </div>
+                                                )}
+                                            </td>
+                                        )}
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                        {filteredFamilies.length === 0 && (
+                            <div className="text-center p-8 text-gray-500">لا توجد بيانات</div>
+                        )}
+                    </div>
+                    )}
+
+                </div>
+            );
+        }
+
+        function MoahilForm({ onSuccess }) {
+            const [formData, setFormData] = useState({
+                moahil: '',
+                university: '',
+                takhasos: '',
+                graduate_dt: ''
+            });
+            const [file, setFile] = useState(null);
+            const [submitting, setSubmitting] = useState(false);
+
+            const handleSubmit = (e) => {
+                e.preventDefault();
+                setSubmitting(true);
+                
+                const data = new FormData();
+                data.append('moahil', formData.moahil);
+                data.append('university', formData.university);
+                data.append('takhasos', formData.takhasos);
+                data.append('graduate_dt', formData.graduate_dt);
+                if (file) data.append('attachement_file', file);
+
+                fetch('/bot/api/moahil/create/', {
+                    method: 'POST',
+                    credentials: 'same-origin',
+                    headers: {
+                        'X-CSRFToken': csrftoken,
+                    },
+                    body: data
+                })
+                .then(res => res.json())
+                .then(() => {
+                    alert('تم إضافة البيانات بنجاح');
+                    onSuccess();
+                })
+                .catch(() => alert('حدث خطأ'))
+                .finally(() => setSubmitting(false));
+            };
+
+            return (
+                <div className="card bg-base-100 shadow-xl mb-4">
+                    <div className="card-body">
+                        <h3 className="card-title">إضافة مؤهل جديد</h3>
+                        <form onSubmit={handleSubmit}>
+                            <div className="form-control">
+                                <label className="label">
+                                    <span className="label-text">المؤهل</span>
+                                </label>
+                                <select 
+                                    className="select select-bordered" 
+                                    value={formData.moahil}
+                                    onChange={(e) => setFormData({...formData, moahil: e.target.value})}
+                                    required
+                                >
+                                    <option value="">اختر المؤهل</option>
+                                    {% for key, value in MOAHIL_CHOICES.items%}
+                                    <option value="{{key}}">{{value}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            
+                            <div className="form-control">
+                                <label className="label">
+                                    <span className="label-text">الجامعة</span>
+                                </label>
+                                <input 
+                                    type="text" 
+                                    className="input input-bordered" 
+                                    value={formData.university}
+                                    onChange={(e) => setFormData({...formData, university: e.target.value})}
+                                    required
+                                />
+                            </div>
+                            
+                            <div className="form-control">
+                                <label className="label">
+                                    <span className="label-text">التخصص</span>
+                                </label>
+                                <input 
+                                    type="text" 
+                                    className="input input-bordered" 
+                                    value={formData.takhasos}
+                                    onChange={(e) => setFormData({...formData, takhasos: e.target.value})}
+                                    required
+                                />
+                            </div>
+                            
+                            <div className="form-control">
+                                <label className="label">
+                                    <span className="label-text">تاريخ التخرج</span>
+                                </label>
+                                <input 
+                                    type="date" 
+                                    className="input input-bordered" 
+                                    value={formData.graduate_dt}
+                                    onChange={(e) => setFormData({...formData, graduate_dt: e.target.value})}
+                                    required
+                                />
+                            </div>
+                            
+                            <div className="form-control">
+                                <label className="label">
+                                    <span className="label-text">المرفق</span>
+                                </label>
+                                <input 
+                                    type="file" 
+                                    className="file-input file-input-bordered" 
+                                    onChange={(e) => setFile(e.target.files[0])}
+                                />
+                            </div>
+                            
+                            <div className="form-control mt-6">
+                                <button type="submit" className="btn btn-primary" disabled={submitting}>
+                                    {submitting ? 'جاري الحفظ...' : 'حفظ'}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            );
+        }
+
+        function MoahilList({ user, setView, isManager, isEmployee, initialShowForm = false }) {
+            const [moahil, setMoahil] = useState([]);
+            const [loading, setLoading] = useState(true);
+            const [showForm, setShowForm] = useState(initialShowForm);
+            const [searchTerm, setSearchTerm] = useState('');
+            const [stateFilter, setStateFilter] = useState(STATE_DRAFT);
+
+            const loadData = () => {
+                    if(isManager){
+                    setLoading(true);
+                    fetch('/bot/api/moahil/', { credentials: 'same-origin' })
+                        .then(res => res.json())
+                        .then(data => {
+                            setMoahil(data.moahil);
+                            setLoading(false);
+                        })
+                        .catch(() => setLoading(false));
+                }else{
+                    setLoading(false);
+                }
+            };
+
+            useEffect(() => {
+                loadData();               
+            }, []);
+
+            const filteredMoahil = moahil.filter(m => {
+                const matchesSearch = searchTerm === '' ||
+                    m.employee.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    String(m.employee_code).includes(searchTerm) ||
+                    m.moahil.includes(searchTerm) ||
+                    m.university.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    m.takhasos.toLowerCase().includes(searchTerm.toLowerCase());
+                const matchesState = stateFilter === '' || m.state === stateFilter;
+                return matchesSearch && matchesState;
+            });
+
+            const accept = (id) => {
+                if (!confirm('هل أنت متأكد من قبول هذا الطلب؟')) return;
+                
+                fetch(`/bot/api/moahil/${id}/accept/`, { 
+                    method: 'POST', 
+                    credentials: 'same-origin',
+                    headers: {
+                        'X-CSRFToken': csrftoken,
+                    }
+                })
+                .then(res => res.json())
+                .then(() => {
+                    alert('تم قبول الطلب بنجاح');
+                    loadData();
+                })
+                .catch(() => alert('حدث خطأ'));
+            };
+
+            const reject = (id) => {
+                if (!confirm('هل أنت متأكد من رفض هذا الطلب؟')) return;
+                
+                fetch(`/bot/api/moahil/${id}/reject/`, { 
+                    method: 'POST', 
+                    credentials: 'same-origin',
+                    headers: {
+                        'X-CSRFToken': csrftoken,
+                    }
+                })
+                .then(res => res.json())
+                .then(() => {
+                    alert('تم رفض الطلب');
+                    loadData();
+                })
+                .catch(() => alert('حدث خطأ'));
+            };
+
+            if (loading) {
+                return <div className="flex justify-center p-8"><span className="loading loading-spinner loading-lg"></span></div>;
+            }
+
+            return (
+                <div>
+                    <div className="flex justify-between items-center mb-4">
+                        <h2 className="text-2xl font-bold">المؤهلات العلمية</h2>
+                    </div>
+
+                    {isManager && (
+                    <div className="mb-4 flex gap-4">
+                        <input type="text" placeholder="بحث..." className="input input-bordered" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+                        <select className="select select-bordered" value={stateFilter} onChange={(e) => setStateFilter(e.target.value === '' ? '' : parseInt(e.target.value))}>
+                            <option value="">جميع الحالات</option>
+                            <option value={STATE_DRAFT}>مسودة</option>
+                            <option value={STATE_ACCEPTED}>مقبول</option>
+                            <option value={STATE_REJECTED}>مرفوض</option>
+                        </select>
+                    </div>
+                    )}
+
+                    {showForm && isEmployee && (
+                        <MoahilForm onSuccess={() => { setShowForm(false); setView('employee_data'); }} />
+                    )}
+                    
+                    {isManager && (
+                    <div className="overflow-x-auto mt-4">
+                        <table className="table table-zebra w-full">
+                            <thead>
+                                <tr>
+                                    <th>كود الموظف</th>
+                                    <th>الموظف</th>
+                                    <th>المؤهل</th>
+                                    <th>الجامعة</th>
+                                    <th>التخصص</th>
+                                    <th>تاريخ التخرج</th>
+                                    <th>المرفق</th>
+                                    <th>الحالة</th>
+                                    {isManager && <th>الإجراءات</th>}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {filteredMoahil.map(m => (
+                                    <tr key={m.id}>
+                                        <td>{m.employee_code}</td>
+                                        <td>{m.employee}</td>
+                                        <td>{m.moahil}</td>
+                                        <td>{m.university}</td>
+                                        <td>{m.takhasos}</td>
+                                        <td>{m.graduate_dt}</td>
+                                        <td>
+                                            {m.attachement_file && (
+                                                <a href={m.attachement_file} target="_blank" className="btn btn-sm btn-ghost">عرض</a>
+                                            )}
+                                        </td>
+                                        <td><StateBadge state={m.state} /></td>
+                                        {isManager && (
+                                            <td>
+                                                {m.state === STATE_DRAFT && (
+                                                    <div className="flex gap-2">
+                                                        <button className="btn btn-success btn-sm" onClick={() => accept(m.id)}>قبول</button>
+                                                        <button className="btn btn-error btn-sm" onClick={() => reject(m.id)}>رفض</button>
+                                                    </div>
+                                                )}
+                                            </td>
+                                        )}
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                        {filteredMoahil.length === 0 && (
+                            <div className="text-center p-8 text-gray-500">لا توجد بيانات</div>
+                        )}
+                    </div>
+                    )}
+                </div>
+            );
+        }
+
+        function BankAccountForm({ onSuccess }) {
+            const [formData, setFormData] = useState({
+                bank: '',
+                account_no: '',
+                active: true
+            });
+            const [submitting, setSubmitting] = useState(false);
+
+            const handleSubmit = (e) => {
+                e.preventDefault();
+                setSubmitting(true);
+                
+                const data = new FormData();
+                data.append('bank', formData.bank);
+                data.append('account_no', formData.account_no);
+                data.append('active', formData.active);
+
+                fetch('/bot/api/bank-accounts/create/', {
+                    method: 'POST',
+                    credentials: 'same-origin',
+                    headers: {
+                        'X-CSRFToken': csrftoken,
+                    },
+                    body: data
+                })
+                .then(res => res.json())
+                .then(() => {
+                    alert('تم إضافة البيانات بنجاح');
+                    onSuccess();
+                })
+                .catch(() => alert('حدث خطأ'))
+                .finally(() => setSubmitting(false));
+            };
+
+            return (
+                <div className="card bg-base-100 shadow-xl mb-4">
+                    <div className="card-body">
+                        <h3 className="card-title">إضافة حساب بنكي جديد</h3>
+                        <form onSubmit={handleSubmit}>
+                            <div className="form-control">
+                                <label className="label">
+                                    <span className="label-text">البنك</span>
+                                </label>
+                                <select 
+                                    className="select select-bordered" 
+                                    value={formData.bank}
+                                    onChange={(e) => setFormData({...formData, bank: e.target.value})}
+                                    required
+                                >
+                                    <option value="">اختر البنك</option>
+                                    {% for key,value in BANK_CHOICES.items%}
+                                    <option value="{{key}}">{{value}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            
+                            <div className="form-control">
+                                <label className="label">
+                                    <span className="label-text">رقم الحساب</span>
+                                </label>
+                                <input 
+                                    type="text" 
+                                    className="input input-bordered" 
+                                    value={formData.account_no}
+                                    onChange={(e) => setFormData({...formData, account_no: e.target.value})}
+                                    required
+                                />
+                            </div>
+                            
+                            <div className="form-control">
+                                <label className="label cursor-pointer">
+                                    <span className="label-text">نشط</span>
+                                    <input 
+                                        type="checkbox" 
+                                        className="checkbox" 
+                                        checked={formData.active}
+                                        onChange={(e) => setFormData({...formData, active: e.target.checked})}
+                                    />
+                                </label>
+                            </div>
+                            
+                            <div className="form-control mt-6">
+                                <button type="submit" className="btn btn-primary" disabled={submitting}>
+                                    {submitting ? 'جاري الحفظ...' : 'حفظ'}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            );
+        }
+
+        function BankAccountList({ user, setView, isManager, isEmployee, initialShowForm = false }) {
+            const [bankAccounts, setBankAccounts] = useState([]);
+            const [loading, setLoading] = useState(true);
+            const [showForm, setShowForm] = useState(initialShowForm);
+            const [searchTerm, setSearchTerm] = useState('');
+            const [stateFilter, setStateFilter] = useState(STATE_DRAFT);
+
+            const loadData = () => {
+                if (isManager){
+                    setLoading(true);
+                    fetch('/bot/api/bank-accounts/', { credentials: 'same-origin' })
+                        .then(res => res.json())
+                        .then(data => {
+                            setBankAccounts(data.bank_accounts);
+                            setLoading(false);
+                        })
+                        .catch(() => setLoading(false));
+                }else{
+                    setLoading(false)
+                }
+
+            };
+
+            useEffect(() => {
+                loadData();
+            }, []);
+
+            const filteredBankAccounts = bankAccounts.filter(b => {
+                const matchesSearch = searchTerm === '' ||
+                    b.employee.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    String(b.employee_code).includes(searchTerm) ||
+                    b.bank.includes(searchTerm) ||
+                    b.account_no.includes(searchTerm);
+                const matchesState = stateFilter === '' || b.state === stateFilter;
+                return matchesSearch && matchesState;
+            });
+
+            const accept = (id) => {
+                if (!confirm('هل أنت متأكد من قبول هذا الطلب؟')) return;
+                
+                fetch(`/bot/api/bank-accounts/${id}/accept/`, { 
+                    method: 'POST', 
+                    credentials: 'same-origin',
+                    headers: {
+                        'X-CSRFToken': csrftoken,
+                    }
+                })
+                .then(res => res.json())
+                .then(() => {
+                    alert('تم قبول الطلب بنجاح');
+                    loadData();
+                })
+                .catch(() => alert('حدث خطأ'));
+            };
+
+            const reject = (id) => {
+                if (!confirm('هل أنت متأكد من رفض هذا الطلب؟')) return;
+                
+                fetch(`/bot/api/bank-accounts/${id}/reject/`, { 
+                    method: 'POST', 
+                    credentials: 'same-origin',
+                    headers: {
+                        'X-CSRFToken': csrftoken,
+                    }
+                })
+                .then(res => res.json())
+                .then(() => {
+                    alert('تم رفض الطلب');
+                    loadData();
+                })
+                .catch(() => alert('حدث خطأ'));
+            };
+
+            if (loading) {
+                return <div className="flex justify-center p-8"><span className="loading loading-spinner loading-lg"></span></div>;
+            }
+
+            return (
+                <div>
+                    <div className="flex justify-between items-center mb-4">
+                        <h2 className="text-2xl font-bold">الحسابات البنكية</h2>
+                    </div>
+
+                    {isManager && (
+                    <div className="mb-4 flex gap-4">
+                        <input type="text" placeholder="بحث..." className="input input-bordered" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+                        <select className="select select-bordered" value={stateFilter} onChange={(e) => setStateFilter(e.target.value === '' ? '' : parseInt(e.target.value))}>
+                            <option value="">جميع الحالات</option>
+                            <option value={STATE_DRAFT}>مسودة</option>
+                            <option value={STATE_ACCEPTED}>مقبول</option>
+                            <option value={STATE_REJECTED}>مرفوض</option>
+                        </select>
+                    </div>
+                    )}
+
+                    {showForm && isEmployee && (
+                        <BankAccountForm onSuccess={() => { setShowForm(false); setView('employee_data') }} />
+                    )}
+
+                    {isManager && (
+                    <div className="overflow-x-auto mt-4">
+                        <table className="table table-zebra w-full">
+                            <thead>
+                                <tr>
+                                    <th>كود الموظف</th>
+                                    <th>الموظف</th>
+                                    <th>البنك</th>
+                                    <th>رقم الحساب</th>
+                                    <th>نشط</th>
+                                    <th>الحالة</th>
+                                    {isManager && <th>الإجراءات</th>}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {filteredBankAccounts.map(b => (
+                                    <tr key={b.id}>
+                                        <td>{b.employee_code}</td>
+                                        <td>{b.employee}</td>
+                                        <td>{b.bank}</td>
+                                        <td>{b.account_no}</td>
+                                        <td>{b.active ? <span className="badge badge-success">نعم</span> : <span className="badge badge-error">لا</span>}</td>
+                                        <td><StateBadge state={b.state} /></td>
+                                        {isManager && (
+                                            <td>
+                                                {b.state === STATE_DRAFT && (
+                                                    <div className="flex gap-2">
+                                                        <button className="btn btn-success btn-sm" onClick={() => accept(b.id)}>قبول</button>
+                                                        <button className="btn btn-error btn-sm" onClick={() => reject(b.id)}>رفض</button>
+                                                    </div>
+                                                )}
+                                            </td>
+                                        )}
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                        {filteredBankAccounts.length === 0 && (
+                            <div className="text-center p-8 text-gray-500">لا توجد بيانات</div>
+                        )}
+                    </div>
+                    )}
+                </div>
+            );
+        }
+
+        function EmployeeData({ user, setView, isEmployee }) {
+            const [data, setData] = useState(null);
+            const [loading, setLoading] = useState(true);
+
+            useEffect(() => {
+                fetch('/bot/api/employee-data/', { credentials: 'same-origin' })
+                    .then(res => res.json())
+                    .then(data => {
+                        setData(data);
+                        setLoading(false);
+                    })
+                    .catch(() => setLoading(false));
+            }, []);
+
+            if (loading) {
+                return <div className="flex justify-center p-8"><span className="loading loading-spinner loading-lg"></span></div>;
+            }
+
+            if (!data || data.error) {
+                return <div className="text-center p-8 text-gray-500">لا توجد بيانات</div>;
+            }
+
+            return (
+                <div>
+                    <h2 className="text-2xl font-bold mb-4">بياناتي الشخصية</h2>
+                    
+                    {isEmployee && (
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                            <button className="btn btn-primary btn-lg" onClick={() => setView('families:add')}>
+                                إضافة بيانات عائلة
+                            </button>
+                            <button className="btn btn-primary btn-lg" onClick={() => setView('moahil:add')}>
+                                إضافة مؤهل علمي
+                            </button>
+                            <button className="btn btn-primary btn-lg" onClick={() => setView('bank_accounts:add')}>
+                                إضافة حساب بنكي
+                            </button>
+                        </div>
+                    )}
+                    
+                    <div className="card bg-base-100 shadow-xl mb-4">
+                        <div className="card-body">
+                            <h3 className="card-title">البيانات الأساسية</h3>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <span className="font-bold">الكود:</span> {data.employee.code}
+                                </div>
+                                <div>
+                                    <span className="font-bold">الاسم:</span> {data.employee.name}
+                                </div>
+                                <div>
+                                    <span className="font-bold">الدرجة الوظيفية:</span> {data.employee.draja_wazifia}
+                                </div>
+                                <div>
+                                    <span className="font-bold">العلاوة السنوية:</span> {data.employee.alawa_sanawia}
+                                </div>
+                                <div>
+                                    <span className="font-bold">الهيكل الوظيفي:</span> {data.employee.hikal_wazifi}
+                                </div>
+                                <div>
+                                    <span className="font-bold">المسمى الوظيفي:</span> {data.employee.mosama_wazifi}
+                                </div>
+                                <div>
+                                    <span className="font-bold">الجنس:</span> {data.employee.sex}
+                                </div>
+                                <div>
+                                    <span className="font-bold">تاريخ الميلاد:</span> {data.employee.tarikh_milad}
+                                </div>
+                                <div>
+                                    <span className="font-bold">تاريخ التعيين:</span> {data.employee.tarikh_ta3in}
+                                </div>
+                                <div>
+                                    <span className="font-bold">تاريخ آخر ترقية:</span> {data.employee.tarikh_akhir_targia}
+                                </div>
+                                <div>
+                                    <span className="font-bold">قاسمة:</span> {data.employee.gasima}
+                                </div>
+                                <div>
+                                    <span className="font-bold">عدد الأطفال:</span> {data.employee.atfal}
+                                </div>
+                                <div>
+                                    <span className="font-bold">المؤهل:</span> {data.employee.moahil}
+                                </div>
+                                <div>
+                                    <span className="font-bold">الهاتف:</span> {data.employee.phone}
+                                </div>
+                                <div>
+                                    <span className="font-bold">البريد الإلكتروني:</span> {data.employee.email}
+                                </div>
+                                <div>
+                                    <span className="font-bold">نوع الارتباط:</span> {data.employee.no3_2lertibat}
+                                </div>
+                                <div>
+                                    <span className="font-bold">سنوات الخبرة:</span> {data.employee.sanoat_2lkhibra}
+                                </div>
+                                <div>
+                                    <span className="font-bold">عضوية:</span> {data.employee.aadoa}
+                                </div>
+                                <div>
+                                    <span className="font-bold">المعاش:</span> {data.employee.m3ash}
+                                </div>
+                                <div>
+                                    <span className="font-bold">الحالة:</span> {data.employee.status}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="card bg-base-100 shadow-xl mb-4">
+                        <div className="card-body">
+                            <h3 className="card-title">بيانات العائلة</h3>
+                            {data.families.length > 0 ? (
+                                <div className="overflow-x-auto">
+                                    <table className="table table-zebra w-full">
+                                        <thead>
+                                            <tr>
+                                                <th>العلاقة</th>
+                                                <th>الاسم</th>
+                                                <th>تاريخ الإضافة</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {data.families.map((f, index) => (
+                                                <tr key={index}>
+                                                    <td>{f.relation}</td>
+                                                    <td>{f.name}</td>
+                                                    <td>{f.tarikh_el2dafa}</td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            ) : (
+                                <p className="text-gray-500">لا توجد بيانات عائلة</p>
+                            )}
+                        </div>
+                    </div>
+
+                    <div className="card bg-base-100 shadow-xl mb-4">
+                        <div className="card-body">
+                            <h3 className="card-title">المؤهلات العلمية</h3>
+                            {data.moahil.length > 0 ? (
+                                <div className="overflow-x-auto">
+                                    <table className="table table-zebra w-full">
+                                        <thead>
+                                            <tr>
+                                                <th>المؤهل</th>
+                                                <th>الجامعة</th>
+                                                <th>التخصص</th>
+                                                <th>تاريخ التخرج</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {data.moahil.map((m, index) => (
+                                                <tr key={index}>
+                                                    <td>{m.moahil}</td>
+                                                    <td>{m.university}</td>
+                                                    <td>{m.takhasos}</td>
+                                                    <td>{m.graduate_dt}</td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            ) : (
+                                <p className="text-gray-500">لا توجد مؤهلات علمية</p>
+                            )}
+                        </div>
+                    </div>
+
+                    <div className="card bg-base-100 shadow-xl mb-4">
+                        <div className="card-body">
+                            <h3 className="card-title">الحسابات البنكية</h3>
+                            {data.bank_accounts.length > 0 ? (
+                                <div className="overflow-x-auto">
+                                    <table className="table table-zebra w-full">
+                                        <thead>
+                                            <tr>
+                                                <th>البنك</th>
+                                                <th>رقم الحساب</th>
+                                                <th>نشط</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {data.bank_accounts.map((b, index) => (
+                                                <tr key={index}>
+                                                    <td>{b.bank}</td>
+                                                    <td>{b.account_no}</td>
+                                                    <td>{b.active ? <span className="badge badge-success">نعم</span> : <span className="badge badge-error">لا</span>}</td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            ) : (
+                                <p className="text-gray-500">لا توجد حسابات بنكية</p>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        function App() {
+            const [user, setUser] = useState(null);
+            const [loading, setLoading] = useState(true);
+            const [view, setView] = useState('dashboard');
+
+            useEffect(() => {
+                fetch('/bot/api/login-status/', { credentials: 'same-origin' })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.is_authenticated) {
+                            setUser(data);
+                        } else {
+                            window.location.href = '/managers/?next=/bot/';
+                        }
+                        setLoading(false);
+                    })
+                    .catch(() => {
+                        window.location.href = '/managers/?next=/bot/';
+                    });
+            }, []);
+
+            const logout = () => {
+                fetch('/bot/api/logout/', { 
+                    method: 'POST', 
+                    credentials: 'same-origin',
+                    headers: {
+                        'X-CSRFToken': csrftoken,
+                    }
+                })
+                .then(() => {
+                    window.location.href = '/managers/';
+                });
+            };
+
+            if (loading) {
+                return (
+                    <div className="flex justify-center items-center h-screen">
+                        <span className="loading loading-spinner loading-lg"></span>
+                    </div>
+                );
+            }
+
+            const isManager = user.groups.includes('hr_manager') || user.groups.includes('hr_manpower') || user.is_superuser;
+            const isEmployee = user.groups.includes('hr_employee') || user.is_superuser;
+
+            const baseView = view.split(':')[0];
+            const showForm = view.includes(':add');
+
+            return (
+                <div className="min-h-screen">
+                    <Navbar user={user} logout={logout} setView={setView} />
+                    <Breadcrumb view={baseView} setView={setView} />
+                    <div className="container mx-auto p-4">
+                        {baseView === 'dashboard' && <Dashboard user={user} setView={setView} isManager={isManager} isEmployee={isEmployee} />}
+                        {baseView === 'registrations' && <RegistrationList user={user} setView={setView} isManager={isManager} />}
+                        {baseView === 'families' && <FamilyList user={user} setView={setView} isManager={isManager} isEmployee={isEmployee} initialShowForm={showForm} />}
+                        {baseView === 'moahil' && <MoahilList user={user} setView={setView} isManager={isManager} isEmployee={isEmployee} initialShowForm={showForm} />}
+                        {baseView === 'bank_accounts' && <BankAccountList user={user} setView={setView} isManager={isManager} isEmployee={isEmployee} initialShowForm={showForm} />}
+                        {baseView === 'employee_data' && <EmployeeData user={user} setView={setView} isEmployee={isEmployee} />}
+                    </div>
+                </div>
+            );
+        }
+
+        waitForUtils().then(() => {
+            const root = ReactDOM.createRoot(document.getElementById('root'));
+            root.render(<App />);
+        });
+    </script>
+</body>
+</html>

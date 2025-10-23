@@ -39,7 +39,7 @@
                     <tbody>
                         {% for family in approved_families %}
                         <tr>
-                            <td>{{ family.relation }}</td>
+                            <td>{{ family.get_relation_display }}</td>
                             <td>{{ family.name }}</td>
                             <td>{{ family.tarikh_el2dafa|date:'Y-m-d' }}</td>
                             <td>
@@ -88,7 +88,7 @@
                         <tbody id="pending-families-tbody">
                             {% for family in pending_families %}
                             <tr data-id="{{ family.id }}">
-                                <td>{{ family.relation }}</td>
+                                <td>{{ family.get_relation_display }}</td>
                                 <td>{{ family.name }}</td>
                                 <td>{{ family.tarikh_el2dafa|date:'Y-m-d' }}</td>
                                 <td>
@@ -139,12 +139,9 @@
                 </label>
                 <select name="relation" class="select select-bordered" required>
                     <option value="">اختر الصلة</option>
-                    <option value="زوج">زوج</option>
-                    <option value="زوجة">زوجة</option>
-                    <option value="ابن">ابن</option>
-                    <option value="ابنة">ابنة</option>
-                    <option value="أب">أب</option>
-                    <option value="أم">أم</option>
+                    {% for k,v in FAMILY_RELATION_CHOICES.items %}
+                    <option value="{{k}}">{{v}}</option>
+                    {% endfor %}
                 </select>
             </div>
 
@@ -229,7 +226,7 @@
         }
         
         try {
-            const response = await fetch(`/hr_bot/api/family/${id}/delete/`, {
+            const response = await fetch(`/api/family/${id}/delete/`, {
                 method: 'POST',
                 headers: {
                     'X-CSRFToken': csrftoken,

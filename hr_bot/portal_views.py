@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout as auth_logout
 from django.utils.translation import gettext as _
 
-from hr.models import EmployeeBasic, EmployeeFamily, EmployeeMoahil, EmployeeBankAccount
+from hr.models import MOAHIL_CHOICES, EmployeeBasic, EmployeeFamily, EmployeeMoahil, EmployeeBankAccount
 from hr_bot.models import EmployeeTelegramFamily, EmployeeTelegramMoahil, EmployeeTelegramBankAccount
 
 
@@ -65,6 +65,7 @@ def portal_family(request):
             'employee': employee,
             'approved_families': approved_families,
             'pending_families': pending_families,
+            'FAMILY_RELATION_CHOICES': EmployeeFamily.FAMILY_RELATION_CHOICES,
         }
         
         return render(request, 'hr_bot/portal/family.html', context)
@@ -88,6 +89,7 @@ def portal_moahil(request):
             'employee': employee,
             'approved_moahils': approved_moahils,
             'pending_moahils': pending_moahils,
+            'MOAHIL_CHOICES': MOAHIL_CHOICES,
         }
         
         return render(request, 'hr_bot/portal/moahil.html', context)
@@ -111,6 +113,7 @@ def portal_bank_account(request):
             'employee': employee,
             'approved_accounts': approved_accounts,
             'pending_accounts': pending_accounts,
+            'BANK_CHOICES': EmployeeBankAccount.BANK_CHOICES,
         }
         
         return render(request, 'hr_bot/portal/bank_account.html', context)

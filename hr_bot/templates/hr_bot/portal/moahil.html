@@ -39,7 +39,7 @@
                     <tbody>
                         {% for moahil in approved_moahils %}
                         <tr>
-                            <td>{{ moahil.moahil }}</td>
+                            <td>{{ moahil.get_moahil_display }}</td>
                             <td>{{ moahil.university }}</td>
                             <td>{{ moahil.takhasos }}</td>
                             <td>{{ moahil.graduate_dt|date:'Y-m-d' }}</td>
@@ -90,7 +90,7 @@
                         <tbody id="pending-moahils-tbody">
                             {% for moahil in pending_moahils %}
                             <tr data-id="{{ moahil.id }}">
-                                <td>{{ moahil.moahil }}</td>
+                                <td>{{ moahil.get_moahil_display }}</td>
                                 <td>{{ moahil.university }}</td>
                                 <td>{{ moahil.takhasos }}</td>
                                 <td>{{ moahil.graduate_dt|date:'Y-m-d' }}</td>
@@ -142,11 +142,9 @@
                 </label>
                 <select name="moahil" class="select select-bordered" required>
                     <option value="">اختر المؤهل</option>
-                    <option value="ثانوية">ثانوية</option>
-                    <option value="دبلوم">دبلوم</option>
-                    <option value="بكالوريوس">بكالوريوس</option>
-                    <option value="ماجستير">ماجستير</option>
-                    <option value="دكتوراه">دكتوراه</option>
+                    {% for k,v in MOAHIL_CHOICES.items %}
+                    <option value="{{k}}">{{v}}</option>
+                    {% endfor %}
                 </select>
             </div>
 

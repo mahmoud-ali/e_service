@@ -37,7 +37,7 @@
                     <tbody>
                         {% for account in approved_accounts %}
                         <tr>
-                            <td>{{ account.bank }}</td>
+                            <td>{{ account.get_bank_display }}</td>
                             <td>{{ account.account_no }}</td>
                             <td>
                                 {% if account.active %}
@@ -83,7 +83,7 @@
                         <tbody id="pending-accounts-tbody">
                             {% for account in pending_accounts %}
                             <tr data-id="{{ account.id }}">
-                                <td>{{ account.bank }}</td>
+                                <td>{{ account.get_bank_display }}</td>
                                 <td>{{ account.account_no }}</td>
                                 <td>
                                     {% if account.active %}
@@ -140,11 +140,9 @@
                 </label>
                 <select name="bank" class="select select-bordered" required>
                     <option value="">اختر البنك</option>
-                    <option value="الوحدة">الوحدة</option>
-                    <option value="الجمهورية">الجمهورية</option>
-                    <option value="الصحارى">الصحارى</option>
-                    <option value="التجارة والتنمية">التجارة والتنمية</option>
-                    <option value="الأمان">الأمان</option>
+                    {% for k,v in BANK_CHOICES.items %}
+                    <option value="{{k}}">{{v}}</option>
+                    {% endfor %}
                 </select>
             </div>
 
