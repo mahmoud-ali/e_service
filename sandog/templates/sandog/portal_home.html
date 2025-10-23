@@ -21,8 +21,8 @@
                 </svg>
             </div>
             <div class="stat-title">إجمالي التسجيلات</div>
-            <div class="stat-value text-primary">{{ total_registrations }}</div>
-            <div class="stat-desc">جميع التسجيلات في النظام</div>
+            <div class="stat-value text-primary text-center">{{ total_registrations }}</div>
+            <div class="stat-desc text-center">جميع التسجيلات في النظام</div>
         </div>
 
         <div class="stat">
@@ -32,8 +32,8 @@
                 </svg>
             </div>
             <div class="stat-title">أنواع المنظومات</div>
-            <div class="stat-value text-secondary">{{ registrations_by_category|length }}</div>
-            <div class="stat-desc">عدد الفئات المختلفة</div>
+            <div class="stat-value text-secondary text-center">{{ registrations_by_category|length }}</div>
+            <div class="stat-desc text-center">عدد الفئات المختلفة</div>
         </div>
 
         <div class="stat">
@@ -43,8 +43,8 @@
                 </svg>
             </div>
             <div class="stat-title">طرق الدفع</div>
-            <div class="stat-value text-accent">{{ registrations_by_payment|length }}</div>
-            <div class="stat-desc">عدد طرق الدفع المتاحة</div>
+            <div class="stat-value text-accent text-center">{{ registrations_by_payment|length }}</div>
+            <div class="stat-desc text-center">عدد طرق الدفع المتاحة</div>
         </div>
     </div>
 
@@ -53,13 +53,13 @@
         <!-- Registrations by Category -->
         <div class="card bg-base-100 shadow-xl">
             <div class="card-body">
-                <h2 class="card-title">التسجيلات حسب نوع المنظومة</h2>
+                <h2 class="card-title">التسجيل حسب نوع المنظومة</h2>
                 <div class="overflow-x-auto">
                     <table class="table table-zebra w-full">
                         <thead>
                             <tr>
                                 <th>نوع المنظومة</th>
-                                <th>عدد التسجيلات</th>
+                                <th>عدد التسجيل</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -84,7 +84,7 @@
         <!-- Registrations by Payment Method -->
         <div class="card bg-base-100 shadow-xl">
             <div class="card-body">
-                <h2 class="card-title">التسجيلات حسب طريقة الدفع</h2>
+                <h2 class="card-title">التسجيل حسب طريقة الدفع</h2>
                 <div class="overflow-x-auto">
                     <table class="table table-zebra w-full">
                         <thead>
