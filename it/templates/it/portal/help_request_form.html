@@ -1,0 +1,35 @@
+{% extends 'it/portal/base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Submit Help Request" %}{% endblock %}
+
+{% block content %}
+<h1 class="text-2xl font-bold mb-4">{% trans "Submit Help Request" %}</h1>
+<form method="post" class="card bg-base-100 shadow-xl p-6">
+    {% csrf_token %}
+    {% for field in form %}
+    <div class="form-control mb-4">
+        <label class="label">
+            <span class="label-text">{{ field.label }}</span>
+        </label>
+        {% if field.field.widget.input_type == 'select' %}
+            <select name="{{ field.name }}" class="select select-bordered w-full" {% if field.field.required %}required{% endif %}>
+                {% for choice_value, choice_label in field.field.choices %}
+                <option value="{{ choice_value }}" {% if field.value == choice_value %}selected{% endif %}>{{ choice_label }}</option>
+                {% endfor %}
+            </select>
+        {% elif field.field.widget.input_type == 'textarea' %}
+            <textarea name="{{ field.name }}" class="textarea textarea-bordered h-24" placeholder="{{ field.field.widget.attrs.placeholder }}" {% if field.field.required %}required{% endif %}>{{ field.value|default_if_none:'' }}</textarea>
+        {% else %}
+            <input type="{{ field.field.widget.input_type }}" name="{{ field.name }}" value="{{ field.value|default_if_none:'' }}" class="input input-bordered w-full" placeholder="{{ field.field.widget.attrs.placeholder }}" {% if field.field.required %}required{% endif %} />
+        {% endif %}
+        {% if field.errors %}
+        <span class="text-error text-sm">{{ field.errors }}</span>
+        {% endif %}
+    </div>
+    {% endfor %}
+    <div class="form-control mt-6">
+        <button type="submit" class="btn btn-primary w-full">{% trans "Submit" %}</button>
+    </div>
+</form>
+{% endblock %}

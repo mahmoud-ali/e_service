@@ -1,0 +1,34 @@
+{% extends 'it/portal/base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Computer Detail" %}{% endblock %}
+
+{% block content %}
+<h1 class="text-2xl font-bold mb-4">{{ object.computer.code }}</h1>
+<div class="card bg-base-100 shadow-xl">
+    <div class="card-body">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+                <h2 class="card-title">{% trans "Details" %}</h2>
+                <p><strong>{% trans "Type" %}:</strong> {{ object.computer.get_type_display }}</p>
+                <p><strong>{% trans "OS" %}:</strong> {{ object.computer.template.get_os_type_display }} {{ object.computer.template.os_version }}</p>
+            </div>
+            <div>
+                <h2 class="card-title">{% trans "Applications" %}</h2>
+                {% if object.computer.applications.all %}
+                    <ul class="list-disc list-inside">
+                        {% for app in object.computer.applications.all %}
+                        <li>{{ app }}</li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="text-gray-500">{% trans "No applications listed." %}</p>
+                {% endif %}
+            </div>
+        </div>
+        <div class="card-actions justify-end mt-4">
+            <a href="{% url 'it:ai_prompt' object.pk %}" class="btn btn-primary" target="_blank">{% trans "Ask AI" %}</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
