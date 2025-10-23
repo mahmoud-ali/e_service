@@ -18,6 +18,8 @@
         .rtl-flip {
             transform: scaleX(-1);
         }
+        
+        /* Fix dropdown menu z-index */
         .navbar {
             position: relative;
             z-index: 50;
@@ -26,14 +28,61 @@
         .navbar details[open] summary ~ * {
             z-index: 50;
         }
+        
+        /* Fix dropdown menu colors */
         .navbar details ul {
             background-color: white;
-            color: gray;
+            color: black;
         }
         
         .navbar details ul li a:hover {
             background-color: hsl(var(--p));
-            color: blue;
+            color: white;
+        }
+        
+        /* Mobile menu improvements */
+        @media (max-width: 768px) {
+            .navbar {
+                flex-wrap: wrap;
+            }
+            
+            .navbar .flex-1 {
+                width: 100%;
+                justify-content: center;
+                margin-bottom: 0.5rem;
+            }
+            
+            .navbar .flex-none {
+                width: 100%;
+            }
+            
+            .navbar .menu-horizontal {
+                flex-direction: column;
+                width: 100%;
+            }
+            
+            .navbar .menu-horizontal > li {
+                width: 100%;
+            }
+            
+            .navbar .menu-horizontal > li > a,
+            .navbar .menu-horizontal > li > details > summary {
+                justify-content: center;
+                padding: 1rem;
+                font-size: 1rem;
+            }
+            
+            .navbar details ul {
+                position: static;
+                width: 100%;
+                box-shadow: none;
+                border-top: 1px solid #e5e7eb;
+            }
+            
+            .navbar details ul li a {
+                padding: 1rem;
+                font-size: 0.95rem;
+            }
         }
     </style>
     
@@ -54,7 +103,7 @@
                 <li>
                     <details>
                         <summary><i class="fas fa-cog ml-2"></i>الخدمات</summary>
-                        <ul class="bg-base-100 rounded-t-none p-2 text-right">
+                        <ul class="rounded-t-none p-2 text-right shadow-lg">
                             <li><a href="{% url 'portal_family' %}"><i class="fas fa-users ml-2"></i>بيانات العائلة</a></li>
                             <li><a href="{% url 'portal_moahil' %}"><i class="fas fa-graduation-cap ml-2"></i>المؤهلات</a></li>
                             <li><a href="{% url 'portal_bank_account' %}"><i class="fas fa-university ml-2"></i>الحسابات البنكية</a></li>
