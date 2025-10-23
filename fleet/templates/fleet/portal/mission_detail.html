@@ -1,0 +1,71 @@
+{% extends 'fleet/portal/base.html' %}
+
+{% block title %}مأمورية - {{ mission.destination }}{% endblock %}
+
+{% block content %}
+<div class="mb-6">
+    <a href="{% url 'fleet:mission_list' %}" class="btn btn-ghost mb-4">
+        <i class="fas fa-arrow-right"></i> العودة للقائمة
+    </a>
+    <h1 class="text-4xl font-bold">
+        <i class="fas fa-route"></i> مأمورية - {{ mission.destination }}
+    </h1>
+</div>
+
+<div class="card bg-base-100 shadow-xl mb-6">
+    <div class="card-body">
+        <h2 class="card-title text-2xl mb-4">
+            <i class="fas fa-info-circle"></i> معلومات المأمورية
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+                <p class="mb-2">
+                    <strong>المركبة:</strong>
+                    <a href="{% url 'fleet:vehicle_detail' mission.vehicle.pk %}" class="link link-primary">
+                        {{ mission.vehicle.license_plate }} - {{ mission.vehicle.model }}
+                    </a>
+                </p>
+                <p class="mb-2">
+                    <strong>السائق:</strong>
+                    <a href="{% url 'fleet:driver_detail' mission.driver.pk %}" class="link link-primary">
+                        {{ mission.driver.name }}
+                    </a>
+                </p>
+                <p class="mb-2"><strong>الوجهة:</strong> {{ mission.destination }}</p>
+                <p class="mb-2"><strong>الجهة الطالبة:</strong> {{ mission.requested_by }}</p>
+            </div>
+            <div>
+                <p class="mb-2"><strong>تاريخ البدء المخطط:</strong> {{ mission.planned_start_date }}</p>
+                <p class="mb-2"><strong>تاريخ البدء الفعلي:</strong> {{ mission.actual_start_date|default:"-" }}</p>
+                <p class="mb-2"><strong>عدد الأيام:</strong> {{ mission.no_of_days }}</p>
+                <p class="mb-2"><strong>تاريخ الانتهاء المخطط:</strong> {{ mission.planned_end_date|default:"-" }}</p>
+                <p class="mb-2"><strong>تاريخ الانتهاء الفعلي:</strong> {{ mission.actual_end_date|default:"-" }}</p>
+                <p class="mb-2">
+                    <strong>الحالة:</strong>
+                    {% if mission.actual_end_date %}
+                    <span class="badge badge-success">مكتملة</span>
+                    {% else %}
+                    <span class="badge badge-warning">نشطة</span>
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+        
+        {% if mission.notes %}
+        <div class="mt-4">
+            <strong>ملاحظات:</strong>
+            <p class="mt-2 p-4 bg-base-200 rounded">{{ mission.notes }}</p>
+        </div>
+        {% endif %}
+        
+        {% if mission.attachments %}
+        <div class="mt-4">
+            <strong>المرفقات:</strong>
+            <a href="{{ mission.attachments.url }}" class="btn btn-primary btn-sm mt-2" target="_blank">
+                <i class="fas fa-download"></i> تحميل المرفق
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

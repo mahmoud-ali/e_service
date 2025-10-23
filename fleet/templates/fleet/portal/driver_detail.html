@@ -1,0 +1,111 @@
+{% extends 'fleet/portal/base.html' %}
+
+{% block title %}{{ driver.name }} - السائقين{% endblock %}
+
+{% block content %}
+<div class="mb-6">
+    <a href="{% url 'fleet:driver_list' %}" class="btn btn-ghost mb-4">
+        <i class="fas fa-arrow-right"></i> العودة للقائمة
+    </a>
+    <h1 class="text-4xl font-bold">
+        <i class="fas fa-user"></i> {{ driver.name }}
+    </h1>
+</div>
+
+<div class="card bg-base-100 shadow-xl mb-6">
+    <div class="card-body">
+        <h2 class="card-title text-2xl mb-4">
+            <i class="fas fa-info-circle"></i> معلومات السائق
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+                <p class="mb-2"><strong>الاسم:</strong> {{ driver.name }}</p>
+                <p class="mb-2"><strong>رقم الرخصة:</strong> {{ driver.license_no }}</p>
+                <p class="mb-2"><strong>نوع الرخصة:</strong> {{ driver.license_type }}</p>
+            </div>
+            <div>
+                <p class="mb-2"><strong>تاريخ الانتهاء:</strong> {{ driver.expiry_date }}</p>
+                <p class="mb-2"><strong>الهاتف:</strong> {{ driver.phone }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card bg-base-100 shadow-xl mb-6">
+    <div class="card-body">
+        <h2 class="card-title text-2xl mb-4">
+            <i class="fas fa-car"></i> المركبات المخصصة
+        </h2>
+        {% if vehicle_assignments %}
+        <div class="overflow-x-auto">
+            <table class="table table-zebra">
+                <thead>
+                    <tr>
+                        <th>المركبة</th>
+                        <th>تاريخ البدء</th>
+                        <th>تاريخ الانتهاء</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for va in vehicle_assignments %}
+                    <tr>
+                        <td>
+                            <a href="{% url 'fleet:vehicle_detail' va.vehicle.pk %}" class="link link-primary">
+                                {{ va.vehicle.license_plate }} - {{ va.vehicle.model }}
+                            </a>
+                        </td>
+                        <td>{{ va.start_date }}</td>
+                        <td>{{ va.end_date|default:"-" }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-gray-500">لا توجد مركبات مخصصة</p>
+        {% endif %}
+    </div>
+</div>
+
+<div class="card bg-base-100 shadow-xl mb-6">
+    <div class="card-body">
+        <h2 class="card-title text-2xl mb-4">
+            <i class="fas fa-route"></i> المأموريات
+        </h2>
+        {% if missions %}
+        <div class="overflow-x-auto">
+            <table class="table table-zebra">
+                <thead>
+                    <tr>
+                        <th>المركبة</th>
+                        <th>الوجهة</th>
+                        <th>الجهة الطالبة</th>
+                        <th>تاريخ البدء</th>
+                        <th>عدد الأيام</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for mission in missions %}
+                    <tr>
+                        <td>{{ mission.vehicle.license_plate }}</td>
+                        <td>{{ mission.destination }}</td>
+                        <td>{{ mission.requested_by }}</td>
+                        <td>{{ mission.planned_start_date }}</td>
+                        <td>{{ mission.no_of_days }}</td>
+                        <td>
+                            <a href="{% url 'fleet:mission_detail' mission.pk %}" class="btn btn-primary btn-xs">
+                                <i class="fas fa-eye"></i> عرض
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-gray-500">لا توجد مأموريات</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
