@@ -39,6 +39,7 @@ urlpatterns = [
     path('it/', include('it.urls')), 
     path('', include('hr_bot.urls')), 
     path('fleet/', include('fleet.urls')), 
+    path('sandog/', include('sandog.urls')), 
     # path('help/', include('help_request.urls')), 
     path('', redirect_to_home),
 
