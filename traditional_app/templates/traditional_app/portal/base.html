@@ -1,44 +1,20 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar" dir="rtl" data-theme="cupcake">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}بوابة المدير{% endblock %}</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/daisyui@4.4.19/dist/full.min.css" rel="stylesheet" type="text/css" />
-    <style>
-        /* Z-index fix for dropdowns */
-        .navbar {
-            position: relative;
-            z-index: 50;
-        }
 
-        /* Dropdown menu colors */
-        .navbar details ul {
-            background-color: white;
-            color: gray;
-        }
-
-        /* Hover effects */
-        .navbar details ul li a:hover {
-            background-color: hsl(var(--p));
-            color: black;
-        }
-
-        /* RTL-specific adjustments */
-        [dir="rtl"] .dropdown-content {
-            left: auto;
-            right: 0;
-        }
-    </style>
     {% block extra_css %}{% endblock %}
 </head>
-<body data-theme="cupcake">
+<body>
     <!-- Navbar -->
     <div class="navbar bg-primary text-primary-content shadow-lg">
         <div class="flex-1">
             <a href="{% url 'traditional_app:portal_dashboard' %}" class="btn btn-ghost text-xl">
-                بوابة المدير - التعدين التقليدي
+                بوابة المكاتب الولائية
             </a>
         </div>
         <div class="flex-none gap-2">
