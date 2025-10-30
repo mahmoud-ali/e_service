@@ -145,6 +145,9 @@ class LkpMojam3atTawa7inAdmin(LogMixin,SoagControlMixin, LeafletGeoAdmin):
     def soag_locality(self, obj):
         return f'{obj.soag.locality}'
 
+    class Media:
+        js = ('admin/js/jquery.init.js',"traditional_app/js/get_current_location.js",)
+
 admin.site.register(LkpMojam3atTawa7in, LkpMojam3atTawa7inAdmin)
 
 class LkpSaigAdmin(LogMixin,SoagControlMixin, LeafletGeoAdmin):
