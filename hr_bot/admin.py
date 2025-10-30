@@ -398,3 +398,27 @@ class ApplicationRequirementAdmin(admin.ModelAdmin):
     list_display = ["app","requirement"]
     list_filter = ["app"]
     view_on_site = False
+
+@admin.register(EmployeeBankAccountProxy)
+class EmployeeBankAccount(admin.ModelAdmin):
+    model = EmployeeBankAccountProxy
+    list_display = ('bank', 'account_no','active')
+    fields = ('employee','bank','account_no','active')
+    exclude = ["created_at","created_by","updated_at","updated_by"]
+    readonly_fields = ('employee','bank','account_no',)
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        # if request.user.is_superuser or request.user.groups.filter(name__in=["hr_manager","hr_manpower"]).exists():
+        #     return qs #.filter(state=STATE_DRAFT)
+
+        return qs.filter(employee__email=request.user.email)
+    
+    def has_add_permission(self, request):
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        return True
+
+    def has_delete_permission(self, request, obj=None):
+        return False

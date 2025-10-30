@@ -108,7 +108,7 @@ class EmployeeTelegramFamily(LoggingModel):
     employee = models.ForeignKey(EmployeeBasic, on_delete=models.PROTECT,verbose_name=_("employee_name"))
     relation = models.CharField(_("relation"), choices=EmployeeFamily.FAMILY_RELATION_CHOICES,max_length=10)
     name = models.CharField(_("name"),max_length=100)
-    tarikh_el2dafa = models.DateField(_("تاريخ صدور الشهادة"),blank=True,null=True)
+    tarikh_el2dafa = models.DateField(_("تاريخ الشهادة"),blank=True,null=True)
     attachement_file = models.FileField(_("attachement"),upload_to=hr_models.attachement_path)
     state = models.IntegerField(_("record_state"), choices=STATE_CHOICES, default=STATE_DRAFT)
 
@@ -124,7 +124,7 @@ class EmployeeTelegramFamily(LoggingModel):
     def clean(self):
         if not self.tarikh_el2dafa:
             raise ValidationError({
-                'tarikh_el2dafa':_("الرجاء إدخال تاريخ صدور الشهادة"),
+                'tarikh_el2dafa':_("الرجاء إدخال تاريخ الشهادة"),
             })
         return super().clean()
 
@@ -220,10 +220,6 @@ class EmployeeTelegramBankAccount(LoggingModel):
         
         return super().clean()
 
-    # def save(self, *args, **kwargs):
-    #     send_notifications(TOKEN_ID=TOKEN_ID,message=f"قام الموظف {self.employee.name} بإضافة بيانات حساب بنكي")
-    #     return super().save(*args, **kwargs)
-
 class EmployeeBasicProxy(hr_models.EmployeeBasic):
     class Meta:
         proxy = True
@@ -235,6 +231,23 @@ class EmployeeBankAccountProxy(hr_models.EmployeeBankAccount):
         proxy = True
         verbose_name = _("Bank Account")
         verbose_name_plural = _("Bank Accounts")
+
+    def clean(self):
+        if not self.active and EmployeeBankAccountProxy.objects.filter(employee=self.employee,active=True).exclude(id=self.id).count() == 0:
+            raise ValidationError({
+                'active':_("يجب ان يكون هنالك حساب نشط"),
+            })
+        
+        return super().clean()
+
+    def save(self, *args, **kwargs):
+        if self.active:
+            EmployeeBankAccountProxy.objects\
+                .filter(employee=self.employee)\
+                .exclude(id=self.id)\
+                .update(active=False)
+            
+        return super().save(*args, **kwargs)
 
 class EmployeeFamilyProxy(hr_models.EmployeeFamily):
     class Meta:
