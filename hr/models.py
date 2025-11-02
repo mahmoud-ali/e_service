@@ -6,7 +6,7 @@ from django.forms import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator,MinLengthValidator
 from django.contrib import admin
 from mptt.models import MPTTModel, TreeForeignKey
-
+from django.db.models import Sum
 MONTH_JAN = 1
 MONTH_FEB = 2
 MONTH_MAR = 3
@@ -739,7 +739,7 @@ class EmployeeMoahil(LoggingModel):
             self.employee.moahil = tmp_moahil
             self.employee.save()
 
-class EmployeeSalafiat(LoggingModel):
+class EmployeeSalafiatMaster(LoggingModel):
     NO3_2LSALAFIA_SHARIKA = 1
     NO3_2LSALAFIA_SANDOG = 2
     NO3_2LSALAFIA_3LA_2LMORATAB = 3
@@ -752,6 +752,26 @@ class EmployeeSalafiat(LoggingModel):
         NO3_2LSALAFIA_3LA_2LMOKAF2: _('NO3_2LSALAFIA_3LA_2LMOKAF2'),
     }
 
+    employee = models.ForeignKey(EmployeeBasic, on_delete=models.PROTECT,verbose_name=_("employee_name"))
+    no3_2lsalafia = models.IntegerField(_("no3_2lsalafia"), choices=NO3_2LSALAFIA_CHOICES,default=NO3_2LSALAFIA_SANDOG)
+    amount = models.FloatField(_("amount"))
+
+    def remaining(self, exclude=None):
+        qs = EmployeeSalafiat.objects.filter(salafiat_master__id=self.id)
+        paid = qs.aggregate(paid =Sum('amount'))['paid'] or 0
+        
+        return self.amount - paid
+
+
+class EmployeeSalafiat(LoggingModel):
+    NO3_2LSALAFIA_SHARIKA = EmployeeSalafiatMaster.NO3_2LSALAFIA_SHARIKA
+    NO3_2LSALAFIA_SANDOG = EmployeeSalafiatMaster.NO3_2LSALAFIA_SANDOG
+    NO3_2LSALAFIA_3LA_2LMORATAB = EmployeeSalafiatMaster.NO3_2LSALAFIA_3LA_2LMORATAB
+    NO3_2LSALAFIA_3LA_2LMOKAF2 = EmployeeSalafiatMaster.NO3_2LSALAFIA_3LA_2LMOKAF2
+
+    NO3_2LSALAFIA_CHOICES = EmployeeSalafiatMaster.NO3_2LSALAFIA_CHOICES
+
+    salafiat_master = models.ForeignKey(EmployeeSalafiatMaster, on_delete=models.PROTECT,verbose_name=_("employee_name"), null=True, default=None)
     employee = models.ForeignKey(EmployeeBasic, on_delete=models.PROTECT,verbose_name=_("employee_name"))
     year = models.IntegerField(_("year"), validators=[MinValueValidator(limit_value=2015),MaxValueValidator(limit_value=2100)])
     month = models.IntegerField(_("month"), choices=MONTH_CHOICES)
@@ -783,6 +803,18 @@ class EmployeeSalafiat(LoggingModel):
         
         return super().validate_unique(exclude=exclude)
 
+    def clean(self):
+        if self.salafiat_master and self.salafiat_master.employee != self.employee:
+            raise ValidationError({
+                'employee': 'لايمكن استقطاع سلفية موظف من موظف اخر!',
+            })
+        
+        if self.salafiat_master and self.salafiat_master.no3_2lsalafia != self.no3_2lsalafia:
+            raise ValidationError({
+                'no3_2lsalafia': 'يجب ان تكون نوع السلفية من نفس نوع السلفية الاساسية',
+            })
+        
+        return super().clean()
 class EmployeeJazaat(LoggingModel):
     employee = models.ForeignKey(EmployeeBasic, on_delete=models.PROTECT,verbose_name=_("employee_name"))
     year = models.IntegerField(_("year"), validators=[MinValueValidator(limit_value=2015),MaxValueValidator(limit_value=2100)])
