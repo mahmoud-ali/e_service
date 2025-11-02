@@ -1,6 +1,6 @@
 from django.urls import path
 
-from traditional_app.views import PayrollT3agood, geojson_soug_view
+from traditional_app.views import PayrollT3agood #, geojson_soug_view
 from traditional_app.portal_views import (
     DashboardView, DailyReportsListView, DailyReportDetailView,
     DailyReportTransitionView, EmployeesListView, EmployeeDetailView,
@@ -11,7 +11,7 @@ app_name = "traditional_app"
 urlpatterns = [
     # Existing URLs
     path('payroll_t3agood/', PayrollT3agood.as_view(), name='payroll_t3agood'),
-    path('soug_layer/', geojson_soug_view, name='soug_layer'),
+    # path('soug_layer/', geojson_soug_view, name='soug_layer'),
     
     # Portal URLs
     path('', DashboardView.as_view(), name='portal_dashboard'),

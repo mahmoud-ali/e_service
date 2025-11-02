@@ -95,10 +95,10 @@ class PayrollT3agood(LoginRequiredMixin,UserPermissionMixin,View):
             cache.patch_cache_control(response, max_age=0)
             return response
     
-from django.core.serializers import serialize
-from django.http import HttpResponse
-from .models import LkpSougTmp
+# from django.core.serializers import serialize
+# from django.http import HttpResponse
+# from .models import LkpSougTmp
 
-def geojson_soug_view(request):
-    geojson = serialize('geojson', LkpSougTmp.objects.all(), geometry_field='geom', fields=('name','state','locality'))
-    return HttpResponse(geojson, content_type='application/json')
+# def geojson_soug_view(request):
+#     geojson = serialize('geojson', LkpSougTmp.objects.all(), geometry_field='geom', fields=('name','state','locality'))
+#     return HttpResponse(geojson, content_type='application/json')

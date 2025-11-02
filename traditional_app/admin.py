@@ -6,7 +6,7 @@ from django.utils.html import format_html
 from leaflet.admin import LeafletGeoAdmin
 from company_profile.models import LkpLocality, LkpState
 from traditional_app.hr_payroll import T3agoodPayroll
-from traditional_app.models import DailyGrabeel, DailyHofrKabira, DailyIncome, DailyReport, DailyGoldMor7ala, DailyKartaMor7ala, DailySmallProcessingUnit, Employee, EmployeeProject, Lkp2bar, Lkp2jhizatBahth, Lkp7ofrKabira, LkpGrabeel, LkpKhalatat, LkpLocalityTmp, LkpMojam3atTawa7in, LkpSaig, LkpSmallProcessingUnit, LkpSoag, LkpSosalGold, DailyTahsilForm, DailyWardHajr, PayrollDetail, PayrollMaster, RentedApartment, RentedVehicle, TraditionalAppUser, Vehicle
+from traditional_app.models import DailyGrabeel, DailyHofrKabira, DailyIncome, DailyReport, DailyGoldMor7ala, DailyKartaMor7ala, DailySmallProcessingUnit, Employee, EmployeeProject, Lkp2bar, Lkp2jhizatBahth, Lkp7ofrKabira, LkpGrabeel, LkpKhalatat, LkpMojam3atTawa7in, LkpSaig, LkpSmallProcessingUnit, LkpSoag, LkpSosalGold, DailyTahsilForm, DailyWardHajr, PayrollDetail, PayrollMaster, RentedApartment, RentedVehicle, TraditionalAppUser, Vehicle #, LkpLocalityTmp
 from workflow.admin_utils import create_main_form
 
 class LogMixin:

@@ -630,418 +630,418 @@ class PayrollDetail(models.Model):
         verbose_name = _("Payroll detail")
         verbose_name_plural = _("Payroll details")
 
-##########################
-class LkpSaigTmp(gis_models.Model):
-    name = gis_models.CharField(max_length=100, blank=True, null=True)
-    type = gis_models.CharField(max_length=100, blank=True, null=True)
-    grindingmi = gis_models.CharField(max_length=100, blank=True, null=True)
-    market_cod = gis_models.CharField(max_length=15, blank=True, null=True)
-    market = gis_models.CharField(max_length=100, blank=True, null=True)
-    aveagemerc = gis_models.CharField(max_length=100, blank=True, null=True)
-    locality = gis_models.CharField(max_length=15, blank=True, null=True)
-    state = gis_models.CharField(max_length=30, blank=True, null=True)
-    phone_no = gis_models.CharField(max_length=15, blank=True, null=True)
-    age = gis_models.CharField(max_length=100, blank=True, null=True)
-    social_sta = gis_models.CharField(max_length=100, blank=True, null=True)
-    edu_level = gis_models.CharField(max_length=20, blank=True, null=True)
-    adress_of = gis_models.CharField(max_length=254, blank=True, null=True)
-    blood = gis_models.CharField(max_length=100, blank=True, null=True)
-    previous_j = gis_models.CharField(max_length=100, blank=True, null=True)
-    national_n = gis_models.CharField(max_length=100, blank=True, null=True)
-    age_work = gis_models.CharField(max_length=100, blank=True, null=True)
-    laborer_no = gis_models.CharField(max_length=10, blank=True, null=True)
-    point_x = gis_models.FloatField(blank=True, null=True)
-    point_y = gis_models.FloatField(blank=True, null=True)
-    geom = gis_models.MultiPointField(srid=4326, blank=True, null=True)
+# ##########################
+# class LkpSaigTmp(gis_models.Model):
+#     name = gis_models.CharField(max_length=100, blank=True, null=True)
+#     type = gis_models.CharField(max_length=100, blank=True, null=True)
+#     grindingmi = gis_models.CharField(max_length=100, blank=True, null=True)
+#     market_cod = gis_models.CharField(max_length=15, blank=True, null=True)
+#     market = gis_models.CharField(max_length=100, blank=True, null=True)
+#     aveagemerc = gis_models.CharField(max_length=100, blank=True, null=True)
+#     locality = gis_models.CharField(max_length=15, blank=True, null=True)
+#     state = gis_models.CharField(max_length=30, blank=True, null=True)
+#     phone_no = gis_models.CharField(max_length=15, blank=True, null=True)
+#     age = gis_models.CharField(max_length=100, blank=True, null=True)
+#     social_sta = gis_models.CharField(max_length=100, blank=True, null=True)
+#     edu_level = gis_models.CharField(max_length=20, blank=True, null=True)
+#     adress_of = gis_models.CharField(max_length=254, blank=True, null=True)
+#     blood = gis_models.CharField(max_length=100, blank=True, null=True)
+#     previous_j = gis_models.CharField(max_length=100, blank=True, null=True)
+#     national_n = gis_models.CharField(max_length=100, blank=True, null=True)
+#     age_work = gis_models.CharField(max_length=100, blank=True, null=True)
+#     laborer_no = gis_models.CharField(max_length=10, blank=True, null=True)
+#     point_x = gis_models.FloatField(blank=True, null=True)
+#     point_y = gis_models.FloatField(blank=True, null=True)
+#     geom = gis_models.MultiPointField(srid=4326, blank=True, null=True)
 
 
-# Auto-generated `LayerMapping` dictionary for LkpSaigTmp model
-lkpsaigtmp_mapping = {
-    'name': 'Name',
-    'type': 'Type',
-    'grindingmi': 'GrindingMi',
-    'market_cod': 'Market_Cod',
-    'market': 'Market',
-    'aveagemerc': 'AveageMerc',
-    'locality': 'Locality',
-    'state': 'State',
-    'phone_no': 'Phone_no',
-    'age': 'Age',
-    'social_sta': 'Social_Sta',
-    'edu_level': 'Edu_Level',
-    'adress_of': 'Adress_Of',
-    'blood': 'blood',
-    'previous_j': 'Previous_j',
-    'national_n': 'National_N',
-    'age_work': 'Age_Work',
-    'laborer_no': 'Laborer_No',
-    'point_x': 'POINT_X',
-    'point_y': 'POINT_Y',
-    'geom': 'MULTIPOINT',
-}
+# # Auto-generated `LayerMapping` dictionary for LkpSaigTmp model
+# lkpsaigtmp_mapping = {
+#     'name': 'Name',
+#     'type': 'Type',
+#     'grindingmi': 'GrindingMi',
+#     'market_cod': 'Market_Cod',
+#     'market': 'Market',
+#     'aveagemerc': 'AveageMerc',
+#     'locality': 'Locality',
+#     'state': 'State',
+#     'phone_no': 'Phone_no',
+#     'age': 'Age',
+#     'social_sta': 'Social_Sta',
+#     'edu_level': 'Edu_Level',
+#     'adress_of': 'Adress_Of',
+#     'blood': 'blood',
+#     'previous_j': 'Previous_j',
+#     'national_n': 'National_N',
+#     'age_work': 'Age_Work',
+#     'laborer_no': 'Laborer_No',
+#     'point_x': 'POINT_X',
+#     'point_y': 'POINT_Y',
+#     'geom': 'MULTIPOINT',
+# }
 
-class LkpGrindinTmp(gis_models.Model):
-    name = gis_models.CharField(max_length=200, blank=True, null=True)
-    mill_owner = gis_models.CharField(max_length=100, blank=True, null=True)
-    code = gis_models.CharField(max_length=15, blank=True, null=True)
-    market_cod = gis_models.CharField(max_length=15, blank=True, null=True)
-    laborersno = gis_models.CharField(max_length=50, blank=True, null=True)
-    fuelconsum = gis_models.CharField(max_length=50, blank=True, null=True)
-    waterconsu = gis_models.CharField(max_length=50, blank=True, null=True)
-    mill_sort = gis_models.CharField(max_length=30, blank=True, null=True)
-    state = gis_models.CharField(max_length=15, blank=True, null=True)
-    locality = gis_models.CharField(max_length=30, blank=True, null=True)
-    elc_consum = gis_models.CharField(max_length=50, blank=True, null=True)
-    amount_car = gis_models.CharField(max_length=15, blank=True, null=True)
-    phone_no = gis_models.CharField(max_length=15, blank=True, null=True)
-    age = gis_models.CharField(max_length=20, blank=True, null=True)
-    company_na = gis_models.CharField(max_length=30, blank=True, null=True)
-    social_sta = gis_models.CharField(max_length=15, blank=True, null=True)
-    edu_level = gis_models.CharField(max_length=50, blank=True, null=True)
-    adress_of = gis_models.CharField(max_length=254, blank=True, null=True)
-    blood = gis_models.CharField(max_length=150, blank=True, null=True)
-    previous_j = gis_models.CharField(max_length=100, blank=True, null=True)
-    national_n = gis_models.CharField(max_length=100, blank=True, null=True)
-    age_work = gis_models.CharField(max_length=100, blank=True, null=True)
-    laborer_no = gis_models.CharField(max_length=10, blank=True, null=True)
-    unit_numb = gis_models.CharField(max_length=20, blank=True, null=True)
-    zabuq = gis_models.CharField(max_length=50, blank=True, null=True)
-    market = gis_models.CharField(max_length=50, blank=True, null=True)
-    amount_c_1 = gis_models.FloatField(blank=True, null=True)
-    point_x = gis_models.FloatField(blank=True, null=True)
-    point_y = gis_models.FloatField(blank=True, null=True)
-    geom = gis_models.MultiPointField(srid=4326, blank=True, null=True)
+# class LkpGrindinTmp(gis_models.Model):
+#     name = gis_models.CharField(max_length=200, blank=True, null=True)
+#     mill_owner = gis_models.CharField(max_length=100, blank=True, null=True)
+#     code = gis_models.CharField(max_length=15, blank=True, null=True)
+#     market_cod = gis_models.CharField(max_length=15, blank=True, null=True)
+#     laborersno = gis_models.CharField(max_length=50, blank=True, null=True)
+#     fuelconsum = gis_models.CharField(max_length=50, blank=True, null=True)
+#     waterconsu = gis_models.CharField(max_length=50, blank=True, null=True)
+#     mill_sort = gis_models.CharField(max_length=30, blank=True, null=True)
+#     state = gis_models.CharField(max_length=15, blank=True, null=True)
+#     locality = gis_models.CharField(max_length=30, blank=True, null=True)
+#     elc_consum = gis_models.CharField(max_length=50, blank=True, null=True)
+#     amount_car = gis_models.CharField(max_length=15, blank=True, null=True)
+#     phone_no = gis_models.CharField(max_length=15, blank=True, null=True)
+#     age = gis_models.CharField(max_length=20, blank=True, null=True)
+#     company_na = gis_models.CharField(max_length=30, blank=True, null=True)
+#     social_sta = gis_models.CharField(max_length=15, blank=True, null=True)
+#     edu_level = gis_models.CharField(max_length=50, blank=True, null=True)
+#     adress_of = gis_models.CharField(max_length=254, blank=True, null=True)
+#     blood = gis_models.CharField(max_length=150, blank=True, null=True)
+#     previous_j = gis_models.CharField(max_length=100, blank=True, null=True)
+#     national_n = gis_models.CharField(max_length=100, blank=True, null=True)
+#     age_work = gis_models.CharField(max_length=100, blank=True, null=True)
+#     laborer_no = gis_models.CharField(max_length=10, blank=True, null=True)
+#     unit_numb = gis_models.CharField(max_length=20, blank=True, null=True)
+#     zabuq = gis_models.CharField(max_length=50, blank=True, null=True)
+#     market = gis_models.CharField(max_length=50, blank=True, null=True)
+#     amount_c_1 = gis_models.FloatField(blank=True, null=True)
+#     point_x = gis_models.FloatField(blank=True, null=True)
+#     point_y = gis_models.FloatField(blank=True, null=True)
+#     geom = gis_models.MultiPointField(srid=4326, blank=True, null=True)
 
-# Auto-generated `LayerMapping` dictionary for LkpGrindinTmp model
-lkpgrindintmp_mapping = {
-    'name': 'Name',
-    'mill_owner': 'Mill_Owner',
-    'code': 'Code',
-    'market_cod': 'Market_Cod',
-    'laborersno': 'LaborersNo',
-    'fuelconsum': 'FuelConsum',
-    'waterconsu': 'WaterConsu',
-    'mill_sort': 'Mill_Sort',
-    'state': 'State',
-    'locality': 'Locality',
-    'elc_consum': 'ELC_Consum',
-    'amount_car': 'Amount_Car',
-    'phone_no': 'Phone_no',
-    'age': 'Age',
-    'company_na': 'Company_Na',
-    'social_sta': 'Social_Sta',
-    'edu_level': 'Edu_Level',
-    'adress_of': 'Adress_Of',
-    'blood': 'BLood',
-    'previous_j': 'Previous_j',
-    'national_n': 'National_N',
-    'age_work': 'Age_Work',
-    'laborer_no': 'Laborer_No',
-    'unit_numb': 'Unit_Numb',
-    'zabuq': 'Zabuq',
-    'market': 'Market',
-    'amount_c_1': 'Amount_C_1',
-    'point_x': 'POINT_X',
-    'point_y': 'POINT_Y',
-    'geom': 'MULTIPOINT',
-}
+# # Auto-generated `LayerMapping` dictionary for LkpGrindinTmp model
+# lkpgrindintmp_mapping = {
+#     'name': 'Name',
+#     'mill_owner': 'Mill_Owner',
+#     'code': 'Code',
+#     'market_cod': 'Market_Cod',
+#     'laborersno': 'LaborersNo',
+#     'fuelconsum': 'FuelConsum',
+#     'waterconsu': 'WaterConsu',
+#     'mill_sort': 'Mill_Sort',
+#     'state': 'State',
+#     'locality': 'Locality',
+#     'elc_consum': 'ELC_Consum',
+#     'amount_car': 'Amount_Car',
+#     'phone_no': 'Phone_no',
+#     'age': 'Age',
+#     'company_na': 'Company_Na',
+#     'social_sta': 'Social_Sta',
+#     'edu_level': 'Edu_Level',
+#     'adress_of': 'Adress_Of',
+#     'blood': 'BLood',
+#     'previous_j': 'Previous_j',
+#     'national_n': 'National_N',
+#     'age_work': 'Age_Work',
+#     'laborer_no': 'Laborer_No',
+#     'unit_numb': 'Unit_Numb',
+#     'zabuq': 'Zabuq',
+#     'market': 'Market',
+#     'amount_c_1': 'Amount_C_1',
+#     'point_x': 'POINT_X',
+#     'point_y': 'POINT_Y',
+#     'geom': 'MULTIPOINT',
+# }
 
-class LkpSougTmp(gis_models.Model):
-    name = gis_models.CharField(max_length=30, blank=True, null=True)
-    network_so = gis_models.CharField(max_length=15, blank=True, null=True)
-    framingsta = gis_models.CharField(max_length=15, blank=True, null=True)
-    processing_type = gis_models.CharField(max_length=30, blank=True, null=True)
-    fuel_stati = gis_models.FloatField(blank=True, null=True)
-    tailingsco = gis_models.FloatField(blank=True, null=True)
-    market_man = gis_models.CharField(max_length=30, blank=True, null=True)
-    controller = gis_models.FloatField(blank=True, null=True)
-    accountcol = gis_models.FloatField(blank=True, null=True)
-    state = gis_models.CharField(max_length=15, blank=True, null=True)
-    locality = gis_models.CharField(max_length=15, blank=True, null=True)
-    contorol_v = gis_models.CharField(max_length=15, blank=True, null=True)
-    securityfo = gis_models.FloatField(blank=True, null=True)
-    total_cart = gis_models.CharField(max_length=15, blank=True, null=True)
-    shape_leng = gis_models.FloatField(blank=True, null=True)
-    shape_area = gis_models.FloatField(blank=True, null=True)
-    geom = gis_models.MultiPolygonField(srid=4326, blank=True, null=True)
+# class LkpSougTmp(gis_models.Model):
+#     name = gis_models.CharField(max_length=30, blank=True, null=True)
+#     network_so = gis_models.CharField(max_length=15, blank=True, null=True)
+#     framingsta = gis_models.CharField(max_length=15, blank=True, null=True)
+#     processing_type = gis_models.CharField(max_length=30, blank=True, null=True)
+#     fuel_stati = gis_models.FloatField(blank=True, null=True)
+#     tailingsco = gis_models.FloatField(blank=True, null=True)
+#     market_man = gis_models.CharField(max_length=30, blank=True, null=True)
+#     controller = gis_models.FloatField(blank=True, null=True)
+#     accountcol = gis_models.FloatField(blank=True, null=True)
+#     state = gis_models.CharField(max_length=15, blank=True, null=True)
+#     locality = gis_models.CharField(max_length=15, blank=True, null=True)
+#     contorol_v = gis_models.CharField(max_length=15, blank=True, null=True)
+#     securityfo = gis_models.FloatField(blank=True, null=True)
+#     total_cart = gis_models.CharField(max_length=15, blank=True, null=True)
+#     shape_leng = gis_models.FloatField(blank=True, null=True)
+#     shape_area = gis_models.FloatField(blank=True, null=True)
+#     geom = gis_models.MultiPolygonField(srid=4326, blank=True, null=True)
 
-# Auto-generated `LayerMapping` dictionary for LkpSougTmp model
-lkpsougtmp_mapping = {
-    'name': 'Name',
-    'network_so': 'Network_So',
-    'framingsta': 'FramingSta',
-    'processing_type': 'نوع_م',
-    'fuel_stati': 'Fuel_Stati',
-    'tailingsco': 'TailingsCo',
-    'market_man': 'Market_Man',
-    'controller': 'Controller',
-    'accountcol': 'AccountCol',
-    'state': 'State',
-    'locality': 'Locality',
-    'contorol_v': 'Contorol_V',
-    'securityfo': 'SecurityFo',
-    'total_cart': 'Total_Cart',
-    'shape_leng': 'SHAPE_Leng',
-    'shape_area': 'SHAPE_Area',
-    'geom': 'MULTIPOLYGON',
-}
+# # Auto-generated `LayerMapping` dictionary for LkpSougTmp model
+# lkpsougtmp_mapping = {
+#     'name': 'Name',
+#     'network_so': 'Network_So',
+#     'framingsta': 'FramingSta',
+#     'processing_type': 'نوع_م',
+#     'fuel_stati': 'Fuel_Stati',
+#     'tailingsco': 'TailingsCo',
+#     'market_man': 'Market_Man',
+#     'controller': 'Controller',
+#     'accountcol': 'AccountCol',
+#     'state': 'State',
+#     'locality': 'Locality',
+#     'contorol_v': 'Contorol_V',
+#     'securityfo': 'SecurityFo',
+#     'total_cart': 'Total_Cart',
+#     'shape_leng': 'SHAPE_Leng',
+#     'shape_area': 'SHAPE_Area',
+#     'geom': 'MULTIPOLYGON',
+# }
 
-class LkpSougOtherTmp(gis_models.Model):
-    id_of_poc1 = gis_models.FloatField(blank=True, null=True)
-    date_of_po = gis_models.CharField(max_length=254, blank=True, null=True)
-    national_n = gis_models.CharField(max_length=254, blank=True, null=True)
-    state = gis_models.CharField(max_length=254, blank=True, null=True)
-    classfy_of = gis_models.CharField(max_length=254, blank=True, null=True)
-    owner_name = gis_models.CharField(max_length=254, blank=True, null=True)
-    partnar_na = gis_models.CharField(max_length=254, blank=True, null=True)
-    nickname = gis_models.CharField(max_length=254, blank=True, null=True)
-    phone_no = gis_models.CharField(max_length=254, blank=True, null=True)
-    adress_of_field = gis_models.CharField(max_length=254, blank=True, null=True)
-    age = gis_models.CharField(max_length=254, blank=True, null=True)
-    soc_status = gis_models.CharField(max_length=254, blank=True, null=True)
-    company_na = gis_models.CharField(max_length=254, blank=True, null=True)
-    number_yea = gis_models.CharField(max_length=254, blank=True, null=True)
-    number_gil = gis_models.CharField(max_length=254, blank=True, null=True)
-    number_lab = gis_models.CharField(max_length=254, blank=True, null=True)
-    number_mac = gis_models.CharField(max_length=254, blank=True, null=True)
-    techncal_a = gis_models.CharField(max_length=254, blank=True, null=True)
-    market_pur = gis_models.CharField(max_length=254, blank=True, null=True)
-    resources_field = gis_models.CharField(max_length=254, blank=True, null=True)
-    enter_at = gis_models.CharField(max_length=254, blank=True, null=True)
-    place_of = gis_models.CharField(max_length=254, blank=True, null=True)
-    flag = gis_models.FloatField(blank=True, null=True)
-    edulevel = gis_models.CharField(max_length=254, blank=True, null=True)
-    job = gis_models.CharField(max_length=254, blank=True, null=True)
-    units = gis_models.CharField(max_length=254, blank=True, null=True)
-    zabuq = gis_models.CharField(max_length=254, blank=True, null=True)
-    mother = gis_models.CharField(max_length=254, blank=True, null=True)
-    blood = gis_models.CharField(max_length=254, blank=True, null=True)
-    gender = gis_models.CharField(max_length=254, blank=True, null=True)
-    upload_at = gis_models.CharField(max_length=254, blank=True, null=True)
-    place = gis_models.CharField(max_length=254, blank=True, null=True)
-    geom = gis_models.MultiPointField(srid=4326, blank=True, null=True)
-
-
-# Auto-generated `LayerMapping` dictionary for LkpSougOtherTmp model
-lkpsougothertmp_mapping = {
-    'id_of_poc1': 'id_of_poc1',
-    'date_of_po': 'date_of_po',
-    'national_n': 'national_n',
-    'state': 'state',
-    'classfy_of': 'classfy_of',
-    'owner_name': 'owner_name',
-    'partnar_na': 'partnar_na',
-    'nickname': 'nickname',
-    'phone_no': 'phone_no',
-    'adress_of_field': 'adress_of_',
-    'age': 'age',
-    'soc_status': 'soc_status',
-    'company_na': 'company_na',
-    'number_yea': 'number_yea',
-    'number_gil': 'number_gil',
-    'number_lab': 'number_lab',
-    'number_mac': 'number_mac',
-    'techncal_a': 'techncal_a',
-    'market_pur': 'market_pur',
-    'resources_field': 'resources_',
-    'enter_at': 'enter_at',
-    'place_of': 'place_of',
-    'flag': 'flag',
-    'edulevel': 'edulevel',
-    'job': 'job',
-    'units': 'units',
-    'zabuq': 'zabuq',
-    'mother': 'mother',
-    'blood': 'blood',
-    'gender': 'gender',
-    'upload_at': 'upload_at',
-    'place': 'place',
-    'geom': 'MULTIPOINT',
-}
-
-class LkpProductionTmp(gis_models.Model):
-    classifica = gis_models.CharField(max_length=30, blank=True, null=True)
-    area_name = gis_models.CharField(max_length=30, blank=True, null=True)
-    processing = gis_models.CharField(max_length=100, blank=True, null=True)
-    watersourc = gis_models.CharField(max_length=100, blank=True, null=True)
-    code = gis_models.CharField(max_length=15, blank=True, null=True)
-    state = gis_models.CharField(max_length=30, blank=True, null=True)
-    locality = gis_models.CharField(max_length=15, blank=True, null=True)
-    name = gis_models.CharField(max_length=100, blank=True, null=True)
-    locationsu = gis_models.CharField(max_length=30, blank=True, null=True)
-    traditiona = gis_models.CharField(max_length=30, blank=True, null=True)
-    phone_no = gis_models.CharField(max_length=15, blank=True, null=True)
-    age = gis_models.CharField(max_length=100, blank=True, null=True)
-    company_na = gis_models.CharField(max_length=254, blank=True, null=True)
-    social_sta = gis_models.CharField(max_length=254, blank=True, null=True)
-    edu_level = gis_models.CharField(max_length=254, blank=True, null=True)
-    adress_of = gis_models.CharField(max_length=254, blank=True, null=True)
-    blood = gis_models.CharField(max_length=254, blank=True, null=True)
-    previous_j = gis_models.CharField(max_length=200, blank=True, null=True)
-    national_n = gis_models.CharField(max_length=200, blank=True, null=True)
-    age_work = gis_models.CharField(max_length=200, blank=True, null=True)
-    laborer_no = gis_models.CharField(max_length=10, blank=True, null=True)
-    geom = gis_models.MultiPointField(srid=4326, blank=True, null=True)
+# class LkpSougOtherTmp(gis_models.Model):
+#     id_of_poc1 = gis_models.FloatField(blank=True, null=True)
+#     date_of_po = gis_models.CharField(max_length=254, blank=True, null=True)
+#     national_n = gis_models.CharField(max_length=254, blank=True, null=True)
+#     state = gis_models.CharField(max_length=254, blank=True, null=True)
+#     classfy_of = gis_models.CharField(max_length=254, blank=True, null=True)
+#     owner_name = gis_models.CharField(max_length=254, blank=True, null=True)
+#     partnar_na = gis_models.CharField(max_length=254, blank=True, null=True)
+#     nickname = gis_models.CharField(max_length=254, blank=True, null=True)
+#     phone_no = gis_models.CharField(max_length=254, blank=True, null=True)
+#     adress_of_field = gis_models.CharField(max_length=254, blank=True, null=True)
+#     age = gis_models.CharField(max_length=254, blank=True, null=True)
+#     soc_status = gis_models.CharField(max_length=254, blank=True, null=True)
+#     company_na = gis_models.CharField(max_length=254, blank=True, null=True)
+#     number_yea = gis_models.CharField(max_length=254, blank=True, null=True)
+#     number_gil = gis_models.CharField(max_length=254, blank=True, null=True)
+#     number_lab = gis_models.CharField(max_length=254, blank=True, null=True)
+#     number_mac = gis_models.CharField(max_length=254, blank=True, null=True)
+#     techncal_a = gis_models.CharField(max_length=254, blank=True, null=True)
+#     market_pur = gis_models.CharField(max_length=254, blank=True, null=True)
+#     resources_field = gis_models.CharField(max_length=254, blank=True, null=True)
+#     enter_at = gis_models.CharField(max_length=254, blank=True, null=True)
+#     place_of = gis_models.CharField(max_length=254, blank=True, null=True)
+#     flag = gis_models.FloatField(blank=True, null=True)
+#     edulevel = gis_models.CharField(max_length=254, blank=True, null=True)
+#     job = gis_models.CharField(max_length=254, blank=True, null=True)
+#     units = gis_models.CharField(max_length=254, blank=True, null=True)
+#     zabuq = gis_models.CharField(max_length=254, blank=True, null=True)
+#     mother = gis_models.CharField(max_length=254, blank=True, null=True)
+#     blood = gis_models.CharField(max_length=254, blank=True, null=True)
+#     gender = gis_models.CharField(max_length=254, blank=True, null=True)
+#     upload_at = gis_models.CharField(max_length=254, blank=True, null=True)
+#     place = gis_models.CharField(max_length=254, blank=True, null=True)
+#     geom = gis_models.MultiPointField(srid=4326, blank=True, null=True)
 
 
-# Auto-generated `LayerMapping` dictionary for LkpProductionTmp model
-lkpproductiontmp_mapping = {
-    'classifica': 'Classifica',
-    'area_name': 'Area_Name',
-    'processing': 'Processing',
-    'watersourc': 'WaterSourc',
-    'code': 'Code',
-    'state': 'State',
-    'locality': 'Locality',
-    'name': 'Name',
-    'locationsu': 'LocationSu',
-    'traditiona': 'Traditiona',
-    'phone_no': 'Phone_no',
-    'age': 'Age',
-    'company_na': 'Company_Na',
-    'social_sta': 'Social_Sta',
-    'edu_level': 'Edu_Level',
-    'adress_of': 'Adress_Of',
-    'blood': 'BLood',
-    'previous_j': 'Previous_j',
-    'national_n': 'National_N',
-    'age_work': 'Age_Work',
-    'laborer_no': 'Laborer_No',
-    'geom': 'MULTIPOINT',
-}
+# # Auto-generated `LayerMapping` dictionary for LkpSougOtherTmp model
+# lkpsougothertmp_mapping = {
+#     'id_of_poc1': 'id_of_poc1',
+#     'date_of_po': 'date_of_po',
+#     'national_n': 'national_n',
+#     'state': 'state',
+#     'classfy_of': 'classfy_of',
+#     'owner_name': 'owner_name',
+#     'partnar_na': 'partnar_na',
+#     'nickname': 'nickname',
+#     'phone_no': 'phone_no',
+#     'adress_of_field': 'adress_of_',
+#     'age': 'age',
+#     'soc_status': 'soc_status',
+#     'company_na': 'company_na',
+#     'number_yea': 'number_yea',
+#     'number_gil': 'number_gil',
+#     'number_lab': 'number_lab',
+#     'number_mac': 'number_mac',
+#     'techncal_a': 'techncal_a',
+#     'market_pur': 'market_pur',
+#     'resources_field': 'resources_',
+#     'enter_at': 'enter_at',
+#     'place_of': 'place_of',
+#     'flag': 'flag',
+#     'edulevel': 'edulevel',
+#     'job': 'job',
+#     'units': 'units',
+#     'zabuq': 'zabuq',
+#     'mother': 'mother',
+#     'blood': 'blood',
+#     'gender': 'gender',
+#     'upload_at': 'upload_at',
+#     'place': 'place',
+#     'geom': 'MULTIPOINT',
+# }
 
-class LkpProductionPathTmp(gis_models.Model):
-    line_name = gis_models.CharField(max_length=30, blank=True, null=True)
-    target_to = gis_models.CharField(max_length=30, blank=True, null=True)
-    target_fro = gis_models.CharField(max_length=30, blank=True, null=True)
-    state = gis_models.CharField(max_length=15, blank=True, null=True)
-    locality = gis_models.CharField(max_length=15, blank=True, null=True)
-    shape_leng = gis_models.FloatField(blank=True, null=True)
-    geom = gis_models.MultiLineStringField(srid=4326, blank=True, null=True)
-
-
-# Auto-generated `LayerMapping` dictionary for LkpProductionPathTmp model
-lkpproductionpathtmp_mapping = {
-    'line_name': 'Line_Name',
-    'target_to': 'Target_TO',
-    'target_fro': 'Target_FRO',
-    'state': 'State',
-    'locality': 'Locality',
-    'shape_leng': 'SHAPE_Leng',
-    'geom': 'MULTILINESTRING',
-}
-
-class LkpSougServiceTmp(gis_models.Model):
-    owner = gis_models.CharField(max_length=40, blank=True, null=True)
-    market = gis_models.CharField(max_length=100, blank=True, null=True)
-    market_cod = gis_models.CharField(max_length=15, blank=True, null=True)
-    servicetyp = gis_models.CharField(max_length=20, blank=True, null=True)
-    locality = gis_models.CharField(max_length=15, blank=True, null=True)
-    state = gis_models.CharField(max_length=30, blank=True, null=True)
-    phone_no = gis_models.CharField(max_length=200, blank=True, null=True)
-    age = gis_models.CharField(max_length=5, blank=True, null=True)
-    social_sta = gis_models.CharField(max_length=200, blank=True, null=True)
-    edu_level = gis_models.CharField(max_length=20, blank=True, null=True)
-    adress_of = gis_models.CharField(max_length=254, blank=True, null=True)
-    blood = gis_models.CharField(max_length=200, blank=True, null=True)
-    previous_j = gis_models.CharField(max_length=200, blank=True, null=True)
-    national_n = gis_models.CharField(max_length=200, blank=True, null=True)
-    age_work = gis_models.CharField(max_length=200, blank=True, null=True)
-    laborer_no = gis_models.CharField(max_length=10, blank=True, null=True)
-    point_x = gis_models.FloatField(blank=True, null=True)
-    point_y = gis_models.FloatField(blank=True, null=True)
-    geom = gis_models.MultiPointField(srid=4326, blank=True, null=True)
+# class LkpProductionTmp(gis_models.Model):
+#     classifica = gis_models.CharField(max_length=30, blank=True, null=True)
+#     area_name = gis_models.CharField(max_length=30, blank=True, null=True)
+#     processing = gis_models.CharField(max_length=100, blank=True, null=True)
+#     watersourc = gis_models.CharField(max_length=100, blank=True, null=True)
+#     code = gis_models.CharField(max_length=15, blank=True, null=True)
+#     state = gis_models.CharField(max_length=30, blank=True, null=True)
+#     locality = gis_models.CharField(max_length=15, blank=True, null=True)
+#     name = gis_models.CharField(max_length=100, blank=True, null=True)
+#     locationsu = gis_models.CharField(max_length=30, blank=True, null=True)
+#     traditiona = gis_models.CharField(max_length=30, blank=True, null=True)
+#     phone_no = gis_models.CharField(max_length=15, blank=True, null=True)
+#     age = gis_models.CharField(max_length=100, blank=True, null=True)
+#     company_na = gis_models.CharField(max_length=254, blank=True, null=True)
+#     social_sta = gis_models.CharField(max_length=254, blank=True, null=True)
+#     edu_level = gis_models.CharField(max_length=254, blank=True, null=True)
+#     adress_of = gis_models.CharField(max_length=254, blank=True, null=True)
+#     blood = gis_models.CharField(max_length=254, blank=True, null=True)
+#     previous_j = gis_models.CharField(max_length=200, blank=True, null=True)
+#     national_n = gis_models.CharField(max_length=200, blank=True, null=True)
+#     age_work = gis_models.CharField(max_length=200, blank=True, null=True)
+#     laborer_no = gis_models.CharField(max_length=10, blank=True, null=True)
+#     geom = gis_models.MultiPointField(srid=4326, blank=True, null=True)
 
 
-# Auto-generated `LayerMapping` dictionary for LkpSougServiceTmp model
-lkpsougservicetmp_mapping = {
-    'owner': 'Owner',
-    'market': 'Market',
-    'market_cod': 'Market_Cod',
-    'servicetyp': 'ServiceTyp',
-    'locality': 'Locality',
-    'state': 'State',
-    'phone_no': 'Phone_no',
-    'age': 'Age',
-    'social_sta': 'Social_Sta',
-    'edu_level': 'Edu_Level',
-    'adress_of': 'Adress_Of',
-    'blood': 'BLood',
-    'previous_j': 'Previous_j',
-    'national_n': 'National_N',
-    'age_work': 'Age_Work',
-    'laborer_no': 'Laborer_No',
-    'point_x': 'POINT_X',
-    'point_y': 'POINT_Y',
-    'geom': 'MULTIPOINT',
-}
+# # Auto-generated `LayerMapping` dictionary for LkpProductionTmp model
+# lkpproductiontmp_mapping = {
+#     'classifica': 'Classifica',
+#     'area_name': 'Area_Name',
+#     'processing': 'Processing',
+#     'watersourc': 'WaterSourc',
+#     'code': 'Code',
+#     'state': 'State',
+#     'locality': 'Locality',
+#     'name': 'Name',
+#     'locationsu': 'LocationSu',
+#     'traditiona': 'Traditiona',
+#     'phone_no': 'Phone_no',
+#     'age': 'Age',
+#     'company_na': 'Company_Na',
+#     'social_sta': 'Social_Sta',
+#     'edu_level': 'Edu_Level',
+#     'adress_of': 'Adress_Of',
+#     'blood': 'BLood',
+#     'previous_j': 'Previous_j',
+#     'national_n': 'National_N',
+#     'age_work': 'Age_Work',
+#     'laborer_no': 'Laborer_No',
+#     'geom': 'MULTIPOINT',
+# }
 
-class LkpSougWashingTmp(gis_models.Model):
-    basinowner = gis_models.CharField(max_length=40, blank=True, null=True)
-    code = gis_models.CharField(max_length=15, blank=True, null=True)
-    mercury_us = gis_models.CharField(max_length=100, blank=True, null=True)
-    state = gis_models.CharField(max_length=15, blank=True, null=True)
-    locality = gis_models.CharField(max_length=15, blank=True, null=True)
-    phone_no = gis_models.CharField(max_length=15, blank=True, null=True)
-    edu_level = gis_models.CharField(max_length=100, blank=True, null=True)
-    adress_of = gis_models.CharField(max_length=20, blank=True, null=True)
-    age = gis_models.CharField(max_length=5, blank=True, null=True)
-    blood = gis_models.CharField(max_length=50, blank=True, null=True)
-    previous_j = gis_models.CharField(max_length=50, blank=True, null=True)
-    national_n = gis_models.CharField(max_length=15, blank=True, null=True)
-    age_work = gis_models.CharField(max_length=20, blank=True, null=True)
-    laborer_no = gis_models.CharField(max_length=10, blank=True, null=True)
-    market = gis_models.CharField(max_length=50, blank=True, null=True)
-    karta = gis_models.CharField(max_length=50, blank=True, null=True)
-    water_cons = gis_models.CharField(max_length=30, blank=True, null=True)
-    point_x = gis_models.FloatField(blank=True, null=True)
-    point_y = gis_models.FloatField(blank=True, null=True)
-    geom = gis_models.MultiPointField(srid=4326, blank=True, null=True)
-
-# Auto-generated `LayerMapping` dictionary for LkpSougWashingTmp model
-lkpsougwashingtmp_mapping = {
-    'basinowner': 'BasinOwner',
-    'code': 'Code',
-    'mercury_us': 'Mercury_Us',
-    'state': 'State',
-    'locality': 'Locality',
-    'phone_no': 'Phone_no',
-    'edu_level': 'Edu_Level',
-    'adress_of': 'Adress_Of',
-    'age': 'Age',
-    'blood': 'BLood',
-    'previous_j': 'Previous_j',
-    'national_n': 'National_N',
-    'age_work': 'Age_Work',
-    'laborer_no': 'Laborer_No',
-    'market': 'Market',
-    'karta': 'karta',
-    'water_cons': 'Water_Cons',
-    'point_x': 'POINT_X',
-    'point_y': 'POINT_Y',
-    'geom': 'MULTIPOINT',
-}
-
-class LkpLocalityTmp(gis_models.Model):
-    objectid = gis_models.BigIntegerField()
-    name = gis_models.CharField(max_length=20, blank=True, null=True)
-    city = gis_models.CharField(max_length=15, blank=True, null=True)
-    state_gis = gis_models.CharField(max_length=15, blank=True, null=True)
-    shape_leng = gis_models.FloatField(blank=True, null=True)
-    shape_area = gis_models.FloatField(blank=True, null=True)
-    geom = gis_models.MultiPolygonField(srid=4326)
-
-    state = gis_models.ForeignKey(LkpState, on_delete=gis_models.PROTECT, verbose_name=_("الولاية"),null=True, blank=True)
-    locality = gis_models.ForeignKey(LkpLocality, on_delete=gis_models.PROTECT, verbose_name=_("Locality"),null=True, blank=True)
+# class LkpProductionPathTmp(gis_models.Model):
+#     line_name = gis_models.CharField(max_length=30, blank=True, null=True)
+#     target_to = gis_models.CharField(max_length=30, blank=True, null=True)
+#     target_fro = gis_models.CharField(max_length=30, blank=True, null=True)
+#     state = gis_models.CharField(max_length=15, blank=True, null=True)
+#     locality = gis_models.CharField(max_length=15, blank=True, null=True)
+#     shape_leng = gis_models.FloatField(blank=True, null=True)
+#     geom = gis_models.MultiLineStringField(srid=4326, blank=True, null=True)
 
 
-# Auto-generated `LayerMapping` dictionary for LkpLocalityTmp model
-lkplocalitytmp_mapping = {
-    'objectid': 'OBJECTID',
-    'name': 'Name',
-    'city': 'City',
-    'state_gis': 'State',
-    'shape_leng': 'SHAPE_Leng',
-    'shape_area': 'SHAPE_Area',
-    'geom': 'MULTIPOLYGON',
-}
+# # Auto-generated `LayerMapping` dictionary for LkpProductionPathTmp model
+# lkpproductionpathtmp_mapping = {
+#     'line_name': 'Line_Name',
+#     'target_to': 'Target_TO',
+#     'target_fro': 'Target_FRO',
+#     'state': 'State',
+#     'locality': 'Locality',
+#     'shape_leng': 'SHAPE_Leng',
+#     'geom': 'MULTILINESTRING',
+# }
+
+# class LkpSougServiceTmp(gis_models.Model):
+#     owner = gis_models.CharField(max_length=40, blank=True, null=True)
+#     market = gis_models.CharField(max_length=100, blank=True, null=True)
+#     market_cod = gis_models.CharField(max_length=15, blank=True, null=True)
+#     servicetyp = gis_models.CharField(max_length=20, blank=True, null=True)
+#     locality = gis_models.CharField(max_length=15, blank=True, null=True)
+#     state = gis_models.CharField(max_length=30, blank=True, null=True)
+#     phone_no = gis_models.CharField(max_length=200, blank=True, null=True)
+#     age = gis_models.CharField(max_length=5, blank=True, null=True)
+#     social_sta = gis_models.CharField(max_length=200, blank=True, null=True)
+#     edu_level = gis_models.CharField(max_length=20, blank=True, null=True)
+#     adress_of = gis_models.CharField(max_length=254, blank=True, null=True)
+#     blood = gis_models.CharField(max_length=200, blank=True, null=True)
+#     previous_j = gis_models.CharField(max_length=200, blank=True, null=True)
+#     national_n = gis_models.CharField(max_length=200, blank=True, null=True)
+#     age_work = gis_models.CharField(max_length=200, blank=True, null=True)
+#     laborer_no = gis_models.CharField(max_length=10, blank=True, null=True)
+#     point_x = gis_models.FloatField(blank=True, null=True)
+#     point_y = gis_models.FloatField(blank=True, null=True)
+#     geom = gis_models.MultiPointField(srid=4326, blank=True, null=True)
+
+
+# # Auto-generated `LayerMapping` dictionary for LkpSougServiceTmp model
+# lkpsougservicetmp_mapping = {
+#     'owner': 'Owner',
+#     'market': 'Market',
+#     'market_cod': 'Market_Cod',
+#     'servicetyp': 'ServiceTyp',
+#     'locality': 'Locality',
+#     'state': 'State',
+#     'phone_no': 'Phone_no',
+#     'age': 'Age',
+#     'social_sta': 'Social_Sta',
+#     'edu_level': 'Edu_Level',
+#     'adress_of': 'Adress_Of',
+#     'blood': 'BLood',
+#     'previous_j': 'Previous_j',
+#     'national_n': 'National_N',
+#     'age_work': 'Age_Work',
+#     'laborer_no': 'Laborer_No',
+#     'point_x': 'POINT_X',
+#     'point_y': 'POINT_Y',
+#     'geom': 'MULTIPOINT',
+# }
+
+# class LkpSougWashingTmp(gis_models.Model):
+#     basinowner = gis_models.CharField(max_length=40, blank=True, null=True)
+#     code = gis_models.CharField(max_length=15, blank=True, null=True)
+#     mercury_us = gis_models.CharField(max_length=100, blank=True, null=True)
+#     state = gis_models.CharField(max_length=15, blank=True, null=True)
+#     locality = gis_models.CharField(max_length=15, blank=True, null=True)
+#     phone_no = gis_models.CharField(max_length=15, blank=True, null=True)
+#     edu_level = gis_models.CharField(max_length=100, blank=True, null=True)
+#     adress_of = gis_models.CharField(max_length=20, blank=True, null=True)
+#     age = gis_models.CharField(max_length=5, blank=True, null=True)
+#     blood = gis_models.CharField(max_length=50, blank=True, null=True)
+#     previous_j = gis_models.CharField(max_length=50, blank=True, null=True)
+#     national_n = gis_models.CharField(max_length=15, blank=True, null=True)
+#     age_work = gis_models.CharField(max_length=20, blank=True, null=True)
+#     laborer_no = gis_models.CharField(max_length=10, blank=True, null=True)
+#     market = gis_models.CharField(max_length=50, blank=True, null=True)
+#     karta = gis_models.CharField(max_length=50, blank=True, null=True)
+#     water_cons = gis_models.CharField(max_length=30, blank=True, null=True)
+#     point_x = gis_models.FloatField(blank=True, null=True)
+#     point_y = gis_models.FloatField(blank=True, null=True)
+#     geom = gis_models.MultiPointField(srid=4326, blank=True, null=True)
+
+# # Auto-generated `LayerMapping` dictionary for LkpSougWashingTmp model
+# lkpsougwashingtmp_mapping = {
+#     'basinowner': 'BasinOwner',
+#     'code': 'Code',
+#     'mercury_us': 'Mercury_Us',
+#     'state': 'State',
+#     'locality': 'Locality',
+#     'phone_no': 'Phone_no',
+#     'edu_level': 'Edu_Level',
+#     'adress_of': 'Adress_Of',
+#     'age': 'Age',
+#     'blood': 'BLood',
+#     'previous_j': 'Previous_j',
+#     'national_n': 'National_N',
+#     'age_work': 'Age_Work',
+#     'laborer_no': 'Laborer_No',
+#     'market': 'Market',
+#     'karta': 'karta',
+#     'water_cons': 'Water_Cons',
+#     'point_x': 'POINT_X',
+#     'point_y': 'POINT_Y',
+#     'geom': 'MULTIPOINT',
+# }
+
+# class LkpLocalityTmp(gis_models.Model):
+#     objectid = gis_models.BigIntegerField()
+#     name = gis_models.CharField(max_length=20, blank=True, null=True)
+#     city = gis_models.CharField(max_length=15, blank=True, null=True)
+#     state_gis = gis_models.CharField(max_length=15, blank=True, null=True)
+#     shape_leng = gis_models.FloatField(blank=True, null=True)
+#     shape_area = gis_models.FloatField(blank=True, null=True)
+#     geom = gis_models.MultiPolygonField(srid=4326)
+
+#     state = gis_models.ForeignKey(LkpState, on_delete=gis_models.PROTECT, verbose_name=_("الولاية"),null=True, blank=True)
+#     locality = gis_models.ForeignKey(LkpLocality, on_delete=gis_models.PROTECT, verbose_name=_("Locality"),null=True, blank=True)
+
+
+# # Auto-generated `LayerMapping` dictionary for LkpLocalityTmp model
+# lkplocalitytmp_mapping = {
+#     'objectid': 'OBJECTID',
+#     'name': 'Name',
+#     'city': 'City',
+#     'state_gis': 'State',
+#     'shape_leng': 'SHAPE_Leng',
+#     'shape_area': 'SHAPE_Area',
+#     'geom': 'MULTIPOLYGON',
+# }
