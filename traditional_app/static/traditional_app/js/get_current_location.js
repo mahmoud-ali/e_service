@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", function () {
+function get_current_position() {
   const lonField = document.getElementById("id_longitude");
   const latField = document.getElementById("id_latitude");
 
@@ -38,4 +38,6 @@ document.addEventListener("DOMContentLoaded", function () {
     lonField.readOnly = false;
     latField.readOnly = false;
   }
-});
+}
+
+document.addEventListener("DOMContentLoaded", get_current_position);
