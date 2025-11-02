@@ -50,7 +50,7 @@ class FlowMixin:
         else:
             obj.created_by = obj.updated_by = request.user
 
-        obj.employee = EmployeeTelegram.objects.get(employee__email=request.user.email).employee
+        obj.employee = EmployeeTelegram.objects.filter(employee__email=request.user.email).first().employee
         super().save_model(request, obj, form, change)    
 
     def get_queryset(self, request):
