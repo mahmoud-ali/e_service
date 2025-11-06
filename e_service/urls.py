@@ -20,9 +20,9 @@ from django.views.generic import TemplateView
 from django.contrib import admin
 from django.contrib.flatpages import views as flatpages_views
 from django.conf import settings
-from django.conf.urls.static import static
+# from django.conf.urls.static import static
 
-from django.shortcuts import redirect
+# from django.shortcuts import redirect
 
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
