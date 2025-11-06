@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="card w-full max-w-lg bg-base-100 shadow-xl mx-auto">
+    <div class="card-body">
+        <h2 class="card-title">طلب توفير إحتياج</h2>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+            <div class="form-control w-full">
+                <label class="label" for="{{ form.date.id_for_label }}">
+                    <span class="label-text">التاريخ</span>
+                </label>                
+                {{ form.date }}
+            </div>
+
+
+            <h3 class="text-xl font-bold mt-4">الأصناف</h3>
+            {{ formset.management_form }}
+            {{ formset.non_form_errors }}
+            <div id="formset-container">
+                {% for form in formset %}
+                {{ form.id }} 
+                <div class="form-control w-full mb-2 item-form">
+                    {{ form.errors }}
+                    <label class="label" for="{{ form.requested_item.id_for_label }}">
+                        <span class="label-text">اسم الصنف المطلوب</span>
+                    </label>
+                    {{ form.requested_item }}
+                    {% if form.DELETE %}
+                        <div class="form-control">
+                            <label class="label cursor-pointer">
+                                <span class="label-text">حذف</span>
+                                {{ form.DELETE }}
+                            </label>
+                        </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+            <button type="button" id="add-item" class="btn btn-secondary btn-sm mt-2">إضافة صنف</button>
+
+            <div id="empty-form" style="display: none;">
+                <div class="form-control w-full mb-2 item-form">
+                    <label class="label" for="{{ formset.empty_form.requested_item_name.id_for_label }}">
+                        <span class="label-text">اسم الصنف المطلوب</span>
+                    </label>
+                    {{ formset.empty_form.requested_item }}
+                    {% if formset.empty_form.DELETE %}
+                        <div class="form-control">
+                            <label class="label cursor-pointer">
+                                <span class="label-text">حذف</span>
+                                {{ formset.empty_form.DELETE }}
+                            </label>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="card-actions justify-end mt-4">
+                <a href="{% url 'needs_request_list' %}" class="btn btn-ghost">إلغاء</a>
+                <button type="submit" class="btn btn-primary">حفظ</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    $(document).ready(function() {
+        const addItemButton = document.getElementById('add-item');
+        const formsetContainer = document.getElementById('formset-container');
+        const emptyForm = document.getElementById('empty-form').innerHTML;
+        const totalForms = document.getElementById('id_items-TOTAL_FORMS');
+        let formIdx = {{ formset.total_form_count }};
+
+        addItemButton.addEventListener('click', function() {
+            {% comment %} console.log('test') {% endcomment %}
+            const newForm = emptyForm.replace(/__prefix__/g, formIdx);
+            const newFormElement = document.createElement('div');
+            newFormElement.innerHTML = newForm;
+            formsetContainer.appendChild(newFormElement.firstElementChild);
+            totalForms.value = parseInt(totalForms.value) + 1;
+            formIdx++;
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% load needs_request_tags %}
+<div class="flex justify-between items-center mb-4">
+    <h1 class="text-2xl font-bold">طلب توفير إحتياج</h1>
+    {% if perms.needs_request.add_needsrequest and user|has_group:"eom_pub" %}
+    <a href="{% url 'needs_request_create' %}" class="btn btn-primary">إنشاء طلب جديد</a>
+    {% endif %}
+</div>
+
+<form method="get" class="mb-4">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div>
+            <label for="id" class="block text-sm font-medium text-gray-700">رقم الطلب</label>
+            <input type="text" name="id" id="id" value="{{ current_id|default:'' }}" class="input input-bordered w-full">
+        </div>
+        <div>
+            <label for="date" class="block text-sm font-medium text-gray-700">التاريخ</label>
+            <input type="date" name="date" id="date" value="{{ current_date|default:'' }}" class="input input-bordered w-full">
+        </div>
+        <div>
+            <label for="department" class="block text-sm font-medium text-gray-700">القسم</label>
+            <select name="department" id="department" class="select select-bordered w-full">
+                <option value="">الكل</option>
+                {% for department in departments %}
+                <option value="{{ department.id }}" {% if current_department == department.id|stringformat:"s" %}selected{% endif %}>{{ department.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div>
+            <label for="status" class="block text-sm font-medium text-gray-700">الحالة</label>
+            <select name="status" id="status" class="select select-bordered w-full">
+                <option value="">الكل</option>
+                <option value="approved" {% if current_status == 'approved' %}selected{% endif %}>مقبول</option>
+                <option value="rejected" {% if current_status == 'rejected' %}selected{% endif %}>مرفوض</option>
+                <option value="pending" {% if current_status == 'pending' %}selected{% endif %}>قيد المعالجة</option>
+            </select>
+        </div>
+    </div>
+    <div class="mt-4 flex justify-end space-x-2">
+        <button type="submit" class="btn btn-primary">بحث</button>
+        <a href="{% url 'needs_request_list' %}" class="btn">مسح</a>
+    </div>
+</form>
+
+<div class="overflow-x-auto">
+    <table class="table w-full">
+        <thead>
+            <tr>
+                <th>رقم الطلب</th>
+                <th>التاريخ</th>
+                <th>القسم</th>
+                <th>الحالة</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for request in requests %}
+            <tr>
+                <th>{{ request.id }}</th>
+                <td>{{ request.date|date }}</td>
+                <td>{{ request.department }}</td>
+                <td>
+                    {% if request.is_approved %}
+                        <span class="badge badge-success badge-md">مقبول</span>
+                    {% elif request.is_rejected %}
+                        <span class="badge badge-error badge-md">مرفوض</span>
+                    {% else %}
+                        <span class="badge badge-warning badge-md">قيد المعالجة</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{% url 'needs_request_detail' request.pk %}" class="btn btn-sm btn-outline">عرض</a>
+                    {% if request.approval_status == 'draft' and perms.needs_request.change_needsrequest %}
+                    <a href="{% url 'needs_request_update' request.pk %}" class="btn btn-sm btn-outline btn-warning">تعديل</a>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% if  requests.paginator.num_pages > 1%}
+<div class="pagination mt-4 flex justify-center">
+    <div class="join">
+        {% if requests.has_previous %}
+            <a href="?page=1&id={{ current_id|default:'' }}&date={{ current_date|default:'' }}&department={{ current_department|default:'' }}&status={{ current_status|default:'' }}" class="join-item btn">« اول</a>
+            <a href="?page={{ requests.previous_page_number }}&id={{ current_id|default:'' }}&date={{ current_date|default:'' }}&department={{ current_department|default:'' }}&status={{ current_status|default:'' }}" class="join-item btn">السابق</a>
+        {% endif %}
+
+        <button class="join-item btn">صفحة {{ requests.number }} من {{ requests.paginator.num_pages }}</button>
+
+        {% if requests.has_next %}
+            <a href="?page={{ requests.next_page_number }}&id={{ current_id|default:'' }}&date={{ current_date|default:'' }}&department={{ current_department|default:'' }}&status={{ current_status|default:'' }}" class="join-item btn">التالي</a>
+            <a href="?page={{ requests.paginator.num_pages }}&id={{ current_id|default:'' }}&date={{ current_date|default:'' }}&department={{ current_department|default:'' }}&status={{ current_status|default:'' }}" class="join-item btn">اخر »</a>
+        {% endif %}
+    </div>
+</div>
+{% endif %}
+{% endblock %}

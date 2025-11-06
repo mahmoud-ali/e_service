@@ -1,0 +1,280 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% load needs_request_tags %}
+
+<div class="flex justify-between items-center mb-4">
+    <h1 class="text-2xl font-bold">تفاصيل طلب توفير إحتياج</h1>
+    <div>
+        {% if user_can_update and user|has_group:"eom_pub" and needs_request.approval_status == 'draft'%}
+        <a href="{% url 'needs_request_update' needs_request.pk %}" class="btn btn-warning">تعديل</a>
+        {% endif %}
+        <a href="{% url 'needs_request_list' %}" class="btn btn-outline">العودة إلى القائمة</a>
+    </div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+    <div class="lg:col-span-2">
+        <div class="card bg-base-100 shadow-xl">
+            <div class="card-body">
+                <h2 class="card-title">معلومات الطلب</h2>
+                <p><strong>رقم الطلب:</strong> {{ needs_request.id }}</p>
+                <p><strong>التاريخ:</strong> {{ needs_request.date }}</p>
+                <p><strong>القسم:</strong> {{ needs_request.department }}</p>
+            </div>
+        </div>
+
+        <div class="card bg-base-100 shadow-xl mt-4">
+            <div class="card-body">
+                <h2 class="card-title">الأصناف المطلوبة</h2>
+                    <input type="hidden" name="action" value="approve_items">
+                    <div class="overflow-x-auto">
+                        <table class="table w-full">
+                            <thead>
+                                <tr>
+                                    <th># </th>
+                                    <th>اسم الصنف </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for obj in needs_request.items.all %}
+                                <tr>
+                                    <td>{{ forloop.counter }}</td>
+                                    <td>{{ obj.requested_item }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+            </div>
+        </div>
+
+        <div class="card bg-base-100 shadow-xl mt-4">
+            <div class="card-body">
+                <h2 class="card-title">التعليقات والتوصيات</h2>
+                {% if needs_request.sd_comment %}<p><strong>تعليق قسم الإمداد:</strong> {{ needs_request.sd_comment|default:"لا يوجد" }}</p>{% endif %}
+                {% if needs_request.doa_comment %}<p><strong>تعليق مدير الشؤون الإدارية:</strong> {{ needs_request.doa_comment|default:"لا يوجد" }}</p>{% endif %}
+                {% if needs_request.it_comment %}<p><strong>تعليق تقنية المعلومات:</strong> {{ needs_request.it_comment|default:"لا يوجد" }}</p>{% endif %}
+                {% if needs_request.dgdhra_recommendation %}<p><strong>توصية مدير الإدارة العامة للموارد البشرية والإدارة:</strong> {{ needs_request.dgdhra_recommendation|default:"لا يوجد" }}</p>{% endif %}
+                {% if needs_request.dgfa_recommendation %}<p><strong>توصية مدير الإدارة العامة للشؤون المالية:</strong> {{ needs_request.dgfa_recommendation|default:"لا يوجد" }}</p>{% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div>
+        <div class="card bg-base-100 shadow-xl">
+            <div class="card-body">
+                <h2 class="card-title">حالة الموافقة</h2>
+                {% if needs_request.approval_status == 'gm_approval' %}
+                    <div class="alert alert-success">
+                        <span>مقبول نهائيًا</span>
+                    </div>
+                {% elif needs_request.approval_status == 'dga_rejection' %}
+                    <div class="alert alert-error">
+                        <span>رفض مدير الإدارة العامة</span>
+                    </div>
+                    <p><strong>سبب الرفض:</strong> {{ needs_request.rejection_cause }}</p>
+                {% elif needs_request.approval_status == 'agmfa_rejection' %}
+                    <div class="alert alert-error">
+                        <span>رفض مساعد المدير العام للشئون الإدارية والمالية</span>
+                    </div>
+                    <p><strong>سبب الرفض:</strong> {{ needs_request.rejection_cause }}</p>
+                {% elif needs_request.approval_status == 'gm_rejection' %}
+                    <div class="alert alert-error">
+                        <span>رفض المدير العام</span>
+                    </div>
+                    <p><strong>سبب الرفض:</strong> {{ needs_request.rejection_cause }}</p>
+                {% else %}
+                    <div class="alert alert-warning">
+                        <span>{{ needs_request.get_approval_status_display }}</span>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        {% if not needs_request.is_final_status %}
+        <div class="card bg-base-100 shadow-xl mt-4">
+            <div class="card-body">
+                <h2 class="card-title">الإجراءات</h2>
+
+                {% if needs_request.approval_status == 'draft' %}
+                <form method="post" class="mb-4">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="dga_approval">
+                    <button type="submit" class="btn btn-success btn-block mt-2">موافقة مدير الإدارة العامة</button>
+                </form>
+                <form method="post" class="mb-4">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="dga_rejection">
+                    {{ rejection_form.non_field_errors }}
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text">سبب الرفض</span>
+                        </label>
+                        {{ rejection_form.rejection_cause }}
+                        {% if rejection_form.rejection_cause.errors %}
+                            <div class="text-error text-sm mt-1">
+                                {{ rejection_form.rejection_cause.errors }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <button type="submit" class="btn btn-error btn-block mt-2">رفض مدير الإدارة العامة</button>
+                </form>
+                {% endif %}
+
+                {% if needs_request.approval_status == 'dga_approval' %}
+                <form method="post" class="mb-4">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="sd_comment">
+                    {{ comment_form.non_field_errors }}
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text">تعليق قسم الإمداد</span>
+                        </label>
+                        {{ comment_form.sd_comment }}
+                        {% if comment_form.sd_comment.errors %}
+                            <div class="text-error text-sm mt-1">
+                                {{ comment_form.sd_comment.errors }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block mt-2">إرسال تعليق قسم الإمداد</button>
+                </form>
+                {% endif %}
+
+                {% if needs_request.approval_status == 'sd_comment' %}
+                <form method="post" class="mb-4">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="doa_comment">
+                    {{ doa_comment_form.non_field_errors }}
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text">تعليق مدير الشؤون الإدارية</span>
+                        </label>
+                        {{ doa_comment_form.doa_comment }}
+                        {% if doa_comment_form.doa_comment.errors %}
+                            <div class="text-error text-sm mt-1">
+                                {{ doa_comment_form.doa_comment.errors }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block mt-2">إرسال تعليق مدير الشؤون الإدارية</button>
+                </form>
+                {% endif %}
+
+                {% if needs_request.approval_status == 'doa_comment' %}
+                <form method="post" class="mb-4">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="it_comment">
+                    {{ it_comment_form.non_field_errors }}
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text">تعليق مدير تقنية المعلومات</span>
+                        </label>
+                        {{ it_comment_form.it_comment }}
+                        {% if it_comment_form.it_comment.errors %}
+                            <div class="text-error text-sm mt-1">
+                                {{ it_comment_form.it_comment.errors }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block mt-2">إرسال تعليق مدير تقنية المعلومات</button>
+                </form>
+                {% endif %}
+
+                {% if needs_request.approval_status == 'it_comment' %}
+                <form method="post" class="mb-4">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="dgdhra_recommendation">
+                    {{ dgdhra_form.non_field_errors }}
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text">توصية مدير الإدارة العامة للموارد البشرية والإدارية</span>
+                        </label>
+                        {{ dgdhra_form.dgdhra_recommendation }}
+                        {% if dgdhra_form.dgdhra_recommendation.errors %}
+                            <div class.text-error.text-sm.mt-1">
+                                {{ dgdhra_form.dgdhra_recommendation.errors }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block mt-2">إرسال توصية مدير الإدارة العامة للموارد البشرية والإدارية</button>
+                </form>
+                {% endif %}
+
+                {% if needs_request.approval_status == 'dgdhra_recommendation' %}
+                <form method="post" class="mb-4">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="dgfa_recommendation">
+                    {{ dgfa_form.non_field_errors }}
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text">توصية مدير الإدارة العامة للشؤون المالية</span>
+                        </label>
+                        {{ dgfa_form.dgfa_recommendation }}
+                        {% if dgfa_form.dgfa_recommendation.errors %}
+                            <div class="text-error text-sm mt-1">
+                                {{ dgfa_form.dgfa_recommendation.errors }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block mt-2">إرسال توصية مدير الإدارة العامة للشؤون المالية</button>
+                </form>
+                {% endif %}
+
+                {% if needs_request.approval_status == 'dgfa_recommendation' %}
+                <form method="post" class="mb-4">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="agmfa_approval">
+                    <button type="submit" class="btn btn-success btn-block mt-2">موافقة مساعد المدير العام للشؤون المالية والإدارية</button>
+                </form>
+                <form method="post" class="mb-4">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="agmfa_rejection">
+                    {{ rejection_form.non_field_errors }}
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text">سبب الرفض</span>
+                        </label>
+                        {{ rejection_form.rejection_cause }}
+                        {% if rejection_form.rejection_cause.errors %}
+                            <div class="text-error text-sm mt-1">
+                                {{ rejection_form.rejection_cause.errors }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <button type="submit" class="btn btn-error btn-block mt-2">رفض مساعد المدير العام للشؤون المالية والإدارية</button>
+                </form>
+                {% endif %}
+
+                {% if needs_request.approval_status == 'agmfa_approval' %}
+                <form method="post" class="mb-4">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="gm_approval">
+                    <button type="submit" class="btn btn-success btn-block mt-2">موافقة المدير العام</button>
+                </form>
+                <form method="post" class="mb-4">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="gm_rejection">
+                    {{ rejection_form.non_field_errors }}
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text">سبب الرفض</span>
+                        </label>
+                        {{ rejection_form.rejection_cause }}
+                        {% if rejection_form.rejection_cause.errors %}
+                            <div class="text-error text-sm mt-1">
+                                {{ rejection_form.rejection_cause.errors }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <button type="submit" class="btn btn-error btn-block mt-2">رفض المدير العام</button>
+                </form>
+                {% endif %}
+
+            </div>
+        </div>
+        {% endif%}
+    </div>
+</div>
+{% endblock %}
