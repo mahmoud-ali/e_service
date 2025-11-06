@@ -67,7 +67,7 @@
                 <h2 class="card-title">حالة الموافقة</h2>
                 {% if needs_request.approval_status == 'gm_approval' %}
                     <div class="alert alert-success">
-                        <span>مقبول نهائيًا</span>
+                        <span>تصديق المدير العام</span>
                     </div>
                 {% elif needs_request.approval_status == 'dga_rejection' %}
                     <div class="alert alert-error">
@@ -97,7 +97,7 @@
             <div class="card-body">
                 <h2 class="card-title">الإجراءات</h2>
 
-                {% if needs_request.approval_status == 'draft' %}
+                {% if needs_request.approval_status == 'draft' and user|has_group:"dga_pub" %}
                 <form method="post" class="mb-4">
                     {% csrf_token %}
                     <input type="hidden" name="action" value="dga_approval">
@@ -122,7 +122,7 @@
                 </form>
                 {% endif %}
 
-                {% if needs_request.approval_status == 'dga_approval' %}
+                {% if needs_request.approval_status == 'dga_approval' and user|has_group:"sd_pub" %}
                 <form method="post" class="mb-4">
                     {% csrf_token %}
                     <input type="hidden" name="action" value="sd_comment">
@@ -142,7 +142,7 @@
                 </form>
                 {% endif %}
 
-                {% if needs_request.approval_status == 'sd_comment' %}
+                {% if needs_request.approval_status == 'sd_comment' and user|has_group:"doa_pub" %}
                 <form method="post" class="mb-4">
                     {% csrf_token %}
                     <input type="hidden" name="action" value="doa_comment">
@@ -162,7 +162,7 @@
                 </form>
                 {% endif %}
 
-                {% if needs_request.approval_status == 'doa_comment' %}
+                {% if needs_request.approval_status == 'doa_comment' and user|has_group:"dgdhra_pub" %}
                 <form method="post" class="mb-4">
                     {% csrf_token %}
                     <input type="hidden" name="action" value="it_comment">
@@ -182,7 +182,7 @@
                 </form>
                 {% endif %}
 
-                {% if needs_request.approval_status == 'it_comment' %}
+                {% if needs_request.approval_status == 'it_comment' and user|has_group:"dgfa_pub" %}
                 <form method="post" class="mb-4">
                     {% csrf_token %}
                     <input type="hidden" name="action" value="dgdhra_recommendation">
@@ -202,7 +202,7 @@
                 </form>
                 {% endif %}
 
-                {% if needs_request.approval_status == 'dgdhra_recommendation' %}
+                {% if needs_request.approval_status == 'dgdhra_recommendation' and user|has_group:"agmfa_pub" %}
                 <form method="post" class="mb-4">
                     {% csrf_token %}
                     <input type="hidden" name="action" value="dgfa_recommendation">
@@ -222,11 +222,11 @@
                 </form>
                 {% endif %}
 
-                {% if needs_request.approval_status == 'dgfa_recommendation' %}
+                {% if needs_request.approval_status == 'dgfa_recommendation' and user|has_group:"gm_pub" %}
                 <form method="post" class="mb-4">
                     {% csrf_token %}
                     <input type="hidden" name="action" value="agmfa_approval">
-                    <button type="submit" class="btn btn-success btn-block mt-2">موافقة مساعد المدير العام للشؤون المالية والإدارية</button>
+                    <button type="submit" class="btn btn-success btn-block mt-2">إعتماد مساعد المدير العام للشؤون المالية والإدارية</button>
                 </form>
                 <form method="post" class="mb-4">
                     {% csrf_token %}
@@ -247,11 +247,11 @@
                 </form>
                 {% endif %}
 
-                {% if needs_request.approval_status == 'agmfa_approval' %}
+                {% if needs_request.approval_status == 'agmfa_approval' and user|has_group:"gm_pub" %}
                 <form method="post" class="mb-4">
                     {% csrf_token %}
                     <input type="hidden" name="action" value="gm_approval">
-                    <button type="submit" class="btn btn-success btn-block mt-2">موافقة المدير العام</button>
+                    <button type="submit" class="btn btn-success btn-block mt-2">تصديق المدير العام</button>
                 </form>
                 <form method="post" class="mb-4">
                     {% csrf_token %}
