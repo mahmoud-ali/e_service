@@ -12,8 +12,8 @@ class CustomUser(AbstractUser):
         LANG_AR: _("English"),
     }
             
-    lang = models.CharField(max_length=2, choices=LANG_CHOICES, default=LANG_AR)
     usable_password = models.BooleanField(default=True)
+    lang = models.CharField(max_length=2, choices=LANG_CHOICES, default=LANG_AR)
 
     def __str__(self):
         return self.email
