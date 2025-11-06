@@ -1,6 +1,8 @@
 from django.urls import path
 from . import views
 
+app_name = "needs"
+
 urlpatterns = [
     path('', views.needs_request_list, name='needs_request_list'),
     path('new/', views.needs_request_create, name='needs_request_create'),

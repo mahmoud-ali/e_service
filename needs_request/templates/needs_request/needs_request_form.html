@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'acceptance/base.html' %}
 
 {% block content %}
 <div class="card w-full max-w-lg bg-base-100 shadow-xl mx-auto">
@@ -58,7 +58,7 @@
             </div>
 
             <div class="card-actions justify-end mt-4">
-                <a href="{% url 'needs_request_list' %}" class="btn btn-ghost">إلغاء</a>
+                <a href="{% url 'needs:needs_request_list' %}" class="btn btn-ghost">إلغاء</a>
                 <button type="submit" class="btn btn-primary">حفظ</button>
             </div>
         </form>

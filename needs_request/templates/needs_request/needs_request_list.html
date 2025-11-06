@@ -1,11 +1,11 @@
-{% extends 'base.html' %}
+{% extends 'acceptance/base.html' %}
 
 {% block content %}
 {% load needs_request_tags %}
 <div class="flex justify-between items-center mb-4">
     <h1 class="text-2xl font-bold">طلب توفير إحتياج</h1>
     {% if perms.needs_request.add_needsrequest and user|has_group:"eom_pub" %}
-    <a href="{% url 'needs_request_create' %}" class="btn btn-primary">إنشاء طلب جديد</a>
+    <a href="{% url 'needs:needs_request_create' %}" class="btn btn-primary">إنشاء طلب جديد</a>
     {% endif %}
 </div>
 
@@ -40,10 +40,11 @@
     </div>
     <div class="mt-4 flex justify-end space-x-2">
         <button type="submit" class="btn btn-primary">بحث</button>
-        <a href="{% url 'needs_request_list' %}" class="btn">مسح</a>
+        <a href="{% url 'needs:needs_request_list' %}" class="btn">مسح</a>
     </div>
 </form>
 
+{% if requests|length > 0 %}
 <div class="overflow-x-auto">
     <table class="table w-full">
         <thead>
@@ -71,9 +72,9 @@
                     {% endif %}
                 </td>
                 <td>
-                    <a href="{% url 'needs_request_detail' request.pk %}" class="btn btn-sm btn-outline">عرض</a>
+                    <a href="{% url 'needs:needs_request_detail' request.pk %}" class="btn btn-sm btn-outline">عرض</a>
                     {% if request.approval_status == 'draft' and perms.needs_request.change_needsrequest %}
-                    <a href="{% url 'needs_request_update' request.pk %}" class="btn btn-sm btn-outline btn-warning">تعديل</a>
+                    <a href="{% url 'needs:needs_request_update' request.pk %}" class="btn btn-sm btn-outline btn-warning">تعديل</a>
                     {% endif %}
                 </td>
             </tr>
@@ -81,6 +82,9 @@
         </tbody>
     </table>
 </div>
+{% else %}
+<p> لايوجد بيانات</p>
+{% endif %}
 
 {% if  requests.paginator.num_pages > 1%}
 <div class="pagination mt-4 flex justify-center">

@@ -1,0 +1,10 @@
+{% extends 'acceptance/base.html' %}
+
+{% block content %}
+<div class="text-center">
+    <h1 class="text-4xl font-bold text-error">403</h1>
+    <p class="text-2xl">ليس لديك صلاحية للوصول لهذه الصفحة.</p>
+    <p>إذا كنت تعتقد أن هذا خطأ، يرجى التواصل مع مدير النظام.</p>
+    <a href="{% url 'acceptance_home' %}" class="btn btn-primary mt-4">العودة للصفحة الرئيسية</a>
+</div>
+{% endblock %}

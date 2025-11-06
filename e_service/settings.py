@@ -90,6 +90,7 @@ INSTALLED_APPS = [
     'sandog',
     'fleet',
     'it',
+    'needs_request',
 
     # Debug
     'debug_toolbar',
@@ -278,8 +279,8 @@ ACCOUNT_MAX_EMAIL_ADDRESSES = 1
 ACCOUNT_ADAPTER = 'accounts.adapter.NoNewUsersAccountAdapter'
 
 LOGIN_URL = config('LOGIN_URL')
-LOGIN_REDIRECT_URL = 'profile:home'
-ACCOUNT_LOGOUT_REDIRECT_URL = 'profile:home'
+LOGIN_REDIRECT_URL = 'acceptance_home'
+ACCOUNT_LOGOUT_REDIRECT_URL = 'acceptance_home'
 
 ACCOUNT_DEFAULT_PASSWORD = "changethispassword"
 

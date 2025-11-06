@@ -78,7 +78,7 @@ def needs_request_list(request):
 @login_required
 def needs_request_create(request):
     if not request.user.groups.filter(name='eom_pub').exists() and not request.user.is_superuser:
-        return render(request, '403.html', status=403)
+        return render(request, 'acceptance/403.html', status=403)
         
     if request.method == 'POST':
         form = NeedsRequestForm(request.POST)
@@ -92,16 +92,16 @@ def needs_request_create(request):
                     needs_request.department = department
                 else:
                     # Handle case where user is not an executive manager of any department
-                    return render(request, '403.html', status=403)
+                    return render(request, 'acceptance/403.html', status=403)
             except AttributeError:
                 # Handle case where user is not an executive manager of any department
-                return render(request, '403.html', status=403)
+                return render(request, 'acceptance/403.html', status=403)
 
             formset = ItemFormSet(request.POST, request.FILES, instance=needs_request, prefix='items')
             if formset.is_valid():
                 needs_request.save()
                 formset.save()
-                return redirect('needs_request_list')
+                return redirect('needs:needs_request_list')
             else:
                 # Add formset errors to the context
                 return render(request, 'needs_request/needs_request_form.html', {'form': form, 'formset': formset})
@@ -120,7 +120,7 @@ def needs_request_update(request, pk):
     formset = None
 
     if not has_update_permission(request.user, needs_request):
-        return render(request, '403.html', status=403)
+        return render(request, 'acceptance/403.html', status=403)
 
     if request.method == 'POST':
         form = NeedsRequestForm(request.POST, instance=needs_request)
@@ -130,7 +130,7 @@ def needs_request_update(request, pk):
             if formset.is_valid():
                 needs_request.save()
                 formset.save()
-                return redirect('needs_request_list')
+                return redirect('needs:needs_request_list')
             else:
                 return render(request, 'needs_request/needs_request_form.html', {'form': form, 'formset': formset})
         else:
@@ -146,18 +146,18 @@ def needs_request_detail(request, pk):
     needs_request = get_object_or_404(NeedsRequest, pk=pk)
     
     if not has_read_permission(request.user, needs_request):
-        return render(request, '403.html', status=403)
+        return render(request, 'acceptance/403.html', status=403)
     
     if not is_operational_employee(request.user):
         if request.user.groups.filter(name='eom_pub').exists(): 
             department = request.user.executive_manager_of.first()
             if needs_request.department != department:
-                return render(request, '403.html', status=403)
+                return render(request, 'acceptance/403.html', status=403)
 
         elif request.user.groups.filter(name='dga_pub').exists(): 
             department = request.user.department_manager_of.first()
             if needs_request.department != department:
-                return render(request, '403.html', status=403)
+                return render(request, 'acceptance/403.html', status=403)
 
     # Initialize all possible forms
     comment_form = CommentForm(request.POST or None, instance=needs_request)
@@ -173,86 +173,86 @@ def needs_request_detail(request, pk):
         action = request.POST.get('action')
 
         if not has_action_permission(request.user, needs_request, action):
-            return render(request, '403.html', status=403)
+            return render(request, 'acceptance/403.html', status=403)
 
         # if action == 'approve_items':
         #     if approved_item_formset.is_valid():
         #         approved_item_formset.save()
-        #         return redirect('needs_request_detail', pk=pk)
+        #         return redirect('needs:needs_request_detail', pk=pk)
 
         if action == 'dga_approval':
             needs_request.approval_status = 'dga_approval'
             needs_request.rejection_cause = None
             needs_request.save()
-            return redirect('needs_request_detail', pk=pk)
+            return redirect('needs:needs_request_detail', pk=pk)
             
         elif action == 'sd_comment':
             if comment_form.is_valid():
                 comment_form.save()
                 needs_request.approval_status = 'sd_comment'
                 needs_request.save()
-                return redirect('needs_request_detail', pk=pk)
+                return redirect('needs:needs_request_detail', pk=pk)
                 
         elif action == 'doa_comment':
             if doa_comment_form.is_valid():
                 doa_comment_form.save()
                 needs_request.approval_status = 'doa_comment'
                 needs_request.save()
-                return redirect('needs_request_detail', pk=pk)
+                return redirect('needs:needs_request_detail', pk=pk)
                 
         elif action == 'it_comment':
             if it_comment_form.is_valid():
                 it_comment_form.save()
                 needs_request.approval_status = 'it_comment'
                 needs_request.save()
-                return redirect('needs_request_detail', pk=pk)
+                return redirect('needs:needs_request_detail', pk=pk)
                 
         elif action == 'dgdhra_recommendation':
             if dgdhra_form.is_valid():
                 dgdhra_form.save()
                 needs_request.approval_status = 'dgdhra_recommendation'
                 needs_request.save()
-                return redirect('needs_request_detail', pk=pk)
+                return redirect('needs:needs_request_detail', pk=pk)
                 
         elif action == 'dgfa_recommendation':
             if dgfa_form.is_valid():
                 dgfa_form.save()
                 needs_request.approval_status = 'dgfa_recommendation'
                 needs_request.save()
-                return redirect('needs_request_detail', pk=pk)
+                return redirect('needs:needs_request_detail', pk=pk)
                 
         elif action == 'agmfa_approval':
             needs_request.approval_status = 'agmfa_approval'
             needs_request.rejection_cause = None
             needs_request.save()
-            return redirect('needs_request_detail', pk=pk)
+            return redirect('needs:needs_request_detail', pk=pk)
             
         elif action == 'gm_approval':
             needs_request.approval_status = 'gm_approval'
             needs_request.rejection_cause = None
             needs_request.save()
-            return redirect('needs_request_detail', pk=pk)
+            return redirect('needs:needs_request_detail', pk=pk)
                      
         elif action == 'dga_rejection':
             if rejection_form.is_valid():
                 needs_request.approval_status = 'dga_rejection'
                 needs_request.rejection_cause = rejection_form.cleaned_data['rejection_cause']
                 needs_request.save()
-                return redirect('needs_request_detail', pk=pk)
+                return redirect('needs:needs_request_detail', pk=pk)
                 
         elif action == 'agmfa_rejection':
             if rejection_form.is_valid():
                 needs_request.approval_status = 'agmfa_rejection'
                 needs_request.rejection_cause = rejection_form.cleaned_data['rejection_cause']
                 needs_request.save()
-                return redirect('needs_request_detail', pk=pk)
+                return redirect('needs:needs_request_detail', pk=pk)
                 
         elif action == 'gm_rejection':
             if rejection_form.is_valid():
                 needs_request.approval_status = 'gm_rejection'
                 needs_request.rejection_cause = rejection_form.cleaned_data['rejection_cause']
                 needs_request.save()
-                return redirect('needs_request_detail', pk=pk)
+                return redirect('needs:needs_request_detail', pk=pk)
                     
     return render(request, 'needs_request/needs_request_detail.html', {
         'needs_request': needs_request, 

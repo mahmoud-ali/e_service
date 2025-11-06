@@ -1,10 +1,10 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.conf import settings
 
 class Department(models.Model):
     name = models.CharField(max_length=100, unique=True)
-    executive_manager = models.ForeignKey(User, on_delete=models.PROTECT, null=True, blank=True, related_name='executive_manager_of')
-    department_manager = models.ForeignKey(User, on_delete=models.PROTECT, null=True, blank=True, related_name='department_manager_of')
+    executive_manager = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, null=True, blank=True, related_name='executive_manager_of')
+    department_manager = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, null=True, blank=True, related_name='department_manager_of')
 
     def __str__(self):
         return self.name

@@ -1,0 +1,25 @@
+{% extends 'acceptance/base.html' %}
+
+{% block content %}
+<h1 class="text-2xl font-bold mb-4">لوحة التحكم</h1>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div class="card bg-base-100 shadow-xl">
+        <div class="card-body">
+            <h2 class="card-title">طلب توفير إحتياج</h2>
+            <p>عرض وإدارة طلبات الاحتياج.</p>
+            <div class="card-actions justify-end">
+                <a href="{% url 'needs:needs_request_list' %}" class="btn btn-primary">عرض</a>
+            </div>
+        </div>
+    </div>
+    {% comment %} <div class="card bg-base-100 shadow-xl">
+        <div class="card-body">
+            <h2 class="card-title">طلبات الشراء</h2>
+            <p>عرض وإدارة طلبات الشراء.</p>
+            <div class="card-actions justify-end">
+                <a href="{% url 'purchase_request_list' %}" class="btn btn-primary">عرض</a>
+            </div>
+        </div>
+    </div> {% endcomment %}
+</div>
+{% endblock %}

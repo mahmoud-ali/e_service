@@ -23,27 +23,37 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 from django.shortcuts import redirect
-def redirect_to_home(request):
-    return redirect(reverse('admin:index'))
 
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+
+# def redirect_to_home(request):
+#     return redirect(reverse('admin:index'))
+
+@login_required
+def dashboard(request):
+    return render(request, 'acceptance/dashboard.html')
 
 urlpatterns = [
-    path("__debug__/", include("debug_toolbar.urls")),
-
     path('managers/', admin.site.urls),
+    path('accounts/', include('accounts.urls')),
     # path('accounts/', include('accounts.urls')), 
     # path('check/', include('check_cordinates.urls')), 
     # path("about/", flatpages_views.flatpage, {"url": "/about/"}, name="about"),
     # path('pa/', include('pa.urls')), 
     path('hr/', include('hr.urls')), 
     path('it/', include('it.urls')), 
-    path('', include('hr_bot.urls')), 
     path('fleet/', include('fleet.urls')), 
     path('sandog/', include('sandog.urls')), 
+    path('needs/', include('needs_request.urls')),
+    
     # path('help/', include('help_request.urls')), 
-    path('', redirect_to_home),
+    path('', include('hr_bot.urls')), 
+    path('', dashboard, name='acceptance_home'),
+    path("__debug__/", include("debug_toolbar.urls")),
 
-]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+] #+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 
 # if settings.DEBUG:
