@@ -755,12 +755,22 @@ class EmployeeSalafiatMaster(LoggingModel):
     employee = models.ForeignKey(EmployeeBasic, on_delete=models.PROTECT,verbose_name=_("employee_name"))
     no3_2lsalafia = models.IntegerField(_("no3_2lsalafia"), choices=NO3_2LSALAFIA_CHOICES,default=NO3_2LSALAFIA_SANDOG)
     amount = models.FloatField(_("amount"))
+    start_year = models.IntegerField(_("تاريخ البداية - السنة"), validators=[MinValueValidator(limit_value=2015),MaxValueValidator(limit_value=2100)])
+    start_month = models.IntegerField(_("تاريخ البداية - الشهر"), choices=MONTH_CHOICES)
+    no_month = models.IntegerField(_("عدد الشهور"), default=1)
 
+    def __str__(self):
+        return f"{self.employee.name} {self.amount} ({self.get_no3_2lsalafia_display()})"
+    
     def remaining(self, exclude=None):
         qs = EmployeeSalafiat.objects.filter(salafiat_master__id=self.id)
         paid = qs.aggregate(paid =Sum('amount'))['paid'] or 0
         
         return self.amount - paid
+
+    class Meta:
+        verbose_name = _("سجل سلفية")
+        verbose_name_plural = _("سجل السلفيات")
 
 
 class EmployeeSalafiat(LoggingModel):
@@ -771,7 +781,7 @@ class EmployeeSalafiat(LoggingModel):
 
     NO3_2LSALAFIA_CHOICES = EmployeeSalafiatMaster.NO3_2LSALAFIA_CHOICES
 
-    salafiat_master = models.ForeignKey(EmployeeSalafiatMaster, on_delete=models.PROTECT,verbose_name=_("employee_name"), null=True, default=None)
+    salafiat_master = models.ForeignKey(EmployeeSalafiatMaster, on_delete=models.PROTECT,verbose_name=_("مرجع السلفية"), null=True, default=None)
     employee = models.ForeignKey(EmployeeBasic, on_delete=models.PROTECT,verbose_name=_("employee_name"))
     year = models.IntegerField(_("year"), validators=[MinValueValidator(limit_value=2015),MaxValueValidator(limit_value=2100)])
     month = models.IntegerField(_("month"), choices=MONTH_CHOICES)
@@ -791,8 +801,8 @@ class EmployeeSalafiat(LoggingModel):
             models.Index(fields=["employee", "year","month"]),
         ]
         ordering = ["year","month","no3_2lsalafia"]
-        verbose_name = _("Salafiat")
-        verbose_name_plural = _("Salafiat")
+        verbose_name = _("تفاصيل سلفية")
+        verbose_name_plural = _("تفاصيل السلفيات")
 
     def validate_unique(self, exclude=None):
         qs = EmployeeSalafiat.objects.filter(no3_2lsalafia=EmployeeSalafiat.NO3_2LSALAFIA_SANDOG,employee=self.employee,year=self.year,month=self.month)
@@ -815,6 +825,20 @@ class EmployeeSalafiat(LoggingModel):
             })
         
         return super().clean()
+    
+class EmployeeSalafiatSandogManager(models.Manager):
+    def get_queryset(self):
+       return super().get_queryset().filter(no3_2lsalafia=EmployeeSalafiat.NO3_2LSALAFIA_SANDOG)
+
+class EmployeeSalafiatSandog(EmployeeSalafiat):
+    objects = EmployeeSalafiatSandogManager()
+    default_manager = objects
+
+    class Meta:
+        proxy = True
+        verbose_name = _("سلفية صندوق")
+        verbose_name_plural = _("سلفيات الصندوق")
+
 class EmployeeJazaat(LoggingModel):
     employee = models.ForeignKey(EmployeeBasic, on_delete=models.PROTECT,verbose_name=_("employee_name"))
     year = models.IntegerField(_("year"), validators=[MinValueValidator(limit_value=2015),MaxValueValidator(limit_value=2100)])

@@ -3,6 +3,7 @@ import csv
 from django.db import models
 from django.db.models import Sum
 from django.contrib.admin.options import InlineModelAdmin
+from django import forms
 from django.forms import ModelForm, ValidationError
 from django.forms.widgets import TextInput
 from django.http import HttpRequest, HttpResponse
@@ -15,7 +16,7 @@ from django.contrib import messages
 from hr.calculations import PayrollValidation
 from hr.payroll import M2moriaSheet, MajlisEl2daraMokaf2Payroll, MobasharaSheet, Mokaf2Sheet, Payroll, Ta3agodMosimiPayroll, TasoiaPayroll, Wi7datMosa3idaMokaf2tFarigMoratabPayroll
 
-from .models import Drajat3lawat, EmployeeBankAccount, EmployeeFamily, EmployeeM2moria, EmployeeM2moriaMonthly, EmployeeMajlisEl2dara, EmployeeMoahil, EmployeeJazaat, EmployeeMobashra, EmployeeVacation, EmployeeWi7datMosa3da, Gisim, HikalWazifi, MosamaWazifi,Edara3ama,Edarafar3ia,EmployeeBasic, PayrollDetail, PayrollDetailMajlisEl2dara, PayrollDetailTa3agodMosimi, PayrollDetailWi7datMosa3ida, PayrollMaster, EmployeeSalafiat, PayrollTasoia,Settings, Wi7da
+from .models import Drajat3lawat, EmployeeBankAccount, EmployeeFamily, EmployeeM2moria, EmployeeM2moriaMonthly, EmployeeMajlisEl2dara, EmployeeMoahil, EmployeeJazaat, EmployeeMobashra, EmployeeSalafiatMaster, EmployeeSalafiatSandog, EmployeeVacation, EmployeeWi7datMosa3da, Gisim, HikalWazifi, MosamaWazifi,Edara3ama,Edarafar3ia,EmployeeBasic, PayrollDetail, PayrollDetailMajlisEl2dara, PayrollDetailTa3agodMosimi, PayrollDetailWi7datMosa3ida, PayrollMaster, EmployeeSalafiat, PayrollTasoia,Settings, Wi7da
 from mptt.admin import MPTTModelAdmin,TreeRelatedFieldListFilter
 
 class SalafiatMixin(ModelForm):
@@ -328,9 +329,16 @@ class EmployeeMoahilInline(admin.TabularInline):
     extra = 1    
 
 class SalafiatForm(SalafiatMixin,ModelForm):
+    salafiat_master = forms.ModelChoiceField(queryset=EmployeeSalafiatMaster.objects.none(), label=_("مرجع السلفية"))
+    def __init__(self, *args, **kwargs):        
+        super().__init__(*args, **kwargs)
+
+        if kwargs.get('instance') and kwargs['instance'].pk:
+            self.fields["salafiat_master"].queryset = EmployeeSalafiatMaster.objects.filter(employee=kwargs.get('instance').employee)
+
     class Meta:
         model = EmployeeSalafiat
-        fields = ['employee','year','month','no3_2lsalafia','note','amount']
+        fields = ['salafiat_master','employee','year','month','no3_2lsalafia','note','amount']
  
 class SalafiatInline(admin.TabularInline):
     model = EmployeeSalafiat
@@ -339,8 +347,13 @@ class SalafiatInline(admin.TabularInline):
         models.FloatField: {"widget": TextInput},
         models.IntegerField: {"widget": TextInput},
     }    
-    extra = 1    
+    extra = 0
 
+    def has_add_permission(self,request, obj):
+        return False
+    
+    def has_delete_permission(self, request, obj):
+        return False
 class JazaatInline(admin.TabularInline):
     model = EmployeeJazaat
     exclude = ["created_at","created_by","updated_at","updated_by"]
@@ -567,7 +580,7 @@ admin.site.register(Settings,SettingsAdmin)
 class SalafiatSandogForm(SalafiatMixin,ModelForm):
     class Meta:
         model = EmployeeSalafiat
-        fields = ['employee','year','month','note','amount']
+        fields = ['salafiat_master', 'employee','year','month','note','amount']
 
 class SalafiatAdmin(admin.ModelAdmin):
     form = SalafiatSandogForm
@@ -622,7 +635,7 @@ class SalafiatAdmin(admin.ModelAdmin):
         #     return qs
         return qs.filter(no3_2lsalafia=EmployeeSalafiat.NO3_2LSALAFIA_SANDOG)
     
-admin.site.register(EmployeeSalafiat,SalafiatAdmin)
+admin.site.register(EmployeeSalafiatSandog,SalafiatAdmin)
 
 # class EmployeeBankAccountAdmin(admin.ModelAdmin):
 #     exclude = ["created_at","created_by","updated_at","updated_by"]
@@ -952,3 +965,22 @@ class PayrollMasterAdmin(admin.ModelAdmin):
 
 admin.site.register(PayrollMaster,PayrollMasterAdmin)
 
+
+class SalafiatDetailInline(admin.TabularInline):
+    model = EmployeeSalafiat
+    # form = SalafiatForm
+    fields = ('year', 'month', 'amount','note')
+    formfield_overrides = {
+        models.FloatField: {"widget": TextInput},
+        models.IntegerField: {"widget": TextInput},
+    }    
+    extra = 1
+
+class SalafiatMasterAdmin(admin.ModelAdmin):
+    fields = ["employee","no3_2lsalafia", "amount",('start_year','start_month'),'no_month',]
+    inlines = [SalafiatDetailInline,]
+    list_display = ["employee","no3_2lsalafia", "amount",]    
+
+admin.site.register(EmployeeSalafiatMaster,SalafiatMasterAdmin)
+
+#
