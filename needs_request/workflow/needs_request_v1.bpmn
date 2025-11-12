@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:task_details="http://task_details" id="sample-diagram" targetNamespace="http://bpmn.io/schema/bpmn" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd">
+  <bpmn2:process id="needs_request_v1" name="طلب احتياجات" isExecutable="true">
+    <bpmn2:startEvent id="StartEvent_1" name="انشاء طلب احتياجات">
+      <bpmn2:outgoing>Flow_16imhy2</bpmn2:outgoing>
+    </bpmn2:startEvent>
+    <bpmn2:exclusiveGateway id="Gateway_0hvbla2" name="هل تم الإعتماد من مدير الإدارة العامة المعنية؟">
+      <bpmn2:incoming>Flow_1o4e4t0</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_098pt9i</bpmn2:outgoing>
+      <bpmn2:outgoing>Flow_1dywxj6</bpmn2:outgoing>
+    </bpmn2:exclusiveGateway>
+    <bpmn2:task id="Activity_sd_comment" name="تعليق قسم الامداد" task_details:candidateGroups="sd_pub" task_details:viewURL="needs_request_detail" task_details:candidate_groups="sd_pub" task_details:form_key="needs_request_detail">
+      <bpmn2:incoming>Flow_098pt9i</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_1uqag61</bpmn2:outgoing>
+    </bpmn2:task>
+    <bpmn2:sequenceFlow id="Flow_098pt9i" name="نعم" sourceRef="Gateway_0hvbla2" targetRef="Activity_sd_comment" />
+    <bpmn2:task id="Activity_doa_comment" name="تعليق مدير إدارة الشئون الإدارية" task_details:candidateGroups="doa_pub" task_details:viewURL="needs_request_detail" task_details:candidate_groups="doa_pub" task_details:form_key="needs_request_detail">
+      <bpmn2:incoming>Flow_1uqag61</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_0nz2oj2</bpmn2:outgoing>
+    </bpmn2:task>
+    <bpmn2:sequenceFlow id="Flow_1uqag61" sourceRef="Activity_sd_comment" targetRef="Activity_doa_comment" />
+    <bpmn2:exclusiveGateway id="Gateway_0muh5ax" name="هل الطلب مرتبط بأجهزة او معدات او خدمات؟">
+      <bpmn2:incoming>Flow_0nz2oj2</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_12dtcv4</bpmn2:outgoing>
+      <bpmn2:outgoing>Flow_06tx6q4</bpmn2:outgoing>
+    </bpmn2:exclusiveGateway>
+    <bpmn2:sequenceFlow id="Flow_0nz2oj2" sourceRef="Activity_doa_comment" targetRef="Gateway_0muh5ax" />
+    <bpmn2:sequenceFlow id="Flow_1dywxj6" name="لا" sourceRef="Gateway_0hvbla2" targetRef="Event_14evdcg" />
+    <bpmn2:endEvent id="Event_14evdcg" name="رفض م.ا.ع">
+      <bpmn2:incoming>Flow_1dywxj6</bpmn2:incoming>
+    </bpmn2:endEvent>
+    <bpmn2:task id="Activity_it_comment" name="تعليق م.ا.ع للتخطيط والجودة والمعلومات" task_details:candidateGroups="it_pub" task_details:viewURL="needs_request_detail" task_details:candidate_groups="it_pub" task_details:form_key="needs_request_detail">
+      <bpmn2:incoming>Flow_12dtcv4</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_09gmgmx</bpmn2:outgoing>
+    </bpmn2:task>
+    <bpmn2:sequenceFlow id="Flow_12dtcv4" name="نعم" sourceRef="Gateway_0muh5ax" targetRef="Activity_it_comment" />
+    <bpmn2:task id="Activity_dgdhra_recommendation" name="توصية م.ا.ع للموارد البشرية والإدارية" task_details:candidateGroups="dgdhra_pub" task_details:viewURL="needs_request_detail" task_details:candidate_groups="dgdhra_pub" task_details:form_key="needs_request_detail">
+      <bpmn2:incoming>Flow_09gmgmx</bpmn2:incoming>
+      <bpmn2:incoming>Flow_06tx6q4</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_1gq44u5</bpmn2:outgoing>
+    </bpmn2:task>
+    <bpmn2:sequenceFlow id="Flow_09gmgmx" sourceRef="Activity_it_comment" targetRef="Activity_dgdhra_recommendation" />
+    <bpmn2:sequenceFlow id="Flow_06tx6q4" name="لا" sourceRef="Gateway_0muh5ax" targetRef="Activity_dgdhra_recommendation" />
+    <bpmn2:task id="Activity_dgfa_recommendation" name="توصية م.ا.ع للشئون المالية" task_details:candidateGroups="agmfa_pub" task_details:viewURL="needs_request_detail" task_details:candidate_groups="dgfa_pub" task_details:form_key="needs_request_detail">
+      <bpmn2:incoming>Flow_1gq44u5</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_1bp9flx</bpmn2:outgoing>
+    </bpmn2:task>
+    <bpmn2:sequenceFlow id="Flow_1gq44u5" sourceRef="Activity_dgdhra_recommendation" targetRef="Activity_dgfa_recommendation" />
+    <bpmn2:exclusiveGateway id="Gateway_0ihoepi" name="اعتماد مساعد المدير العام المالي والإداري؟">
+      <bpmn2:incoming>Flow_15ledlg</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_1va9uk3</bpmn2:outgoing>
+      <bpmn2:outgoing>Flow_1bgg2f7</bpmn2:outgoing>
+    </bpmn2:exclusiveGateway>
+    <bpmn2:exclusiveGateway id="Gateway_1mgjqv0" name="تصديق المدير العام؟">
+      <bpmn2:incoming>Flow_19fo1kl</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_085if4e</bpmn2:outgoing>
+      <bpmn2:outgoing>Flow_0bio06b</bpmn2:outgoing>
+    </bpmn2:exclusiveGateway>
+    <bpmn2:endEvent id="Event_14i754h" name="تم التصديق">
+      <bpmn2:incoming>Flow_085if4e</bpmn2:incoming>
+    </bpmn2:endEvent>
+    <bpmn2:sequenceFlow id="Flow_085if4e" sourceRef="Gateway_1mgjqv0" targetRef="Event_14i754h" />
+    <bpmn2:sequenceFlow id="Flow_1va9uk3" sourceRef="Gateway_0ihoepi" targetRef="Event_0tgx2fr" />
+    <bpmn2:endEvent id="Event_0tgx2fr" name="رفض مساعد المدير العام">
+      <bpmn2:incoming>Flow_1va9uk3</bpmn2:incoming>
+    </bpmn2:endEvent>
+    <bpmn2:sequenceFlow id="Flow_0bio06b" sourceRef="Gateway_1mgjqv0" targetRef="Event_1jymwc9" />
+    <bpmn2:endEvent id="Event_1jymwc9" name="رفض المدير العام">
+      <bpmn2:incoming>Flow_0bio06b</bpmn2:incoming>
+    </bpmn2:endEvent>
+    <bpmn2:task id="Activity_dga_approval_or_rejection" name="اعتماد/رفض م.ا.ع المعنية" task_details:viewURL="needs_request_detail">
+      <bpmn2:incoming>Flow_16imhy2</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_1o4e4t0</bpmn2:outgoing>
+    </bpmn2:task>
+    <bpmn2:sequenceFlow id="Flow_16imhy2" sourceRef="StartEvent_1" targetRef="Activity_dga_approval_or_rejection" />
+    <bpmn2:sequenceFlow id="Flow_1o4e4t0" sourceRef="Activity_dga_approval_or_rejection" targetRef="Gateway_0hvbla2" />
+    <bpmn2:task id="Activity_agmfa_approval_or_rejection" name="اعتماد/رفض مساعد المدير العام" task_details:candidateGroups="agmfa_approval" task_details:viewURL="needs_request_detail">
+      <bpmn2:incoming>Flow_1bp9flx</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_15ledlg</bpmn2:outgoing>
+    </bpmn2:task>
+    <bpmn2:sequenceFlow id="Flow_1bp9flx" sourceRef="Activity_dgfa_recommendation" targetRef="Activity_agmfa_approval_or_rejection" />
+    <bpmn2:sequenceFlow id="Flow_15ledlg" sourceRef="Activity_agmfa_approval_or_rejection" targetRef="Gateway_0ihoepi" />
+    <bpmn2:task id="Activity_gm_approval_or_rejection" name="تصديق/رفض المدير العام" task_details:candidateGroups="gm_pub" task_details:viewURL="needs_request_detail">
+      <bpmn2:incoming>Flow_1bgg2f7</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_19fo1kl</bpmn2:outgoing>
+    </bpmn2:task>
+    <bpmn2:sequenceFlow id="Flow_1bgg2f7" sourceRef="Gateway_0ihoepi" targetRef="Activity_gm_approval_or_rejection" />
+    <bpmn2:sequenceFlow id="Flow_19fo1kl" sourceRef="Activity_gm_approval_or_rejection" targetRef="Gateway_1mgjqv0" />
+    <bpmn2:textAnnotation id="TextAnnotation_01u85lb">
+      <bpmn2:text>يتضمن التعليق تحديد المواد الموجودة بالمخزن والتي سيتم شرائها</bpmn2:text>
+    </bpmn2:textAnnotation>
+    <bpmn2:association id="Association_0o1dvh8" associationDirection="None" sourceRef="TextAnnotation_01u85lb" targetRef="Activity_sd_comment" />
+    <bpmn2:textAnnotation id="TextAnnotation_0j10dsr">
+      <bpmn2:text>ادخال الغرض من الحوجة وتفاصيل الإحتياجات</bpmn2:text>
+    </bpmn2:textAnnotation>
+    <bpmn2:association id="Association_0h0t30w" associationDirection="None" sourceRef="TextAnnotation_0j10dsr" targetRef="StartEvent_1" />
+  </bpmn2:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="needs_request_v1">
+      <bpmndi:BPMNShape id="Gateway_0hvbla2_di" bpmnElement="Gateway_0hvbla2" isMarkerVisible="true">
+        <dc:Bounds x="655" y="233" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="640" y="183" width="81" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1cmjca4_di" bpmnElement="Activity_sd_comment">
+        <dc:Bounds x="760" y="218" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0ii31s5_di" bpmnElement="Activity_doa_comment">
+        <dc:Bounds x="920" y="218" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_0muh5ax_di" bpmnElement="Gateway_0muh5ax" isMarkerVisible="true">
+        <dc:Bounds x="1085" y="233" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1069" y="183" width="82" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1xt3jhe_di" bpmnElement="Activity_it_comment">
+        <dc:Bounds x="1200" y="218" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_087jmq9_di" bpmnElement="Activity_dgdhra_recommendation">
+        <dc:Bounds x="1370" y="218" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1xzoenv_di" bpmnElement="Activity_dgfa_recommendation">
+        <dc:Bounds x="1540" y="218" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_07vxk1y_di" bpmnElement="Activity_dga_approval_or_rejection">
+        <dc:Bounds x="510" y="218" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="422" y="240" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="415" y="203" width="49" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_0ihoepi_di" bpmnElement="Gateway_0ihoepi" isMarkerVisible="true">
+        <dc:Bounds x="1875" y="233" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1855" y="183" width="89" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1yne3cy_di" bpmnElement="Activity_agmfa_approval_or_rejection">
+        <dc:Bounds x="1710" y="218" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0tgx2fr_di" bpmnElement="Event_0tgx2fr">
+        <dc:Bounds x="1882" y="352" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1858" y="395" width="85" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1ujpy7f_di" bpmnElement="Activity_gm_approval_or_rejection">
+        <dc:Bounds x="1990" y="218" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1mgjqv0_di" bpmnElement="Gateway_1mgjqv0" isMarkerVisible="true">
+        <dc:Bounds x="2155" y="233" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2135" y="209" width="89" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_14i754h_di" bpmnElement="Event_14i754h">
+        <dc:Bounds x="2292" y="240" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2285" y="283" width="51" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1jymwc9_di" bpmnElement="Event_1jymwc9">
+        <dc:Bounds x="2162" y="352" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2143" y="395" width="75" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_14evdcg_di" bpmnElement="Event_14evdcg">
+        <dc:Bounds x="662" y="352" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="657" y="395" width="47" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Association_0h0t30w_di" bpmnElement="Association_0h0t30w">
+        <di:waypoint x="440" y="342" />
+        <di:waypoint x="440" y="276" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="TextAnnotation_01u85lb_di" bpmnElement="TextAnnotation_01u85lb">
+        <dc:Bounds x="750" y="80" width="165" height="60" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_098pt9i_di" bpmnElement="Flow_098pt9i">
+        <di:waypoint x="705" y="258" />
+        <di:waypoint x="760" y="258" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="712" y="240" width="15" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1uqag61_di" bpmnElement="Flow_1uqag61">
+        <di:waypoint x="860" y="258" />
+        <di:waypoint x="920" y="258" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0nz2oj2_di" bpmnElement="Flow_0nz2oj2">
+        <di:waypoint x="1020" y="258" />
+        <di:waypoint x="1085" y="258" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1dywxj6_di" bpmnElement="Flow_1dywxj6">
+        <di:waypoint x="680" y="283" />
+        <di:waypoint x="680" y="352" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="689" y="289" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_12dtcv4_di" bpmnElement="Flow_12dtcv4">
+        <di:waypoint x="1135" y="258" />
+        <di:waypoint x="1200" y="258" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1142" y="240" width="15" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_09gmgmx_di" bpmnElement="Flow_09gmgmx">
+        <di:waypoint x="1300" y="258" />
+        <di:waypoint x="1370" y="258" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_06tx6q4_di" bpmnElement="Flow_06tx6q4">
+        <di:waypoint x="1110" y="283" />
+        <di:waypoint x="1110" y="350" />
+        <di:waypoint x="1420" y="350" />
+        <di:waypoint x="1420" y="298" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1116" y="293" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1gq44u5_di" bpmnElement="Flow_1gq44u5">
+        <di:waypoint x="1470" y="258" />
+        <di:waypoint x="1540" y="258" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_085if4e_di" bpmnElement="Flow_085if4e">
+        <di:waypoint x="2205" y="258" />
+        <di:waypoint x="2292" y="258" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1va9uk3_di" bpmnElement="Flow_1va9uk3">
+        <di:waypoint x="1900" y="283" />
+        <di:waypoint x="1900" y="352" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0bio06b_di" bpmnElement="Flow_0bio06b">
+        <di:waypoint x="2180" y="283" />
+        <di:waypoint x="2180" y="352" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_0o1dvh8_di" bpmnElement="Association_0o1dvh8">
+        <di:waypoint x="828" y="140" />
+        <di:waypoint x="814" y="218" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_16imhy2_di" bpmnElement="Flow_16imhy2">
+        <di:waypoint x="458" y="258" />
+        <di:waypoint x="510" y="258" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1o4e4t0_di" bpmnElement="Flow_1o4e4t0">
+        <di:waypoint x="610" y="258" />
+        <di:waypoint x="655" y="258" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="TextAnnotation_0j10dsr_di" bpmnElement="TextAnnotation_0j10dsr">
+        <dc:Bounds x="390" y="342" width="100" height="55" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1bp9flx_di" bpmnElement="Flow_1bp9flx">
+        <di:waypoint x="1640" y="258" />
+        <di:waypoint x="1710" y="258" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_15ledlg_di" bpmnElement="Flow_15ledlg">
+        <di:waypoint x="1810" y="258" />
+        <di:waypoint x="1875" y="258" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1bgg2f7_di" bpmnElement="Flow_1bgg2f7">
+        <di:waypoint x="1925" y="258" />
+        <di:waypoint x="1990" y="258" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_19fo1kl_di" bpmnElement="Flow_19fo1kl">
+        <di:waypoint x="2090" y="258" />
+        <di:waypoint x="2155" y="258" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn2:definitions>

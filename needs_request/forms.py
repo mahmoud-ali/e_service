@@ -116,17 +116,35 @@ class RejectionForm(forms.Form):
     )
 
 class ItemForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(ItemForm, self).__init__(*args, **kwargs)
+        self.fields['no_of_requested_items'].initial = 1
+
     class Meta:
         model = Item
-        fields = ['id','requested_item']
+        fields = ['id','requested_item', 'no_of_requested_items']
 
         widgets = {
             'requested_item': forms.Select(attrs={'class': 'select input input-bordered w-full '}),
+            'no_of_requested_items': forms.NumberInput(attrs={'class': 'input input-bordered w-full '}),
         }
-# class ApprovedItemForm(forms.ModelForm):
-#     class Meta:
-#         model = Item
-#         fields = ['approved_item_name']
+    
+    def save(self, commit=True):
+        instance = super(ItemForm, self).save(commit=False)
+        instance.no_of_approved_items = instance.no_of_requested_items
+        if commit:
+            instance.save()
+        return instance
+class ItemActionForm(forms.ModelForm):
+    no_of_requested_items = forms.IntegerField(disabled=True)
+    class Meta:
+        model = Item
+        fields = ['no_of_requested_items','no_of_approved_items']
+
+        widgets = {
+            'no_of_requested_items': forms.NumberInput(attrs={'class': 'input w-full '}),
+            'no_of_approved_items': forms.NumberInput(attrs={'class': 'input input-bordered w-full '}),
+        }
 
 ItemFormSet = inlineformset_factory(NeedsRequest, Item, form=ItemForm, extra=1, can_delete=True)
-# ApprovedItemFormSet = inlineformset_factory(NeedsRequest, Item, form=ApprovedItemForm, extra=0)
+ItemActionFormSet = inlineformset_factory(NeedsRequest, Item, form=ItemActionForm, extra=0)

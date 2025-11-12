@@ -67,9 +67,17 @@ def assign_model_permissions():
         print("Permission 'add_needsrequest' does not exist. Please run migrations.")
 
 def has_read_permission(user, needs_request):
+    """Check read permission - uses workflow if available, falls back to old system"""
     if user.is_superuser:
         return True
     
+    # Try workflow-based permission first
+    workflow = needs_request.get_workflow()
+    if workflow:
+        from .workflow_permissions import has_workflow_read_permission
+        return has_workflow_read_permission(user, needs_request)
+    
+    # Fall back to old approval_status based permissions
     user_groups = user.groups.values_list('name', flat=True)
     allowed_groups = READ_PERMISSIONS.get(needs_request.approval_status, [])
     
@@ -94,9 +102,17 @@ def has_delete_permission(user, needs_request):
     return any(group in user_groups for group in allowed_groups)
 
 def has_action_permission(user, needs_request, action):
+    """Check action permission - uses workflow if available, falls back to old system"""
     if user.is_superuser:
         return True
+    
+    # Try workflow-based permission first
+    workflow = needs_request.get_workflow()
+    if workflow:
+        from .workflow_permissions import can_user_perform_action
+        return can_user_perform_action(user, needs_request, action)
 
+    # Fall back to old approval_status based permissions
     user_groups = user.groups.values_list('name', flat=True)
     for group in user_groups:
         allowed_actions = ACTION_PERMISSIONS.get((needs_request.approval_status, group), [])

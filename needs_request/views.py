@@ -1,11 +1,14 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
-from .models import NeedsRequest, SuggestedItem, Department
+from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
+from django.contrib.contenttypes.models import ContentType
+
+from .models import NeedsRequest, SuggestedItem, Department
 from .forms import (
     NeedsRequestForm, 
     ItemFormSet, 
-    # ApprovedItemFormSet,
+    ItemActionFormSet,
     CommentForm,
     DOACommentForm,
     ITCommentForm,
@@ -20,7 +23,11 @@ from .permissions import (
     has_action_permission,
     is_operational_employee
 )
-from django.contrib.auth.decorators import login_required
+
+# BPMN Workflow imports
+from bpmn_workflow.engine import BPMNEngine
+from bpmn_workflow.models import ProcessInstance, TaskInstance
+
 
 @login_required
 def needs_request_list(request):
@@ -38,14 +45,33 @@ def needs_request_list(request):
         requests_qs = requests_qs.filter(date=date)
     if department_id:
         requests_qs = requests_qs.filter(department_id=department_id)
+    
+    # Filter by workflow status
     if status:
         if status == 'approved':
-            requests_qs = requests_qs.filter(approval_status='gm_approval')
+            # Filter by workflow status = completed
+            content_type = ContentType.objects.get_for_model(NeedsRequest)
+            approved_ids = ProcessInstance.objects.filter(
+                content_type=content_type,
+                status='completed'
+            ).values_list('object_id', flat=True)
+            requests_qs = requests_qs.filter(id__in=approved_ids)
         elif status == 'rejected':
-            requests_qs = requests_qs.filter(approval_status__in=['dga_rejection', 'agmfa_rejection', 'gm_rejection'])
+            # Filter by workflow status = terminated (rejected)
+            content_type = ContentType.objects.get_for_model(NeedsRequest)
+            rejected_ids = ProcessInstance.objects.filter(
+                content_type=content_type,
+                status='terminated'
+            ).values_list('object_id', flat=True)
+            requests_qs = requests_qs.filter(id__in=rejected_ids)
         elif status == 'pending':
-            requests_qs = requests_qs.exclude(approval_status__in=['gm_approval', 'dga_rejection', 'agmfa_rejection', 'gm_rejection'])
-
+            # Filter by workflow status = active
+            content_type = ContentType.objects.get_for_model(NeedsRequest)
+            pending_ids = ProcessInstance.objects.filter(
+                content_type=content_type,
+                status='active'
+            ).values_list('object_id', flat=True)
+            requests_qs = requests_qs.filter(id__in=pending_ids)
 
     if not is_operational_employee(request.user):
         if request.user.groups.filter(name='eom_pub').exists(): 
@@ -58,7 +84,7 @@ def needs_request_list(request):
     # Filter requests based on read permissions
     allowed_requests = [req for req in requests_qs if has_read_permission(request.user, req)]
     
-    paginator = Paginator(allowed_requests, 50) # Show 50 requests per page
+    paginator = Paginator(allowed_requests, 50)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     
@@ -75,10 +101,11 @@ def needs_request_list(request):
     
     return render(request, 'needs_request/needs_request_list.html', context)
 
+
 @login_required
 def needs_request_create(request):
     if not request.user.groups.filter(name='eom_pub').exists() and not request.user.is_superuser:
-        return render(request, 'acceptance/403.html', status=403)
+        return render(request, '403.html', status=403)
         
     if request.method == 'POST':
         form = NeedsRequestForm(request.POST)
@@ -91,19 +118,33 @@ def needs_request_create(request):
                 if department:
                     needs_request.department = department
                 else:
-                    # Handle case where user is not an executive manager of any department
-                    return render(request, 'acceptance/403.html', status=403)
+                    return render(request, '403.html', status=403)
             except AttributeError:
-                # Handle case where user is not an executive manager of any department
-                return render(request, 'acceptance/403.html', status=403)
+                return render(request, '403.html', status=403)
 
             formset = ItemFormSet(request.POST, request.FILES, instance=needs_request, prefix='items')
             if formset.is_valid():
                 needs_request.save()
                 formset.save()
+                
+                # START BPMN WORKFLOW
+                try:
+                    process = BPMNEngine.start_process(
+                        workflow_key='needs_request_v1',
+                        business_object=needs_request,
+                        user=request.user,
+                        initial_variables={
+                            'department': needs_request.department.name,
+                            'date': needs_request.date.isoformat(),
+                        }
+                    )
+                except Exception as e:
+                    # Log error but don't fail - workflow can be started manually
+                    print(f"Error starting workflow: {e}")
+                    raise
+                
                 return redirect('needs:needs_request_list')
             else:
-                # Add formset errors to the context
                 return render(request, 'needs_request/needs_request_form.html', {'form': form, 'formset': formset})
         else:
             formset = ItemFormSet(request.POST, request.FILES, prefix='items')
@@ -113,14 +154,13 @@ def needs_request_create(request):
         formset = ItemFormSet(prefix='items')
     return render(request, 'needs_request/needs_request_form.html', {'form': form, 'formset': formset})
 
+
 @login_required
 def needs_request_update(request, pk):
     needs_request = get_object_or_404(NeedsRequest, pk=pk)
-    form = None
-    formset = None
-
+    
     if not has_update_permission(request.user, needs_request):
-        return render(request, 'acceptance/403.html', status=403)
+        return render(request, '403.html', status=403)
 
     if request.method == 'POST':
         form = NeedsRequestForm(request.POST, instance=needs_request)
@@ -141,122 +181,133 @@ def needs_request_update(request, pk):
         formset = ItemFormSet(instance=needs_request, prefix='items')
     return render(request, 'needs_request/needs_request_form.html', {'form': form, 'formset': formset, 'needs_request': needs_request})
 
+
 @login_required
 def needs_request_detail(request, pk):
     needs_request = get_object_or_404(NeedsRequest, pk=pk)
     
     if not has_read_permission(request.user, needs_request):
-        return render(request, 'acceptance/403.html', status=403)
+        return render(request, '403.html', status=403)
     
     if not is_operational_employee(request.user):
         if request.user.groups.filter(name='eom_pub').exists(): 
             department = request.user.executive_manager_of.first()
             if needs_request.department != department:
-                return render(request, 'acceptance/403.html', status=403)
-
+                return render(request, '403.html', status=403)
         elif request.user.groups.filter(name='dga_pub').exists(): 
             department = request.user.department_manager_of.first()
             if needs_request.department != department:
-                return render(request, 'acceptance/403.html', status=403)
+                return render(request, '403.html', status=403)
 
-    # Initialize all possible forms
+    # Get workflow information
+    workflow = needs_request.get_workflow()
+    current_tasks = needs_request.get_current_tasks()
+    timeline = needs_request.get_workflow_timeline()
+    
+    # Get the current task for this user (if any)
+    user_current_task = None
+    for task in current_tasks:
+        if task.can_be_completed_by(request.user):
+            user_current_task = task
+            break
+    
+    # Initialize forms
     comment_form = CommentForm(request.POST or None, instance=needs_request)
     doa_comment_form = DOACommentForm(request.POST or None, instance=needs_request)
     it_comment_form = ITCommentForm(request.POST or None, instance=needs_request)
     dgdhra_form = DGDHRARecommendationForm(request.POST or None, instance=needs_request)
     dgfa_form = DGFARecommendationForm(request.POST or None, instance=needs_request)
     rejection_form = RejectionForm(request.POST or None)
-    
-    # approved_item_formset = ApprovedItemFormSet(request.POST or None, instance=needs_request)
+    item_action_formset = ItemActionFormSet(request.POST or None, instance=needs_request)
 
     if request.method == 'POST':
         action = request.POST.get('action')
 
-        if not has_action_permission(request.user, needs_request, action):
-            return render(request, 'acceptance/403.html', status=403)
-
-        # if action == 'approve_items':
-        #     if approved_item_formset.is_valid():
-        #         approved_item_formset.save()
-        #         return redirect('needs:needs_request_detail', pk=pk)
-
-        if action == 'dga_approval':
-            needs_request.approval_status = 'dga_approval'
-            needs_request.rejection_cause = None
-            needs_request.save()
-            return redirect('needs:needs_request_detail', pk=pk)
-            
-        elif action == 'sd_comment':
-            if comment_form.is_valid():
-                comment_form.save()
-                needs_request.approval_status = 'sd_comment'
-                needs_request.save()
-                return redirect('needs:needs_request_detail', pk=pk)
+        # Handle workflow actions
+        if action and user_current_task:
+            try:
+                task_data = {}
                 
-        elif action == 'doa_comment':
-            if doa_comment_form.is_valid():
-                doa_comment_form.save()
-                needs_request.approval_status = 'doa_comment'
-                needs_request.save()
-                return redirect('needs:needs_request_detail', pk=pk)
-                
-        elif action == 'it_comment':
-            if it_comment_form.is_valid():
-                it_comment_form.save()
-                needs_request.approval_status = 'it_comment'
-                needs_request.save()
-                return redirect('needs:needs_request_detail', pk=pk)
-                
-        elif action == 'dgdhra_recommendation':
-            if dgdhra_form.is_valid():
-                dgdhra_form.save()
-                needs_request.approval_status = 'dgdhra_recommendation'
-                needs_request.save()
-                return redirect('needs:needs_request_detail', pk=pk)
-                
-        elif action == 'dgfa_recommendation':
-            if dgfa_form.is_valid():
-                dgfa_form.save()
-                needs_request.approval_status = 'dgfa_recommendation'
-                needs_request.save()
-                return redirect('needs:needs_request_detail', pk=pk)
-                
-        elif action == 'agmfa_approval':
-            needs_request.approval_status = 'agmfa_approval'
-            needs_request.rejection_cause = None
-            needs_request.save()
-            return redirect('needs:needs_request_detail', pk=pk)
-            
-        elif action == 'gm_approval':
-            needs_request.approval_status = 'gm_approval'
-            needs_request.rejection_cause = None
-            needs_request.save()
-            return redirect('needs:needs_request_detail', pk=pk)
-                     
-        elif action == 'dga_rejection':
-            if rejection_form.is_valid():
-                needs_request.approval_status = 'dga_rejection'
-                needs_request.rejection_cause = rejection_form.cleaned_data['rejection_cause']
-                needs_request.save()
-                return redirect('needs:needs_request_detail', pk=pk)
-                
-        elif action == 'agmfa_rejection':
-            if rejection_form.is_valid():
-                needs_request.approval_status = 'agmfa_rejection'
-                needs_request.rejection_cause = rejection_form.cleaned_data['rejection_cause']
-                needs_request.save()
-                return redirect('needs:needs_request_detail', pk=pk)
-                
-        elif action == 'gm_rejection':
-            if rejection_form.is_valid():
-                needs_request.approval_status = 'gm_rejection'
-                needs_request.rejection_cause = rejection_form.cleaned_data['rejection_cause']
-                needs_request.save()
-                return redirect('needs:needs_request_detail', pk=pk)
+                if action == 'dga_approval':
+                    task_data = {'approved': True}
                     
+                elif action == 'dga_rejection':
+                    if rejection_form.is_valid():
+                        task_data = {
+                            'approved': False,
+                            'dga_rejection_cause': rejection_form.cleaned_data['rejection_cause']
+                        }
+                    
+                elif action == 'sd_comment':
+                    if comment_form.is_valid():
+                        task_data = {'comment': comment_form.cleaned_data['sd_comment']}
+                        
+                elif action == 'doa_comment':
+                    if doa_comment_form.is_valid():
+                        task_data = {'comment': doa_comment_form.cleaned_data['doa_comment']}
+                        
+                elif action == 'it_comment':
+                    if it_comment_form.is_valid():
+                        task_data = {'comment': it_comment_form.cleaned_data['it_comment']}
+                        
+                elif action == 'dgdhra_recommendation':
+                    if dgdhra_form.is_valid():
+                        task_data = {'recommendation': dgdhra_form.cleaned_data['dgdhra_recommendation']}
+                        
+                elif action == 'dgfa_recommendation':
+                    if dgfa_form.is_valid():
+                        task_data = {'recommendation': dgfa_form.cleaned_data['dgfa_recommendation']}
+                        
+                elif action == 'agmfa_approval':
+                    task_data = {'approved': True}
+                    
+                elif action == 'agmfa_rejection':
+                    if rejection_form.is_valid():
+                        task_data = {
+                            'approved': False,
+                            'rejection_cause': rejection_form.cleaned_data['rejection_cause']
+                        }
+                        
+                elif action == 'gm_approval':
+                    # Collect approved item quantities
+                    task_data = {
+                        'approved': True,
+                    }
+                    
+                elif action == 'gm_rejection':
+                    if rejection_form.is_valid():
+                        task_data = {
+                            'approved': False,
+                            'rejection_cause': rejection_form.cleaned_data['rejection_cause']
+                        }
+                
+                # Complete the workflow task
+                if task_data:
+                    BPMNEngine.complete_task(
+                        task_instance=user_current_task,
+                        user=request.user,
+                        data=task_data
+                    )
+                    return redirect('needs:needs_request_detail', pk=pk)
+                    
+            except Exception as e:
+                print(f"Error completing workflow task: {e}")
+                raise
+        
+        # Handle item actions separately
+        elif action == 'action_items':
+            if item_action_formset.is_valid():
+                item_action_formset.save()
+                return redirect('needs:needs_request_detail', pk=pk)
+                     
+    
     return render(request, 'needs_request/needs_request_detail.html', {
-        'needs_request': needs_request, 
-        # 'approved_item_formset': approved_item_formset,
+        'needs_request': needs_request,
+        'workflow': workflow,
+        'current_tasks': current_tasks,
+        'user_current_task': user_current_task,
+        'timeline': timeline,
+        'item_action_formset': item_action_formset,
         'comment_form': comment_form,
         'doa_comment_form': doa_comment_form,
         'it_comment_form': it_comment_form,
@@ -266,4 +317,3 @@ def needs_request_detail(request, pk):
         'user_can_update': has_update_permission(request.user, needs_request),
         'user_can_delete': has_delete_permission(request.user, needs_request),
     })
-

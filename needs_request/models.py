@@ -1,6 +1,8 @@
 from django.db import models
 from django.conf import settings
 
+from django.contrib.contenttypes.models import ContentType
+
 class Department(models.Model):
     name = models.CharField(max_length=100, unique=True)
     executive_manager = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, null=True, blank=True, related_name='executive_manager_of')
@@ -11,6 +13,7 @@ class Department(models.Model):
 
 class SuggestedItem(models.Model):
     name = models.CharField(max_length=255, unique=True)
+    is_it_related = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name
@@ -61,10 +64,49 @@ class NeedsRequest(models.Model):
             return True
         
         return False
+    
+    # BPMN Workflow Integration
+    def get_workflow(self):
+        """Get the active workflow process instance for this request"""
+        from bpmn_workflow.models import ProcessInstance
+        content_type = ContentType.objects.get_for_model(self)
+        return ProcessInstance.objects.filter(
+            content_type=content_type,
+            object_id=self.pk
+        ).first()
+    
+    def get_workflow_status(self):
+        """Get current workflow status (active, completed, etc.)"""
+        workflow = self.get_workflow()
+        return workflow.status if workflow else 'draft'
+    
+    def get_current_tasks(self):
+        """Get all active tasks for this request"""
+        workflow = self.get_workflow()
+        if workflow:
+            return workflow.get_current_tasks()
+        return []
+    
+    def get_workflow_timeline(self):
+        """Get complete audit trail of workflow actions"""
+        from bpmn_workflow.engine import BPMNEngine
+        workflow = self.get_workflow()
+        if workflow:
+            return BPMNEngine.get_timeline(workflow)
+        return []
+    
+    def can_user_act(self, user):
+        """Check if user can act on any current task"""
+        for task in self.get_current_tasks():
+            if task.can_be_completed_by(user):
+                return True
+        return False
 
 class Item(models.Model):
     needs_request = models.ForeignKey(NeedsRequest, on_delete=models.PROTECT, related_name='items')
     requested_item = models.ForeignKey(SuggestedItem, on_delete=models.PROTECT)
+    no_of_requested_items = models.IntegerField(default=0)
+    no_of_approved_items = models.IntegerField(default=0)
 
     def __str__(self):
         return self.requested_item.name

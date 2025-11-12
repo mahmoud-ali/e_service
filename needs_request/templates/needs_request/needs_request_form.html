@@ -21,12 +21,22 @@
             <div id="formset-container">
                 {% for form in formset %}
                 {{ form.id }} 
-                <div class="form-control w-full mb-2 item-form">
+                <div class="item-form">
                     {{ form.errors }}
-                    <label class="label" for="{{ form.requested_item.id_for_label }}">
-                        <span class="label-text">اسم الصنف المطلوب</span>
-                    </label>
-                    {{ form.requested_item }}
+                    <div class="flex gap-4">
+                        <div class="form-control w-full">
+                            <label class="label" for="{{ form.requested_item.id_for_label }}">
+                                <span class="label-text">اسم الصنف المطلوب</span>
+                            </label>
+                            {{ form.requested_item }}
+                        </div>
+                        <div class="form-control w-full">
+                            <label class="label" for="{{ form.no_of_requested_items.id_for_label }}">
+                                <span class="label-text">الكمية المطلوبة</span>
+                            </label>
+                            {{ form.no_of_requested_items }}
+                        </div>
+                    </div>
                     {% if form.DELETE %}
                         <div class="form-control">
                             <label class="label cursor-pointer">
@@ -41,11 +51,21 @@
             <button type="button" id="add-item" class="btn btn-secondary btn-sm mt-2">إضافة صنف</button>
 
             <div id="empty-form" style="display: none;">
-                <div class="form-control w-full mb-2 item-form">
-                    <label class="label" for="{{ formset.empty_form.requested_item_name.id_for_label }}">
-                        <span class="label-text">اسم الصنف المطلوب</span>
-                    </label>
-                    {{ formset.empty_form.requested_item }}
+                <div class="item-form">
+                    <div class="flex gap-4">
+                        <div class="form-control w-full">
+                            <label class="label" for="{{ formset.empty_form.requested_item.id_for_label }}">
+                                <span class="label-text">اسم الصنف المطلوب</span>
+                            </label>
+                            {{ formset.empty_form.requested_item }}
+                        </div>
+                        <div class="form-control w-full">
+                            <label class="label" for="{{ formset.empty_form.no_of_requested_items.id_for_label }}">
+                                <span class="label-text">الكمية المطلوبة</span>
+                            </label>
+                            {{ formset.empty_form.no_of_requested_items }}
+                        </div>
+                    </div>
                     {% if formset.empty_form.DELETE %}
                         <div class="form-control">
                             <label class="label cursor-pointer">
