@@ -121,13 +121,11 @@ from bpmn_workflow.models import ProcessInstance, TaskInstance
                 'approved_at': timezone.now().isoformat(),
             }}
         """
-        # TODO: Implement your business logic here
-        
         # Access the business object
         business_object = task_instance.process_instance.content_object
         
         # Get process variables
-        # example: status = self.get_variable(task_instance.process_instance, 'status')
+        # status = self.get_variable(task_instance.process_instance, 'status')
         
         # Your custom logic here
         # Example: Update the business object with form data
@@ -166,13 +164,11 @@ from bpmn_workflow.models import ProcessInstance, TaskInstance
                 'email_sent': True,
             }}
         """
-        # TODO: Implement automated logic
-        
         # Access the business object
         business_object = process_instance.content_object
         
         # Get process variables
-        # example: total = self.get_variable(process_instance, 'total_amount')
+        # total = self.get_variable(process_instance, 'total_amount')
         
         # Your automation logic here
         # Examples:
@@ -196,7 +192,7 @@ from bpmn_workflow.models import ProcessInstance, TaskInstance
             flow_name = flow.name or f"Flow {i}"
             target_name = flow.target.name
             condition = flow.condition_expression or 'default'
-            conditions_comment += f"        #   {i}. '{flow_name}' -> {target_name} (condition: {condition})\n"
+            conditions_comment += f"        #   {i}. '{flow_name}'({flow.bpmn_id}) -> {target_name} (condition: {condition})\n"
         
         flow_returns = "\n".join([
             f"        # return '{flow.bpmn_id}'  # Route to: {flow.target.name}"
@@ -204,6 +200,7 @@ from bpmn_workflow.models import ProcessInstance, TaskInstance
         ])
         
         default_return = f"'{flows[0].bpmn_id}'" if flows else "'default'"
+        other_return = f"'{flows[-1].bpmn_id}'" if flows else "'default'"
         
         return f'''    def evaluate_{method_name}(self, process_instance: ProcessInstance) -> str:
         """
@@ -225,8 +222,6 @@ from bpmn_workflow.models import ProcessInstance, TaskInstance
             else:
                 return 'flow_to_rejection'
         """
-        # TODO: Implement your routing logic
-        
         # Access the business object
         business_object = process_instance.content_object
         
@@ -235,8 +230,8 @@ from bpmn_workflow.models import ProcessInstance, TaskInstance
         # amount = self.get_variable(process_instance, 'total_amount')
         
         # Example routing logic:
-        # if approved:
-{flow_returns}
+        if not approved:
+            return {other_return}
         
         # Default flow
         return {default_return}
