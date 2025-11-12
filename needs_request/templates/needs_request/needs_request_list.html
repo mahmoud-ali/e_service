@@ -72,9 +72,6 @@
                 </td>
                 <td>
                     <a href="{% url 'needs:needs_request_detail' request.pk %}" class="btn btn-sm btn-outline">عرض</a>
-                    {% if request.approval_status == 'draft' and perms.needs_request.change_needsrequest %}
-                    <a href="{% url 'needs:needs_request_update' request.pk %}" class="btn btn-sm btn-outline btn-warning">تعديل</a>
-                    {% endif %}
                 </td>
             </tr>
             {% endfor %}

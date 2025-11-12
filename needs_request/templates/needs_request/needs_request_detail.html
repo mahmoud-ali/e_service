@@ -6,7 +6,7 @@
 <div class="flex justify-between items-center mb-4">
     <h1 class="text-2xl font-bold">تفاصيل طلب توفير إحتياج</h1>
     <div>
-        {% if user_can_update and user|has_group:"eom_pub" and needs_request.approval_status == 'draft'%}
+        {% if user_can_update and user|has_group:"eom_pub" and user_current_task.node.bpmn_id == 'Activity_dga_approval_or_rejection'%}
         <a href="{% url 'needs:needs_request_update' needs_request.pk %}" class="btn btn-warning">تعديل</a>
         {% endif %}
         <a href="{% url 'needs:needs_request_list' %}" class="btn btn-outline">العودة إلى القائمة</a>
