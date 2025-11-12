@@ -84,6 +84,7 @@ INSTALLED_APPS = [
     # 'company_profile',    
     # 'check_cordinates',
     # 'pa',
+    'bpmn_workflow',
     'help_request',
     'hr',
     'hr_bot',
