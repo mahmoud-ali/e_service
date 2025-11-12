@@ -21,6 +21,7 @@
                 <p><strong>رقم الطلب:</strong> {{ needs_request.id }}</p>
                 <p><strong>التاريخ:</strong> {{ needs_request.date }}</p>
                 <p><strong>القسم:</strong> {{ needs_request.department }}</p>
+                <p><strong>سبب الحوجة:</strong> {{ needs_request.cause }}</p>
             </div>
         </div>
 
@@ -34,7 +35,7 @@
                                     <th># </th>
                                     <th>اسم الصنف </th>
                                     <th>الكمية المطلوبة</th>
-                                    <th>الكمية المعتمدة</th>
+                                    {% comment %} <th>الكمية المعتمدة</th> {% endcomment %}
                                 </tr>
                             </thead>
                             <tbody>
@@ -43,7 +44,7 @@
                                     <td>{{ forloop.counter }}</td>
                                     <td>{{ obj.requested_item }}</td>
                                     <td>{{ obj.no_of_requested_items }}</td>
-                                    <td>{{ obj.no_of_approved_items }}</td>
+                                    {% comment %} <td>{{ obj.no_of_approved_items }}</td> {% endcomment %}
                                 </tr>
                                 {% endfor %}
                             </tbody>

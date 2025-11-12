@@ -36,6 +36,7 @@ class NeedsRequest(models.Model):
 
     date = models.DateField()
     department = models.ForeignKey(Department, on_delete=models.PROTECT)
+    cause = models.TextField()
     sd_comment = models.TextField(blank=True, null=True)
     doa_comment = models.TextField(blank=True, null=True)
     it_comment = models.TextField(blank=True, null=True)
@@ -48,19 +49,34 @@ class NeedsRequest(models.Model):
         return f"Needs Request from {self.department} on {self.date}"
     
     def is_final_status(self):
-        if self.approval_status in ('dga_rejection', 'agmfa_rejection', 'gm_approval', 'gm_rejection'):
+        workflow = self.get_workflow()
+        status = None
+        if workflow:
+            status = workflow.status
+
+        if status in ('terminated','completed',):
             return True
         
         return False
     
     def is_approved(self):
-        if self.approval_status in ('gm_approval',):
+        workflow = self.get_workflow()
+        status = None
+        if workflow:
+            status = workflow.status
+
+        if status in ('completed',):
             return True
         
         return False
     
     def is_rejected(self):
-        if self.approval_status in ('dga_rejection', 'agmfa_rejection', 'gm_rejection'):
+        workflow = self.get_workflow()
+        status = None
+        if workflow:
+            status = workflow.status
+
+        if status in ('terminated',):
             return True
         
         return False
