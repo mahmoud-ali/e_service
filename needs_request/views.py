@@ -105,7 +105,7 @@ def needs_request_list(request):
 @login_required
 def needs_request_create(request):
     if not request.user.groups.filter(name='eom_pub').exists() and not request.user.is_superuser:
-        return render(request, '403.html', status=403)
+        return render(request, 'acceptance/403.html', status=403)
         
     if request.method == 'POST':
         form = NeedsRequestForm(request.POST)
@@ -118,9 +118,9 @@ def needs_request_create(request):
                 if department:
                     needs_request.department = department
                 else:
-                    return render(request, '403.html', status=403)
+                    return render(request, 'acceptance/403.html', status=403)
             except AttributeError:
-                return render(request, '403.html', status=403)
+                return render(request, 'acceptance/403.html', status=403)
 
             formset = ItemFormSet(request.POST, request.FILES, instance=needs_request, prefix='items')
             if formset.is_valid():
@@ -160,7 +160,7 @@ def needs_request_update(request, pk):
     needs_request = get_object_or_404(NeedsRequest, pk=pk)
     
     if not has_update_permission(request.user, needs_request):
-        return render(request, '403.html', status=403)
+        return render(request, 'acceptance/403.html', status=403)
 
     if request.method == 'POST':
         form = NeedsRequestForm(request.POST, instance=needs_request)
@@ -187,17 +187,17 @@ def needs_request_detail(request, pk):
     needs_request = get_object_or_404(NeedsRequest, pk=pk)
     
     if not has_read_permission(request.user, needs_request):
-        return render(request, '403.html', status=403)
+        return render(request, 'acceptance/403.html', status=403)
     
     if not is_operational_employee(request.user):
         if request.user.groups.filter(name='eom_pub').exists(): 
             department = request.user.executive_manager_of.first()
             if needs_request.department != department:
-                return render(request, '403.html', status=403)
+                return render(request, 'acceptance/403.html', status=403)
         elif request.user.groups.filter(name='dga_pub').exists(): 
             department = request.user.department_manager_of.first()
             if needs_request.department != department:
-                return render(request, '403.html', status=403)
+                return render(request, 'acceptance/403.html', status=403)
 
     # Get workflow information
     workflow = needs_request.get_workflow()
