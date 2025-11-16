@@ -106,9 +106,14 @@
 
         <!-- WORKFLOW TIMELINE -->
         {% if timeline %}
-        <div class="card bg-base-100 shadow-xl mt-4">
+<div tabindex="0" class="collapse collapse-arrow bg-base-100 border-base-300 border  shadow-xl mt-4">
+    <input type="checkbox" />
+  <div class="collapse-title font-semibold">سجل سير الموافقات (Workflow Timeline)</div>
+  <div class="collapse-content text-sm">
+
+        <div class="card bg-base-100">
             <div class="card-body">
-                <h2 class="card-title">سجل سير الموافقات (Workflow Timeline)</h2>
+                {% comment %} <h2 class="card-title">سجل سير الموافقات (Workflow Timeline)</h2> {% endcomment %}
                 <div class="timeline-container">
                     <ul class="timeline timeline-vertical">
                         {% for log in timeline %}
@@ -120,14 +125,14 @@
                                 </svg>
                             </div>
                             <div class="timeline-end timeline-box">
-                                <div class="font-bold">{{ log.event_type }}</div>
+                                <div class="font-bold">{{ log.get_event_type_display }}</div>
                                 {% if log.actor %}
                                 <div class="text-sm">المستخدم: {{ log.actor.get_full_name|default:log.actor.username }}</div>
                                 {% endif %}
                                 {% if log.node %}
                                 <div class="text-sm">المرحلة: {{ log.node.name }}</div>
                                 {% endif %}
-                                {% if log.details %}
+                                {% comment %} {% if log.details %}
                                 <div class="text-xs text-gray-500 mt-1">
                                     {% for key, value in log.details.items %}
                                         {% if key != 'variables' and key != 'from_node' %}
@@ -135,7 +140,7 @@
                                         {% endif %}
                                     {% endfor %}
                                 </div>
-                                {% endif %}
+                                {% endif %} {% endcomment %}
                             </div>
                             <hr/>
                         </li>
@@ -144,6 +149,8 @@
                 </div>
             </div>
         </div>
+  </div>
+</div>        
         {% endif %}
     </div>
 

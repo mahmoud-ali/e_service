@@ -136,6 +136,7 @@ def needs_request_create(request):
                         initial_variables={
                             'department': needs_request.department.name,
                             'date': needs_request.date.isoformat(),
+                            'cause': needs_request.cause,
                         }
                     )
                 except Exception as e:
