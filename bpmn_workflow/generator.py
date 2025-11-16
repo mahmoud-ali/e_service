@@ -248,7 +248,7 @@ from bpmn_workflow.models import ProcessInstance, TaskInstance
         process_instance: process instanse
         user: user object
         """
-        pass
+        return {}
         
     # ==========================================
     # Add your custom helper methods below

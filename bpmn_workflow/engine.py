@@ -348,7 +348,12 @@ class BPMNEngine:
         method_name = f"pre_end_event"
 
         if hasattr(handler, method_name):
-            getattr(handler, method_name)(process, user)
+            output = getattr(handler, method_name)(process, user)
+
+            # Store output variables
+            if output and isinstance(output, dict):
+                for key, value in output.items():
+                    handler.set_variable(process, key, value)
         
         # Check if there are other active tokens
         other_active = process.tokens.filter(is_active=True).exclude(id=token.id).exists()
