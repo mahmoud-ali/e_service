@@ -458,4 +458,4 @@ class BPMNEngine:
     @staticmethod
     def get_timeline(process_instance: ProcessInstance):
         """Get complete timeline of process activities"""
-        return process_instance.activity_logs.select_related('actor', 'node', 'task_instance').filter(event_type__in=['process_started','process_completed','task_completed']).order_by('-id')
+        return process_instance.activity_logs.select_related('actor', 'node', 'task_instance').filter(event_type__in=['process_started','process_completed','task_completed']).order_by('timestamp')
