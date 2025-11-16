@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.validators import MinValueValidator
 from django.utils.translation import gettext_lazy as _
 from hr.models import EmployeeBasic, LoggingModel
 
@@ -50,7 +51,7 @@ class LkpOmraCategory(models.Model):
 class EmployeeOmra(LoggingModel):
     employee = models.ForeignKey(EmployeeBasic, on_delete=models.PROTECT,verbose_name=_("employee_name"))
     category = models.ForeignKey(LkpOmraCategory, on_delete=models.PROTECT,verbose_name=_("طريقة التقسيط"))
-    count = models.IntegerField("عدد الاشخاص",default=1,validators=[])
+    count = models.IntegerField("عدد الاشخاص",default=1,validators=[MinValueValidator(1)])
 
     def __str__(self) -> str:
         return f'طريقة التقسيط: {self.category.name}'
