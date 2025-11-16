@@ -343,6 +343,12 @@ class BPMNEngine:
     def _handle_end_event(token: Token, user):
         """End process"""
         process = token.process_instance
+
+        handler = BPMNEngine._get_handler(token.process_instance.workflow)
+        method_name = f"pre_end_event"
+
+        if hasattr(handler, method_name):
+            getattr(handler, method_name)(process, user)
         
         # Check if there are other active tokens
         other_active = process.tokens.filter(is_active=True).exclude(id=token.id).exists()
@@ -447,4 +453,4 @@ class BPMNEngine:
     @staticmethod
     def get_timeline(process_instance: ProcessInstance):
         """Get complete timeline of process activities"""
-        return process_instance.activity_logs.select_related('actor', 'node', 'task_instance').all()
+        return process_instance.activity_logs.select_related('actor', 'node', 'task_instance').filter(event_type__in=['process_started','process_completed','task_completed']).order_by('-id')

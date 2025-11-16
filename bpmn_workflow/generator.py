@@ -240,6 +240,16 @@ from bpmn_workflow.models import ProcessInstance, TaskInstance
     
     def _generate_footer(self) -> str:
         return '''
+    @transaction.atomic
+    def pre_end_event(self,process_instance: ProcessInstance, user):
+        """
+        This will be called before end event.
+        
+        process_instance: process instanse
+        user: user object
+        """
+        pass
+        
     # ==========================================
     # Add your custom helper methods below
     # ==========================================

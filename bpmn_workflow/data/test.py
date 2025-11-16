@@ -8,7 +8,7 @@ data = {}
 
 def runSample(obj):
 
-    process_obj = BPMNEngine.start_process('needs_request_v2',obj, user)
+    process_obj = BPMNEngine.start_process('needs_request_v1',obj, user)
 
     t1 = obj.get_current_tasks().last()
 
@@ -24,6 +24,7 @@ def t1():
 
     from needs_request.models import NeedsRequest,Department
 
-    obj = NeedsRequest.objects.create(date='2025-11-11',department=Department.objects.first())
+    obj = NeedsRequest.objects.create(date='2025-11-11',cause='test',department=Department.objects.first())
+    print('***',obj)
     test.runSample(obj)
     obj.delete()
