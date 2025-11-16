@@ -35,3 +35,26 @@ class EmployeeSolarSystem(LoggingModel):
     class Meta:
         verbose_name = _("منظومة الطاقة الشمسية")
         verbose_name_plural = _("منظومة الطاقة الشمسية")
+
+class LkpOmraCategory(models.Model):
+    name = models.CharField(_("طريقة التقسيط"),max_length=150)
+
+    def __str__(self) -> str:
+        return self.name
+
+    class Meta:
+        ordering = ['id']
+        verbose_name = _("طريقة تقسيط العمرة")
+        verbose_name_plural = _("طريقة تقسيط العمرة")
+
+class EmployeeOmra(LoggingModel):
+    employee = models.ForeignKey(EmployeeBasic, on_delete=models.PROTECT,verbose_name=_("employee_name"))
+    category = models.ForeignKey(LkpOmraCategory, on_delete=models.PROTECT,verbose_name=_("طريقة التقسيط"))
+    count = models.IntegerField("عدد الاشخاص",default=1,validators=[])
+
+    def __str__(self) -> str:
+        return f'طريقة التقسيط: {self.category.name}'
+
+    class Meta:
+        verbose_name = _("عرض العمرة")
+        verbose_name_plural = _("عروض العمرة")
