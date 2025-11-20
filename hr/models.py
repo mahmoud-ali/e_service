@@ -1157,3 +1157,9 @@ class PayrollTasoia(models.Model):
     class Meta:
         verbose_name = _("Payroll tasoia")
         verbose_name_plural = _("Payroll tasoia")
+
+class PayrollSummary(models.Model):
+    payroll_master = models.ForeignKey(PayrollMaster, on_delete=models.CASCADE)
+    employee = models.ForeignKey(EmployeeBasic, on_delete=models.PROTECT,verbose_name=_("employee_name"))
+    total_salary = models.FloatField(_("اجمالي المرتب"),default=0)
+    net_salary = models.FloatField(_("صافي الإستحقاق"),default=0)
