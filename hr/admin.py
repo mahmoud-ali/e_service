@@ -578,9 +578,10 @@ class SettingsAdmin(admin.ModelAdmin):
 admin.site.register(Settings,SettingsAdmin)
 
 class SalafiatSandogForm(SalafiatMixin,ModelForm):
+    # salafiat_master = forms.ModelChoiceField(queryset=EmployeeSalafiat.objects.all(), label="مرجع السلفية")
     class Meta:
         model = EmployeeSalafiat
-        fields = ['salafiat_master', 'employee','year','month','note','amount']
+        fields = [ 'employee','year','month','note','amount'] #'salafiat_master',
 
 class SalafiatAdmin(admin.ModelAdmin):
     form = SalafiatSandogForm
