@@ -329,7 +329,7 @@ class EmployeeMoahilInline(admin.TabularInline):
     extra = 1    
 
 class SalafiatForm(SalafiatMixin,ModelForm):
-    salafiat_master = forms.ModelChoiceField(queryset=EmployeeSalafiatMaster.objects.none(), label=_("مرجع السلفية"))
+    # salafiat_master = forms.ModelChoiceField(queryset=EmployeeSalafiatMaster.objects.none(), label=_("مرجع السلفية"))
     def __init__(self, *args, **kwargs):        
         super().__init__(*args, **kwargs)
 
@@ -338,7 +338,7 @@ class SalafiatForm(SalafiatMixin,ModelForm):
 
     class Meta:
         model = EmployeeSalafiat
-        fields = ['salafiat_master','employee','year','month','no3_2lsalafia','note','amount']
+        fields = ['employee','year','month','no3_2lsalafia','note','amount'] #'salafiat_master',
  
 class SalafiatInline(admin.TabularInline):
     model = EmployeeSalafiat
