@@ -333,8 +333,8 @@ class SalafiatForm(SalafiatMixin,ModelForm):
     def __init__(self, *args, **kwargs):        
         super().__init__(*args, **kwargs)
 
-        if kwargs.get('instance') and kwargs['instance'].pk:
-            self.fields["salafiat_master"].queryset = EmployeeSalafiatMaster.objects.filter(employee=kwargs.get('instance').employee)
+        # if kwargs.get('instance') and kwargs['instance'].pk:
+        #     self.fields["salafiat_master"].queryset = EmployeeSalafiatMaster.objects.filter(employee=kwargs.get('instance').employee)
 
     class Meta:
         model = EmployeeSalafiat
