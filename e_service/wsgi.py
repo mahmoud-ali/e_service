@@ -13,10 +13,4 @@ from django.core.wsgi import get_wsgi_application
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'e_service.settings')
 
-_application = get_wsgi_application()
-
-def application(environ, start_response):
-    # This forces the generator to evaluate into a single byte string
-    # preventing mod_wsgi from accidentally printing the list brackets.
-    response = _application(environ, start_response)
-    return [b"".join(response)]
+application = get_wsgi_application()
