@@ -148,8 +148,8 @@ class WorkflowAdminMixin:
             company_types += [TblCompany.COMPANY_TYPE_SAGEER]
 
         if self.model == AppFuelPermission:
-            if request.user.groups.filter(name__in=["pro_company_application_approve"]).exists():
-                return qs.none()
+            # if request.user.groups.filter(name__in=["pro_company_application_approve"]).exists():
+            #     return qs.none()
             
             if request.user.groups.filter(name__in=["production_control_auditor"]).exists():
                 try:
