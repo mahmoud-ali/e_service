@@ -78,6 +78,7 @@ class HarkatKhatabat(models.Model):  # جدول_حركة_الخطابات
     PROCEDURE_7 = 7
     PROCEDURE_8 = 8
     PROCEDURE_9 = 9
+    PROCEDURE_10 = 10
 
     PROCEDURE_CHOICES = {
         PROCEDURE_1: "توصية",
@@ -89,6 +90,7 @@ class HarkatKhatabat(models.Model):  # جدول_حركة_الخطابات
         PROCEDURE_7: "للعمل بموجبه",
         PROCEDURE_8: "للإحاطة واجراء اللازم",
         PROCEDURE_9: "للإطلاع وابداء الرأي",
+        PROCEDURE_10: "للحفظ",
     }
 
     letter = models.ForeignKey(
