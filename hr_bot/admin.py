@@ -312,7 +312,6 @@ class EmployeeTelegramBankAccountAdmin(PermissionMixin,FlowMixin,admin.ModelAdmi
             if obj.state ==STATE_DRAFT:
                 obj.state = STATE_ACCEPTED
                 obj.save()
-                self.log_change(request,obj,"تحويل الطلب إلى "+"مقبول")
 
                 EmployeeBankAccount.objects.create(
                     employee=obj.employee,
@@ -324,6 +323,7 @@ class EmployeeTelegramBankAccountAdmin(PermissionMixin,FlowMixin,admin.ModelAdmi
                     updated_by=request.user,
                 )
                 self.message_user(request,_('application accepted!'))
+                self.log_change(request,obj,"تحويل الطلب إلى "+"مقبول")
 
                 message = f"تم قبول طلبك: {obj}."
 
@@ -400,7 +400,7 @@ class ApplicationRequirementAdmin(admin.ModelAdmin):
     view_on_site = False
 
 @admin.register(EmployeeBankAccountProxy)
-class EmployeeBankAccount(admin.ModelAdmin):
+class EmployeeBankAccountAdmin(admin.ModelAdmin):
     model = EmployeeBankAccountProxy
     list_display = ('bank', 'account_no','active')
     fields = ('employee','bank','account_no','active')
