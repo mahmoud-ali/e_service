@@ -330,18 +330,18 @@ class EmployeeTelegramBankAccountAdmin(PermissionMixin,FlowMixin,admin.ModelAdmi
 
                     obj.state = STATE_ACCEPTED
                     obj.save()
+
+                    try:
+                        user_id = obj.employee.employeetelegramregistration_set.first().user_id
+                        send_message(TOKEN_ID, user_id, message)
+                    except:
+                        pass
+
                 except IntegrityError:
                     obj.state = STATE_REJECTED
                     obj.save()
                     self.message_user(request,_('تم رفض الطلب لأن رقم الحساب موجود مسبقاً'))
                     self.log_change(request,obj,'تم رفض الطلب لأن رقم الحساب موجود مسبقاً')
-
-
-                try:
-                    user_id = obj.employee.employeetelegramregistration_set.first().user_id
-                    send_message(TOKEN_ID, user_id, message)
-                except:
-                    pass
 
 class EmployeeBankAccountInline(admin.TabularInline):
     model = EmployeeBankAccountProxy
