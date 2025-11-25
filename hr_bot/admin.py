@@ -313,7 +313,7 @@ class EmployeeTelegramBankAccountAdmin(PermissionMixin,FlowMixin,admin.ModelAdmi
                 obj.state = STATE_ACCEPTED
                 obj.save()
 
-                EmployeeBankAccount.objects.create(
+                EmployeeBankAccount.objects.update_or_create(
                     employee=obj.employee,
                     bank=obj.bank,
                     account_no=obj.account_no,
