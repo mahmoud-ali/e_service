@@ -349,11 +349,11 @@ class SalafiatInline(admin.TabularInline):
     }    
     extra = 0
 
-    def has_add_permission(self,request, obj):
-        return False
+    # def has_add_permission(self,request, obj):
+    #     return False
     
-    def has_delete_permission(self, request, obj):
-        return False
+    # def has_delete_permission(self, request, obj):
+    #     return False
 class JazaatInline(admin.TabularInline):
     model = EmployeeJazaat
     exclude = ["created_at","created_by","updated_at","updated_by"]
