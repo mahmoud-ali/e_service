@@ -1163,3 +1163,4 @@ class PayrollSummary(models.Model):
     employee = models.ForeignKey(EmployeeBasic, on_delete=models.PROTECT,verbose_name=_("employee_name"))
     total_salary = models.FloatField(_("اجمالي المرتب"),default=0)
     net_salary = models.FloatField(_("صافي الإستحقاق"),default=0)
+    mokaf2 = models.FloatField(_("المكافئة"),default=0)

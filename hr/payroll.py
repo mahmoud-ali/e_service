@@ -302,6 +302,7 @@ class Payroll():
         return True
     
     def calc_summary(self):
+        #### create total and net salary
         data = []
 
         PayrollSummary.objects.filter(payroll_master=self.payroll_master).delete()
@@ -316,8 +317,20 @@ class Payroll():
                 )
             )
 
-        PayrollSummary.objects.bulk_create(data, batch_size=500)
+        objs = PayrollSummary.objects.bulk_create(data, batch_size=500)
     
+        #### update mokaf2
+        mokaf2 = Mokaf2Sheet(self.payroll_master.year,self.payroll_master.month)
+        data = []
+
+        for (emp,emp_mokaf2) in mokaf2.all_employees_mokaf2_from_db():
+            for obj in objs:
+                if obj.employee.id == emp.id:
+                    obj.mokaf2=round(emp_mokaf2.safi_2l2sti7gag,2)
+                    data.append(obj)
+
+        PayrollSummary.objects.bulk_update(data,['mokaf2'], batch_size=500)
+
 class MobasharaSheet():
     def __init__(self,year,month) -> None:
         self.year = year
