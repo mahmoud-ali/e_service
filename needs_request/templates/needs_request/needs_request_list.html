@@ -4,7 +4,7 @@
 {% load needs_request_tags %}
 <div class="flex justify-between items-center mb-4">
     <h1 class="text-2xl font-bold">طلب توفير إحتياج</h1>
-    {% if perms.needs_request.add_needsrequest and user|has_group:"eom_pub" %}
+    {% if user|has_group:"eom_pub" %}
     <a href="{% url 'needs:needs_request_create' %}" class="btn btn-primary">إنشاء طلب جديد</a>
     {% endif %}
 </div>
