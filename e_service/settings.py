@@ -93,7 +93,7 @@ INSTALLED_APPS = [
 
     'leaflet',
     'auditlog',
-    
+
     # Local                
     'accounts',
     'company_profile',    
@@ -324,6 +324,11 @@ DATA_UPLOAD_MAX_MEMORY_SIZE = 10485760 # 10 MB
 # Auditlog
 AUDITLOG_INCLUDE_ALL_MODELS=True
 AUDITLOG_DISABLE_REMOTE_ADDR = True
+
+AUDITLOG_EXCLUDE_TRACKING_MODELS = (
+    "sessions",
+    # "<app_name>.<model>"
+)
 
 # logging 
 LOGGING = {
