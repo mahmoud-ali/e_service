@@ -790,8 +790,8 @@ class EmployeeSalafiat(LoggingModel):
     amount = models.FloatField(_("amount"))
     deducted = models.BooleanField(_("deducted"),default=False)
 
-    def __str__(self) -> str:
-        return f'{self.amount}'
+    # def __str__(self) -> str:
+    #     return f'سلفية: {self.employee.name}({self.get_no3_2lsalafia_display()}) - {self.amount} {self.year}/{self.month}'
 
     class Meta:
         constraints = [
