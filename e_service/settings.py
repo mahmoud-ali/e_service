@@ -93,7 +93,7 @@ INSTALLED_APPS = [
     'fleet',
     'it',
     'needs_request',
-
+    'hr_employee_survey',
     # Debug
     # 'debug_toolbar',
 ]
