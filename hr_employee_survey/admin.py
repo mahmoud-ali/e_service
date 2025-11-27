@@ -81,7 +81,7 @@ class EmergencyEvaluationAdmin(admin.ModelAdmin):
                 ('average_attendance', 'attendance_punctnality'),
                 ('violation_count', 'warnings_count'),
                 ('employee_effective', 'recommendations_continue'),
-                ('Substantive_note',),
+                ('substantive_note',),
             ),
         }),
     )
