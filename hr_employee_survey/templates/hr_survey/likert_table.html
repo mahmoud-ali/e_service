@@ -1,0 +1,17 @@
+<div class="form-section-title">وضوح الهيكل التنظيمي</div>
+            {% include 'hr_survey/_likert_field.html' with field=form.clarity_statement %}
+            {% include 'hr_survey/_likert_field.html' with field=form.roles_responsibilities %}
+            {% include 'hr_survey/_likert_field.html' with field=form.communication_lines %}
+            {% include 'hr_survey/_likert_field.html' with field=form.job_title_match %}
+
+            <div class="form-section-title">الكفاءة الإدارية والتنظيمية</div>
+            {% include 'hr_survey/_likert_field.html' with field=form.decision_making %}
+            {% include 'hr_survey/_likert_field.html' with field=form.reduces_overlap %}
+            {% include 'hr_survey/_likert_field.html' with field=form.coordination %}
+            {% include 'hr_survey/_likert_field.html' with field=form.service_quality %}
+
+            <div class="form-section-title">المرونة والمواءمة</div>
+            {% include 'hr_survey/_likert_field.html' with field=form.strategic_alignment %}
+            {% include 'hr_survey/_likert_field.html' with field=form.adaptability %}
+            {% include 'hr_survey/_likert_field.html' with field=form.resource_allocation %}
+            {% include 'hr_survey/_likert_field.html' with field=form.service_delivery %}

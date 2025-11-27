@@ -1,0 +1,206 @@
+{% extends 'survey/base_survey.html' %}
+
+{% block content %}
+
+{% load i18n %}
+
+{% load static %}
+
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    
+    <style>
+        body {
+            background-color: #e9eff4; 
+        }
+        
+        .survey-container {
+            font-family: 'Cairo', sans-serif; 
+            max-width: 900px; 
+            margin-top: 40px;
+            margin-bottom: 40px;
+            padding: 40px;
+            background-color: #e9eff4; 
+            border-radius: 12px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1); 
+        }
+        
+        .survey-container h1 {
+            color: #007bff; (Primary) 
+            font-weight: 700;
+        }
+
+        .form-section-title {
+            background-color: #007bff;  (Primary) 
+            color: white;   
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-top: 35px;
+            margin-bottom: 20px;
+            font-size: 1.4rem;
+            font-weight: 700;
+            box-shadow: 0 2px 10px rgba(0, 123, 255, 0.2); 
+        }
+
+        .likert-question {
+            margin-bottom: 15px;
+            padding: 15px;
+            border: 1px solid #cce5ff;  
+            border-radius: 8px;
+            transition: all 0.3s ease; 
+            background-color: #f8faff; 
+        }
+        
+        
+        .likert-question:hover {
+            box-shadow: 0 0 10px rgba(0, 123, 255, 0.1);
+            border-color: #a8d3ff;
+        }
+
+         
+        .likert-options {
+            padding-top: 10px;
+            padding-bottom: 5px;
+        }
+        
+        .likert-options .form-check-inline {
+            min-width: 100px;
+         
+            padding: 5px 10px; 
+            border-radius: 5px;
+            transition: background-color 0.2s;
+        }
+        
+       
+        .likert-options input:checked + label {
+            font-weight: bold;
+            color: #0056b3; 
+        }
+
+         (Select, Input, Textarea) 
+        .form-control, .form-select {
+            border-radius: 6px;
+            padding: 10px 15px;
+        }
+        
+     
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+    </style>
+
+    <div class="container survey-container">
+        <h1 class="text-center mb-4 text-primary"><i class="bi bi-bar-chart-fill"></i> {{ title }}</h1>
+        <p class="text-center text-muted mb-5">
+            يرجى الإجابة على جميع الأسئلة بصدق لضمان دقة تحليل الهيكل التنظيمي.
+        </p>
+        <hr class="mb-4">
+
+        <form method="post" novalidate>
+            {% csrf_token %}
+
+            <div class="form-section-title">بيانات المستجيب</div>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    {{ form.wilaya.label_tag }}
+                    {{ form.wilaya }}
+                    {% for error in form.wilaya.errors %}
+                        <div class="invalid-feedback d-block">{{ error }}</div>
+                    {% endfor %}
+                </div>
+                
+                <div class="col-md-6 mb-3">
+                    <label class="form-label" for="{{ form.position.id_for_label }}">المسمى الوظيفي / الوظيفة</label>
+                    <div class="border p-3 rounded">
+                        {% for radio in form.position %}
+                            <div class="form-check form-check-inline">
+                                {{ radio.tag }}
+                                <label class="form-check-label" for="{{ radio.id_for_label }}">{{ radio.choice_label }}</label>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    {% for error in form.position.errors %}
+                        <div class="invalid-feedback d-block">{{ error }}</div>
+                    {% endfor %}
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    {{ form.other_position.label_tag }}
+                    {{ form.other_position }}
+                    {% for error in form.other_position.errors %}
+                        <div class="invalid-feedback d-block">{{ error }}</div>
+                    {% endfor %}
+                    <small class="form-text text-info">يرجى التحديد إذا اخترت "وظيفة أخرى" أعلاه.</small>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label class="form-label" for="{{ form.work_duration.id_for_label }}">مدة العمل بالشركة</label>
+                    <div class="border p-3 rounded">
+                        {% for radio in form.work_duration %}
+                            <div class="form-check form-check-inline">
+                                {{ radio.tag }}
+                                <label class="form-check-label" for="{{ radio.id_for_label }}">{{ radio.choice_label }}</label>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    {% for error in form.work_duration.errors %}
+                        <div class="invalid-feedback d-block">{{ error }}</div>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <div class="form-section-title">وضوح الهيكل التنظيمي</div>
+            {% include 'hr_survey/_likert_field.html' with field=form.clarity_statement %}
+            {% include 'hr_survey/_likert_field.html' with field=form.roles_responsibilities %}
+            {% include 'hr_survey/_likert_field.html' with field=form.communication_lines %}
+            {% include 'hr_survey/_likert_field.html' with field=form.job_title_match %}
+
+            <div class="form-section-title">الكفاءة الإدارية والتنظيمية</div>
+            {% include 'hr_survey/_likert_field.html' with field=form.decision_making %}
+            {% include 'hr_survey/_likert_field.html' with field=form.reduces_overlap %}
+            {% include 'hr_survey/_likert_field.html' with field=form.coordination %}
+            {% include 'hr_survey/_likert_field.html' with field=form.service_quality %}
+
+            <div class="form-section-title">المرونة والمواءمة</div>
+            {% include 'hr_survey/_likert_field.html' with field=form.strategic_alignment %}
+            {% include 'hr_survey/_likert_field.html' with field=form.adaptability %}
+            {% include 'hr_survey/_likert_field.html' with field=form.resource_allocation %}
+            {% include 'hr_survey/_likert_field.html' with field=form.service_delivery %}
+            
+            <div class="form-section-title">أسئلة مفتوحة</div>
+
+            <div class="mb-3">
+                {{ form.challenges.label_tag }}
+                {{ form.challenges }}
+                {% for error in form.challenges.errors %}
+                    <div class="invalid-feedback d-block">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            <div class="mb-3">
+                {{ form.suitability.label_tag }}
+                {{ form.suitability }}
+                {% for error in form.suitability.errors %}
+                    <div class="invalid-feedback d-block">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            <div class="mb-3">
+                {{ form.improvements.label_tag }}
+                {{ form.improvements }}
+                {% for error in form.improvements.errors %}
+                    <div class="invalid-feedback d-block">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            <div class="d-grid gap-2 mt-5">
+                <button type="submit" class="btn btn-primary btn-lg shadow">إرسال الاستبيان</button>
+            </div>
+        </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+
+    {% endblock %}

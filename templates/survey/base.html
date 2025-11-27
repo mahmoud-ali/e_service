@@ -1,0 +1,108 @@
+{% load i18n %}
+<!doctype html>
+<html lang="en" {% if request.LANGUAGE_CODE == "ar" %} dir="rtl" {% endif %}>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}{% translate "E-Services App" %}{% endblock title %}</title>
+<style>
+	{% if request.LANGUAGE_CODE == "ar" %}
+	.form-control{
+		text-align:right !important;
+	}
+	{% endif %}
+	@media (min-width: 768px) {
+		.sidebar {
+	  {% if request.LANGUAGE_CODE == "ar" %}
+		  right: 0;
+		  border-left: 1px solid #eee;
+	  {% else %}	
+		  left: 0;
+		  border-right: 1px solid #eee;
+	  {% endif %}
+		}
+	  }
+</style>
+{% load bootstrap3 %}
+
+{% bootstrap_css %}
+
+{% if request.LANGUAGE_CODE == "ar" %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-rtl/3.4.0/css/bootstrap-rtl.min.css" integrity="sha512-3Lr2MkT5iW+jVhwKFUBa+zQk8Uklef98/3mebU6wNxTzj65enYrFXaeuqPAYWxcQd1GAt9aUBvYHOIcl2SUsKA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+{% endif %}
+
+{% load static  %}
+
+
+<link rel="stylesheet" type="text/css" href="{% static 'admin/css/widgets.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'pa/css/select2.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'pa/css/select2-bootstrap.css' %}" />
+
+<link rel="stylesheet" type="text/css" href="{% static 'company_profile/css/base.css' %}" />
+
+	
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha384-nvAa0+6Qg9clwYCGGPpDQLVpLNn0fRaROjHqs13t4Ggj3Ez50XnGQqc/r8MhnRDZ" crossorigin="anonymous"></script>
+    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>	
+{% bootstrap_javascript %}
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Yantramanav:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
+
+<script src="{% static 'pa/js/select2.js' %}"></script>
+
+	
+</head>
+<body>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/">{% translate "E-Services App" %}</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+		{% if user.is_authenticated %}	
+          <ul class="nav navbar-nav {% if request.LANGUAGE_CODE == 'ar' %} navbar-left {% else %} navbar-right {% endif %}">
+            <li><a href="{% url 'account_logout' %}?next=/pa/">{% translate "Log Out" %}</a></li>
+          </ul>
+		  	
+		{% endif %}
+
+        </div>
+      </div>
+    </nav>	
+	
+	<div class="container-fluid">
+	  <div class="row">
+		<div class="col-sm-12 col-md-12 main">
+		  
+			{% block content %}
+			{% endblock content %}
+	  	</div>	  
+	  </div>
+	</div>
+	<script>
+		$(document).ready(function(){
+			$("th.asc").append('<span class="glyphicon glyphicon-sort-by-alphabet" aria-hidden="true"></span>');
+			$("th.desc").append('<span class="glyphicon glyphicon-sort-by-alphabet-alt" aria-hidden="true"></span>');
+			{% comment %} $("select").not("table.detail_table select").select2({ {% endcomment %}
+			$("select.select2").select2({
+				theme: "bootstrap",
+			});
+			$("form.filter select").select2({
+				theme: "bootstrap",
+			});
+		});
+		
+		</script>
+	
+</body>
+	
+</html>
