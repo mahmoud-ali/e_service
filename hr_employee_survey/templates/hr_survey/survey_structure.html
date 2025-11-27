@@ -111,19 +111,13 @@
                 </div>
                 
                 <div class="col-md-6 mb-3">
-                    <label class="form-label" for="{{ form.position.id_for_label }}">المسمى الوظيفي / الوظيفة</label>
-                    <div class="border p-3 rounded">
-                        {% for radio in form.position %}
-                            <div class="form-check form-check-inline">
-                                {{ radio.tag }}
-                                <label class="form-check-label" for="{{ radio.id_for_label }}">{{ radio.choice_label }}</label>
-                            </div>
-                        {% endfor %}
-                    </div>
+                    {{ form.position.label_tag }}
+                    {{ form.position }}
                     {% for error in form.position.errors %}
                         <div class="invalid-feedback d-block">{{ error }}</div>
                     {% endfor %}
                 </div>
+            
 
                 <div class="col-md-6 mb-3">
                     {{ form.other_position.label_tag }}

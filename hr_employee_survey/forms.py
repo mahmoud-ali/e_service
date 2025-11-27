@@ -1,5 +1,5 @@
 from django import forms
-from .models import EmergencyEvaluation ,Employee_Data_Emergency,SurveyResponse
+from .models import MosamaWazifi,EmergencyEvaluation ,Employee_Data_Emergency,SurveyResponse
 
 class EmergencyEvaluationForm(forms.ModelForm):
     employee_name = forms.ChoiceField(
@@ -57,8 +57,8 @@ class SurveyResponseForm(forms.ModelForm):
             'challenges', 'suitability', 'improvements'
         ]
         
+        
         widgets = {
-            'position': forms.RadioSelect,
             'work_duration': forms.RadioSelect,        
             'clarity_statement': forms.RadioSelect,
             'roles_responsibilities': forms.RadioSelect,
@@ -81,6 +81,7 @@ class SurveyResponseForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['other_position'].required = False
+    
 
 
 
