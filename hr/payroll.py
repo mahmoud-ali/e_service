@@ -7,7 +7,7 @@ from django.contrib.auth import get_user_model
 
 from hr.calculations import Badalat_3lawat, BadalatModir3am, Khosomat, KhosomatModir3am, M2moria, MajlisEl2daraMokaf2, Mobashara, Mokaf2, Mokaf2Modir3am, Ta3agodMosimiMokaf2, Ta3agodMosimiMoratab, Wi7datMosa3idaMokaf2,Wi7datMosa3idaMokaf2tFarigMoratab
 
-from .models import EmployeeM2moria, EmployeeM2moriaMonthly, EmployeeMajlisEl2dara, EmployeeMobashra, EmployeeJazaat,EmployeeBasic,Drajat3lawat, EmployeeMobashraMonthly, EmployeeWi7datMosa3da, PayrollDetail, PayrollDetailMajlisEl2dara, PayrollDetailTa3agodMosimi, PayrollDetailWi7datMosa3ida, PayrollMaster, PayrollTasoia,Settings,EmployeeSalafiat
+from .models import EmployeeM2moria, EmployeeM2moriaMonthly, EmployeeMajlisEl2dara, EmployeeMobashra, EmployeeJazaat,EmployeeBasic,Drajat3lawat, EmployeeMobashraMonthly, EmployeeWi7datMosa3da, PayrollDetail, PayrollDetailMajlisEl2dara, PayrollDetailTa3agodMosimi, PayrollDetailWi7datMosa3ida, PayrollMaster, PayrollSummary, PayrollTasoia,Settings,EmployeeSalafiat
 
 class HrSettings():
     def __init__(self) -> None:
@@ -285,6 +285,8 @@ class Payroll():
             self.salafiat_qs.update(deducted = True)
             self.jazaat_qs.update(deducted = True)
 
+            self.calc_summary()
+
             return True
         
     def is_confirmed(self):
@@ -299,6 +301,36 @@ class Payroll():
         
         return True
     
+    def calc_summary(self):
+        #### create total and net salary
+        data = []
+
+        PayrollSummary.objects.filter(payroll_master=self.payroll_master).delete()
+
+        for (emp,badalat,khosomat,draja_wazifia,alawa_sanawia) in self.all_employees_payroll_from_db():
+            data.append(
+                PayrollSummary(
+                    payroll_master=self.payroll_master,
+                    employee=emp,
+                    total_salary=badalat.ajmali_almoratab,
+                    net_salary=khosomat.safi_alisti7gag,
+                )
+            )
+
+        objs = PayrollSummary.objects.bulk_create(data, batch_size=500)
+    
+        #### update mokaf2
+        mokaf2 = Mokaf2Sheet(self.payroll_master.year,self.payroll_master.month)
+        data = []
+
+        for (emp,emp_mokaf2) in mokaf2.all_employees_mokaf2_from_db():
+            for obj in objs:
+                if obj.employee.id == emp.id:
+                    obj.mokaf2=round(emp_mokaf2.safi_2l2sti7gag,2)
+                    data.append(obj)
+
+        PayrollSummary.objects.bulk_update(data,['mokaf2'], batch_size=500)
+
 class MobasharaSheet():
     def __init__(self,year,month) -> None:
         self.year = year

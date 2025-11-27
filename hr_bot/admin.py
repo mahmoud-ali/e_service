@@ -1,5 +1,5 @@
 import random
-from django.db import models
+from django.db import IntegrityError, models
 from django.forms.widgets import TextInput
 from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
@@ -168,8 +168,11 @@ class EmployeeTelegramRegistrationAdmin(FlowMixin,admin.ModelAdmin):
                     updated_by=request.user,
                 )
                 self.message_user(request,_('application accepted!'))
-            except:
-                pass
+            except IntegrityError:
+                obj.state = STATE_REJECTED
+                obj.save()
+                self.message_user(request,_('تم رفض الطلب لأن الهاتف موجود مسبقاً'))
+                self.log_change(request,obj,'تم رفض الطلب لأن الهاتف موجود مسبقاً')
 
             username = obj.employee.email
 
@@ -310,28 +313,35 @@ class EmployeeTelegramBankAccountAdmin(PermissionMixin,FlowMixin,admin.ModelAdmi
     def accept(self, request, queryset):
         for obj in queryset:
             if obj.state ==STATE_DRAFT:
-                obj.state = STATE_ACCEPTED
-                obj.save()
-                self.log_change(request,obj,"تحويل الطلب إلى "+"مقبول")
-
-                EmployeeBankAccount.objects.create(
-                    employee=obj.employee,
-                    bank=obj.bank,
-                    account_no=obj.account_no,
-                    active=obj.active,
-
-                    created_by=request.user,
-                    updated_by=request.user,
-                )
-                self.message_user(request,_('application accepted!'))
-
-                message = f"تم قبول طلبك: {obj}."
-
                 try:
-                    user_id = obj.employee.employeetelegramregistration_set.first().user_id
-                    send_message(TOKEN_ID, user_id, message)
-                except:
-                    pass
+                    EmployeeBankAccount.objects.update_or_create(
+                        employee=obj.employee,
+                        bank=obj.bank,
+                        account_no=obj.account_no,
+                        active=obj.active,
+
+                        created_by=request.user,
+                        updated_by=request.user,
+                    )
+                    self.message_user(request,_('application accepted!'))
+                    self.log_change(request,obj,"تحويل الطلب إلى "+"مقبول")
+
+                    message = f"تم قبول طلبك: {obj}."
+
+                    obj.state = STATE_ACCEPTED
+                    obj.save()
+
+                    try:
+                        user_id = obj.employee.employeetelegramregistration_set.first().user_id
+                        send_message(TOKEN_ID, user_id, message)
+                    except:
+                        pass
+
+                except IntegrityError:
+                    obj.state = STATE_REJECTED
+                    obj.save()
+                    self.message_user(request,_('تم رفض الطلب لأن رقم الحساب موجود مسبقاً'))
+                    self.log_change(request,obj,'تم رفض الطلب لأن رقم الحساب موجود مسبقاً')
 
 class EmployeeBankAccountInline(admin.TabularInline):
     model = EmployeeBankAccountProxy
@@ -400,7 +410,7 @@ class ApplicationRequirementAdmin(admin.ModelAdmin):
     view_on_site = False
 
 @admin.register(EmployeeBankAccountProxy)
-class EmployeeBankAccount(admin.ModelAdmin):
+class EmployeeBankAccountAdmin(admin.ModelAdmin):
     model = EmployeeBankAccountProxy
     list_display = ('bank', 'account_no','active')
     fields = ('employee','bank','account_no','active')

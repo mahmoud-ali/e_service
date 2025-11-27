@@ -337,3 +337,10 @@ def update_email_to_lower():
         if obj.email:
             obj.email = obj.email.lower()
             obj.save()
+
+def calc_summary():
+    from hr.payroll import Payroll
+
+    for obj in PayrollMaster.objects.filter(confirmed=True):
+        payroll = Payroll(obj.year,obj.month)
+        payroll.calc_summary()

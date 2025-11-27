@@ -329,16 +329,16 @@ class EmployeeMoahilInline(admin.TabularInline):
     extra = 1    
 
 class SalafiatForm(SalafiatMixin,ModelForm):
-    salafiat_master = forms.ModelChoiceField(queryset=EmployeeSalafiatMaster.objects.none(), label=_("مرجع السلفية"))
+    # salafiat_master = forms.ModelChoiceField(queryset=EmployeeSalafiatMaster.objects.none(), label=_("مرجع السلفية"))
     def __init__(self, *args, **kwargs):        
         super().__init__(*args, **kwargs)
 
-        if kwargs.get('instance') and kwargs['instance'].pk:
-            self.fields["salafiat_master"].queryset = EmployeeSalafiatMaster.objects.filter(employee=kwargs.get('instance').employee)
+        # if kwargs.get('instance') and kwargs['instance'].pk:
+        #     self.fields["salafiat_master"].queryset = EmployeeSalafiatMaster.objects.filter(employee=kwargs.get('instance').employee)
 
     class Meta:
         model = EmployeeSalafiat
-        fields = ['salafiat_master','employee','year','month','no3_2lsalafia','note','amount']
+        fields = ['employee','year','month','no3_2lsalafia','note','amount'] #'salafiat_master',
  
 class SalafiatInline(admin.TabularInline):
     model = EmployeeSalafiat
@@ -349,11 +349,11 @@ class SalafiatInline(admin.TabularInline):
     }    
     extra = 0
 
-    def has_add_permission(self,request, obj):
-        return False
+    # def has_add_permission(self,request, obj):
+    #     return False
     
-    def has_delete_permission(self, request, obj):
-        return False
+    # def has_delete_permission(self, request, obj):
+    #     return False
 class JazaatInline(admin.TabularInline):
     model = EmployeeJazaat
     exclude = ["created_at","created_by","updated_at","updated_by"]
@@ -578,9 +578,10 @@ class SettingsAdmin(admin.ModelAdmin):
 admin.site.register(Settings,SettingsAdmin)
 
 class SalafiatSandogForm(SalafiatMixin,ModelForm):
+    # salafiat_master = forms.ModelChoiceField(queryset=EmployeeSalafiat.objects.all(), label="مرجع السلفية")
     class Meta:
         model = EmployeeSalafiat
-        fields = ['salafiat_master', 'employee','year','month','note','amount']
+        fields = [ 'employee','year','month','note','amount'] #'salafiat_master',
 
 class SalafiatAdmin(admin.ModelAdmin):
     form = SalafiatSandogForm

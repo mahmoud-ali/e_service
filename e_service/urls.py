@@ -50,7 +50,7 @@ urlpatterns = [
     # path('help/', include('help_request.urls')), 
     path('', include('hr_bot.urls')), 
     path('', dashboard, name='acceptance_home'),
-    path("__debug__/", include("debug_toolbar.urls")),
+    # path("__debug__/", include("debug_toolbar.urls")),
 
 
 ] #+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -16,8 +16,8 @@ class DepartmentAdmin(admin.ModelAdmin):
 
         if db_field.name == "department_manager":
             try:
-                eom_pub_group = Group.objects.get(name='dga_pub')
-                kwargs["queryset"] = eom_pub_group.user_set.all()
+                dga_pub_group = Group.objects.get(name='dga_pub')
+                kwargs["queryset"] = dga_pub_group.user_set.all()
             except Group.DoesNotExist:
                 kwargs["queryset"] = User.objects.none()
 
