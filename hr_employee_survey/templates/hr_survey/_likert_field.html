@@ -1,0 +1,18 @@
+<div class="likert-question">
+    <p class="mb-2 text-dark"><strong>{{ field.label }}</strong></p>
+    
+    <div class="d-flex flex-wrap justify-content-between likert-options">
+        {% for radio in field %}
+            <div class="form-check form-check-inline">
+                {{ radio.tag }}
+                <label class="form-check-label" for="{{ radio.id_for_label }}">
+                    {{ radio.choice_label }}
+                </label>
+            </div>
+        {% endfor %}
+    </div>
+
+    {% for error in field.errors %}
+        <div class="invalid-feedback d-block">{{ error }}</div>
+    {% endfor %}
+</div>

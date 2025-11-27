@@ -1,0 +1,22 @@
+
+{% extends 'survey/base_survey.html' %}
+
+{% block content %}
+
+{% load i18n %}
+
+    <meta charset="UTF-8">
+    <title>شكراً لك</title>
+    <style>
+        body { font-family: Tahoma, sans-serif; background-color: #f4f4f4; padding: 50px; text-align: center; direction: rtl; }
+        .thank-you-box { max-width: 600px; margin: 0 auto; background-color: #e6ffe6; border: 1px solid #c3e6cb; padding: 40px; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 123, 255, 0.1); }
+        .thank-you-box h1 { color: #28a745; margin-bottom: 20px; }
+        .thank-you-box p { font-size: 18px; color: #333; }
+    </style>
+
+    <div class="thank-you-box">
+        <h1>شكراً جزيلاً لك!</h1>
+        <p>تم استلام استبيانك بنجاح.</p>
+        <p>نُقدر وقتك وتعاونك في تقييم فاعلية الاداء . مدخلاتك قيمة لعملية التطوير والتحسين المستمر.</p>
+    </div>
+{% endblock %}
