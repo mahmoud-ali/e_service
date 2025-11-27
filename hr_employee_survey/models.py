@@ -92,7 +92,7 @@ class EmergencyEvaluation(models.Model):
         
     employee_effective = models.CharField(max_length=20, choices=ASKING_CHOICES, null=True, blank=True,verbose_name="هل ترى أن الموظف كان فاعلاً ")
     recommendations_continue = models.CharField(max_length=20, choices=ASKING_CHOICES, null=True, blank=True,verbose_name="هل توصي باستمراره ضمن فريق العمل ")
-    Substantive_note = models.TextField(null=True, blank=True,verbose_name="هل هنالك ملاحظات جوهرية على أدائه ")
+    substantive_note = models.TextField(null=True, blank=True,verbose_name="هل هنالك ملاحظات جوهرية على أدائه ")
 
     class Meta:
           verbose_name = "تقييم العاملين فترة الطوارئ"
