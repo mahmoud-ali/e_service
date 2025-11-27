@@ -292,7 +292,7 @@ AUDITLOG_INCLUDE_ALL_MODELS=True
 AUDITLOG_DISABLE_REMOTE_ADDR = True
 
 AUDITLOG_EXCLUDE_TRACKING_MODELS = (
-    "django.session",
+    "django.contrib.sessions",
     # "<app_name>.<model>"
 )
 
