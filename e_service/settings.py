@@ -75,6 +75,7 @@ INSTALLED_APPS = [
     'import_export',
 
     'bootstrap_datepicker_plus',
+    'auditlog',
 
     # 'django_crontab',
     'mptt',
@@ -94,7 +95,7 @@ INSTALLED_APPS = [
     'needs_request',
 
     # Debug
-    'debug_toolbar',
+    # 'debug_toolbar',
 ]
 
 MIDDLEWARE = [
@@ -110,9 +111,10 @@ MIDDLEWARE = [
     #3rd party
     'allauth.account.middleware.AccountMiddleware',
     'rollbar.contrib.django.middleware.RollbarNotifierMiddleware',
+    'auditlog.middleware.AuditlogMiddleware',
 
     # Debug
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
+    # 'debug_toolbar.middleware.DebugToolbarMiddleware',
 
 ]
 
@@ -285,6 +287,10 @@ ACCOUNT_LOGOUT_REDIRECT_URL = 'acceptance_home'
 
 ACCOUNT_DEFAULT_PASSWORD = "changethispassword"
 
+# Auditlog
+AUDITLOG_INCLUDE_ALL_MODELS=True
+AUDITLOG_DISABLE_REMOTE_ADDR = True
+
 # logging 
 LOGGING = {
     'version': 1,
@@ -343,14 +349,14 @@ BOOTSTRAP3 = {
     "form_renderers": {"default": "e_service.renderers.FormRenderer"},
 }
 
-ROLLBAR = {
-    'access_token': config('ROLLBAR_TOKEN'),
-    'environment': 'development' if DEBUG else 'production',
-    'code_version': '1.0',
-    'root': BASE_DIR,
-}
-
 if not DEBUG:
+    ROLLBAR = {
+        'access_token': config('ROLLBAR_TOKEN'),
+        'environment': 'development' if DEBUG else 'production',
+        'code_version': '1.0',
+        'root': BASE_DIR,
+    }
+
     TELEGRAM_TOKEN_ID = config('TELEGRAM_HR_TOKEN_ID')
     TELEGRAM_IT_TOKEN_ID = config('TELEGRAM_IT_TOKEN_ID')
 
