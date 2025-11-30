@@ -114,7 +114,7 @@ class GoldProductionDetailView(generics.RetrieveAPIView):
 
 ########### Gold shipping(ترحيل ذهب الشركات) ##############
 class GoldShippingListView(generics.ListAPIView):
-    queryset = GoldShippingForm.objects.all() #.filter(state=GoldShippingForm.STATE_APPROVED)
+    queryset = GoldShippingForm.objects.filter(state=GoldShippingForm.STATE_APPROVED)
     serializer_class = GoldShippingListSerializer
     permission_classes = [permissions.IsAuthenticated, IsInGroup,]
 
@@ -137,7 +137,7 @@ class GoldShippingListView(generics.ListAPIView):
         })
 
 class GoldShippingDetailView(generics.RetrieveAPIView):
-    queryset = GoldShippingForm.objects.all() #.filter(state=GoldShippingForm.STATE_APPROVED)
+    queryset = GoldShippingForm.objects.filter(state=GoldShippingForm.STATE_APPROVED)
     serializer_class = GoldShippingMasterSerializer
     permission_classes = [permissions.IsAuthenticated, IsInGroup,]
 
