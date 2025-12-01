@@ -14,7 +14,7 @@ class KhatabatAdminForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.fields["forwarded_to"].required=False
+        # self.fields["forwarded_to"].required=False
 
         if self.request:
             try:

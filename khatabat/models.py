@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from django.forms import ValidationError
 
 from workflow.model_utils import LoggingModel
 
@@ -118,3 +119,19 @@ class HarkatKhatabat(models.Model):  # جدول_حركة_الخطابات
     class Meta:
         verbose_name = "حركة خطاب"
         verbose_name_plural = "حركة الخطابات"
+
+    def clean(self):
+        if self.movement_type == self.MOVEMENT_OUTBOX:
+            # print(self.letter_attachment,self.forwarded_to,self.forward_date)
+            if not self.letter_attachment:
+                raise ValidationError(
+                    {"letter_attachment":"الحقل مطلوب: الرجاء اضافة صورة الخطاب"}
+                )
+            # if not self.forwarded_to.exists():
+            #     raise ValidationError(
+            #         {"forwarded_to":"الحقل مطلوب: الرجاء تحديد جهة الصادر"}
+            #     )
+            if not self.forward_date:
+                raise ValidationError(
+                    {"forward_date":"الحقل مطلوب: الرجاء تحديد تاريخ التحويل"}
+                )
