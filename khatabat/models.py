@@ -135,7 +135,7 @@ class HarkatKhatabat(models.Model):  # جدول_حركة_الخطابات
                 raise ValidationError(
                     {"letter_attachment":"الحقل مطلوب: الرجاء اضافة صورة الخطاب"}
                 )
-            if not self.forward_date:
-                raise ValidationError(
-                    {"forward_date":"الحقل مطلوب: الرجاء تحديد تاريخ التحويل"}
-                )
+            # if not self.forward_date:
+            #     raise ValidationError(
+            #         {"forward_date":"الحقل مطلوب: الرجاء تحديد تاريخ التحويل"}
+            #     )
