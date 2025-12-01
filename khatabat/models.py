@@ -104,7 +104,7 @@ class HarkatKhatabat(models.Model):  # جدول_حركة_الخطابات
     source_entity = models.ForeignKey(MaktabTanfiziJiha, on_delete=models.PROTECT, related_name="source_entities", verbose_name="جهة الخطاب")
     procedure = models.IntegerField(verbose_name="الإجراء", choices=PROCEDURE_CHOICES)
     letter_attachment = models.FileField(upload_to='khatabat/', verbose_name="صورة الخطاب", null=True, blank=True)
-    forwarded_to = models.ForeignKey(MaktabTanfiziJiha, on_delete=models.PROTECT, null=True, blank=True, related_name="forwarded_to", verbose_name="الجهة المحول لها")
+    forwarded_to = models.ManyToManyField(MaktabTanfiziJiha, related_name="forwarded_to", verbose_name="الجهة المحول لها")
     forward_date = models.DateField(null=True, blank=True, verbose_name="تاريخ التحويل")
     # receiver_signature = models.BooleanField(default=False, verbose_name="توقيع المستلم")
     delivery_date = models.DateField(null=True, blank=True, verbose_name="تاريخ التسليم")

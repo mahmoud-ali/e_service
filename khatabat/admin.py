@@ -1,5 +1,9 @@
+from datetime import date
 from django.contrib import admin
 from django.contrib.auth import get_user_model
+
+from django.http import HttpResponse
+from django.template.loader import render_to_string
 
 from khatabat.forms import KhatabatAdminForm
 from .models import Khatabat, HarkatKhatabat, MaktabTanfizi, MaktabTanfiziJiha
@@ -117,13 +121,34 @@ class KhatabatAdmin(MaktabTanfiziMixin,LogMixin,admin.ModelAdmin):
     inlines = [HarkatKhatabatInline]
 
     def get_formsets_with_inlines(self, request, obj=None):
+        maktab = request.user.maktab_tanfizi_user
+
+        jiha_all_qs = MaktabTanfiziJiha.objects.filter(maktab_tanfizi=maktab)
+
         for inline in self.get_inline_instances(request, obj):
             formset = inline.get_formset(request, obj)
             if isinstance(inline,HarkatKhatabatInline):
                 formset.form = KhatabatAdminForm
                 formset.form.request = request
+                formset.form.qs = jiha_all_qs
 
             yield formset,inline
+
+
+
+@admin.action(description="Print HTML table")
+def print_html_table(modeladmin, request, queryset):
+    qs = queryset.filter(delivery_date__isnull=True)
+    html = render_to_string('khatabat/receive.html', {
+        "queryset": qs,
+        "date":date.isoformat(date.today())
+    })
+
+    # Return as downloadable HTML
+    response = HttpResponse(html, content_type="text/html; charset=utf-8")
+    # response["Content-Disposition"] = "attachment; filename=report.html"
+    return response
+
 
 @admin.register(HarkatKhatabat)
 class HarkatKhatabatAdmin(admin.ModelAdmin):
@@ -131,6 +156,7 @@ class HarkatKhatabatAdmin(admin.ModelAdmin):
     list_display = ('subject', 'letter_number', 'movement_type', 'date', 'source_entity', 'procedure', 'delivery_date', 'followup_result')    
     search_fields = ('letter__letter_number', 'letter__subject','note')
     list_filter = ('movement_type','date', 'source_entity', 'procedure', 'delivery_date', 'followup_result')
+    actions = [print_html_table]
 
     @admin.display(description='رقم الخطاب')
     def letter_number(self, obj):

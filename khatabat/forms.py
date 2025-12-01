@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import ModelForm
-from django.contrib.admin.widgets import AdminDateWidget
+from django.contrib.admin.widgets import AdminDateWidget,FilteredSelectMultiple
 
 from khatabat.models import HarkatKhatabat, MaktabTanfiziJiha
 
@@ -9,20 +9,20 @@ jiha_all_qs = MaktabTanfiziJiha.objects.all()
 
 class KhatabatAdminForm(ModelForm):
     request = None
-    source_entity = forms.ModelChoiceField(queryset=jiha_none, label="جهة الخطاب")
-    forwarded_to = forms.ModelChoiceField(queryset=jiha_none, label="الجهة المحول لها",required=False)
+    qs = None
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+        self.fields["forwarded_to"].required=False
+
         if self.request:
             try:
-                maktab = self.request.user.maktab_tanfizi_user
-                self.fields["source_entity"].queryset = jiha_all_qs.filter(maktab_tanfizi=maktab)
-                self.fields["forwarded_to"].queryset = jiha_all_qs.filter(maktab_tanfizi=maktab)
+                self.fields["source_entity"].queryset = self.qs
+                self.fields["forwarded_to"].queryset = self.qs
             except:
-                self.fields["source_entity"].queryset = jiha_none
-                self.fields["forwarded_to"].queryset = jiha_none
+                self.fields["source_entity"].queryset = self.qs.none()
+                self.fields["forwarded_to"].queryset = self.qs.none()
 
     class Meta:
         model = HarkatKhatabat
@@ -30,6 +30,7 @@ class KhatabatAdminForm(ModelForm):
         widgets = {
             "date":AdminDateWidget(),
             "forward_date":AdminDateWidget(),
+            "forwarded_to":FilteredSelectMultiple('الجهة المحول لها', is_stacked=False),
             "delivery_date":AdminDateWidget(),
         }
 

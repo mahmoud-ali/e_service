@@ -1,0 +1,77 @@
+{% extends 'khatabat/report_base.html' %}
+{% load i18n %}
+{% load bootstrap3 %}
+{% load auth_extras %}
+{% load static  %}
+{% load humanize %}
+
+{% block content %}
+<style>
+    @page {
+        size: landscape;
+    }
+    body {
+        direction: rtl;
+        font-family: Arial, sans-serif;
+        text-align: right;
+    }            
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        font-family: Arial, sans-serif;
+        text-align: right;
+    }
+    th, td {
+        border: 1px solid #000;
+        padding: 8px;
+        text-align: right;
+
+    }
+    th {
+        background-color: #f0f0f0;
+    }
+    tfoot td {
+        font-weight: bold;
+        background-color: #fafafa;
+    }
+    .center {
+        text-align: center;
+    }
+</style>
+
+<h2 class="center">فورم تسليم مستندات</h2>
+<p class="center">{{date}}</p>
+<table>
+    <thead>
+        <tr>
+            <th>م</th>
+            <th>الموضوع</th>
+            <th>الجهة</th>
+            <th>التوقيع والتاريخ</th>
+        </tr>
+    </thead>
+    <tbody>
+        
+        {% for obj in queryset %}
+            {% with total=obj.forwarded_to.count %}
+                {% for d in obj.forwarded_to.all %}
+                    {% if forloop.first %}
+                        <tr>
+                            <td rowspan="{{ total }}">{{ forloop.parentloop.counter }}.</td>
+                            <td width="40%" rowspan="{{ total }}">{{ obj.letter.subject|escape }}</td>
+                            <td width="40%">{{ d|escape }}</td>
+                            <td>&nbsp;</td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td>{{ d|escape }}</td>
+                            <td>&nbsp;</td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+            {% endwith %}
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock content %}
