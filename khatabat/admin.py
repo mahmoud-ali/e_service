@@ -107,18 +107,20 @@ class MaktabTanfiziJihaAdmin(MaktabTanfiziMixin, admin.ModelAdmin):
 
         super().save_model(request, obj, form, change)
 
-class HarkatKhatabatInline(admin.StackedInline):  # You can use StackedInline if you prefer vertical layout
+class HarkatKhatabatInline(admin.StackedInline):
     model = HarkatKhatabat
-    min_num = 1  # Minimum number of empty forms
-    extra = 0  # Number of empty forms to display
+    min_num = 1
+    extra = 0
     show_change_link = True
 
 @admin.register(Khatabat)
 class KhatabatAdmin(MaktabTanfiziMixin,LogMixin,admin.ModelAdmin):
     exclude = ('maktab_tanfizi','created_by', 'updated_by')
-    list_display = ('subject', 'letter_number',)
+    list_display = ('letter_number', 'subject',)
     search_fields = ('letter_number', 'subject')
     inlines = [HarkatKhatabatInline]
+    fields =  ('letter_number','subject', )
+    readonly_fields = ['letter_number',]
 
     def get_formsets_with_inlines(self, request, obj=None):
         maktab = request.user.maktab_tanfizi_user
@@ -133,8 +135,6 @@ class KhatabatAdmin(MaktabTanfiziMixin,LogMixin,admin.ModelAdmin):
                 formset.form.qs = jiha_all_qs
 
             yield formset,inline
-
-
 
 @admin.action(description="طباعة فورم تسليم")
 def print_html_table(modeladmin, request, queryset):

@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.db import models
 from django.conf import settings
 from django.forms import ValidationError
@@ -53,6 +55,12 @@ class Khatabat(LoggingModel):  # جدول_خطابات
         ordering = ["-letter_number"]
         verbose_name = "الخطاب"
         verbose_name_plural = "الخطابات"
+
+    def save(self, *args,**kwargs):
+        last_letter = Khatabat.objects.filter(maktab_tanfizi=self.maktab_tanfizi).last()
+        last_letter_num = int(last_letter.letter_number.split("-")[-1])+1
+        self.letter_number = f"{self.maktab_tanfizi.code}-{datetime.now().strftime("%m")}-{last_letter_num}"
+        return super().save(args,kwargs)
 
 class HarkatKhatabat(models.Model):  # جدول_حركة_الخطابات
     MOVEMENT_INBOX = 1
@@ -127,10 +135,6 @@ class HarkatKhatabat(models.Model):  # جدول_حركة_الخطابات
                 raise ValidationError(
                     {"letter_attachment":"الحقل مطلوب: الرجاء اضافة صورة الخطاب"}
                 )
-            # if not self.forwarded_to.exists():
-            #     raise ValidationError(
-            #         {"forwarded_to":"الحقل مطلوب: الرجاء تحديد جهة الصادر"}
-            #     )
             if not self.forward_date:
                 raise ValidationError(
                     {"forward_date":"الحقل مطلوب: الرجاء تحديد تاريخ التحويل"}
