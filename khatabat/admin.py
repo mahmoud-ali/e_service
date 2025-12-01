@@ -138,7 +138,7 @@ class KhatabatAdmin(MaktabTanfiziMixin,LogMixin,admin.ModelAdmin):
 
 @admin.action(description="طباعة فورم تسليم")
 def print_html_table(modeladmin, request, queryset):
-    qs = queryset.filter(delivery_date__isnull=True)
+    qs = queryset #.filter(delivery_date__isnull=True)
     html = render_to_string('khatabat/receive.html', {
         "queryset": qs,
         "date":date.isoformat(date.today())

@@ -58,8 +58,8 @@
                     {% if forloop.first %}
                         <tr>
                             <td rowspan="{{ total }}">{{ forloop.parentloop.counter }}.</td>
-                            <td width="40%" rowspan="{{ total }}">{{ obj.letter.subject|escape }}</td>
-                            <td width="40%">{{ d|escape }}</td>
+                            <td width="60%" rowspan="{{ total }}">{{ obj.letter.subject|escape }}</td>
+                            <td width="20%">{{ d|escape }}</td>
                             <td>&nbsp;</td>
                         </tr>
                     {% else %}
