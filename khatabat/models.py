@@ -56,10 +56,14 @@ class Khatabat(LoggingModel):  # جدول_خطابات
         verbose_name = "الخطاب"
         verbose_name_plural = "الخطابات"
 
+    @property
+    def next_letter_number(self):
+        last_letter = Khatabat.objects.filter(maktab_tanfizi=self.maktab_tanfizi).order_by("-created_at").first()
+        last_letter_num = int(last_letter.letter_number.split("-")[-1])
+        return f"{self.maktab_tanfizi.code}-{datetime.now().strftime("%m")}-{last_letter_num+1}"
+
     def save(self, *args,**kwargs):
-        last_letter = Khatabat.objects.filter(maktab_tanfizi=self.maktab_tanfizi).last()
-        last_letter_num = int(last_letter.letter_number.split("-")[-1])+1
-        self.letter_number = f"{self.maktab_tanfizi.code}-{datetime.now().strftime("%m")}-{last_letter_num}"
+        self.letter_number = self.next_letter_number
         return super().save(args,kwargs)
 
 class HarkatKhatabat(models.Model):  # جدول_حركة_الخطابات

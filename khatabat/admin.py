@@ -1,4 +1,5 @@
-from datetime import date
+from datetime import date,datetime
+
 from django.contrib import admin
 from django.contrib.auth import get_user_model
 
@@ -120,15 +121,23 @@ class KhatabatAdmin(MaktabTanfiziMixin,LogMixin,admin.ModelAdmin):
     search_fields = ('letter_number', 'subject')
     inlines = [HarkatKhatabatInline]
     fields =  ('letter_number','subject', )
-    readonly_fields = ['letter_number',]
+    # readonly_fields = ['letter_number',]
 
+    def get_changeform_initial_data(self, request):
+        maktab_tanfizi = request.user.maktab_tanfizi_user
+        last_letter = Khatabat.objects.filter(maktab_tanfizi=maktab_tanfizi).order_by("-created_at").first()
+        last_letter_num = int(last_letter.letter_number.split("-")[-1])
+        num = f"{maktab_tanfizi.code}-{datetime.now().strftime("%m")}-{last_letter_num+1}"
+
+        return {'letter_number': num}
+    
     def get_formsets_with_inlines(self, request, obj=None):
         maktab = request.user.maktab_tanfizi_user
 
         jiha_all_qs = MaktabTanfiziJiha.objects.filter(maktab_tanfizi=maktab)
 
         for inline in self.get_inline_instances(request, obj):
-            formset = inline.get_formset(request, obj)
+            formset = inline.get_formset(request, obj)            
             if isinstance(inline,HarkatKhatabatInline):
                 formset.form = KhatabatAdminForm
                 formset.form.request = request
