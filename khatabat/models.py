@@ -10,7 +10,8 @@ class MaktabTanfizi(models.Model):
     name = models.CharField(max_length=255, verbose_name="المكتب التنفيذي")
     code = models.CharField(max_length=10, verbose_name="الرمز",default="")
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.PROTECT,related_name="maktab_tanfizi_user",verbose_name="المستخدم")
-    manager = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.PROTECT,related_name="maktab_tanfizi_manager",null=True,verbose_name="مدير")
+    follow_up = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.PROTECT,related_name="maktab_tanfizi_follow_up",null=True,verbose_name="موظف متابعة")
+    manager = models.ManyToManyField(settings.AUTH_USER_MODEL,related_name="maktab_tanfizi_manager",verbose_name="مدير")
 
     def __str__(self):
         return self.name
@@ -48,6 +49,7 @@ class Khatabat(LoggingModel):  # جدول_خطابات
         verbose_name="رقم الخطاب"
     )
     subject = models.TextField(verbose_name="موضوع الخطاب")
+    has_motab3at = models.BooleanField("يوجد متابعة؟", default=False)
 
     def __str__(self):
         return f'{self.subject} ({self.letter_number})'
@@ -125,8 +127,6 @@ class HarkatKhatabat(models.Model):  # جدول_حركة_الخطابات
     forward_date = models.DateField(null=True, blank=True, verbose_name="تاريخ التحويل")
     # receiver_signature = models.BooleanField(default=False, verbose_name="توقيع المستلم")
     delivery_date = models.DateField(null=True, blank=True, verbose_name="تاريخ التسليم")
-    followup_result = models.IntegerField(default=FOLLOWUP_NOT_DONE, choices=FOLLOWUP_CHOICES, verbose_name="نتيجة المتابعة",)
-    followup_attachment = models.FileField(upload_to='mutabaah/', null=True, blank=True, verbose_name="صورة نتيجة المتابعة")
     note = models.TextField(verbose_name="ملاحظات", null=True, blank=True)
 
     def __str__(self):
@@ -169,3 +169,20 @@ class HarkatKhatabatOutbox(HarkatKhatabat):
     def save(self, *args,**kwargs):
         self.movement_type = HarkatKhatabat.MOVEMENT_OUTBOX
         return super().save(args,kwargs)
+
+class Motab3atKhatabat(models.Model): 
+    letter = models.ForeignKey(
+        Khatabat,
+        on_delete=models.PROTECT,
+        verbose_name="رقم الخطاب"
+    )
+    date = models.DateField(verbose_name="التاريخ")
+    action = models.CharField(verbose_name="الإجراء")
+    attachment = models.FileField(upload_to='mutabaah/', null=True, blank=True, verbose_name="صورة نتيجة المتابعة")
+
+    def __str__(self):
+        return f"{self.date}/{self.action[:10]}"
+
+    class Meta:
+        verbose_name = "متابعة خطاب"
+        verbose_name_plural = "متابعة الخطابات"

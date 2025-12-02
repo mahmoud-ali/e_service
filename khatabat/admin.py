@@ -7,7 +7,7 @@ from django.http import HttpResponse
 from django.template.loader import render_to_string
 
 from khatabat.forms import HarkatKhatabatInboxAdminForm,HarkatKhatabatOutboxAdminForm
-from .models import HarkatKhatabatInbox, HarkatKhatabatOutbox, Khatabat, HarkatKhatabat, MaktabTanfizi, MaktabTanfiziJiha
+from .models import HarkatKhatabatInbox, HarkatKhatabatOutbox, Khatabat, HarkatKhatabat, MaktabTanfizi, MaktabTanfiziJiha, Motab3atKhatabat
 
 User = get_user_model()
 
@@ -17,9 +17,10 @@ class LogMixin:
             maktab = request.user.maktab_tanfizi_user
             obj.maktab_tanfizi=maktab
         except:
-            pass
+            maktab = request.user.maktab_tanfizi_follow_up
+            obj.maktab_tanfizi=maktab
 
-        if not change:  # New object
+        if not change:
             obj.created_by = request.user
         obj.updated_by = request.user
         super().save_model(request, obj, form, change)
@@ -41,45 +42,38 @@ class LogMixin:
 class MaktabTanfiziMixin:
     def get_queryset(self, request):
         qs = super().get_queryset(request)
-        try:
-            maktab = None
-            try:
-                maktab = request.user.maktab_tanfizi_user
-            except:
-                maktab = request.user.maktab_tanfizi_manager
+        maktab = None
 
+        if hasattr(request.user,"maktab_tanfizi_user"):
+            maktab = request.user.maktab_tanfizi_user
             qs = qs.filter(maktab_tanfizi=maktab)
-            print(maktab,qs)
-        except:
+        elif hasattr(request.user,"maktab_tanfizi_follow_up"):
+            maktab = request.user.maktab_tanfizi_follow_up
+            qs = qs.filter(maktab_tanfizi=maktab,has_motab3at=True)
+        elif hasattr(request.user,"maktab_tanfizi_manager"):
+            maktab = request.user.maktab_tanfizi_manager.first()
+            qs = qs.filter(maktab_tanfizi=maktab)
+        else:
             qs = qs.none()
 
         return qs
 
     def has_add_permission(self, request):
-        try:
-            maktab = request.user.maktab_tanfizi_user
+        if hasattr(request.user,"maktab_tanfizi_user") or hasattr(request.user,"maktab_tanfizi_follow_up"):
             return super().has_add_permission(request)
-        except:
-            pass
 
         return False
 
     def has_change_permission(self, request, obj=None):
-        try:
-            maktab = request.user.maktab_tanfizi_user
+        if hasattr(request.user,"maktab_tanfizi_user") or hasattr(request.user,"maktab_tanfizi_follow_up"):
             return super().has_change_permission(request,obj)
-        except:
-            pass
 
         return False
     
     def has_delete_permission(self, request, obj=None):
-        try:
-            maktab = request.user.maktab_tanfizi_user
+        if hasattr(request.user,"maktab_tanfizi_user") or hasattr(request.user,"maktab_tanfizi_follow_up"):
             return super().has_delete_permission(request,obj)
-        except:
-            pass
-
+        
         return False
 
 class MaktabTanfiziJihaInline(admin.StackedInline):
@@ -96,10 +90,16 @@ class MaktabTanfiziAdmin(admin.ModelAdmin):
         if db_field.name == "user":
             kwargs["queryset"] = User.objects.filter(groups__name='Maktab Tanfizi')
 
+        if db_field.name == "follow_up":
+            kwargs["queryset"] = User.objects.filter(groups__name='Maktab Tanfizi Follow up')
+           
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
+
+    def formfield_for_manytomany(self, db_field, request, **kwargs):
         if db_field.name == "manager":
             kwargs["queryset"] = User.objects.filter(groups__name='Maktab Tanfizi Manager')
             
-        return super().formfield_for_foreignkey(db_field, request, **kwargs)
+        return super().formfield_for_manytomany(db_field, request, **kwargs)
 
 @admin.register(MaktabTanfiziJiha)
 class MaktabTanfiziJihaAdmin(MaktabTanfiziMixin, admin.ModelAdmin):
@@ -131,15 +131,35 @@ class HarkatKhatabatOutboxInline(admin.StackedInline):
     show_change_link = True
     classes = ['collapse']
 
+class Motab3atKhatabatInline(admin.TabularInline):
+    model = Motab3atKhatabat
+    min_num = 0
+    extra = 0
+    show_change_link = True
+    classes = ["wide", "collapse"]
+
 @admin.register(Khatabat)
 class KhatabatAdmin(MaktabTanfiziMixin,LogMixin,admin.ModelAdmin):
     exclude = ('maktab_tanfizi','created_by', 'updated_by')
     list_display = ('letter_number', 'subject',)
     search_fields = ('letter_number', 'subject')
-    inlines = [HarkatKhatabatInboxInline,HarkatKhatabatOutboxInline]
-    fields =  ('letter_number','subject', )
-    # readonly_fields = ['letter_number',]
+    inlines = [HarkatKhatabatInboxInline,HarkatKhatabatOutboxInline,]
+    fields =  ('letter_number','subject','has_motab3at' )
+    readonly_fields = []
 
+    def get_readonly_fields(self, request, obj=None):
+        readonly = super().get_readonly_fields(request, obj)
+        if hasattr(request.user,"maktab_tanfizi_user"):
+            if obj and obj.motab3atkhatabat_set.exists():
+                readonly.append("has_motab3at")
+
+        if hasattr(request.user,"maktab_tanfizi_follow_up"):
+            readonly.append("letter_number")
+            readonly.append("subject")
+            readonly.append("has_motab3at")
+
+        return readonly
+    
     def get_changeform_initial_data(self, request):
         maktab_tanfizi = request.user.maktab_tanfizi_user
         last_letter = Khatabat.objects.filter(maktab_tanfizi=maktab_tanfizi).order_by("-created_at").first()
@@ -148,12 +168,21 @@ class KhatabatAdmin(MaktabTanfiziMixin,LogMixin,admin.ModelAdmin):
 
         return {'letter_number': num}
     
+    def get_inlines(self,request, obj):
+        if obj and (obj.has_motab3at or obj.motab3atkhatabat_set.exists()):
+            return self.inlines + [Motab3atKhatabatInline]
+        
+        return self.inlines
+    
     def get_formsets_with_inlines(self, request, obj=None):
         maktab = None
-        try:
+
+        if hasattr(request.user,"maktab_tanfizi_user"):
             maktab = request.user.maktab_tanfizi_user
-        except:
-            maktab = request.user.maktab_tanfizi_manager
+        elif hasattr(request.user,"maktab_tanfizi_follow_up"):
+            maktab = request.user.maktab_tanfizi_follow_up
+        elif hasattr(request.user,"maktab_tanfizi_manager"):
+            maktab = request.user.maktab_tanfizi_manager.first()
 
         jiha_all_qs = MaktabTanfiziJiha.objects.filter(maktab_tanfizi=maktab)
 
@@ -186,9 +215,9 @@ def print_html_table(modeladmin, request, queryset):
 @admin.register(HarkatKhatabat)
 class HarkatKhatabatAdmin(admin.ModelAdmin):
     model = HarkatKhatabat
-    list_display = ('subject', 'letter_number', 'movement_type', 'date', 'source_entity', 'procedure', 'delivery_date', 'followup_result')    
+    list_display = ('subject', 'letter_number', 'movement_type', 'date', 'source_entity', 'procedure', 'delivery_date')    
     search_fields = ('letter__letter_number', 'letter__subject','note')
-    list_filter = ('movement_type','date', 'source_entity', 'procedure', 'delivery_date', 'followup_result')
+    list_filter = ('movement_type','date', 'source_entity', 'procedure', 'delivery_date')
     actions = [print_html_table]
 
     @admin.display(description='رقم الخطاب')
@@ -201,15 +230,18 @@ class HarkatKhatabatAdmin(admin.ModelAdmin):
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
-        try:
-            maktab = None
-            try:
-                maktab = request.user.maktab_tanfizi_user
-            except:
-                maktab = request.user.maktab_tanfizi_manager
 
+        maktab = None
+        if hasattr(request.user,"maktab_tanfizi_user"):
+            maktab = request.user.maktab_tanfizi_user
             qs = qs.filter(letter__maktab_tanfizi=maktab)
-        except:
+        elif hasattr(request.user,"maktab_tanfizi_follow_up"):
+            maktab = request.user.maktab_tanfizi_follow_up
+            qs = qs.filter(letter__maktab_tanfizi=maktab,letter__has_motab3at=True)
+        elif hasattr(request.user,"maktab_tanfizi_manager"):
+            maktab = request.user.maktab_tanfizi_manager.first()
+            qs = qs.filter(letter__maktab_tanfizi=maktab)
+        else:
             qs = qs.none()
 
         return qs
