@@ -53,7 +53,7 @@ class Khatabat(LoggingModel):  # جدول_خطابات
         return f'{self.subject} ({self.letter_number})'
 
     class Meta:
-        ordering = ["-letter_number"]
+        ordering = ["-created_at"]
         verbose_name = "الخطاب"
         verbose_name_plural = "الخطابات"
 
