@@ -10,6 +10,7 @@ class MaktabTanfizi(models.Model):
     name = models.CharField(max_length=255, verbose_name="المكتب التنفيذي")
     code = models.CharField(max_length=10, verbose_name="الرمز",default="")
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.PROTECT,related_name="maktab_tanfizi_user",verbose_name="المستخدم")
+    manager = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.PROTECT,related_name="maktab_tanfizi_manager",null=True,verbose_name="مدير")
 
     def __str__(self):
         return self.name
