@@ -63,7 +63,10 @@ class Khatabat(LoggingModel):  # جدول_خطابات
         return f"{self.maktab_tanfizi.code}-{datetime.now().strftime("%m")}-{last_letter_num+1}"
 
     def save(self, *args,**kwargs):
-        self.letter_number = self.next_letter_number
+        is_new = self.pk is None
+
+        if is_new:
+            self.letter_number = self.next_letter_number
         return super().save(args,kwargs)
 
 class HarkatKhatabat(models.Model):  # جدول_حركة_الخطابات
@@ -115,7 +118,7 @@ class HarkatKhatabat(models.Model):  # جدول_حركة_الخطابات
     movement_type = models.IntegerField(verbose_name="نوع الحركة", choices=MOVEMENT_CHOICES)
     date = models.DateField(verbose_name="التاريخ")
     source_entity = models.ForeignKey(MaktabTanfiziJiha, on_delete=models.PROTECT, related_name="source_entities", verbose_name="جهة الخطاب")
-    procedure = models.IntegerField(verbose_name="الإجراء", choices=PROCEDURE_CHOICES)
+    procedure = models.IntegerField(verbose_name="الإجراء", choices=PROCEDURE_CHOICES, null=True, blank=True)
     letter_attachment = models.FileField(upload_to='khatabat/', verbose_name="صورة الخطاب", null=True, blank=True)
     forwarded_to = models.ManyToManyField(MaktabTanfiziJiha, related_name="forwarded_to", verbose_name="الجهة المحول لها")
     forward_date = models.DateField(null=True, blank=True, verbose_name="تاريخ التحويل")
@@ -132,14 +135,36 @@ class HarkatKhatabat(models.Model):  # جدول_حركة_الخطابات
         verbose_name = "حركة خطاب"
         verbose_name_plural = "حركة الخطابات"
 
-    def clean(self):
-        if self.movement_type == self.MOVEMENT_OUTBOX:
-            # print(self.letter_attachment,self.forwarded_to,self.forward_date)
-            if not self.letter_attachment:
-                raise ValidationError(
-                    {"letter_attachment":"الحقل مطلوب: الرجاء اضافة صورة الخطاب"}
-                )
-            # if not self.forward_date:
-            #     raise ValidationError(
-            #         {"forward_date":"الحقل مطلوب: الرجاء تحديد تاريخ التحويل"}
-            #     )
+class HarkatKhatabatInboxManager(models.Manager):
+    def get_queryset(self):
+       return super().get_queryset().filter(movement_type=HarkatKhatabat.MOVEMENT_INBOX)
+
+class HarkatKhatabatInbox(HarkatKhatabat):
+    objects = HarkatKhatabatInboxManager()
+    default_manager = objects
+
+    class Meta:
+        proxy = True
+        verbose_name = "حركة خطاب وارد"
+        verbose_name_plural = "حركة الخطابات الواردة"
+
+    def save(self, *args,**kwargs):
+        self.movement_type = HarkatKhatabat.MOVEMENT_INBOX
+        return super().save(args,kwargs)
+
+class HarkatKhatabatOutboxManager(models.Manager):
+    def get_queryset(self):
+       return super().get_queryset().filter(movement_type=HarkatKhatabat.MOVEMENT_OUTBOX)
+
+class HarkatKhatabatOutbox(HarkatKhatabat):
+    objects = HarkatKhatabatOutboxManager()
+    default_manager = objects
+
+    class Meta:
+        proxy = True
+        verbose_name = "حركة خطاب صادر"
+        verbose_name_plural = "حركة الخطابات الصادرة"
+
+    def save(self, *args,**kwargs):
+        self.movement_type = HarkatKhatabat.MOVEMENT_OUTBOX
+        return super().save(args,kwargs)

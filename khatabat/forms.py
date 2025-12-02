@@ -2,12 +2,33 @@ from django import forms
 from django.forms import ModelForm
 from django.contrib.admin.widgets import AdminDateWidget,FilteredSelectMultiple
 
-from khatabat.models import HarkatKhatabat, MaktabTanfiziJiha
+from khatabat.models import HarkatKhatabat, HarkatKhatabatInbox, HarkatKhatabatOutbox, MaktabTanfiziJiha
 
 jiha_none = MaktabTanfiziJiha.objects.none() #MaktabTanfiziJiha.objects.filter(maktab_tanfizi=obj.maktab_tanfizi)
 jiha_all_qs = MaktabTanfiziJiha.objects.all()
 
-class KhatabatAdminForm(ModelForm):
+class HarkatKhatabatInboxAdminForm(ModelForm):
+    request = None
+    qs = None
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        if self.request:
+            try:
+                self.fields["source_entity"].queryset = self.qs
+            except:
+                self.fields["source_entity"].queryset = self.qs.none()
+
+    class Meta:
+        model = HarkatKhatabatInbox
+        fields = ["date","source_entity","letter_attachment","delivery_date","note"]
+        widgets = {
+            "date":AdminDateWidget(),
+            "delivery_date":AdminDateWidget(),
+        }
+
+class HarkatKhatabatOutboxAdminForm(ModelForm):
     request = None
     qs = None
 
@@ -25,8 +46,8 @@ class KhatabatAdminForm(ModelForm):
                 self.fields["forwarded_to"].queryset = self.qs.none()
 
     class Meta:
-        model = HarkatKhatabat
-        fields = ["movement_type","date","source_entity","procedure","letter_attachment","forwarded_to","forward_date","delivery_date","followup_result","followup_attachment","note"]
+        model = HarkatKhatabatOutbox
+        fields = ["date","source_entity","procedure","forward_date","forwarded_to","letter_attachment","delivery_date","note"]
         widgets = {
             "date":AdminDateWidget(),
             "forward_date":AdminDateWidget(),

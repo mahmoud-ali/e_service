@@ -6,8 +6,8 @@ from django.contrib.auth import get_user_model
 from django.http import HttpResponse
 from django.template.loader import render_to_string
 
-from khatabat.forms import KhatabatAdminForm
-from .models import Khatabat, HarkatKhatabat, MaktabTanfizi, MaktabTanfiziJiha
+from khatabat.forms import HarkatKhatabatInboxAdminForm,HarkatKhatabatOutboxAdminForm
+from .models import HarkatKhatabatInbox, HarkatKhatabatOutbox, Khatabat, HarkatKhatabat, MaktabTanfizi, MaktabTanfiziJiha
 
 User = get_user_model()
 
@@ -108,18 +108,27 @@ class MaktabTanfiziJihaAdmin(MaktabTanfiziMixin, admin.ModelAdmin):
 
         super().save_model(request, obj, form, change)
 
-class HarkatKhatabatInline(admin.StackedInline):
-    model = HarkatKhatabat
-    min_num = 1
+class HarkatKhatabatInboxInline(admin.StackedInline):
+    model = HarkatKhatabatInbox
+    form = HarkatKhatabatInboxAdminForm
+    min_num = 0
     extra = 0
     show_change_link = True
+    classes = ['collapse']
+class HarkatKhatabatOutboxInline(admin.StackedInline):
+    model = HarkatKhatabatOutbox
+    form = HarkatKhatabatOutboxAdminForm
+    min_num = 0
+    extra = 0
+    show_change_link = True
+    classes = ['collapse']
 
 @admin.register(Khatabat)
 class KhatabatAdmin(MaktabTanfiziMixin,LogMixin,admin.ModelAdmin):
     exclude = ('maktab_tanfizi','created_by', 'updated_by')
     list_display = ('letter_number', 'subject',)
     search_fields = ('letter_number', 'subject')
-    inlines = [HarkatKhatabatInline]
+    inlines = [HarkatKhatabatInboxInline,HarkatKhatabatOutboxInline]
     fields =  ('letter_number','subject', )
     # readonly_fields = ['letter_number',]
 
@@ -138,8 +147,11 @@ class KhatabatAdmin(MaktabTanfiziMixin,LogMixin,admin.ModelAdmin):
 
         for inline in self.get_inline_instances(request, obj):
             formset = inline.get_formset(request, obj)            
-            if isinstance(inline,HarkatKhatabatInline):
-                formset.form = KhatabatAdminForm
+            if isinstance(inline,HarkatKhatabatInboxInline):
+                formset.form.request = request
+                formset.form.qs = jiha_all_qs
+
+            if isinstance(inline,HarkatKhatabatOutboxInline):
                 formset.form.request = request
                 formset.form.qs = jiha_all_qs
 
