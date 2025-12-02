@@ -42,7 +42,11 @@ class MaktabTanfiziMixin:
     def get_queryset(self, request):
         qs = super().get_queryset(request)
         try:
-            maktab = request.user.maktab_tanfizi_user or request.user.maktab_tanfizi_manager
+            maktab = None
+            try:
+                maktab = request.user.maktab_tanfizi_user
+            except:
+                maktab = request.user.maktab_tanfizi_manager
 
             qs = qs.filter(maktab_tanfizi=maktab)
             print(maktab,qs)
@@ -53,7 +57,7 @@ class MaktabTanfiziMixin:
 
     def has_add_permission(self, request):
         try:
-            maktab = request.user.maktab_tanfizi_user or request.user.maktab_tanfizi_manager
+            maktab = request.user.maktab_tanfizi_user
             return super().has_add_permission(request)
         except:
             pass
@@ -62,7 +66,7 @@ class MaktabTanfiziMixin:
 
     def has_change_permission(self, request, obj=None):
         try:
-            maktab = request.user.maktab_tanfizi_user or request.user.maktab_tanfizi_manager
+            maktab = request.user.maktab_tanfizi_user
             return super().has_change_permission(request,obj)
         except:
             pass
@@ -71,7 +75,7 @@ class MaktabTanfiziMixin:
     
     def has_delete_permission(self, request, obj=None):
         try:
-            maktab = request.user.maktab_tanfizi_user or request.user.maktab_tanfizi_manager
+            maktab = request.user.maktab_tanfizi_user
             return super().has_delete_permission(request,obj)
         except:
             pass
@@ -105,7 +109,7 @@ class MaktabTanfiziJihaAdmin(MaktabTanfiziMixin, admin.ModelAdmin):
 
     def save_model(self, request, obj, form, change):
         try:
-            maktab = request.user.maktab_tanfizi_user or request.user.maktab_tanfizi_manager
+            maktab = request.user.maktab_tanfizi_user
             obj.maktab_tanfizi=maktab
         except:
             pass
@@ -137,7 +141,7 @@ class KhatabatAdmin(MaktabTanfiziMixin,LogMixin,admin.ModelAdmin):
     # readonly_fields = ['letter_number',]
 
     def get_changeform_initial_data(self, request):
-        maktab_tanfizi = request.user.maktab_tanfizi_user or request.user.maktab_tanfizi_manager
+        maktab_tanfizi = request.user.maktab_tanfizi_user
         last_letter = Khatabat.objects.filter(maktab_tanfizi=maktab_tanfizi).order_by("-created_at").first()
         last_letter_num = int(last_letter.letter_number.split("-")[-1])
         num = f"{maktab_tanfizi.code}-{datetime.now().strftime("%m")}-{last_letter_num+1}"
@@ -145,7 +149,11 @@ class KhatabatAdmin(MaktabTanfiziMixin,LogMixin,admin.ModelAdmin):
         return {'letter_number': num}
     
     def get_formsets_with_inlines(self, request, obj=None):
-        maktab = request.user.maktab_tanfizi_user or request.user.maktab_tanfizi_manager
+        maktab = None
+        try:
+            maktab = request.user.maktab_tanfizi_user
+        except:
+            maktab = request.user.maktab_tanfizi_manager
 
         jiha_all_qs = MaktabTanfiziJiha.objects.filter(maktab_tanfizi=maktab)
 
@@ -194,7 +202,11 @@ class HarkatKhatabatAdmin(admin.ModelAdmin):
     def get_queryset(self, request):
         qs = super().get_queryset(request)
         try:
-            maktab = request.user.maktab_tanfizi_user or request.user.maktab_tanfizi_manager
+            maktab = None
+            try:
+                maktab = request.user.maktab_tanfizi_user
+            except:
+                maktab = request.user.maktab_tanfizi_manager
 
             qs = qs.filter(letter__maktab_tanfizi=maktab)
         except:
