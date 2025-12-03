@@ -153,7 +153,7 @@ class KhatabatAdmin(MaktabTanfiziMixin,LogMixin,admin.ModelAdmin):
             if obj and obj.motab3atkhatabat_set.exists():
                 readonly.append("has_motab3at")
 
-        if hasattr(request.user,"maktab_tanfizi_follow_up"):
+        elif hasattr(request.user,"maktab_tanfizi_follow_up"):
             readonly.append("letter_number")
             readonly.append("subject")
             readonly.append("has_motab3at")
