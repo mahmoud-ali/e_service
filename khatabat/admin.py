@@ -181,6 +181,7 @@ class KhatabatAdmin(MaktabTanfiziMixin,LogMixin,admin.ModelAdmin):
         return {'letter_number': num}
     
     def get_inlines(self,request, obj):
+        my_inlines = super().get_inlines(request, obj)
         if not hasattr(request.user,"maktab_tanfizi_user"):
             if obj:
                 inlines = []
@@ -192,12 +193,12 @@ class KhatabatAdmin(MaktabTanfiziMixin,LogMixin,admin.ModelAdmin):
                     if qs.exists():
                         inlines.append(inline)
 
-                self.inlines = inlines
+                my_inlines = inlines
 
         if obj and (obj.has_motab3at or obj.motab3atkhatabat_set.exists()):
-            return self.inlines + [Motab3atKhatabatInline]
+            return my_inlines + [Motab3atKhatabatInline]
         
-        return self.inlines
+        return my_inlines
     
     def get_formsets_with_inlines(self, request, obj=None):
         maktab = None
