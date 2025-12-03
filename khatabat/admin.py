@@ -1,5 +1,8 @@
 from datetime import date,datetime
 
+from django.urls import reverse
+from django.utils.html import format_html
+
 from django.contrib import admin
 from django.contrib.auth import get_user_model
 
@@ -116,20 +119,18 @@ class MaktabTanfiziJihaAdmin(MaktabTanfiziMixin, admin.ModelAdmin):
 
         super().save_model(request, obj, form, change)
 
-class HarkatKhatabatInboxInline(admin.StackedInline):
+class HarakaMixin:
+    min_num = 0
+    extra = 0
+    show_change_link = True
+    classes = ['collapse']
+
+class HarkatKhatabatInboxInline(HarakaMixin,admin.StackedInline):
     model = HarkatKhatabatInbox
     form = HarkatKhatabatInboxAdminForm
-    min_num = 0
-    extra = 0
-    show_change_link = True
-    classes = ['collapse']
-class HarkatKhatabatOutboxInline(admin.StackedInline):
+class HarkatKhatabatOutboxInline(HarakaMixin,admin.StackedInline):
     model = HarkatKhatabatOutbox
     form = HarkatKhatabatOutboxAdminForm
-    min_num = 0
-    extra = 0
-    show_change_link = True
-    classes = ['collapse']
 
 class Motab3atKhatabatInline(admin.TabularInline):
     model = Motab3atKhatabat
@@ -141,11 +142,22 @@ class Motab3atKhatabatInline(admin.TabularInline):
 @admin.register(Khatabat)
 class KhatabatAdmin(MaktabTanfiziMixin,LogMixin,admin.ModelAdmin):
     exclude = ('maktab_tanfizi','created_by', 'updated_by')
-    list_display = ('letter_number', 'subject',)
+    list_display = ('letter_number', 'subject','first_haraka')
+    list_display_links = ('letter_number', 'subject',)
     search_fields = ('letter_number', 'subject')
     inlines = [HarkatKhatabatInboxInline,HarkatKhatabatOutboxInline,]
     fields =  ('letter_number','subject','has_motab3at' )
     readonly_fields = []
+
+    @admin.display(description='الحركة الابتدائية')
+    def first_haraka(self, obj):
+        if obj.harkatkhatabat_set.exists():
+            haraka_obj = obj.harkatkhatabat_set.first()
+            url = reverse("admin:khatabat_harkatkhatabat_change", args=[haraka_obj.id])
+            return format_html('<a href="{}">{}</a>', url, haraka_obj.get_movement_type_display())            
+            
+        
+        return '-'
 
     def get_readonly_fields(self, request, obj=None):
         readonly = super().get_readonly_fields(request, obj)
@@ -200,6 +212,9 @@ class KhatabatAdmin(MaktabTanfiziMixin,LogMixin,admin.ModelAdmin):
         jiha_all_qs = MaktabTanfiziJiha.objects.filter(maktab_tanfizi=maktab)
 
         for inline in self.get_inline_instances(request, obj):
+            count = inline.model.objects.filter(letter=obj).count()
+            inline.verbose_name_plural = f"{inline.verbose_name_plural} ({count})"
+
             formset = inline.get_formset(request, obj)            
             if isinstance(inline,HarkatKhatabatInboxInline):
                 formset.form.request = request
