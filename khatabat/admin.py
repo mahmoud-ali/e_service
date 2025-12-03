@@ -215,9 +215,9 @@ def print_html_table(modeladmin, request, queryset):
 @admin.register(HarkatKhatabat)
 class HarkatKhatabatAdmin(admin.ModelAdmin):
     model = HarkatKhatabat
-    list_display = ('subject', 'letter_number', 'movement_type', 'date', 'source_entity', 'procedure', 'delivery_date')    
+    list_display = ('subject', 'letter_number', 'movement_type', 'date', 'procedure', 'delivery_date', 'source_entity','forwarded_to_list')    
     search_fields = ('letter__letter_number', 'letter__subject','note')
-    list_filter = ('movement_type','date', 'procedure', 'delivery_date', 'source_entity')
+    list_filter = ('movement_type','date', 'procedure', 'delivery_date', 'source_entity', 'forwarded_to')
     actions = [print_html_table]
 
     @admin.display(description='رقم الخطاب')
@@ -227,6 +227,11 @@ class HarkatKhatabatAdmin(admin.ModelAdmin):
     @admin.display(description='موضوع الخطاب')
     def subject(self, obj):
         return obj.letter.subject
+
+    @admin.display(description="جهة التحويل")
+    def forwarded_to_list(self, obj):
+        l = list(obj.forwarded_to.values_list('name',flat=True))
+        return "، ".join(l)
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
