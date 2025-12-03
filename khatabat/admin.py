@@ -217,7 +217,7 @@ class HarkatKhatabatAdmin(admin.ModelAdmin):
     model = HarkatKhatabat
     list_display = ('subject', 'letter_number', 'movement_type', 'date', 'source_entity', 'procedure', 'delivery_date')    
     search_fields = ('letter__letter_number', 'letter__subject','note')
-    list_filter = ('movement_type','date', 'source_entity', 'procedure', 'delivery_date')
+    list_filter = ('movement_type','date', 'procedure', 'delivery_date', 'source_entity')
     actions = [print_html_table]
 
     @admin.display(description='رقم الخطاب')
@@ -236,6 +236,46 @@ class HarkatKhatabatAdmin(admin.ModelAdmin):
             maktab = request.user.maktab_tanfizi_user
             qs = qs.filter(letter__maktab_tanfizi=maktab)
         elif hasattr(request.user,"maktab_tanfizi_follow_up"):
+            maktab = request.user.maktab_tanfizi_follow_up
+            qs = qs.filter(letter__maktab_tanfizi=maktab,letter__has_motab3at=True)
+        elif hasattr(request.user,"maktab_tanfizi_manager"):
+            maktab = request.user.maktab_tanfizi_manager.first()
+            qs = qs.filter(letter__maktab_tanfizi=maktab)
+        else:
+            qs = qs.none()
+
+        return qs
+
+    def has_add_permission(self, request):
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        return False
+    
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+@admin.register(Motab3atKhatabat)
+class Motab3atKhatabatAdmin(admin.ModelAdmin):
+    model = Motab3atKhatabat
+    list_display = ('subject', 'letter_number', 'date', 'action', 'done',)    
+    search_fields = ('letter__letter_number', 'letter__subject','note')
+    list_filter = ('date', 'done',)
+    actions = [print_html_table]
+
+    @admin.display(description='رقم الخطاب')
+    def letter_number(self, obj):
+        return obj.letter.letter_number
+
+    @admin.display(description='موضوع الخطاب')
+    def subject(self, obj):
+        return obj.letter.subject
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+
+        maktab = None
+        if hasattr(request.user,"maktab_tanfizi_follow_up"):
             maktab = request.user.maktab_tanfizi_follow_up
             qs = qs.filter(letter__maktab_tanfizi=maktab,letter__has_motab3at=True)
         elif hasattr(request.user,"maktab_tanfizi_manager"):

@@ -178,6 +178,7 @@ class Motab3atKhatabat(models.Model):
     )
     date = models.DateField(verbose_name="التاريخ")
     action = models.CharField(verbose_name="الإجراء")
+    done = models.BooleanField(verbose_name="هل إكتملت المهمة؟", default=False)
     attachment = models.FileField(upload_to='mutabaah/', null=True, blank=True, verbose_name="صورة نتيجة المتابعة")
 
     def __str__(self):
