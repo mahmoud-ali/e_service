@@ -172,12 +172,10 @@ class KhatabatAdmin(MaktabTanfiziMixin,LogMixin,admin.ModelAdmin):
         if not hasattr(request.user,"maktab_tanfizi_user"):
             if obj:
                 inlines = []
-                print(self.inlines)
                 for inline in [HarkatKhatabatInboxInline,HarkatKhatabatOutboxInline,]:
                     related_model = inline.model
 
                     qs = related_model.objects.filter(letter= obj)
-                    print(qs)
 
                     if qs.exists():
                         inlines.append(inline)
