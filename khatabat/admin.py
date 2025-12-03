@@ -169,6 +169,21 @@ class KhatabatAdmin(MaktabTanfiziMixin,LogMixin,admin.ModelAdmin):
         return {'letter_number': num}
     
     def get_inlines(self,request, obj):
+        if not hasattr(request.user,"maktab_tanfizi_user"):
+            if obj:
+                inlines = []
+                print(self.inlines)
+                for inline in [HarkatKhatabatInboxInline,HarkatKhatabatOutboxInline,]:
+                    related_model = inline.model
+
+                    qs = related_model.objects.filter(letter= obj)
+                    print(qs)
+
+                    if qs.exists():
+                        inlines.append(inline)
+
+                self.inlines = inlines
+
         if obj and (obj.has_motab3at or obj.motab3atkhatabat_set.exists()):
             return self.inlines + [Motab3atKhatabatInline]
         
