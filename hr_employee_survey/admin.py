@@ -11,7 +11,32 @@ class EmergencyEvaluationAdmin(admin.ModelAdmin):
                 'admin/emergency_evaluation_fetch_name.js', 
             )
 
-    readonly_fields = ('employee_name',)
+    readonly_fields = (
+                'employee_code',
+                'employee_name',
+                'job_title',
+                'direct_manager',
+                'period_from',
+                'period_to',
+                'attendance_discipline',
+                'follow_instructions',
+                'task_responsibility',
+                'teamwork',
+                'communication',
+                'main_tasks_quality',
+                'extra_tasks',
+                'work_pressure',
+                'policies_commitment',
+                'creativity',
+                'overall_performance',
+                'emergency_response', 
+                'coverage_percentage',
+                'strengths',
+                'challenges',
+                'training_needs',
+                'manager_notes'   
+                       )
+    
     list_display = (
         'employee_code',
         'employee_name',
@@ -36,7 +61,6 @@ class EmergencyEvaluationAdmin(admin.ModelAdmin):
     search_fields = (
         'employee_code',
         'employee_name',
-        'job_number',
         'job_title',
         'direct_manager',
     )
@@ -45,7 +69,7 @@ class EmergencyEvaluationAdmin(admin.ModelAdmin):
         (_('بيانات الموظف والفترة'), {
             'fields': (
                 ('employee_code', 'employee_name'),
-                ('job_number', 'job_title'),
+                ( 'job_title'),
                 ( 'direct_manager'),
                 ('period_from', 'period_to'),
             ),

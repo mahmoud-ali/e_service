@@ -2,173 +2,13 @@
 
 {% block content %}
 
+{% load static  %}
+
 {% load i18n %}
 
 
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
-
-<style>
-   
-    body {
-        background-color: #e9eff4; 
-    }
-    .evaluation-form-container {
-        max-width: 900px;
-        margin: 30px auto;
-        padding: 20px;
-        background-color: #ffffff;
-        border: 1px solid #ddd;
-        border-radius: 8px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-        font-family: Arial, sans-serif;
-        direction: rtl;
-        text-align: right;
-        font-family: 'Cairo', sans-serif;
-    }
-
-    h2 {
-        background-color: #007bff; (Primary) 
-        color: white; 
-        padding: 15px 20px;
-        border-radius: 8px;
-        margin-top: 35px;
-        margin-bottom: 20px;
-        font-size: 1.4rem;
-        font-weight: 700;
-        box-shadow: 0 2px 10px rgba(0, 123, 255, 0.2);
-    }
-
-    h3 {
-        color: #333;
-        margin-top: 20px;
-        font-size: 1.2em;
-    }
-
-    .form-section {
-        margin-bottom: 20px;
-        padding: 15px;
-        border: 1px solid #eee;
-        border-radius: 6px;
-        background-color: #f9f9f9;
-    }
-
-    .form-group {
-        display: flex;
-        align-items: center;
-        margin-bottom: 15px;
-    }
-
-    .form-group label {
-        flex-basis: 300px; 
-        min-width: 250px;
-        font-weight: bold;
-        color: #555;
-        white-space: nowrap;
-        text-align: right;
-    }
-    
-    .form-group input[type="text"],
-    .form-group select,
-    .form-group .date-inputs,
-    .form-group .django-field {
-        flex-grow: 1;
-        padding: 8px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        box-sizing: border-box;
-    }
-
-    .form-group .django-field {
-        flex-grow: 1;
-        display: block; 
-    }
-    .form-group .django-field select,
-    .form-group .django-field input[type="text"] {
-        width: 100%;
-    }
-
-
-    .date-inputs {
-        display: flex;
-        align-items: center;
-        gap: 5px;
-        flex-wrap: nowrap;
-    }
-
-    .date-inputs input {
-        flex-grow: 1;
-        min-width: 0;
-    }
-    
-    textarea {
-        width: 100%;
-        min-height: 100px;
-        padding: 10px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        margin-top: 5px;
-        box-sizing: border-box;
-    }
-
-    button[type="submit"] {
-        background-color: #28a745;
-        color: white;
-        padding: 12px 20px;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        font-size: 1.1em;
-        margin-top: 20px;
-        width: 100%;
-        transition: background-color 0.3s;
-    }
-
-    button[type="submit"]:hover {
-        background-color: #218838;
-    }
-
-    @media (max-width: 768px) {
-        .evaluation-form-container {
-            margin: 10px;
-            padding: 15px;
-        }
-
-        h2 {
-            font-size: 1.2rem;
-            padding: 10px 15px;
-        }
-
-        .form-group {
-            flex-direction: column; 
-            align-items: flex-start; 
-            gap: 5px; 
-        }
-
-        .form-group label {
-            flex-basis: 100%; 
-            width: 100%;
-            white-space: normal;
-            text-align: right;
-            margin-left: 0; 
-            margin-bottom: 2px;
-        }
-        
-        .form-group input[type="text"],
-        .form-group select,
-        .form-group .date-inputs,
-        .form-group .django-field {
-            width: 100%;
-            max-width: 100%;
-        }
-
-        .date-inputs {
-            flex-wrap: wrap; 
-        }
-    }
-
-</style>
-
-
+<link rel="stylesheet" type="text/css" href="{% static 'css/base.css' %}" />
 <div class="evaluation-form-container">
     <form method="post">
         {% csrf_token %}
@@ -184,38 +24,48 @@
             <div class="form-group">
                <label for="department_display">كود الموظف</label>  <input type="text" id="employee_code_display" >
             </div>
-            
-
-            
+                        
             <div class="form-group">
                <label for="department_display">البريد الالكتروني  </label>  {{ form.email }} 
             </div>
-
             
             {{ form.job_title }}
             <div class="form-group">
                 <label for="job_title_display">المسمى الوظيفي </label>
                 <input type="text" id="job_title_display" >
             </div>
-                    
-            
+                         
             <div class="form-group">
                 <label for="department_display">المدير المباشر</label>  
                 <input type="text" value="{{ manager_name|default:request.user.get_full_name }}" >
             </div>
 
             <div class="form-group">
-                <label>فترة التقييم:</label>
-                <div class="date-inputs">
-                    <span>من:</span> {{ form.period_from }} 
-                    <span>— إلى:</span> {{ form.period_to }}
-                </div>
+            <label>فترة التقييم:</label>
+            <div class="date-inputs">
+                <span>من:</span> 
+                {{ form.period_from }} 
+                {% if form.period_from.errors %}
+                    <div class="error-message">{{ form.period_from.errors }}</div>
+                {% endif %}
+                
+                <span>— إلى:</span> 
+                {{ form.period_to }}
+                {% if form.period_to.errors %}
+                    </br>
+                    <div class="error-message">{{ form.period_to.errors }}</div>
+                {% endif %}
             </div>
+            
+            {% if form.non_field_errors %}
+                </br>
+                <div class="error-message non-field-error">{{ form.non_field_errors }}</div>
+            {% endif %}
+            
+        </div>
         </div>
 
         <hr>
-        
-
         <h2>ثانياً: تقييم السلوك الوظيفي </h2>
         <div class="form-section">
             <div class="form-group">
@@ -259,10 +109,7 @@
         <hr>
 
         <h2>ثالثاً  الأداء العام قياس النتائج</h2>
-        <div class="form-section">
-            <div class="form-group">
-                <label for="department_display">مستوي الانجاز العام</label>  {{ form.overall_performance }}
-            </div>
+        <div class="form-section">   
             <div class="form-group">
                 <label for="department_display">مدي الاستجابة لطبيعة العمل في الطوارئ</label>  {{ form.emergency_response }}
             </div>

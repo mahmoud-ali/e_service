@@ -16,7 +16,7 @@ def get_employees_under_manager(request):
     if not request.user.is_authenticated:
         return JsonResponse({"error": "User is not authenticated"}, status=401)
     
-    manager_email = request.user.email    
+    manager_email = request.user.email  
     
     try:
         manager_employee = Employee_Data_Emergency.objects.get(email=manager_email)
@@ -64,8 +64,8 @@ def emergency_form(request):
 
     if request.method == "POST":
         
-        form = EmergencyEvaluationForm(request.POST, employee_choices=employee_choices )
-
+        form = EmergencyEvaluationForm(request.POST, employee_choices=employee_choices)
+ 
         if form.is_valid():
             try:
                 with transaction.atomic():
@@ -75,6 +75,7 @@ def emergency_form(request):
 
                     emergency_evaluation_instance.direct_manager = manager_name 
                     emergency_evaluation_instance.direct_manager_email = manager_email 
+                    
                     employee_code = form.cleaned_data.get('employee_code') 
                     if employee_code:
                         emergency_evaluation_instance.job_number = str(employee_code)
@@ -82,14 +83,26 @@ def emergency_form(request):
                     
                     if employee_email_from_form:
                         emergency_evaluation_instance.email = str(employee_email_from_form)
-                                        
+                    
+
                     emergency_evaluation_instance.save()
-                    return redirect('/surveys/survey_thank_you/')
+                    return redirect('surveys:submission_list')
 
             except Exception as e:
-                        print(f"Error saving Emergency Evaluation: {e}") 
-                        print(f"Form non-field errors: {form.errors}")
-                        traceback.print_exc() 
+                print(f"Error saving Emergency Evaluation (Database/Transaction Error): {e}") 
+                traceback.print_exc()
+                messages.error(request, 'حدث خطأ أثناء حفظ البيانات. يرجى مراجعة سجلات الخادم.')
+        
+        else:
+            
+            if 'period_to' in form.errors:
+                print("--- خطأ التحقق في حقل التاريخ ---")
+                print(f"رسالة خطأ period_to: {form.errors['period_to']}")
+                print("---------------------------------")
+
+            if form.non_field_errors():
+                print(f"Non-field errors: {form.non_field_errors()}")
+            
     else:
         form = EmergencyEvaluationForm(employee_choices=employee_choices)
 
@@ -103,7 +116,6 @@ def emergency_form(request):
     }
     
     return render(request, "hr_survey/form.html", context)
-
 
 
 
@@ -138,11 +150,9 @@ def survey_view(request):
 
         if form.is_valid():
             try:
-                
                 with transaction.atomic():
                     form.save()
-                
-                return render(request, 'hr_survey/thank_you.html')
+                return redirect('surveys:survey_thank_you')            
 
             except IntegrityError as e:
                 print(f"Database Integrity Error: {e}")

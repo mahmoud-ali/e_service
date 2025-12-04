@@ -128,7 +128,7 @@
                         <th>المسمي الوظيفي</th>
                         <th> المدير المباشر</th>
                         <th>تاريخ التقييم</th>
-                        <th>إجراءات</th>
+                        <th>نتيجة التقييم</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -139,17 +139,8 @@
                         <td>{{ emp.job_title }}</td>
                         <td>{{ emp.direct_manager }}</td>
                         <td>{{ emp.period_from }} - {{ emp.period_to }}</td>
-                        <td>
-                            <a href="" class="btn btn-sm btn-primary" title="تعديل">
-                                <i class="fas fa-edit"></i>
-                            </a>
-                            <form action="" method="POST" class="d-inline" onsubmit="return confirm('هل أنت متأكد من الحذف؟');">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-sm btn-danger" title="حذف">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </form>
-                        </td>
+                        <td>{{ emp.overall_performance }}</td>
+                           
                     </tr>
                     {% empty %}
                     <tr>
