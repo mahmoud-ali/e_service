@@ -122,7 +122,7 @@ class HarkatKhatabat(models.Model):  # جدول_حركة_الخطابات
     date = models.DateField(verbose_name="التاريخ")
     source_entity = models.ForeignKey(MaktabTanfiziJiha, on_delete=models.PROTECT, related_name="source_entities", verbose_name="جهة الخطاب")
     procedure = models.IntegerField(verbose_name="الإجراء", choices=PROCEDURE_CHOICES, null=True, blank=True)
-    letter_attachment = models.FileField(upload_to='khatabat/', verbose_name="صورة الخطاب", null=True, blank=True)
+    letter_attachment = models.FileField(upload_to='khatabat/', max_length=255, verbose_name="صورة الخطاب", null=True, blank=True)
     forwarded_to = models.ManyToManyField(MaktabTanfiziJiha, related_name="forwarded_to", verbose_name="الجهة المحول لها")
     forward_date = models.DateField(null=True, blank=True, verbose_name="تاريخ التحويل")
     # receiver_signature = models.BooleanField(default=False, verbose_name="توقيع المستلم")
@@ -180,7 +180,7 @@ class Motab3atKhatabat(models.Model):
     action = models.CharField(verbose_name="الإجراء")
     done = models.BooleanField(verbose_name="هل إكتملت المهمة؟", default=False)
     note = models.TextField(verbose_name="ملاحظات", blank=True,null=True)
-    attachment = models.FileField(upload_to='mutabaah/', null=True, blank=True, verbose_name="صورة نتيجة المتابعة")
+    attachment = models.FileField(upload_to='mutabaah/', max_length=255, null=True, blank=True, verbose_name="صورة نتيجة المتابعة")
 
     def __str__(self):
         return f"{self.date}/{self.action[:10]}"
