@@ -121,7 +121,7 @@
                         <h2 class="card-title text-lg mb-2">
                             <i class="fa-solid fa-circle-plus ml-2"></i> إضافة نقطة جديدة
                         </h2>
-                        <form method="post">
+                        <form method="post" onsubmit="return false;">
                         {% csrf_token %}
                         <div class="grid grid-cols-2 gap-3">
                             <input type="hidden" id="editPointId"> <!-- Hidden ID for editing -->
