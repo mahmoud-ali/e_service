@@ -175,9 +175,6 @@
                         <button onclick="submitPoints()" class="btn btn-primary w-full mt-4 text-white">
                             <i class="fa-solid fa-cloud-arrow-up ml-2"></i> إرسال النقاط للفحص
                         </button>
-                        <div id="submitResult"
-                            class="mt-4 p-3 bg-slate-100 rounded text-xs overflow-x-auto hidden border border-slate-300">
-                        </div>
                     </div>
                 </div>
 
@@ -190,6 +187,22 @@
                     </div>
                 </div>
             </div>
+        </div>
+        <div id="result_container" class="grid grid-cols-1 lg:grid-cols-12 gap-3 mt-4 hidden">
+            <div class="col-span-12 gap-6">            
+                <div class="card bg-base-100 shadow-md flex-grow">
+                    <div class="card-body p-5">
+                        <h2 class="card-title text-lg mb-2 justify-between">
+                            <span><i class="fa-solid fa-list-ol ml-2"></i>نتيجة الفحص</span>
+                        </h2>
+
+                        <div id="submitResult" class="mt-4 p-3 bg-slate-100 rounded text-xs overflow-x-auto border border-slate-300">
+                            <span class="text-red-500 font-bold">لا توجد نقاط للإرسال!</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 
@@ -425,6 +438,9 @@
                 overlay.setPosition(undefined);
                 updateMapFeatures();
                 updatePointsList();
+                const containerDiv = document.getElementById('result_container');
+                containerDiv.classList.add('hidden');
+
             }
         }
 
@@ -539,13 +555,18 @@
         }
 
         function submitPoints() {
+            const containerDiv = document.getElementById('result_container');
             const resultDiv = document.getElementById('submitResult');
-            resultDiv.classList.remove('hidden');
+            containerDiv.classList.remove('hidden');
 
             if (points.length === 0) {
                 resultDiv.innerHTML = '<span class="text-red-500 font-bold">لا توجد نقاط للإرسال!</span>';
                 return;
+            }else if (points.length < 3) {
+                resultDiv.innerHTML = '<span class="text-red-500 font-bold">لا توجد نقاط كافية!</span>';
+                return;
             }
+
 
             resultDiv.innerHTML = '<span class="text-blue-600"><i class="fa-solid fa-spinner fa-spin ml-2"></i> جاري إرسال البيانات...</span>';
 
