@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>خريطة فحص موقع جغرافي</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.4.19/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@v8.2.0/ol.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: #f3f4f6;
+        }
+
+        #map {
+            direction: ltr;
+            width: 100%;
+            height: 100%;
+            min-height: 600px;
+            border-radius: 0.5rem;
+            overflow: hidden;
+        }
+
+        /* تنسيقات النافذة المنبثقة (Popup) */
+        .ol-popup {
+            direction: rtl;
+            position: absolute;
+            background-color: white;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid #cccccc;
+            bottom: 12px;
+            left: -50px;
+            min-width: 200px;
+            z-index: 100;
+        }
+
+        .ol-popup:after,
+        .ol-popup:before {
+            top: 100%;
+            border: solid transparent;
+            content: " ";
+            height: 0;
+            width: 0;
+            position: absolute;
+            pointer-events: none;
+        }
+
+        .ol-popup:after {
+            border-top-color: white;
+            border-width: 10px;
+            left: 48px;
+            margin-left: -10px;
+        }
+
+        .ol-popup:before {
+            border-top-color: #cccccc;
+            border-width: 11px;
+            left: 48px;
+            margin-left: -11px;
+        }
+
+        .ol-popup-closer {
+            text-decoration: none;
+            position: absolute;
+            top: 2px;
+            right: 8px;
+            /* يسار لأننا RTL */
+            left: auto;
+            color: #999;
+            font-size: 1.2em;
+            cursor: pointer;
+        }
+
+        .ol-popup-closer:hover {
+            color: #333;
+        }
+
+        /* تنسيق عنصر القائمة القابل للسحب */
+        .point-item {
+            cursor: grab;
+        }
+
+        .point-item:active {
+            cursor: grabbing;
+        }
+
+        .sortable-ghost {
+            opacity: 0.4;
+            background-color: #e2e8f0;
+        }
+    </style>
+</head>
+
+<body class="pb-10">
+
+    <div class="bg-slate-800 text-white p-6 text-center shadow-lg mb-6">
+        <h1 class="text-3xl font-bold mb-2">
+            <i class="fa-solid fa-map-location-dot ml-2"></i>
+            خريطة فحص موقع جغرافي
+        </h1>
+        <p class="text-slate-300 text-sm">أضف نقاطاً، رتبها بالسحب والإفلات، وانقر عليها للتفاصيل</p>
+    </div>
+
+    <div class="container mx-auto px-4 max-w-7xl">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+            <div class="lg:col-span-4 space-y-4">
+
+                <div class="card bg-base-100 shadow-md">
+                    <div class="card-body p-5">
+                        <h2 class="card-title text-lg mb-2">
+                            <i class="fa-solid fa-circle-plus ml-2"></i> إضافة نقطة جديدة
+                        </h2>
+                        <form method="post">
+                        {% csrf_token %}
+                        <div class="grid grid-cols-2 gap-3">
+                            <input type="hidden" id="editPointId"> <!-- Hidden ID for editing -->
+                            <div class="form-control">
+                                <label class="label"><span class="label-text font-bold">خط العرض (Lat)</span></label>
+                                <input type="number" id="latInput" placeholder="15.5007"
+                                    class="input input-bordered w-full input-sm" step="any">
+                            </div>
+                            <div class="form-control">
+                                <label class="label"><span class="label-text font-bold">خط الطول (Lon)</span></label>
+                                <input type="number" id="lonInput" placeholder="32.5599"
+                                    class="input input-bordered w-full input-sm" step="any">
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-3 mt-4" id="addButtons">
+                            <button onclick="addManualPoint()" class="btn btn-primary btn-sm text-white">
+                                <i class="fa-solid fa-location-dot ml-1"></i> إضافة
+                            </button>
+                            <button onclick="addRandomPoint()" class="btn btn-success btn-sm text-white">
+                                <i class="fa-solid fa-dice ml-1"></i> عشوائي
+                            </button>
+                        </div>
+                        <div class="grid grid-cols-2 gap-3 mt-4 hidden" id="editButtons">
+                            <button onclick="updatePoint()" class="btn btn-warning btn-sm text-white">
+                                <i class="fa-solid fa-check ml-1"></i> تحديث
+                            </button>
+                            <button onclick="cancelEdit()" class="btn btn-ghost btn-sm">
+                                <i class="fa-solid fa-xmark ml-1"></i> إلغاء
+                            </button>
+                        </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="card bg-base-100 shadow-md flex-grow">
+                    <div class="card-body p-5">
+                        <h2 class="card-title text-lg mb-2 justify-between">
+                            <span><i class="fa-solid fa-list-ol ml-2"></i> القائمة (اسحب للترتيب)</span>
+                            <span class="text-xs font-normal text-gray-500">Drag & Drop</span>
+                        </h2>
+
+                        <div id="pointsList" class="h-64 overflow-y-auto border rounded-lg bg-slate-50 text-sm">
+                            <div class="p-4 text-center text-gray-400 empty-msg">لا توجد نقاط مضافة حالياً</div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-3 mt-4">
+                            <button onclick="clearAllPoints()" class="btn btn-error btn-sm text-white">حذف الكل</button>
+                            <button onclick="centerMapOnPoints()"
+                                class="btn btn-accent btn-sm text-white">توسيط</button>
+                        </div>
+                        <button onclick="submitPoints()" class="btn btn-primary w-full mt-4 text-white">
+                            <i class="fa-solid fa-cloud-arrow-up ml-2"></i> إرسال النقاط للفحص
+                        </button>
+                        <div id="submitResult"
+                            class="mt-4 p-3 bg-slate-100 rounded text-xs overflow-x-auto hidden border border-slate-300">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="lg:col-span-8 relative">
+                <div class="card bg-base-100 shadow-md h-full">
+                    <div class="card-body p-1 relative h-full">
+                        <div id="map" class="bg-gray-200"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="popup" class="ol-popup">
+        <a href="#" id="popup-closer" class="ol-popup-closer">✖</a>
+        <div id="popup-content"></div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/ol@v8.2.0/dist/ol.js"></script>
+
+    <script>
+        // --- تهيئة المتغيرات ---
+        let points = [];
+        let pointIdCounter = 1;
+
+        // --- عناصر النافذة المنبثقة (Popup) ---
+        const container = document.getElementById('popup');
+        const content = document.getElementById('popup-content');
+        const closer = document.getElementById('popup-closer');
+
+        // إنشاء Overlay لربطه بالخريطة
+        const overlay = new ol.Overlay({
+            element: container,
+            autoPan: {
+                animation: { duration: 250 }
+            },
+            // Set the positioning to 'center-left' or 'bottom-left'
+            // 'center-left' anchors the left edge of the popup to the coordinate
+            positioning: 'center-left',
+            // Add an optional offset to move it a little further east (right)
+            offset: [10, 0] // 10 pixels to the right, 0 vertical offset            
+        });
+
+        // إغلاق النافذة المنبثقة
+        closer.onclick = function () {
+            overlay.setPosition(undefined);
+            closer.blur();
+            return false;
+        };
+
+        // --- تهيئة الخريطة ---
+        const pointsSource = new ol.source.Vector();
+        const polygonSource = new ol.source.Vector();
+
+        const polygonLayer = new ol.layer.Vector({
+            source: polygonSource,
+            style: new ol.style.Style({
+                fill: new ol.style.Fill({ color: 'rgba(34, 197, 94, 0.2)' }),
+                stroke: new ol.style.Stroke({ color: '#22c55e', width: 2 })
+            }), zIndex: 1
+        });
+
+        const pointsLayer = new ol.layer.Vector({
+            source: pointsSource,
+            style: new ol.style.Style({
+                image: new ol.style.Circle({
+                    radius: 7, fill: new ol.style.Fill({ color: '#ef4444' }),
+                    stroke: new ol.style.Stroke({ color: '#fff', width: 2 })
+                })
+            }), zIndex: 3
+        });
+
+        const map = new ol.Map({
+            target: 'map',
+            overlays: [overlay], // إضافة النافذة المنبثقة للخريطة
+            layers: [
+                new ol.layer.Tile({ source: new ol.source.OSM() }),
+                polygonLayer, pointsLayer
+            ],
+            view: new ol.View({
+                center: ol.proj.fromLonLat([30.5599, 15.9]), zoom: 6
+            })
+        });
+
+        // --- تفاعلات الخريطة ---
+
+        // 1. النقر على الخريطة لإضافة نقطة (إذا لم يتم النقر على ميزة موجودة)
+        map.on('click', function (evt) {
+            // التحقق مما إذا كان النقر فوق نقطة موجودة (Feature)
+            const feature = map.forEachFeatureAtPixel(evt.pixel, function (feature) {
+                return feature;
+            });
+
+            if (feature) {
+                // إذا تم النقر على نقطة موجودة، نظهر النافذة المنبثقة
+                const geometry = feature.getGeometry();
+                const coord = geometry.getCoordinates();
+
+                // التأكد من أنها نقطة (ليست خط أو مضلع)
+                if (geometry.getType() === 'Point') {
+                    const pointId = feature.get('id'); // الحصول على ID المخزن
+                    const pointData = points.find(p => p.id === pointId);
+
+                    if (pointData) {
+                        content.innerHTML = `
+                            <div class="text-right">
+                                <h3 class="font-bold text-lg mb-2 text-slate-700">تفاصيل النقطة #${points.indexOf(pointData) + 1}</h3>
+                                <div class="text-sm mb-1"><b>خط العرض:</b> ${pointData.lat.toFixed(5)}</div>
+                                <div class="text-sm mb-3"><b>خط الطول:</b> ${pointData.lon.toFixed(5)}</div>
+                                <div class="grid grid-cols-2 gap-2">
+                                    <button onclick="editPoint(${pointId})" class="btn btn-warning btn-xs text-white">
+                                        <i class="fa-solid fa-pen ml-1"></i> تعديل
+                                    </button>
+                                    <button onclick="removePoint(${pointId})" class="btn btn-error btn-xs text-white">
+                                        <i class="fa-solid fa-trash-can ml-1"></i> حذف
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+
+                        overlay.setPosition(coord);
+                    }
+                }
+            } else {
+                // إذا كان النقر في مكان فارغ، أضف نقطة جديدة
+                const coords = ol.proj.toLonLat(evt.coordinate);
+                addPoint(coords[1], coords[0]);
+                overlay.setPosition(undefined); // إخفاء النافذة القديمة
+            }
+        });
+
+        // تغيير شكل المؤشر عند المرور فوق نقطة
+        map.on('pointermove', function (e) {
+            const pixel = map.getEventPixel(e.originalEvent);
+            const hit = map.hasFeatureAtPixel(pixel);
+            map.getTargetElement().style.cursor = hit ? 'pointer' : '';
+        });
+
+        // --- تفعيل السحب والإفلات (SortableJS) ---
+        const listElement = document.getElementById('pointsList');
+        new Sortable(listElement, {
+            animation: 150,
+            ghostClass: 'sortable-ghost',
+            onEnd: function (evt) {
+                // evt.oldIndex = الترتيب القديم
+                // evt.newIndex = الترتيب الجديد
+
+                // إعادة ترتيب المصفوفة points
+                const item = points.splice(evt.oldIndex, 1)[0];
+                points.splice(evt.newIndex, 0, item);
+
+                // تحديث الخريطة لتعكس ترتيب الخطوط الجديد
+                updateMapFeatures();
+                // تحديث القائمة لإعادة كتابة الأرقام (1, 2, 3...)
+                updatePointsList(false); // false = لا تقم بإعادة بناء القائمة بالكامل لتجنب فقدان التركيز (optional optimization)
+                // لكن للأمان سنعيد البناء لضبط الأرقام التسلسلية
+                updatePointsList();
+            },
+        });
+
+
+        // --- الوظائف الأساسية ---
+
+        function addPoint(lat, lon) {
+            const id = pointIdCounter++;
+            points.push({ id, lat: parseFloat(lat), lon: parseFloat(lon) });
+            updateMapFeatures();
+            updatePointsList();
+            document.getElementById('latInput').value = '';
+            document.getElementById('lonInput').value = '';
+        }
+
+        function addManualPoint() {
+            const lat = document.getElementById('latInput').value;
+            const lon = document.getElementById('lonInput').value;
+            if (!lat || !lon) return alert('الرجاء إدخال البيانات');
+            addPoint(lat, lon);
+        }
+
+        function addRandomPoint() {
+            const center = ol.proj.toLonLat(map.getView().getCenter());
+            const rLat = center[1] + (Math.random() - 0.5) * 0.1;
+            const rLon = center[0] + (Math.random() - 0.5) * 0.1;
+            addPoint(rLat.toFixed(6), rLon.toFixed(6));
+        }
+
+        function editPoint(id) {
+            const point = points.find(p => p.id === id);
+            if (!point) return;
+
+            document.getElementById('latInput').value = point.lat;
+            document.getElementById('lonInput').value = point.lon;
+            document.getElementById('editPointId').value = point.id;
+
+            // Toggle buttons
+            document.getElementById('addButtons').classList.add('hidden');
+            document.getElementById('editButtons').classList.remove('hidden');
+
+            // Close popup if open
+            overlay.setPosition(undefined);
+
+            // Highlight list item (optional implementation)
+        }
+
+        function updatePoint() {
+            const id = parseInt(document.getElementById('editPointId').value);
+            const lat = parseFloat(document.getElementById('latInput').value);
+            const lon = parseFloat(document.getElementById('lonInput').value);
+
+            if (isNaN(lat) || isNaN(lon)) return alert('بيانات غير صحيحة');
+
+            const pointIndex = points.findIndex(p => p.id === id);
+            if (pointIndex !== -1) {
+                points[pointIndex].lat = lat;
+                points[pointIndex].lon = lon;
+
+                updateMapFeatures();
+                updatePointsList();
+                cancelEdit();
+            }
+        }
+
+        function cancelEdit() {
+            document.getElementById('latInput').value = '';
+            document.getElementById('lonInput').value = '';
+            document.getElementById('editPointId').value = '';
+
+            document.getElementById('addButtons').classList.remove('hidden');
+            document.getElementById('editButtons').classList.add('hidden');
+        }
+
+        function removePoint(id) {
+            points = points.filter(p => p.id !== id);
+            overlay.setPosition(undefined); // إخفاء النافذة
+            updateMapFeatures();
+            updatePointsList();
+        }
+
+        function clearAllPoints() {
+            if (confirm('هل أنت متأكد؟')) {
+                points = [];
+                overlay.setPosition(undefined);
+                updateMapFeatures();
+                updatePointsList();
+            }
+        }
+
+        function updateMapFeatures() {
+            pointsSource.clear();
+            polygonSource.clear();
+
+            if (points.length === 0) return;
+
+            const coordinates = points.map(p => ol.proj.fromLonLat([p.lon, p.lat]));
+
+            // 1. النقاط (مع تخزين ID داخل الـ Feature)
+            points.forEach(p => {
+                const feature = new ol.Feature({
+                    geometry: new ol.geom.Point(ol.proj.fromLonLat([p.lon, p.lat]))
+                });
+                feature.set('id', p.id); // *مهم*: ربط الـ Feature بـ ID النقطة
+                pointsSource.addFeature(feature);
+            });
+
+            // 2. المضلع
+            if (points.length >= 3) {
+                polygonSource.addFeature(new ol.Feature({ geometry: new ol.geom.Polygon([coordinates]) }));
+            }
+        }
+
+        function updatePointsList() {
+            const listContainer = document.getElementById('pointsList');
+
+            if (points.length === 0) {
+                listContainer.innerHTML = '<div class="p-4 text-center text-gray-400 empty-msg">لا توجد نقاط مضافة حالياً</div>';
+                return;
+            }
+
+            // مسح المحتوى الحالي وإعادة بنائه
+            listContainer.innerHTML = '';
+
+            points.forEach((p, index) => {
+                const item = document.createElement('div');
+                item.className = 'point-item flex justify-between items-center p-3 border-b border-gray-200 bg-white hover:bg-blue-50 transition-colors select-none';
+                item.setAttribute('data-id', p.id); // لتسهيل التعرف عليه
+
+                item.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <div class="cursor-move text-gray-400 hover:text-gray-600">
+                            <i class="fa-solid fa-grip-vertical"></i>
+                        </div>
+                        <span class="badge badge-primary badge-sm font-bold text-white">${index + 1}</span>
+                        <div class="text-xs">
+                            <div class="font-bold text-slate-700">Lat: ${p.lat.toFixed(5)}</div>
+                            <div class="text-slate-500">Lon: ${p.lon.toFixed(5)}</div>
+                        </div>
+                    </div>
+                    <button onclick="editPoint(${p.id})" class="btn btn-ghost btn-xs text-yellow-500 hover:bg-yellow-100">
+                        <i class="fa-solid fa-pen"></i>
+                    </button>
+                    <button onclick="removePoint(${p.id})" class="btn btn-ghost btn-xs text-red-500 hover:bg-red-100">
+                        <i class="fa-solid fa-trash-can"></i>
+                    </button>
+                `;
+                listContainer.appendChild(item);
+            });
+        }
+
+        function toggleLayer(type) {
+            const isChecked = document.getElementById(
+                type === 'points' ? 'togglePoints' : 'togglePolygon'
+            ).checked;
+
+            if (type === 'points') pointsLayer.setVisible(isChecked);
+            if (type === 'polygon') polygonLayer.setVisible(isChecked);
+        }
+
+        function centerMapOnPoints() {
+            if (pointsSource.getFeatures().length > 0) {
+                map.getView().fit(pointsSource.getExtent(), { padding: [50, 50, 50, 50], duration: 1000 });
+            }
+        }
+
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== "") {
+                const cookies = document.cookie.split(";");
+                for (let cookie of cookies) {
+                    cookie = cookie.trim();
+                    if (cookie.startsWith(name + "=")) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }        
+
+        function on_error(error) {
+            const resultDiv = document.getElementById('submitResult');
+            console.log(error)
+
+        }
+        function on_success(response) {
+            const resultDiv = document.getElementById('submitResult');
+            if(response.data.code==0){
+                resultDiv.innerHTML = `
+                    <div class="font-bold text-green-600 mb-2"><i class="fa-solid fa-check ml-1"></i> ${response.data.result}</div>
+                `;
+            }else{
+                resultDiv.innerHTML = `
+                    <div class="font-bold text-red-600 mb-2"><i class="fa-solid fa-times ml-1"></i> يوجد تداخل!</div>
+                    <pre class="whitespace-pre-wrap">${response.data.result}</pre>
+                `;
+            }
+        }
+
+        function submitPoints() {
+            const resultDiv = document.getElementById('submitResult');
+            resultDiv.classList.remove('hidden');
+
+            if (points.length === 0) {
+                resultDiv.innerHTML = '<span class="text-red-500 font-bold">لا توجد نقاط للإرسال!</span>';
+                return;
+            }
+
+            resultDiv.innerHTML = '<span class="text-blue-600"><i class="fa-solid fa-spinner fa-spin ml-2"></i> جاري إرسال البيانات...</span>';
+
+            const csrftoken = getCookie("csrftoken");
+
+            axios.defaults.headers.common["X-CSRFToken"] = csrftoken;
+
+            var arr = points.map(p => ([p.lon, p.lat ]))
+            arr.push(arr[0])
+            const data = {
+                points: arr
+            };
+
+            axios.post('',data)
+                 .then(on_success)
+                 .then(on_error)
+
+        }
+    </script>
+</body>
+
+</html>

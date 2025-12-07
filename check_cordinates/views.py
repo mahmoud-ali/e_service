@@ -1,5 +1,6 @@
+import json
 from django.forms import formset_factory
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views import View
@@ -17,7 +18,7 @@ class CheckCordinatesView(LoginRequiredMixin,View):
     detail_formset = None
     menu_name = "check_cordinates:check_view"
     title = _("Check cordinates")
-    template_name = "check_cordinates/application_add_master_details.html"
+    template_name = "check_cordinates/page.html"
     
     def dispatch(self, *args, **kwargs):    
         self.detail_formset = formset_factory(self.form,extra=0,can_delete=False,min_num=3, validate_min=True)
@@ -34,29 +35,26 @@ class CheckCordinatesView(LoginRequiredMixin,View):
         return render(request, self.template_name, self.extra_context)
 
     def post(self, request, *args, **kwargs):
-        formset = self.detail_formset(request.POST)
-        
-        if formset.is_valid():
-            # calculate intersection
-            points = []
-            for form in formset:
-                x,y = (form.cleaned_data['x'],form.cleaned_data['y'])
-                points.append(Point(float(x), float(y))) #,srid=32636
+        data = json.loads(request.body)
 
-            points.append(points[0])
+        points = data.get("points",[])
 
-            poly = Polygon(points)
-            print(poly)
-            data = SmallMining.objects.filter(geom__intersects=poly).values_list("company_name")
-            if len(data) > 0:
-                tmp = []
-                for d in data:
-                    if d[0]:
-                        tmp.append(d[0])
-                messages.add_message(request,messages.ERROR,_("Intersect with other data: ")+ ", ".join(tmp))
-            else:
-                messages.add_message(request,messages.SUCCESS,_("No intersection!"))
-                
-        self.extra_context['detail_formset'] = formset
+        poly = Polygon(points)
+        data = SmallMining.objects.filter(geom__intersects=poly).values_list("company_name")
+        if len(data) > 0:
+            tmp = []
+            for d in data:
+                if d[0]:
+                    tmp.append(d[0])
 
-        return render(request, self.template_name, self.extra_context)
+            return JsonResponse({
+                "code": 1,
+                "result": _("Intersect with other data: ")+ ", ".join(tmp)
+            })                    
+        else:
+            return JsonResponse({
+                "code": 0,
+                "result": _("No intersection!")
+            })                    
+
+            
