@@ -146,6 +146,7 @@
                     <th>اسم الموظف</th>
                     <th>فترة التقييم</th>
                     <th> التقييم</th>
+
                 </tr>
             </thead>
             <tbody>
@@ -155,6 +156,7 @@
                         <td>{{ submission.employee_name }}</td>
                         <td>{{ submission.period_from }} - {{ submission.period_to }}</td>
                         <td>{{ submission.overall_performance }}</td>
+                        
                     </tr>
                 {% endfor %}
             </tbody>
