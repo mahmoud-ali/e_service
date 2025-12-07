@@ -26,7 +26,7 @@
     <div class="navbar bg-base-100 shadow-lg">
         <div class="navbar-start">
             <img src="{% static 'img/smrc_logo.png' %}" alt="Company Logo" class="h-10 w-10 mr-2">
-            <a class="btn btn-ghost normal-case text-xl" href="{% url 'acceptance_home' %}">نظام الموارد البشرية</a>
+            <a class="btn btn-ghost normal-case text-xl" href="">نظام الموارد البشرية</a>
         </div>
         <div class="navbar-end">
             <div class="dropdown dropdown-end">
@@ -49,7 +49,7 @@
             </div>
             <div class="hidden lg:flex">
                 <ul class="menu menu-horizontal px-1">
-                      <li><a href="{% url 'surveys:emergency_form' %}">تقييم الموظفين</a></li>
+                      <li><a href="{% url 'surveys:submission_list' %}">تقييم الموظفين</a></li>
                     <li><a href="{% url 'surveys:survey_form' %}">تقيم الهيكل التنظيمي </a></li>
 
                     {% if user.is_authenticated %}

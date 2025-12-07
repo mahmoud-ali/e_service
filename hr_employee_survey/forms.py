@@ -50,7 +50,7 @@ class SurveyResponseForm(forms.ModelForm):
     class Meta:
         model = SurveyResponse
         fields = [
-            'wilaya','position', 'other_position', 'work_duration',
+            'wilaya','department','position', 'other_position', 'work_duration',
             'clarity_statement', 'roles_responsibilities', 'communication_lines', 'job_title_match',
             'decision_making', 'reduces_overlap', 'coordination', 'service_quality',
             'strategic_alignment', 'adaptability', 'resource_allocation', 'service_delivery',
