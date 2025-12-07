@@ -11,10 +11,7 @@ RATING_MAPPING = {
     "excellent": 5, "very_good": 4, "good": 3, "acceptable": 2, "weak": 1,
 }
 
-ASKING_CHOICES  = [
-    ("1", "نعم"),
-    ("0", "لا"),
-]
+ASKING_CHOICES  = [(i, str(i)) for i in range(0, 2)]
 
 RATING_FIELDS = [
     'attendance_discipline', 'follow_instructions', 'task_responsibility',
@@ -83,16 +80,16 @@ class EmergencyEvaluation(models.Model):
     training_needs = models.TextField(verbose_name=" الاحتياجات التدريبية ")
     manager_notes = models.TextField(verbose_name="تعليق المدير المباشر")
 
-    average_attendance = models.IntegerField(max_length=20, choices=GENERAL_RATING, null=True, blank=True,verbose_name= "متوسط نسبة الحصور والانصراف")
-    attendance_punctnality = models.IntegerField(max_length=20, choices=GENERAL_RATING, null=True, blank=True,verbose_name="الالتزام بمواعيد الدوام")
+    average_attendance = models.IntegerField( choices=GENERAL_RATING, null=True, blank=True,verbose_name= "متوسط نسبة الحصور والانصراف")
+    attendance_punctnality = models.IntegerField( choices=GENERAL_RATING, null=True, blank=True,verbose_name="الالتزام بمواعيد الدوام")
     violation_count = models.IntegerField(choices=WARNING_CHOICES, null=True, blank=True,verbose_name="عدد المخالفات الادارية المسجلة")
     warnings_count = models.IntegerField(choices=WARNING_CHOICES, null=True, blank=True,verbose_name="عدد الانزارات او التنبيهات الادارية")
         
-    employee_effective = models.CharField(null=True, blank=True,max_length=20, choices=ASKING_CHOICES,verbose_name="هل ترى أن الموظف كان فاعلاً ")
-    recommendations_continue = models.CharField(null=True, blank=True,max_length=20, choices=ASKING_CHOICES,verbose_name="هل توصي باستمراره ضمن فريق العمل ")
+    employee_effective = models.IntegerField(null=True, blank=True, choices=ASKING_CHOICES,verbose_name="هل ترى أن الموظف كان فاعلاً ")
+    recommendations_continue = models.IntegerField(null=True, blank=True, choices=ASKING_CHOICES,verbose_name="هل توصي باستمراره ضمن فريق العمل ")
     substantive_note = models.TextField(null=True, blank=True,verbose_name="هل هنالك ملاحظات جوهرية على أدائه ")
     manager_average_score = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True, verbose_name="متوسط تقييم المدير ")
-    
+ 
     def clean(self):
         super().clean()
         if self.period_from and self.period_to:
@@ -130,7 +127,7 @@ class EmergencyEvaluation(models.Model):
                     count += 1
                 except ValueError:
                     continue 
-        return round( (total_sum / count), 2 ) if count > 0 else None
+        return round( (total_sum / count), 2 ) if count > 0 else None   
 
     def _hr_data_is_complete(self):
         hr_fields = ['average_attendance', 'attendance_punctnality', 'violation_count', 'warnings_count']
@@ -184,14 +181,7 @@ class EmergencyEvaluation(models.Model):
         
         else:
             return "weak" 
-
-    def clean(self):
-        super().clean()
-        if self.period_from and self.period_to:
-            if self.period_to < self.period_from:
-                raise ValidationError({
-                    'period_to': _('تاريخ النهاية يجب أن يكون مساوياً أو بعد تاريخ البداية.')
-                })
+   
 
     def save(self, *args, **kwargs):  
         manager_avg = self._calculate_manager_average()
