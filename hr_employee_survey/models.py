@@ -26,7 +26,8 @@ class Employee_Data_Emergency(models.Model):
         verbose_name="اسم الموظف"
     )
     email = models.EmailField(
-        unique=True, 
+        null=True, 
+        blank=True,
         verbose_name="البريد الإلكتروني"
     )
 
