@@ -73,7 +73,7 @@ class Khatabat(LoggingModel):  # جدول_خطابات
     def save(self, *args,**kwargs):
         is_new = self.pk is None
 
-        if is_new:
+        if is_new and not self.letter_number:
             self.letter_number = self.next_letter_number
         return super().save(args,kwargs)
 
