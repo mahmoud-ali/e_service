@@ -175,7 +175,11 @@ class KhatabatAdmin(MaktabTanfiziMixin,LogMixin,admin.ModelAdmin):
     def get_changeform_initial_data(self, request):
         maktab_tanfizi = request.user.maktab_tanfizi_user
         last_letter = Khatabat.objects.filter(maktab_tanfizi=maktab_tanfizi).order_by("-created_at").first()
-        last_letter_num = int(last_letter.letter_number.split("-")[-1])
+        last_letter_num = 0
+        try:
+            last_letter_num = int(last_letter.letter_number.split("-")[-1])
+        except:
+            pass
         num = f"{maktab_tanfizi.code}-{datetime.now().strftime("%m")}-{last_letter_num+1}"
 
         return {'letter_number': num}

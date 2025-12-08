@@ -62,7 +62,12 @@ class Khatabat(LoggingModel):  # جدول_خطابات
     @property
     def next_letter_number(self):
         last_letter = Khatabat.objects.filter(maktab_tanfizi=self.maktab_tanfizi).order_by("-created_at").first()
-        last_letter_num = int(last_letter.letter_number.split("-")[-1])
+        last_letter_num = 0
+        try:
+            last_letter_num = int(last_letter.letter_number.split("-")[-1])
+        except:
+            pass
+
         return f"{self.maktab_tanfizi.code}-{datetime.now().strftime("%m")}-{last_letter_num+1}"
 
     def save(self, *args,**kwargs):
