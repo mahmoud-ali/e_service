@@ -248,6 +248,8 @@
         const pointsSource = new ol.source.Vector();
         const polygonSource = new ol.source.Vector();
 
+        const defaultCenterCordinate = [30.5599, 15.9]
+
         const polygonLayer = new ol.layer.Vector({
             source: polygonSource,
             style: new ol.style.Style({
@@ -274,7 +276,7 @@
                 polygonLayer, pointsLayer
             ],
             view: new ol.View({
-                center: ol.proj.fromLonLat([30.5599, 15.9]), zoom: 6
+                center: ol.proj.fromLonLat(defaultCenterCordinate), zoom: 6
             })
         });
 
@@ -517,6 +519,9 @@
         function centerMapOnPoints() {
             if (pointsSource.getFeatures().length > 0) {
                 map.getView().fit(pointsSource.getExtent(), { padding: [50, 50, 50, 50], duration: 1000 });
+            }else{
+                const p = new ol.geom.Point(ol.proj.fromLonLat(defaultCenterCordinate))
+                map.getView().fit(p.getExtent(), { padding: [50, 50, 50, 50], duration: 1000, maxZoom: 6 });
             }
         }
 
