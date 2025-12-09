@@ -2,7 +2,9 @@ from django.db import models
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 
-class LoggingModel(models.Model):
+from auditlog.mixins import LogAccessMixin
+
+class LoggingModel(LogAccessMixin,models.Model):
     """
         updating ``created_at`` and ``updated_at`` fields for responsable user.
     """
