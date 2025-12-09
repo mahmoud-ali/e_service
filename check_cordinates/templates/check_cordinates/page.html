@@ -364,6 +364,7 @@
             points.push({ id, lat: parseFloat(lat), lon: parseFloat(lon) });
             updateMapFeatures();
             updatePointsList();
+            cancelEdit()
             document.getElementById('latInput').value = '';
             document.getElementById('lonInput').value = '';
         }
@@ -492,8 +493,8 @@
                         </div>
                         <span class="badge badge-primary badge-sm font-bold text-white">${index + 1}</span>
                         <div class="text-xs">
-                            <div class="font-bold text-slate-700">Lat: ${p.lat.toFixed(5)}</div>
-                            <div class="text-slate-500">Lon: ${p.lon.toFixed(5)}</div>
+                            <div class="text-slate-500"><b>خط العرض:</b> ${p.lat.toFixed(5)}</div>
+                            <div class="text-slate-500"><b> خط الطول:</b> ${p.lon.toFixed(5)}</div>
                         </div>
                     </div>
                     <button onclick="editPoint(${p.id})" class="btn btn-ghost btn-xs text-yellow-500 hover:bg-yellow-100">
