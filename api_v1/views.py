@@ -5,6 +5,9 @@ from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from rest_framework import generics, permissions
 from rest_framework.exceptions import NotFound
+
+from auditlog.signals import accessed
+
 from gold_travel.models import AppMoveGold, AppMoveGoldDetails
 from production_control.models import GoldProductionForm, GoldShippingForm
 
@@ -65,6 +68,9 @@ class GoldTravelDetailView(generics.RetrieveAPIView):
 
         result = serializer.data
 
+        # Log access
+        accessed.send(obj.__class__, instance=obj)
+
         return Response(result)
 
 ########### Gold production(انتاج الشركات) ##############
@@ -110,6 +116,9 @@ class GoldProductionDetailView(generics.RetrieveAPIView):
 
         result = serializer.data
 
+        # Log access
+        accessed.send(obj.__class__, instance=obj)
+
         return Response(result)
 
 ########### Gold shipping(ترحيل ذهب الشركات) ##############
@@ -154,5 +163,8 @@ class GoldShippingDetailView(generics.RetrieveAPIView):
         serializer = self.serializer_class(instance=obj)
 
         result = serializer.data
+
+        # Log access
+        accessed.send(obj.__class__, instance=obj)
 
         return Response(result)
