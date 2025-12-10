@@ -17,6 +17,8 @@ from django.conf import settings
 # from django.utils.html import format_html
 
 from openai import OpenAI
+from opik.integrations.openai import track_openai
+
 import markdown2
 import telegramify_markdown
 from telegramify_markdown import customize
@@ -177,6 +179,8 @@ async def chat(update: Update, context: ContextTypes.DEFAULT_TYPE):
             base_url=settings.OPENAI_BASE_URL,
             api_key=settings.OPENAI_API_KEY,
         )
+
+        openai_client = track_openai(client)
 
         # print("request---------------------------------------------------------------------------------------",context.user_data.get("user_history"))
         await context.bot.send_chat_action(chat_id=update.effective_chat.id, action="typing")
