@@ -17,6 +17,22 @@
                 بوابة المكاتب الولائية
             </a>
         </div>
+        {% comment %} <div tabindex="-1" class="hidden md:block flex-none">
+            <ul class="menu menu-horizontal px-1">
+            <li><a>Item 1</a></li>
+            <li><a>Item 3</a></li>
+            <li>
+                <details>
+                <summary>Parent</summary>
+                <ul class="bg-base-100 rounded-t-none p-2">
+                    <li><a>Link 1</a></li>
+                    <li><a>Link 2</a></li>
+                </ul>
+                </details>
+            </li>
+
+            </ul>
+        </div> {% endcomment %}
         <div class="flex-none gap-2">
             <div class="dropdown dropdown-end">
                 <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar placeholder">
@@ -25,9 +41,9 @@
                     </div>
                 </div>
                 <ul tabindex="0" class="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52">
-                    <li class="menu-title">
+                    {% comment %} <li class="menu-title">
                         <span class="text-gray-700">{{ request.user.username }}</span>
-                    </li>
+                    </li> {% endcomment %}
                     <li><a href="{% url 'traditional_app:portal_profile' %}" class="text-gray-700 hover:bg-primary hover:text-black">الملف الشخصي</a></li>
                     <li><a href="{% url 'traditional_app:portal_settings' %}" class="text-gray-700 hover:bg-primary hover:text-black">الإعدادات</a></li>
                     <li><a href="{% url 'admin:logout' %}" class="text-gray-700 hover:bg-primary hover:text-black">تسجيل الخروج</a></li>
@@ -54,7 +70,7 @@
     <!-- Footer -->
     <footer class="footer footer-center p-4 bg-base-300 text-base-content mt-8">
         <aside>
-            <p>© 2024 - الإدارة العامة للتعدين التقليدي</p>
+            <p>الإدارة العامة لشئون الولايات</p>
         </aside>
     </footer>
 

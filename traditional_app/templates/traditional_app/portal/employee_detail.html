@@ -50,24 +50,18 @@
                 </label>
                 <p class="text-lg">{{ employee.category.name }}</p>
             </div>
-            <div class="form-control">
+            {% comment %} <div class="form-control">
                 <label class="label">
                     <span class="label-text font-bold">الولاية</span>
                 </label>
                 <p class="text-lg">{{ employee.state.name }}</p>
-            </div>
+            </div> {% endcomment %}
         </div>
 
         {% if employee.no3_elta3god == 2 %}
         {% if employee.employeeproject %}
-        <div class="divider">معلومات المشروع</div>
+        <div class="divider">معلومات التعاقد</div>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div class="form-control">
-                <label class="label">
-                    <span class="label-text font-bold">موقع العمل</span>
-                </label>
-                <p class="text-lg">{{ employee.employeeproject.work_place }}</p>
-            </div>
             <div class="form-control">
                 <label class="label">
                     <span class="label-text font-bold">تاريخ بداية العقد</span>
@@ -79,6 +73,12 @@
                     <span class="label-text font-bold">تاريخ نهاية العقد</span>
                 </label>
                 <p class="text-lg">{{ employee.employeeproject.contract_end_date }}</p>
+            </div>
+            <div class="form-control">
+                <label class="label">
+                    <span class="label-text font-bold">موقع العمل</span>
+                </label>
+                <p class="text-lg">{{ employee.employeeproject.work_place }}</p>
             </div>
         </div>
         {% endif %}
