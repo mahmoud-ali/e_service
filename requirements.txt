@@ -25,3 +25,4 @@ telegramify-markdown
 django-multiselectfield
 django-storages[s3]
 django-auditlog
+opik

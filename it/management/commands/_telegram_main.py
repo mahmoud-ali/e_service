@@ -152,7 +152,7 @@ async def chat(update: Update, context: ContextTypes.DEFAULT_TYPE):
     def generate(user_id,msgs):
         def x():
             return client.chat.completions.create(
-                model="deepseek/deepseek-chat-v3.1", #"openai/gpt-5-mini",  #"anthropic/claude-3.5-haiku-20241022",#"deepseek/deepseek-chat", #"openai/gpt-oss-120b", #"openai/gpt-5-mini", #"openai/o1-mini", #"openai/gpt-4.1", #"openai/gpt-5-chat",
+                model="deepseek/deepseek-v3.2", #"deepseek/deepseek-chat-v3.1", #"openai/gpt-5-mini",  #"anthropic/claude-3.5-haiku-20241022",#"deepseek/deepseek-chat", #"openai/gpt-oss-120b", #"openai/gpt-5-mini", #"openai/o1-mini", #"openai/gpt-4.1", #"openai/gpt-5-chat",
                 messages=msgs,
                 stream=True,
                 timeout=120,
