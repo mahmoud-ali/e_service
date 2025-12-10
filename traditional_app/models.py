@@ -111,7 +111,7 @@ class EmployeeProject(LoggingModel):
     contract_end_date = models.DateField(_("تاريخ نهاية العقد"))
 
     def __str__(self):
-        return f"{self.employee.name} ({self.get_no3_elta3god_display()})"
+        return f"{self.employee.name} ({self.employee.get_no3_elta3god_display()})"
 
     class Meta:
         verbose_name = _("موظف مشروع")

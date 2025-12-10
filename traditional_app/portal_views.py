@@ -185,7 +185,7 @@ class EmployeeDetailView(LoginRequiredMixin, PortalUserMixin, DetailView):
     
     def get_queryset(self):
         user_state = self.request.user.traditional_app_user.state
-        return Employee.objects.filter(state=user_state).select_related('category')
+        return Employee.objects.filter(state=user_state).select_related('category').select_related('employeeproject')
 
 
 class PayrollListView(LoginRequiredMixin, PortalUserMixin, ListView):
