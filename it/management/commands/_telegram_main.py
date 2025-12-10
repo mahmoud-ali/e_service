@@ -224,7 +224,7 @@ async def chat(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
         await sent_message.edit_text(final_answer,parse_mode=ParseMode.MARKDOWN_V2)
 
-        await addConversation(context.user_data.get('employeeComputerId'),user_message,final_answer)
+        # await addConversation(context.user_data.get('employeeComputerId'),user_message,final_answer)
     except Exception as e:
         final_answer = f"لايمكنني الرد عليك، الرجاء الاتصال بإدارة تقنية المعلومات {e}"
         await update.message.reply_markdown(final_answer)
