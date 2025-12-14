@@ -93,6 +93,7 @@ INSTALLED_APPS = [
 
     'leaflet',
     'auditlog',
+    'taggit',
 
     # Local                
     'accounts',
@@ -392,6 +393,10 @@ SILENCED_SYSTEM_CHECKS = ['admin.E410']
 BOOTSTRAP3 = {
     "form_renderers": {"default": "e_service.renderers.FormRenderer"},
 }
+
+TAGGIT_CASE_INSENSITIVE = True
+TAGGIT_TAGS_FROM_STRING = 'e_service.taggit_utils.comma_splitter'
+TAGGIT_STRING_FROM_TAGS = 'e_service.taggit_utils.comma_joiner'
 
 # PWA_APP_NAME = 'My App'
 # PWA_APP_DESCRIPTION = "My app description"

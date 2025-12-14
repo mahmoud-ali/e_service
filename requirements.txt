@@ -31,3 +31,4 @@ rollbar
 django-storages[s3]
 pyshp
 django-auditlog
+django-taggit

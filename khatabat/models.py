@@ -4,6 +4,9 @@ from django.db import models
 from django.conf import settings
 from django.forms import ValidationError
 
+from taggit.managers import TaggableManager
+from taggit.models import CommonGenericTaggedItemBase, TaggedItemBase
+
 from workflow.model_utils import LoggingModel
 
 class MaktabTanfizi(models.Model):
@@ -28,6 +31,7 @@ class MaktabTanfiziJiha(models.Model):
     )
 
     name = models.CharField(max_length=255, verbose_name="جهة الخطاب")
+    kharijia = models.BooleanField("جهة خارجية؟", default=False)
 
     def __str__(self):
         return self.name
@@ -35,6 +39,9 @@ class MaktabTanfiziJiha(models.Model):
     class Meta:
         verbose_name = "جهة الخطاب"
         verbose_name_plural = "جهات الخطاب"
+
+class KhatabatTaggedLetter(CommonGenericTaggedItemBase, TaggedItemBase):
+    object_id = models.CharField(max_length=100, db_index=True)
 
 class Khatabat(LoggingModel):  # جدول_خطابات
     maktab_tanfizi = models.ForeignKey(
@@ -50,6 +57,7 @@ class Khatabat(LoggingModel):  # جدول_خطابات
     )
     subject = models.TextField(verbose_name="موضوع الخطاب")
     has_motab3at = models.BooleanField("يوجد متابعة؟", default=False)
+    tags = TaggableManager(through=KhatabatTaggedLetter,blank=True)
 
     def __str__(self):
         return f'{self.subject} ({self.letter_number})'
