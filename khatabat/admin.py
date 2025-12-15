@@ -144,7 +144,7 @@ class KhatabatAdmin(MaktabTanfiziMixin,LogMixin,admin.ModelAdmin):
     exclude = ('maktab_tanfizi','created_by', 'updated_by')
     list_display = ('letter_number', 'subject','first_haraka')
     list_display_links = ('letter_number', 'subject',)
-    search_fields = ('letter_number', 'subject','tags')
+    search_fields = ('letter_number', 'subject',)
     inlines = [HarkatKhatabatInboxInline,HarkatKhatabatOutboxInline,]
     fields =  ('letter_number','subject','has_motab3at','tags' )
     readonly_fields = []
@@ -180,7 +180,7 @@ class KhatabatAdmin(MaktabTanfiziMixin,LogMixin,admin.ModelAdmin):
             last_letter_num = int(last_letter.letter_number.split("-")[-1])
         except:
             pass
-        num = f"{maktab_tanfizi.code}-{datetime.now().strftime("%m")}-{last_letter_num+1}"
+        num = f"{maktab_tanfizi.code}-{datetime.now().strftime("%m")}-{last_letter_num+1}" #f"{maktab_tanfizi.code}-{datetime.now().strftime("%y")}-{datetime.now().strftime("%m")}-{last_letter_num+1}"
 
         return {'letter_number': num}
     
