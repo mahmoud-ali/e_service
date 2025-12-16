@@ -42,6 +42,14 @@ class Employee_Data_Emergency(models.Model):
         verbose_name="المسمى الوظيفي "
     )  
 
+
+    edara_3ama = models.CharField(
+        max_length=255, 
+        null=True, 
+        blank=True,
+        verbose_name="الادارة العامة"
+    ) 
+
     class Meta:
         verbose_name = "بيانات موظف مستوردة من بيانات المباشرين"
 
