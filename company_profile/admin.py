@@ -492,9 +492,9 @@ class TblCompanyProductionLicenseAdmin(LoggingAdminMixin,LeafletGeoAdmin): #admi
     fieldsets = [
         (None, {"fields": ["company",("license_no","license_type","license_count")]}), #,"geom"
         (_("General information"), {"fields": ["date",("start_date","end_date")]}),
-        (_("Location information"), {"fields": [("state","locality","location","sheet_no")]}),
+        (_("Location information"), {"fields": [("state","locality","location","sheet_no","fuel_route")]}),
         (_("Contract information"), {"fields": ["mineral","area_initial","area","reserve","royalty","zakat","annual_rent","gov_rep","rep_percent","com_percent","business_profit","social_responsibility","contract_status","contract_file"]}),
-     ]        
+     ]        #
     exclude = ["created_at","created_by","updated_at","updated_by"]
     
     list_display = ["company","license_no","license_type", "start_date", "end_date","license_count","state","sheet_no","area_initial","area","contract_status","date","company_type"]        

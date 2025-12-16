@@ -41,6 +41,12 @@
                 <th class="active">التصنيف</th>
                 <td colspan=5>{{object.company.get_company_type_display}}</td>
             </tr>
+            {%if license.fuel_route %}
+            <tr>
+                <th class="active">خط السير</th>
+                <td colspan=5>{{license.fuel_route}}</td>
+            </tr>
+            {%endif%}
             <tr>
                 <th class="active">الكمية المطلوبة (لتر)</th>
                 <td colspan=5>{{total|intcomma}}</td>
