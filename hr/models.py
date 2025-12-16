@@ -315,6 +315,7 @@ class HikalWazifi(MPTTModel):
     ELMOSTOA_ELTANZIMI_2DARA_FAR3IA = 4
     ELMOSTOA_ELTANZIMI_GISIM = 5
     ELMOSTOA_ELTANZIMI_WI7DA = 6
+    ELMOSTOA_ELTANZIMI_MAKTAB_WILA2I = 7
     
     ELMOSTOA_ELTANZIMI_CHOICES = {
         ELMOSTOA_ELTANZIMI_MODIR_3AM: _('ELMOSTOA_ELTANZIMI_MODIR_3AM'),
@@ -323,6 +324,7 @@ class HikalWazifi(MPTTModel):
         ELMOSTOA_ELTANZIMI_2DARA_FAR3IA: _('ELMOSTOA_ELTANZIMI_2DARA_FAR3IA'),
         ELMOSTOA_ELTANZIMI_GISIM: _('ELMOSTOA_ELTANZIMI_GISIM'),
         ELMOSTOA_ELTANZIMI_WI7DA: _('ELMOSTOA_ELTANZIMI_WI7DA'),
+        ELMOSTOA_ELTANZIMI_MAKTAB_WILA2I: _('ELMOSTOA_ELTANZIMI_MAKTAB_WILA2I'),
     }
 
     name = models.CharField(max_length=150, unique=True)
@@ -343,11 +345,11 @@ class HikalWazifi(MPTTModel):
         return self.name
 
     def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+
         self.edara_3ama = self.edara_3ama_calc
         self.edara_far3ia = self.edara_far3ia_calc
         self.gisim = self.gisim_calc
-
-        super().save(*args, **kwargs)
 
     def traverse_hikal_wazifi(self,level):
         job = None
@@ -364,6 +366,7 @@ class HikalWazifi(MPTTModel):
         if not job:
             job = self.traverse_hikal_wazifi(HikalWazifi.ELMOSTOA_ELTANZIMI_MOSA3ID_MODIR_3AM)
             if not job:
+                # try:
                 job = self.get_root()
 
         return job
