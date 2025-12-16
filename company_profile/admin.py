@@ -82,6 +82,10 @@ class WorkflowAdminMixin:
         js = ('admin/js/jquery.init.js',"company_profile/js/state_control.js",)
 
     def has_change_permission(self, request, obj=None):
+        if self.model == AppFuelPermission:
+            if request.user.groups.filter(name__in=["pro_company_application_accept"]).exists() and obj and obj.state != SUBMITTED:
+                return False
+
         if obj and obj.state in[APPROVED,REJECTED]:
            return False
 #        
@@ -92,13 +96,6 @@ class WorkflowAdminMixin:
 
     def has_add_permission(self, request, obj=None):
         return False
-
-    def has_change_permission(self, request, obj=None):
-        if self.model == AppFuelPermission:
-            if request.user.groups.filter(name__in=["pro_company_application_accept"]).exists() and obj and obj.state != SUBMITTED:
-                return False
-            
-        return super().has_change_permission(request,obj)
 
     def get_exclude(self,request, obj=None):
         fields = list(super().get_exclude(request, obj) or [])
