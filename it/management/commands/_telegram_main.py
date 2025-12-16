@@ -17,6 +17,8 @@ from django.conf import settings
 # from django.utils.html import format_html
 
 from openai import OpenAI
+from opik.integrations.openai import track_openai
+
 import markdown2
 import telegramify_markdown
 from telegramify_markdown import customize
@@ -152,7 +154,7 @@ async def chat(update: Update, context: ContextTypes.DEFAULT_TYPE):
     def generate(user_id,msgs):
         def x():
             return client.chat.completions.create(
-                model="deepseek/deepseek-chat-v3.1", #"openai/gpt-5-mini",  #"anthropic/claude-3.5-haiku-20241022",#"deepseek/deepseek-chat", #"openai/gpt-oss-120b", #"openai/gpt-5-mini", #"openai/o1-mini", #"openai/gpt-4.1", #"openai/gpt-5-chat",
+                model="deepseek/deepseek-v3.2", #"deepseek/deepseek-chat-v3.1", #"openai/gpt-5-mini",  #"anthropic/claude-3.5-haiku-20241022",#"deepseek/deepseek-chat", #"openai/gpt-oss-120b", #"openai/gpt-5-mini", #"openai/o1-mini", #"openai/gpt-4.1", #"openai/gpt-5-chat",
                 messages=msgs,
                 stream=True,
                 timeout=120,
@@ -177,6 +179,8 @@ async def chat(update: Update, context: ContextTypes.DEFAULT_TYPE):
             base_url=settings.OPENAI_BASE_URL,
             api_key=settings.OPENAI_API_KEY,
         )
+
+        openai_client = track_openai(client)
 
         # print("request---------------------------------------------------------------------------------------",context.user_data.get("user_history"))
         await context.bot.send_chat_action(chat_id=update.effective_chat.id, action="typing")
@@ -220,7 +224,7 @@ async def chat(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
         await sent_message.edit_text(final_answer,parse_mode=ParseMode.MARKDOWN_V2)
 
-        await addConversation(context.user_data.get('employeeComputerId'),user_message,final_answer)
+        # await addConversation(context.user_data.get('employeeComputerId'),user_message,final_answer)
     except Exception as e:
         final_answer = f"لايمكنني الرد عليك، الرجاء الاتصال بإدارة تقنية المعلومات {e}"
         await update.message.reply_markdown(final_answer)
