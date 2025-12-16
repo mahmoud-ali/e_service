@@ -15,6 +15,7 @@ django-crontab
 Pillow
 django-bootstrap-datepicker-plus
 django-mptt
+django-treewidget
 python-telegram-bot
 requests
 # django-admin-interface

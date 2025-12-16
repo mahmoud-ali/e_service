@@ -5,7 +5,8 @@ from django.utils import timezone
 from django.forms import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator,MinLengthValidator
 from django.contrib import admin
-from mptt.models import MPTTModel, TreeForeignKey
+from mptt.models import MPTTModel #, TreeForeignKey
+from treewidget.fields import TreeForeignKey
 from django.db.models import Sum
 MONTH_JAN = 1
 MONTH_FEB = 2
