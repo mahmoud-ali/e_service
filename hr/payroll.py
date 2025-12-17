@@ -1454,7 +1454,7 @@ class TasoiaPayroll():
                 total_safi_alisti7gag = total_safi_alisti7gag,
             )
 
-        except IntegrityError:
+        except: # IntegrityError:
             pass
 
     def from_db(self):

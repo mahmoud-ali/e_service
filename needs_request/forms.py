@@ -8,6 +8,7 @@ class NeedsRequestForm(forms.ModelForm):
         fields = [
             'date',
             'cause',
+            'others',
             'sd_comment',
             'doa_comment',
             'it_comment',
@@ -24,6 +25,11 @@ class NeedsRequestForm(forms.ModelForm):
             'cause': forms.Textarea(attrs={
                 'class': 'textarea textarea-bordered',
                 'placeholder': 'أدخل سبب الحوجة...'
+                }
+            ),
+            'others': forms.Textarea(attrs={
+                'class': 'textarea textarea-bordered',
+                'placeholder': 'أدخل اي ملاحظات اخرى...'
                 }
             ),
         }

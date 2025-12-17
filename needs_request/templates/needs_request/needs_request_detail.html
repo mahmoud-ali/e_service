@@ -22,6 +22,9 @@
                 <p><strong>التاريخ:</strong> {{ needs_request.date }}</p>
                 <p><strong>القسم:</strong> {{ needs_request.department }}</p>
                 <p><strong>سبب الحوجة:</strong> {{ needs_request.cause }}</p>
+                {% if needs_request.others %}
+                <p><strong>ملاحظات أخرى:</strong> {{ needs_request.others }}</p>
+                {% endif %}
             </div>
         </div>
 

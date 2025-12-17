@@ -79,6 +79,7 @@ INSTALLED_APPS = [
 
     # 'django_crontab',
     'mptt',
+    'treewidget',
     
     # Local                
     'accounts',
@@ -352,6 +353,11 @@ SHOW_REQUESTS_URL = "profile:pa_request_show"
 
 BOOTSTRAP3 = {
     "form_renderers": {"default": "e_service.renderers.FormRenderer"},
+}
+
+TREEWIDGET_SETTINGS = {
+    "show_buttons": True,
+    "search": True,
 }
 
 if not DEBUG:

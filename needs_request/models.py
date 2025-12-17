@@ -37,6 +37,7 @@ class NeedsRequest(models.Model):
     date = models.DateField()
     department = models.ForeignKey(Department, on_delete=models.PROTECT)
     cause = models.TextField()
+    others = models.TextField(blank=True, null=True)
     sd_comment = models.TextField(blank=True, null=True)
     doa_comment = models.TextField(blank=True, null=True)
     it_comment = models.TextField(blank=True, null=True)
