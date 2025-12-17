@@ -17,7 +17,13 @@
         <div class="form-section">
             
             <div class="form-group">
-                <label for="department_display">اسم الموظف </label>  {{ form.employee_name }}
+                <label for="department_display">اسم الموظف </label>  
+                {{ form.employee_name }}
+                {% if form.employee_name.errors %}
+                    <div class="error-message" style="color: red; font-weight: bold;">
+                        {{ form.employee_name.errors }}
+                    </div>
+                {% endif %}
             </div>
 
             {{ form.employee_code }} 

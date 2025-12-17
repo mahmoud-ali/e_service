@@ -43,7 +43,13 @@ class EmergencyEvaluationForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         if employee_choices is not None:
             self.fields['employee_name'].choices = employee_choices
-
+    def clean_employee_name(self):
+        employee_name = self.cleaned_data.get('employee_name')
+        
+        if EmergencyEvaluation.objects.filter(employee_name=employee_name).exists():
+            raise forms.ValidationError("عذراً، تم إدخال تقييم لهذا الموظف مسبقاً.")
+            
+        return employee_name
 
 
 class SurveyResponseForm(forms.ModelForm):
@@ -51,7 +57,7 @@ class SurveyResponseForm(forms.ModelForm):
         model = SurveyResponse
         fields = [
             'wilaya','department','position', 'other_position', 'work_duration',
-            'clarity_statement', 'roles_responsibilities', 'communication_lines', 'job_title_match',
+            'clarity_statement',  'roles_responsibilities', 'communication_lines', 'job_title_match',
             'decision_making', 'reduces_overlap', 'coordination', 'service_quality',
             'strategic_alignment', 'adaptability', 'resource_allocation', 'service_delivery',
             'challenges', 'suitability', 'improvements'
@@ -59,6 +65,18 @@ class SurveyResponseForm(forms.ModelForm):
         
         
         widgets = {
+            'wilaya': forms.Select(attrs={
+                'class': 'form-select',
+                'data-placeholder': 'ابحث عن القسم'
+            }),
+            'department': forms.Select(attrs={
+                'class': 'form-control select2',
+                'data-placeholder': 'ابحث عن القسم'
+            }),
+            'position': forms.Select(attrs={
+                'class': 'form-control select2',
+                'data-placeholder': 'ابحث عن القسم'
+            }),
             'work_duration': forms.RadioSelect,        
             'clarity_statement': forms.RadioSelect,
             'roles_responsibilities': forms.RadioSelect,
@@ -81,7 +99,8 @@ class SurveyResponseForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['other_position'].required = False
-    
+        self.fields['department'].empty_label = 'ابحث أو اختر القسم'
+        self.fields['position'].empty_label = 'ابحث أو اختر الوظيفة'    
 
 
 

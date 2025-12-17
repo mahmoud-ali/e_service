@@ -283,6 +283,7 @@ class SurveyResponse(models.Model):
     submission_date = models.DateTimeField(auto_now_add=True)
     overall_evaluation = models.CharField(blank=True, null=True,max_length=20, verbose_name=" التقييم بصورة عامة للهيكل  ")
     average_score = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True, verbose_name="متوسط تقييم")
+    email = models.CharField(blank=True, null=True,max_length=150, verbose_name=" البريد الالكتروني للموظف ")
 
     def calculate_likert_average(self):
 
@@ -335,7 +336,6 @@ class SurveyResponse(models.Model):
     def save(self, *args, **kwargs):
         
         evaluation = self.get_overall_evaluation_text()
-        
         if evaluation:
             self.overall_evaluation = evaluation
             
