@@ -1,3 +1,8 @@
+import codecs
+import csv
+
+from django.http import HttpRequest, HttpResponse
+
 from django.contrib import admin
 from .models import Employee_Data_Emergency, EmergencyEvaluation, RATING_CHOICES, WARNING_CHOICES, GENERAL_RATING, ASKING_CHOICES, PERCENTAGE_CHOICES
 from django.utils.translation import gettext_lazy as _
@@ -151,6 +156,31 @@ class Employee_Data_Emergency_admin(admin.ModelAdmin):
         
     ordering = ('name',)
 
+    actions = ['export_data']
+
+    @admin.action(description=_('Export data'))
+    def export_data(self, request, queryset):
+        response = HttpResponse(
+            content_type="text/csv",
+            headers={"Content-Disposition": f'attachment; filename="employees.csv"'},
+        )
+        header = [
+                    "id","الاسم","الايميل","ايميل المدير المباشر","المسمى الوظيفي","الإدارة العامة"
+        ]
+
+        # BOM
+        response.write(codecs.BOM_UTF8)
+
+        writer = csv.writer(response)
+        writer.writerow(header)
+
+        for emp in queryset.all():
+            row = [
+                    emp.id, emp.name,emp.email,emp.direct_manager_email,emp.job_title,emp.edara_3ama
+            ]
+            writer.writerow(row)
+
+        return response
 
 admin.site.register(EmergencyEvaluation, EmergencyEvaluationAdmin)
 admin.site.register(Employee_Data_Emergency, Employee_Data_Emergency_admin)
