@@ -20,6 +20,12 @@
                 {{ form.cause }}
             </div>
 
+            <div class="form-control w-full">
+                <label class="label" for="{{ form.cause.id_for_label }}">
+                    <span class="label-text">أخرى</span>
+                </label>                
+                {{ form.others }}
+            </div>
 
             <h3 class="text-xl font-bold mt-4">الأصناف</h3>
             {{ formset.management_form }}
