@@ -314,6 +314,7 @@ class Payroll():
                     employee=emp,
                     total_salary=badalat.ajmali_almoratab,
                     net_salary=khosomat.safi_alisti7gag,
+                    salary_mokaf2=badalat.mokaf2at_2da2,
                 )
             )
 
