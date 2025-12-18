@@ -3,6 +3,7 @@ import csv
 from django.contrib.auth import get_user_model
 from django.core.management.base import BaseCommand
 from hr_employee_survey.models import  Employee_Data_Emergency
+from hr.models import  EmployeeBasic
 
 
 admin_user = get_user_model().objects.get(id=1)
@@ -53,3 +54,20 @@ def update_email(filename='email.csv'):
             except:
                 print("error",row)
 
+
+
+def import_from_employee_basic():
+
+    with open('./hr_employee_survey/data/employee_basic.csv', newline='') as csvfile:
+        reader = csv.reader(csvfile, delimiter=',')
+        next(reader, None)  # skip the headers
+        for row in reader:
+            id = row[0].strip()
+
+            try:
+                emp = EmployeeBasic.objects.get(id=id)
+                Employee_Data_Emergency.objects.create(
+                   name=emp.name,job_title='-',email=emp.email
+                )
+            except Exception as e:
+                print(f'name: {row}, Exception: {e}')
