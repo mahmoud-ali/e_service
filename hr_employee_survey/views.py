@@ -151,18 +151,20 @@ def survey_view(request):
         if form.is_valid():
             try:
                 with transaction.atomic():
-                    form.save()
+                    survey_instance = form.save(commit=False)
+                    
+                    survey_instance.email = request.user.email                
+                    survey_instance.save()
+                    
                 return redirect('surveys:survey_thank_you')            
 
             except IntegrityError as e:
                 print(f"Database Integrity Error: {e}")
-                form.add_error(None, "حدث خطأ في البيانات المدخلة. يرجى التأكد من اختيار جميع الخيارات المطلوبة.")
+                form.add_error(None, "حدث خطأ في البيانات المدخلة.")
                 
             except Exception as e:
                 print(f"General Error saving survey: {e}")
                 form.add_error(None, "حدث خطأ غير متوقع أثناء حفظ الاستبيان.")
-                
-       
     else:
         form = SurveyResponseForm()
 
@@ -170,7 +172,6 @@ def survey_view(request):
         'form': form, 
         'title': 'استبيان تقييم فاعلية الهيكل التنظيمي',
     }
-    
     return render(request, 'hr_survey/survey_structure.html', context)
 
 def survey_thank_you(request):
