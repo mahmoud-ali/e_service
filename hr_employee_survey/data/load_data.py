@@ -33,3 +33,23 @@ def import_employees():
                 )
             except Exception as e:
                 print(f'name: {name}, Exception: {e}')
+
+
+def update_email(filename='email.csv'):    
+    with open('./hr_employee_survey/data/mubasher.csv', newline='') as csvfile:
+        reader = csv.reader(csvfile, delimiter=',')
+        next(reader, None)  # skip the headers
+        for row in reader:
+            try:
+                id = row[0].strip()
+                email = row[2].strip()
+
+                obj = Employee_Data_Emergency.objects.get(id=id)
+                obj.email = email
+
+                obj.save()
+
+                #print(id)
+            except:
+                print("error",row)
+
