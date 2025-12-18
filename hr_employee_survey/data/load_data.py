@@ -65,7 +65,7 @@ def import_from_employee_basic():
             id = row[0].strip()
 
             try:
-                emp = EmployeeBasic.objects.get(id=id)
+                emp = EmployeeBasic.objects.get(code=id)
                 Employee_Data_Emergency.objects.create(
                    name=emp.name,job_title='-',email=emp.email
                 )
