@@ -12,8 +12,8 @@ from workflow.model_utils import LoggingModel
 class MaktabTanfizi(models.Model):
     name = models.CharField(max_length=255, verbose_name="المكتب التنفيذي")
     code = models.CharField(max_length=10, verbose_name="الرمز",default="")
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.PROTECT,related_name="maktab_tanfizi_user",verbose_name="المستخدم")
-    follow_up = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.PROTECT,related_name="maktab_tanfizi_follow_up",null=True,verbose_name="موظف متابعة")
+    user = models.ManyToManyField(settings.AUTH_USER_MODEL,related_name="maktab_tanfizi_user",verbose_name="المستخدم")
+    follow_up = models.ManyToManyField(settings.AUTH_USER_MODEL,related_name="maktab_tanfizi_follow_up",verbose_name="موظف متابعة")
     manager = models.ManyToManyField(settings.AUTH_USER_MODEL,related_name="maktab_tanfizi_manager",verbose_name="مدير")
 
     def __str__(self):
