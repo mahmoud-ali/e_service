@@ -9,6 +9,7 @@ from django.contrib.auth import get_user_model
 from django.http import HttpResponse
 from django.template.loader import render_to_string
 
+
 from khatabat.forms import HarkatKhatabatInboxAdminForm,HarkatKhatabatOutboxAdminForm
 from .models import HarkatKhatabatInbox, HarkatKhatabatOutbox, Khatabat, HarkatKhatabat, MaktabTanfizi, MaktabTanfiziJiha, Motab3atKhatabat
 
@@ -66,7 +67,7 @@ class MaktabTanfiziMixin:
         qs = qs.filter(maktab_tanfizi__in=maktib_list)
 
         if request.user.maktab_tanfizi_follow_up.exists():
-            qs = qs.filter(has_motab3at=True)
+            qs = qs | qs.filter(has_motab3at=True)
 
         return qs
 
@@ -351,7 +352,7 @@ class HarkatKhatabatAdmin(admin.ModelAdmin):
         qs = qs.filter(letter__maktab_tanfizi__in=makatib_list)
 
         if request.user.maktab_tanfizi_follow_up.exists():
-            qs = qs.filter(letter__has_motab3at=True)
+            qs = qs | qs.filter(letter__has_motab3at=True)
 
         return qs
 
@@ -398,7 +399,7 @@ class Motab3atKhatabatAdmin(admin.ModelAdmin):
 
         qs = qs.filter(letter__maktab_tanfizi__in=makatib_list)
         if request.user.maktab_tanfizi_follow_up.exists():
-            qs = qs.filter(letter__has_motab3at=True)
+            qs = qs | qs.filter(letter__has_motab3at=True)
 
         return qs
 
