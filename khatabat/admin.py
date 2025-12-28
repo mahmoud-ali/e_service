@@ -18,10 +18,10 @@ User = get_user_model()
 class LogMixin:
     def save_model(self, request, obj, form, change):
         try:
-            maktab = request.user.maktab_tanfizi_user
+            maktab = request.user.maktab_tanfizi_user.first()
             obj.maktab_tanfizi=maktab
         except:
-            maktab = request.user.maktab_tanfizi_follow_up
+            maktab = request.user.maktab_tanfizi_follow_up.first()
             obj.maktab_tanfizi=maktab
 
         if not change:
