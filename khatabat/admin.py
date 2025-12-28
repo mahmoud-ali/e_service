@@ -44,33 +44,6 @@ class LogMixin:
         formset.save_m2m()
 
 class MaktabTanfiziMixin:
-    def get_queryset(self, request):
-        qs = super().get_queryset(request)
-        maktib_list = []
-
-        if request.user.maktab_tanfizi_manager.exists():
-            maktib_list.append(
-                request.user.maktab_tanfizi_manager.first()
-            )
-            
-        elif request.user.maktab_tanfizi_user.exists():
-            maktib_list.append(
-                request.user.maktab_tanfizi_user.first()
-            )
-        elif request.user.maktab_tanfizi_follow_up.exists():
-            maktib_list.append(
-                request.user.maktab_tanfizi_follow_up.first()
-            )
-        else:
-            qs = qs.none()
-
-        qs = qs.filter(maktab_tanfizi__in=maktib_list)
-
-        if request.user.maktab_tanfizi_follow_up.exists():
-            qs = qs | qs.filter(has_motab3at=True)
-
-        return qs
-
     def has_add_permission(self, request):
         if request.user.maktab_tanfizi_user.exists() or request.user.maktab_tanfizi_follow_up.exists():
             return super().has_add_permission(request)
@@ -203,6 +176,33 @@ class KhatabatAdmin(MaktabTanfiziMixin,LogMixin,admin.ModelAdmin):
     inlines = [HarkatKhatabatInboxInline,HarkatKhatabatOutboxInline,]
     fields =  ('letter_number','subject','has_motab3at','tags' )
     readonly_fields = []
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        maktib_list = []
+
+        if request.user.maktab_tanfizi_manager.exists():
+            maktib_list.append(
+                request.user.maktab_tanfizi_manager.first()
+            )
+            
+        elif request.user.maktab_tanfizi_user.exists():
+            maktib_list.append(
+                request.user.maktab_tanfizi_user.first()
+            )
+        elif request.user.maktab_tanfizi_follow_up.exists():
+            maktib_list.append(
+                request.user.maktab_tanfizi_follow_up.first()
+            )
+        else:
+            qs = qs.none()
+
+        qs = qs.filter(maktab_tanfizi__in=maktib_list)
+
+        if request.user.maktab_tanfizi_follow_up.exists():
+            qs = qs | qs.filter(has_motab3at=True)
+
+        return qs
 
     @admin.display(description='الحركة الابتدائية')
     def first_haraka(self, obj):
