@@ -411,7 +411,7 @@ class EmployeeBasicAdmin(admin.ModelAdmin):
     list_filter = ["draja_wazifia","alawa_sanawia",Edara3amaFilter,Edarafar3iaFilter,EmployeeWi7daMosa3daFilter,"no3_2lertibat","mosama_wazifi__category","gasima","atfal",EmployeeTarikhTa3inFilter,EmployeeWifg2lwazaifFilter,EmployeeWifg2lmostawiatFilter,"sex","moahil","aadoa","status"] #
     view_on_site = False
     autocomplete_fields = ["mosama_wazifi"] #,"hikal_wazifi"
-    search_fields = ["name","code"]
+    search_fields = ["name","code","email"]
     readonly_fields = ["moahil","gasima","atfal"] #,"edara_3ama_tmp","edara_far3ia_tmp"
     actions = ['export_as_csv','export_as_contacts']
 
