@@ -1,5 +1,5 @@
 from django import forms
-from .models import MosamaWazifi,EmergencyEvaluation ,Employee_Data_Emergency,SurveyResponse
+from .models import Employee_Sim_Card,MosamaWazifi,EmergencyEvaluation ,Employee_Data_Emergency,SurveyResponse
 
 class EmergencyEvaluationForm(forms.ModelForm):
     employee_name = forms.ChoiceField(
@@ -139,5 +139,41 @@ class EmployeeDataForm(forms.ModelForm):
             'email': 'البريد الإلكتروني',
             'direct_manager_email': 'بريد المدير المباشر',
             'job_title': 'المسمى الوظيفي',
+        }
+
+
+class EmployeeٍSimCardForm(forms.ModelForm):
+    class Meta:
+        model = Employee_Sim_Card
+        fields = [
+            'name', 'email', 'department', 
+             'sim_number'
+        ]
+        
+        widgets = {
+           
+            'name': forms.TextInput(attrs={
+                'class': 'form-control', 
+                'placeholder': 'الاسم الكامل'
+            }),
+            'email': forms.EmailInput(attrs={
+                'class': 'form-control', 
+                'placeholder': 'example@company.com'
+            }),
+            'department': forms.TextInput(attrs={
+                'class': 'form-control', 
+                'placeholder': 'الإدارة / القسم'
+            }),
+            'sim_number': forms.NumberInput(attrs={
+                'class': 'form-control', 
+                'placeholder': 'مثال: 123456'
+            }),
+        }
+        
+        labels = {
+            'name': 'اسم الموظف',
+            'email': 'البريد الإلكتروني',
+            'department': 'الإدارة / القسم',
+            'sim_number': 'رقم الشريحة',
         }
 

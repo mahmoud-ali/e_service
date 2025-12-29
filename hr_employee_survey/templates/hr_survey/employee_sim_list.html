@@ -1,0 +1,174 @@
+{% extends 'survey/base_survey.html' %}
+
+{% block content %}
+
+{% load i18n %}
+
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+ 
+    body {
+        background-color: #e9eff4;
+        font-family: 'Cairo', sans-serif;
+        direction: rtl;
+        text-align: right;
+    }
+
+    .list-container {
+        max-width: 1000px; 
+        margin: 30px auto;
+        padding: 20px;
+        background-color: #ffffff;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    h2 {
+        background-color: #007bff;
+        color: white;
+        padding: 15px 20px;
+        border-radius: 8px;
+        margin-bottom: 25px;
+        font-size: 1.6rem;
+        font-weight: 700;
+        text-align: center;
+    }
+    
+    .alert-info {
+        padding: 15px;
+        margin-bottom: 20px;
+        border: 1px solid #007bff;
+        color: #004085;
+        background-color: #cce5ff;
+        border-radius: 5px;
+        text-align: center;
+        font-weight: bold;
+    }
+
+   
+    .data-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        table-layout: fixed; 
+    }
+
+    .data-table th, .data-table td {
+        border: 1px solid #dee2e6;
+        padding: 12px;
+        text-align: right;
+        vertical-align: middle;
+        word-wrap: break-word;
+    }
+
+    .data-table th {
+        background-color: #f1f1f1;
+        color: #333;
+        font-weight: 700;
+        font-size: 0.95rem;
+    }
+
+    .data-table tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+    .data-table tr:hover {
+        background-color: #e2f3ff;
+    }
+
+   
+    .action-button {
+        display: inline-block;
+        padding: 8px 15px;
+        background-color: #28a745; 
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        transition: background-color 0.3s;
+        font-size: 0.9rem;
+        text-align: center;
+    }
+
+    .action-button:hover {
+        background-color: #218838;
+    }
+
+   
+    @media (max-width: 768px) {
+        .list-container {
+            margin: 10px;
+            padding: 10px;
+            overflow-x: auto; 
+        }
+
+        .data-table {
+            min-width: 700px; 
+            table-layout: auto;
+        }
+
+        .data-table th, .data-table td {
+            padding: 8px;
+            font-size: 0.85rem;
+        }
+        
+        .action-button {
+            padding: 6px 10px;
+            font-size: 0.8rem;
+        }
+
+        button {
+        background-color: #28a745;
+        color: white;
+        padding: 12px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 1.1em;
+        margin-top: 20px;
+        width: 100%;
+        transition: background-color 0.3s;
+    }
+
+    }
+</style>
+
+
+<div class="list-container">
+    <h2> قائمة البيانات المُرسلة </h2>
+    <button class="action-button"> <a href="{% url 'surveys:employee_sim_add' %}">  اضافة بيانات شريحة الاتصال </a></li> </button>
+    {% if user_data %}
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>اسم الموظف</th>
+                    <th>الادارة</th>
+                    <th> رقم الهاتف</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                {% for data in user_data %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ data.name }}</td>
+                        <td>{{ data.department }}</td>
+                        <td>{{ data.sim_number }}</td>
+                        
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div class="alert-info">
+            عفواً، لم تقم بإرسال أي بيانات حتى الآن.
+        </div>
+    {% endif %}
+
+</div>
+
+
+
+{% endblock %}

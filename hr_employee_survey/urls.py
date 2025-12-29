@@ -10,5 +10,7 @@ urlpatterns = [
     path('create_employee/', views.employee_create, name='employee_create'),
     path('list/', views.survey_list_view, name='survey_list'), 
     path('submissions/', views.submission_list_view, name='submission_list'),
-    
+    path('employee-sim/add/', views.employee_sim_create, name='employee_sim_add'),
+    path('employee_simcard/', views.employee_sim_list_view, name='employee_sim_list'),
+
 ]
