@@ -54,6 +54,30 @@ class Employee_Data_Emergency(models.Model):
         verbose_name = "بيانات موظف مستوردة من بيانات المباشرين"
 
 
+class Employee_Sim_Card(models.Model):
+   
+    name = models.CharField(
+        max_length=255, 
+        verbose_name="اسم الموظف"
+    )
+
+    sim_number = models.IntegerField(
+        verbose_name="رقم الشريحة ")
+
+    department = models.CharField(
+       blank=True, null=True,max_length=255,  
+       verbose_name=_("الإدارة / القسم")
+    ) 
+
+    email = models.EmailField(
+        null=True, 
+        blank=True,
+        verbose_name="البريد الإلكتروني"
+    )
+
+    class Meta:
+        verbose_name = "بيانات موظف مستوردة من بيانات المباشرين"
+
 
 class EmergencyEvaluation(models.Model):
     

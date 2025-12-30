@@ -1,0 +1,169 @@
+{% extends 'survey/base_survey.html' %}
+
+{% block content %}
+{% load static %}
+{% load i18n %}
+
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+<style>
+    :root {
+        --primary-color: #2563eb;
+        --secondary-color: #64748b;
+        --success-color: #059669;
+        --bg-light: #f8fafc;
+    }
+
+    body {
+        font-family: 'Cairo', sans-serif;
+        background-color: var(--bg-light);
+    }
+
+    .form-card {
+        border-radius: 16px;
+        overflow: hidden;
+        transition: transform 0.3s ease;
+    }
+
+    .card-header-gradient {
+        background: linear-gradient(135deg, #1e40af 0%, #2563eb 100%);
+        border-bottom: none;
+    }
+
+    .form-label {
+        font-size: 0.9rem;
+        color: #334155;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    /* تحسين شكل المدخلات */
+    .form-control, .form-select {
+        border-radius: 10px;
+        padding: 12px 15px;
+        border: 1px solid #e2e8f0;
+        transition: all 0.3s ease;
+        background-color: #ffffff;
+    }
+
+    .form-control:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+    }
+
+    /* زر الحفظ */
+    .btn-submit {
+        background-color: var(--success-color);
+        border: none;
+        padding: 12px 40px;
+        border-radius: 10px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .btn-submit:hover {
+        background-color: #047857;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(5, 150, 105, 0.2);
+    }
+
+    /* استجابة الأجهزة الصغيرة */
+    @media (max-width: 768px) {
+        .container {
+            padding-left: 15px;
+            padding-right: 15px;
+        }
+        .btn-submit {
+            width: 100%;
+        }
+    }
+</style>
+
+<div class="container py-5" dir="rtl">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10">
+            <div class="card form-card shadow-lg border-0">
+                
+                <div class="card-header card-header-gradient text-white py-4">
+                    <div class="text-center">
+                        <div class="mb-2">
+                            <i class="fas fa-id-card fa-2x opacity-75"></i>
+                        </div>
+                        <h4 class="mb-0 fw-bold">{{ title }}</h4>
+                        <p class="small mb-0 opacity-75 mt-2">يرجى التأكد من صحة البيانات المدخلة</p>
+                    </div>
+                </div>
+
+                <div class="card-body p-4 p-md-5">
+                    
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }} alert-dismissible fade show rounded-3 shadow-sm" role="alert">
+                                <i class="fas fa-info-circle me-2"></i> {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+
+                    <form method="post" class="needs-validation" novalidate>
+                        {% csrf_token %}
+                        
+                        <div class="row g-4">
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">
+                                    <i class="fas fa-user text-muted"></i> {{ form.name.label }}
+                                </label>
+                                {{ form.name }}
+                                {% if form.name.errors %}
+                                    <div class="text-danger x-small mt-1"><i class="fas fa-exclamation-triangle"></i> {{ form.name.errors }}</div>
+                                {% endif %}
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">
+                                    <i class="fas fa-envelope text-muted"></i> {{ form.email.label }}
+                                </label>
+                                {{ form.email }}
+                                {% if form.email.errors %}
+                                    <div class="text-danger x-small mt-1"><i class="fas fa-exclamation-triangle"></i> {{ form.email.errors }}</div>
+                                {% endif %}
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">
+                                    <i class="fas fa-building text-muted"></i> {{ form.department.label }}
+                                </label>
+                                {{ form.department }}
+                                {% if form.department.errors %}
+                                    <div class="text-danger x-small mt-1"><i class="fas fa-exclamation-triangle"></i> {{ form.department.errors }}</div>
+                                {% endif %}
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">
+                                    <i class="fas fa-sim-card text-muted"></i> {{ form.sim_number.label }}
+                                </label>
+                                {{ form.sim_number }}
+                                {% if form.sim_number.errors %}
+                                    <div class="text-danger x-small mt-1"><i class="fas fa-exclamation-triangle"></i> {{ form.sim_number.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="mt-5 pt-3 border-top d-flex justify-content-center">
+                            <button type="submit" class="btn btn-submit text-white shadow-sm">
+                                <i class="fas fa-check-circle me-1"></i> حفظ البيانات المسجلة
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+           
+        </div>
+    </div>
+</div>
+{% endblock %}

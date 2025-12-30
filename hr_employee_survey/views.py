@@ -3,14 +3,16 @@ from .forms import (
     EmergencyEvaluationForm,
     SurveyResponseForm, 
     EmployeeDataForm, 
+    EmployeeٍSimCardForm,
 )
 from django.http import JsonResponse
-from .models import Employee_Data_Emergency,EmergencyEvaluation,SurveyResponse
+from .models import EmployeeBasic,Employee_Sim_Card,Employee_Data_Emergency,EmergencyEvaluation,SurveyResponse
 from django.contrib.auth.decorators import login_required
 import json 
 from django.contrib import messages
 import traceback
 from django.db import transaction, IntegrityError 
+from django.urls import reverse_lazy
 @login_required
 def get_employees_under_manager(request):
     if not request.user.is_authenticated:
@@ -143,7 +145,7 @@ def employee_create(request):
     }
     return render(request, 'hr_survey/employee_form.html', context)
 
-
+@login_required
 def survey_view(request):
     if request.method == 'POST':
         form = SurveyResponseForm(request.POST)
@@ -197,3 +199,42 @@ def submission_list_view(request):
         'user_submissions': user_submissions
     }
     return render(request, 'hr_survey/submission_list.html', context)
+
+@login_required
+def employee_sim_create(request):
+    user_email = request.user.email
+    initial_data = {'email': user_email}
+
+    try:
+        employee_info = EmployeeBasic.objects.get(email=user_email)
+        initial_data.update({
+            'name': employee_info.name,
+            'department': employee_info.hikal_wazifi 
+        })
+    except EmployeeBasic.DoesNotExist:
+        messages.warning(request, "تنبيه: بريدك الإلكتروني غير مرتبط بسجل موظف في النظام، يرجى إدخال البيانات يدوياً.")
+
+    if request.method == 'POST':
+        form = EmployeeٍSimCardForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'تم حفظ بيانات الشريحة بنجاح!')
+            return redirect('surveys:employee_sim_list')
+    else:
+        form = EmployeeٍSimCardForm(initial=initial_data)
+
+    context = {
+        'form': form,
+        'title': 'إضافة بيانات شريحة موظف'
+    }
+    return render(request, 'hr_survey/employee_sim_form.html', context)
+
+
+@login_required
+def employee_sim_list_view(request):
+    user_data = Employee_Sim_Card.objects.filter(email = request.user.email)
+    
+    context = {
+        'user_data': user_data
+    }
+    return render(request, 'hr_survey/employee_sim_list.html', context)
