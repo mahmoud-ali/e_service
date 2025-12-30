@@ -132,21 +132,19 @@ class Employee_Data_Emergency_admin(admin.ModelAdmin):
         'name',
         'email',
         'direct_manager_email',
-        'job_title'
+        'job_title',
+        'edara_3ama'
     )
 
     list_filter = (
         'job_title',
-        'name',
-        'email',
-        'direct_manager_email',
+        'edara_3ama',
     )
 
     search_fields = (
         'job_title',
         'name',
         'email',
-        'direct_manager_email',
         
     )
 
