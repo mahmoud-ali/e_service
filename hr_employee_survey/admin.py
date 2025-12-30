@@ -137,7 +137,6 @@ class Employee_Data_Emergency_admin(admin.ModelAdmin):
     )
 
     list_filter = (
-        'job_title',
         'edara_3ama',
     )
 
