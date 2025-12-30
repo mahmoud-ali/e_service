@@ -143,9 +143,9 @@
             <thead>
                 <tr>
                     <th>#</th>
+                    <th> رقم الهاتف</th>
                     <th>اسم الموظف</th>
                     <th>الادارة</th>
-                    <th> رقم الهاتف</th>
 
                 </tr>
             </thead>
@@ -153,9 +153,9 @@
                 {% for data in user_data %}
                     <tr>
                         <td>{{ forloop.counter }}</td>
+                        <td>{{ data.sim_number }}</td>
                         <td>{{ data.name }}</td>
                         <td>{{ data.department }}</td>
-                        <td>{{ data.sim_number }}</td>
                         
                     </tr>
                 {% endfor %}
