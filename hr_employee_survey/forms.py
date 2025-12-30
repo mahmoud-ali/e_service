@@ -143,6 +143,11 @@ class EmployeeDataForm(forms.ModelForm):
 
 
 class EmployeeٍSimCardForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['name'].disabled = True
+        self.fields['email'].disabled = True
+        self.fields['department'].disabled = True
     class Meta:
         model = Employee_Sim_Card
         fields = [
@@ -154,19 +159,22 @@ class EmployeeٍSimCardForm(forms.ModelForm):
            
             'name': forms.TextInput(attrs={
                 'class': 'form-control', 
-                'placeholder': 'الاسم الكامل'
+                'placeholder': 'الاسم الكامل',
+                'readonly': 'readonly',
             }),
             'email': forms.EmailInput(attrs={
                 'class': 'form-control', 
-                'placeholder': 'example@company.com'
+                'placeholder': 'example@smrc.sd',
+                'readonly': 'readonly',
             }),
             'department': forms.TextInput(attrs={
                 'class': 'form-control', 
-                'placeholder': 'الإدارة / القسم'
+                'placeholder': 'الإدارة / القسم',
+                'readonly': 'readonly',
             }),
-            'sim_number': forms.NumberInput(attrs={
+            'sim_number': forms.TextInput(attrs={
                 'class': 'form-control', 
-                'placeholder': 'مثال: 123456'
+                'placeholder': 'مثال: 0912345678'
             }),
         }
         

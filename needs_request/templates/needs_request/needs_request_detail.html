@@ -114,10 +114,18 @@
   <div class="collapse-title font-semibold">سجل سير الموافقات (Workflow Timeline)</div>
   <div class="collapse-content text-sm">
 
+
+                <div id="diagram"></div>
+                <button id="fullscreenBtn">Fullscreen</button>
+                <button id="fitscreenBtn" onclick="canvas.zoom('fit-viewport')">Fit</button>
+                <button id="zoomInBtn" onclick="canvas.zoom(canvas.zoom() + 0.2)">+</button>
+                <button id="zoomOutBtn" onclick="canvas.zoom(canvas.zoom() - 0.2)">−</button>
+
+
         <div class="card bg-base-100">
             <div class="card-body">
                 {% comment %} <h2 class="card-title">سجل سير الموافقات (Workflow Timeline)</h2> {% endcomment %}
-                <div class="timeline-container">
+                <div class="timeline-container">                    
                     <ul class="timeline timeline-vertical">
                         {% for log in timeline %}
                         <li>
@@ -303,4 +311,84 @@
     </div>
 </div>
 
+  <script>
+
+document.addEventListener("DOMContentLoaded", function () {
+    var viewer = new BpmnJS({
+        container: '#diagram',
+        keyboard: true
+    });
+
+    const canvas = viewer.get('canvas');
+
+    function showDiagram(diagramXML) {
+
+      viewer.importXML(diagramXML).then(() => {
+        canvas.zoom('fit-viewport');
+
+        var overlays = viewer.get('overlays'),
+            elementRegistry = viewer.get('elementRegistry');
+        {% for log in timeline %}
+            {% if log.node.bpmn_id%}
+                canvas.addMarker('{{log.node.bpmn_id}}', 'highlight');
+            {% endif%}
+        {% endfor%}
+      });
+
+    }
+    function centerDiagramVertically() {
+        const viewbox = canvas.viewbox();
+        const diagramHeight = viewbox.inner.height;
+        const viewportHeight = canvas._container.clientHeight;
+
+        const dy = (viewportHeight - diagramHeight) / 2;
+
+        canvas.viewbox({
+            x: viewbox.x,
+            y: viewbox.y - dy,
+            width: viewbox.width,
+            height: viewbox.height
+        });
+    }
+    const container = document.getElementById('diagram');
+
+    container.addEventListener('fullscreenchange', () => {
+        canvas.zoom('fit-viewport');
+        requestAnimationFrame(() => {
+            centerDiagramVertically();
+        });
+        //centerDiagramVertically()
+    });
+
+    document.getElementById('fullscreenBtn').addEventListener('click', () => {
+        if (!document.fullscreenElement) {
+            container.requestFullscreen();
+            
+        } else {
+            document.exitFullscreen();
+        }
+    });        
+
+    document.getElementById('fitscreenBtn').addEventListener('click', () => {
+        canvas.zoom('fit-viewport');
+        //centerDiagramVertically()
+    });        
+
+    document.getElementById('zoomInBtn').addEventListener('click', () => {
+        canvas.zoom(canvas.zoom() + 0.2);
+    });        
+
+    document.getElementById('zoomOutBtn').addEventListener('click', () => {
+        canvas.zoom(canvas.zoom() - 0.2);
+    });        
+
+    const xml = `
+        {{workflow.workflow.bpmn_xml|safe}}
+    `
+
+    showDiagram(xml)
+
+});
+
+  </script>    
 {% endblock %}

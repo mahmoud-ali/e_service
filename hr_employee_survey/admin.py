@@ -4,7 +4,7 @@ import csv
 from django.http import HttpRequest, HttpResponse
 
 from django.contrib import admin
-from .models import Employee_Data_Emergency, EmergencyEvaluation, RATING_CHOICES, WARNING_CHOICES, GENERAL_RATING, ASKING_CHOICES, PERCENTAGE_CHOICES
+from .models import Employee_Data_Emergency, EmergencyEvaluation, RATING_CHOICES, WARNING_CHOICES, GENERAL_RATING, ASKING_CHOICES, PERCENTAGE_CHOICES, Employee_Sim_Card
 from django.utils.translation import gettext_lazy as _
 
 class EmergencyEvaluationAdmin(admin.ModelAdmin):
@@ -181,3 +181,29 @@ class Employee_Data_Emergency_admin(admin.ModelAdmin):
 
 admin.site.register(EmergencyEvaluation, EmergencyEvaluationAdmin)
 admin.site.register(Employee_Data_Emergency, Employee_Data_Emergency_admin)
+
+class Employee_Sim_Card_admin(admin.ModelAdmin):
+    
+    list_display = (
+        'name',
+        'sim_number',
+        'department',
+        'email',
+    )
+
+    list_filter = (
+        'department',
+    )
+
+    search_fields = (
+        'name',
+        'sim_number',
+        'email',
+        
+    )
+
+    fieldsets = (
+          
+    )
+
+admin.site.register(Employee_Sim_Card,Employee_Sim_Card_admin)

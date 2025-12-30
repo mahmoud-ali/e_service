@@ -204,6 +204,7 @@ def submission_list_view(request):
 def employee_sim_create(request):
     user_email = request.user.email
     initial_data = {'email': user_email}
+    can_submit = True
 
     try:
         employee_info = EmployeeBasic.objects.get(email=user_email)
@@ -212,20 +213,28 @@ def employee_sim_create(request):
             'department': employee_info.hikal_wazifi 
         })
     except EmployeeBasic.DoesNotExist:
-        messages.warning(request, "تنبيه: بريدك الإلكتروني غير مرتبط بسجل موظف في النظام، يرجى إدخال البيانات يدوياً.")
+        can_submit = False
+        messages.error(request, "تنبيه: بريدك الإلكتروني غير مرتبط بسجل موظف في النظام، الرجاء مراجعة الموارد البشرية.")
 
     if request.method == 'POST':
-        form = EmployeeٍSimCardForm(request.POST)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'تم حفظ بيانات الشريحة بنجاح!')
-            return redirect('surveys:employee_sim_list')
+        try:
+            EmployeeBasic.objects.get(email=user_email)
+            form = EmployeeٍSimCardForm(request.POST)
+            if form.is_valid():
+                form.save()
+                messages.success(request, 'تم حفظ بيانات الشريحة بنجاح!')
+                return redirect('surveys:employee_sim_list')
+        except EmployeeBasic.DoesNotExist:
+            can_submit = False
+            messages.error(request, "تنبيه: بريدك الإلكتروني غير مرتبط بسجل موظف في النظام، الرجاء مراجعة الموارد البشرية.")
+
     else:
         form = EmployeeٍSimCardForm(initial=initial_data)
 
     context = {
         'form': form,
-        'title': 'إضافة بيانات شريحة موظف'
+        'title': 'إضافة بيانات شريحة موظف',
+        'can_submit': can_submit
     }
     return render(request, 'hr_survey/employee_sim_form.html', context)
 
