@@ -27,11 +27,3 @@ def add_year_to_letter_number(year=25):
             obj = Khatabat.objects.get(letter_number=id).delete()
             print(id)
 
-def drop_year_to_letter_number(year=25):
-    qs = Khatabat.objects.all()
-    for obj in qs:
-        id = obj.letter_number
-        a = obj.letter_number.split('-')
-        if len(a) == 4:
-            obj.delete()
-            print(id)
