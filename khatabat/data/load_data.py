@@ -25,7 +25,7 @@ def add_year_to_letter_number(year=25):
             qs3.update(letter=new_letter)
 
             obj = Khatabat.objects.get(letter_number=id).delete()
-            print(obj.letter_number)
+            print(id)
 
 def drop_year_to_letter_number(year=25):
     qs = Khatabat.objects.all()
