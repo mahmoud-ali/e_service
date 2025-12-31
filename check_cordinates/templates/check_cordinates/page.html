@@ -429,7 +429,7 @@
         }
 
         function removePoint(id) {
-            if confirm('هل ترغب حقاً في حذف هذه النقطة؟'){
+            if (confirm('هل ترغب حقاً في حذف هذه النقطة؟')){
                 points = points.filter(p => p.id !== id);
                 overlay.setPosition(undefined); // إخفاء النافذة
                 updateMapFeatures();
