@@ -236,7 +236,7 @@ class KhatabatAdmin(MaktabTanfiziMixin,LogMixin,admin.ModelAdmin):
             last_letter_num = int(last_letter.letter_number.split("-")[-1])
         except:
             pass
-        num = f"{maktab_tanfizi.code}-{datetime.now().strftime("%m")}-{last_letter_num+1}" #f"{maktab_tanfizi.code}-{datetime.now().strftime("%y")}-{datetime.now().strftime("%m")}-{last_letter_num+1}"
+        num = f"{maktab_tanfizi.code}-{datetime.now().strftime("%y")}-{datetime.now().strftime("%m")}-{last_letter_num+1}" #f"{maktab_tanfizi.code}-{datetime.now().strftime("%m")}-{last_letter_num+1}"
 
         return {'letter_number': num}
     
