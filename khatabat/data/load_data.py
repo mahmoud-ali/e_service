@@ -12,6 +12,6 @@ def add_year_to_letter_number(year=25):
     for obj in qs:
         a = obj.letter_number.split('-')
         if len(a) == 3:
-            obj.letter_number = f'{a[0]}-{year}-{a[1]}-{a[2]}'
+            obj.letter_number = f'{a[0]}-{year}-{a[1]}-{a[2]}'.upper()
             obj.save()
             print(obj.letter_number)
