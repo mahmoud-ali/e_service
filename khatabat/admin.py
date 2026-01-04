@@ -46,19 +46,19 @@ class LogMixin:
 class MaktabTanfiziMixin:
     def has_add_permission(self, request):
         if request.user.maktab_tanfizi_user.exists() or request.user.maktab_tanfizi_follow_up.exists():
-            return super().has_add_permission(request)
+            return True #super().has_add_permission(request)
 
         return False
 
     def has_change_permission(self, request, obj=None):
         if request.user.maktab_tanfizi_user.exists() or request.user.maktab_tanfizi_follow_up.exists():
-            return super().has_change_permission(request,obj)
+            return True # super().has_change_permission(request,obj)
     
         return False
     
     def has_delete_permission(self, request, obj=None):
         if request.user.maktab_tanfizi_user.exists() or request.user.maktab_tanfizi_follow_up.exists():
-            return super().has_delete_permission(request,obj)
+            return True # super().has_delete_permission(request,obj)
         
         return False
 
@@ -111,19 +111,19 @@ class HarkatKhatabatInboxInline(HarakaMixin,admin.StackedInline):
 
     def has_add_permission(self, request, obj=None):
         if request.user.maktab_tanfizi_user.exists():
-            return super().has_add_permission(request,obj)
+            return True # super().has_add_permission(request,obj)
 
         return False
 
     def has_change_permission(self, request, obj=None):
         if request.user.maktab_tanfizi_user.exists():
-            return super().has_change_permission(request,obj)
+            return True # super().has_change_permission(request,obj)
     
         return False
     
     def has_delete_permission(self, request, obj=None):
         if request.user.maktab_tanfizi_user.exists():
-            return super().has_delete_permission(request,obj)
+            return True # super().has_delete_permission(request,obj)
 
 class HarkatKhatabatOutboxInline(HarakaMixin,admin.StackedInline):
     model = HarkatKhatabatOutbox
@@ -131,19 +131,19 @@ class HarkatKhatabatOutboxInline(HarakaMixin,admin.StackedInline):
 
     def has_add_permission(self, request, obj=None):
         if request.user.maktab_tanfizi_user.exists():
-            return super().has_add_permission(request,obj)
+            return True # super().has_add_permission(request,obj)
 
         return False
 
     def has_change_permission(self, request, obj=None):
         if request.user.maktab_tanfizi_user.exists():
-            return super().has_change_permission(request,obj)
+            return True # super().has_change_permission(request,obj)
     
         return False
     
     def has_delete_permission(self, request, obj=None):
         if request.user.maktab_tanfizi_user.exists():
-            return super().has_delete_permission(request,obj)
+            return True # super().has_delete_permission(request,obj)
 
 class Motab3atKhatabatInline(admin.TabularInline):
     model = Motab3atKhatabat
