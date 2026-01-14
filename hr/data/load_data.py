@@ -344,3 +344,25 @@ def calc_summary():
     for obj in PayrollMaster.objects.filter(confirmed=True):
         payroll = Payroll(obj.year,obj.month)
         payroll.calc_summary()
+
+def update_drjat_3lawat(filename='promotion2026.csv'):
+    with open('./hr/data/'+filename, newline='') as csvfile:
+        reader = csv.reader(csvfile, delimiter=',')
+        next(reader, None)  # skip the headers
+        for row in reader:
+            try:
+                code = int(row[0])
+                drja = int(row[2])
+                alawa = int(row[3])
+
+                emp = EmployeeBasic.objects.get(code=code)
+                emp.draja_wazifia = drja
+                emp.alawa_sanawia = alawa
+                emp.save(update_fields=['draja_wazifia','alawa_sanawia'])
+
+                print('Employee',row[0],row[1],'Ok')
+
+            except Exception as e:
+                print('Employee',row[0],row[1],'Error:',e)
+
+                
