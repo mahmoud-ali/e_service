@@ -37,12 +37,13 @@ class Badalat(LoginRequiredMixin,UserPermissionMixin,View):
         month = int(self.request.GET['month'])
         format = self.request.GET.get('format',None)
         data = []
+        calculate_mokaf2t_ada2 = False
         
         payroll = Payroll(year,month)
-        header = ['الرمز','الموظف','الدرجة الوظيفية','العلاوة','ابتدائي','غلاء معيشة','اساسي','طبيعة عمل','تمثيل','مهنة','معادن','مخاطر','عدوى','مكافئة اداء','اجتماعية قسيمة','اجتماعية اطفال','مؤهل','شخصية','اجمالي المرتب']
         summary_list = []
 
         for (emp,badalat,khosomat,draja_wazifia,alawa_sanawia) in payroll.all_employees_payroll_from_db():
+            calculate_mokaf2t_ada2 = badalat.calculate_mokaf2t_ada2
             badalat_list = [b[1] for b in badalat]
             l = [emp.code,emp.name,Drajat3lawat.DRAJAT_CHOICES[draja_wazifia],Drajat3lawat.ALAWAT_CHOICES[alawa_sanawia]] + badalat_list
             data.append(l)
@@ -52,6 +53,12 @@ class Badalat(LoginRequiredMixin,UserPermissionMixin,View):
                     summary_list[idx] += badalat_list[idx]
                 except IndexError:
                     summary_list.insert(idx,badalat_list[idx])
+
+        header = ['الرمز','الموظف','الدرجة الوظيفية','العلاوة','ابتدائي','غلاء معيشة','اساسي','طبيعة عمل','تمثيل','مهنة','معادن','مخاطر','عدوى']
+
+        if calculate_mokaf2t_ada2:
+            header +=['مكافئة اداء',]
+        header += ['اجتماعية قسيمة','اجتماعية اطفال','مؤهل','شخصية','اجمالي المرتب']
 
         summary_list = [round(s,2) for s in summary_list]
 

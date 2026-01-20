@@ -220,6 +220,7 @@ class Settings(LoggingModel):
     SETTINGS_MOKAF2T_ADA2 = 'mokaf2t_ada2'
 
     SETTINGS_MOKAF2T_ADA2_FI_MOKAF2 = 'mokaf2t_ada2_fi_mokaf2'
+    SETTINGS_CALCULATE_MOKAF2T_ADA2 = 'calculate_mokaf2t_ada2'
 
     SETTINGS_CHOICES = {
         SETTINGS_ZAKA_KAFAF: _('SETTINGS_ZAKAT_KAFAF'),
@@ -245,7 +246,9 @@ class Settings(LoggingModel):
         SETTINGS_MAJLIS_EL2DARA_3ODO: _('SETTINGS_MAJLIS_EL2DARA_3ODO'),
 
         SETTINGS_MODIR_3AM_ASAI: _('SETTINGS_MODIR_3AM_ASAI'),
-        SETTINGS_MOKAF2T_ADA2_FI_MOKAF2: 'حساب مكافئة الاداء في المرتب',
+
+        SETTINGS_CALCULATE_MOKAF2T_ADA2: 'حساب مكافئة الاداء؟',
+        SETTINGS_MOKAF2T_ADA2_FI_MOKAF2: 'حساب مكافئة الاداء في المكافئة',
     }
 
     for moahil in MOAHIL_CHOICES:
@@ -1073,6 +1076,7 @@ class PayrollDetailHikalRatibiAbstract(PayrollDetailAbstract):
 
 class PayrollDetail(PayrollDetailHikalRatibiAbstract):
     aadoa = models.FloatField(_("aadoa"),default=0)
+    calculate_mokaf2t_ada2 = models.BooleanField("حساب بدل المكافئة؟",default=True)
     mokaf2at_2da2 = models.FloatField(_("mokaf2at_2da2"),default=0)
     mokaf2at_2da2_fi_mokaf2 = models.BooleanField("حساب بدل المكافئة في كشف المكافئة",default=True)
     gasima = models.FloatField(_("gasima"),default=0)
@@ -1141,6 +1145,7 @@ class PayrollTasoia(models.Model):
     total_mihna = models.FloatField(_("mihna"),default=0)
     total_ma3adin = models.FloatField(_("ma3adin"),default=0)
     total_aadoa = models.FloatField(_("aadoa"),default=0)
+    calculate_mokaf2t_ada2 = models.BooleanField("حساب مكافئة الاداء؟",default=True)
     total_mokaf2at_2da2 = models.FloatField(_("aadoa"),default=0)
     total_ajtima3ia = models.FloatField(_("ajtima3ia"),default=0)
     total_moahil = models.FloatField(_("moahil"),default=0)
@@ -1168,4 +1173,5 @@ class PayrollSummary(models.Model):
     total_salary = models.FloatField(_("اجمالي المرتب"),default=0)
     net_salary = models.FloatField(_("صافي الإستحقاق"),default=0)
     mokaf2 = models.FloatField(_("المكافئة"),default=0)
+    salary_calculate_mokaf2t_ada2 = models.BooleanField("حساب مكافئة الاداء؟",default=True)
     salary_mokaf2 = models.FloatField(_("مكافئة اداء"),default=0)

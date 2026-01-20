@@ -4,7 +4,7 @@ from collections import namedtuple
 from django.utils import timezone
 
 class Badalat_3lawat():
-    def __init__(self,abtdai,galaa_m3isha,gasima=0,atfal=0,moahil=0,shakhsia=0,ma3adin=0,aadoa=0,mokaf2at_2da2=0,month=1,year=1970):
+    def __init__(self,abtdai,galaa_m3isha,gasima=0,atfal=0,moahil=0,shakhsia=0,ma3adin=0,aadoa=0,calculate_mokaf2t_ada2=True,mokaf2at_2da2=0,month=1,year=1970):
         self._abtdai = abtdai
         self._galaa_m3isha = galaa_m3isha
         self._asasi = (self._abtdai +self._galaa_m3isha)
@@ -14,6 +14,7 @@ class Badalat_3lawat():
         self._shakhsia = shakhsia
         self._ma3adin = ma3adin
         self._aadoa = aadoa
+        self._calculate_mokaf2t_ada2 = calculate_mokaf2t_ada2
         self._mokaf2at_2da2 = mokaf2at_2da2
         self._month = month
         self._year = year
@@ -55,6 +56,10 @@ class Badalat_3lawat():
         return self._aadoa
 
     @property
+    def calculate_mokaf2t_ada2(self):
+        return self._calculate_mokaf2t_ada2
+
+    @property
     def mokaf2at_2da2(self):
         return self._mokaf2at_2da2
 
@@ -84,9 +89,13 @@ class Badalat_3lawat():
     
     @property
     def ajmali_almoratab(self):
-        return (self._asasi +self.tabi3at_3mal +self.tamtheel +self.mihna +self.ma3adin \
-                 +self.makhatir +self.aadoa +self.mokaf2at_2da2 +self.ajtima3ia_gasima +self.ajtima3ia_atfal \
+        total = (self._asasi +self.tabi3at_3mal +self.tamtheel +self.mihna +self.ma3adin \
+                 +self.makhatir +self.aadoa +self.ajtima3ia_gasima +self.ajtima3ia_atfal \
                  +self.moahil +self.shakhsia)
+        
+        if self.calculate_mokaf2t_ada2:
+            total += self.mokaf2at_2da2
+        return total
 
     def __iter__(self):
         props = [
@@ -99,7 +108,14 @@ class Badalat_3lawat():
             ('ma3adin',self.ma3adin),
             ('makhatir',self.makhatir),
             ('aadoa',self.aadoa),
-            ('mokaf2at_2da2',self.mokaf2at_2da2),
+        ]
+
+        if self.calculate_mokaf2t_ada2:
+            props +=[
+                ('mokaf2at_2da2',self.mokaf2at_2da2),
+            ]
+
+        props +=[
             ('ajtima3ia_gasima',self.ajtima3ia_gasima),
             ('ajtima3ia_atfal',self.ajtima3ia_atfal),
             ('moahil',self.moahil),
