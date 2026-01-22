@@ -150,12 +150,14 @@
 						<td></td>
 						<td></td>
 					</tr>
+					{% if object.total_mokaf2at_2da2 > 0 %}
 					<tr>
 						<td>مكافئة اداء</td>
 						<td class="money_align">{{object.total_mokaf2at_2da2|floatformat:"2g"}}</td>
 						<td></td>
 						<td></td>
 					</tr>
+					{% endif %}
 					<tr>
 						<td>علاوة اجتماعية</td>
 						<td class="money_align">{{object.total_ajtima3ia|floatformat:"2g"}}</td>
