@@ -11,7 +11,7 @@ from django.db.models import Sum
 
 from hr.calculations import PayrollValidation
 from hr.models import Drajat3lawat, EmployeeBankAccount, EmployeeBasic, PayrollDetail, PayrollMaster,MONTH_CHOICES
-from hr.payroll import M2moriaSheet, MajlisEl2daraMokaf2Payroll, MobasharaSheet, Modir3amPayroll, MoratabMokaf2Sheet, Payroll,Mokaf2Sheet, Ta3agodMosimiMokaf2Payroll, Ta3agodMosimiPayroll, TasoiaPayroll, Wi7datMosa3idaMokaf2tFarigMoratabPayroll, Wi7datMosa3idaMokaf2tPayroll
+from hr.payroll import M2moriaSheet, MajlisEl2daraMokaf2Payroll, MobasharaSheet, Modir3amPayroll, Mokaf2MajlisWzaraSheet, MoratabMokaf2Sheet, Payroll,Mokaf2Sheet, Ta3agodMosimiMokaf2Payroll, Ta3agodMosimiPayroll, TasoiaPayroll, Wi7datMosa3idaMokaf2tFarigMoratabPayroll, Wi7datMosa3idaMokaf2tPayroll
 
 SHOW_CSV_TOTAL = False
 
@@ -653,6 +653,86 @@ class Mokaf2(LoginRequiredMixin,UserPermissionMixin,View):
             cache.patch_cache_control(response, max_age=0)
             return response
 #############
+
+class Mokaf2MajlisWzara(LoginRequiredMixin,UserPermissionMixin,View):
+    user_groups = ['hr_manager','hr_payroll']
+    def get(self,*args,**kwargs):
+        year = self.request.GET['year']
+        month = int(self.request.GET['month'])
+        format = self.request.GET.get('format',None)
+        bank_sheet = self.request.GET.get('bank_sheet',False)
+        data = []
+
+        try:
+            payroll_master = PayrollMaster.objects.get(year=year,month=month)
+        except PayrollMaster.DoesNotExist as e:
+            bad_request(self.request,e)
+
+        mokaf2 = Mokaf2MajlisWzaraSheet(year,month)
+
+        if bank_sheet:
+            template_name = 'hr/bank.html'
+            header = ['الرمز','الموظف','البنك','رقم الحساب','صافي الاستحقاق']
+            emp_accounts = get_employee_accounts()
+
+            for (emp,badalat) in mokaf2.all_employees_mokaf2_from_db():
+                try:
+                    bnk_no,bank = emp_accounts[emp.id] #employeeemp.employeebankaccount_set.get(active=True).account_no
+                except KeyError:
+                    bnk_no,bank = ('-','-')
+
+                l = [emp.code,emp.name,bank,bnk_no,round(badalat.mokaf2at_majlis,2)]
+                data.append(l)
+        else:
+            template_name = 'hr/mokaf2.html'
+            header = ['الرمز','الموظف','الدرجة الوظيفية','العلاوة','صافي الاستحقاق',]
+
+
+            summary_list = []
+
+            for (emp,badalat) in mokaf2.all_employees_mokaf2_from_db():
+                l = [emp.code,emp.name,emp.get_draja_wazifia_display(),emp.get_alawa_sanawia_display(),]+[round(badalat.mokaf2at_majlis,2)] 
+                data.append(l)
+
+
+
+        if format == 'csv':
+            sheet_name = 'bonace_majlis'
+            # print(f'attachment; filename="{sheet_name}_{month}_{year}.csv"')
+            response = HttpResponse(
+                content_type="text/csv",
+                headers={"Content-Disposition": f'attachment; filename="{sheet_name}_{month}_{year}.csv"'},
+            )
+
+            # BOM
+            response.write(codecs.BOM_UTF8)
+
+            writer = csv.writer(response)
+            writer.writerow(header)
+
+            if SHOW_CSV_TOTAL:
+                data.append(['-','-','-','-',]+summary_list)
+
+            for r in data:
+                writer.writerow(r)
+
+            cache.patch_cache_control(response, max_age=0)
+            return response
+
+        else:
+            context = {
+                'title':'كشف مكافأة مجلس الوزراء',
+                'header':header,
+                'data': data,
+                'summary':summary_list,
+                'month':MONTH_CHOICES[month],
+                'year':year,
+            }
+
+            response = render(self.request,template_name,context)
+            cache.patch_cache_control(response, max_age=0)
+            return response
+#############
 class KhosomatPlusMokaf2(LoginRequiredMixin,UserPermissionMixin,View):
     user_groups = ['hr_manager','hr_payroll']
     def get(self,*args,**kwargs):
@@ -675,7 +755,7 @@ class KhosomatPlusMokaf2(LoginRequiredMixin,UserPermissionMixin,View):
             header = ['الرمز','الموظف','البنك','رقم الحساب','صافي الاستحقاق']
             emp_accounts = get_employee_accounts()
 
-            for (emp,(khosomat,mokaf2)) in moratab_mokaf2.all_employees_from_db():
+            for (emp,(khosomat,mokaf2,mokaf2at_majlis)) in moratab_mokaf2.all_employees_from_db():
                 try:
                     bnk_no,bank = emp_accounts[emp.id] #employeeemp.employeebankaccount_set.get(active=True).account_no
                 except KeyError:
@@ -687,11 +767,11 @@ class KhosomatPlusMokaf2(LoginRequiredMixin,UserPermissionMixin,View):
                 data.append(l)
         else:
             template_name = 'hr/moratab_mokaf2.html'
-            header = ['الرمز','الموظف','الدرجة الوظيفية','العلاوة','صافي المرتب','صافي المكافئة','المجموع',]
+            header = ['الرمز','الموظف','الدرجة الوظيفية','العلاوة','صافي المرتب','صافي المكافئة','مكافئة مجلس الوزراء','المجموع',]
 
-            for (emp,(khosomat,mokaf2)) in moratab_mokaf2.all_employees_from_db():
-                total = round(khosomat.safi_alisti7gag,2) + round(mokaf2.safi_2l2sti7gag,2)
-                moratab_mokaf2_list = [round(khosomat.safi_alisti7gag,2),round(mokaf2.safi_2l2sti7gag,2),total,]
+            for (emp,(khosomat,mokaf2,mokaf2at_majlis)) in moratab_mokaf2.all_employees_from_db():
+                total = round(khosomat.safi_alisti7gag,2) + round(mokaf2.safi_2l2sti7gag,2) + round(mokaf2at_majlis,2)
+                moratab_mokaf2_list = [round(khosomat.safi_alisti7gag,2),round(mokaf2.safi_2l2sti7gag,2),round(mokaf2at_majlis,2),total,]
                 # moratab_mokaf2_list = [khosomat.safi_alisti7gag,mokaf2.safi_2l2sti7gag,total,]
 
                 l = [emp.code,emp.name,emp.get_draja_wazifia_display(),emp.get_alawa_sanawia_display(),]+moratab_mokaf2_list #round(emp_mokaf2.ajmali_2lmoratab,2),round(emp_mokaf2.dariba,2),emp_mokaf2.damga,]

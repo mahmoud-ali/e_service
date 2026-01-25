@@ -67,6 +67,10 @@ class Badalat_3lawat():
         return 0
 
     @property
+    def mokaf2at_majlis(self):
+        return self._mokaf2at_2da2
+        
+    @property
     def ajtima3ia_gasima(self):
         return self._gasima
     

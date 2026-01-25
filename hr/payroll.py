@@ -250,6 +250,7 @@ class Payroll():
                         aadoa = badalat.aadoa*factor,
                         calculate_mokaf2t_ada2=badalat.calculate_mokaf2t_ada2,
                         mokaf2at_2da2 = badalat.mokaf2at_2da2*factor,
+                        mokaf2at_majlis = badalat.mokaf2at_majlis*factor,
                         mokaf2at_2da2_fi_mokaf2 = mokaf2at_2da2_fi_mokaf2,
                         gasima = badalat.ajtima3ia_gasima*factor,
                         atfal = badalat.ajtima3ia_atfal*factor,
@@ -477,7 +478,44 @@ class Mokaf2Sheet():
             x = self.employee_mokaf2_from_db(emp)
             if x:
                 yield(emp.employee,x)
+
 ################
+class Mokaf2MajlisWzaraSheet():
+    def __init__(self,year,month) -> None:
+        self.year = year
+        self.month = month
+
+        self.hr_settings = HrSettings()
+        self.employees = PayrollDetail.objects \
+            .exclude(employee__no3_2lertibat__in=[EmployeeBasic.NO3_2LERTIBAT_2L7ag, EmployeeBasic.NO3_2LERTIBAT_TA3AGOD, EmployeeBasic.NO3_2LERTIBAT_TA3AGOD_MOSIMI,EmployeeBasic.NO3_2LERTIBAT_MASHRO3]) \
+            .filter(payroll_master__year = self.year,payroll_master__month = self.month).prefetch_related("payroll_master","employee").filter(employee__status=EmployeeBasic.STATUS_ACTIVE)
+            # .exclude(employee__hikal_wazifi=self.hr_settings.get_code_as_float(Settings.SETTINGS_KHARJ_ELSHARIKA))\
+
+    def employee_mokaf2_from_db(self,emp_payroll:PayrollDetail):
+        mokaf2at_majlis = emp_payroll.mokaf2at_majlis
+
+        badal = Badalat_3lawat(
+            emp_payroll.abtdai,
+            emp_payroll.galaa_m3isha,
+            shakhsia=emp_payroll.shakhsia,
+            aadoa=emp_payroll.aadoa,
+            calculate_mokaf2t_ada2=True,
+            mokaf2at_2da2=mokaf2at_majlis,
+            gasima=emp_payroll.gasima,
+            atfal=emp_payroll.atfal,
+            moahil=emp_payroll.moahil,
+            ma3adin=emp_payroll.ma3adin
+        )
+
+        return badal
+
+    def all_employees_mokaf2_from_db(self):
+        for emp in self.employees:
+            x = self.employee_mokaf2_from_db(emp)
+            if x:
+                yield(emp.employee,x)
+################
+
 class MoratabMokaf2Sheet():
     def __init__(self,year,month) -> None:
         self.year = int(year)
@@ -560,7 +598,7 @@ class MoratabMokaf2Sheet():
             dariba_mokaf2=self.hr_settings.get_code_as_float(Settings.SETTINGS_DARIBAT_2LMOKAFA),
         )
 
-        return (khosomat,Mokaf2(badal_mokaf2,emp_payroll.payroll_master.daribat_2lmokafa,emp_payroll.damga,khasm_salafiat_elsandog_min_elmokaf2=(not emp_payroll.payroll_master.khasm_salafiat_elsandog_min_elomoratab),salafiat_sandog=emp_payroll.salafiat_sandog,salafiat_3la_2lmokaf2=emp_payroll.salafiat_3la_2lmokaf2))
+        return (khosomat,Mokaf2(badal_mokaf2,emp_payroll.payroll_master.daribat_2lmokafa,emp_payroll.damga,khasm_salafiat_elsandog_min_elmokaf2=(not emp_payroll.payroll_master.khasm_salafiat_elsandog_min_elomoratab),salafiat_sandog=emp_payroll.salafiat_sandog,salafiat_3la_2lmokaf2=emp_payroll.salafiat_3la_2lmokaf2),emp_payroll.mokaf2at_majlis)
 
     def all_employees_from_db(self):
         for emp in self.payroll_details:

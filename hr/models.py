@@ -1078,6 +1078,7 @@ class PayrollDetail(PayrollDetailHikalRatibiAbstract):
     aadoa = models.FloatField(_("aadoa"),default=0)
     calculate_mokaf2t_ada2 = models.BooleanField("حساب بدل المكافئة؟",default=True)
     mokaf2at_2da2 = models.FloatField(_("mokaf2at_2da2"),default=0)
+    mokaf2at_majlis = models.FloatField(_("مكافئة اداء مجلس الوزراء"),default=0)
     mokaf2at_2da2_fi_mokaf2 = models.BooleanField("حساب بدل المكافئة في كشف المكافئة",default=True)
     gasima = models.FloatField(_("gasima"),default=0)
     atfal = models.FloatField(_("atfal"),default=0)

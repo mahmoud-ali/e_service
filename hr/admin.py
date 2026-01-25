@@ -749,7 +749,7 @@ class PayrollMasterAdmin(admin.ModelAdmin):
     # readonly_fields = ["year","month","confirmed"]
 
     def get_list_display(self,request):
-        links = ["year","month","confirmed","show_badalat_link","cmp_badalat_prev_month_link","show_khosomat_link","cmp_khosomat_prev_month_link","show_mokaf2_link","show_moratab_mokaf2_link","show_wi7dat_mosa3ida_farig_moratab_link","show_wi7dat_mosa3ida_mokaf2_link","show_ta3agod_mosimi_moratab_link","show_ta3agod_mosimi_mokaf2_link","show_majlis_el2dara_link","show_modir_3am_badalat_link","show_modir_3am_khosomat_link","show_modir_3am_mokaf2_link"]
+        links = ["year","month","confirmed","show_badalat_link","cmp_badalat_prev_month_link","show_khosomat_link","cmp_khosomat_prev_month_link","show_mokaf2_link","show_mokaf2_majlis_link","show_moratab_mokaf2_link","show_wi7dat_mosa3ida_farig_moratab_link","show_wi7dat_mosa3ida_mokaf2_link","show_ta3agod_mosimi_moratab_link","show_ta3agod_mosimi_mokaf2_link","show_majlis_el2dara_link","show_modir_3am_badalat_link","show_modir_3am_khosomat_link","show_modir_3am_mokaf2_link"]
         if request.user.groups.filter(name="hr_manager").exists():
             return links + ["show_mobashara_link","show_m2moria_link"]
         else:
@@ -821,10 +821,20 @@ class PayrollMasterAdmin(admin.ModelAdmin):
                                +'<a target="_blank" href="{url}?year={year}&month={month}&format=csv">CSV</a>',
                            url=url,year=obj.year,month=obj.month)
 
-    @admin.display(description=_('كشف المرتب والمكافئة'))
+
+    @admin.display(description="كشف مكافئة مجلس الوزراء")
+    def show_mokaf2_majlis_link(self, obj):
+        url = reverse('hr:payroll_mokaf2_majlis')
+        return format_html('<a target="_blank" class="viewlink" href="{url}?year={year}&month={month}">'+_('Show mokaf2 sheet')\
+                               +'</a> / '\
+                               +'<a target="_blank" href="{url}?year={year}&month={month}&format=csv&bank_sheet=1">'+_('bank sheet')+'</a> / '\
+                               +'<a target="_blank" href="{url}?year={year}&month={month}&format=csv">CSV</a>',
+                           url=url,year=obj.year,month=obj.month)
+
+    @admin.display(description="كشف المرتب والمكافئات")
     def show_moratab_mokaf2_link(self, obj):
         url = reverse('hr:payroll_moratab_mokaf2')
-        return format_html('<a target="_blank" class="viewlink" href="{url}?year={year}&month={month}">'+_('كشف المرتب والمكافئة')\
+        return format_html('<a target="_blank" class="viewlink" href="{url}?year={year}&month={month}">'+_('كشف المرتب والمكافئات')\
                                +'</a> / '\
                                +'<a target="_blank" href="{url}?year={year}&month={month}&bank_sheet=1">'+_('bank sheet')+'</a> / '\
                                +'<a target="_blank" href="{url}?year={year}&month={month}&format=csv&bank_sheet=1">CSV</a>',
