@@ -825,7 +825,7 @@ class PayrollMasterAdmin(admin.ModelAdmin):
     @admin.display(description="كشف مكافئة مجلس الوزراء")
     def show_mokaf2_majlis_link(self, obj):
         url = reverse('hr:payroll_mokaf2_majlis')
-        return format_html('<a target="_blank" class="viewlink" href="{url}?year={year}&month={month}">'+_('Show mokaf2 sheet')\
+        return format_html('<a target="_blank" class="viewlink" href="{url}?year={year}&month={month}">'+"كشف مكافئة مجلس الوزراء"\
                                +'</a> / '\
                                +'<a target="_blank" href="{url}?year={year}&month={month}&format=csv&bank_sheet=1">'+_('bank sheet')+'</a> / '\
                                +'<a target="_blank" href="{url}?year={year}&month={month}&format=csv">CSV</a>',
