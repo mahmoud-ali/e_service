@@ -691,9 +691,17 @@ class Mokaf2MajlisWzara(LoginRequiredMixin,UserPermissionMixin,View):
             summary_list = []
 
             for (emp,badalat) in mokaf2.all_employees_mokaf2_from_db():
-                l = [emp.code,emp.name,emp.get_draja_wazifia_display(),emp.get_alawa_sanawia_display(),]+[round(badalat.mokaf2at_majlis,2)] 
+                mokaf2_list = [round(badalat.mokaf2at_majlis,2)] 
+                l = [emp.code,emp.name,emp.get_draja_wazifia_display(),emp.get_alawa_sanawia_display(),]+mokaf2_list
                 data.append(l)
 
+                for idx,s in enumerate(mokaf2_list):
+                    try:
+                        summary_list[idx] += mokaf2_list[idx]
+                    except IndexError:
+                        summary_list.insert(idx,mokaf2_list[idx])
+
+            summary_list = [round(s,2) for s in summary_list]
 
 
         if format == 'csv':
@@ -761,7 +769,7 @@ class KhosomatPlusMokaf2(LoginRequiredMixin,UserPermissionMixin,View):
                 except KeyError:
                     bnk_no,bank = ('-','-')
 
-                total = round(khosomat.safi_alisti7gag,2) + round(mokaf2.safi_2l2sti7gag,2)
+                total = round(khosomat.safi_alisti7gag,2) + round(mokaf2.safi_2l2sti7gag,2) + round(mokaf2at_majlis,2)
 
                 l = [emp.code,emp.name,bank,bnk_no,total]
                 data.append(l)
