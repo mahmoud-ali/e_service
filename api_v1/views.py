@@ -38,7 +38,7 @@ class GoldTravelListView(generics.ListAPIView):
         except ValueError:
             return HttpResponse("Invalid date format. Use YYYY-MM-DD.")
 
-        queryset = self.get_queryset().filter(state=AppMoveGold.STATE_SMRC,date=date_obj)
+        queryset = self.get_queryset().filter(date=date_obj,state__in=[AppMoveGold.STATE_SMRC,AppMoveGold.STATE_SSMO])
         serializer = self.serializer_class(queryset, many=True)
 
         result = [item['id'] for item in serializer.data]
