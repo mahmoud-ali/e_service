@@ -208,8 +208,9 @@ class KhatabatAdmin(MaktabTanfiziMixin,LogMixin,admin.ModelAdmin):
     def first_haraka(self, obj):
         if obj.harkatkhatabat_set.exists():
             haraka_obj = obj.harkatkhatabat_set.first()
-            # url = reverse("admin:khatabat_harkatkhatabat_change", args=[haraka_obj.id])
-            # return format_html('<a href="{}">{}</a>', url, haraka_obj.get_movement_type_display())            
+            if haraka_obj.id:
+                url = reverse("admin:khatabat_harkatkhatabat_change", args=[haraka_obj.id])
+                return format_html('<a href="{}">{}</a>', url, haraka_obj.get_movement_type_display())            
             
         
         return '-'
