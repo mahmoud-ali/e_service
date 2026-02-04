@@ -23,40 +23,42 @@ class UserPermissionMixin(UserPassesTestMixin):
         
         if not qs:
             return False
-            
-        if self.request.user.is_superuser:
-            return qs.exists()
-
-        if self.request.user.groups.filter(name__in=("production_control_sector_mgr",)).exists():
-            try:
-                company_type = self.request.user.gold_production_sector_user.company_type
-                sector = self.request.user.gold_production_sector_user.sector
-                return qs.filter(
-                    company__company_type__in= [company_type],
-                    license__state__sector=sector
-                ).exists()
-            except Exception as e:
-                print(e)
-
-        if self.request.user.groups.filter(name__in=("production_control_state_mgr",)).exists():
-            try:
-                company_type = self.request.user.gold_production_state_user.company_type
-                states = self.request.user.gold_production_state_user.state.values_list('id',flat=True)
-
-                return qs.filter(
-                    company__company_type__in= [company_type],
-                    license__state__in=states
-                ).exists()
-            except Exception as e:
-                print(e)
         
-        try:
-            license_lst = self.request.user.moragib_list.moragib_distribution.goldproductionuserdetail_set.filter(master__state=STATE_CONFIRMED).values_list('license',flat=True)
-            return qs.filter(license__id__in=license_lst).exists()
-        except Exception as e:
-            print(e)
+        return qs.exists()
+            
+        # if self.request.user.is_superuser:
+        #     return qs.exists()
 
-        return False
+        # if self.request.user.groups.filter(name__in=("production_control_sector_mgr",)).exists():
+        #     try:
+        #         company_type = self.request.user.gold_production_sector_user.company_type
+        #         sector = self.request.user.gold_production_sector_user.sector
+        #         return qs.filter(
+        #             company__company_type__in= [company_type],
+        #             license__state__sector=sector
+        #         ).exists()
+        #     except Exception as e:
+        #         print(e)
+
+        # if self.request.user.groups.filter(name__in=("production_control_state_mgr",)).exists():
+        #     try:
+        #         company_type = self.request.user.gold_production_state_user.company_type
+        #         states = self.request.user.gold_production_state_user.state.values_list('id',flat=True)
+
+        #         return qs.filter(
+        #             company__company_type__in= [company_type],
+        #             license__state__in=states
+        #         ).exists()
+        #     except Exception as e:
+        #         print(e)
+        
+        # try:
+        #     license_lst = self.request.user.moragib_list.moragib_distribution.goldproductionuserdetail_set.filter(master__state=STATE_CONFIRMED).values_list('license',flat=True)
+        #     return qs.filter(license__id__in=license_lst).exists()
+        # except Exception as e:
+        #     print(e)
+
+        # return False
     
 class CertificateTemplate(LoginRequiredMixin,UserPermissionMixin,TemplateView):
     def _partition(self,lst, size=20):
