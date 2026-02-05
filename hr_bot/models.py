@@ -189,6 +189,8 @@ class EmployeeTelegramBankAccount(LoggingModel):
     """
     employee = models.ForeignKey(EmployeeBasic, on_delete=models.PROTECT,verbose_name=_("employee_name"))
     bank = models.CharField(_("bank"), choices=EmployeeBankAccount.BANK_CHOICES,max_length=10)
+    branch_code = models.CharField(_("كود الفرع"),max_length=5,null=True,blank=True,help_text="خاص ببنك امدرمان الوطني")
+    account_type = models.CharField(_("نوع الحساب"),max_length=5,null=True,blank=True,help_text="خاص ببنك امدرمان الوطني")
     account_no = models.CharField(_("account_no"),max_length=20)
     active = models.BooleanField(_("active"),default=False)
     state = models.IntegerField(_("record_state"), choices=STATE_CHOICES, default=STATE_DRAFT)
@@ -217,7 +219,18 @@ class EmployeeTelegramBankAccount(LoggingModel):
             raise ValidationError({
                 'account_no':_("الرجاء إدخال حساب مكون من 5 - 7 خانات"),
             })
-        
+
+        if self.bank == EmployeeBankAccount.BANK_OMDURMAN:
+            if not self.branch_code:
+                raise ValidationError(
+                    {"branch_code":_("ادخل كود الفرع")}
+                )
+
+            if not self.account_type:
+                raise ValidationError(
+                    {"account_type":_("ادخل نوع الحساب")}
+                )
+
         return super().clean()
 
 class EmployeeBasicProxy(hr_models.EmployeeBasic):

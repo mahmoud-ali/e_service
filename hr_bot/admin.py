@@ -317,6 +317,8 @@ class EmployeeTelegramBankAccountAdmin(PermissionMixin,FlowMixin,admin.ModelAdmi
                     EmployeeBankAccount.objects.update_or_create(
                         employee=obj.employee,
                         bank=obj.bank,
+                        branch_code=obj.branch_code,
+                        account_type=obj.account_type,
                         account_no=obj.account_no,
                         active=obj.active,
 
