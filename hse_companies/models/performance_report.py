@@ -12,8 +12,8 @@ from workflow.model_utils import LoggingModel
 
 from company_profile.models import MONTH_CHOICES, TblCompanyProduction, TblCompanyProductionLicense
 
-def get_previous_month():
-    today = date.today()
+def get_previous_month(report_date):
+    today = report_date.today()
     year, month = today.year, today.month
 
     if month == 1:  # If current month is January, go to December of previous year
@@ -73,7 +73,11 @@ class AppHSEPerformanceReport(LoggingModel):
         return super().clean()
     
     def save(self, *args,**kwargs):
-        self.year, self.month = get_previous_month()
+        report_dt = date
+        if self.created_at:
+            report_dt = self.created_at
+
+        self.year, self.month = get_previous_month(report_dt)
         return super().save(args,kwargs)
 
     def get_next_states(self, user):
