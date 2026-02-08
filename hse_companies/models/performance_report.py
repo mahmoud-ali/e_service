@@ -73,7 +73,7 @@ class AppHSEPerformanceReport(LoggingModel):
         return super().clean()
     
     def save(self, *args,**kwargs):
-        report_dt = date
+        report_dt = date()
         if self.created_at:
             report_dt = self.created_at
 
