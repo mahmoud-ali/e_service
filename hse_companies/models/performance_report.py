@@ -76,8 +76,6 @@ class AppHSEPerformanceReport(LoggingModel):
         if self.created_at:
             report_dt = self.created_at
 
-        print("****",report_dt)
-
         self.year, self.month = get_previous_month(report_dt)
         return super().save(args,kwargs)
 
