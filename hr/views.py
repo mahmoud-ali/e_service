@@ -15,11 +15,17 @@ from hr.payroll import M2moriaSheet, MajlisEl2daraMokaf2Payroll, MobasharaSheet,
 
 SHOW_CSV_TOTAL = False
 
+def none_to_dash(x):
+    if not x:
+        return '-'
+    
+    return x
+
 def get_employee_accounts():
     data = {}
     for emp in EmployeeBankAccount.objects.filter(active=True).prefetch_related("employee"):
         id = emp.employee.id
-        data[id] = (emp.account_no,emp.get_bank_display())
+        data[id] = (none_to_dash(emp.branch_code),none_to_dash(emp.account_type),none_to_dash(emp.account_no),emp.get_bank_display())
         # print(f'id: {id}, account_no: {data[id]}')
 
     return data
@@ -132,16 +138,16 @@ class Khosomat(LoginRequiredMixin,UserPermissionMixin,View):
 
         if bank_sheet:
             template_name = 'hr/bank.html'
-            header = ['الرمز','الموظف','البنك','رقم الحساب','صافي الاستحقاق']
+            header = ['الرمز','الموظف','كود الفرع','نوع الحساب','البنك','رقم الحساب','صافي الاستحقاق']
             emp_accounts = get_employee_accounts()
 
             for (emp,badalat,khosomat,draja_wazifia,alawa_sanawia) in payroll.all_employees_payroll_from_db():
                 try:
-                    bnk_no,bank = emp_accounts[emp.id] #employeeemp.employeebankaccount_set.get(active=True).account_no
+                    branch_code,account_type,bnk_no,bank = emp_accounts[emp.id] #employeeemp.employeebankaccount_set.get(active=True).account_no
                 except KeyError:
-                    bnk_no,bank = ('-','-')
+                    branch_code,account_type,bnk_no,bank = ('-','-','-','-',)
 
-                l = [emp.code,emp.name,bank,bnk_no,round(khosomat.safi_alisti7gag,2)]
+                l = [emp.code,emp.name,branch_code,account_type,bank,bnk_no,round(khosomat.safi_alisti7gag,2)]
                 data.append(l)
         else:
             template_name = 'hr/khosomat.html'
@@ -502,18 +508,18 @@ class Mobashara(LoginRequiredMixin,UserPermissionMixin,View):
 
         if bank_sheet:
             template_name = 'hr/bank.html'
-            header = ['الرمز','الموظف','البنك','رقم الحساب','صافي الاستحقاق']
+            header = ['الرمز','الموظف','كود الفرع','نوع الحساب','البنك','رقم الحساب','صافي الاستحقاق']
             emp_accounts = get_employee_accounts()
 
             for emp_mobashara in mobashara.all_employees_mobashara_from_db().prefetch_related("employee__mosama_wazifi"):
                 emp = emp_mobashara.employee
                 try:
-                    bnk_no,bank = emp_accounts[emp.id] #employeeemp.employeebankaccount_set.get(active=True).account_no
+                    branch_code,account_type,bnk_no,bank = emp_accounts[emp.id] #employeeemp.employeebankaccount_set.get(active=True).account_no
                 except KeyError:
-                    bnk_no,bank = ('-','-')
+                    branch_code,account_type,bnk_no,bank = ('-','-','-','-',)
 
                 total = (emp_mobashara.amount+emp_mobashara.amount_m2moria+emp_mobashara.amount_e3asha)
-                l = [emp.code,emp.name,bank,bnk_no,round(total,2)]
+                l = [emp.code,emp.name,branch_code,account_type,bank,bnk_no,round(total,2)]
                 data.append(l)
         else:
             template_name = 'hr/mobashara.html'
@@ -576,16 +582,16 @@ class Mokaf2(LoginRequiredMixin,UserPermissionMixin,View):
 
         if bank_sheet:
             template_name = 'hr/bank.html'
-            header = ['الرمز','الموظف','البنك','رقم الحساب','صافي الاستحقاق']
+            header = ['الرمز','الموظف','كود الفرع','نوع الحساب','البنك','رقم الحساب','صافي الاستحقاق']
             emp_accounts = get_employee_accounts()
 
             for (emp,emp_mokaf2) in mokaf2.all_employees_mokaf2_from_db():
                 try:
-                    bnk_no,bank = emp_accounts[emp.id] #employeeemp.employeebankaccount_set.get(active=True).account_no
+                    branch_code,account_type,bnk_no,bank = emp_accounts[emp.id] #employeeemp.employeebankaccount_set.get(active=True).account_no
                 except KeyError:
-                    bnk_no,bank = ('-','-')
+                    branch_code,account_type,bnk_no,bank = ('-','-','-','-',)
 
-                l = [emp.code,emp.name,bank,bnk_no,round(emp_mokaf2.safi_2l2sti7gag,2)]
+                l = [emp.code,emp.name,branch_code,account_type,bank,bnk_no,round(emp_mokaf2.safi_2l2sti7gag,2)]
                 data.append(l)
         else:
             template_name = 'hr/mokaf2.html'
@@ -672,16 +678,16 @@ class Mokaf2MajlisWzara(LoginRequiredMixin,UserPermissionMixin,View):
 
         if bank_sheet:
             template_name = 'hr/bank.html'
-            header = ['الرمز','الموظف','البنك','رقم الحساب','صافي الاستحقاق']
+            header = ['الرمز','الموظف','كود الفرع','نوع الحساب','البنك','رقم الحساب','صافي الاستحقاق']
             emp_accounts = get_employee_accounts()
 
             for (emp,badalat) in mokaf2.all_employees_mokaf2_from_db():
                 try:
-                    bnk_no,bank = emp_accounts[emp.id] #employeeemp.employeebankaccount_set.get(active=True).account_no
+                    branch_code,account_type,bnk_no,bank = emp_accounts[emp.id] #employeeemp.employeebankaccount_set.get(active=True).account_no
                 except KeyError:
-                    bnk_no,bank = ('-','-')
+                    branch_code,account_type,bnk_no,bank = ('-','-','-','-',)
 
-                l = [emp.code,emp.name,bank,bnk_no,round(badalat.mokaf2at_majlis,2)]
+                l = [emp.code,emp.name,branch_code,account_type,bank,bnk_no,round(badalat.mokaf2at_majlis,2)]
                 data.append(l)
         else:
             template_name = 'hr/mokaf2.html'
@@ -760,18 +766,18 @@ class KhosomatPlusMokaf2(LoginRequiredMixin,UserPermissionMixin,View):
 
         if bank_sheet:
             template_name = 'hr/bank.html'
-            header = ['الرمز','الموظف','البنك','رقم الحساب','صافي الاستحقاق']
+            header = ['الرمز','الموظف','كود الفرع','نوع الحساب','البنك','رقم الحساب','صافي الاستحقاق']
             emp_accounts = get_employee_accounts()
 
             for (emp,(khosomat,mokaf2,mokaf2at_majlis)) in moratab_mokaf2.all_employees_from_db():
                 try:
-                    bnk_no,bank = emp_accounts[emp.id] #employeeemp.employeebankaccount_set.get(active=True).account_no
+                    branch_code,account_type,bnk_no,bank = emp_accounts[emp.id] #employeeemp.employeebankaccount_set.get(active=True).account_no
                 except KeyError:
-                    bnk_no,bank = ('-','-')
+                    branch_code,account_type,bnk_no,bank = ('-','-','-','-',)
 
                 total = round(khosomat.safi_alisti7gag,2) + round(mokaf2.safi_2l2sti7gag,2) + round(mokaf2at_majlis,2)
 
-                l = [emp.code,emp.name,bank,bnk_no,total]
+                l = [emp.code,emp.name,branch_code,account_type,bank,bnk_no,total]
                 data.append(l)
         else:
             template_name = 'hr/moratab_mokaf2.html'
@@ -850,17 +856,17 @@ class M2moria(LoginRequiredMixin,UserPermissionMixin,View):
 
         if bank_sheet:
             template_name = 'hr/bank.html'
-            header = ['الرمز','الموظف','البنك','رقم الحساب','صافي الاستحقاق']
+            header = ['الرمز','الموظف','كود الفرع','نوع الحساب','البنك','رقم الحساب','صافي الاستحقاق']
             emp_accounts = get_employee_accounts()
 
             for emp_m2moria in m2moria.all_employees_m2moria_from_db():
                 emp = emp_m2moria.employee
                 try:
-                    bnk_no,bank = emp_accounts[emp.id] #employeeemp.employeebankaccount_set.get(active=True).account_no
+                    branch_code,account_type,bnk_no,bank = emp_accounts[emp.id] #employeeemp.employeebankaccount_set.get(active=True).account_no
                 except KeyError:
-                    bnk_no,bank = ('-','-')
+                    branch_code,account_type,bnk_no,bank = ('-','-','-','-',)
 
-                l = [emp.code,emp.name,bank,bnk_no,round(emp_m2moria.safi_2l2sti7gag,2)]
+                l = [emp.code,emp.name,branch_code,account_type,bank,bnk_no,round(emp_m2moria.safi_2l2sti7gag,2)]
                 data.append(l)
         else:
             template_name = 'hr/mokaf2.html'
@@ -924,16 +930,16 @@ class Wi7datMosa3idaMokaf2tFarigMoratab(LoginRequiredMixin,UserPermissionMixin,V
 
         if bank_sheet:
             template_name = 'hr/bank.html'
-            header = ['الرمز','الموظف','البنك','رقم الحساب','صافي الاستحقاق']
+            header = ['الرمز','الموظف','كود الفرع','نوع الحساب','البنك','رقم الحساب','صافي الاستحقاق']
             emp_accounts = get_employee_accounts()
 
             for (emp,badalat,mokaf2,draja_wazifia,alawa_sanawia) in payroll.all_employees_payroll_from_db():
                 try:
-                    bnk_no,bank = emp_accounts[emp.id] #employeeemp.employeebankaccount_set.get(active=True).account_no
+                    branch_code,account_type,bnk_no,bank = emp_accounts[emp.id] #employeeemp.employeebankaccount_set.get(active=True).account_no
                 except KeyError:
-                    bnk_no,bank = ('-','-')
+                    branch_code,account_type,bnk_no,bank = ('-','-','-','-',)
 
-                l = [emp.code,emp.name,bank,bnk_no,round(mokaf2.safi_alisti7gag,2)]
+                l = [emp.code,emp.name,branch_code,account_type,bank,bnk_no,round(mokaf2.safi_alisti7gag,2)]
                 data.append(l)
         else:
             template_name = 'hr/wi7dat_mosa3ida.html'
@@ -1002,16 +1008,16 @@ class Wi7datMosa3idaMokaf2t(LoginRequiredMixin,UserPermissionMixin,View):
 
         if bank_sheet:
             template_name = 'hr/bank.html'
-            header = ['الرمز','الموظف','البنك','رقم الحساب','صافي الاستحقاق']
+            header = ['الرمز','الموظف','كود الفرع','نوع الحساب','البنك','رقم الحساب','صافي الاستحقاق']
             emp_accounts = get_employee_accounts()
 
             for (emp,badalat,mokaf2,draja_wazifia,alawa_sanawia) in payroll.all_employees_payroll_from_db():
                 try:
-                    bnk_no,bank = emp_accounts[emp.id] #employeeemp.employeebankaccount_set.get(active=True).account_no
+                    branch_code,account_type,bnk_no,bank = emp_accounts[emp.id] #employeeemp.employeebankaccount_set.get(active=True).account_no
                 except KeyError:
-                    bnk_no,bank = ('-','-')
+                    branch_code,account_type,bnk_no,bank = ('-','-','-','-',)
 
-                l = [emp.code,emp.name,bank,bnk_no,round(mokaf2.safi_alisti7gag,2)]
+                l = [emp.code,emp.name,branch_code,account_type,bank,bnk_no,round(mokaf2.safi_alisti7gag,2)]
                 data.append(l)
         else:
             template_name = 'hr/wi7dat_mosa3ida.html'
@@ -1080,16 +1086,16 @@ class Ta3agodMosimiMoratab(LoginRequiredMixin,UserPermissionMixin,View):
 
         if bank_sheet:
             template_name = 'hr/bank.html'
-            header = ['الرمز','الموظف','البنك','رقم الحساب','صافي الاستحقاق']
+            header = ['الرمز','الموظف','كود الفرع','نوع الحساب','البنك','رقم الحساب','صافي الاستحقاق']
             emp_accounts = get_employee_accounts()
 
             for (emp,moratab,draja_wazifia,alawa_sanawia) in payroll.all_employees_payroll_from_db():
                 try:
-                    bnk_no,bank = emp_accounts[emp.id] #employeeemp.employeebankaccount_set.get(active=True).account_no
+                    branch_code,account_type,bnk_no,bank = emp_accounts[emp.id] #employeeemp.employeebankaccount_set.get(active=True).account_no
                 except KeyError:
-                    bnk_no,bank = ('-','-')
+                    branch_code,account_type,bnk_no,bank = ('-','-','-','-',)
 
-                l = [emp.code,emp.name,bank,bnk_no,round(moratab.safi_alisti7gag,2)]
+                l = [emp.code,emp.name,branch_code,account_type,bank,bnk_no,round(moratab.safi_alisti7gag,2)]
                 data.append(l)
         else:
             template_name = 'hr/t3agood_mosimi.html'
@@ -1158,16 +1164,16 @@ class Ta3agodMosimiMokaf2(LoginRequiredMixin,UserPermissionMixin,View):
 
         if bank_sheet:
             template_name = 'hr/bank.html'
-            header = ['الرمز','الموظف','البنك','رقم الحساب','صافي الاستحقاق']
+            header = ['الرمز','الموظف','كود الفرع','نوع الحساب','البنك','رقم الحساب','صافي الاستحقاق']
             emp_accounts = get_employee_accounts()
 
             for (emp,moratab,draja_wazifia,alawa_sanawia) in payroll.all_employees_payroll_from_db():
                 try:
-                    bnk_no,bank = emp_accounts[emp.id] #employeeemp.employeebankaccount_set.get(active=True).account_no
+                    branch_code,account_type,bnk_no,bank = emp_accounts[emp.id] #employeeemp.employeebankaccount_set.get(active=True).account_no
                 except KeyError:
-                    bnk_no,bank = ('-','-')
+                    branch_code,account_type,bnk_no,bank = ('-','-','-','-',)
 
-                l = [emp.code,emp.name,bank,bnk_no,round(moratab.safi_alisti7gag,2)]
+                l = [emp.code,emp.name,branch_code,account_type,bank,bnk_no,round(moratab.safi_alisti7gag,2)]
                 data.append(l)
         else:
             template_name = 'hr/t3agood_mosimi.html'
@@ -1236,16 +1242,16 @@ class MajlisEl2daraMokaf2View(LoginRequiredMixin,UserPermissionMixin,View):
 
         if bank_sheet:
             template_name = 'hr/bank.html'
-            header = ['الرمز','الموظف','البنك','رقم الحساب','صافي الاستحقاق']
+            header = ['الرمز','الموظف','كود الفرع','نوع الحساب','البنك','رقم الحساب','صافي الاستحقاق']
             emp_accounts = get_employee_accounts()
 
             for (emp,moratab,draja_wazifia,alawa_sanawia) in payroll.all_employees_payroll_from_db():
                 try:
-                    bnk_no,bank = emp_accounts[emp.id] #employeeemp.employeebankaccount_set.get(active=True).account_no
+                    branch_code,account_type,bnk_no,bank = emp_accounts[emp.id] #employeeemp.employeebankaccount_set.get(active=True).account_no
                 except KeyError:
-                    bnk_no,bank = ('-','-')
+                    branch_code,account_type,bnk_no,bank = ('-','-','-','-',)
 
-                l = [emp.code,emp.name,bank,bnk_no,round(moratab.safi_alisti7gag,2)]
+                l = [emp.code,emp.name,branch_code,account_type,bank,bnk_no,round(moratab.safi_alisti7gag,2)]
                 data.append(l)
         else:
             template_name = 'hr/majlis_el2dara.html'
@@ -1379,16 +1385,16 @@ class Modir3amKhosomatView(LoginRequiredMixin,UserPermissionMixin,View):
 
         if bank_sheet:
             template_name = 'hr/bank.html'
-            header = ['الرمز','الموظف','البنك','رقم الحساب','صافي الاستحقاق']
+            header = ['الرمز','الموظف','كود الفرع','نوع الحساب','البنك','رقم الحساب','صافي الاستحقاق']
             emp_accounts = get_employee_accounts()
 
             for (emp,badalat,khosomat,mokaf2,draja_wazifia,alawa_sanawia) in payroll.all_employees_payroll_from_db():
                 try:
-                    bnk_no,bank = emp_accounts[emp.id] #employeeemp.employeebankaccount_set.get(active=True).account_no
+                    branch_code,account_type,bnk_no,bank = emp_accounts[emp.id] #employeeemp.employeebankaccount_set.get(active=True).account_no
                 except KeyError:
-                    bnk_no,bank = ('-','-')
+                    branch_code,account_type,bnk_no,bank = ('-','-','-','-',)
 
-                l = [emp.code,emp.name,bank,bnk_no,round(khosomat.safi_alisti7gag,2)]
+                l = [emp.code,emp.name,branch_code,account_type,bank,bnk_no,round(khosomat.safi_alisti7gag,2)]
                 data.append(l)
         else:
             template_name = 'hr/modir_3am.html'
@@ -1457,16 +1463,16 @@ class Modir3amMokaf2View(LoginRequiredMixin,UserPermissionMixin,View):
 
         if bank_sheet:
             template_name = 'hr/bank.html'
-            header = ['الرمز','الموظف','البنك','رقم الحساب','صافي الاستحقاق']
+            header = ['الرمز','الموظف','كود الفرع','نوع الحساب','البنك','رقم الحساب','صافي الاستحقاق']
             emp_accounts = get_employee_accounts()
 
             for (emp,badalat,khosomat,mokaf2,draja_wazifia,alawa_sanawia) in payroll.all_employees_payroll_from_db():
                 try:
-                    bnk_no,bank = emp_accounts[emp.id] #employeeemp.employeebankaccount_set.get(active=True).account_no
+                    branch_code,account_type,bnk_no,bank = emp_accounts[emp.id] #employeeemp.employeebankaccount_set.get(active=True).account_no
                 except KeyError:
-                    bnk_no,bank = ('-','-')
+                    branch_code,account_type,bnk_no,bank = ('-','-','-','-',)
 
-                l = [emp.code,emp.name,bank,bnk_no,round(mokaf2.safi_alisti7gag,2)]
+                l = [emp.code,emp.name,branch_code,account_type,bank,bnk_no,round(mokaf2.safi_alisti7gag,2)]
                 data.append(l)
         else:
             template_name = 'hr/modir_3am.html'
