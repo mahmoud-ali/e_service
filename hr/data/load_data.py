@@ -366,3 +366,38 @@ def update_drjat_3lawat(filename='promotion2026.csv'):
                 print('Employee',row[0],row[1],'Error:',e)
 
                 
+def import_onb_bank_accounts():    
+    with open(f'./hr/data/onb_accounts.csv', newline='') as csvfile:
+        reader = csv.reader(csvfile, delimiter=',')
+        next(reader, None)  # skip the headers
+        for row in reader:
+            try:
+                code = int(row[1])
+                account_no = str(row[3]).strip()
+                branch_code = str(row[4]).strip()
+                account_type = str(row[5]).strip()
+                if code:
+                    emp = EmployeeBasic.objects.get(code=code)
+
+                    try:
+                        EmployeeBankAccount.objects.filter(
+                            employee=emp,
+                            bank='onb',
+                        ).delete()
+
+                        obj = EmployeeBankAccount.objects.create(
+                            employee=emp,
+                            bank='onb',
+                            account_no=account_no,
+                            branch_code=branch_code,
+                            account_type=account_type,
+                            active=True,
+                            created_by=admin_user,
+                            updated_by=admin_user
+                        )
+                        #print('created',obj)
+                    except:
+                        print('unable to create account',code,emp,e)
+
+            except Exception as e:
+                print('not imported',code,emp,e)
