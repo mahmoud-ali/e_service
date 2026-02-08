@@ -73,9 +73,11 @@ class AppHSEPerformanceReport(LoggingModel):
         return super().clean()
     
     def save(self, *args,**kwargs):
-        report_dt = date()
+        report_dt = date.today()
         if self.created_at:
             report_dt = self.created_at
+
+        print("****",report_dt)
 
         self.year, self.month = get_previous_month(report_dt)
         return super().save(args,kwargs)
