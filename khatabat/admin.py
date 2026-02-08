@@ -216,7 +216,7 @@ class KhatabatAdmin(MaktabTanfiziMixin,LogMixin,admin.ModelAdmin):
         return '-'
 
     def get_readonly_fields(self, request, obj=None):
-        readonly = super().get_readonly_fields(request, obj)
+        readonly = []
         if request.user.maktab_tanfizi_user.exists():
             if obj and obj.motab3atkhatabat_set.exists():
                 readonly.append("has_motab3at")
