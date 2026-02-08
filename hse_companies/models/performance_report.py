@@ -13,8 +13,7 @@ from workflow.model_utils import LoggingModel
 from company_profile.models import MONTH_CHOICES, TblCompanyProduction, TblCompanyProductionLicense
 
 def get_previous_month(report_date):
-    today = report_date.today()
-    year, month = today.year, today.month
+    year, month = report_date.year, report_date.month
 
     if month == 1:  # If current month is January, go to December of previous year
         prev_month = 12
