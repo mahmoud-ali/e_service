@@ -401,3 +401,47 @@ def import_onb_bank_accounts():
 
             except Exception as e:
                 print('not imported',code,emp,e)
+
+def import_salafiat_jan2026():    
+    with open(f'./hr/data/salafiat_mokaf2a_jan_2026.csv', newline='') as csvfile:
+        reader = csv.reader(csvfile, delimiter=',')
+        next(reader, None)  # skip the headers
+        for row in reader:
+            try:
+                code = int(row[0])
+                mokafa = float(row[2])
+
+                if code:
+                    emp = EmployeeBasic.objects.get(code=code)
+
+                    try:
+                        try:
+                            old_obj = EmployeeSalafiat.objects.get(
+                                employee=emp,
+                                no3_2lsalafia=EmployeeSalafiat.NO3_2LSALAFIA_3LA_2LMOKAF2,
+                                year=2026,
+                                month=1,
+                            )
+
+                            mokafa += old_obj.amount
+
+                            old_obj.delete()
+                        except:
+                            pass
+
+                        obj = EmployeeSalafiat.objects.create(
+                            employee=emp,
+                            no3_2lsalafia=EmployeeSalafiat.NO3_2LSALAFIA_3LA_2LMOKAF2,
+                            year=2026,
+                            month=1,
+                            note='تم التصدير بطلب من ادارة الموارد البشرية',
+                            amount=mokafa,
+                            created_by=admin_user,
+                            updated_by=admin_user
+                        )
+                        #print('created',obj)
+                    except Exception as e:
+                        print('unable to create salafia',code,emp,e)
+
+            except Exception as e:
+                print('not imported',row[0],e)
