@@ -90,6 +90,21 @@ class MaktabTanfiziJihaAdmin(MaktabTanfiziMixin, admin.ModelAdmin):
     exclude = ('maktab_tanfizi',)
     list_display = ('name',)
 
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        makatib_list = []
+
+        if request.user.maktab_tanfizi_manager.exists():
+            makatib_list.append(request.user.maktab_tanfizi_manager.first())
+        elif request.user.maktab_tanfizi_user.exists():
+            makatib_list.append(request.user.maktab_tanfizi_user.first())
+        elif request.user.maktab_tanfizi_follow_up.exists():
+            makatib_list.append(request.user.maktab_tanfizi_follow_up.first())
+        else:
+            return qs.none()
+
+        return qs.filter(maktab_tanfizi__in=makatib_list)
+
     def save_model(self, request, obj, form, change):
         try:
             maktab = request.user.maktab_tanfizi_user.first()
