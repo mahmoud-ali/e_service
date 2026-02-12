@@ -538,14 +538,14 @@ class EmployeeBasic(LoggingModel):
     sex = models.CharField(_("sex"),max_length=7, choices=SEX_CHOICES)
     phone = models.CharField(_("phone"),max_length=30,blank=True,null=True)
     email = models.EmailField(_("email"),max_length=30,blank=True,null=True)
-    no3_2lertibat = models.CharField(_("no3_2lertibat"),max_length=15, choices=NO3_2LERTIBAT_CHOICES)
+    no3_2lertibat = models.CharField(_("no3_2lertibat"),max_length=15, choices=NO3_2LERTIBAT_CHOICES, blank=True, null=True)
     sanoat_2lkhibra = models.FloatField(_("sanoat_2lkhibra"),default=0)
     gasima = models.BooleanField(_("gasima"),default=False)
     atfal = models.IntegerField(_("3dad_atfal"),default=0)
     moahil = models.CharField(_("moahil"),max_length=30, choices=MOAHIL_CHOICES,default=MOAHIL_BAKLARIOS)
     m3ash = models.FloatField(_("m3ash"),default=0)
     aadoa = models.BooleanField(_("aadoa"),default=False)
-    status = models.IntegerField(_("status"), choices=STATUS_CHOICES,default=STATUS_ACTIVE)
+    status = models.IntegerField(_("status"), choices=STATUS_CHOICES,default=STATUS_ACTIVE, blank=True, null=True)
     hikal_wazifi = TreeForeignKey(HikalWazifi, on_delete=models.PROTECT,verbose_name=_("hikal_wazifi"),blank=True,null=True)
 
     def __str__(self) -> str:
