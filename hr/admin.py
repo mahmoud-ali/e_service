@@ -432,7 +432,7 @@ class EmployeeBasicAdmin(admin.ModelAdmin):
     view_on_site = False
     autocomplete_fields = ["mosama_wazifi"] #,"hikal_wazifi"
     search_fields = ["name","code","email"]
-    readonly_fields = ["moahil","gasima","atfal"] #,"edara_3ama_tmp","edara_far3ia_tmp"
+    readonly_fields = ["moahil","gasima","atfal","no3_2lertibat","status",] #,"edara_3ama_tmp","edara_far3ia_tmp"
     actions = ['export_as_csv','export_as_contacts']
 
     formfield_overrides = {
