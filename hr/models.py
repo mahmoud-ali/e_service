@@ -467,6 +467,7 @@ class EmployeeBasic(LoggingModel):
 
     NO3_2LERTIBAT_TA3EEN = 'ta3een'
     NO3_2LERTIBAT_NAGL = 'nagl'
+    NO3_2LERTIBAT_NAGL_NIHA2I = 'nagl_niha2i'
     NO3_2LERTIBAT_2L7ag = '2l7ag'
     NO3_2LERTIBAT_2NTEDAB = '2ntedab'
     NO3_2LERTIBAT_TAKLEEF = 'takleef'
@@ -478,6 +479,7 @@ class EmployeeBasic(LoggingModel):
     NO3_2LERTIBAT_CHOICES = {
         NO3_2LERTIBAT_TA3EEN: _("NO3_2LERTIBAT_TA3EEN"),
         NO3_2LERTIBAT_NAGL: _("NO3_2LERTIBAT_NAGL"),
+        NO3_2LERTIBAT_NAGL_NIHA2I: _("نقل نهائي"),
         NO3_2LERTIBAT_2NTEDAB: _("NO3_2LERTIBAT_2NTEDAB"),
         NO3_2LERTIBAT_TAKLEEF: _("NO3_2LERTIBAT_TAKLEEF"),
         NO3_2LERTIBAT_2L7ag: _("NO3_2LERTIBAT_2L7ag"), #wi7dat mosa3da
@@ -614,6 +616,91 @@ class EmployeeBasic(LoggingModel):
                     {"alawa_sanawia":_("akhtar 3lawat gair t3akod")}
                 )
 
+class EmployeeNo32lertibat(LoggingModel):
+    employee = models.ForeignKey(EmployeeBasic, on_delete=models.PROTECT,verbose_name=_("employee_name"))
+    no3_2lertibat = models.CharField(_("no3_2lertibat"),max_length=15, choices=EmployeeBasic.NO3_2LERTIBAT_CHOICES)
+    tarikh_start_dt = models.DateField(_("تاريخ البداية"))
+    tarikh_end_dt = models.DateField(_("تاريخ النهاية"), blank=True, null=True)
+
+    class Meta:
+        verbose_name = "نوع الإرتباط"
+        verbose_name_plural = "أنواع الإرتباط"
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        # Update EmployeeBasic.no3_2lertibat if this is the latest record
+        latest = EmployeeNo32lertibat.objects.filter(employee=self.employee).order_by('-tarikh_start_dt', '-id').first()
+        if latest and latest.id == self.id:
+            self.employee.no3_2lertibat = self.no3_2lertibat
+            self.employee.save()
+
+class EmployeeStatus(LoggingModel):
+    employee = models.ForeignKey(EmployeeBasic, on_delete=models.PROTECT,verbose_name=_("employee_name"))
+    status = models.IntegerField(_("status"), choices=EmployeeBasic.STATUS_CHOICES,default=EmployeeBasic.STATUS_ACTIVE)
+    tarikh_dt = models.DateField(_("التاريخ"))
+
+    class Meta:
+        verbose_name = "حالة الموظف"
+        verbose_name_plural = "حالة الموظفين"
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        # Update EmployeeBasic.status if this is the latest record
+        latest = EmployeeStatus.objects.filter(employee=self.employee).order_by('-tarikh_dt', '-id').first()
+        if latest and latest.id == self.id:
+            self.employee.status = self.status
+            self.employee.save()
+class EmployeeKhibra(LoggingModel):
+    KHIBRA_TYPE_MUTABAQA = 'mutabaqa'
+    KHIBRA_TYPE_MUSHTABAHA = 'mushtabaha'
+
+    KHIBRA_TYPE_CHOICES = {
+        KHIBRA_TYPE_MUTABAQA: _('مطابقة'),
+        KHIBRA_TYPE_MUSHTABAHA: _('مشتبهة'),
+    }
+
+    employee = models.ForeignKey(EmployeeBasic, on_delete=models.PROTECT, verbose_name=_("employee_name"))
+    jiha = models.CharField(_("الجهة"), max_length=150)
+    mosama_wazifi = models.CharField(_("المسمى الوظيفي"), max_length=100)
+    start_dt = models.DateField(_("تاريخ البداية"))
+    end_dt = models.DateField(_("تاريخ النهاية"))
+    no3_khibra = models.CharField(_("نوع الخبرة"), choices=KHIBRA_TYPE_CHOICES, max_length=20)
+
+    class Meta:
+        verbose_name = _("خبرة العامل")
+        verbose_name_plural = _("خبرات العاملين")
+
+    def __str__(self):
+        return f"{self.employee.name} - {self.jiha} ({self.get_no3_khibra_display()})"
+    
+class EmployeeArchive(LoggingModel):
+    DOCUMENT_TYPE_CONTRACT = 'contract'
+    DOCUMENT_TYPE_CERTIFICATE = 'certificate'
+    DOCUMENT_TYPE_DECISION = 'decision'
+    DOCUMENT_TYPE_LETTER = 'letter'
+    DOCUMENT_TYPE_OTHER = 'other'
+
+    DOCUMENT_TYPE_CHOICES = {
+        DOCUMENT_TYPE_CONTRACT: _('عقد'),
+        DOCUMENT_TYPE_CERTIFICATE: _('شهادة'),
+        DOCUMENT_TYPE_DECISION: _('قرار'),
+        DOCUMENT_TYPE_LETTER: _('خطاب'),
+        DOCUMENT_TYPE_OTHER: _('أخرى'),
+    }
+
+    employee = models.ForeignKey(EmployeeBasic, on_delete=models.PROTECT, verbose_name=_("employee_name"))
+    document_type = models.CharField(_("نوع المستند"), choices=DOCUMENT_TYPE_CHOICES, max_length=20)
+    document_date = models.DateField(_("تاريخ المستند"))
+    attachment = models.FileField(_("المرفق"), upload_to=attachement_path)
+    notes = models.CharField(_("ملاحظات"), max_length=255, blank=True, null=True)
+
+    class Meta:
+        verbose_name = _("ارشيف رقمي")
+        verbose_name_plural = _("الارشيف الرقمي")
+
+    def __str__(self):
+        return f"{self.employee.name} - {self.get_document_type_display()} ({self.document_date})"
+        
 class EmployeeWi7datMosa3da(LoggingModel):
     employee = models.OneToOneField(EmployeeBasic, on_delete=models.PROTECT,verbose_name=_("employee_name"),related_name="wi7dat_mosa3da")
     has_diff = models.BooleanField(_("has_diff"),default=False)
