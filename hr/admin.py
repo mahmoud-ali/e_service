@@ -16,7 +16,7 @@ from django.contrib import messages
 from hr.calculations import PayrollValidation
 from hr.payroll import M2moriaSheet, MajlisEl2daraMokaf2Payroll, MobasharaSheet, Mokaf2Sheet, Payroll, Ta3agodMosimiPayroll, TasoiaPayroll, Wi7datMosa3idaMokaf2tFarigMoratabPayroll
 
-from .models import Drajat3lawat, EmployeeBankAccount, EmployeeFamily, EmployeeM2moria, EmployeeM2moriaMonthly, EmployeeMajlisEl2dara, EmployeeMoahil, EmployeeJazaat, EmployeeMobashra, EmployeeSalafiatMaster, EmployeeSalafiatSandog, EmployeeVacation, EmployeeWi7datMosa3da, Gisim, HikalWazifi, MosamaWazifi,Edara3ama,Edarafar3ia,EmployeeBasic, PayrollDetail, PayrollDetailMajlisEl2dara, PayrollDetailTa3agodMosimi, PayrollDetailWi7datMosa3ida, PayrollMaster, EmployeeSalafiat, PayrollTasoia,Settings, Wi7da
+from .models import Drajat3lawat, EmployeeArchive, EmployeeBankAccount, EmployeeFamily, EmployeeKhibra, EmployeeM2moria, EmployeeM2moriaMonthly, EmployeeMajlisEl2dara, EmployeeMoahil, EmployeeJazaat, EmployeeMobashra, EmployeeNo32lertibat, EmployeeSalafiatMaster, EmployeeSalafiatSandog, EmployeeStatus, EmployeeVacation, EmployeeWi7datMosa3da, Gisim, HikalWazifi, MosamaWazifi,Edara3ama,Edarafar3ia,EmployeeBasic, PayrollDetail, PayrollDetailMajlisEl2dara, PayrollDetailTa3agodMosimi, PayrollDetailWi7datMosa3ida, PayrollMaster, EmployeeSalafiat, PayrollTasoia,Settings, Wi7da
 from mptt.admin import MPTTModelAdmin,TreeRelatedFieldListFilter
 
 class SalafiatMixin(ModelForm):
@@ -403,9 +403,29 @@ class EmployeeMajlisEl2daraInline(admin.TabularInline):
     exclude = ["created_at","created_by","updated_at","updated_by"]
     extra = 1
 
+class EmployeeNo32lertibatInline(admin.TabularInline):
+    model = EmployeeNo32lertibat
+    exclude = ["created_at", "created_by", "updated_at", "updated_by"]
+    extra = 1
+
+class EmployeeStatusInline(admin.TabularInline):
+    model = EmployeeStatus
+    exclude = ["created_at", "created_by", "updated_at", "updated_by"]
+    extra = 1
+
+class EmployeeKhibraInline(admin.TabularInline):
+    model = EmployeeKhibra
+    exclude = ["created_at", "created_by", "updated_at", "updated_by"]
+    extra = 1
+
+class EmployeeArchiveInline(admin.TabularInline):
+    model = EmployeeArchive
+    exclude = ["created_at", "created_by", "updated_at", "updated_by"]
+    extra = 1
+
 class EmployeeBasicAdmin(admin.ModelAdmin):
     fields = ["code","name", "draja_wazifia","alawa_sanawia","hikal_wazifi", "mosama_wazifi","sex","tarikh_milad","tarikh_ta3in","tarikh_akhir_targia","phone","email","no3_2lertibat","sanoat_2lkhibra","moahil","gasima","atfal","aadoa","m3ash","status"]        
-    inlines = [EmployeeFamilyInline,EmployeeMoahilInline,EmployeeBankAccountInline,SalafiatInline,JazaatInline,EmployeeMobashraInline,EmployeeVacationInline,EmployeeM2moriaInline]
+    inlines = [EmployeeFamilyInline,EmployeeMoahilInline,EmployeeBankAccountInline,EmployeeNo32lertibatInline, EmployeeStatusInline, EmployeeKhibraInline, EmployeeArchiveInline,SalafiatInline,JazaatInline,EmployeeMobashraInline,EmployeeVacationInline,EmployeeM2moriaInline]
     list_display = ["code","name", "draja_wazifia","alawa_sanawia", "edara_3ama","edara_far3ia","gisim", "mosama_wazifi","tarikh_ta3in","tarikh_akhir_targia","sex","moahil","gasima","atfal","aadoa","m3ash","status"]    
     list_display_links = ["code","name"]
     list_filter = ["draja_wazifia","alawa_sanawia",Edara3amaFilter,Edarafar3iaFilter,EmployeeWi7daMosa3daFilter,"no3_2lertibat","mosama_wazifi__category","gasima","atfal",EmployeeTarikhTa3inFilter,EmployeeWifg2lwazaifFilter,EmployeeWifg2lmostawiatFilter,"sex","moahil","aadoa","status"] #
