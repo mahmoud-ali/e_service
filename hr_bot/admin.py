@@ -404,30 +404,30 @@ class EmployeeBasicProxyAdmin(admin.ModelAdmin):
 
         return qs.filter(email=email)
 
-@admin.register(EmployeeBankAccountProxy)
-class EmployeeBankAccountProxyAdmin(admin.ModelAdmin):
-    model = EmployeeBankAccountProxy
-    fields = ["bank","branch_code", "account_type","account_no","active", ]        
-    readonly_fields = ["bank","branch_code", "account_type","account_no",]        
-    list_display_links = ["bank","branch_code"]
-    list_display = ["bank","branch_code", "account_type","account_no","active"]        
-    view_on_site = False
+# @admin.register(EmployeeBankAccountProxy)
+# class EmployeeBankAccountProxyAdmin(admin.ModelAdmin):
+#     model = EmployeeBankAccountProxy
+#     fields = ["bank","branch_code", "account_type","account_no","active", ]        
+#     readonly_fields = ["bank","branch_code", "account_type","account_no",]        
+#     list_display_links = ["bank","branch_code"]
+#     list_display = ["bank","branch_code", "account_type","account_no","active"]        
+#     view_on_site = False
 
-    def has_add_permission(self, request):
-        return False
+#     def has_add_permission(self, request):
+#         return False
 
-    def has_change_permission(self, request, obj=None):
-        return True
+#     def has_change_permission(self, request, obj=None):
+#         return True
 
-    def has_delete_permission(self, request, obj=None):
-        return False
+#     def has_delete_permission(self, request, obj=None):
+#         return False
     
-    def get_queryset(self, request):
-        qs = super().get_queryset(request)
+#     def get_queryset(self, request):
+#         qs = super().get_queryset(request)
 
-        email = request.user.email
+#         email = request.user.email
 
-        return qs.filter(email=email)
+#         return qs.filter(email=email)
 @admin.register(ApplicationRequirement)
 class ApplicationRequirementAdmin(admin.ModelAdmin):
     model = ApplicationRequirement
