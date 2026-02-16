@@ -666,9 +666,17 @@ class TblCompanyProductionLicenseAdmin(LoggingAdminMixin,LeafletGeoAdmin): #admi
                 response['Content-Disposition'] = 'attachment; filename=license_data.zip'
                 return response
                     
+class LkpStateAdmin(admin.ModelAdmin): 
+    model = LkpState
+    fields = ["name","sector"]
+    list_display = ["name","sector"]
+    list_filter = []
+    view_on_site = False             
+
+admin.site.register(LkpState,LkpStateAdmin)
+
 admin.site.register(LkpNationality)
 admin.site.register(LkpSector)
-admin.site.register(LkpState)
 # admin.site.register(LkpLocality)
 admin.site.register(LkpMineral)
 admin.site.register(LkpForeignerProcedureType)
