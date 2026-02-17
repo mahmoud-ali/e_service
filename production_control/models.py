@@ -117,8 +117,8 @@ class GoldProductionForm(WorkFlowModel):
     STATE_CHOICES = {
         STATE_DRAFT: _('state_draft'),
         STATE_CONFIRMED1: _('تأكيد المراقب'),
-        STATE_CONFIRMED2: _('تأكيد رئيس قسم الانتاج بالولاية'),
-        STATE_APPROVED: _('إعتماد مشرف القطاع'),
+        STATE_CONFIRMED2: _('تأكيد مشرف القطاع'),
+        STATE_APPROVED: _('إعتماد رئيس القطاع'),
         STATE_REVIEW_REQUIRED: _('مراجعة الإدخال'),
     }
 
@@ -230,8 +230,9 @@ class GoldShippingForm(WorkFlowModel):
     STATE_CHOICES = {
         STATE_DRAFT: _('state_draft'),
         STATE_CONFIRMED1: _('تأكيد المراقب'),
-        STATE_CONFIRMED2: _('تأكيد رئيس قسم الانتاج بالولاية'),
-        STATE_APPROVED: _('إعتماد مشرف القطاع'),
+        STATE_CONFIRMED2: _('تأكيد مشرف القطاع'),
+        STATE_APPROVED: _('إعتماد رئيس القطاع'),
+
         STATE_REVIEW_REQUIRED: _('مراجعة الإدخال'),
     }
 
