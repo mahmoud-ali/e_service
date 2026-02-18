@@ -266,6 +266,11 @@ class GoldShippingForm(WorkFlowModel):
                 obj.alloy_serial_no.alloy_shipped = True
                 obj.alloy_serial_no.save()
 
+        if self.state == self.STATE_REVIEW_REQUIRED:
+            for obj in self.goldshippingformalloy_set.all():
+                obj.alloy_serial_no.alloy_shipped = False
+                obj.alloy_serial_no.save()
+
     def get_next_states(self, user):
         """
         Determine the next possible states based on the current state and user's role.
