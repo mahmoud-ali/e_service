@@ -36,6 +36,7 @@ urlpatterns = [
     path('gold_travel/', include('gold_travel.urls')), 
     path('production/', include('production_control.urls')), 
     path('traditional/', include('traditional_app.urls')),
+    path('invoice/', include('form15_tra.urls')),
 
     # path('', include('user_sessions.urls', 'user_sessions')),
     path('', include('company_profile.urls')),

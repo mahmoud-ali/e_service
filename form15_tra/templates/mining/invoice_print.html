@@ -1,0 +1,184 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إيصال تحصيل #{{ object.receipt_number }}</title>
+
+    <!-- Google Fonts: Cairo -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Cairo', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Thermal Printer Optimized CSS */
+        @page {
+            margin: 0;
+            size: auto;
+        }
+
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+
+            body {
+                background-color: white !important;
+                color: black !important;
+                margin: 0;
+                padding: 0;
+                width: 80mm;
+                /* Standard Thermal Paper Width */
+            }
+
+            .invoice-box {
+                box-shadow: none !important;
+                border: none !important;
+                margin: 0 !important;
+                padding: 10px !important;
+                width: 100% !important;
+                max-width: none !important;
+            }
+
+            /* Ensure high contrast for thermal printing */
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+                color: black !important;
+                border-color: black !important;
+            }
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .invoice-box {
+            max-width: 400px;
+            /* Narrower for thermal preview */
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #eee;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+            font-size: 14px;
+            line-height: 20px;
+            background: #fff;
+        }
+
+        .item-row td {
+            padding: 4px 0;
+            border-bottom: 1px dashed #eee;
+        }
+
+        @media print {
+            .item-row td {
+                border-bottom: 1px dashed black !important;
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 py-6">
+
+    <div class="no-print flex justify-center mb-6">
+        <button onclick="window.print()"
+            class="bg-blue-600 text-white px-6 py-2 rounded shadow hover:bg-blue-700 transition">
+            طباعة الإيصال
+        </button>
+        <a href="{% url 'collection-detail' object.pk %}"
+            class="mr-4 bg-gray-200 text-gray-700 px-6 py-2 rounded shadow hover:bg-gray-300 transition">
+            رجوع
+        </a>
+    </div>
+
+    <div class="invoice-box">
+        <!-- Header -->
+        <div class="text-center mb-4">
+            <img src="{% static 'mining/images/logo.webp' %}" alt="Logo" class="h-16 w-auto mx-auto mb-2">
+            <h1 class="text-xl font-bold">إيصال تحصيل</h1>
+            <p class="text-sm font-bold mt-1">نظام تحصيل التعدين</p>
+        </div>
+
+        <div class="border-b-2 border-dashed border-black my-2"></div>
+
+        <!-- Meta Info -->
+        <div class="flex justify-between text-sm mb-4">
+            <div>
+                <strong>الإيصال:</strong> #{{ object.receipt_number }}
+            </div>
+            <div class="text-left">
+                <strong>التاريخ:</strong> {{ object.updated_at|date:"Y/m/d" }}
+            </div>
+        </div>
+
+        <!-- Details -->
+        <div class="mb-4">
+            <div class="mb-2">
+                <span class="font-bold">السوق:</span> {{ object.market.market_name }}
+            </div>
+            <div class="mb-2">
+                <span class="font-bold">المتحصل:</span>
+                {{object.collector.get_full_name|default:object.collector.username}}
+            </div>
+        </div>
+
+        <div class="border-b-2 border-dashed border-black my-2"></div>
+
+        <!-- Bill Table -->
+        <table class="w-full text-right mb-4">
+            <tr class="item-row">
+                <td class="font-bold">اسم العميل</td>
+                <td class="text-left">{{ object.miner_name }}</td>
+            </tr>
+            <tr class="item-row">
+                <td class="font-bold">عدد الجوالات</td>
+                <td class="text-left">{{ object.sacks_count }}</td>
+            </tr>
+            <tr class="item-row">
+                <td class="font-bold">الحالة</td>
+                <td class="text-left font-bold">{{object.get_status_display}}</td>
+            </tr>
+        </table>
+
+        <!-- Total -->
+        <div class="text-center py-4 bg-gray-50 border-2 border-dashed border-black">
+            <div class="text-sm font-bold mb-1">المبلغ الإجمالي</div>
+            <div class="text-2xl font-bold">{{ object.total_amount }} ج.س</div>
+        </div>
+
+        <!-- Signature -->
+        <div class="mt-8 flex justify-center">
+            <div class="text-center w-40">
+                <div class="border-b border-black mb-1 h-8"></div>
+                <div class="text-xs font-bold">توقيع المتحصل</div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="mt-8 pt-4 border-t border-dashed border-black text-center text-[10px] leading-3 uppercase">
+            شكراً لتعاملكم معنا<br>
+            نظام تحصيل إيرادات التعدين<br>
+            {{ now|date:"Y-m-d H:i" }}
+        </div>
+    </div>
+
+</body>
+
+</html>

@@ -119,6 +119,7 @@ INSTALLED_APPS = [
     'hse_companies',
     'khatabat',
     'company_profile_entaj',
+    'form15_tra',
     # 'billing_api',
 
     # Debug

@@ -14,4 +14,5 @@ urlpatterns = [
     path('gold_production_retrieve/<int:pk>/', views.GoldProductionDetailView.as_view()),
     path('gold_shipping_list/<str:date>/', views.GoldShippingListView.as_view()),
     path('gold_shipping_retrieve/<int:pk>/', views.GoldShippingDetailView.as_view()),
+    path('invoice/tra/', include('form15_tra.api.urls')),
 ]
