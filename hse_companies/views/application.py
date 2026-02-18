@@ -72,7 +72,7 @@ class ApplicationMasterDetailCreateView(LoginRequiredMixin,View):
     title = None    
     # user_groups = []
     menu_name = ""  
-    template_name = "pa/application_add_master_details.html"
+    template_name = "hse_companies/application_add_master_details.html"
     
     def dispatch(self,request, *args, **kwargs):         
         self.details_formset = []
@@ -120,8 +120,10 @@ class ApplicationMasterDetailCreateView(LoginRequiredMixin,View):
                 detail['formset'] = formset
                 if not formset.is_valid():
                     flag = False
+                    print("fkag",formset.errors)
+                    messages.add_message(request,messages.ERROR,"تأكد من اكتمال البيانات: "+formset.model._meta.verbose_name_plural)
                 
-                formset_list.append(formset)
+                formset_list.append(formset)   
                 
             # if self.request.POST.get('_save_confirm') and self.test_group('pa_manager'):
             #     self.object.state = STATE_TYPE_CONFIRM

@@ -1,4 +1,4 @@
-{% extends 'pa/base.html' %}
+{% extends 'company_profile/base.html' %}
 {% load i18n %}
 {% load static  %}
 
@@ -23,43 +23,71 @@
 	<h3>{{detail.title}}:</h3>
     {{ detail.formset.management_form }}
 
-    <table id="detail_table{{ forloop.counter }}"  class="table table-bordered detail_table">
-        <tr>
-        {% for field in detail.formset|first %}
-            {% if field.is_hidden is not True %}
-            <th>
-            {{ field.label }}
-            </th>
-            {% endif %}
-        {% endfor %}
-        </tr>
-    {% for form in detail.formset %}
-        {% for hidden in form.hidden_fields %}
-            {{ hidden }}
-        {% endfor %}        
+    {% if detail.id == 10%}
+        <table id="detail_table{{ forloop.counter }}"  class="table table-bordered detail_table">
+            
+        {% for form in detail.formset %}
+            {% for hidden in form.hidden_fields %}
+                {{ hidden }}
+            {% endfor %}        
 
-        <tr>
-        {% for field in form.visible_fields %}
-            <td>
-            {% bootstrap_field field show_label=False%}
-            </td>
-        {% endfor %}
-        </tr>
-        {% endfor %}        	
-    </table>
+            
+            {% for field in form.visible_fields %}
+                 <tr>
+                    <th>
+                    {{ field.label }}
+                    </th>
+                </tr>
+
+                <tr>
+                    <td>
+                    {% bootstrap_field field show_label=False%}
+                    </td>
+                </tr>
+            {% endfor %}
+            
+            {% endfor %}        	
+        </table>
+    {% else%}
+        <table id="detail_table{{ forloop.counter }}"  class="table table-bordered detail_table">
+            <tr>
+            {% for field in detail.formset|first %}
+                {% if field.is_hidden is not True %}
+                <th>
+                {{ field.label }}
+                </th>
+                {% endif %}
+            {% endfor %}
+            </tr>
+        {% for form in detail.formset %}
+            {% for hidden in form.hidden_fields %}
+                {{ hidden }}
+            {% endfor %}        
+
+            <tr>
+            {% for field in form.visible_fields %}
+                <td>
+                {% bootstrap_field field show_label=False%}
+                </td>
+            {% endfor %}
+            </tr>
+            {% endfor %}        	
+        </table>
+
+    {%endif%}
+    {% if detail.formset.max_num > 1%}
     <button id="add_row_btn{{ forloop.counter }}" style="float:{% if request.LANGUAGE_CODE == 'ar' %} left {% else %} right {% endif %}" type="button" class="btn btn-link">
         <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
         {% translate "add_more" %}
+
     </button>
+    {% endif%}
 <br/>
 <br/>
 {% endfor %}        	
 
     {% buttons %}
-    <input type="submit" value="{% translate "Save Draft" %}" name="_save_draft" class="btn btn-primary">
-    {% if request.user|has_group:"pa_manager" %}
-    <input type="submit" value="{% translate "Save & Confirm" %}" name="_save_confirm" class="btn btn-default">
-    {% endif %}
+        <button type="submit" class="btn btn-primary">{% translate "Submit" %}</button>
     {% endbuttons %}
 </form>
 

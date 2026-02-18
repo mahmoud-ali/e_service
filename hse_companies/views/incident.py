@@ -141,6 +141,7 @@ details = [
                 "exclude":['created_by'],
                 "extra":0,
                 "min_num":1, 
+                "max_num":1, 
                 "validate_min":True,
                 "can_delete":False,
             },

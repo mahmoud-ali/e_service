@@ -281,7 +281,7 @@ class ContributingFactor(models.Model):
     ]
     
     incident = models.ForeignKey(IncidentInfo, on_delete=models.CASCADE, related_name='contributing_factors')
-    factor_type = models.SmallIntegerField(choices=FACTOR_CHOICES, verbose_name=_("الاسباب المساهمة في الحادث Contributing Causes"))
+    factor_type = models.SmallIntegerField(choices=FACTOR_CHOICES, verbose_name=_("الاسباب المساهمة في الحادث Contributing Causes"),default=1)
     description = models.TextField(help_text="Explain how this factor contributed to the incident", verbose_name=_("وصف الاسباب المساهمة في الحادث contributing factors description"))
     
     def __str__(self):

@@ -46,6 +46,8 @@ from .views import CompanySummaryView,SetLanguageView, HomePageView, \
                    AppWhomConcernListView,AppWhomConcernCreateView,AppWhomConcernReadonlyView, \
                    AppGoldProductionListView,AppGoldProductionCreateView,AppGoldProductionReadonlyView, TblCompanyProductionLicenseSelectView, dispatcher_for_work_plan_list
 
+from hse_companies.views.incident import IncidentInfoListView,IncidentInfoCreateView,IncidentInfoReadonlyView
+
 app_name = "profile"
 urlpatterns = [                                                        
     path('', HomePageView.as_view(), name='home'),
@@ -223,10 +225,17 @@ urlpatterns = [
     path('app_fuel_permission/add/', AppFuelPermissionCreateView.as_view(), name='app_fuel_permission_add'),
     path('app_fuel_permission/fuel_cert/', FuelCertificate.as_view(), name='app_fuel_permission_cert'),    
 
+    # تبليغ عن حادث
     path('app_hse_accident/', AppHSEAccidentReportListView.as_view(), name='app_hse_accident_list'),
     path('app_hse_accident/<int:type>/', AppHSEAccidentReportListView.as_view(), name='app_hse_accident_list'),
     path('app_hse_accident/<int:pk>/show/', AppHSEAccidentReportReadonlyView.as_view(), name='app_hse_accident_show'),    
     path('app_hse_accident/add/', AppHSEAccidentReportCreateView.as_view(), name='app_hse_accident_add'),
+
+    # تحقيق في حادث
+    path('app_hse_accident_invest/', IncidentInfoListView.as_view(), name='app_hse_accident_invest_list'),
+    path('app_hse_accident_invest/<int:type>/', IncidentInfoListView.as_view(), name='app_hse_accident_invest_list'),
+    path('app_hse_accident_invest/<int:pk>/show/', IncidentInfoReadonlyView.as_view(), name='app_hse_accident_invest_show'),    
+    path('app_hse_accident_invest/add/', IncidentInfoCreateView.as_view(), name='app_hse_accident_invest_add'),
 
     path('app_hse_performance/', AppHSEPerformanceReportListView.as_view(), name='app_hse_performance_list'),
     path('app_hse_performance/<int:type>/', AppHSEPerformanceReportListView.as_view(), name='app_hse_performance_list'),
