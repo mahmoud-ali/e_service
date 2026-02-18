@@ -1228,6 +1228,13 @@ class LkpAccidentType(models.Model):
 
 
 class AppHSEAccidentReport(WorkflowModel):
+    CATEGORY_CHOICES = [
+        (1, 'Occupational Health'),
+        (2, 'Safety'),
+        (3, 'Environment'),
+    ]
+
+
     ACCIDENT_CLASS_MINOR = 'minor'
     ACCIDENT_CLASS_MODERATE = 'moderate'
     ACCIDENT_CLASS_MAJOR = 'major'
@@ -1241,6 +1248,9 @@ class AppHSEAccidentReport(WorkflowModel):
     company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
     accident_place = models.CharField(_("accident_place"),max_length=100)
     accident_dt = models.DateTimeField(_("accident_dt"), help_text="Ex: 2025-01-31")
+
+    accident_category = models.SmallIntegerField(choices=CATEGORY_CHOICES, verbose_name=_("فئة الحادث Incident Category"),null=True,blank=True)
+
     accident_type  = models.ForeignKey(LkpAccidentType, on_delete=models.PROTECT,verbose_name=_("accident_type"))    
     accident_class = models.CharField(_("accident_class"),max_length=10, choices=ACCIDENT_CLASS_CHOICES)
 
