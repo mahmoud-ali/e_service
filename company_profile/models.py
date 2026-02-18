@@ -1244,7 +1244,7 @@ class AppHSEAccidentReport(WorkflowModel):
     accident_type  = models.ForeignKey(LkpAccidentType, on_delete=models.PROTECT,verbose_name=_("accident_type"))    
     accident_class = models.CharField(_("accident_class"),max_length=10, choices=ACCIDENT_CLASS_CHOICES)
 
-    attachement_file = models.FileField(_("attachement_file"),upload_to=company_applications_path)
+    attachement_file = models.FileField(_("attachement_file"),upload_to=company_applications_path,null=True,blank=True)
 
     def __str__(self):
         return _("HSE Accident Report") +" ("+str(self.id)+")"

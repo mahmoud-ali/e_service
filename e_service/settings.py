@@ -481,6 +481,8 @@ LEAFLET_CONFIG = {
 
 }
 
+TELEGRAM_HSE_ACCIDENTS_ACCESS_KEY = ""
+
 if not DEBUG:
     ROLLBAR = {
         'access_token': config('ROLLBAR_TOKEN'),

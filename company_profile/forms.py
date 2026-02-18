@@ -585,7 +585,7 @@ class AppHSEAccidentReportForm(AppHSEAccidentReportAdminForm):
     company = None
     class Meta:
         model = AppHSEAccidentReport
-        exclude = ["company","state","recommendation_comments","reject_comments"]
+        exclude = ["company","state","recommendation_comments","reject_comments","attachement_file"]
         widgets = {
             "accident_dt":DatePickerInput(),
         }
