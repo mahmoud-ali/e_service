@@ -1117,7 +1117,7 @@ incident_main_class = {
     'model': IncidentInfo,
     'mixins': [],
     'kwargs': {
-        'list_display': ("company", "incident_category", "incident_type","classification",),
+        'list_display': ("company", "incident_category", "incident_type","classification","state",),
         'list_filter': ('incident_category','incident_type', 'classification','state'),
         # 'readonly_fields':('company',),
         # 'fields': ("company", "year", "month","album",),
