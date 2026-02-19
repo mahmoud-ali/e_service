@@ -49,7 +49,8 @@ Notifies the system that a payment has been successfully completed.
 ```json
 {
   "receipt_number": "0000000001",
-  "payment_status": "SUCCESS"
+  "payment_status": "SUCCESS",
+  "ref_number": "45646"
 }
 ```
 
@@ -58,6 +59,7 @@ Notifies the system that a payment has been successfully completed.
 | :--- | :--- | :--- | :--- |
 | `receipt_number` | string | Yes | The 10-digit receipt number. |
 | `payment_status` | string | Yes | Must be exactly `SUCCESS` to mark the invoice as paid. |
+| `ref_number` | string | Yes | Invoice referance number. |
 
 ### Response (200 OK)
 ```json
@@ -69,7 +71,7 @@ Notifies the system that a payment has been successfully completed.
 ### Error Responses
 - **400 Bad Request:** 
     - Payment status is not `SUCCESS`.
-    - `receipt_number` is missing or invalid.
+    - `receipt_number` or `ref_number` is missing or invalid.
     - Invoice is not in `Pending Payment` status (e.g., already paid or cancelled).
 - **404 Not Found:** Receipt number does not exist.
 
