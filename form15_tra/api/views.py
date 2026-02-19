@@ -147,6 +147,7 @@ class BankCallbackWebhook(APIView):
     def post(self, request: Any, format: Any = None) -> Response:
         receipt_number = request.data.get('receipt_number','').strip()
         payment_status = request.data.get('payment_status','').strip().upper()
+        ref_number = request.data.get('ref_number','').strip()
 
         if payment_status != 'SUCCESS':
             error_data = {"error": f"Payment status is not SUCCESS"}
@@ -165,6 +166,18 @@ class BankCallbackWebhook(APIView):
 
         if not receipt_number:
             error_data = {"error": "Invalid notification"}
+            APILog.objects.create(
+                action="bank_callback_failed",
+                user=None,
+                request_data=request.data,
+                response_data=error_data,
+                status_code=status.HTTP_400_BAD_REQUEST,
+                ip_address=request.META.get('REMOTE_ADDR')
+            )
+            return Response(error_data, status=status.HTTP_400_BAD_REQUEST)
+
+        if not ref_number:
+            error_data = {"error": "Invalid referance number"}
             APILog.objects.create(
                 action="bank_callback_failed",
                 user=None,

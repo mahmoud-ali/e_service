@@ -3,7 +3,7 @@
 This API allows the bank to query invoice details and notify the system when a payment is successfully processed.
 
 ## Base URL
-`/api/v1/webhooks/bank-callback/`
+`/api/v1/invoice/tra/webhooks/bank-callback/`
 
 ## Authentication
 All requests require a valid API Key sent in the request header.
@@ -17,7 +17,7 @@ All requests require a valid API Key sent in the request header.
 
 Retrieves the details of an invoice using the receipt number.
 
-**Endpoint:** `GET /api/v1/webhooks/bank-callback/`
+**Endpoint:** `GET /api/v1/invoice/tra/webhooks/bank-callback/`
 
 ### Query Parameters
 | Parameter | Type | Required | Description |
@@ -43,7 +43,7 @@ Retrieves the details of an invoice using the receipt number.
 
 Notifies the system that a payment has been successfully completed.
 
-**Endpoint:** `POST /api/v1/webhooks/bank-callback/`
+**Endpoint:** `POST /api/v1/invoice/tra/webhooks/bank-callback/`
 
 ### Request Body
 ```json
