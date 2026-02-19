@@ -332,6 +332,8 @@ AUDITLOG_EXCLUDE_TRACKING_MODELS = (
     # "<app_name>.<model>"
 )
 
+APPEND_SLASH = True
+
 # logging 
 LOGGING = {
     'version': 1,

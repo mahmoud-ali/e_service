@@ -7,6 +7,6 @@ router.register(r'collections', CollectionFormViewSet, basename='collection')
 router.register(r'markets', MarketViewSet, basename='market')
 
 urlpatterns = [
-    path('', include(router.urls)),
     path('webhooks/bank-callback/', BankCallbackWebhook.as_view(), name='bank-callback'),
+    path('', include(router.urls)),
 ]
