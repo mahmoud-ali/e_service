@@ -102,8 +102,8 @@ class IncidentInfo(LoggingModel):
     
     class Meta:
         ordering = ['-date_time_occurred']
-        verbose_name = 'حادث'
-        verbose_name_plural = 'الحوادث'
+        verbose_name = 'تقرير التحقيق عن حادث'
+        verbose_name_plural = 'تقرير التحقيق عن الحوادث'
 
     def get_next_states(self, user):
         """

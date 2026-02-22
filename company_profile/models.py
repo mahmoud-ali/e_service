@@ -1290,8 +1290,8 @@ class AppHSEAccidentReport(WorkflowModel):
 
     class Meta:
         ordering = ["-id"]
-        verbose_name = _("Application: HSE Accident Report")
-        verbose_name_plural = _("Application: HSE Accident Report")
+        verbose_name = 'تقرير التبليغ عن حادث'
+        verbose_name_plural = 'تقرير التبليغ عن حوادث'
 
 @receiver(pre_save, sender=AppHSEAccidentReport)
 def send_notifications_event(sender, instance, **kwargs):

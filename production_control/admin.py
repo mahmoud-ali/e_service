@@ -127,8 +127,8 @@ production_main_class = {
     'mixins': [],
     'kwargs': {
         'form': GoldProductionFormForm,
-        'list_display': ["license","date","form_no","total_weight","state","show_certificate_link"],
-        'list_filter': ["state","date"],
+        'list_display': ["id","license","date","form_no","total_weight","state","show_certificate_link"],
+        'list_filter': ["id","state","date"],
         'formfield_overrides': {
             models.FloatField: {"widget": TextInput},
         },
@@ -248,8 +248,8 @@ move_main_class = {
     'mixins': [],
     'kwargs': {
         'form': GoldShippingFormForm,
-        'list_display': ["license","date","form_no","state","show_certificate_link"],
-        'list_filter': ["state","date"],
+        'list_display': ["id","license","date","form_no","state","show_certificate_link"],
+        'list_filter': ["id","state","date"],
         # 'readonly_fields': ["company"],
         'save_as_continue': False,
     },
