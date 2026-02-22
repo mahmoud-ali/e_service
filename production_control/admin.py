@@ -128,7 +128,8 @@ production_main_class = {
     'kwargs': {
         'form': GoldProductionFormForm,
         'list_display': ["id","license","date","form_no","total_weight","state","show_certificate_link"],
-        'list_filter': ["id","state","date"],
+        'list_filter': ["state","date"],
+        'search_fields': ["form_no"],
         'formfield_overrides': {
             models.FloatField: {"widget": TextInput},
         },
@@ -250,6 +251,7 @@ move_main_class = {
         'form': GoldShippingFormForm,
         'list_display': ["id","license","date","form_no","state","show_certificate_link"],
         'list_filter': ["id","state","date"],
+        'search_fields': ["form_no"],
         # 'readonly_fields': ["company"],
         'save_as_continue': False,
     },
