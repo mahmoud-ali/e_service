@@ -19,7 +19,7 @@ license_none = TblCompanyProductionLicense.objects.none()
 license_all_qs = TblCompanyProductionLicense.objects.exclude(license_type=TblCompanyProductionLicense.LICENSE_TYPE_ROKH9A)
 
 alloy_none = GoldProductionFormAlloy.objects.none()
-alloy_all_qs = GoldProductionFormAlloy.objects.all()
+alloy_all_qs = GoldProductionFormAlloy.objects.select_related('master').all()
 
 class MoragibForm(forms.ModelForm):
     user = forms.ModelChoiceField(queryset=UserModel.objects.filter(groups__name__in=('production_control_auditor',)), label=_("user"))
@@ -124,6 +124,7 @@ class GoldShippingFormForm(forms.ModelForm):
             
         self.fields["license"].disabled = False
         
+
     class Meta:
         model = GoldShippingForm     
         fields = ["license","date","form_no","attachement_file"]
@@ -136,7 +137,7 @@ class GoldShippingFormAlloyForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):        
         super().__init__(*args, **kwargs)
 
-        self.fields["alloy_serial_no"].queryset = alloy_all_qs.filter(master__license__id__in=self.license_ids,alloy_shipped=False)
+        self.fields["alloy_serial_no"].queryset = alloy_all_qs.filter(master__license__id__in=self.license_ids,alloy_shipped=False) #
         # if self.master_id:
         #     self.fields["alloy_serial_no"].queryset |= alloy_all_qs.filter(id__in=GoldShippingFormAlloy.objects.filter(master=self.master_id).values_list('alloy_serial_no'))
 
