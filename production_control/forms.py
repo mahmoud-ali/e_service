@@ -122,13 +122,8 @@ class GoldShippingFormForm(forms.ModelForm):
         else:
             self.fields["license"].queryset = license_all_qs.filter(company__company_type__in=self.company_types)
             
-        # self.fields["company"].disabled = False
-
         self.fields["license"].disabled = False
         
-        # if kwargs.get('instance') and kwargs['instance'].company:
-        #     self.fields["license"].queryset = license_all_qs.filter(company=kwargs['instance'].company)
-
     class Meta:
         model = GoldShippingForm     
         fields = ["license","date","form_no","attachement_file"]
