@@ -80,27 +80,25 @@ class LogMixin:
 
         return qs.none() #super().get_queryset(request)
     
-    def get_form(self, request, obj=None, **kwargs):
-        kwargs["form"] = self.form
+    # def get_form(self, request, obj=None, **kwargs):
+    #     kwargs["form"] = self.form
 
-        license_lst = []
+    #     license_lst = []
 
-        try:
-            if request.user.groups.filter(name__in=("production_control_state_mgr","production_control_sector_mgr")).exists():
-                if obj:
-                    license_lst = [obj.license.id]
-                # else:
-                #     kwargs["form"].company_types = get_company_types(request)
-            else:
-                license_lst = request.user.moragib_list.moragib_distribution.goldproductionuserdetail_set.filter(master__state=STATE_CONFIRMED).values_list('license',flat=True)
+    #     try:
+    #         if request.user.groups.filter(name__in=("production_control_state_mgr","production_control_sector_mgr")).exists():
+    #             if obj:
+    #                 license_lst = [obj.license.id]
+    #         else:
+    #             license_lst = request.user.moragib_list.moragib_distribution.goldproductionuserdetail_set.filter(master__state=STATE_CONFIRMED).values_list('license',flat=True)
 
-        except Exception as e:
-            print(e)
+    #     except Exception as e:
+    #         print(e)
             
 
-        kwargs["form"].license_list = license_lst
+    #     kwargs["form"].license_list = license_lst
 
-        return super().get_form(request, obj, **kwargs)
+    #     return super().get_form(request, obj, **kwargs)
 
 class GoldProductionMixin:
     class Media:
