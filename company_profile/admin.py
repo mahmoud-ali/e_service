@@ -147,10 +147,7 @@ class WorkflowAdminMixin:
         if self.model == AppTechnicalFinancialReport:        
             if request.user.groups.filter(name__in=["pa_review"]).exists():
                 qs = qs.filter(report_type=AppTechnicalFinancialReport.REPORT_TYPE_FINANCIAL)
-            else:
-                qs = qs.filter(report_type=AppTechnicalFinancialReport.REPORT_TYPE_TECHNICAL)
-
-            return qs.filter(company__company_type__in=company_types)
+                return qs.filter(company__company_type__in=company_types)
 
         if self.model == AppFuelPermission:
             # if request.user.groups.filter(name__in=["pro_company_application_approve"]).exists():
