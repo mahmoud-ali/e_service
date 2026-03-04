@@ -1096,7 +1096,7 @@ class IncidentInfoMixin:
                 companies = TblCompanyProductionLicense.objects.filter(state=original_state).values_list('company',flat=True)
                    
                 return qs.filter(
-                    incident__company__in=companies
+                    company__in=companies
                 )
             except Exception as e:
                 print("Error",e)
@@ -1105,7 +1105,7 @@ class IncidentInfoMixin:
             try:
                 company_lst = request.user.moragib_list.moragib_distribution.goldproductionuserdetail_set.filter(master__state=PRODUCTION_STATE_CONFIRMED).values_list('company',flat=True)
                 return qs.filter(
-                    incident__company__in=company_lst
+                    company__in=company_lst
                     )
             except Exception as e:
                 print(request.user,e)
