@@ -443,7 +443,7 @@ class EmployeeBasicAdmin(admin.ModelAdmin):
             "classes": ["fieldset-card", "fieldset-extra"],
         }),
     ]
-    inlines = [EmployeeFamilyInline,EmployeeMoahilInline,EmployeeBankAccountInline,EmployeeNo32lertibatInline, EmployeeStatusInline, EmployeeKhibraInline, EmployeeArchiveInline,SalafiatInline,JazaatInline,EmployeeMobashraInline,EmployeeVacationInline,EmployeeM2moriaInline]
+    inlines = [EmployeeStatusInline, EmployeeFamilyInline,EmployeeMoahilInline,EmployeeBankAccountInline,EmployeeNo32lertibatInline, EmployeeKhibraInline, EmployeeArchiveInline,SalafiatInline,JazaatInline,EmployeeMobashraInline,EmployeeVacationInline,EmployeeM2moriaInline]
     list_display = ["code","name", "draja_wazifia","alawa_sanawia", "edara_3ama","edara_far3ia","gisim", "mosama_wazifi","tarikh_ta3in","tarikh_akhir_targia","sex","moahil","gasima","atfal","aadoa","m3ash","status"]    
     list_display_links = ["code","name"]
     list_filter = ["status","draja_wazifia","alawa_sanawia",Edara3amaFilter,Edarafar3iaFilter,EmployeeWi7daMosa3daFilter,"no3_2lertibat","mosama_wazifi__category","gasima","atfal",EmployeeTarikhTa3inFilter,EmployeeWifg2lwazaifFilter,EmployeeWifg2lmostawiatFilter,"sex","moahil","aadoa",] #
