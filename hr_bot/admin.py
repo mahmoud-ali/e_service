@@ -360,10 +360,6 @@ class EmployeeTelegramBankAccountAdmin(PermissionMixin,FlowMixin,admin.ModelAdmi
     autocomplete_fields = ["employee"]
     view_on_site = False
     fieldsets = [
-        (_("بيانات الموظف"), {
-            "fields": ["employee"],
-            "classes": ["fieldset-card", "fieldset-basic"],
-        }),
         (_("البيانات البنكية"), {
             "fields": ["bank", "branch_code", "account_type", "account_no",  "active"],
             "classes": ["fieldset-card", "fieldset-extra"],
