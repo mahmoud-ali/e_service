@@ -255,7 +255,7 @@ class EmployeeTelegramFamilyAdmin(PermissionMixin,FlowMixin,admin.ModelAdmin):
             "classes": ["fieldset-card", "fieldset-basic"],
         }),
         (_("بيانات العائلة"), {
-            "fields": [("relation", "name"), "tarikh_el2dafa", "attachement_file"],
+            "fields": ["relation", "name", "tarikh_el2dafa", "attachement_file"],
             "classes": ["fieldset-card", "fieldset-extra"],
         }),
     ]
@@ -309,7 +309,7 @@ class EmployeeTelegramMoahilAdmin(PermissionMixin,FlowMixin,admin.ModelAdmin):
             "classes": ["fieldset-card", "fieldset-basic"],
         }),
         (_("بيانات المؤهل"), {
-            "fields": [("moahil", "graduate_dt"), ("university", "takhasos"), "attachement_file"],
+            "fields": ["moahil", "graduate_dt","university", "takhasos", "attachement_file"],
             "classes": ["fieldset-card", "fieldset-extra"],
         }),
     ]
@@ -365,7 +365,7 @@ class EmployeeTelegramBankAccountAdmin(PermissionMixin,FlowMixin,admin.ModelAdmi
             "classes": ["fieldset-card", "fieldset-basic"],
         }),
         (_("البيانات البنكية"), {
-            "fields": [("bank", "account_no"), ("branch_code", "account_type"), "active"],
+            "fields": ["bank", "branch_code", "account_type", "account_no",  "active"],
             "classes": ["fieldset-card", "fieldset-extra"],
         }),
     ]
