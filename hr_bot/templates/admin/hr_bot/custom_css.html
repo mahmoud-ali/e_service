@@ -1,0 +1,191 @@
+{% load i18n %}
+<style>
+    /* ===== Fieldset Card Styles ===== */
+    fieldset.fieldset-card {
+        background: var(--body-bg, #fff);
+        border: 1px solid var(--hairline-color, #ddd);
+        border-radius: 8px;
+        box-shadow: 0 1px 8px rgba(0, 0, 0, 0.06);
+        margin-bottom: 24px;
+        padding: 0;
+        overflow: hidden;
+        transition: box-shadow 0.25s ease;
+    }
+
+    fieldset.fieldset-card:hover {
+        box-shadow: 0 3px 16px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Fieldset Header */
+    fieldset.fieldset-card>h2,
+    fieldset.fieldset-card>.fieldset-heading {
+        margin: 0;
+        padding: 12px 24px;
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--header-color, #fff);
+        letter-spacing: 0.3px;
+        border: none;
+        background: var(--primary, #417690);
+        grid-column: 1 / -1;
+    }
+
+    fieldset.fieldset-basic>h2 {
+        background: var(--primary, #417690);
+    }
+
+    fieldset.fieldset-extra>h2 {
+        background: var(--secondary, #205067);
+        opacity: 0.92;
+    }
+
+    /* Fieldset Body */
+    fieldset.fieldset-card .form-row {
+        padding: 14px 24px;
+        border-bottom: 1px solid var(--hairline-color, #ddd);
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    fieldset.fieldset-card .form-row:last-child {
+        border-bottom: none;
+    }
+
+    /* Grid Layout */
+    fieldset.fieldset-card.module {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr;
+        gap: 0;
+        padding: 8px 0;
+    }
+
+    fieldset.fieldset-card.module>.form-row {
+        min-width: 0;
+    }
+
+    /* Full-width for specific fields */
+    fieldset.fieldset-card .form-row.field-employee,
+    fieldset.fieldset-card .form-row.field-attachement_file {
+        grid-column: 1 / -1;
+    }
+
+    /* Form Controls Styling */
+    fieldset.fieldset-card .form-row label {
+        font-weight: 600;
+        color: var(--body-fg, #333);
+        font-size: 13px;
+        margin: 0;
+    }
+
+    fieldset.fieldset-card input[type="text"],
+    fieldset.fieldset-card input[type="number"],
+    fieldset.fieldset-card input[type="email"],
+    fieldset.fieldset-card input[type="date"],
+    fieldset.fieldset-card select,
+    fieldset.fieldset-card .related-widget-wrapper {
+        width: 100% !important;
+        box-sizing: border-box;
+    }
+
+    fieldset.fieldset-card input[type="text"],
+    fieldset.fieldset-card input[type="number"],
+    fieldset.fieldset-card input[type="email"],
+    fieldset.fieldset-card input[type="date"],
+    fieldset.fieldset-card select {
+        padding: 9px 12px;
+        border: 1px solid var(--border-color, #ccc);
+        border-radius: 6px;
+        font-size: 14px;
+        transition: border-color 0.2s, box-shadow 0.2s;
+        background: var(--body-bg, #fff);
+        color: var(--body-fg, #333);
+    }
+
+    fieldset.fieldset-card input:focus,
+    fieldset.fieldset-card select:focus {
+        border-color: var(--primary, #417690);
+        box-shadow: 0 0 0 3px rgba(65, 118, 144, 0.15);
+        outline: none;
+    }
+
+    /* RTL Adjustments */
+    [dir="rtl"] fieldset.fieldset-card .form-row,
+    html[dir="rtl"] fieldset.fieldset-card .form-row {
+        text-align: right;
+    }
+
+    /* Result list improvement */
+    .results table {
+        border-radius: 8px;
+        overflow: hidden;
+        border: 1px solid var(--hairline-color, #ddd);
+        margin-top: 10px;
+    }
+
+    .results thead th {
+        background: var(--primary, #417690) !important;
+        color: #fff !important;
+        padding: 10px 15px !important;
+    }
+
+    .results tbody td {
+        padding: 10px 15px !important;
+    }
+
+    h2 {
+        margin-top: 20px !important;
+        color: var(--primary, #417690);
+    }
+
+    /* ===== Responsive Adjustments ===== */
+    @media (max-width: 1024px) {
+        fieldset.fieldset-card.module {
+            grid-template-columns: 1fr;
+            /* Stack columns on tablets and mobile */
+        }
+
+        fieldset.fieldset-card .form-row {
+            padding: 12px 18px;
+        }
+    }
+
+    /* Support for small mobiles */
+    @media (max-width: 640px) {
+
+        fieldset.fieldset-card>h2,
+        fieldset.fieldset-card>.fieldset-heading {
+            padding: 10px 16px;
+            font-size: 13px;
+        }
+
+        #content {
+            padding: 12px !important;
+        }
+
+        /* Ensure tables are scrollable on mobile */
+        .results {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .results table {
+            min-width: 600px;
+            /* Prevent table from squishing too much */
+        }
+    }
+
+    /* Improvement for touch targets */
+    @media (pointer: coarse) {
+
+        fieldset.fieldset-card input,
+        fieldset.fieldset-card select {
+            min-height: 44px;
+            /* Standard touch target height */
+        }
+
+        .inline-tab-btn {
+            padding: 12px 20px;
+        }
+    }
+</style>
