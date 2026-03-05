@@ -85,6 +85,9 @@ class EmployeeTelegramRegistration(LoggingModel):
         verbose_name = _("Employee Registration")
         verbose_name_plural = _("Employee Registration")
 
+    def __str__(self) -> str:
+        return f'بيانات التسجيل: {self.name}'
+
     # def save(self, *args, **kwargs):
     #     send_notifications(TOKEN_ID=TOKEN_ID,message=f"قام الموظف {self.employee.name} بالتسجيل")
     #     return super().save(*args, **kwargs)
