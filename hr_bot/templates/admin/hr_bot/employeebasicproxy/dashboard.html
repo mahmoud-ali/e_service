@@ -272,6 +272,51 @@
         }
     }
 
+    @media (max-width: 768px) {
+        .dashboard-container {
+            padding: 12px;
+        }
+
+        .stats-grid {
+            grid-template-columns: 1fr;
+            /* Force 1 column on mobile */
+            gap: 15px;
+        }
+
+        .info-card .personal-info-grid {
+            grid-template-columns: 1fr !important;
+            /* Stack the two tables */
+            gap: 0 !important;
+        }
+
+        .data-table th,
+        .data-table td {
+            display: block;
+            width: 100% !important;
+            text-align: right !important;
+            padding: 8px 0;
+        }
+
+        .data-table th {
+            padding-bottom: 0;
+            border-bottom: none;
+            font-size: 12px;
+            opacity: 0.8;
+        }
+
+        .data-table td {
+            padding-top: 2px;
+            font-size: 15px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .data-table td {
+                border-bottom-color: rgba(255, 255, 255, 0.05) !important;
+            }
+        }
+    }
+
     @media (max-width: 640px) {
         .dashboard-header {
             padding: 30px 20px;
@@ -285,6 +330,10 @@
 
         .stat-value {
             font-size: 24px;
+        }
+
+        .stat-card {
+            padding: 18px;
         }
     }
 </style>
@@ -307,7 +356,8 @@
                     {% if pending_family_count > 0 %}
                     <span class="pending-badge">{{ pending_family_count }}</span> {% trans " طلبات قيد المراجعة" %}
                     {% else %}
-                    <span style="color: #16a34a;"><i class="fas fa-check-circle"></i> {% trans "لا توجد طلبات معلقة" %}</span>
+                    <span style="color: #16a34a;"><i class="fas fa-check-circle"></i> {% trans "لا توجد طلبات معلقة"
+                        %}</span>
                     {% endif %}
                 </div>
             </a>
@@ -322,7 +372,8 @@
                     {% if pending_moahil_count > 0 %}
                     <span class="pending-badge">{{ pending_moahil_count }}</span> {% trans "طلبات قيد المراجعة" %}
                     {% else %}
-                    <span style="color: #16a34a;"><i class="fas fa-check-circle"></i> {% trans "لا توجد طلبات معلقة" %}</span>
+                    <span style="color: #16a34a;"><i class="fas fa-check-circle"></i> {% trans "لا توجد طلبات معلقة"
+                        %}</span>
                     {% endif %}
                 </div>
             </a>
@@ -349,7 +400,7 @@
             <!-- Personal Summary -->
             <div class="info-card">
                 <h2><i class="fas fa-id-card"></i> {% trans "ملخص المعلومات الوظيفية" %}</h2>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <div class="personal-info-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
                     <table class="data-table">
                         <tr>
                             <th>{% trans "الدرجة الوظيفية" %}</th>
