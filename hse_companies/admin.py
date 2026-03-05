@@ -1139,6 +1139,7 @@ incident_main_class = {
         },
         'hse_cmpny_state_mngr':{
             'permissions': {
+                IncidentInfo.STATE_SUBMITTED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 IncidentInfo.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 IncidentInfo.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
             },
