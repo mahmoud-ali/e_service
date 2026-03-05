@@ -545,10 +545,16 @@ class ApplicationRequirementAdmin(admin.ModelAdmin):
 class EmployeeBankAccountAdmin(admin.ModelAdmin):
     model = EmployeeBankAccountProxy
     list_display = ('employee', 'bank', 'account_no','active')
-    fields = ('employee','bank','account_no','active')
-    search_fields = ('employee__name', 'employee__code', 'account_no')
-    list_filter = ('bank', 'active')
-    exclude = ["created_at","created_by","updated_at","updated_by"]
+    fieldsets = [
+        (_("بيانات الموظف"), {
+            "fields": ["employee"],
+            "classes": ["fieldset-card", "fieldset-basic"],
+        }),
+        (_("البيانات البنكية"), {
+            "fields": ["bank", "branch_code", "account_type", "account_no", "active"],
+            "classes": ["fieldset-card", "fieldset-extra"],
+        }),
+    ]
     readonly_fields = ('employee','bank','account_no',)
 
     def get_queryset(self, request):
