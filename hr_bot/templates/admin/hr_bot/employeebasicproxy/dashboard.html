@@ -13,6 +13,35 @@
         background: var(--body-bg, #f4f7f9);
     }
 
+    @media (prefers-color-scheme: dark) {
+
+        .stat-card,
+        .info-card {
+            background: #262b33 !important;
+            /* Slightly lighter than pure dark bg */
+            border-color: #383e47 !important;
+        }
+
+        .action-btn {
+            background: #2d333b !important;
+            border-color: #444c56 !important;
+            color: #adbac7 !important;
+        }
+
+        .action-btn:hover {
+            background: #373e47 !important;
+            border-color: var(--primary) !important;
+        }
+
+        .data-table tr {
+            border-bottom: 1px solid #383e47 !important;
+        }
+
+        .data-table th {
+            color: #8b949e !important;
+        }
+    }
+
     .dashboard-header {
         margin-bottom: 30px;
         display: flex;
@@ -72,7 +101,7 @@
     }
 
     .stat-card {
-        background: #fff;
+        background: var(--body-bg, #fff);
         padding: 24px;
         border-radius: 12px;
         border: 1px solid var(--hairline-color, #eee);
@@ -162,7 +191,7 @@
     }
 
     .info-card {
-        background: #fff;
+        background: var(--body-bg, #fff);
         padding: 24px;
         border-radius: 12px;
         border: 1px solid var(--hairline-color, #eee);
@@ -268,7 +297,7 @@
         {% if employee_obj %}
         <!-- Stats Grid -->
         <div class="stats-grid">
-            <a href="/managers/hr_bot/employeetelegramfamily/" class="stat-card">
+            <a href="{% url 'admin:hr_bot_employeetelegramfamily_changelist' %}" class="stat-card">
                 <div class="stat-header">
                     <div class="stat-icon icon-family"><i class="fas fa-users"></i></div>
                     <span class="stat-title">{% trans "أفراد العائلة" %}</span>
@@ -278,12 +307,13 @@
                     {% if pending_family_count > 0 %}
                     <span class="pending-badge">{{ pending_family_count }}</span> {% trans "طلبات قيد المراجعة" %}
                     {% else %}
-                    <span style="color: #16a34a;"><i class="fas fa-check-circle"></i> {% trans "لا توجد طلبات معلقة" %}</span>
+                    <span style="color: #16a34a;"><i class="fas fa-check-circle"></i> {% trans "لا توجد طلبات معلقة"
+                        %}</span>
                     {% endif %}
                 </div>
             </a>
 
-            <a href="/managers/hr_bot/employeetelegrammoahil/" class="stat-card">
+            <a href="{% url 'admin:hr_bot_employeetelegrammoahil_changelist' %}" class="stat-card">
                 <div class="stat-header">
                     <div class="stat-icon icon-moahil"><i class="fas fa-graduation-cap"></i></div>
                     <span class="stat-title">{% trans "المؤهلات" %}</span>
@@ -293,12 +323,13 @@
                     {% if pending_moahil_count > 0 %}
                     <span class="pending-badge">{{ pending_moahil_count }}</span> {% trans "طلبات قيد المراجعة" %}
                     {% else %}
-                    <span style="color: #16a34a;"><i class="fas fa-check-circle"></i> {% trans "لا توجد طلبات معلقة" %}</span>
+                    <span style="color: #16a34a;"><i class="fas fa-check-circle"></i> {% trans "لا توجد طلبات معلقة"
+                        %}</span>
                     {% endif %}
                 </div>
             </a>
 
-            <a href="/managers/hr_bot/employeetelegrambankaccount/" class="stat-card">
+            <a href="{% url 'admin:hr_bot_employeetelegrambankaccount_changelist' %}" class="stat-card">
                 <div class="stat-header">
                     <div class="stat-icon icon-bank"><i class="fas fa-university"></i></div>
                     <span class="stat-title">{% trans "الحسابات البنكية" %}</span>
@@ -308,7 +339,8 @@
                     {% if pending_bank_count > 0 %}
                     <span class="pending-badge">{{ pending_bank_count }}</span> {% trans "طلبات قيد المراجعة" %}
                     {% else %}
-                    <span style="color: #16a34a;"><i class="fas fa-check-circle"></i> {% trans "لا توجد طلبات معلقة"  %}</span>
+                    <span style="color: #16a34a;"><i class="fas fa-check-circle"></i> {% trans "لا توجد طلبات معلقة"
+                        %}</span>
                     {% endif %}
                 </div>
             </a>
@@ -350,7 +382,7 @@
                     </table>
                 </div>
                 <div style="margin-top: 20px; text-align: right;">
-                    <a href="/managers/hr_bot/employeebasicproxy/{{ employee_obj.pk }}/change/" class="button"
+                    <a href="{% url 'admin:hr_bot_employeebasicproxy_change' employee_obj.pk %}" class="button"
                         style="background: var(--primary); padding: 8px 16px; border-radius: 4px; color: #fff;">
                         <i class="fas fa-edit mr-1"></i> {% trans "عرض الملف الكامل" %}
                     </a>
@@ -361,15 +393,15 @@
             <div class="info-card">
                 <h2><i class="fas fa-bolt"></i> {% trans "إجراءات سريعة" %}</h2>
                 <div class="quick-actions">
-                    <a href="/managers/hr_bot/employeetelegramfamily/add/" class="action-btn">
+                    <a href="{% url 'admin:hr_bot_employeetelegramfamily_add' %}" class="action-btn">
                         <i class="fas fa-user-plus" style="color: #4f46e5;"></i>
                         <span>{% trans "إضافة فرد عائلة جديد" %}</span>
                     </a>
-                    <a href="/managers/hr_bot/employeetelegrammoahil/add/" class="action-btn">
+                    <a href="{% url 'admin:hr_bot_employeetelegrammoahil_add' %}" class="action-btn">
                         <i class="fas fa-graduation-cap" style="color: #16a34a;"></i>
                         <span>{% trans "إضافة مؤهل جديد" %}</span>
                     </a>
-                    <a href="/managers/hr_bot/employeetelegrambankaccount/add/" class="action-btn">
+                    <a href="{% url 'admin:hr_bot_employeetelegrambankaccount_add' %}" class="action-btn">
                         <i class="fas fa-university" style="color: #ea580c;"></i>
                         <span>{% trans "إضافة حساب بنكي" %}</span>
                     </a>

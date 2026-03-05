@@ -188,4 +188,49 @@
             padding: 12px 20px;
         }
     }
+
+    /* ===== Night Mode Support ===== */
+    @media (prefers-color-scheme: dark) {
+        fieldset.fieldset-card {
+            background: #262b33 !important;
+            border-color: #383e47 !important;
+        }
+
+        fieldset.fieldset-card .form-row {
+            border-bottom-color: #383e47 !important;
+        }
+
+        fieldset.fieldset-card .form-row label {
+            color: #adbac7 !important;
+        }
+
+        fieldset.fieldset-card input,
+        fieldset.fieldset-card select {
+            background: #2d333b !important;
+            border-color: #444c56 !important;
+            color: #adbac7 !important;
+        }
+
+        fieldset.fieldset-card input:focus,
+        fieldset.fieldset-card select:focus {
+            border-color: var(--primary) !important;
+            box-shadow: 0 0 0 3px rgba(65, 118, 144, 0.3) !important;
+        }
+
+        .results table {
+            border-color: #383e47 !important;
+        }
+
+        .results tbody tr {
+            background-color: #22272e !important;
+        }
+
+        .results tbody tr:nth-child(even) {
+            background-color: #1c2128 !important;
+        }
+
+        .results tbody td {
+            color: #adbac7 !important;
+        }
+    }
 </style>
