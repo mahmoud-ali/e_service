@@ -25,8 +25,8 @@
                 <span class="payroll-status-badge confirmed">✅ مؤكد</span>
                 {% else %}
                 <span class="payroll-status-badge unconfirmed">⏳ غير مؤكد</span>
-                {% endif %}
                 <a href="{{ card.edit_url }}" class="payroll-edit-link" title="{% trans 'Edit' %}">✏️</a>
+                {% endif %}
                 {% if card.can_delete %}
                 <a href="{{ card.delete_url }}" class="payroll-delete-link" title="{% trans 'Delete' %}">🗑️</a>
                 {% endif %}
