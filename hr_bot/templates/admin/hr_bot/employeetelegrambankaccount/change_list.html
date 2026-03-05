@@ -1,0 +1,362 @@
+{% extends "admin/change_list.html" %}
+{% load i18n static %}
+
+{% block extrastyle %}
+{{ block.super }}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+    .card-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 14px;
+        padding: 6px 0 20px;
+    }
+
+    @media (min-width: 600px) {
+        .card-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media (min-width: 1024px) {
+        .card-grid {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+
+    @media (min-width: 1400px) {
+        .card-grid {
+            grid-template-columns: repeat(4, 1fr);
+        }
+    }
+
+    .card-list-header {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        padding: 8px 4px;
+        margin-bottom: 4px;
+    }
+
+    .card-list-count {
+        font-size: 13px;
+        color: var(--body-quiet-color, #888);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .admin-card {
+        background: var(--body-bg, #fff);
+        border: 1px solid var(--hairline-color, #e5e7eb);
+        border-radius: 12px;
+        box-shadow: 0 1px 6px rgba(0, 0, 0, .05);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+    }
+
+    .admin-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, .10);
+        border-color: var(--primary, #417690);
+    }
+
+    .admin-card-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 14px 16px;
+        border-bottom: 1px solid var(--hairline-color, #f0f0f0);
+        flex-wrap: wrap;
+        row-gap: 8px;
+    }
+
+    .card-avatar {
+        width: 44px;
+        height: 44px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        flex-shrink: 0;
+    }
+
+    .card-avatar--bank {
+        background: #fff7ed;
+        color: #ea580c;
+    }
+
+    .card-title-group {
+        flex: 1;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+    }
+
+    .card-title {
+        font-size: 15px;
+        font-weight: 700;
+        color: var(--body-fg, #1e293b);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .card-subtitle {
+        font-size: 12px;
+        color: var(--body-quiet-color, #64748b);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .state-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 3px 10px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: 700;
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+
+    .state-draft {
+        background: #fef9c3;
+        color: #a16207;
+    }
+
+    .state-accepted {
+        background: #dcfce7;
+        color: #15803d;
+    }
+
+    .state-rejected {
+        background: #fee2e2;
+        color: #b91c1c;
+    }
+
+    .admin-card-body {
+        padding: 12px 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        flex: 1;
+    }
+
+    .card-field {
+        display: flex;
+        align-items: baseline;
+        gap: 8px;
+        font-size: 13px;
+    }
+
+    .card-field-label {
+        color: var(--body-quiet-color, #64748b);
+        font-size: 12px;
+        font-weight: 600;
+        white-space: nowrap;
+        min-width: 110px;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .card-field-label i {
+        width: 14px;
+        text-align: center;
+        opacity: .7;
+    }
+
+    .card-field-value {
+        color: var(--body-fg, #1e293b);
+        font-weight: 500;
+        flex: 1;
+        word-break: break-all;
+    }
+
+    .card-mono {
+        font-family: 'Courier New', monospace;
+        letter-spacing: .5px;
+        font-size: 13px;
+    }
+
+    .mini-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 2px 8px;
+        border-radius: 12px;
+        font-size: 11px;
+        font-weight: 700;
+    }
+
+    .mini-badge--active {
+        background: #dcfce7;
+        color: #15803d;
+    }
+
+    .mini-badge--inactive {
+        background: #f1f5f9;
+        color: #64748b;
+    }
+
+    .admin-card-footer {
+        padding: 10px 16px;
+        border-top: 1px solid var(--hairline-color, #f0f0f0);
+        display: flex;
+        justify-content: flex-end;
+        gap: 8px;
+    }
+
+    .card-action-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--primary, #417690) !important;
+        text-decoration: none;
+        padding: 5px 12px;
+        border-radius: 6px;
+        border: 1px solid var(--primary, #417690);
+        transition: background .15s, color .15s;
+    }
+
+    .card-action-link:hover {
+        background: var(--primary, #417690);
+        color: #fff !important;
+    }
+
+    .no-results {
+        text-align: center;
+        padding: 40px;
+        color: var(--body-quiet-color, #888);
+        font-size: 15px;
+        background: var(--body-bg, #fff);
+        border-radius: 12px;
+        border: 1px dashed var(--hairline-color, #ddd);
+        margin: 10px 0 20px;
+    }
+
+    [dir="rtl"] .card-list-header,
+    html[dir="rtl"] .card-list-header {
+        justify-content: flex-start;
+    }
+
+    [dir="rtl"] .admin-card-footer,
+    html[dir="rtl"] .admin-card-footer {
+        justify-content: flex-start;
+    }
+
+    @media (prefers-color-scheme: dark) {
+        .admin-card {
+            background: #262b33 !important;
+            border-color: #383e47 !important;
+        }
+
+        .admin-card-header,
+        .admin-card-footer {
+            border-color: #383e47 !important;
+        }
+
+        .card-title {
+            color: #adbac7 !important;
+        }
+
+        .card-subtitle {
+            color: #768390 !important;
+        }
+
+        .state-draft {
+            background: #3a2e00;
+            color: #f0c000;
+        }
+
+        .state-accepted {
+            background: #0a2e1e;
+            color: #56d364;
+        }
+
+        .state-rejected {
+            background: #2e0a0a;
+            color: #f85149;
+        }
+
+        .card-action-link {
+            border-color: var(--primary) !important;
+            color: var(--primary) !important;
+        }
+
+        .card-action-link:hover {
+            background: var(--primary) !important;
+            color: #fff !important;
+        }
+    }
+
+    @media (pointer: coarse) {
+        .card-action-link {
+            padding: 8px 16px;
+            min-height: 40px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block result_list %}
+{% if cl.result_list %}
+<div class="card-list-header">
+    <span class="card-list-count">
+        <i class="fas fa-list-ul"></i>&nbsp;{{ cl.result_count }} {% trans "سجل" %}
+    </span>
+</div>
+<div class="card-grid">
+    {% for result in cl.result_list %}
+    <div class="admin-card">
+        <div class="admin-card-header">
+            <div class="card-avatar card-avatar--bank"><i class="fas fa-university"></i></div>
+            <div class="card-title-group">
+                <span class="card-title">{{ result.get_bank_display }}</span>
+                <span class="card-subtitle">{{ result.employee }}</span>
+            </div>
+            <span class="state-badge state-draft">{{ result.get_state_display }}</span>
+        </div>
+        <div class="admin-card-body">
+            <div class="card-field">
+                <span class="card-field-label"><i class="fas fa-hashtag"></i> {% trans "رقم الحساب" %}</span>
+                <span class="card-field-value card-mono">{{ result.account_no|default:"—" }}</span>
+            </div>
+            <div class="card-field">
+                <span class="card-field-label"><i class="fas fa-credit-card"></i> {% trans "نوع الحساب" %}</span>
+                <span class="card-field-value">{{ result.get_account_type_display|default:result.account_type }}</span>
+            </div>
+            <div class="card-field">
+                <span class="card-field-label"><i class="fas fa-toggle-on"></i> {% trans "الحالة" %}</span>
+                <span class="card-field-value">
+                    {% if result.active %}
+                    <span class="mini-badge mini-badge--active"><i class="fas fa-check"></i> {% trans "نشط" %}</span>
+                    {% else %}
+                    <span class="mini-badge mini-badge--inactive"><i class="fas fa-times"></i> {% trans "غير نشط" %}</span>
+                    {% endif %}
+                </span>
+            </div>
+        </div>
+        <div class="admin-card-footer">
+            <a class="card-action-link" href="{{ result.pk }}/change/">
+                <i class="fas fa-eye"></i> {% trans "عرض" %}
+            </a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<p class="no-results"><i class="fas fa-inbox fa-2x" style="display:block;margin-bottom:8px;opacity:.4;"></i>{% trans "لا توجد نتائج" %}</p>
+{% endif %}
+{% endblock %}
+
+{% block pagination %}{{ block.super }}{% endblock %}
