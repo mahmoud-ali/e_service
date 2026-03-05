@@ -1,0 +1,149 @@
+{% extends "admin/change_list.html" %}
+{% load i18n static %}
+
+{% block extrastyle %}
+{{ block.super }}
+<link rel="stylesheet" type="text/css" href="{% static 'admin/payroll_changelist.css' %}">
+{% endblock %}
+
+{% block result_list %}
+{# Render the original result_list — CSS hides #result_list table, but actions bar stays visible #}
+{{ block.super }}
+
+{% if results %}
+<div class="payroll-cards-grid">
+    {% for card in results %}
+    <div class="payroll-card">
+        {# ── Header ── #}
+        <div class="payroll-card-header">
+            <div class="payroll-card-title">
+                <span class="card-icon">📅</span>
+                {{ card.month_display }} {{ card.year }}
+            </div>
+            <div style="display:flex; align-items:center; gap:8px;">
+                {% if card.confirmed %}
+                <span class="payroll-status-badge confirmed">✅ مؤكد</span>
+                {% else %}
+                <span class="payroll-status-badge unconfirmed">⏳ غير مؤكد</span>
+                {% endif %}
+                <a href="{{ card.edit_url }}" class="payroll-edit-link" title="{% trans 'Edit' %}">✏️</a>
+                {% if card.can_delete %}
+                <a href="{{ card.delete_url }}" class="payroll-delete-link" title="{% trans 'Delete' %}">🗑️</a>
+                {% endif %}
+            </div>
+        </div>
+
+        {# ── Checkbox for actions ── #}
+        <div class="payroll-card-check">
+            <label>
+                <input type="checkbox" class="action-select" name="_selected_action" value="{{ card.pk }}">
+                تحديد للإجراء
+            </label>
+        </div>
+
+        {# ── Body: Link Groups ── #}
+        <div class="payroll-card-body">
+
+            {# ── Core Sheets ── #}
+            <div class="payroll-link-group">
+                <div class="payroll-link-group-title">
+                    <span class="group-icon">📋</span> كشوفات أساسية
+                </div>
+                <div class="payroll-link-items">
+                    {% for link in card.core_links %}
+                    <div class="payroll-link-item">
+                        <a href="{{ link.url }}" target="_blank">{{ link.label }}</a>
+                        {% for sub in link.sub_links %}
+                        <span class="link-sep">|</span>
+                        <a href="{{ sub.url }}" target="_blank" class="link-sub">{{ sub.label }}</a>
+                        {% endfor %}
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            {# ── Comparison Sheets ── #}
+            <div class="payroll-link-group">
+                <div class="payroll-link-group-title">
+                    <span class="group-icon">📊</span> كشوفات المقارنة
+                </div>
+                <div class="payroll-link-items">
+                    {% for link in card.comparison_links %}
+                    <div class="payroll-link-item">
+                        <a href="{{ link.url }}" target="_blank">{{ link.label }}</a>
+                        {% for sub in link.sub_links %}
+                        <span class="link-sep">|</span>
+                        <a href="{{ sub.url }}" target="_blank" class="link-sub">{{ sub.label }}</a>
+                        {% endfor %}
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            {# ── Special Sheets ── #}
+            <div class="payroll-link-group">
+                <div class="payroll-link-group-title">
+                    <span class="group-icon">🏢</span> كشوفات خاصة
+                </div>
+                <div class="payroll-link-items">
+                    {% for link in card.special_links %}
+                    <div class="payroll-link-item">
+                        <a href="{{ link.url }}" target="_blank">{{ link.label }}</a>
+                        {% for sub in link.sub_links %}
+                        <span class="link-sep">|</span>
+                        <a href="{{ sub.url }}" target="_blank" class="link-sub">{{ sub.label }}</a>
+                        {% endfor %}
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            {# ── Manager Sheets ── #}
+            <div class="payroll-link-group">
+                <div class="payroll-link-group-title">
+                    <span class="group-icon">👤</span> كشوفات المدير العام
+                </div>
+                <div class="payroll-link-items">
+                    {% for link in card.manager_links %}
+                    <div class="payroll-link-item">
+                        <a href="{{ link.url }}" target="_blank">{{ link.label }}</a>
+                        {% for sub in link.sub_links %}
+                        <span class="link-sep">|</span>
+                        <a href="{{ sub.url }}" target="_blank" class="link-sub">{{ sub.label }}</a>
+                        {% endfor %}
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            {# ── Additional Sheets (hr_manager only) ── #}
+            {% if card.additional_links %}
+            <div class="payroll-link-group">
+                <div class="payroll-link-group-title">
+                    <span class="group-icon">📑</span> كشوفات إضافية
+                </div>
+                <div class="payroll-link-items">
+                    {% for link in card.additional_links %}
+                    <div class="payroll-link-item">
+                        <a href="{{ link.url }}" target="_blank">{{ link.label }}</a>
+                        {% for sub in link.sub_links %}
+                        <span class="link-sep">|</span>
+                        <a href="{{ sub.url }}" target="_blank" class="link-sub">{{ sub.label }}</a>
+                        {% endfor %}
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="payroll-empty-state">
+    <span class="empty-icon">📭</span>
+    لا توجد سجلات مرتبات.
+</div>
+{% endif %}
+{% endblock %}
