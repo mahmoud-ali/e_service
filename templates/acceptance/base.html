@@ -11,10 +11,46 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+
+    <!-- required modeler styles -->
+    <link rel="stylesheet" href="https://unpkg.com/bpmn-js@18.8.0/dist/assets/diagram-js.css">
+    <link rel="stylesheet" href="https://unpkg.com/bpmn-js@18.8.0/dist/assets/bpmn-js.css">
+    <link rel="stylesheet" href="https://unpkg.com/bpmn-js@18.8.0/dist/assets/bpmn-font/css/bpmn.css">
+
     <style>
         body {
             font-family: 'Cairo', sans-serif;
         }
+        .highlight:not(.djs-connection) .djs-visual > :nth-child(1) {
+            fill: gray !important; /* color elements as gray */
+        }
+        #diagram {
+        width: 100%;
+        height: 300px;
+        }
+
+        :fullscreen #diagram {
+        width: 100vw;
+        height: 100vh;
+        }
+
+        #diagram:fullscreen,#diagram:fullscreen .bjs-container,#diagram:fullscreen svg{
+            background-color: #ffffff;
+        }
+
+        #diagram:-webkit-full-screen,#diagram:-webkit-full-screen .bjs-container,#diagram:-webkit-full-screen svg {
+            background-color: #ffffff;
+        }
+
+        #diagram:-moz-full-screen,#diagram:-moz-full-screen .bjs-container,#diagram:-moz-full-screen svg {
+            background-color: #ffffff;
+        }
+        .bjs-container {
+            box-shadow: none !important;
+        }        
+        .bjs-powered-by {
+            display: none !important;
+        }        
     </style>
 </head>
 <body>
@@ -59,9 +95,13 @@
         {% block content %}
         {% endblock %}
     </main>
+    <!-- modeler distro -->
+    <script src="https://unpkg.com/bpmn-js@18.8.0/dist/bpmn-viewer.development.js"></script>
+
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" crossorigin="anonymous"></script>
     {% comment %} <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css"> {% endcomment %}
     {% block extra_js %}{% endblock %}
+
 </body>
 </html>

@@ -368,7 +368,7 @@
                 <span class="card-title">{{ result.name }}</span>
                 <span class="card-subtitle">{{ result.employee }}</span>
             </div>
-            <span class="state-badge state-draft">{{ result.get_state_display }}</span>
+            <span class="state-badge {% if result.state == 1 %}state-draft{% elif result.state == 2 %}state-accepted{% elif result.state == 3 %}state-rejected{% endif %}">{{ result.get_state_display }}</span>
         </div>
         <div class="admin-card-body">
             <div class="card-field">
