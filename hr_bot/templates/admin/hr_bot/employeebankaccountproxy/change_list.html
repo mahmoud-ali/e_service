@@ -1,5 +1,5 @@
 {% extends "admin/change_list.html" %}
-{% load i18n static %}
+{% load i18n static admin_list %}
 
 {% block extrastyle %}
 {{ block.super }}
@@ -275,12 +275,61 @@
             min-height: 40px;
         }
     }
+    /* Checkbox styling */
+    .card-checkbox-container {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        z-index: 10;
+        cursor: pointer;
+    }
+
+    .card-checkbox-container input[type="checkbox"] {
+        cursor: pointer;
+        width: 18px;
+        height: 18px;
+        accent-color: var(--primary);
+    }
+
+    .admin-card {
+        position: relative;
+    }
+
+    /* Actions styling */
+    .actions {
+        padding: 10px 0;
+        margin-bottom: 0;
+        border: none;
+        background: transparent;
+        color: var(--body-fg);
+    }
+
+    .actions select {
+        padding: 5px;
+        border-radius: 4px;
+        border: 1px solid var(--hairline-color);
+        background: var(--body-bg);
+        color: var(--body-fg);
+        margin-left: 10px;
+    }
+
+    .actions .button {
+        padding: 5px 15px;
+        border-radius: 4px;
+        background: var(--primary);
+        color: #fff;
+        border: none;
+        cursor: pointer;
+    }
 </style>
 {% endblock %}
 
 {% block result_list %}
 {% if cl.result_list %}
-<div class="card-list-header">
+<div class="card-list-header" style="justify-content: space-between; flex-wrap: wrap; gap: 10px;">
+    <div class="admin-actions-container">
+        {% admin_actions %}
+    </div>
     <span class="card-list-count">
         <i class="fas fa-list-ul"></i>&nbsp;{{ cl.result_count }} {% trans "سجل" %}
     </span>
@@ -288,6 +337,9 @@
 <div class="card-grid">
     {% for result in cl.result_list %}
     <div class="admin-card">
+        <div class="card-checkbox-container">
+            <input type="checkbox" name="_selected_action" value="{{ result.pk }}" class="action-select">
+        </div>
         <div class="admin-card-header">
             <div class="card-avatar card-avatar--bank"><i class="fas fa-piggy-bank"></i></div>
             <div class="card-title-group">
