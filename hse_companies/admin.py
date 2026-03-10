@@ -1185,12 +1185,14 @@ incident_inline_classes = {
             },
             'hse_cmpny_state_mngr':{
                 'permissions': {
+                    IncidentInfo.STATE_SUBMITTED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     IncidentInfo.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     IncidentInfo.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
             'hse_cmpny_department_mngr':{
                 'permissions': {
+                    
                     IncidentInfo.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
@@ -1228,6 +1230,7 @@ incident_inline_classes = {
             },
             'hse_cmpny_state_mngr':{
                 'permissions': {
+                    IncidentInfo.STATE_SUBMITTED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     IncidentInfo.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     IncidentInfo.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
@@ -1271,6 +1274,7 @@ incident_inline_classes = {
             },
             'hse_cmpny_state_mngr':{
                 'permissions': {
+                    IncidentInfo.STATE_SUBMITTED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     IncidentInfo.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     IncidentInfo.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
@@ -1314,6 +1318,7 @@ incident_inline_classes = {
             },
             'hse_cmpny_state_mngr':{
                 'permissions': {
+                    IncidentInfo.STATE_SUBMITTED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     IncidentInfo.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     IncidentInfo.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
@@ -1357,6 +1362,7 @@ incident_inline_classes = {
             },
             'hse_cmpny_state_mngr':{
                 'permissions': {
+                    IncidentInfo.STATE_SUBMITTED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     IncidentInfo.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     IncidentInfo.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
@@ -1396,6 +1402,7 @@ incident_inline_classes = {
             },
             'hse_cmpny_state_mngr':{
                 'permissions': {
+                    IncidentInfo.STATE_SUBMITTED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     IncidentInfo.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     IncidentInfo.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
@@ -1434,6 +1441,7 @@ incident_inline_classes = {
             },
             'hse_cmpny_state_mngr':{
                 'permissions': {
+                    IncidentInfo.STATE_SUBMITTED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     IncidentInfo.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     IncidentInfo.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
@@ -1477,6 +1485,7 @@ incident_inline_classes = {
             },
             'hse_cmpny_state_mngr':{
                 'permissions': {
+                    IncidentInfo.STATE_SUBMITTED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     IncidentInfo.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     IncidentInfo.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
@@ -1516,6 +1525,7 @@ incident_inline_classes = {
             },
             'hse_cmpny_state_mngr':{
                 'permissions': {
+                    IncidentInfo.STATE_SUBMITTED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     IncidentInfo.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     IncidentInfo.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
@@ -1576,6 +1586,7 @@ incident_inline_classes = {
             },
             'hse_cmpny_state_mngr':{
                 'permissions': {
+                    IncidentInfo.STATE_SUBMITTED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     IncidentInfo.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     IncidentInfo.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
@@ -1610,6 +1621,7 @@ incident_inline_classes = {
         'groups': {
             'hse_cmpny_state_mngr':{
                 'permissions': {
+                    IncidentInfo.STATE_SUBMITTED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     IncidentInfo.STATE_AUDITOR_APPROVAL: {'add': 1, 'change': 1, 'delete': 0, 'view': 1},
                     IncidentInfo.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
@@ -1638,6 +1650,7 @@ incident_inline_classes = {
         'groups': {
             'hse_cmpny_state_mngr':{
                 'permissions': {
+                    IncidentInfo.STATE_SUBMITTED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     IncidentInfo.STATE_AUDITOR_APPROVAL: {'add': 1, 'change': 1, 'delete': 0, 'view': 1},
                     IncidentInfo.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
