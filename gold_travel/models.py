@@ -70,16 +70,24 @@ class LkpOwner(models.Model):
         STATE_INACTIVE: _('inactive'),
     }
 
+    def attachement_path(self, filename):
+        company = self.name
+        return "company_{0}/profile/{1}".format(company, filename)    
+
     name = models.CharField(_("name"),max_length=100)
     state = models.IntegerField(_("record_state"), choices=STATE_CHOICES, default=STATE_ACTIVE)
+    owner_name = models.CharField(_("اسم المالك"),max_length=100,null=True,blank=True)
+    owner_telephone = models.CharField(_("تلفون المالك"),max_length=30,null=True,blank=True)
+    address = models.TextField(_("العنوان"),max_length=200,null=True,blank=True)
+    attachment = models.FileField(_("المرفقات"),upload_to=attachement_path,null=True,blank=True)
 
     def __str__(self):
         return f'{self.name}'
 
     class Meta:
         ordering = ["name"]
-        verbose_name = _("owner_name")
-        verbose_name_plural = _("owner_name")
+        verbose_name = _("اسم الشركة")
+        verbose_name_plural = _("اسماء الشركات")
 
 class AppMoveGold(LoggingModel):
     DESTINATION_SSMO = 1
