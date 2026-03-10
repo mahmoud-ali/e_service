@@ -80,7 +80,7 @@ class LkpOwnerAdmin(admin.ModelAdmin):
         response = HttpResponse(content_type="text/csv")
         response["Content-Disposition"] = "attachment; filename=owners.csv"
         writer = csv.writer(response)
-        writer.writerow(["name", "owner_name", "owner_telephone", "address", "state"])
+        writer.writerow(["اسم الشركة", "اسم المالك", "تلفون المالك", "العنوان", "الحالة"])
         for obj in queryset:
             writer.writerow([obj.name, obj.owner_name, obj.owner_telephone, obj.address, obj.state])
         return response
