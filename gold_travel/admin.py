@@ -74,6 +74,18 @@ class LkpOwnerAdmin(admin.ModelAdmin):
 
         return qs
 
+
+    @admin.action(description="تصدير البيانات")
+    def export_to_csv(self, request, queryset):
+        response = HttpResponse(content_type="text/csv")
+        response["Content-Disposition"] = "attachment; filename=owners.csv"
+        writer = csv.writer(response)
+        writer.writerow(["name", "owner_name", "owner_telephone", "address", "state"])
+        for obj in queryset:
+            writer.writerow([obj.name, obj.owner_name, obj.owner_telephone, obj.address, obj.state])
+        return response
+
+    actions = ["export_to_csv"]
 admin.site.register(LkpOwner, LkpOwnerAdmin)
 
 class TblStateRepresentativeAdmin(admin.ModelAdmin):
