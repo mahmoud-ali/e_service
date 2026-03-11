@@ -59,7 +59,7 @@ from .workflow import REVIEW_ACCEPTANCE, SUBMITTED, get_state_choices,send_trans
 import tempfile
 import os
 import zipfile
-import shapefile
+#import shapefile
 from django.contrib.gis.geos import GEOSGeometry
 
 # admin.site.__class__ =  django_otp.admin.OTPAdminSite #
@@ -125,7 +125,8 @@ class WorkflowAdminMixin:
             filter += ["submitted","review_accept"]
         if request.user.groups.filter(name__in=["pro_company_application_approve","hse_approve"]).exists():
             filter += ["accepted","approved","rejected"]
-
+        if request.user.groups.filter(name__in=["pro_company_application_show"]).exists():
+            filter += ["submitted","review_accept","accepted","approved","rejected"]
         if self.model == AppFuelPermission:
             if request.user.groups.filter(name__in=["fuel_permission"]).exists():
                 filter += ["accepted",]
@@ -304,7 +305,11 @@ class WorkflowAdminMixin:
                         
                 except forms.ValidationError as e:
                     #response = super().change_view(request,object_id, form_url, extra_context)
-                    self.message_user(request,f"لايمكن الانتقال إلى {next_state[1]} وذلك بسبب الاتي: {"،".join(e)}",level=messages.ERROR)
+                    self.message_user(
+                        request, 
+                        f"لايمكن الانتقال إلى {next_state[1]} وذلك بسبب الاتي: {'،'.join(e)}", 
+                        level=messages.ERROR
+                    )                    
                     return self.rerender_change_form(request,object_id, form_url, extra_context)
         # normal save
         return response #super().change_view(request,object_id, form_url, extra_context)
