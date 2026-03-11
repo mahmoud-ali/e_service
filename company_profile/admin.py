@@ -59,7 +59,7 @@ from .workflow import REVIEW_ACCEPTANCE, SUBMITTED, get_state_choices,send_trans
 import tempfile
 import os
 import zipfile
-#import shapefile
+import shapefile
 from django.contrib.gis.geos import GEOSGeometry
 
 # admin.site.__class__ =  django_otp.admin.OTPAdminSite #
