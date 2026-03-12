@@ -159,7 +159,7 @@ production_main_class = {
         'production_control_sector_mgr':{
             'permissions': {
                 # GoldProductionForm.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
-                GoldProductionForm.STATE_REVIEW_REQUIRED: {'add': 0, 'change': 1, 'delete': 1, 'view': 1},
+                GoldProductionForm.STATE_REVIEW_REQUIRED: {'add': 0, 'change': 0, 'delete': 1, 'view': 1},
                 GoldProductionForm.STATE_CONFIRMED1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 GoldProductionForm.STATE_CONFIRMED2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 GoldProductionForm.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -200,7 +200,7 @@ production_inline_classes = {
             'production_control_sector_mgr':{
                 'permissions': {
                     # GoldProductionForm.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
-                    GoldProductionForm.STATE_REVIEW_REQUIRED: {'add': 0, 'change': 1, 'delete': 1, 'view': 1},
+                    GoldProductionForm.STATE_REVIEW_REQUIRED: {'add': 0, 'change': 0, 'delete': 1, 'view': 1},
                     GoldProductionForm.STATE_CONFIRMED1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     GoldProductionForm.STATE_CONFIRMED2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     GoldProductionForm.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -280,7 +280,7 @@ move_main_class = {
         'production_control_sector_mgr':{
             'permissions': {
                 # GoldShippingForm.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
-                GoldShippingForm.STATE_REVIEW_REQUIRED: {'add': 0, 'change': 1, 'delete': 1, 'view': 1},
+                GoldShippingForm.STATE_REVIEW_REQUIRED: {'add': 0, 'change': 0, 'delete': 1, 'view': 1},
                 GoldShippingForm.STATE_CONFIRMED1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 GoldShippingForm.STATE_CONFIRMED2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 GoldShippingForm.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -320,7 +320,7 @@ move_inline_classes = {
             'production_control_sector_mgr':{
                 'permissions': {
                     # GoldShippingForm.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
-                    GoldShippingForm.STATE_REVIEW_REQUIRED: {'add': 0, 'change': 1, 'delete': 1, 'view': 1},
+                    GoldShippingForm.STATE_REVIEW_REQUIRED: {'add': 0, 'change': 0, 'delete': 1, 'view': 1},
                     GoldShippingForm.STATE_CONFIRMED1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     GoldShippingForm.STATE_CONFIRMED2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     GoldShippingForm.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
