@@ -130,7 +130,7 @@ production_main_class = {
         'form': GoldProductionFormForm,
         'list_display': ["id","license","date","form_no","total_weight","state","show_certificate_link"],
         'list_filter': ["state",("license__company", admin.RelatedOnlyFieldListFilter)],
-        'search_fields': ["form_no"],
+        'search_fields': ["id","form_no"],
         'date_hierarchy': "date",
         'formfield_overrides': {
             models.FloatField: {"widget": TextInput},
@@ -253,7 +253,7 @@ move_main_class = {
         'form': GoldShippingFormForm,
         'list_display': ["id","license","date","form_no","state","show_certificate_link"],
         'list_filter': ["state",("license__company", admin.RelatedOnlyFieldListFilter)],
-        'search_fields': ["form_no"],
+        'search_fields': ["id","form_no"],
         'date_hierarchy': "date",
         # 'readonly_fields': ["company"],
         'save_as_continue': False,
