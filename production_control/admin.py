@@ -129,8 +129,9 @@ production_main_class = {
     'kwargs': {
         'form': GoldProductionFormForm,
         'list_display': ["id","license","date","form_no","total_weight","state","show_certificate_link"],
-        'list_filter': ["state","date"],
+        'list_filter': ["state",("license__company", admin.RelatedOnlyFieldListFilter)],
         'search_fields': ["form_no"],
+        'date_hierarchy': "date",
         'formfield_overrides': {
             models.FloatField: {"widget": TextInput},
         },
@@ -141,9 +142,9 @@ production_main_class = {
             'permissions': {
                 GoldProductionForm.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
                 GoldProductionForm.STATE_REVIEW_REQUIRED: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
-                # GoldProductionForm.STATE_CONFIRMED1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                # GoldProductionForm.STATE_CONFIRMED2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                # GoldProductionForm.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                GoldProductionForm.STATE_CONFIRMED1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                GoldProductionForm.STATE_CONFIRMED2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                GoldProductionForm.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
             },
         },
         'production_control_state_mgr':{
@@ -151,14 +152,14 @@ production_main_class = {
                 # GoldProductionForm.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
                 GoldProductionForm.STATE_REVIEW_REQUIRED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 GoldProductionForm.STATE_CONFIRMED1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                # GoldProductionForm.STATE_CONFIRMED2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                # GoldProductionForm.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                GoldProductionForm.STATE_CONFIRMED2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                GoldProductionForm.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
             },
         },
         'production_control_sector_mgr':{
             'permissions': {
                 # GoldProductionForm.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
-                GoldProductionForm.STATE_REVIEW_REQUIRED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                GoldProductionForm.STATE_REVIEW_REQUIRED: {'add': 0, 'change': 0, 'delete': 1, 'view': 1},
                 GoldProductionForm.STATE_CONFIRMED1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 GoldProductionForm.STATE_CONFIRMED2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 GoldProductionForm.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -182,9 +183,9 @@ production_inline_classes = {
                 'permissions': {
                     GoldProductionForm.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
                     GoldProductionForm.STATE_REVIEW_REQUIRED: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
-                    # GoldProductionForm.STATE_CONFIRMED1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    # GoldProductionForm.STATE_CONFIRMED2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    # GoldProductionForm.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    GoldProductionForm.STATE_CONFIRMED1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    GoldProductionForm.STATE_CONFIRMED2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    GoldProductionForm.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
             'production_control_state_mgr':{
@@ -192,14 +193,14 @@ production_inline_classes = {
                     # GoldProductionForm.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
                     GoldProductionForm.STATE_REVIEW_REQUIRED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     GoldProductionForm.STATE_CONFIRMED1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    # GoldProductionForm.STATE_CONFIRMED2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    # GoldProductionForm.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    GoldProductionForm.STATE_CONFIRMED2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    GoldProductionForm.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
             'production_control_sector_mgr':{
                 'permissions': {
                     # GoldProductionForm.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
-                    GoldProductionForm.STATE_REVIEW_REQUIRED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    GoldProductionForm.STATE_REVIEW_REQUIRED: {'add': 0, 'change': 0, 'delete': 1, 'view': 1},
                     GoldProductionForm.STATE_CONFIRMED1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     GoldProductionForm.STATE_CONFIRMED2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     GoldProductionForm.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -251,8 +252,9 @@ move_main_class = {
     'kwargs': {
         'form': GoldShippingFormForm,
         'list_display': ["id","license","date","form_no","state","show_certificate_link"],
-        'list_filter': ["state","date"],
+        'list_filter': ["state",("license__company", admin.RelatedOnlyFieldListFilter)],
         'search_fields': ["form_no"],
+        'date_hierarchy': "date",
         # 'readonly_fields': ["company"],
         'save_as_continue': False,
     },
@@ -261,9 +263,9 @@ move_main_class = {
             'permissions': {
                 GoldShippingForm.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
                 GoldShippingForm.STATE_REVIEW_REQUIRED: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
-                # GoldShippingForm.STATE_CONFIRMED1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                # GoldShippingForm.STATE_CONFIRMED2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                # GoldShippingForm.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                GoldShippingForm.STATE_CONFIRMED1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                GoldShippingForm.STATE_CONFIRMED2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                GoldShippingForm.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
             },
         },
         'production_control_state_mgr':{
@@ -271,8 +273,8 @@ move_main_class = {
                 # GoldShippingForm.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
                 GoldShippingForm.STATE_REVIEW_REQUIRED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 GoldShippingForm.STATE_CONFIRMED1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                # GoldShippingForm.STATE_CONFIRMED2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                # GoldShippingForm.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                GoldShippingForm.STATE_CONFIRMED2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                GoldShippingForm.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
             },
         },
         'production_control_sector_mgr':{
@@ -301,9 +303,9 @@ move_inline_classes = {
                 'permissions': {
                     GoldShippingForm.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
                     GoldShippingForm.STATE_REVIEW_REQUIRED: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
-                    # GoldShippingForm.STATE_CONFIRMED1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    # GoldShippingForm.STATE_CONFIRMED2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    # GoldShippingForm.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    GoldShippingForm.STATE_CONFIRMED1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    GoldShippingForm.STATE_CONFIRMED2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    GoldShippingForm.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
             'production_control_state_mgr':{
@@ -311,8 +313,8 @@ move_inline_classes = {
                     # GoldShippingForm.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
                     GoldShippingForm.STATE_REVIEW_REQUIRED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     GoldShippingForm.STATE_CONFIRMED1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    # GoldShippingForm.STATE_CONFIRMED2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    # GoldShippingForm.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    GoldShippingForm.STATE_CONFIRMED2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    GoldShippingForm.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
             'production_control_sector_mgr':{
