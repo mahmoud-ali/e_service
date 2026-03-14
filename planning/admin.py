@@ -7,7 +7,7 @@ from django.utils.translation import gettext_lazy as _
 from planning.forms import DepartmentForm
 from planning.utils import get_company_types
 
-from .models import STATE_DRAFT, CompanyProductionMonthlyPlanning, ExportGoldCompanyMonthlyPlanning, ExportGoldTraditionalMonthlyPlanning, Goal, Department, MonthelyReport, OtherMineralsProductionMonthlyPlanning, Task, TaskAutomation, TaskDuration, TaskExecution, TraditionaProductionMonthlyPlanning, TraditionaTahsilByBandMonthlyPlanning, TraditionaTahsilByJihaMonthlyPlanning, TraditionaTahsilMonthlyPlanning, YearlyPlanning
+from .models import STATE_DRAFT, STATE_CONFIRMED, CompanyProductionQuarterlyPlanning, ExportGoldCompanyQuarterlyPlanning, ExportGoldTraditionalQuarterlyPlanning, Goal, Department, QuarterlyReport, OtherMineralsProductionQuarterlyPlanning, Task, TaskAutomation, TaskDuration, TaskExecution, TraditionaProductionQuarterlyPlanning, TraditionaTahsilByBandQuarterlyPlanning, TraditionaTahsilByJihaQuarterlyPlanning, TraditionaTahsilQuarterlyPlanning, YearlyPlanning
 
 from .admin_tasks_inline import *
 
@@ -75,64 +75,64 @@ class TaskAdmin(admin.ModelAdmin):
 class TaskAutomationAdmin(LogAdminMixin,admin.ModelAdmin):
     model = TaskAutomation
 
-class CompanyProductionMonthlyPlanningInline(admin.TabularInline):
-    model = CompanyProductionMonthlyPlanning
+class CompanyProductionQuarterlyPlanningInline(admin.TabularInline):
+    model = CompanyProductionQuarterlyPlanning
     exclude = ["created_at","created_by","updated_at","updated_by"]
     extra = 1
     formfield_overrides = {
         models.FloatField: {"widget": TextInput},
     }    
 
-class TraditionaProductionMonthlyPlanningInline(admin.TabularInline):
-    model = TraditionaProductionMonthlyPlanning
+class TraditionaProductionQuarterlyPlanningInline(admin.TabularInline):
+    model = TraditionaProductionQuarterlyPlanning
     exclude = ["created_at","created_by","updated_at","updated_by"]
     extra = 1
     formfield_overrides = {
         models.FloatField: {"widget": TextInput},
     }    
     
-class OtherMineralsProductionMonthlyPlanningInline(admin.TabularInline):
-    model = OtherMineralsProductionMonthlyPlanning
+class OtherMineralsProductionQuarterlyPlanningInline(admin.TabularInline):
+    model = OtherMineralsProductionQuarterlyPlanning
     exclude = ["created_at","created_by","updated_at","updated_by"]
     extra = 1
     formfield_overrides = {
         models.FloatField: {"widget": TextInput},
     }    
 
-class TraditionaTahsilMonthlyPlanningInline(admin.TabularInline):
-    model = TraditionaTahsilMonthlyPlanning
+class TraditionaTahsilQuarterlyPlanningInline(admin.TabularInline):
+    model = TraditionaTahsilQuarterlyPlanning
     exclude = ["created_at","created_by","updated_at","updated_by"]
     extra = 1
     formfield_overrides = {
         models.FloatField: {"widget": TextInput},
     }    
 
-class TraditionaTahsilByBandMonthlyPlanningInline(admin.TabularInline):
-    model = TraditionaTahsilByBandMonthlyPlanning
+class TraditionaTahsilByBandQuarterlyPlanningInline(admin.TabularInline):
+    model = TraditionaTahsilByBandQuarterlyPlanning
     exclude = ["created_at","created_by","updated_at","updated_by"]
     extra = 1
     formfield_overrides = {
         models.FloatField: {"widget": TextInput},
     }    
 
-class TraditionaTahsilByJihaMonthlyPlanningInline(admin.TabularInline):
-    model = TraditionaTahsilByJihaMonthlyPlanning
+class TraditionaTahsilByJihaQuarterlyPlanningInline(admin.TabularInline):
+    model = TraditionaTahsilByJihaQuarterlyPlanning
     exclude = ["created_at","created_by","updated_at","updated_by"]
     extra = 1
     formfield_overrides = {
         models.FloatField: {"widget": TextInput},
     }    
 
-class ExportGoldTraditionalMonthlyPlanningInline(admin.TabularInline):
-    model = ExportGoldTraditionalMonthlyPlanning
+class ExportGoldTraditionalQuarterlyPlanningInline(admin.TabularInline):
+    model = ExportGoldTraditionalQuarterlyPlanning
     exclude = ["created_at","created_by","updated_at","updated_by"]
     extra = 1
     formfield_overrides = {
         models.FloatField: {"widget": TextInput},
     }    
 
-class ExportGoldCompanyMonthlyPlanningInline(admin.TabularInline):
-    model = ExportGoldCompanyMonthlyPlanning
+class ExportGoldCompanyQuarterlyPlanningInline(admin.TabularInline):
+    model = ExportGoldCompanyQuarterlyPlanning
     exclude = ["created_at","created_by","updated_at","updated_by"]
     extra = 1
     formfield_overrides = {
@@ -140,19 +140,77 @@ class ExportGoldCompanyMonthlyPlanningInline(admin.TabularInline):
     }    
 
 @admin.register(YearlyPlanning)
-class YearlyPlanningAdmin(admin.ModelAdmin):
+class YearlyPlanningAdmin(LogAdminMixin, admin.ModelAdmin):
     model = YearlyPlanning
     list_display = ["year","state",]
     list_filter = ["year","state",]
-    inlines = [CompanyProductionMonthlyPlanningInline, TraditionaProductionMonthlyPlanningInline, OtherMineralsProductionMonthlyPlanningInline, TraditionaTahsilMonthlyPlanningInline, TraditionaTahsilByBandMonthlyPlanningInline, TraditionaTahsilByJihaMonthlyPlanningInline, ExportGoldCompanyMonthlyPlanningInline, ExportGoldTraditionalMonthlyPlanningInline, ]
+    inlines = [CompanyProductionQuarterlyPlanningInline, TraditionaProductionQuarterlyPlanningInline, OtherMineralsProductionQuarterlyPlanningInline, TraditionaTahsilQuarterlyPlanningInline, TraditionaTahsilByBandQuarterlyPlanningInline, TraditionaTahsilByJihaQuarterlyPlanningInline, ExportGoldCompanyQuarterlyPlanningInline, ExportGoldTraditionalQuarterlyPlanningInline, ]
 
-@admin.register(MonthelyReport)
-class MonthelyReportAdmin(LogAdminMixin,admin.ModelAdmin):
-    model = MonthelyReport
-    list_display = ["month","year",]
+    def get_urls(self):
+        from django.urls import path
+        urls = super().get_urls()
+        custom_urls = [
+            path(
+                '<path:object_id>/reset-draft/',
+                self.admin_site.admin_view(self.reset_to_draft),
+                name='planning_yearlyplanning_reset_to_draft',
+            ),
+        ]
+        return custom_urls + urls
+
+    def reset_to_draft(self, request, object_id):
+        from django.shortcuts import redirect
+        from django.urls import reverse
+        from django.utils.translation import gettext as _
+        
+        obj = self.get_object(request, object_id)
+        if obj and obj.state == STATE_CONFIRMED:
+            obj.state = STATE_DRAFT
+            obj.save()
+            self.message_user(request, _("تم إرجاع الخطة إلى مسودة بنجاح."))
+        return redirect(reverse('admin:planning_yearlyplanning_change', args=[object_id]))
+
+    def change_view(self, request, object_id, form_url='', extra_context=None):
+        extra_context = extra_context or {}
+        obj = self.get_object(request, object_id)
+        if obj and obj.state == STATE_CONFIRMED:
+            extra_context['is_confirmed'] = True
+        return super().change_view(request, object_id, form_url, extra_context=extra_context)
+
+    def has_change_permission(self, request, obj=None):
+        if obj and obj.state == STATE_CONFIRMED:
+            return False
+        return super().has_change_permission(request, obj)
+    
+    def has_delete_permission(self, request, obj=None):
+        if obj and obj.state == STATE_CONFIRMED:
+            return False
+        return super().has_delete_permission(request, obj)
+
+@admin.register(QuarterlyReport)
+class QuarterlyReportAdmin(LogAdminMixin,admin.ModelAdmin):
+    model = QuarterlyReport
+    list_display = ["quarter","year",]
     list_filter = ["year",]
     search_fields = ('name', 'goal__parent__name','goal__name')
-    ordering = ('-year','-month',)
+    ordering = ('-year','-quarter',)
+
+    def save_model(self, request, obj, form, change):
+        super().save_model(request, obj, form, change)
+        if obj.state == STATE_CONFIRMED:
+            # When confirmed, we need to populate tasks if they don't already exist.
+            # Using get_or_create to prevent duplication if saved multiple times.
+            qs = TaskDuration.objects.filter(quarter=obj.quarter, task__year=obj.year)
+            for task_duration in qs:
+                TaskExecution.objects.get_or_create(
+                    report=obj,
+                    task=task_duration.task,
+                    defaults={
+                        'created_by': request.user,
+                        'updated_by': request.user,
+                        'percentage': 0,
+                    }
+                )
 
     # inlines = [CompanyProductionTaskInline, TraditionalProductionTaskInline, TraditionalStateTaskInline, OtherMineralsTaskInline, ExportGoldTraditionalTaskInline, ExportGoldCompanyTaskInline, CompanyInfoTaskInline, CompanyLicenseInfoTaskInline]
 

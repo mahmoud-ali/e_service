@@ -1,14 +1,14 @@
 """
 Planning and Reporting System Models
 
-This module defines a comprehensive system for managing annual planning and monthly 
+This module defines a comprehensive system for managing annual planning and quarterly 
 execution tracking across multiple operational domains. The system includes:
 
 Core Components:
 - LoggingModel: Abstract base model with audit fields (created/updated timestamps and users)
 - Goal/Task hierarchy: Tree-structured objectives with annual department assignments
-- YearlyPlanning: Master container for annual plans with monthly breakdowns
-- MonthelyReport: Execution tracking with detailed task completion records
+- YearlyPlanning: Master container for annual plans with quarterly breakdowns
+- QuarterlyReport: Execution tracking with detailed task completion records
 
 Main Model Groups:
 1. Planning Models (YearlyPlanning & Related):
@@ -16,7 +16,7 @@ Main Model Groups:
    - Financial collection planning (tahsil)
    - Gold export projections
 
-2. Reporting Models (MonthelyReport & Related):
+2. Reporting Models (QuarterlyReport & Related):
    - 25+ specialized TaskExecutionDetail subtypes covering:
      * Production metrics       * Safety reports (salama)
      * Incident tracking        * Community obligations
@@ -41,45 +41,17 @@ from django.core.validators import MaxValueValidator,MinValueValidator
 from company_profile.models import LkpCompanyProductionLicenseStatus, LkpCompanyProductionStatus, LkpMineral, LkpNationality, LkpState, TblCompanyProduction, TblCompanyProductionLicense
 
 
-MONTH_JAN = 1
-MONTH_FEB = 2
-MONTH_MAR = 3
-MONTH_APR = 4
-MONTH_MAY = 5
-MONTH_JUN = 6
-MONTH_JLY = 7
-MONTH_AUG = 8
-MONTH_SEP = 9
-MONTH_OCT = 10
-MONTH_NOV = 11
-MONTH_DEC = 12
+QUARTER_Q1 = 1
+QUARTER_Q2 = 2
+QUARTER_Q3 = 3
+QUARTER_Q4 = 4
 
-# Month choices (from django.po translations):
-# 1 - يناير (January)
-# 2 - فبراير (February) 
-# 3 - مارس (March)
-# 4 - أبريل (April)
-# 5 - مايو (May)
-# 6 - يونيو (June)
-# 7 - يوليو (July)
-# 8 - أغسطس (August)
-# 9 - سبتمبر (September)
-# 10 - أكتوبر (October)
-# 11 - نوفمبر (November)
-# 12 - ديسمبر (December)
-MONTH_CHOICES = {
-    MONTH_JAN: _('MONTH_JAN'),  # يناير
-    MONTH_FEB: _('MONTH_FEB'),  # فبراير
-    MONTH_MAR: _('MONTH_MAR'),
-    MONTH_APR: _('MONTH_APR'),
-    MONTH_MAY: _('MONTH_MAY'),
-    MONTH_JUN: _('MONTH_JUN'),
-    MONTH_JLY: _('MONTH_JLY'),
-    MONTH_AUG: _('MONTH_AUG'),
-    MONTH_SEP: _('MONTH_SEP'),
-    MONTH_OCT: _('MONTH_OCT'),
-    MONTH_NOV: _('MONTH_NOV'),
-    MONTH_DEC: _('MONTH_DEC'),
+
+QUARTER_CHOICES = {
+    QUARTER_Q1: _('الربع الأول'),
+    QUARTER_Q2: _('الربع الثاني'),
+    QUARTER_Q3: _('الربع الثالث'),
+    QUARTER_Q4: _('الربع الرابع'),
 }
 
 STATE_DRAFT = 1
@@ -243,7 +215,7 @@ class Task(models.Model):
         name - Task description (max 255 chars)
         
     Related:
-        duration - Monthly breakdowns via TaskDuration
+        duration - Quarterly breakdowns via TaskDuration
     """
     goal = models.ForeignKey(Goal, on_delete=models.CASCADE, verbose_name=_("goal"), related_name='tasks')
     year = models.PositiveIntegerField(_("year"), validators=[MinValueValidator(limit_value=2015),MaxValueValidator(limit_value=2100)])
@@ -258,19 +230,19 @@ class Task(models.Model):
         verbose_name_plural = _("Tasks")
 
 class TaskDuration(models.Model):
-    """Monthly duration tracking for annual tasks.
+    """Quarterly duration tracking for annual tasks.
     
     Fields:
         task - Parent task (FK to Task)
-        month - Month number (1-12) with translated display names
+        quarter - Quarter number (1-12) with translated display names
         
-    Provides monthly breakdown of task execution timelines.
+    Provides quarterly breakdown of task execution timelines.
     """
     task = models.ForeignKey(Task, on_delete=models.CASCADE, verbose_name=_("task"), related_name='duration')
-    month = models.PositiveIntegerField(verbose_name=_("month"), choices=MONTH_CHOICES)
+    quarter = models.PositiveIntegerField(verbose_name=_("quarter"), choices=QUARTER_CHOICES)
 
     def __str__(self):
-        return f'{self.task.name} ({self.get_month_display()} {self.task.year})'
+        return f'{self.task.name} ({self.get_quarter_display()} {self.task.year})'
     
     class Meta:
         verbose_name = _("TaskDuration")
@@ -327,7 +299,7 @@ class YearlyPlanning(LoggingModel):
         year - Validated year range 2015-2100
         state - Planning state: Draft (1) or Confirmed (2)
         
-    Serves as container for all monthly planning breakdowns.
+    Serves as container for all quarterly planning breakdowns.
     """
     year = models.PositiveIntegerField(_("year"), validators=[MinValueValidator(limit_value=2015),MaxValueValidator(limit_value=2100)])
     state = models.IntegerField(_("record_state"), choices=STATE_CHOICES, default=STATE_DRAFT)
@@ -336,103 +308,103 @@ class YearlyPlanning(LoggingModel):
         verbose_name = _("YearlyPlanning")
         verbose_name_plural = _("YearlyPlanning")
 
-class CompanyProductionMonthlyPlanning(models.Model):
-    """Monthly planned production targets for company operations.
+class CompanyProductionQuarterlyPlanning(models.Model):
+    """Quarterly planned production targets for company operations.
     
     Fields:
         plan - Parent yearly plan (FK to YearlyPlanning)
-        month - Month number (1-12)
+        quarter - Quarter number (1-12)
         planed_weight - Planned production weight
         
     Part of yearly planning breakdown for company production.
     """
     plan = models.ForeignKey(YearlyPlanning, on_delete=models.CASCADE, verbose_name=_("plan"), related_name='+')
-    month = models.PositiveIntegerField(verbose_name=_("month"), choices=MONTH_CHOICES)
+    quarter = models.PositiveIntegerField(verbose_name=_("quarter"), choices=QUARTER_CHOICES)
     planed_weight = models.FloatField(_("planed_weight"))
 
     class Meta:
-        verbose_name = _("CompanyProductionMonthlyPlanning")
-        verbose_name_plural = _("CompanyProductionMonthlyPlanning")
+        verbose_name = _("CompanyProductionQuarterlyPlanning")
+        verbose_name_plural = _("CompanyProductionQuarterlyPlanning")
 
-class TraditionaProductionMonthlyPlanning(models.Model):
+class TraditionaProductionQuarterlyPlanning(models.Model):
     plan = models.ForeignKey(YearlyPlanning, on_delete=models.CASCADE, verbose_name=_("plan"), related_name='+')
-    month = models.PositiveIntegerField(verbose_name=_("month"), choices=MONTH_CHOICES)
+    quarter = models.PositiveIntegerField(verbose_name=_("quarter"), choices=QUARTER_CHOICES)
     planed_weight = models.FloatField(_("planed_weight"))
 
     class Meta:
-        verbose_name = _("TraditionaProductionMonthlyPlanning")
-        verbose_name_plural = _("TraditionaProductionMonthlyPlanning")
+        verbose_name = _("TraditionaProductionQuarterlyPlanning")
+        verbose_name_plural = _("TraditionaProductionQuarterlyPlanning")
 
-class OtherMineralsProductionMonthlyPlanning(models.Model):
+class OtherMineralsProductionQuarterlyPlanning(models.Model):
     plan = models.ForeignKey(YearlyPlanning, on_delete=models.CASCADE, verbose_name=_("plan"), related_name='+')
-    month = models.PositiveIntegerField(verbose_name=_("month"), choices=MONTH_CHOICES)
+    quarter = models.PositiveIntegerField(verbose_name=_("quarter"), choices=QUARTER_CHOICES)
     mineral = models.ForeignKey(LkpMineral, on_delete=models.PROTECT,verbose_name=_("mineral"), help_text=_('in ton'))
     planed_weight = models.FloatField(_("planed_weight"))
 
     class Meta:
-        verbose_name = _("OtherMineralsProductionMonthlyPlanning")
-        verbose_name_plural = _("OtherMineralsProductionMonthlyPlanning")
+        verbose_name = _("OtherMineralsProductionQuarterlyPlanning")
+        verbose_name_plural = _("OtherMineralsProductionQuarterlyPlanning")
 
-class TraditionaTahsilMonthlyPlanning(models.Model):
+class TraditionaTahsilQuarterlyPlanning(models.Model):
     plan = models.ForeignKey(YearlyPlanning, on_delete=models.CASCADE, verbose_name=_("plan"), related_name='+')
-    month = models.PositiveIntegerField(verbose_name=_("month"), choices=MONTH_CHOICES)
+    quarter = models.PositiveIntegerField(verbose_name=_("quarter"), choices=QUARTER_CHOICES)
     planed_money = models.FloatField(_("planed_money"))
 
     class Meta:
-        verbose_name = _("TraditionaTahsilMonthlyPlanning")
-        verbose_name_plural = _("TraditionaTahsilMonthlyPlanning")
+        verbose_name = _("TraditionaTahsilQuarterlyPlanning")
+        verbose_name_plural = _("TraditionaTahsilQuarterlyPlanning")
 
-class TraditionaTahsilByBandMonthlyPlanning(models.Model):
+class TraditionaTahsilByBandQuarterlyPlanning(models.Model):
     plan = models.ForeignKey(YearlyPlanning, on_delete=models.CASCADE, verbose_name=_("plan"), related_name='+')
-    month = models.PositiveIntegerField(verbose_name=_("month"), choices=MONTH_CHOICES)
+    quarter = models.PositiveIntegerField(verbose_name=_("quarter"), choices=QUARTER_CHOICES)
     band = models.IntegerField(_("band"),choices=BAND_CHOICES)
     planed_money = models.FloatField(_("planed_money"))
 
     class Meta:
-        verbose_name = _("TraditionaTahsilByBandMonthlyPlanning")
-        verbose_name_plural = _("TraditionaTahsilByBandMonthlyPlanning")
+        verbose_name = _("TraditionaTahsilByBandQuarterlyPlanning")
+        verbose_name_plural = _("TraditionaTahsilByBandQuarterlyPlanning")
 
-class TraditionaTahsilByJihaMonthlyPlanning(models.Model):
+class TraditionaTahsilByJihaQuarterlyPlanning(models.Model):
     plan = models.ForeignKey(YearlyPlanning, on_delete=models.CASCADE, verbose_name=_("plan"), related_name='+')
-    month = models.PositiveIntegerField(verbose_name=_("month"), choices=MONTH_CHOICES)
+    quarter = models.PositiveIntegerField(verbose_name=_("quarter"), choices=QUARTER_CHOICES)
     jiha = models.IntegerField(_("jiha"),choices=JIHA_CHOICES)
     planed_money = models.FloatField(_("planed_money"))
 
     class Meta:
-        verbose_name = _("TraditionaTahsilByJihaMonthlyPlanning")
-        verbose_name_plural = _("TraditionaTahsilByJihaMonthlyPlanning")
+        verbose_name = _("TraditionaTahsilByJihaQuarterlyPlanning")
+        verbose_name_plural = _("TraditionaTahsilByJihaQuarterlyPlanning")
 
-class ExportGoldTraditionalMonthlyPlanning(models.Model):
+class ExportGoldTraditionalQuarterlyPlanning(models.Model):
     plan = models.ForeignKey(YearlyPlanning, on_delete=models.CASCADE, verbose_name=_("plan"), related_name='+')
     raw_total_weight = models.FloatField(_("raw_total_weight"))
     net_total_weight = models.FloatField(_("net_total_weight"))
 
     class Meta:
-        verbose_name = _("ExportGoldTraditionalMonthlyPlanning")
-        verbose_name_plural = _("ExportGoldTraditionalMonthlyPlanning")
+        verbose_name = _("ExportGoldTraditionalQuarterlyPlanning")
+        verbose_name_plural = _("ExportGoldTraditionalQuarterlyPlanning")
 
-class ExportGoldCompanyMonthlyPlanning(models.Model):
+class ExportGoldCompanyQuarterlyPlanning(models.Model):
     plan = models.ForeignKey(YearlyPlanning, on_delete=models.CASCADE, verbose_name=_("plan"), related_name='+')
     raw_total_weight = models.FloatField(_("raw_total_weight"))
     net_total_weight = models.FloatField(_("net_total_weight"))
 
     class Meta:
-        verbose_name = _("ExportGoldCompanyMonthlyPlanning")
-        verbose_name_plural = _("ExportGoldCompanyMonthlyPlanning")
+        verbose_name = _("ExportGoldCompanyQuarterlyPlanning")
+        verbose_name_plural = _("ExportGoldCompanyQuarterlyPlanning")
 
-############ Monthly Report #############
-class MonthelyReport(LoggingModel):
-    """Monthly execution tracking and reporting container.
+############ Quarterly Report #############
+class QuarterlyReport(LoggingModel):
+    """Quarterly execution tracking and reporting container.
     
     Fields:
         year - Validated year range 2015-2100
-        month - Month number (1-12)
+        quarter - Quarter number (1-12)
         state - Report state: Draft (1) or Confirmed (2)
         
     Contains task execution details and progress tracking.
     """
     year = models.PositiveIntegerField(_("year"), validators=[MinValueValidator(limit_value=2015),MaxValueValidator(limit_value=2100)])
-    month = models.PositiveIntegerField(verbose_name=_("month"), choices=MONTH_CHOICES)
+    quarter = models.PositiveIntegerField(verbose_name=_("quarter"), choices=QUARTER_CHOICES)
     state = models.IntegerField(_("record_state"), choices=STATE_CHOICES, default=STATE_DRAFT)
 
     def __str__(self):
@@ -440,19 +412,23 @@ class MonthelyReport(LoggingModel):
         # if self.state == STATE_DRAFT:
         #     state = f' ({self.get_state_display()})'
 
-        return f'{self.get_month_display()} {self.year}'+state
+        return f'{self.get_quarter_display()} {self.year}'+state
+
+    class Meta:
+        verbose_name = _("QuarterlyReport")
+        verbose_name_plural = _("QuarterlyReports")
 
 class TaskExecution(LoggingModel):
-    """Tracks progress and status of task completion for monthly reports.
+    """Tracks progress and status of task completion for quarterly reports.
     
     Fields:
-        report - Parent monthly report (FK to MonthelyReport)
+        report - Parent quarterly report (FK to QuarterlyReport)
         task - Reference task (FK to Task)
         percentage - Completion percentage (0-100)
         problems - Description of any issues encountered
         state - Execution state: Draft (1) or Confirmed (2)
     """
-    report = models.ForeignKey(MonthelyReport, on_delete=models.CASCADE, null=True, verbose_name=_("report"), related_name='monthly_tasks')
+    report = models.ForeignKey(QuarterlyReport, on_delete=models.CASCADE, null=True, verbose_name=_("report"), related_name='quarterly_tasks')
     task = models.ForeignKey(Task, on_delete=models.CASCADE, verbose_name=_("task"), related_name='execution')
     percentage = models.PositiveIntegerField(verbose_name=_("percentage"), default=0, validators=[MaxValueValidator(limit_value=100)])
     problems = models.TextField(verbose_name=_("problems"), blank=True)
@@ -580,8 +556,8 @@ class CompanyLicenseInfoTask(TaskExecutionDetail):
 class ExplorationMapTask(TaskExecutionDetail):
     def attachement_path(self, filename):
         year = self.task_execution.report.year
-        month = self.task_execution.report.month
-        return "planning/{0}/{1}/{2}".format(year,month, filename)    
+        quarter = self.task_execution.report.quarter
+        return "planning/{0}/{1}/{2}".format(year,quarter, filename)    
 
     is_new_map = models.BooleanField(_("is_new_map_exists"))
     map = models.ImageField(_("exploration_map"),upload_to=attachement_path,null=True,blank=True)
