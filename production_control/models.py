@@ -356,5 +356,9 @@ def update_smrc_data(sender, instance, **kwargs):
     instance.company = instance.license.company
 
 @receiver(pre_save, sender=GoldShippingForm)
-def update_smrc_data(sender, instance, **kwargs):
+def update_smrc_data2(sender, instance, **kwargs):
     instance.company = instance.license.company
+
+@receiver(post_save, sender=GoldShippingForm)
+def alloy_shipped(sender, **kwargs):
+    kwargs['instance'].alloy_shipped()
