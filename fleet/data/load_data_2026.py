@@ -77,60 +77,76 @@ def import_vehicles_2026():
                 model_obj, _ = VehicleModel.objects.get_or_create(make=maker_obj, name=model_name)
                 status_obj, _ = VehicleStatus.objects.get_or_create(name=status_name)
 
-                vehicle_obj, created = Vehicle.objects.update_or_create(
+                # Robust upsert for Vehicle
+                vehicle_defaults = {
+                    'model': model_obj,
+                    'year': year,
+                    'fuel_type': fuel_type_binzeen,
+                    'status': status_obj,
+                    'updated_by': admin_user
+                }
+                vehicle_obj, created = Vehicle.objects.get_or_create(
                     license_plate=license_plate,
-                    defaults={
-                        'model': model_obj,
-                        'year': year,
-                        'fuel_type': fuel_type_binzeen,
-                        'status': status_obj,
-                        'updated_by': admin_user
-                    }
+                    defaults={**vehicle_defaults, 'created_by': admin_user}
                 )
-                
-                if created:
-                    vehicle_obj.created_by = admin_user
+                if not created:
+                    for key, value in vehicle_defaults.items():
+                        setattr(vehicle_obj, key, value)
                     vehicle_obj.save()
-                    created_count += 1
-                else:
                     updated_count += 1
+                else:
+                    created_count += 1
 
                 if assign_to:
-                    VehicleAssignment.objects.update_or_create(
+                    assign_defaults = {
+                        'assign_to': assign_to,
+                        'start_date': '2026-01-01',
+                        'updated_by': admin_user,
+                    }
+                    assign_obj, assign_created = VehicleAssignment.objects.get_or_create(
                         vehicle=vehicle_obj,
-                        defaults={
-                            'assign_to': assign_to,
-                            'start_date': '2026-01-01',
-                            'updated_by': admin_user,
-                        }
+                        defaults={**assign_defaults, 'created_by': admin_user}
                     )
-                   
+                    if not assign_created:
+                        for key, value in assign_defaults.items():
+                            setattr(assign_obj, key, value)
+                        assign_obj.save()
 
                 license_date = parse_date(license_date_str)
                 insurance_date = parse_date(insurance_date_str)
 
                 if insurance_date:
                     for cert_type in [cert_insuranse_ejbari, cert_insuranse_shamel]:
-                        VehicleCertificate.objects.update_or_create(
-                            vehicle=vehicle_obj,
-                            cert_type=cert_type,
-                            defaults={
-                                'start_date': get_last_year(insurance_date),
-                                'end_date': insurance_date,
-                                'updated_by': admin_user
-                            }
-                        )
-
-                if license_date:
-                    VehicleCertificate.objects.update_or_create(
-                        vehicle=vehicle_obj,
-                        cert_type=cert_license,
-                        defaults={
-                            'start_date': get_last_year(license_date),
-                            'end_date': license_date,
+                        cert_defaults = {
+                            'start_date': get_last_year(insurance_date),
+                            'end_date': insurance_date,
                             'updated_by': admin_user
                         }
+                        cert_obj, cert_created = VehicleCertificate.objects.get_or_create(
+                            vehicle=vehicle_obj,
+                            cert_type=cert_type,
+                            defaults={**cert_defaults, 'created_by': admin_user}
+                        )
+                        if not cert_created:
+                            for key, value in cert_defaults.items():
+                                setattr(cert_obj, key, value)
+                            cert_obj.save()
+
+                if license_date:
+                    cert_defaults = {
+                        'start_date': get_last_year(license_date),
+                        'end_date': license_date,
+                        'updated_by': admin_user
+                    }
+                    cert_obj, cert_created = VehicleCertificate.objects.get_or_create(
+                        vehicle=vehicle_obj,
+                        cert_type=cert_license,
+                        defaults={**cert_defaults, 'created_by': admin_user}
                     )
+                    if not cert_created:
+                        for key, value in cert_defaults.items():
+                            setattr(cert_obj, key, value)
+                        cert_obj.save()
                 
                 count += 1
                 if count % 10 == 0:
