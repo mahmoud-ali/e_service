@@ -22,7 +22,7 @@
         box-shadow: 0 1px 8px rgba(0, 0, 0, 0.06);
         margin-bottom: 24px;
         padding: 0;
-        overflow: hidden;
+        /* overflow: hidden; */
         transition: box-shadow 0.25s ease;
     }
 
@@ -163,7 +163,7 @@
         border-radius: 8px;
         box-shadow: 0 1px 8px rgba(0, 0, 0, 0.06);
         margin-top: 16px;
-        overflow: hidden;
+        /* overflow: hidden; */
         border: 1px solid var(--hairline-color, #ddd);
     }
 
@@ -215,6 +215,8 @@
 
     /* Inline Content Panels */
     .inline-tab-panel {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
         display: none;
         animation: fadeSlideIn 0.25s ease;
     }
