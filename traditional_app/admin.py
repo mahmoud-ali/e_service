@@ -34,6 +34,9 @@ class StateControlMixin:
     def get_queryset(self, request):
         qs = super().get_queryset(request)
 
+        if request.user.is_superuser or request.user.groups.filter(name='traditional_hr').exists():
+            return qs
+
         obj = qs.first()
 
         try:
@@ -50,6 +53,8 @@ class StateControlMixin:
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == "state" or db_field.name == "source_state":
+            if request.user.is_superuser or request.user.groups.filter(name='traditional_hr').exists():
+                return super().formfield_for_foreignkey(db_field, request, **kwargs)
             try:
                 state = request.user.traditional_app_user.state
                 kwargs["queryset"] = LkpState.objects.filter(id=state.id) #request.user
@@ -61,6 +66,9 @@ class StateControlMixin:
 class SoagControlMixin:
     def get_queryset(self, request):
         qs = super().get_queryset(request)
+
+        if request.user.is_superuser or request.user.groups.filter(name='traditional_hr').exists():
+            return qs
 
         obj = qs.first()
 
@@ -75,6 +83,8 @@ class SoagControlMixin:
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == "soag":
+            if request.user.is_superuser or request.user.groups.filter(name='traditional_hr').exists():
+                return super().formfield_for_foreignkey(db_field, request, **kwargs)
             try:
                 state = request.user.traditional_app_user.state
                 kwargs["queryset"] = LkpSoag.objects.filter(state=state) #request.user
@@ -318,26 +328,31 @@ class DailyReportMixin:
     def get_formsets_with_inlines(self, request, obj=None):
         super().get_formsets_with_inlines(request, obj)
 
-        state = request.user.traditional_app_user.state
+        bypass_state = request.user.is_superuser or request.user.groups.filter(name='traditional_hr').exists()
+        try:
+            state = None if bypass_state else request.user.traditional_app_user.state
+        except:
+            state = None
 
         for inline in self.get_inline_instances(request, obj):
             formset = inline.get_formset(request, obj)
-            if inline.model == DailyWardHajr:
-                formset.form.base_fields['soag'].queryset = formset.form.base_fields['soag'].queryset.filter(state=state)
-            elif inline.model == DailyIncome:
-                formset.form.base_fields['soag'].queryset = formset.form.base_fields['soag'].queryset.filter(state=state)
-            elif inline.model == DailyTahsilForm:
-                formset.form.base_fields['soag'].queryset = formset.form.base_fields['soag'].queryset.filter(state=state)
-            elif inline.model == DailyKartaMor7ala:
-                formset.form.base_fields['soag'].queryset = formset.form.base_fields['soag'].queryset.filter(state=state)
-            elif inline.model == DailyGoldMor7ala:
-                formset.form.base_fields['soag'].queryset = formset.form.base_fields['soag'].queryset.filter(state=state)
-            elif inline.model == DailyGrabeel:
-                formset.form.base_fields['grabeel'].queryset = formset.form.base_fields['grabeel'].queryset.filter(state=state)
-            elif inline.model == DailyHofrKabira:
-                formset.form.base_fields['hofr_kabira'].queryset = formset.form.base_fields['hofr_kabira'].queryset.filter(state=state)
-            elif inline.model == DailySmallProcessingUnit:
-                formset.form.base_fields['small_processing_unit'].queryset = formset.form.base_fields['small_processing_unit'].queryset.filter(state=state)
+            if state:
+                if inline.model == DailyWardHajr:
+                    formset.form.base_fields['soag'].queryset = formset.form.base_fields['soag'].queryset.filter(state=state)
+                elif inline.model == DailyIncome:
+                    formset.form.base_fields['soag'].queryset = formset.form.base_fields['soag'].queryset.filter(state=state)
+                elif inline.model == DailyTahsilForm:
+                    formset.form.base_fields['soag'].queryset = formset.form.base_fields['soag'].queryset.filter(state=state)
+                elif inline.model == DailyKartaMor7ala:
+                    formset.form.base_fields['soag'].queryset = formset.form.base_fields['soag'].queryset.filter(state=state)
+                elif inline.model == DailyGoldMor7ala:
+                    formset.form.base_fields['soag'].queryset = formset.form.base_fields['soag'].queryset.filter(state=state)
+                elif inline.model == DailyGrabeel:
+                    formset.form.base_fields['grabeel'].queryset = formset.form.base_fields['grabeel'].queryset.filter(state=state)
+                elif inline.model == DailyHofrKabira:
+                    formset.form.base_fields['hofr_kabira'].queryset = formset.form.base_fields['hofr_kabira'].queryset.filter(state=state)
+                elif inline.model == DailySmallProcessingUnit:
+                    formset.form.base_fields['small_processing_unit'].queryset = formset.form.base_fields['small_processing_unit'].queryset.filter(state=state)
                 
             yield formset,inline
 
@@ -762,6 +777,16 @@ class PayrollDetailInline(admin.TabularInline):
     list_select_related = True
     def has_add_permission(self,request, obj):
         return False
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        if request.user.is_superuser or request.user.groups.filter(name='traditional_hr').exists():
+            return qs
+        try:
+            state = request.user.traditional_app_user.state
+            return qs.filter(employee__state=state)
+        except:
+            return qs.none()
 
 class PayrollMasterAdmin(admin.ModelAdmin):
     model = PayrollMaster
