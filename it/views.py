@@ -4,6 +4,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse_lazy
 from django.contrib import messages
 from django.utils.translation import gettext_lazy as _
+import qrcode
+from django.http import HttpResponse
+from django.views import View
 from django.utils.html import format_html
 from django.db.models import Q, Count
 
@@ -215,3 +218,15 @@ class ManagerEmployeeComputerDetailView(LoginRequiredMixin, ManagerRequiredMixin
             master=self.object
         ).order_by('-created_at')[:50]
         return context
+
+class ManagerEmployeeComputerQRCodeView(LoginRequiredMixin, ManagerRequiredMixin, View):
+    """Generate QR Code for Employee Computer"""
+    def get(self, request, pk, *args, **kwargs):
+        from .models import EmployeeComputer
+        from django.shortcuts import get_object_or_404
+        obj = get_object_or_404(EmployeeComputer, pk=pk)
+        qr_text = f"{obj.computer.code} - {obj.computer.get_type_display()} - {obj.employee.name}"
+        img = qrcode.make(qr_text)
+        response = HttpResponse(content_type='image/png')
+        img.save(response, 'PNG')
+        return response

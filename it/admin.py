@@ -67,11 +67,20 @@ class EmployeeComputerInline(admin.TabularInline):
 
 @admin.register(Computer)
 class ComputerAdmin(admin.ModelAdmin):
-    list_display = ("code", "type", "template") #
+    list_display = ("code", "type", "template", "qr_code_preview")
     list_filter = ("type", "template__os_type")
     search_fields = ("code",)
     filter_horizontal = ("applications",)
-    inlines = [EmployeeComputerInline, PeripheralInline, AccessPointInline,] #,NetworkAdapterInline
+    inlines = [EmployeeComputerInline, PeripheralInline, AccessPointInline,]
+    def qr_code_preview(self, obj):
+        # We find the first employee computer for this device if it exists
+        ec = obj.employee_computers.first()
+        if ec:
+            url = reverse('it:manager_employee_computer_qrcode', args=[ec.pk])
+            return format_html('<a target="_blank" href="{}">QR</a>', url)
+        return "-"
+    qr_code_preview.short_description = "QR"
+
 
 # @admin.register(NetworkAdapter)
 # class NetworkAdapterAdmin(admin.ModelAdmin):
@@ -108,10 +117,15 @@ class ConversationInline(admin.TabularInline):
 
 @admin.register(EmployeeComputer)
 class EmployeeComputerAdmin(admin.ModelAdmin):
-    list_display = ("uuid","employee","computer") #,"ask_ai_link"
+    list_display = ("uuid","employee","computer", "qr_code_link")
     search_fields = ("employee__name", "employee__code",)
     autocomplete_fields = ["employee","computer"]
     inlines = [ConversationInline]
+    def qr_code_link(self, obj):
+        url = reverse('it:manager_employee_computer_qrcode', args=[obj.pk])
+        return format_html('<a target="_blank" href="{}">QR</a>', url)
+    qr_code_link.short_description = "QR"
+
 
     # @admin.display(description=_('Ask AI'))
     # def ask_ai_link(self, obj):
