@@ -59,7 +59,7 @@ def test_workflow():
     assert invoice.status == CollectionForm.Status.DRAFT
     assert invoice.collector == observer
 
-    # 2. Observer Confirms Draft -> Waiting Approval
+    # 2. Observer Confirms Draft -> Collector Confirmation
     request = factory.post(reverse('collection-action', kwargs={'pk': invoice.pk, 'action': 'confirm'}))
     request.user = observer
     setattr(request, 'session', 'session')
@@ -71,11 +71,11 @@ def test_workflow():
 
     invoice.refresh_from_db()
     print(f"Observer confirmed invoice: {invoice.status}")
-    assert invoice.status == CollectionForm.Status.WAITING_APPROVAL
+    assert invoice.status == CollectionForm.Status.COLLECTOR_CONFIRMATION
 
     print("--- Testing Collector Approval ---")
 
-    # 3. Collector Approves Waiting Approval -> Pending Payment
+    # 3. Collector Confirms Collector Confirmation -> Invoice Requested
     request = factory.post(reverse('collection-action', kwargs={'pk': invoice.pk, 'action': 'approve'}))
     request.user = collector
     setattr(request, 'session', 'session')
@@ -87,7 +87,7 @@ def test_workflow():
     
     invoice.refresh_from_db()
     print(f"Collector approved invoice: {invoice.status}")
-    assert invoice.status == CollectionForm.Status.PENDING_PAYMENT
+    assert invoice.status == CollectionForm.Status.INVOICE_REQUESTED
 
     print("--- Testing Collector Direct Flow ---")
     
@@ -108,7 +108,7 @@ def test_workflow():
     print(f"Collector created invoice: {invoice_b.status}")
     assert invoice_b.status == CollectionForm.Status.DRAFT
 
-    # 5. Collector Confirms -> Pending Payment
+    # 5. Collector Confirms -> Invoice Requested
     request = factory.post(reverse('collection-action', kwargs={'pk': invoice_b.pk, 'action': 'confirm'}))
     request.user = collector
     setattr(request, 'session', 'session')
@@ -120,7 +120,7 @@ def test_workflow():
 
     invoice_b.refresh_from_db()
     print(f"Collector confirmed invoice: {invoice_b.status}")
-    assert invoice_b.status == CollectionForm.Status.PENDING_PAYMENT
+    assert invoice_b.status == CollectionForm.Status.INVOICE_REQUESTED
 
     print("\nALL TESTS PASSED")
 

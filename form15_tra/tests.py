@@ -62,9 +62,9 @@ class MiningSystemTests(TestCase):
         expected_receipt_2 = f"{prefix}{2:0{10-len(prefix)}d}"
         self.assertEqual(form2.receipt_number, expected_receipt_2)
 
-    def test_draft_to_pending_transition(self) -> None:
+    def test_draft_to_invoice_requested_transition(self) -> None:
         """
-        Transition: Draft -> Pending Payment.
+        Transition: Draft -> Invoice Requested.
         """
         form = CollectionForm.objects.create(
             miner_name="John Doe",
@@ -75,9 +75,9 @@ class MiningSystemTests(TestCase):
             status=CollectionForm.Status.DRAFT
         )
         
-        form.status = CollectionForm.Status.PENDING_PAYMENT
+        form.status = CollectionForm.Status.INVOICE_REQUESTED
         form.save()
-        self.assertEqual(form.status, CollectionForm.Status.PENDING_PAYMENT)
+        self.assertEqual(form.status, CollectionForm.Status.INVOICE_REQUESTED)
 
     def test_immutability_in_pending_payment(self) -> None:
         """
@@ -93,6 +93,24 @@ class MiningSystemTests(TestCase):
         )
         
         # Try to change miner_name
+        form.miner_name = "Jane Doe"
+        with self.assertRaises(ValidationError) as cm:
+            form.save()
+        self.assertIn("غير قابل للتعديل", str(cm.exception))
+
+    def test_immutability_in_invoice_requested(self) -> None:
+        """
+        BR-02: Forms after Draft must be immutable for standard fields.
+        """
+        form = CollectionForm.objects.create(
+            miner_name="John Doe",
+            sacks_count=5,
+            total_amount=Decimal("500.00"),
+            collector=self.collector,
+            market=self.market,
+            status=CollectionForm.Status.INVOICE_REQUESTED
+        )
+        
         form.miner_name = "Jane Doe"
         with self.assertRaises(ValidationError) as cm:
             form.save()

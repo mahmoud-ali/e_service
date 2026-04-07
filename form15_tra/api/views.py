@@ -43,7 +43,7 @@ class CollectionFormViewSet(viewsets.ModelViewSet):
     def confirm(self, request: Any, pk: Any = None) -> Response:
         """
         PUT /api/v1/collections/{id}/confirm/
-        Transition: Draft -> Pending Payment.
+        Transition: Draft -> Invoice Requested.
         """
         instance = self.get_object()
         if instance.status != CollectionForm.Status.DRAFT:
@@ -62,7 +62,7 @@ class CollectionFormViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_400_BAD_REQUEST
             )
         
-        instance.status = CollectionForm.Status.PENDING_PAYMENT
+        instance.status = CollectionForm.Status.INVOICE_REQUESTED
         instance.save()
         
         # Log action

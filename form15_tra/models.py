@@ -76,7 +76,9 @@ class CollectionForm(models.Model):
     
     class Status(models.TextChoices):
         DRAFT = 'Draft', 'مسودة'
-        WAITING_APPROVAL = 'Waiting Approval', 'بانتظار الموافقة'
+        COLLECTOR_CONFIRMATION = 'Collector Confirmation', 'بانتظار تأكيد المتحصل'
+        INVOICE_REQUESTED = 'Invoice Requested', 'تم طلب الفاتورة'
+        INVOICE_QUEUED = 'Invoice Queued', 'تمت جدولة الفاتورة'
         PENDING_PAYMENT = 'Pending Payment', 'بانتظار الدفع'
         PAID = 'Paid', 'تم الدفع'
         CANCELLED = 'Cancelled', 'ملغي'
@@ -97,7 +99,7 @@ class CollectionForm(models.Model):
     sacks_count = models.DecimalField(max_digits=12, decimal_places=2)
     total_amount = models.DecimalField(max_digits=12, decimal_places=2)
     status = models.CharField(
-        max_length=20,
+        max_length=30,
         choices=Status.choices,
         default=Status.DRAFT
     )
@@ -137,7 +139,13 @@ class CollectionForm(models.Model):
             old_instance = CollectionForm.objects.get(pk=self.pk)
             
             # BR-02: Locking: Forms in Pending Payment or Paid status must be immutable for standard fields.
-            if old_instance.status in [self.Status.PENDING_PAYMENT, self.Status.PAID, self.Status.WAITING_APPROVAL]:
+            if old_instance.status in [
+                self.Status.COLLECTOR_CONFIRMATION,
+                self.Status.INVOICE_REQUESTED,
+                self.Status.INVOICE_QUEUED,
+                self.Status.PENDING_PAYMENT,
+                self.Status.PAID,
+            ]:
                 # List of fields that should not change after Draft
                 protected_fields = [
                     'receipt_number', 'miner_name', 'sacks_count', 
