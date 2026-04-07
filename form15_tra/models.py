@@ -98,6 +98,7 @@ class CollectionForm(models.Model):
     miner_name = models.CharField(max_length=255)
     sacks_count = models.DecimalField(max_digits=12, decimal_places=2)
     total_amount = models.DecimalField(max_digits=12, decimal_places=2)
+    invoice_id = models.CharField(max_length=64, null=True, blank=True, db_index=True)
     status = models.CharField(
         max_length=30,
         choices=Status.choices,
@@ -123,6 +124,22 @@ class CollectionForm(models.Model):
     cancellation_reason = models.TextField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    created_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+        related_name='+'
+    )
+
+    updated_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+        related_name='+'
+    )
 
     class Meta:
         verbose_name = "إيصال تحصيل"
@@ -163,31 +180,6 @@ class CollectionForm(models.Model):
         if not self.receipt_number:
             # Calculate total amount
             self.total_amount = self.sacks_count * PRICE_PER_SACK
-
-            prefix = str(self.market.id)
-            # Find the next sequence number for this market
-            last_receipt = CollectionForm.objects.filter(market=self.market).order_by('-receipt_number').first()
-            if last_receipt and last_receipt.receipt_number.startswith(prefix):
-                 # Extract sequence part. Assuming format is {prefix}{sequence}
-                 # Be careful if receipt_number format was different before or if prefix length varies.
-                 # Given the requirement, I'll count + 1 which is simpler but has race conditions.
-                 # For robust unique generation, usually one would use a separate Sequence model or DB sequence.
-                 # For this task, I will use count + 1 logic adjusted to ensure uniqueness loop or use max.
-                 
-                 # Using max receipt number for safety against deletions
-                 # However, since receipt_number is string, naive max might be wrong if lengths differ, but here fixed 10.
-                 # Let's try simple count logic first as requested "start by market id".
-                 # Actually, better practice:
-                 pass
-
-            # Count verification
-            count = CollectionForm.objects.filter(market=self.market).count() + 1
-            while True:
-                candidate = f"{prefix}{count:0{10-len(prefix)}d}"
-                if not CollectionForm.objects.filter(receipt_number=candidate).exists():
-                    self.receipt_number = candidate
-                    break
-                count += 1
 
         self.full_clean()
         super().save(*args, **kwargs)

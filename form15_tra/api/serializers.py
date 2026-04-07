@@ -51,3 +51,27 @@ class CancelCollectionSerializer(serializers.Serializer):
     Serializer for the cancellation action.
     """
     cancellation_reason = serializers.CharField(required=True, min_length=5)
+
+
+class MarkPaidBulkSerializer(serializers.Serializer):
+    """
+    Request payload serializer for bulk mark-paid action.
+    """
+    ids = serializers.ListField(
+        child=serializers.IntegerField(min_value=1),
+        allow_empty=False,
+        required=True,
+    )
+
+
+class InvoiceRefSerializer(serializers.Serializer):
+    id = serializers.IntegerField(min_value=1)
+    invoice_id = serializers.CharField(min_length=1, max_length=64)
+
+
+class SetPendingPaymentInvoicesSerializer(serializers.Serializer):
+    invoices = serializers.ListField(
+        child=InvoiceRefSerializer(),
+        allow_empty=False,
+        required=True,
+    )

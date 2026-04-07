@@ -283,3 +283,173 @@ class MiningSystemTests(TestCase):
         response = self.client.get(reverse('invoice-print', kwargs={'pk': paid_form.pk}))
         self.assertEqual(response.status_code, 302)
         self.assertIn("login", response.url)
+
+    def test_queue_invoices_endpoint_bulk_and_idempotent(self) -> None:
+        """
+        Verify POST /api/v1/collections/queue-invoices/ advances all Invoice Requested -> Invoice Queued.
+        """
+        # Two requested
+        f1 = CollectionForm.objects.create(
+            miner_name="Req 1",
+            sacks_count=5,
+            total_amount=Decimal("500.00"),
+            collector=self.collector,
+            market=self.market,
+            status=CollectionForm.Status.INVOICE_REQUESTED,
+        )
+        f2 = CollectionForm.objects.create(
+            miner_name="Req 2",
+            sacks_count=5,
+            total_amount=Decimal("500.00"),
+            collector=self.collector,
+            market=self.market,
+            status=CollectionForm.Status.INVOICE_REQUESTED,
+        )
+        # One other status
+        f3 = CollectionForm.objects.create(
+            miner_name="Other",
+            sacks_count=5,
+            total_amount=Decimal("500.00"),
+            collector=self.collector,
+            market=self.market,
+            status=CollectionForm.Status.DRAFT,
+        )
+
+        url = reverse("collection-queue-invoices")
+
+        # First call updates 2
+        response = self.client.post(url, data={}, content_type="application/json", HTTP_X_API_KEY="EXPECTED_BANK_API_KEY")
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json().get("updated"), 2)
+
+        f1.refresh_from_db()
+        f2.refresh_from_db()
+        f3.refresh_from_db()
+        self.assertEqual(f1.status, CollectionForm.Status.INVOICE_QUEUED)
+        self.assertEqual(f2.status, CollectionForm.Status.INVOICE_QUEUED)
+        self.assertEqual(f3.status, CollectionForm.Status.DRAFT)
+
+        # Second call is idempotent (updates 0)
+        response2 = self.client.post(url, data={}, content_type="application/json", HTTP_X_API_KEY="EXPECTED_BANK_API_KEY")
+        self.assertEqual(response2.status_code, 200)
+        self.assertEqual(response2.json().get("updated"), 0)
+
+    def test_mark_paid_endpoint_bulk_ids_and_idempotent(self) -> None:
+        """
+        Verify POST /api/v1/collections/mark-paid/ marks provided PENDING_PAYMENT ids as PAID.
+        """
+        p1 = CollectionForm.objects.create(
+            miner_name="P1",
+            sacks_count=5,
+            total_amount=Decimal("500.00"),
+            collector=self.collector,
+            market=self.market,
+            status=CollectionForm.Status.PENDING_PAYMENT,
+        )
+        p2 = CollectionForm.objects.create(
+            miner_name="P2",
+            sacks_count=5,
+            total_amount=Decimal("500.00"),
+            collector=self.collector,
+            market=self.market,
+            status=CollectionForm.Status.PENDING_PAYMENT,
+        )
+        other = CollectionForm.objects.create(
+            miner_name="Other",
+            sacks_count=5,
+            total_amount=Decimal("500.00"),
+            collector=self.collector,
+            market=self.market,
+            status=CollectionForm.Status.INVOICE_REQUESTED,
+        )
+
+        url = reverse("collection-mark-paid")
+
+        payload = {"ids": [p1.id, p2.id, other.id]}
+        response = self.client.post(url, data=payload, content_type="application/json", HTTP_X_API_KEY="EXPECTED_BANK_API_KEY")
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json().get("requested"), 3)
+        self.assertEqual(response.json().get("updated"), 2)
+        self.assertEqual(response.json().get("skipped"), 1)
+
+        p1.refresh_from_db()
+        p2.refresh_from_db()
+        other.refresh_from_db()
+        self.assertEqual(p1.status, CollectionForm.Status.PAID)
+        self.assertEqual(p2.status, CollectionForm.Status.PAID)
+        self.assertEqual(other.status, CollectionForm.Status.INVOICE_REQUESTED)
+
+        # Second call should update 0 (already paid / not eligible)
+        response2 = self.client.post(url, data=payload, content_type="application/json", HTTP_X_API_KEY="EXPECTED_BANK_API_KEY")
+        self.assertEqual(response2.status_code, 200)
+        self.assertEqual(response2.json().get("updated"), 0)
+
+    def test_mark_paid_endpoint_requires_ids(self) -> None:
+        url = reverse("collection-mark-paid")
+        response = self.client.post(url, data={}, content_type="application/json", HTTP_X_API_KEY="EXPECTED_BANK_API_KEY")
+        self.assertEqual(response.status_code, 400)
+
+    def test_set_pending_payment_endpoint_bulk_invoices_and_idempotent(self) -> None:
+        """
+        Verify POST /api/v1/collections/set-pending-payment/ sets invoice_id and transitions
+        provided INVOICE_QUEUED invoices to PENDING_PAYMENT.
+        """
+        q1 = CollectionForm.objects.create(
+            miner_name="Q1",
+            sacks_count=5,
+            total_amount=Decimal("500.00"),
+            collector=self.collector,
+            market=self.market,
+            status=CollectionForm.Status.INVOICE_QUEUED,
+        )
+        q2 = CollectionForm.objects.create(
+            miner_name="Q2",
+            sacks_count=5,
+            total_amount=Decimal("500.00"),
+            collector=self.collector,
+            market=self.market,
+            status=CollectionForm.Status.INVOICE_QUEUED,
+        )
+        other = CollectionForm.objects.create(
+            miner_name="Other",
+            sacks_count=5,
+            total_amount=Decimal("500.00"),
+            collector=self.collector,
+            market=self.market,
+            status=CollectionForm.Status.PENDING_PAYMENT,
+        )
+
+        url = reverse("collection-set-pending-payment")
+        payload = {
+            "invoices": [
+                {"id": q1.id, "invoice_id": "INV-1"},
+                {"id": q2.id, "invoice_id": "INV-2"},
+                {"id": other.id, "invoice_id": "INV-3"},
+            ]
+        }
+
+        response = self.client.post(url, data=payload, content_type="application/json", HTTP_X_API_KEY="EXPECTED_BANK_API_KEY")
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json().get("requested"), 3)
+        self.assertEqual(response.json().get("updated"), 2)
+        self.assertEqual(response.json().get("skipped"), 1)
+
+        q1.refresh_from_db()
+        q2.refresh_from_db()
+        other.refresh_from_db()
+        self.assertEqual(q1.status, CollectionForm.Status.PENDING_PAYMENT)
+        self.assertEqual(q2.status, CollectionForm.Status.PENDING_PAYMENT)
+        self.assertEqual(other.status, CollectionForm.Status.PENDING_PAYMENT)
+        self.assertEqual(q1.invoice_id, "INV-1")
+        self.assertEqual(q2.invoice_id, "INV-2")
+        self.assertIsNone(other.invoice_id)
+
+        # Second call should update 0 (already updated / not eligible)
+        response2 = self.client.post(url, data=payload, content_type="application/json", HTTP_X_API_KEY="EXPECTED_BANK_API_KEY")
+        self.assertEqual(response2.status_code, 200)
+        self.assertEqual(response2.json().get("updated"), 0)
+
+    def test_set_pending_payment_endpoint_requires_invoices(self) -> None:
+        url = reverse("collection-set-pending-payment")
+        response = self.client.post(url, data={}, content_type="application/json", HTTP_X_API_KEY="EXPECTED_BANK_API_KEY")
+        self.assertEqual(response.status_code, 400)
