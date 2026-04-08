@@ -322,9 +322,9 @@ class EmployeePayrollHistoryInline(admin.TabularInline):
 
 class EmployeeAdmin(LogMixin, StateControlMixin, admin.ModelAdmin):
     model = Employee
-    list_display = ['state', 'name']
+    list_display = ['name', 'state', 'category']
     search_fields = ('name',)
-    list_filter = ('state',)
+    list_filter = ('category','state')
     fieldsets = (
         (_('البيانات الأساسية'), {
             'fields': (
@@ -338,13 +338,16 @@ class EmployeeAdmin(LogMixin, StateControlMixin, admin.ModelAdmin):
     def get_inlines(self, request, obj):
         inlines = [
             EmployeeJobDataAdminInline,
-            EmployeePayrollHistoryInline,
             EmployeeStatusInline,
             EmployeeBankAccountInline,
             EmployeeLeaveInline,
             EmployeePenaltyInline,
             EmployeeDocumentInline,
         ]
+        
+        if not request.user.groups.filter(name='state_hr_traditional').exists():
+            inlines.insert(1, EmployeePayrollHistoryInline)
+
         if request.user.is_superuser or request.user.groups.filter(name='traditional_hr').exists():
             inlines.append(AcademicQualificationInline)
         return tuple(inlines)
