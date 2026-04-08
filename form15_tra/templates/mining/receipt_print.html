@@ -6,7 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>فاتورة تحصيل</title>
+    <title>إيصال تحصيل</title>
 
     <!-- Google Fonts: Cairo -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -101,7 +101,7 @@
     <div class="no-print flex justify-center mb-6">
         <button onclick="window.print()"
             class="bg-blue-600 text-white px-6 py-2 rounded shadow hover:bg-blue-700 transition">
-            طباعة الفاتورة
+            طباعة الإيصال
         </button>
         <a href="{% url 'collection-detail' object.pk %}"
             class="mr-4 bg-gray-200 text-gray-700 px-6 py-2 rounded shadow hover:bg-gray-300 transition">
@@ -113,7 +113,7 @@
         <!-- Header -->
         <div class="text-center mb-4">
             <img src="{% static 'mining/images/logo.webp' %}" alt="Logo" class="h-16 w-auto mx-auto mb-2">
-            <h1 class="text-xl font-bold">فاتورة 15</h1>
+            <h1 class="text-xl font-bold">إيصال 15</h1>
             <p class="text-sm font-bold mt-1">نظام التحصيل الإلكتروني</p>
         </div>
 
@@ -129,6 +129,13 @@
         <div class="flex justify-between text-sm mb-4">
             <div>
                 <strong>رقم الفاتورة:</strong> {{ object.invoice_id|default:"-" }}
+            </div>
+        </div>
+
+
+        <div class="flex justify-between text-sm mb-4">
+            <div>
+                <strong>رقم الإيصال:</strong> {{ object.receipt_number }}
             </div>
         </div>
         <div class="border-b-2 border-dashed border-black my-2"></div>
@@ -155,7 +162,7 @@
             <div class="text-2xl font-bold">{{ object.total_amount |intcomma}} ج.س</div>
         </div>
 
-        <br/>
+        <br />
         <div class="flex justify-between text-sm mb-4">
             <div>
                 <strong>السوق:</strong> {{ object.market.market_name }}
@@ -165,22 +172,19 @@
             </div>
         </div>
 
-        <!-- QR (Invoice ID) -->
+        <!-- QR (Receipt Number) -->
         <div class="border-b-2 border-dashed border-black my-2"></div>
         <div class="text-center my-4">
-            <div id="qr-invoice" class="flex justify-center"></div>
-            <div id="qr-invoice-fallback" class="text-[11px] mt-2 hidden">
-                لا يوجد رقم فاتورة لعرض رمز QR
-            </div>
+            <div id="qr-receipt" class="flex justify-center"></div>
             <div class="text-[10px] mt-1">
-                {{ object.invoice_id|default:"-" }}
+                {{ object.receipt_number }}
             </div>
         </div>
 
         <!-- Footer -->
         <div class="mt-8 pt-4 border-t border-dashed border-black text-center text-[10px] leading-3 uppercase">
-            شكراً لتعاونكم معنا<br>
-            الشركة السودانية للموارد المعدنية<br>
+            شكراً لتعاملكم معنا<br>
+            نظام التحصيل الإلكتروني<br>
             {{ now|date:"Y/m/d H:i" }}
         </div>
     </div>
@@ -189,17 +193,14 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script>
         (function () {
-            var raw = "{{ object.invoice_id|default:''|escapejs }}";
+            var raw = "{{ object.receipt_number|default:''|escapejs }}";
             var value = (raw || "").trim();
 
-            var container = document.getElementById("qr-invoice");
-            var fallback = document.getElementById("qr-invoice-fallback");
+            var container = document.getElementById("qr-receipt");
             if (!container) return;
 
-            // Treat missing invoice_id (or '-') as no QR
-            if (!value || value === "-") {
+            if (!value) {
                 container.classList.add("hidden");
-                if (fallback) fallback.classList.remove("hidden");
                 return;
             }
 

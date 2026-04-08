@@ -502,7 +502,7 @@ if TESTING:
     print('In TEST Mode - Disabling Migrations')
     print('=========================')
 
-    class DisableMigrations(object):
+    class DisableMigrations(dict):
 
         def __contains__(self, item):
             return True

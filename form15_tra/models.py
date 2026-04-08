@@ -1,8 +1,8 @@
 from django.conf import settings
 from django.db import models
-from django.core.validators import RegexValidator
 from django.core.exceptions import ValidationError
 from typing import Any
+from django.db import transaction
 
 # from traditional_app.models import LkpSoag
 
@@ -84,16 +84,8 @@ class CollectionForm(models.Model):
         CANCELLED = 'Cancelled', 'ملغي'
 
     receipt_number = models.CharField(
-        max_length=10,
-        unique=True,
-        blank=True,  # Auto-generated
-        validators=[
-            RegexValidator(
-                regex='^\d{10}$',
-                message='رقم الإيصال يجب أن يتكون من 10 أرقام بالضبط.',
-                code='invalid_receipt_number'
-            )
-        ]
+        max_length=64,
+        blank=True
     )
     miner_name = models.CharField(max_length=255)
     sacks_count = models.DecimalField(max_digits=12, decimal_places=2)
@@ -165,7 +157,7 @@ class CollectionForm(models.Model):
             ]:
                 # List of fields that should not change after Draft
                 protected_fields = [
-                    'receipt_number', 'miner_name', 'sacks_count', 
+                    'miner_name', 'sacks_count', 
                     'total_amount', 'collector', 'market'
                 ]
                 for field in protected_fields:
@@ -180,6 +172,20 @@ class CollectionForm(models.Model):
         if not self.receipt_number:
             # Calculate total amount
             self.total_amount = self.sacks_count * PRICE_PER_SACK
+
+            # Auto-generate receipt_number (10 chars) as: {market_id}{sequence_padded}
+            # Sequence is per-market and starts at 1.
+            prefix = str(self.market_id) if self.market_id is not None else ""
+            width = max(1, 10 - len(prefix))
+            with transaction.atomic():
+                existing = (
+                    CollectionForm.objects.select_for_update()
+                    .filter(market_id=self.market_id)
+                    .exclude(pk=self.pk)
+                    .count()
+                )
+                seq = existing + 1
+                self.receipt_number = f"{prefix}{seq:0{width}d}"
 
         self.full_clean()
         super().save(*args, **kwargs)

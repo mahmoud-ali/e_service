@@ -1,7 +1,6 @@
 from rest_framework import viewsets, status, permissions
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework.views import APIView
 from django.shortcuts import get_object_or_404
 from django.db import transaction
 from form15_tra.models import Market, CollectionForm, APILog
@@ -11,6 +10,7 @@ from form15_tra.api.serializers import (
     CancelCollectionSerializer,
     MarkPaidBulkSerializer,
     SetPendingPaymentInvoicesSerializer,
+    MarkPaidReceiptsSerializer,
 )
 from form15_tra.api.permissions import IsCollector, IsSeniorCollector, HasAPIKey
 from typing import Any
@@ -138,26 +138,71 @@ class CollectionFormViewSet(viewsets.ModelViewSet):
     def queue_invoices(self, request: Any) -> Response:
         """
         POST /api/v1/collections/queue-invoices/
-        Bulk transition: Invoice Requested -> Invoice Queued.
+        Batched transition: Invoice Requested -> Invoice Queued.
         Secured by X-API-KEY (background service).
         """
         ip_address = request.META.get("REMOTE_ADDR")
+        default_limit = 50
+        max_limit = 500
+        raw_limit = request.query_params.get("limit", None)
+        try:
+            limit = int(raw_limit) if raw_limit is not None else default_limit
+        except (TypeError, ValueError):
+            limit = default_limit
+        limit = max(1, min(max_limit, limit))
+
         try:
             with transaction.atomic():
-                qs = CollectionForm.objects.filter(status=CollectionForm.Status.INVOICE_REQUESTED)
-                updated = qs.update(status=CollectionForm.Status.INVOICE_QUEUED)
+                base_qs = (
+                    CollectionForm.objects.filter(status=CollectionForm.Status.INVOICE_REQUESTED)
+                    .order_by("created_at", "id")
+                )
+
+                # Prefer skip_locked to avoid multiple workers picking same rows.
+                try:
+                    eligible = base_qs.select_for_update(skip_locked=True)
+                except Exception:
+                    eligible = base_qs.select_for_update()
+
+                ids = list(eligible.values_list("id", flat=True)[:limit])
+
+                if ids:
+                    updated = CollectionForm.objects.filter(id__in=ids).update(
+                        status=CollectionForm.Status.INVOICE_QUEUED
+                    )
+                else:
+                    updated = 0
+
+                results = list(
+                    CollectionForm.objects.select_related("market")
+                    .filter(id__in=ids)
+                    .values("id", "miner_name", "total_amount", "market__market_name")
+                )
+                for row in results:
+                    row["market_name"] = row.pop("market__market_name")
+
+            payload = {
+                "updated": updated,
+                "limit": limit,
+                "returned": len(results),
+                "results": results,
+            }
 
             APILog.objects.create(
                 action="queue_invoices",
-                user=request.user,
+                user=None,
                 request_data={},
-                response_data={"updated": updated},
+                response_data={
+                    "updated": updated,
+                    "limit": limit,
+                    "returned": len(results),
+                },
                 status_code=status.HTTP_200_OK,
                 ip_address=ip_address,
                 collection_form=None,
             )
 
-            return Response({"updated": updated}, status=status.HTTP_200_OK)
+            return Response(payload, status=status.HTTP_200_OK)
         except Exception as exc:
             error_data = {"error": str(exc)}
             APILog.objects.create(
@@ -238,35 +283,45 @@ class CollectionFormViewSet(viewsets.ModelViewSet):
         detail=False,
         methods=["post"],
         url_path="mark-paid",
-        serializer_class=MarkPaidBulkSerializer,
+        serializer_class=MarkPaidReceiptsSerializer,
     )
     def mark_paid(self, request: Any) -> Response:
         """
         POST /api/v1/collections/mark-paid/
-        Bulk transition: Pending Payment -> Paid for provided ids.
+        Bulk transition: Pending Payment -> Paid for provided receipts.
         Secured by X-API-KEY (background service).
         """
         ip_address = request.META.get("REMOTE_ADDR")
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        ids: list[int] = serializer.validated_data["ids"]
+        receipts: list[dict[str, Any]] = serializer.validated_data["receipts"]
+        receipt_map: dict[int, str] = {item["id"]: item["receipt_number"] for item in receipts}
+        ids = list(receipt_map.keys())
         requested = len(ids)
 
         try:
             with transaction.atomic():
-                qs = CollectionForm.objects.filter(
+                eligible = (
+                    CollectionForm.objects.select_for_update()
+                    .filter(
                     id__in=ids,
                     status=CollectionForm.Status.PENDING_PAYMENT,
                 )
-                updated = qs.update(status=CollectionForm.Status.PAID)
+                )
+                updated = 0
+                for form in eligible:
+                    form.receipt_number = receipt_map.get(form.id, "")
+                    form.status = CollectionForm.Status.PAID
+                    form.save(update_fields=["receipt_number", "status"])
+                    updated += 1
 
             payload = {"requested": requested, "updated": updated, "skipped": requested - updated}
 
             APILog.objects.create(
                 action="mark_paid_bulk",
                 user=None,
-                request_data={"ids_count": requested},
+                request_data={"receipts_count": requested},
                 response_data=payload,
                 status_code=status.HTTP_200_OK,
                 ip_address=ip_address,
@@ -279,7 +334,7 @@ class CollectionFormViewSet(viewsets.ModelViewSet):
             APILog.objects.create(
                 action="mark_paid_bulk_failed",
                 user=None,
-                request_data={"ids_count": requested},
+                request_data={"receipts_count": requested},
                 response_data=error_data,
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 ip_address=ip_address,
@@ -288,102 +343,3 @@ class CollectionFormViewSet(viewsets.ModelViewSet):
             return Response(error_data, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-class BankCallbackWebhook(APIView):
-    """
-    POST /api/v1/webhooks/bank-callback/
-    Unauthenticated (uses API Key/IP validation).
-    Updates status to Paid upon bank confirmation.
-    """
-    permission_classes = [HasAPIKey]
-
-    def get(self, request: Any, format: Any = None) -> Response:
-        """
-        GET /api/v1/webhooks/bank-callback/?receipt_number=XXXXXXXXXX
-        Retrieves the total_amount for a given receipt_number.
-        """
-        receipt_number = request.query_params.get("receipt_number")
-        if not receipt_number:
-            return Response(
-                {"error": "receipt_number query parameter is required"},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        form = get_object_or_404(CollectionForm, receipt_number=receipt_number)
-        return Response(
-            {
-                "name": form.miner_name,
-                "total_amount": form.total_amount,
-                "receipt_number": form.receipt_number,
-            },
-            status=status.HTTP_200_OK,
-        )
-
-    def post(self, request: Any, format: Any = None) -> Response:
-        receipt_number = request.data.get("receipt_number", "").strip()
-        payment_status = request.data.get("payment_status", "").strip().upper()
-        ref_number = request.data.get("ref_number", "").strip()
-
-        if payment_status != "SUCCESS":
-            error_data = {"error": "Payment status is not SUCCESS"}
-            APILog.objects.create(
-                action="bank_callback_failed",
-                user=request.user,
-                request_data=request.data,
-                response_data=error_data,
-                status_code=status.HTTP_400_BAD_REQUEST,
-                ip_address=request.META.get("REMOTE_ADDR"),
-            )
-            return Response(error_data, status=status.HTTP_400_BAD_REQUEST)
-
-        if not receipt_number:
-            error_data = {"error": "Invalid notification"}
-            APILog.objects.create(
-                action="bank_callback_failed",
-                user=request.user,
-                request_data=request.data,
-                response_data=error_data,
-                status_code=status.HTTP_400_BAD_REQUEST,
-                ip_address=request.META.get("REMOTE_ADDR"),
-            )
-            return Response(error_data, status=status.HTTP_400_BAD_REQUEST)
-
-        if not ref_number:
-            error_data = {"error": "Invalid referance number"}
-            APILog.objects.create(
-                action="bank_callback_failed",
-                user=request.user,
-                request_data=request.data,
-                response_data=error_data,
-                status_code=status.HTTP_400_BAD_REQUEST,
-                ip_address=request.META.get("REMOTE_ADDR"),
-            )
-            return Response(error_data, status=status.HTTP_400_BAD_REQUEST)
-
-        form = get_object_or_404(CollectionForm, receipt_number=receipt_number)
-
-        if form.status != CollectionForm.Status.PENDING_PAYMENT:
-            error_data = {"error": f"Form is in {form.status} status, cannot mark as Paid."}
-            APILog.objects.create(
-                action="bank_callback_failed",
-                user=request.user,
-                request_data=request.data,
-                response_data=error_data,
-                status_code=status.HTTP_400_BAD_REQUEST,
-                ip_address=request.META.get("REMOTE_ADDR"),
-            )
-            return Response(error_data, status=status.HTTP_400_BAD_REQUEST)
-
-        form.status = CollectionForm.Status.PAID
-        form.save()
-
-        APILog.objects.create(
-            action="bank_callback_success",
-            user=request.user,
-            request_data=request.data,
-            response_data={"status": "Payment recorded successfully"},
-            status_code=status.HTTP_200_OK,
-            ip_address=request.META.get("REMOTE_ADDR"),
-            collection_form=form,
-        )
-
-        return Response({"status": "Payment recorded successfully"}, status=status.HTTP_200_OK)

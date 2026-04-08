@@ -75,3 +75,16 @@ class SetPendingPaymentInvoicesSerializer(serializers.Serializer):
         allow_empty=False,
         required=True,
     )
+
+
+class ReceiptRefSerializer(serializers.Serializer):
+    id = serializers.IntegerField(min_value=1)
+    receipt_number = serializers.CharField(min_length=1, max_length=64)
+
+
+class MarkPaidReceiptsSerializer(serializers.Serializer):
+    receipts = serializers.ListField(
+        child=ReceiptRefSerializer(),
+        allow_empty=False,
+        required=True,
+    )
