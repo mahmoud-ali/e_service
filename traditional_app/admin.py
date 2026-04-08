@@ -1,13 +1,14 @@
 from django.utils.translation import gettext_lazy as _
-from django.urls import reverse
+from django.urls import reverse, resolve
 from django.contrib import admin
 from django.utils.html import format_html
 # from django.contrib.gis import admin as gis_admin
 from leaflet.admin import LeafletGeoAdmin
 from company_profile.models import LkpLocality, LkpState
 from traditional_app.hr_payroll import T3agoodPayroll
-from traditional_app.models import DailyGrabeel, DailyHofrKabira, DailyIncome, DailyReport, DailyGoldMor7ala, DailyKartaMor7ala, DailySmallProcessingUnit, Employee, EmployeeProject, Lkp2bar, Lkp2jhizatBahth, Lkp7ofrKabira, LkpGrabeel, LkpKhalatat, LkpMojam3atTawa7in, LkpSaig, LkpSmallProcessingUnit, LkpSoag, LkpSosalGold, DailyTahsilForm, DailyWardHajr, PayrollDetail, PayrollMaster, RentedApartment, RentedVehicle, TraditionalAppUser, Vehicle #, LkpLocalityTmp
+from traditional_app.models import DailyGrabeel, DailyHofrKabira, DailyIncome, DailyReport, DailyGoldMor7ala, DailyKartaMor7ala, DailySmallProcessingUnit, Employee, EmployeeJobData, Lkp2bar, Lkp2jhizatBahth, Lkp7ofrKabira, LkpGrabeel, LkpKhalatat, LkpMojam3atTawa7in, LkpSaig, LkpSmallProcessingUnit, LkpSoag, LkpSosalGold, DailyTahsilForm, DailyWardHajr, PayrollDetail, PayrollMaster, RentedApartment, RentedVehicle, TraditionalAppUser, Vehicle #, LkpLocalityTmp
 from workflow.admin_utils import create_main_form
+from traditional_app.models import AcademicQualification
 
 class LogMixin:
     def save_model(self, request, obj, form, change):
@@ -218,25 +219,139 @@ class SougAdmin(LogMixin,StateControlMixin, LeafletGeoAdmin):
 
 admin.site.register(LkpSoag, SougAdmin)
 
-class EmployeeProjectAdminInline(admin.StackedInline):
-    model = EmployeeProject
-    min_num = 1
+from traditional_app.models import (
+    AcademicQualification,
+    EmployeeJobData, EmployeeStatus, EmployeeBankAccount,
+    EmployeeLeave, EmployeePenalty, EmployeeDocument,
+)
 
-class EmployeeAdmin(LogMixin,StateControlMixin, admin.ModelAdmin):
+class AcademicQualificationInline(admin.TabularInline):
+    model = AcademicQualification
+    extra = 1
+    classes = ['tab-academic']
+
+class EmployeeJobDataAdminInline(admin.TabularInline):
+    model = EmployeeJobData
+    min_num = 1
+    classes = ['tab-jobdata']
+
+class EmployeeStatusInline(admin.TabularInline):
+    model = EmployeeStatus
+    extra = 1
+    classes = ['tab-status']
+
+class EmployeeBankAccountInline(admin.TabularInline):
+    model = EmployeeBankAccount
+    extra = 1
+    classes = ['tab-bank']
+
+class EmployeeLeaveInline(admin.TabularInline):
+    model = EmployeeLeave
+    extra = 1
+    fk_name = 'employee'
+    classes = ['tab-leave']
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == "assigned_employee":
+            resolved = resolve(request.path_info)
+            if resolved.kwargs.get('object_id'):
+                try:
+                    employee = Employee.objects.get(pk=resolved.kwargs['object_id'])
+                    kwargs["queryset"] = Employee.objects.filter(state=employee.state)
+                except Employee.DoesNotExist:
+                    pass
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
+
+class EmployeePenaltyInline(admin.TabularInline):
+    model = EmployeePenalty
+    extra = 1
+    classes = ['tab-penalty']
+
+class EmployeeDocumentInline(admin.TabularInline):
+    model = EmployeeDocument
+    extra = 1
+    classes = ['tab-document']
+
+class EmployeePayrollHistoryInline(admin.TabularInline):
+    model = PayrollDetail
+    extra = 0
+    can_delete = False
+    max_num = 0
+    classes = ['tab-salary']
+    readonly_fields = [
+        'display_year', 'display_month', 'display_asasi', 'display_galaa', 
+        'display_sakan', 'display_tar7il', 'display_tabi3at_3amal', 
+        'display_laban', 'display_3laj', 'display_damga', 'display_total'
+    ]
+    fields = readonly_fields
+
+    def display_year(self, obj): return obj.payroll_master.year
+    display_year.short_description = _("السنة")
+    
+    def display_month(self, obj): return obj.payroll_master.get_month_display()
+    display_month.short_description = _("الشهر")
+
+    def display_asasi(self, obj): return obj.payroll_master.asasi
+    display_asasi.short_description = _("الاساسي")
+
+    def display_galaa(self, obj): return obj.payroll_master.galaa_m3isha
+    display_galaa.short_description = _("غلاء معيشة")
+
+    def display_sakan(self, obj): return obj.payroll_master.badel_sakan
+    display_sakan.short_description = _("بدل سكن")
+
+    def display_tar7il(self, obj): return obj.payroll_master.badel_tar7il
+    display_tar7il.short_description = _("بدل ترحيل")
+
+    def display_tabi3at_3amal(self, obj): return obj.payroll_master.tabi3at_3amal
+    display_tabi3at_3amal.short_description = _("طبيعة عمل")
+
+    def display_laban(self, obj): return obj.payroll_master.badel_laban
+    display_laban.short_description = _("بدل لبن")
+
+    def display_3laj(self, obj): return obj.payroll_master.badel_3laj
+    display_3laj.short_description = _("بدل علاج")
+
+    def display_damga(self, obj): return obj.payroll_master.damga
+    display_damga.short_description = _("دمغة")
+
+    def display_total(self, obj):
+        m = obj.payroll_master
+        return m.asasi + m.galaa_m3isha + m.badel_sakan + m.badel_tar7il + m.tabi3at_3amal + m.badel_laban + m.badel_3laj
+    display_total.short_description = _("الإجمالي")
+
+class EmployeeAdmin(LogMixin, StateControlMixin, admin.ModelAdmin):
     model = Employee
-    list_display = ['state','no3_elta3god', 'name','job']
+    list_display = ['state', 'name']
     search_fields = ('name',)
-    list_filter = ('state','no3_elta3god')
-    # inlines = [EmployeeProjectAdminInline, ]
+    list_filter = ('state',)
+    fieldsets = (
+        (_('البيانات الأساسية'), {
+            'fields': (
+                'name', 'birth_date', 'gender', 'phone', 'email', 'category', 'state',
+                'id_attachment', 'birth_certificate_attachment'
+            )
+        }),
+    )
+    inlines = []
 
     def get_inlines(self, request, obj):
-        if obj and obj.no3_elta3god == Employee.EMPLOYEE_TYPE_T3AGOOD:
-            return (EmployeeProjectAdminInline,)
-
-        return super().get_inlines(request, obj)
+        inlines = [
+            EmployeeJobDataAdminInline,
+            EmployeePayrollHistoryInline,
+            EmployeeStatusInline,
+            EmployeeBankAccountInline,
+            EmployeeLeaveInline,
+            EmployeePenaltyInline,
+            EmployeeDocumentInline,
+        ]
+        if request.user.is_superuser or request.user.groups.filter(name='traditional_hr').exists():
+            inlines.append(AcademicQualificationInline)
+        return tuple(inlines)
 
     class Media:
-        js = ('admin/js/jquery.init.js',"traditional_app/js/lkp_state_change.js",)
+        js = ('admin/js/jquery.init.js', "traditional_app/js/lkp_state_change.js", "traditional_app/js/employee_tabs.js")
+        css = {'all': ("traditional_app/css/employee_tabs.css",)}
 
 admin.site.register(Employee, EmployeeAdmin)
 

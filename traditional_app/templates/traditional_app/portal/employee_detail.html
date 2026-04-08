@@ -25,24 +25,24 @@
             </div>
             <div class="form-control">
                 <label class="label">
-                    <span class="label-text font-bold">نوع التعاقد</span>
+                    <span class="label-text font-bold">نوع الارتباط</span>
                 </label>
                 <p class="text-lg">
                     <span class="badge badge-lg 
-                        {% if employee.no3_elta3god == 1 %}badge-primary
-                        {% elif employee.no3_elta3god == 2 %}badge-success
-                        {% elif employee.no3_elta3god == 3 %}badge-warning
-                        {% elif employee.no3_elta3god == 4 %}badge-info
+                        {% if employee.job_data.association_type == 1 %}badge-primary
+                        {% elif employee.job_data.association_type == 2 %}badge-success
+                        {% elif employee.job_data.association_type == 3 %}badge-warning
+                        {% elif employee.job_data.association_type == 4 %}badge-info
                         {% endif %}">
-                        {{ employee.get_no3_elta3god_display }}
+                        {{ employee.job_data.get_association_type_display }}
                     </span>
                 </p>
             </div>
             <div class="form-control">
                 <label class="label">
-                    <span class="label-text font-bold">الوظيفة</span>
+                    <span class="label-text font-bold">المسمى الوظيفي</span>
                 </label>
-                <p class="text-lg">{{ employee.job }}</p>
+                <p class="text-lg">{{ employee.job_data.job_title|default:"-" }}</p>
             </div>
             <div class="form-control">
                 <label class="label">
@@ -50,39 +50,38 @@
                 </label>
                 <p class="text-lg">{{ employee.category.name }}</p>
             </div>
-            {% comment %} <div class="form-control">
-                <label class="label">
-                    <span class="label-text font-bold">الولاية</span>
-                </label>
-                <p class="text-lg">{{ employee.state.name }}</p>
-            </div> {% endcomment %}
         </div>
 
-        {% if employee.no3_elta3god == 2 %}
-        {% if employee.employeeproject %}
-        <div class="divider">معلومات التعاقد</div>
+        <div class="divider">البيانات الوظيفية</div>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div class="form-control">
                 <label class="label">
-                    <span class="label-text font-bold">تاريخ بداية العقد</span>
+                    <span class="label-text font-bold">تاريخ التعيين</span>
                 </label>
-                <p class="text-lg">{{ employee.employeeproject.contract_start_date }}</p>
+                <p class="text-lg">{{ employee.job_data.hire_date|default:"-" }}</p>
+            </div>
+            {% if employee.job_data.association_type == 2 %}
+            <div class="form-control">
+                <label class="label">
+                    <span class="label-text font-bold">تاريخ تمديد العقد</span>
+                </label>
+                <p class="text-lg">{{ employee.job_data.contract_extension_date|default:"-" }}</p>
+            </div>
+            {% elif employee.job_data.association_type == 3 or employee.job_data.association_type == 4 %}
+            <div class="form-control">
+                <label class="label">
+                    <span class="label-text font-bold">تاريخ الالحاق/القوات</span>
+                </label>
+                <p class="text-lg">{{ employee.job_data.secondment_or_security_date|default:"-" }}</p>
             </div>
             <div class="form-control">
                 <label class="label">
-                    <span class="label-text font-bold">تاريخ نهاية العقد</span>
+                    <span class="label-text font-bold">جهة الالحاق/القوات</span>
                 </label>
-                <p class="text-lg">{{ employee.employeeproject.contract_end_date }}</p>
+                <p class="text-lg">{{ employee.job_data.secondment_or_security_entity|default:"-" }}</p>
             </div>
-            <div class="form-control">
-                <label class="label">
-                    <span class="label-text font-bold">موقع العمل</span>
-                </label>
-                <p class="text-lg">{{ employee.employeeproject.work_place }}</p>
-            </div>
+            {% endif %}
         </div>
-        {% endif %}
-        {% endif %}
 
         <div class="divider"></div>
         <div class="flex gap-2">

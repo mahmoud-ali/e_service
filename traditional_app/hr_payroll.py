@@ -1,5 +1,5 @@
 from traditional_app.hr_calculations import Badalat_3lawat, Khosomat
-from traditional_app.models import Employee, PayrollDetail, PayrollMaster
+from traditional_app.models import Employee, PayrollDetail, PayrollMaster, EmployeeJobData
 from django.db import transaction
 from django.contrib.auth import get_user_model
 
@@ -31,7 +31,7 @@ class T3agoodPayroll():
             self.payroll_details = []
 
         self.employees = Employee.objects \
-            .filter(no3_elta3god=Employee.EMPLOYEE_TYPE_T3AGOOD)
+            .filter(job_data__association_type=EmployeeJobData.ASSOCIATION_CONTRACT)
 
     def is_confirmed(self):
         if not hasattr(self.payroll_master,'confirmed'):

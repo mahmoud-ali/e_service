@@ -2,6 +2,7 @@ from django.db import models
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 from django.core.validators import MaxValueValidator, MinValueValidator,MinLengthValidator
+from django.core.exceptions import ValidationError
 
 from django.contrib.gis.db import models as gis_models
 
@@ -76,22 +77,23 @@ class EmployeeCategory(models.Model):
         verbose_name_plural = _("فئات الموظفين")
 
 class Employee(LoggingModel):
-    EMPLOYEE_TYPE_EMPLOYEE = 1
-    EMPLOYEE_TYPE_T3AGOOD = 2
-    EMPLOYEE_TYPE_EL7AG = 3
-    EMPLOYEE_TYPE_GOAT_2MNIA = 4
-    EMPLOYEE_TYPE_CHOICES = {
-        EMPLOYEE_TYPE_EMPLOYEE: _('موظف'),
-        EMPLOYEE_TYPE_T3AGOOD: _('متعاقد'),
-        EMPLOYEE_TYPE_EL7AG: _('ملحق'),
-        EMPLOYEE_TYPE_GOAT_2MNIA: _('قوات أمنية'),
+
+    GENDER_MALE = 1
+    GENDER_FEMALE = 2
+    GENDER_CHOICES = {
+        GENDER_MALE: _('ذكر'),
+        GENDER_FEMALE: _('أنثى'),
     }
 
     state = models.ForeignKey(LkpState, on_delete=models.PROTECT, verbose_name=_("state"))
-    no3_elta3god = models.IntegerField(_("نوع التعاقد"), choices=EMPLOYEE_TYPE_CHOICES, default=EMPLOYEE_TYPE_EMPLOYEE)
-    name = models.CharField(_("name"), max_length=100)
+    name = models.CharField(_("الاسم"), max_length=100)
+    birth_date = models.DateField(_("تاريخ الميلاد"), null=True, blank=True)
+    gender = models.IntegerField(_("الجنس"), choices=GENDER_CHOICES, null=True, blank=True)
+    phone = models.CharField(_("التلفون"), max_length=30, null=True, blank=True)
+    email = models.EmailField(_("البريد الإلكتروني"), null=True, blank=True)
     category = models.ForeignKey(EmployeeCategory, on_delete=models.PROTECT, verbose_name=_("فئة الموظف"))
-    job = models.CharField(_("الوظيفة"), max_length=100)
+    id_attachment = models.FileField(_("مرفق إثبات الهوية"), upload_to="traditional/employee/id_attachments/", null=True, blank=True)
+    birth_certificate_attachment = models.FileField(_("مرفق شهادة الميلاد"), upload_to="traditional/employee/birth_certificates/", null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -100,22 +102,207 @@ class Employee(LoggingModel):
         verbose_name = _("موظف")
         verbose_name_plural = _("الموظفين")
 
-class EmployeeProject(LoggingModel):
-    """
-    model EmployeeProject with relation one to one with Employee contain work_place, contract_start_date, contract_end_date
-    """
+class EmployeeJobData(LoggingModel):
+    ASSOCIATION_STRUCTURE = 1
+    ASSOCIATION_CONTRACT = 2
+    ASSOCIATION_SECONDMENT = 3
+    ASSOCIATION_SECURITY_FORCES = 4
 
-    employee = models.OneToOneField(Employee, on_delete=models.PROTECT, verbose_name=_("employee"))
-    work_place = models.CharField(_("موقع العمل"), max_length=100)
-    contract_start_date = models.DateField(_("تاريخ بداية العقد"))
-    contract_end_date = models.DateField(_("تاريخ نهاية العقد"))
+    ASSOCIATION_CHOICES = {
+        ASSOCIATION_STRUCTURE: _('الهيكل'),
+        ASSOCIATION_CONTRACT: _('تعاقد'),
+        ASSOCIATION_SECONDMENT: _('الحاق'),
+        ASSOCIATION_SECURITY_FORCES: _('قوات امنية'),
+    }
+
+    employee = models.OneToOneField(Employee, on_delete=models.CASCADE, verbose_name=_("الموظف"), related_name="job_data")
+    hire_date = models.DateField(_("تاريخ التعيين"))
+    association_type = models.IntegerField(_("نوع الارتباط"), choices=ASSOCIATION_CHOICES, default=ASSOCIATION_STRUCTURE)
+    secondment_or_security_date = models.DateField(_("تاريخ الالحاق/القوات الامنية"), null=True, blank=True)
+    secondment_or_security_entity = models.CharField(_("جهة الالحاق/القوات الامنية"), max_length=255, null=True, blank=True)
+    contract_extension_date = models.DateField(_("تاريخ تمديد العقد"), null=True, blank=True)
+    job_title = models.CharField(_("المسمي الوظيفي"), max_length=255, null=True, blank=True)
 
     def __str__(self):
-        return f"{self.employee.name} ({self.employee.get_no3_elta3god_display()})"
+        return f"{self.employee.name} - {self.get_association_type_display()}"
 
     class Meta:
-        verbose_name = _("موظف مشروع")
-        verbose_name_plural = _("موظفي المشروع")
+        verbose_name = _("البيانات الوظيفية")
+        verbose_name_plural = _("البيانات الوظيفية")
+
+
+class EmployeeStatus(LoggingModel):
+    STATUS_ACTIVE = 1
+    STATUS_CONTRACT_ENDED = 2
+    STATUS_RESIGNED = 3
+    STATUS_DEATH = 4
+    STATUS_DISMISSED = 5
+    STATUS_SECONDMENT_ENDED = 6
+
+    STATUS_CHOICES = {
+        STATUS_ACTIVE: _('نشط'),
+        STATUS_CONTRACT_ENDED: _('انهاء عقد'),
+        STATUS_RESIGNED: _('استقالة'),
+        STATUS_DEATH: _('وفاة'),
+        STATUS_DISMISSED: _('فصل من الخدمة'),
+        STATUS_SECONDMENT_ENDED: _('انهاء اللحاق'),
+    }
+
+    employee = models.ForeignKey(Employee, on_delete=models.CASCADE, verbose_name=_("الموظف"), related_name="statuses")
+    status = models.IntegerField(_("الحالة"), choices=STATUS_CHOICES, default=STATUS_ACTIVE)
+    status_date = models.DateField(_("التاريخ"))
+
+    def __str__(self):
+        return f"{self.employee.name} - {self.get_status_display()} ({self.status_date})"
+
+    class Meta:
+        verbose_name = _("حالة الموظف")
+        verbose_name_plural = _("حالات الموظف")
+        ordering = ["-status_date"]
+
+
+class EmployeeBankAccount(LoggingModel):
+    ACCOUNT_TYPE_SAVINGS = 1
+    ACCOUNT_TYPE_DEPOSIT = 2
+    ACCOUNT_TYPE_CHOICES = {
+        ACCOUNT_TYPE_SAVINGS: _('توفير'),
+        ACCOUNT_TYPE_DEPOSIT: _('ادخار'),
+    }
+
+    employee = models.ForeignKey(Employee, on_delete=models.CASCADE, verbose_name=_("الموظف"), related_name="bank_accounts")
+    bank_name = models.CharField(_("البنك"), max_length=255)
+    bank_code = models.CharField(_("كود البنك"), max_length=50)
+    account_type = models.IntegerField(_("نوع الحساب"), choices=ACCOUNT_TYPE_CHOICES, default=ACCOUNT_TYPE_SAVINGS)
+    account_number = models.CharField(_("رقم الحساب"), max_length=100)
+
+    def __str__(self):
+        return f"{self.employee.name} - {self.bank_name} ({self.account_number})"
+
+    class Meta:
+        verbose_name = _("حساب بنكي")
+        verbose_name_plural = _("الحسابات البنكية")
+
+
+class EmployeeLeave(LoggingModel):
+    employee = models.ForeignKey(Employee, on_delete=models.CASCADE, verbose_name=_("الموظف"), related_name="leaves")
+    leave_type = models.CharField(_("نوع الإجازة"), max_length=100)
+    start_date = models.DateField(_("تاريخ البداية"))
+    end_date = models.DateField(_("تاريخ النهاية"))
+    assigned_employee = models.ForeignKey(Employee, on_delete=models.SET_NULL, null=True, blank=True, verbose_name=_("الموظف المكلف"), related_name="leave_assignments")
+    attachment = models.FileField(_("المرفق"), upload_to="traditional/employee/leaves/", null=True, blank=True)
+
+    def clean(self):
+        super().clean()
+        if self.assigned_employee and self.employee:
+            if self.assigned_employee.state_id != self.employee.state_id:
+                raise ValidationError({
+                    'assigned_employee': _("الموظف المكلف يجب أن يكون من نفس ولاية الموظف")
+                })
+
+    def __str__(self):
+        return f"{self.employee.name} - {self.leave_type} ({self.start_date})"
+
+    class Meta:
+        verbose_name = _("إجازة")
+        verbose_name_plural = _("الإجازات")
+        ordering = ["-start_date"]
+
+
+class EmployeePenalty(LoggingModel):
+    PENALTY_NOTE = 1
+    PENALTY_WARNING = 2
+    PENALTY_CLARIFICATION = 3
+    PENALTY_TYPE_CHOICES = {
+        PENALTY_NOTE: _('لفت نظر'),
+        PENALTY_WARNING: _('انذار'),
+        PENALTY_CLARIFICATION: _('استيضاح'),
+    }
+
+    MONTH_CHOICES = {
+        1: _('يناير'), 2: _('فبراير'), 3: _('مارس'), 4: _('ابريل'),
+        5: _('مايو'), 6: _('يونيو'), 7: _('يوليو'), 8: _('اغسطس'),
+        9: _('سبتمبر'), 10: _('اكتوبر'), 11: _('نوفمبر'), 12: _('ديسمبر'),
+    }
+
+    employee = models.ForeignKey(Employee, on_delete=models.CASCADE, verbose_name=_("الموظف"), related_name="penalties")
+    penalty_type = models.IntegerField(_("نوع الجزاء"), choices=PENALTY_TYPE_CHOICES, default=PENALTY_NOTE)
+    version = models.CharField(_("النسخة"), max_length=50, null=True, blank=True)
+    month = models.IntegerField(_("الشهر"), choices=MONTH_CHOICES, null=True, blank=True)
+    description = models.TextField(_("البيان"), null=True, blank=True)
+    attachment = models.FileField(_("المرفق"), upload_to="traditional/employee/penalties/", null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.employee.name} - {self.get_penalty_type_display()}"
+
+    class Meta:
+        verbose_name = _("جزاء")
+        verbose_name_plural = _("الجزاءات")
+
+
+class EmployeeDocument(LoggingModel):
+    DOC_CONTRACT = 1
+    DOC_CERTIFICATE = 2
+    DOC_DECISION = 3
+    DOC_LETTER = 4
+    DOC_OTHER = 5
+    DOC_TYPE_CHOICES = {
+        DOC_CONTRACT: _('عقد'),
+        DOC_CERTIFICATE: _('شهادة'),
+        DOC_DECISION: _('قرار'),
+        DOC_LETTER: _('خطاب'),
+        DOC_OTHER: _('أخرى'),
+    }
+
+    employee = models.ForeignKey(Employee, on_delete=models.CASCADE, verbose_name=_("الموظف"), related_name="documents")
+    document_type = models.IntegerField(_("نوع المستند"), choices=DOC_TYPE_CHOICES, default=DOC_OTHER)
+    document_date = models.DateField(_("التاريخ"))
+    attachment = models.FileField(_("المرفق"), upload_to="traditional/employee/documents/")
+    notes = models.TextField(_("الملاحظة"), null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.employee.name} - {self.get_document_type_display()} ({self.document_date})"
+
+    class Meta:
+        verbose_name = _("مستند")
+        verbose_name_plural = _("الأرشيف الرقمي")
+        ordering = ["-document_date"]
+
+
+class AcademicQualification(LoggingModel):
+    QUALIFICATION_SECONDARY = 1
+    QUALIFICATION_TECH_DIPLOMA = 2
+    QUALIFICATION_INTER_DIPLOMA = 3
+    QUALIFICATION_BACHELOR = 4
+    QUALIFICATION_HIGHER_DIPLOMA = 5
+    QUALIFICATION_BACHELOR_HONOURS = 6
+    QUALIFICATION_MASTER = 7
+    QUALIFICATION_PHD = 8
+
+    QUALIFICATION_CHOICES = {
+        QUALIFICATION_SECONDARY: _('ثانوي'),
+        QUALIFICATION_TECH_DIPLOMA: _('دبلوم تقني'),
+        QUALIFICATION_INTER_DIPLOMA: _('دبلوم وسيط'),
+        QUALIFICATION_BACHELOR: _('بكلاريوس'),
+        QUALIFICATION_HIGHER_DIPLOMA: _('دبلوم عالي'),
+        QUALIFICATION_BACHELOR_HONOURS: _('بكلاريوس شرف'),
+        QUALIFICATION_MASTER: _('ماجستير'),
+        QUALIFICATION_PHD: _('دكتوراه'),
+    }
+
+    employee = models.ForeignKey(Employee, on_delete=models.CASCADE, verbose_name=_("الموظف"), related_name="academic_qualifications")
+    qualification = models.IntegerField(_("المؤهل"), choices=QUALIFICATION_CHOICES)
+    university = models.CharField(_("الجامعة"), max_length=100)
+    specialization = models.CharField(_("التخصص"), max_length=100)
+    graduation_date = models.DateField(_("تاريخ التخرج"))
+    certificate = models.FileField(_("إرفاق الشهادة"), upload_to="traditional/academic_qualifications/", blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.employee.name} - {self.get_qualification_display()}"
+
+    class Meta:
+        verbose_name = _("المؤهل الأكاديمي")
+        verbose_name_plural = _("المؤهلات الأكاديمية")
+
 
 class Vehicle(LoggingModel):
     VEHICLE_TYPE_CAR = 1

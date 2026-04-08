@@ -11,7 +11,8 @@ from django.contrib.auth.forms import PasswordChangeForm
 from traditional_app.models import (
     DailyReport, Employee, PayrollMaster, LkpSoag, Vehicle,
     DailyWardHajr, DailyIncome, DailyTahsilForm, DailyKartaMor7ala,
-    DailyGrabeel, DailyHofrKabira, DailySmallProcessingUnit, MONTH_CHOICES
+    DailyGrabeel, DailyHofrKabira, DailySmallProcessingUnit, MONTH_CHOICES,
+    EmployeeJobData
 )
 
 
@@ -161,18 +162,18 @@ class EmployeesListView(LoginRequiredMixin, PortalUserMixin, ListView):
         
         # Apply filters
         name = self.request.GET.get('name')
-        no3_elta3god = self.request.GET.get('no3_elta3god')
+        association_type = self.request.GET.get('association_type')
         
         if name:
             queryset = queryset.filter(name__icontains=name)
-        if no3_elta3god:
-            queryset = queryset.filter(no3_elta3god=no3_elta3god)
+        if association_type:
+            queryset = queryset.filter(job_data__association_type=association_type)
         
         return queryset
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['employee_type_choices'] = Employee.EMPLOYEE_TYPE_CHOICES.items()
+        context['employee_type_choices'] = EmployeeJobData.ASSOCIATION_CHOICES.items()
         return context
 
 
@@ -185,7 +186,7 @@ class EmployeeDetailView(LoginRequiredMixin, PortalUserMixin, DetailView):
     
     def get_queryset(self):
         user_state = self.request.user.traditional_app_user.state
-        return Employee.objects.filter(state=user_state).select_related('category').select_related('employeeproject')
+        return Employee.objects.filter(state=user_state).select_related('category').select_related('job_data')
 
 
 class PayrollListView(LoginRequiredMixin, PortalUserMixin, ListView):

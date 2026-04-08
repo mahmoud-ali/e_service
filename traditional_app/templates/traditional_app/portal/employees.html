@@ -26,12 +26,12 @@
             </div>
             <div class="form-control">
                 <label class="label">
-                    <span class="label-text">نوع التعاقد</span>
+                    <span class="label-text">نوع الارتباط</span>
                 </label>
-                <select name="no3_elta3god" class="select select-bordered">
+                <select name="association_type" class="select select-bordered">
                     <option value="">الكل</option>
                     {% for value, label in employee_type_choices %}
-                    <option value="{{ value }}" {% if request.GET.no3_elta3god == value|stringformat:"s" %}selected{% endif %}>{{ label }}</option>
+                    <option value="{{ value }}" {% if request.GET.association_type == value|stringformat:"s" %}selected{% endif %}>{{ label }}</option>
                     {% endfor %}
                 </select>
             </div>
@@ -54,8 +54,8 @@
                     <tr>
                         <th>#</th>
                         <th>الاسم</th>
-                        <th>نوع التعاقد</th>
-                        <th>الوظيفة</th>
+                        <th>نوع الارتباط</th>
+                        <th>المسمى الوظيفي</th>
                         <th>الفئة</th>
                         <th>الإجراءات</th>
                     </tr>
@@ -67,15 +67,15 @@
                         <td>{{ employee.name }}</td>
                         <td>
                             <span class="badge 
-                                {% if employee.no3_elta3god == 1 %}badge-primary
-                                {% elif employee.no3_elta3god == 2 %}badge-success
-                                {% elif employee.no3_elta3god == 3 %}badge-warning
-                                {% elif employee.no3_elta3god == 4 %}badge-info
+                                {% if employee.job_data.association_type == 1 %}badge-primary
+                                {% elif employee.job_data.association_type == 2 %}badge-success
+                                {% elif employee.job_data.association_type == 3 %}badge-warning
+                                {% elif employee.job_data.association_type == 4 %}badge-info
                                 {% endif %}">
-                                {{ employee.get_no3_elta3god_display }}
+                                {{ employee.job_data.get_association_type_display }}
                             </span>
                         </td>
-                        <td>{{ employee.job }}</td>
+                        <td>{{ employee.job_data.job_title|default:"-" }}</td>
                         <td>{{ employee.category.name }}</td>
                         <td>
                             <a href="{% url 'traditional_app:portal_employee_detail' employee.id %}" class="btn btn-sm btn-ghost">
