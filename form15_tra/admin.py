@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django import forms
 from form15_tra.models import Market, CollectionForm, CollectorAssignment, APILog
 
 
@@ -6,6 +7,27 @@ from form15_tra.models import Market, CollectionForm, CollectorAssignment, APILo
 class CollectorAssignmentAdmin(admin.ModelAdmin):
     list_display = ('user', 'market','is_observer', 'is_collector', 'is_senior_collector')
     search_fields = ('user__username', 'market__market_name')
+    readonly_fields = ("esali_password_enc", "esali_service_id") 
+
+    class Form(forms.ModelForm):
+        esali_password_plain = forms.CharField(
+            required=False,
+            widget=forms.PasswordInput(render_value=True),
+            help_text="Enter plain Esali password to (re-)encrypt. Leave empty to keep current encrypted value.",
+            label="Esali password (plain)",
+        )
+
+        class Meta:
+            model = CollectorAssignment
+            fields = ["user", "market", "is_collector", "is_senior_collector", "is_observer", "esali_username", "esali_password_enc"] #, "esali_service_id"
+
+    form = Form
+
+    def save_model(self, request, obj, form, change):
+        plain = str(form.cleaned_data.get("esali_password_plain") or "")
+        if plain.strip() != "":
+            obj.set_esali_password_plain(plain)
+        return super().save_model(request, obj, form, change)
 
 
 @admin.register(Market)

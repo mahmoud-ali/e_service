@@ -51,3 +51,46 @@ class CancelCollectionSerializer(serializers.Serializer):
     Serializer for the cancellation action.
     """
     cancellation_reason = serializers.CharField(required=True, min_length=5)
+
+
+class MarkPaidBulkSerializer(serializers.Serializer):
+    """
+    Request payload serializer for bulk mark-paid action.
+    """
+    ids = serializers.ListField(
+        child=serializers.IntegerField(min_value=1),
+        allow_empty=False,
+        required=True,
+    )
+
+
+class InvoiceRefSerializer(serializers.Serializer):
+    id = serializers.IntegerField(min_value=1)
+    invoice_id = serializers.CharField(min_length=1, max_length=64)
+
+
+class SetPendingPaymentInvoicesSerializer(serializers.Serializer):
+    invoices = serializers.ListField(
+        child=InvoiceRefSerializer(),
+        allow_empty=False,
+        required=True,
+    )
+
+
+class ReceiptRefSerializer(serializers.Serializer):
+    id = serializers.IntegerField(min_value=1)
+    receipt_number = serializers.CharField(min_length=1, max_length=64)
+    rrn_number = serializers.CharField(min_length=1, max_length=64, required=False, allow_blank=True)
+
+
+class MarkPaidReceiptsSerializer(serializers.Serializer):
+    receipts = serializers.ListField(
+        child=ReceiptRefSerializer(),
+        allow_empty=False,
+        required=True,
+    )
+
+
+class UpdateEsaliServiceIdSerializer(serializers.Serializer):
+    collector_username = serializers.CharField(required=True, allow_blank=False, trim_whitespace=True)
+    esali_service_id = serializers.CharField(required=True, allow_blank=False, trim_whitespace=True)

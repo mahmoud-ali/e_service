@@ -1,0 +1,15 @@
+[run]
+branch = True
+source =
+    form15_tra
+omit =
+    */migrations/*
+    */tests/*
+    */verify_workflow.py
+    */admin.py
+
+[report]
+show_missing = True
+skip_covered = True
+fail_under = 95
+

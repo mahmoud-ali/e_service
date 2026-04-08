@@ -1,12 +1,17 @@
 from django.conf import settings
 from django.db import models
-from django.core.validators import RegexValidator
+from django.db.models import Index
 from django.core.exceptions import ValidationError
+from django.core.validators import RegexValidator
 from typing import Any
+from django.db import transaction
+import os
 
-# from traditional_app.models import LkpSoag
+from cryptography.fernet import Fernet, InvalidToken
 
-PRICE_PER_SACK = 25000
+from company_profile.models import LkpState #, LkpLocality
+
+PRICE_PER_SACK = getattr(settings, "PRICE_PER_SACK", 25000)
 
 class Market(models.Model):
     """
@@ -14,6 +19,8 @@ class Market(models.Model):
     """
     market_name = models.CharField(max_length=255)
     location = models.CharField(max_length=255)
+    state = models.ForeignKey(LkpState, on_delete=models.PROTECT, verbose_name="الولاية",null=True,blank=True)
+    # locality = models.ForeignKey(LkpLocality, on_delete=models.PROTECT, verbose_name="المحلية",null=True,blank=True)
 
     def __str__(self) -> str:
         return self.market_name
@@ -38,18 +45,27 @@ class CollectorAssignment(models.Model):
         related_name='collectors'
     )
     is_collector = models.BooleanField(
+        verbose_name="متحصل",
         default=False,
         help_text="يسمح للمستخدم بإنشاء وتأكيد إيصالات التحصيل."
     )
     is_senior_collector = models.BooleanField(
+        verbose_name="كبير متحصل",
         default=False,
         help_text="يسمح للمستخدم بإلغاء إيصالات التحصيل."
     )
 
     is_observer = models.BooleanField(
+        verbose_name="مراقب",
         default=False,
         help_text="يسمح للمستخدم بإنشاء إيصالات مسودة فقط."
     )
+
+    # Esali credentials (used by the TRA invoice daemon).
+    # Stored encrypted at rest; the daemon will decrypt locally using ESALI_FERNET_KEY.
+    esali_username = models.CharField(max_length=128, blank=True, default="")
+    esali_password_enc = models.TextField(blank=True, default="")
+    esali_service_id = models.CharField(max_length=64, blank=True, default="")
 
     class Meta:
         verbose_name = "تكليف متحصل"
@@ -58,9 +74,45 @@ class CollectorAssignment(models.Model):
     def __str__(self) -> str:
         return f"{self.user.username} -> {self.market.market_name}"
 
+    @staticmethod
+    def _get_fernet() -> Fernet:
+        key = getattr(settings, "ESALI_FERNET_KEY", None) or os.getenv("ESALI_FERNET_KEY", "")
+        key = str(key).strip()
+        if key == "":
+            raise ValidationError("ESALI_FERNET_KEY is not configured.")
+        try:
+            return Fernet(key.encode("utf-8"))
+        except Exception as exc:
+            raise ValidationError(f"Invalid ESALI_FERNET_KEY: {exc}")
+
+    def set_esali_password_plain(self, password: str) -> None:
+        password = str(password)
+        token = self._get_fernet().encrypt(password.encode("utf-8")).decode("utf-8")
+        self.esali_password_enc = token
+
+    def get_esali_password_plain(self) -> str:
+        token = (self.esali_password_enc or "").strip()
+        if token == "":
+            return ""
+        try:
+            return self._get_fernet().decrypt(token.encode("utf-8")).decode("utf-8")
+        except InvalidToken:
+            raise ValidationError("Invalid encrypted Esali password.")
+
     def clean(self) -> None:
         if sum([self.is_collector, self.is_senior_collector, self.is_observer]) > 1:
             raise ValidationError("لا يمكن للمستخدم أن يمتلك أكثر من دور واحد (مراقب، محصل، كبير متحصلين) في نفس الوقت.")
+
+        if self.is_collector:
+            missing: list[str] = []
+            if str(self.esali_username).strip() == "":
+                missing.append("esali_username")
+            if str(self.esali_password_enc).strip() == "":
+                missing.append("esali_password_enc")
+            if missing:
+                raise ValidationError(
+                    {"__all__": f"Missing required Esali credentials for collector: {', '.join(missing)}"}
+                )
 
     def save(self, *args: Any, **kwargs: Any) -> None:
         self.full_clean()
@@ -76,28 +128,33 @@ class CollectionForm(models.Model):
     
     class Status(models.TextChoices):
         DRAFT = 'Draft', 'مسودة'
-        WAITING_APPROVAL = 'Waiting Approval', 'بانتظار الموافقة'
+        COLLECTOR_CONFIRMATION = 'Collector Confirmation', 'بانتظار تأكيد المتحصل'
+        INVOICE_REQUESTED = 'Invoice Requested', 'تم طلب الفاتورة'
+        INVOICE_QUEUED = 'Invoice Queued', 'تمت جدولة الفاتورة'
         PENDING_PAYMENT = 'Pending Payment', 'بانتظار الدفع'
         PAID = 'Paid', 'تم الدفع'
         CANCELLED = 'Cancelled', 'ملغي'
 
     receipt_number = models.CharField(
+        max_length=64,
+        blank=True
+    )
+    rrn_number = models.CharField(max_length=64, blank=True, default="")
+    miner_name = models.CharField(max_length=255)
+    phone = models.CharField(
         max_length=10,
-        unique=True,
-        blank=True,  # Auto-generated
         validators=[
             RegexValidator(
-                regex='^\d{10}$',
-                message='رقم الإيصال يجب أن يتكون من 10 أرقام بالضبط.',
-                code='invalid_receipt_number'
+                regex=r"^\d{10}$",
+                message="رقم الهاتف يجب أن يكون 10 أرقام بالضبط.",
             )
-        ]
+        ],
     )
-    miner_name = models.CharField(max_length=255)
     sacks_count = models.DecimalField(max_digits=12, decimal_places=2)
     total_amount = models.DecimalField(max_digits=12, decimal_places=2)
+    invoice_id = models.CharField(max_length=64, null=True, blank=True, db_index=True)
     status = models.CharField(
-        max_length=20,
+        max_length=30,
         choices=Status.choices,
         default=Status.DRAFT
     )
@@ -122,9 +179,30 @@ class CollectionForm(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    created_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+        related_name='+'
+    )
+
+    updated_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+        related_name='+'
+    )
+
     class Meta:
         verbose_name = "إيصال تحصيل"
         verbose_name_plural = "إيصالات التحصيل"
+        indexes = [
+            Index(fields=["receipt_number"], name="idx_collection_receipt_number"),
+            Index(fields=["rrn_number"], name="idx_collection_rrn_number"),
+            Index(fields=["miner_name"], name="idx_collection_miner_name"),
+        ]
 
     def __str__(self) -> str:
         return f"إيصال {self.receipt_number} - {self.get_status_display()}"
@@ -137,11 +215,17 @@ class CollectionForm(models.Model):
             old_instance = CollectionForm.objects.get(pk=self.pk)
             
             # BR-02: Locking: Forms in Pending Payment or Paid status must be immutable for standard fields.
-            if old_instance.status in [self.Status.PENDING_PAYMENT, self.Status.PAID, self.Status.WAITING_APPROVAL]:
+            if old_instance.status in [
+                self.Status.COLLECTOR_CONFIRMATION,
+                self.Status.INVOICE_REQUESTED,
+                self.Status.INVOICE_QUEUED,
+                self.Status.PENDING_PAYMENT,
+                self.Status.PAID,
+            ]:
                 # List of fields that should not change after Draft
                 protected_fields = [
-                    'receipt_number', 'miner_name', 'sacks_count', 
-                    'total_amount', 'collector', 'market'
+                    'miner_name', 'sacks_count', 
+                    'phone', 'total_amount', 'collector', 'market'
                 ]
                 for field in protected_fields:
                     if getattr(self, field) != getattr(old_instance, field):
@@ -152,35 +236,8 @@ class CollectionForm(models.Model):
                 raise ValidationError("لا يمكن إلغاء إيصال تم دفعه بالفعل.")
 
     def save(self, *args: Any, **kwargs: Any) -> None:
-        if not self.receipt_number:
-            # Calculate total amount
-            self.total_amount = self.sacks_count * PRICE_PER_SACK
-
-            prefix = str(self.market.id)
-            # Find the next sequence number for this market
-            last_receipt = CollectionForm.objects.filter(market=self.market).order_by('-receipt_number').first()
-            if last_receipt and last_receipt.receipt_number.startswith(prefix):
-                 # Extract sequence part. Assuming format is {prefix}{sequence}
-                 # Be careful if receipt_number format was different before or if prefix length varies.
-                 # Given the requirement, I'll count + 1 which is simpler but has race conditions.
-                 # For robust unique generation, usually one would use a separate Sequence model or DB sequence.
-                 # For this task, I will use count + 1 logic adjusted to ensure uniqueness loop or use max.
-                 
-                 # Using max receipt number for safety against deletions
-                 # However, since receipt_number is string, naive max might be wrong if lengths differ, but here fixed 10.
-                 # Let's try simple count logic first as requested "start by market id".
-                 # Actually, better practice:
-                 pass
-
-            # Count verification
-            count = CollectionForm.objects.filter(market=self.market).count() + 1
-            while True:
-                candidate = f"{prefix}{count:0{10-len(prefix)}d}"
-                if not CollectionForm.objects.filter(receipt_number=candidate).exists():
-                    self.receipt_number = candidate
-                    break
-                count += 1
-
+        # Ensure total_amount is always calculated.
+        self.total_amount = self.sacks_count * PRICE_PER_SACK
         self.full_clean()
         super().save(*args, **kwargs)
 

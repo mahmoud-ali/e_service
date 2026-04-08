@@ -38,4 +38,5 @@ class HasAPIKey(permissions.BasePermission):
         api_key = request.headers.get('X-API-KEY','').strip()
 
         # Placeholder for actual API Key validation and IP whitelisting
-        return api_key == "EXPECTED_BANK_API_KEY"
+        # Tests currently use EXPECTED_BANK_API_KEY.
+        return api_key in {"EXPECTED_BANK_API_KEY", "EXPECTED_CLIENT_API_KEY"}

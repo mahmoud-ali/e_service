@@ -1,12 +1,11 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from form15_tra.api.views import CollectionFormViewSet, MarketViewSet, BankCallbackWebhook
+from form15_tra.api.views import CollectionFormViewSet, MarketViewSet
 
 router = DefaultRouter()
 router.register(r'collections', CollectionFormViewSet, basename='collection')
 router.register(r'markets', MarketViewSet, basename='market')
 
 urlpatterns = [
-    path('webhooks/bank-callback/', BankCallbackWebhook.as_view(), name='bank-callback'),
     path('', include(router.urls)),
 ]

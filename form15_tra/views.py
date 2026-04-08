@@ -32,10 +32,10 @@ class DashboardView(LoginRequiredMixin, ListView):
         if self.request.user.assignment.is_senior_collector:
             qs = qs.exclude(status=CollectionForm.Status.DRAFT)
         elif self.request.user.assignment.is_collector:
-            # Collectors see their own drafts + Waiting Approval from observers
+            # Collectors see their own drafts + receipts awaiting their confirmation
             qs = qs.filter(
                 Q(collector=self.request.user) | 
-                Q(status=CollectionForm.Status.WAITING_APPROVAL)
+                Q(status=CollectionForm.Status.COLLECTOR_CONFIRMATION)
             )
         else:
             # Observers (and others) see only their own
@@ -45,6 +45,8 @@ class DashboardView(LoginRequiredMixin, ListView):
         if query:
             qs = qs.filter(
                 Q(receipt_number=query) |
+                Q(invoice_id=query) |
+                Q(rrn_number=query) |
                 Q(miner_name__icontains=query)
             )
 
@@ -124,21 +126,50 @@ class CollectionDetailView(LoginRequiredMixin, DetailView):
 class InvoicePrintView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
     """
     View for professional invoice printing.
-    Only allows 'Paid' invoices to be printed.
+    Only allows 'Pending Payment' invoices to be printed.
     """
     model = CollectionForm
     template_name = 'mining/invoice_print.html'
 
     def test_func(self) -> bool:
         obj = self.get_object()
-        return obj.status == CollectionForm.Status.PAID
+        has_assignment = hasattr(self.request.user, 'assignment')
+        can_print = has_assignment and (
+            self.request.user.assignment.is_collector or
+            self.request.user.assignment.is_senior_collector
+        )
+        return can_print and obj.status == CollectionForm.Status.PENDING_PAYMENT
 
     def handle_no_permission(self):
         if not self.request.user.is_authenticated:
             return super().handle_no_permission()
-        messages.error(self.request, "يمكن طباعة الإيصالات المدفوعة فقط")
+        messages.error(self.request, "ليس لديك صلاحية للطباعة")
         return redirect('collection-detail', pk=self.get_object().pk)
     
+
+class ReceiptPrintView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
+    """
+    View for receipt printing.
+    Only allows 'Paid' receipts to be printed.
+    """
+    model = CollectionForm
+    template_name = 'mining/receipt_print.html'
+
+    def test_func(self) -> bool:
+        obj = self.get_object()
+        has_assignment = hasattr(self.request.user, 'assignment')
+        can_print = has_assignment and (
+            self.request.user.assignment.is_collector or
+            self.request.user.assignment.is_senior_collector
+        )
+        return can_print and obj.status == CollectionForm.Status.PAID
+
+    def handle_no_permission(self):
+        if not self.request.user.is_authenticated:
+            return super().handle_no_permission()
+        messages.error(self.request, "ليس لديك صلاحية للطباعة")
+        return redirect('collection-detail', pk=self.get_object().pk)
+
 
 class CollectionActionView(LoginRequiredMixin, View):
     """
@@ -157,11 +188,11 @@ class CollectionActionView(LoginRequiredMixin, View):
                 messages.error(request, "لا يمكن تأكيد هذا الإيصال.")
             else:
                 if request.user.assignment.is_observer:
-                    collection.status = CollectionForm.Status.WAITING_APPROVAL
-                    messages.success(request, "تم تأكيد الإيصال وإرساله للموافقة.")
+                    collection.status = CollectionForm.Status.COLLECTOR_CONFIRMATION
+                    messages.success(request, "تم تأكيد الإيصال وإرساله لتأكيد المتحصل.")
                 else:
-                    collection.status = CollectionForm.Status.PENDING_PAYMENT
-                    messages.success(request, "تم تأكيد الإيصال وأصبح بانتظار الدفع.")
+                    collection.status = CollectionForm.Status.INVOICE_REQUESTED
+                    messages.success(request, "تم تأكيد الإيصال وتم طلب الفاتورة.")
                 collection.save()
         
         elif action == 'approve':
@@ -169,12 +200,12 @@ class CollectionActionView(LoginRequiredMixin, View):
                 messages.error(request, "ليس لديك صلاحية للموافقة على الإيصالات.")
                 return redirect('collection-detail', pk=pk)
 
-             if collection.status != CollectionForm.Status.WAITING_APPROVAL:
-                 messages.error(request, "لا يمكن الموافقة على هذا الإيصال.")
+             if collection.status != CollectionForm.Status.COLLECTOR_CONFIRMATION:
+                 messages.error(request, "لا يمكن تأكيد هذا الإيصال في هذه المرحلة.")
              else:
-                 collection.status = CollectionForm.Status.PENDING_PAYMENT
+                 collection.status = CollectionForm.Status.INVOICE_REQUESTED
                  collection.save()
-                 messages.success(request, "تمت الموافقة على الإيصال وأصبح بانتظار الدفع.")
+                 messages.success(request, "تم تأكيد الإيصال وتم طلب الفاتورة.")
 
         elif action == 'cancel':
             if not (hasattr(request.user, 'assignment') and request.user.assignment.is_senior_collector):
