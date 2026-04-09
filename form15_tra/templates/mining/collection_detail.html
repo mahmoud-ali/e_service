@@ -82,7 +82,7 @@
     <div class="px-4 py-3 bg-gray-50 text-left sm:px-6 flex flex-row-reverse gap-2">
         {% if object.status == 'Paid' %}
         {% if user.assignment.is_collector or user.assignment.is_senior_collector %}
-        <a href="{% url 'receipt-print' object.pk %}" target="_blank"
+        <a href="{% url 'receipt-print' object.pk %}" 
             class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
             طباعة الإيصال
         </a>
@@ -91,7 +91,7 @@
 
         {% if object.status == 'Pending Payment' %}
         {% if user.assignment.is_collector or user.assignment.is_senior_collector %}
-        <a href="{% url 'invoice-print' object.pk %}" target="_blank"
+        <a href="{% url 'invoice-print' object.pk %}" 
             class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
             طباعة الفاتورة
         </a>
