@@ -58,6 +58,10 @@ from dotenv import load_dotenv
 
 import sys
 
+import urllib3
+
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
 # Standalone deployment support:
 # Ensure this script's directory is on sys.path so `import lib.*` works even
 # when the parent package (`form15_tra`) is not deployed.
