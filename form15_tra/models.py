@@ -8,7 +8,7 @@ import os
 
 from cryptography.fernet import Fernet, InvalidToken
 
-# from traditional_app.models import LkpSoag
+from company_profile.models import LkpState #, LkpLocality
 
 PRICE_PER_SACK = getattr(settings, "PRICE_PER_SACK", 25000)
 
@@ -18,6 +18,8 @@ class Market(models.Model):
     """
     market_name = models.CharField(max_length=255)
     location = models.CharField(max_length=255)
+    state = models.ForeignKey(LkpState, on_delete=models.PROTECT, verbose_name="الولاية",null=True,blank=True)
+    # locality = models.ForeignKey(LkpLocality, on_delete=models.PROTECT, verbose_name="المحلية",null=True,blank=True)
 
     def __str__(self) -> str:
         return self.market_name
