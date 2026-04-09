@@ -232,20 +232,6 @@ class CollectionForm(models.Model):
             # Calculate total amount
             self.total_amount = self.sacks_count * PRICE_PER_SACK
 
-            # Auto-generate receipt_number (10 chars) as: {market_id}{sequence_padded}
-            # Sequence is per-market and starts at 1.
-            prefix = str(self.market_id) if self.market_id is not None else ""
-            width = max(1, 10 - len(prefix))
-            with transaction.atomic():
-                existing = (
-                    CollectionForm.objects.select_for_update()
-                    .filter(market_id=self.market_id)
-                    .exclude(pk=self.pk)
-                    .count()
-                )
-                seq = existing + 1
-                self.receipt_number = f"{prefix}{seq:0{width}d}"
-
         self.full_clean()
         super().save(*args, **kwargs)
 
