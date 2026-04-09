@@ -80,6 +80,7 @@ class SetPendingPaymentInvoicesSerializer(serializers.Serializer):
 class ReceiptRefSerializer(serializers.Serializer):
     id = serializers.IntegerField(min_value=1)
     receipt_number = serializers.CharField(min_length=1, max_length=64)
+    rrn_number = serializers.CharField(min_length=1, max_length=64, required=False, allow_blank=True)
 
 
 class MarkPaidReceiptsSerializer(serializers.Serializer):
@@ -88,3 +89,8 @@ class MarkPaidReceiptsSerializer(serializers.Serializer):
         allow_empty=False,
         required=True,
     )
+
+
+class UpdateEsaliServiceIdSerializer(serializers.Serializer):
+    collector_username = serializers.CharField(required=True, allow_blank=False, trim_whitespace=True)
+    esali_service_id = serializers.CharField(required=True, allow_blank=False, trim_whitespace=True)

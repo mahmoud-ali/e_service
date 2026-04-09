@@ -1,12 +1,16 @@
 from django.conf import settings
 from django.db import models
 from django.core.exceptions import ValidationError
+from django.core.validators import RegexValidator
 from typing import Any
 from django.db import transaction
+import os
+
+from cryptography.fernet import Fernet, InvalidToken
 
 # from traditional_app.models import LkpSoag
 
-PRICE_PER_SACK = 25000
+PRICE_PER_SACK = getattr(settings, "PRICE_PER_SACK", 25000)
 
 class Market(models.Model):
     """
@@ -51,6 +55,12 @@ class CollectorAssignment(models.Model):
         help_text="يسمح للمستخدم بإنشاء إيصالات مسودة فقط."
     )
 
+    # Esali credentials (used by the TRA invoice daemon).
+    # Stored encrypted at rest; the daemon will decrypt locally using ESALI_FERNET_KEY.
+    esali_username = models.CharField(max_length=128, blank=True, default="")
+    esali_password_enc = models.TextField(blank=True, default="")
+    esali_service_id = models.CharField(max_length=64, blank=True, default="")
+
     class Meta:
         verbose_name = "تكليف متحصل"
         verbose_name_plural = "تكليف المتحصلين"
@@ -58,9 +68,45 @@ class CollectorAssignment(models.Model):
     def __str__(self) -> str:
         return f"{self.user.username} -> {self.market.market_name}"
 
+    @staticmethod
+    def _get_fernet() -> Fernet:
+        key = getattr(settings, "ESALI_FERNET_KEY", None) or os.getenv("ESALI_FERNET_KEY", "")
+        key = str(key).strip()
+        if key == "":
+            raise ValidationError("ESALI_FERNET_KEY is not configured.")
+        try:
+            return Fernet(key.encode("utf-8"))
+        except Exception as exc:
+            raise ValidationError(f"Invalid ESALI_FERNET_KEY: {exc}")
+
+    def set_esali_password_plain(self, password: str) -> None:
+        password = str(password)
+        token = self._get_fernet().encrypt(password.encode("utf-8")).decode("utf-8")
+        self.esali_password_enc = token
+
+    def get_esali_password_plain(self) -> str:
+        token = (self.esali_password_enc or "").strip()
+        if token == "":
+            return ""
+        try:
+            return self._get_fernet().decrypt(token.encode("utf-8")).decode("utf-8")
+        except InvalidToken:
+            raise ValidationError("Invalid encrypted Esali password.")
+
     def clean(self) -> None:
         if sum([self.is_collector, self.is_senior_collector, self.is_observer]) > 1:
             raise ValidationError("لا يمكن للمستخدم أن يمتلك أكثر من دور واحد (مراقب، محصل، كبير متحصلين) في نفس الوقت.")
+
+        if self.is_collector:
+            missing: list[str] = []
+            if str(self.esali_username).strip() == "":
+                missing.append("esali_username")
+            if str(self.esali_password_enc).strip() == "":
+                missing.append("esali_password_enc")
+            if missing:
+                raise ValidationError(
+                    {"__all__": f"Missing required Esali credentials for collector: {', '.join(missing)}"}
+                )
 
     def save(self, *args: Any, **kwargs: Any) -> None:
         self.full_clean()
@@ -87,7 +133,17 @@ class CollectionForm(models.Model):
         max_length=64,
         blank=True
     )
+    rrn_number = models.CharField(max_length=64, blank=True, default="")
     miner_name = models.CharField(max_length=255)
+    phone = models.CharField(
+        max_length=10,
+        validators=[
+            RegexValidator(
+                regex=r"^\d{10}$",
+                message="رقم الهاتف يجب أن يكون 10 أرقام بالضبط.",
+            )
+        ],
+    )
     sacks_count = models.DecimalField(max_digits=12, decimal_places=2)
     total_amount = models.DecimalField(max_digits=12, decimal_places=2)
     invoice_id = models.CharField(max_length=64, null=True, blank=True, db_index=True)
@@ -158,7 +214,7 @@ class CollectionForm(models.Model):
                 # List of fields that should not change after Draft
                 protected_fields = [
                     'miner_name', 'sacks_count', 
-                    'total_amount', 'collector', 'market'
+                    'phone', 'total_amount', 'collector', 'market'
                 ]
                 for field in protected_fields:
                     if getattr(self, field) != getattr(old_instance, field):

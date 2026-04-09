@@ -3,7 +3,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from django.db import transaction
-from form15_tra.models import Market, CollectionForm, APILog
+from form15_tra.models import Market, CollectionForm, APILog, CollectorAssignment
 from form15_tra.api.serializers import (
     MarketSerializer,
     CollectionFormSerializer,
@@ -11,6 +11,7 @@ from form15_tra.api.serializers import (
     MarkPaidBulkSerializer,
     SetPendingPaymentInvoicesSerializer,
     MarkPaidReceiptsSerializer,
+    UpdateEsaliServiceIdSerializer,
 )
 from form15_tra.api.permissions import IsCollector, IsSeniorCollector, HasAPIKey
 from typing import Any
@@ -45,6 +46,10 @@ class CollectionFormViewSet(viewsets.ModelViewSet):
         elif self.action == 'mark_paid':
             permission_classes = [HasAPIKey]
         elif self.action == 'set_pending_payment':
+            permission_classes = [HasAPIKey]
+        elif self.action == "collector_esali_config":
+            permission_classes = [HasAPIKey]
+        elif self.action == "update_esali_service_id":
             permission_classes = [HasAPIKey]
         else:
             permission_classes = [permissions.IsAuthenticated]
@@ -176,10 +181,18 @@ class CollectionFormViewSet(viewsets.ModelViewSet):
                 results = list(
                     CollectionForm.objects.select_related("market")
                     .filter(id__in=ids)
-                    .values("id", "miner_name", "total_amount", "market__market_name")
+                    .values(
+                        "id",
+                        "miner_name",
+                        "phone",
+                        "total_amount",
+                        "market__market_name",
+                        "collector__username",
+                    )
                 )
                 for row in results:
                     row["market_name"] = row.pop("market__market_name")
+                    row["collector_username"] = row.pop("collector__username")
 
             payload = {
                 "updated": updated,
@@ -215,6 +228,96 @@ class CollectionFormViewSet(viewsets.ModelViewSet):
                 collection_form=None,
             )
             return Response(error_data, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    @action(detail=False, methods=["post"], url_path="collector-esali-config")
+    def collector_esali_config(self, request: Any) -> Response:
+        """
+        POST /api/v1/collections/collector-esali-config/
+        Fetch Esali credentials (encrypted password) for a given collector username.
+        Secured by X-API-KEY (background service).
+        """
+        ip_address = request.META.get("REMOTE_ADDR")
+        collector_username = str((request.data or {}).get("collector_username", "")).strip()
+        if not collector_username:
+            return Response({"error": "collector_username is required"}, status=status.HTTP_400_BAD_REQUEST)
+
+        assignment = (
+            CollectorAssignment.objects.select_related("user")
+            .filter(user__username=collector_username, is_collector=True)
+            .first()
+        )
+        if assignment is None:
+            return Response({"error": "collector not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        payload = {
+            "collector_username": collector_username,
+            "esali_username": assignment.esali_username,
+            "esali_password_enc": assignment.esali_password_enc,
+            "esali_service_id": assignment.esali_service_id,
+        }
+
+        APILog.objects.create(
+            action="collector_esali_config",
+            user=None,
+            request_data={"collector_username": collector_username},
+            response_data={"collector_username": collector_username},
+            status_code=status.HTTP_200_OK,
+            ip_address=ip_address,
+            collection_form=None,
+        )
+        return Response(payload, status=status.HTTP_200_OK)
+
+    @action(
+        detail=False,
+        methods=["post"],
+        url_path="update-esali-service-id",
+        serializer_class=UpdateEsaliServiceIdSerializer,
+    )
+    def update_esali_service_id(self, request: Any) -> Response:
+        """
+        POST /api/v1/collections/update-esali-service-id/
+        Update Esali service_id for a collector (background service).
+        Secured by X-API-KEY.
+        """
+        ip_address = request.META.get("REMOTE_ADDR")
+        serializer = UpdateEsaliServiceIdSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        collector_username = str(serializer.validated_data["collector_username"]).strip()
+        esali_service_id = str(serializer.validated_data["esali_service_id"]).strip()
+
+        assignment = (
+            CollectorAssignment.objects.select_related("user")
+            .filter(user__username=collector_username, is_collector=True)
+            .first()
+        )
+        if assignment is None:
+            error_data = {"error": "collector not found"}
+            APILog.objects.create(
+                action="update_esali_service_id_failed",
+                user=None,
+                request_data={"collector_username": collector_username},
+                response_data=error_data,
+                status_code=status.HTTP_400_BAD_REQUEST,
+                ip_address=ip_address,
+                collection_form=None,
+            )
+            return Response(error_data, status=status.HTTP_400_BAD_REQUEST)
+
+        assignment.esali_service_id = esali_service_id
+        assignment.save(update_fields=["esali_service_id"])
+
+        payload = {"collector_username": collector_username, "esali_service_id": esali_service_id}
+        APILog.objects.create(
+            action="update_esali_service_id",
+            user=None,
+            request_data={"collector_username": collector_username},
+            response_data={"collector_username": collector_username},
+            status_code=status.HTTP_200_OK,
+            ip_address=ip_address,
+            collection_form=None,
+        )
+        return Response(payload, status=status.HTTP_200_OK)
 
     @action(
         detail=False,
@@ -296,7 +399,10 @@ class CollectionFormViewSet(viewsets.ModelViewSet):
         serializer.is_valid(raise_exception=True)
 
         receipts: list[dict[str, Any]] = serializer.validated_data["receipts"]
-        receipt_map: dict[int, str] = {item["id"]: item["receipt_number"] for item in receipts}
+        receipt_map: dict[int, tuple[str, str]] = {
+            item["id"]: (item["receipt_number"], item.get("rrn_number") or "")
+            for item in receipts
+        }
         ids = list(receipt_map.keys())
         requested = len(ids)
 
@@ -311,9 +417,11 @@ class CollectionFormViewSet(viewsets.ModelViewSet):
                 )
                 updated = 0
                 for form in eligible:
-                    form.receipt_number = receipt_map.get(form.id, "")
+                    receipt_number, rrn_number = receipt_map.get(form.id, ("", ""))
+                    form.receipt_number = receipt_number
+                    form.rrn_number = rrn_number
                     form.status = CollectionForm.Status.PAID
-                    form.save(update_fields=["receipt_number", "status"])
+                    form.save(update_fields=["receipt_number", "rrn_number", "status"])
                     updated += 1
 
             payload = {"requested": requested, "updated": updated, "skipped": requested - updated}

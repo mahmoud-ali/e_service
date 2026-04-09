@@ -45,6 +45,10 @@ SECURE_HSTS_PRELOAD = config("SECURE_HSTS_PRELOAD", default=True, cast=bool)
 SESSION_COOKIE_SECURE = config("SESSION_COOKIE_SECURE", default=True, cast=bool)
 CSRF_COOKIE_SECURE = config("CSRF_COOKIE_SECURE", default=True, cast=bool)
 
+# Form15 TRA
+PRICE_PER_SACK = config("PRICE_PER_SACK", default=25000, cast=int)
+ESALI_FERNET_KEY = config('ESALI_FERNET_KEY')
+
 # Application definition
 
 INSTALLED_APPS = [

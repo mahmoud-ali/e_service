@@ -1,0 +1,32 @@
+[Unit]
+Description=Form15 TRA E15 sync worker
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+User=mahmoud
+WorkingDirectory=/home/mahmoud/esali_sync
+
+# Load secrets/config (API keys, fernet key, etc.)
+EnvironmentFile=/home/mahmoud/esali_sync/.env
+
+# Run by script path
+ExecStart=/home/mahmoud/esali_sync/.venv/bin/python /home/mahmoud/esali_sync/sync_e15.py
+
+Restart=on-failure
+RestartSec=5
+
+# Hardening (safe defaults; adjust if you later need write access outside WorkingDirectory)
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=true
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
+

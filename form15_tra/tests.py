@@ -8,8 +8,21 @@ from rest_framework.test import APIClient
 from rest_framework.test import APIRequestFactory
 from form15_tra.api.serializers import CollectionFormSerializer
 from unittest.mock import patch
+from typing import Any
+from cryptography.fernet import Fernet
+from django.conf import settings
 
 User = get_user_model()
+
+# Provide a default valid phone for all CollectionForm creations in this test module.
+# Phone is required and must be exactly 10 digits.
+_ORIG_COLLECTIONFORM_CREATE = CollectionForm.objects.create
+
+def _collectionform_create_with_phone(*args: Any, **kwargs: Any) -> Any:
+    kwargs.setdefault("phone", "0123456789")
+    return _ORIG_COLLECTIONFORM_CREATE(*args, **kwargs)
+
+CollectionForm.objects.create = _collectionform_create_with_phone  # type: ignore[assignment]
 
 class MiningSystemTests(TestCase):
     """
@@ -18,6 +31,9 @@ class MiningSystemTests(TestCase):
     """
 
     def setUp(self) -> None:
+        # CollectorAssignment now requires Esali credentials for collectors (encrypted at rest).
+        # Provide a stable key for this test module.
+        settings.ESALI_FERNET_KEY = Fernet.generate_key().decode("utf-8")
         self.market = Market.objects.create(market_name="Test Market", location="Test Location")
         self.collector = User.objects.create_user(
             username="collector", password="password"
@@ -28,11 +44,15 @@ class MiningSystemTests(TestCase):
         self.senior_collector = User.objects.create_user(
             username="senior", password="password"
         )
-        self.assignment = CollectorAssignment.objects.create(
+        self.assignment = CollectorAssignment(
             user=self.collector,
             market=self.market,
-            is_collector=True
+            is_collector=True,
+            esali_username="esali_u",
+            esali_service_id="S1",
         )
+        self.assignment.set_esali_password_plain("esali_p")
+        self.assignment.save()
         self.observer_assignment = CollectorAssignment.objects.create(
             user=self.observer,
             market=self.market,
@@ -51,6 +71,7 @@ class MiningSystemTests(TestCase):
         """
         form = CollectionForm(
             miner_name="John Doe",
+            phone="0123456789",
             sacks_count=10,
             total_amount=Decimal("1000.00"),
             collector=self.collector,
@@ -73,6 +94,28 @@ class MiningSystemTests(TestCase):
         )
         expected_receipt_2 = f"{prefix}{2:0{10-len(prefix)}d}"
         self.assertEqual(form2.receipt_number, expected_receipt_2)
+
+    def test_phone_must_be_exactly_10_digits(self) -> None:
+        bad = CollectionForm(
+            miner_name="Bad Phone",
+            phone="123",
+            sacks_count=10,
+            total_amount=Decimal("1000.00"),
+            collector=self.collector,
+            market=self.market,
+        )
+        with self.assertRaises(ValidationError):
+            bad.full_clean()
+
+        good = CollectionForm(
+            miner_name="Good Phone",
+            phone="0123456789",
+            sacks_count=10,
+            total_amount=Decimal("1000.00"),
+            collector=self.collector,
+            market=self.market,
+        )
+        good.full_clean()
 
     def test_draft_to_invoice_requested_transition(self) -> None:
         """
@@ -195,6 +238,7 @@ class MiningSystemTests(TestCase):
         )
         response = self.client.post(reverse('collection-edit', kwargs={'pk': form.pk}), {
             'miner_name': "New Name",
+            'phone': "0123456789",
             'sacks_count': 15,
             'total_amount': 150.0
         })
@@ -584,10 +628,19 @@ class MiningSystemTests(TestCase):
 
 class CollectionApiActionTests(TestCase):
     def setUp(self) -> None:
+        settings.ESALI_FERNET_KEY = Fernet.generate_key().decode("utf-8")
         self.market = Market.objects.create(market_name="Test Market", location="Test Location")
 
         self.collector = User.objects.create_user(username="collector_api", password="password")
-        CollectorAssignment.objects.create(user=self.collector, market=self.market, is_collector=True)
+        a = CollectorAssignment(
+            user=self.collector,
+            market=self.market,
+            is_collector=True,
+            esali_username="esali_u",
+            esali_service_id="S1",
+        )
+        a.set_esali_password_plain("esali_p")
+        a.save()
 
         self.senior = User.objects.create_user(username="senior_api", password="password")
         CollectorAssignment.objects.create(user=self.senior, market=self.market, is_senior_collector=True)
@@ -683,9 +736,18 @@ class CollectionApiActionTests(TestCase):
 
 class CollectionSerializerCreateTests(TestCase):
     def setUp(self) -> None:
+        settings.ESALI_FERNET_KEY = Fernet.generate_key().decode("utf-8")
         self.market = Market.objects.create(market_name="Test Market", location="Test Location")
         self.collector = User.objects.create_user(username="collector_create", password="password")
-        CollectorAssignment.objects.create(user=self.collector, market=self.market, is_collector=True)
+        a = CollectorAssignment(
+            user=self.collector,
+            market=self.market,
+            is_collector=True,
+            esali_username="esali_u",
+            esali_service_id="S1",
+        )
+        a.set_esali_password_plain("esali_p")
+        a.save()
 
         self.api_client = APIClient()
 
@@ -726,9 +788,18 @@ class CollectionSerializerCreateTests(TestCase):
 
 class ApiPermissionBehaviorTests(TestCase):
     def setUp(self) -> None:
+        settings.ESALI_FERNET_KEY = Fernet.generate_key().decode("utf-8")
         self.market = Market.objects.create(market_name="Test Market", location="Test Location")
         self.collector = User.objects.create_user(username="collector_perm", password="password")
-        CollectorAssignment.objects.create(user=self.collector, market=self.market, is_collector=True)
+        a = CollectorAssignment(
+            user=self.collector,
+            market=self.market,
+            is_collector=True,
+            esali_username="esali_u",
+            esali_service_id="S1",
+        )
+        a.set_esali_password_plain("esali_p")
+        a.save()
 
         self.senior = User.objects.create_user(username="senior_perm", password="password")
         CollectorAssignment.objects.create(user=self.senior, market=self.market, is_senior_collector=True)
@@ -834,9 +905,18 @@ class ApiViewsErrorHandlingTests(TestCase):
 
 class HtmlViewsBranchTests(TestCase):
     def setUp(self) -> None:
+        settings.ESALI_FERNET_KEY = Fernet.generate_key().decode("utf-8")
         self.market = Market.objects.create(market_name="Test Market", location="Test Location")
         self.collector = User.objects.create_user(username="collector_html", password="password")
-        CollectorAssignment.objects.create(user=self.collector, market=self.market, is_collector=True)
+        a = CollectorAssignment(
+            user=self.collector,
+            market=self.market,
+            is_collector=True,
+            esali_username="esali_u",
+            esali_service_id="S1",
+        )
+        a.set_esali_password_plain("esali_p")
+        a.save()
 
         self.senior = User.objects.create_user(username="senior_html", password="password")
         CollectorAssignment.objects.create(user=self.senior, market=self.market, is_senior_collector=True)
