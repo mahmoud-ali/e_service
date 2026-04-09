@@ -8,6 +8,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>إيصال تحصيل</title>
 
+    <script>
+        (function () {
+            try {
+                var params = new URLSearchParams(window.location.search);
+                var paper = (params.get("paper") || "80").trim();
+                var root = document.documentElement;
+                root.classList.remove("paper-58", "paper-80");
+                root.classList.add(paper === "58" ? "paper-58" : "paper-80");
+            } catch (e) {
+                document.documentElement.classList.add("paper-80");
+            }
+        })();
+    </script>
+
     <!-- Google Fonts: Cairo -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -29,6 +43,24 @@
 
     <style>
         /* Thermal Printer Optimized CSS */
+        :root {
+            --paper-width: 80mm;
+            --content-pad-x: 3mm;
+            --content-pad-y: 4mm;
+            --base-font-size: 13px;
+            --base-line-height: 18px;
+            --qr-max-size: 140px;
+        }
+
+        html.paper-58 {
+            --paper-width: 58mm;
+            --content-pad-x: 2mm;
+            --content-pad-y: 3mm;
+            --base-font-size: 12px;
+            --base-line-height: 17px;
+            --qr-max-size: 118px;
+        }
+
         @page {
             margin: 0;
             size: auto;
@@ -39,22 +71,23 @@
                 display: none !important;
             }
 
+            html,
             body {
                 background-color: white !important;
                 color: black !important;
                 margin: 0;
                 padding: 0;
-                width: 80mm;
-                /* Standard Thermal Paper Width */
+                width: 100%;
+                max-width: none;
             }
 
             .invoice-box {
                 box-shadow: none !important;
                 border: none !important;
-                margin: 0 !important;
-                padding: 10px !important;
-                width: 100% !important;
-                max-width: none !important;
+                margin: 0 auto !important;
+                padding: var(--content-pad-y) var(--content-pad-x) !important;
+                width: var(--paper-width) !important;
+                max-width: var(--paper-width) !important;
             }
 
             /* Ensure high contrast for thermal printing */
@@ -63,6 +96,19 @@
                 print-color-adjust: exact !important;
                 color: black !important;
                 border-color: black !important;
+                box-shadow: none !important;
+            }
+
+            /* Avoid gray fills from Tailwind classes in print */
+            .total-box,
+            .bg-gray-50,
+            .bg-gray-100,
+            .bg-white {
+                background: transparent !important;
+            }
+
+            a {
+                text-decoration: none !important;
             }
         }
 
@@ -78,9 +124,20 @@
             padding: 20px;
             border: 1px solid #eee;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
-            font-size: 14px;
-            line-height: 20px;
+            font-size: var(--base-font-size);
+            line-height: var(--base-line-height);
             background: #fff;
+        }
+
+        table {
+            width: 100%;
+            table-layout: fixed;
+            border-collapse: collapse;
+        }
+
+        td {
+            overflow-wrap: anywhere;
+            word-break: break-word;
         }
 
         .item-row td {
@@ -157,7 +214,7 @@
         </table>
 
         <!-- Total -->
-        <div class="text-center py-4 bg-gray-50 border-2 border-dashed border-black">
+        <div class="total-box text-center py-4 bg-gray-50 border-2 border-dashed border-black">
             <div class="text-sm font-bold mb-1">المبلغ الإجمالي</div>
             <div class="text-2xl font-bold">{{ object.total_amount |intcomma}} ج.س</div>
         </div>
@@ -204,15 +261,37 @@
                 return;
             }
 
-            container.innerHTML = "";
-            new QRCode(container, {
-                text: value,
-                width: 140,
-                height: 140,
-                colorDark: "#000000",
-                colorLight: "#ffffff",
-                correctLevel: QRCode.CorrectLevel.M
-            });
+            function getQrSizePx() {
+                var styles = window.getComputedStyle(document.documentElement);
+                var maxPxRaw = styles.getPropertyValue("--qr-max-size").trim();
+                var maxPx = parseInt(maxPxRaw.replace("px", ""), 10);
+                if (!Number.isFinite(maxPx)) maxPx = 140;
+
+                var w = container.getBoundingClientRect().width || 0;
+                if (w < 50) {
+                    var paperMmRaw = styles.getPropertyValue("--paper-width").trim();
+                    var paperMm = parseFloat(paperMmRaw.replace("mm", ""));
+                    if (Number.isFinite(paperMm)) w = Math.floor(paperMm * 3.2);
+                }
+
+                var size = Math.floor(Math.min(w, maxPx));
+                return Math.max(80, size);
+            }
+
+            function render() {
+                container.innerHTML = "";
+                var size = getQrSizePx();
+                new QRCode(container, {
+                    text: value,
+                    width: size,
+                    height: size,
+                    colorDark: "#000000",
+                    colorLight: "#ffffff",
+                    correctLevel: QRCode.CorrectLevel.M
+                });
+            }
+
+            requestAnimationFrame(render);
         })();
     </script>
 
