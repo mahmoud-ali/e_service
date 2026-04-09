@@ -11,6 +11,8 @@ from unittest.mock import patch
 from typing import Any
 from cryptography.fernet import Fernet
 from django.conf import settings
+import runpy
+import os
 
 User = get_user_model()
 
@@ -903,6 +905,45 @@ class ApiViewsErrorHandlingTests(TestCase):
         self.assertTrue(APILog.objects.filter(action="mark_paid_bulk_failed").exists())
 
 
+class VerifyWorkflowModuleTests(TestCase):
+    def setUp(self) -> None:
+        settings.ESALI_FERNET_KEY = Fernet.generate_key().decode("utf-8")
+
+    def test_verify_workflow_module_is_import_safe_and_runs(self) -> None:
+        # Ensure importing does not try to reconfigure Django or run setup at import time.
+        from form15_tra import verify_workflow
+
+        with patch("builtins.print"):
+            verify_workflow.test_workflow()
+
+    def test_verify_workflow_main_block_runs(self) -> None:
+        # Covers the bottom `if __name__ == "__main__": ...`
+        with patch("builtins.print"):
+            runpy.run_module("form15_tra.verify_workflow", run_name="__main__")
+
+
+class ApiViewsetPermissionsBranchesTests(TestCase):
+    def test_get_permissions_branches(self) -> None:
+        # Cover CollectionFormViewSet.get_permissions action branching.
+        from form15_tra.api.views import CollectionFormViewSet
+
+        v = CollectionFormViewSet()
+        for action in (
+            "create",
+            "confirm",
+            "cancel",
+            "queue_invoices",
+            "mark_paid",
+            "set_pending_payment",
+            "collector_esali_config",
+            "update_esali_service_id",
+            "list",
+        ):
+            v.action = action
+            perms = v.get_permissions()
+            self.assertTrue(perms)
+
+
 class HtmlViewsBranchTests(TestCase):
     def setUp(self) -> None:
         settings.ESALI_FERNET_KEY = Fernet.generate_key().decode("utf-8")
@@ -1026,3 +1067,279 @@ class HtmlViewsBranchTests(TestCase):
         self.assertEqual(resp.status_code, 302)
         pending.refresh_from_db()
         self.assertEqual(pending.status, CollectionForm.Status.PENDING_PAYMENT)
+
+
+class ApiViewsMoreBranchesTests(TestCase):
+    def setUp(self) -> None:
+        settings.ESALI_FERNET_KEY = Fernet.generate_key().decode("utf-8")
+        self.market = Market.objects.create(market_name="Test Market", location="Test Location")
+
+        self.collector = User.objects.create_user(username="collector_more", password="password")
+        a = CollectorAssignment(
+            user=self.collector,
+            market=self.market,
+            is_collector=True,
+            esali_username="esali_u",
+            esali_service_id="S1",
+        )
+        a.set_esali_password_plain("esali_p")
+        a.save()
+
+        self.api_client = APIClient()
+
+    def test_collector_esali_config_requires_collector_username(self) -> None:
+        url = reverse("collection-collector-esali-config")
+        resp = self.api_client.post(url, data={}, format="json", HTTP_X_API_KEY="EXPECTED_BANK_API_KEY")
+        self.assertEqual(resp.status_code, 400)
+
+    def test_collector_esali_config_collector_not_found(self) -> None:
+        url = reverse("collection-collector-esali-config")
+        resp = self.api_client.post(
+            url,
+            data={"collector_username": "missing"},
+            format="json",
+            HTTP_X_API_KEY="EXPECTED_BANK_API_KEY",
+        )
+        self.assertEqual(resp.status_code, 404)
+
+    def test_update_esali_service_id_collector_not_found_logs(self) -> None:
+        url = reverse("collection-update-esali-service-id")
+        resp = self.api_client.post(
+            url,
+            data={"collector_username": "missing", "esali_service_id": "SVC-1"},
+            format="json",
+            HTTP_X_API_KEY="EXPECTED_BANK_API_KEY",
+        )
+        self.assertEqual(resp.status_code, 400)
+        self.assertTrue(APILog.objects.filter(action="update_esali_service_id_failed").exists())
+
+    def test_queue_invoices_invalid_limit_uses_default(self) -> None:
+        # Seed 1 requested form so we see an update.
+        CollectionForm.objects.create(
+            miner_name="Req",
+            sacks_count=1,
+            total_amount=Decimal("0.00"),
+            collector=self.collector,
+            market=self.market,
+            status=CollectionForm.Status.INVOICE_REQUESTED,
+        )
+        url = reverse("collection-queue-invoices") + "?limit=bad"
+        resp = self.api_client.post(url, data={}, format="json", HTTP_X_API_KEY="EXPECTED_BANK_API_KEY")
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.json().get("limit"), 50)
+
+    def test_queue_invoices_select_for_update_fallback(self) -> None:
+        # Force select_for_update(skip_locked=True) to fail, and ensure fallback path still works.
+        CollectionForm.objects.create(
+            miner_name="Req",
+            sacks_count=1,
+            total_amount=Decimal("0.00"),
+            collector=self.collector,
+            market=self.market,
+            status=CollectionForm.Status.INVOICE_REQUESTED,
+        )
+        url = reverse("collection-queue-invoices")
+
+        real_qs = CollectionForm.objects.filter(status=CollectionForm.Status.INVOICE_REQUESTED).order_by("created_at", "id")
+        with patch.object(type(real_qs), "select_for_update", side_effect=[Exception("no skip_locked"), real_qs]):
+            resp = self.api_client.post(url, data={}, format="json", HTTP_X_API_KEY="EXPECTED_BANK_API_KEY")
+        self.assertEqual(resp.status_code, 200)
+        self.assertGreaterEqual(resp.json().get("updated", 0), 1)
+
+    def test_collector_esali_config_success_logs(self) -> None:
+        url = reverse("collection-collector-esali-config")
+        resp = self.api_client.post(
+            url,
+            data={"collector_username": "collector_more"},
+            format="json",
+            HTTP_X_API_KEY="EXPECTED_BANK_API_KEY",
+        )
+        self.assertEqual(resp.status_code, 200)
+        data = resp.json()
+        self.assertEqual(data["collector_username"], "collector_more")
+        self.assertEqual(data["esali_username"], "esali_u")
+        self.assertTrue(APILog.objects.filter(action="collector_esali_config").exists())
+
+    def test_update_esali_service_id_success_logs_and_persists(self) -> None:
+        url = reverse("collection-update-esali-service-id")
+        resp = self.api_client.post(
+            url,
+            data={"collector_username": "collector_more", "esali_service_id": "SVC-NEW"},
+            format="json",
+            HTTP_X_API_KEY="EXPECTED_BANK_API_KEY",
+        )
+        self.assertEqual(resp.status_code, 200)
+        self.assertTrue(APILog.objects.filter(action="update_esali_service_id").exists())
+        self.assertEqual(
+            CollectorAssignment.objects.get(user__username="collector_more").esali_service_id, "SVC-NEW"
+        )
+
+
+class CollectorAssignmentCryptoBranchesTests(TestCase):
+    def test_get_fernet_missing_key_raises(self) -> None:
+        settings.ESALI_FERNET_KEY = ""
+        a = CollectorAssignment(
+            user=User.objects.create_user("u1"),
+            market=Market.objects.create(market_name="M", location="L"),
+        )
+        with self.assertRaises(ValidationError):
+            with patch.dict(os.environ, {"ESALI_FERNET_KEY": ""}, clear=True):
+                a._get_fernet()
+
+    def test_get_fernet_invalid_key_raises(self) -> None:
+        settings.ESALI_FERNET_KEY = "not-a-key"
+        a = CollectorAssignment(user=User.objects.create_user("u2"), market=Market.objects.create(market_name="M2", location="L2"))
+        with self.assertRaises(ValidationError):
+            a._get_fernet()
+
+    def test_get_esali_password_plain_invalid_token_raises(self) -> None:
+        settings.ESALI_FERNET_KEY = Fernet.generate_key().decode("utf-8")
+        a = CollectorAssignment(user=User.objects.create_user("u3"), market=Market.objects.create(market_name="M3", location="L3"))
+        a.esali_password_enc = "not-a-token"
+        with self.assertRaises(ValidationError):
+            a.get_esali_password_plain()
+
+    def test_get_esali_password_plain_empty_returns_empty(self) -> None:
+        settings.ESALI_FERNET_KEY = Fernet.generate_key().decode("utf-8")
+        a = CollectorAssignment(
+            user=User.objects.create_user("u3b"),
+            market=Market.objects.create(market_name="M3b", location="L3b"),
+        )
+        a.esali_password_enc = ""
+        self.assertEqual(a.get_esali_password_plain(), "")
+
+    def test_collector_clean_requires_esali_fields(self) -> None:
+        settings.ESALI_FERNET_KEY = Fernet.generate_key().decode("utf-8")
+        a = CollectorAssignment(
+            user=User.objects.create_user("u4"),
+            market=Market.objects.create(market_name="M4", location="L4"),
+            is_collector=True,
+            esali_username="",
+            esali_service_id="",
+            esali_password_enc="",
+        )
+        with self.assertRaises(ValidationError):
+            a.full_clean()
+
+
+class HtmlViewsMoreBranchesTests(TestCase):
+    def setUp(self) -> None:
+        settings.ESALI_FERNET_KEY = Fernet.generate_key().decode("utf-8")
+        self.market = Market.objects.create(market_name="Test Market", location="Test Location")
+        self.user_no_assignment = User.objects.create_user(username="no_assign_html", password="password")
+
+        self.observer = User.objects.create_user(username="observer_more_html", password="password")
+        CollectorAssignment.objects.create(user=self.observer, market=self.market, is_observer=True)
+
+        self.collector = User.objects.create_user(username="collector_more_html2", password="password")
+        a = CollectorAssignment(user=self.collector, market=self.market, is_collector=True, esali_username="u", esali_service_id="S1")
+        a.set_esali_password_plain("p")
+        a.save()
+
+        self.senior = User.objects.create_user(username="senior_more_html", password="password")
+        CollectorAssignment.objects.create(user=self.senior, market=self.market, is_senior_collector=True)
+
+    def test_create_view_missing_assignment_hits_form_invalid_branch(self) -> None:
+        # User must pass `test_func` (needs an assignment) but still hit the
+        # `CollectorAssignment.DoesNotExist` branch in `form_valid`.
+        CollectorAssignment.objects.create(user=self.user_no_assignment, market=self.market, is_observer=True)
+
+        self.client.login(username="no_assign_html", password="password")
+        with patch("form15_tra.views.CollectorAssignment.objects.get", side_effect=CollectorAssignment.DoesNotExist()):
+            resp = self.client.post(
+                reverse("collection-create"),
+                data={"miner_name": "X", "phone": "0123456789", "sacks_count": 1},
+            )
+        self.assertEqual(resp.status_code, 200)
+
+    def test_action_view_unauthorized_branches(self) -> None:
+        draft = CollectionForm.objects.create(
+            miner_name="Draft",
+            phone="0123456789",
+            sacks_count=1,
+            total_amount=Decimal("0.00"),
+            collector=self.observer,
+            market=self.market,
+            status=CollectionForm.Status.DRAFT,
+        )
+
+        self.client.login(username="no_assign_html", password="password")
+        resp = self.client.post(reverse("collection-action", kwargs={"pk": draft.pk, "action": "confirm"}), follow=True)
+        self.assertEqual(resp.status_code, 200)
+
+        self.client.logout()
+        self.client.login(username="observer_more_html", password="password")
+        resp2 = self.client.post(reverse("collection-action", kwargs={"pk": draft.pk, "action": "approve"}), follow=True)
+        self.assertEqual(resp2.status_code, 200)
+
+        self.client.logout()
+        self.client.login(username="collector_more_html2", password="password")
+        resp3 = self.client.post(reverse("collection-action", kwargs={"pk": draft.pk, "action": "cancel"}), follow=True)
+        self.assertEqual(resp3.status_code, 200)
+
+    def test_action_view_wrong_status_branches(self) -> None:
+        # confirm when not draft -> error branch
+        not_draft = CollectionForm.objects.create(
+            miner_name="ND",
+            phone="0123456789",
+            sacks_count=1,
+            total_amount=Decimal("0.00"),
+            collector=self.collector,
+            market=self.market,
+            status=CollectionForm.Status.PENDING_PAYMENT,
+        )
+        self.client.login(username="collector_more_html2", password="password")
+        resp = self.client.post(reverse("collection-action", kwargs={"pk": not_draft.pk, "action": "confirm"}), follow=True)
+        self.assertEqual(resp.status_code, 200)
+
+        # approve when wrong status -> error branch
+        wrong_approve = CollectionForm.objects.create(
+            miner_name="WA",
+            phone="0123456789",
+            sacks_count=1,
+            total_amount=Decimal("0.00"),
+            collector=self.observer,
+            market=self.market,
+            status=CollectionForm.Status.DRAFT,
+        )
+        resp2 = self.client.post(reverse("collection-action", kwargs={"pk": wrong_approve.pk, "action": "approve"}), follow=True)
+        self.assertEqual(resp2.status_code, 200)
+
+        # cancel when wrong status -> error branch
+        wrong_cancel = CollectionForm.objects.create(
+            miner_name="WC",
+            phone="0123456789",
+            sacks_count=1,
+            total_amount=Decimal("0.00"),
+            collector=self.collector,
+            market=self.market,
+            status=CollectionForm.Status.DRAFT,
+        )
+        self.client.logout()
+        self.client.login(username="senior_more_html", password="password")
+        resp3 = self.client.post(
+            reverse("collection-action", kwargs={"pk": wrong_cancel.pk, "action": "cancel"}),
+            data={"cancellation_reason": "X"},
+            follow=True,
+        )
+        self.assertEqual(resp3.status_code, 200)
+
+    def test_action_view_cancel_success_branch(self) -> None:
+        pending = CollectionForm.objects.create(
+            miner_name="P",
+            phone="0123456789",
+            sacks_count=1,
+            total_amount=Decimal("0.00"),
+            collector=self.collector,
+            market=self.market,
+            status=CollectionForm.Status.PENDING_PAYMENT,
+        )
+        self.client.login(username="senior_more_html", password="password")
+        resp = self.client.post(
+            reverse("collection-action", kwargs={"pk": pending.pk, "action": "cancel"}),
+            data={"cancellation_reason": "Reason"},
+            follow=True,
+        )
+        self.assertEqual(resp.status_code, 200)
+        pending.refresh_from_db()
+        self.assertEqual(pending.status, CollectionForm.Status.CANCELLED)

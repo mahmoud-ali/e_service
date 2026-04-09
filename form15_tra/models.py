@@ -42,15 +42,18 @@ class CollectorAssignment(models.Model):
         related_name='collectors'
     )
     is_collector = models.BooleanField(
+        verbose_name="متحصل",
         default=False,
         help_text="يسمح للمستخدم بإنشاء وتأكيد إيصالات التحصيل."
     )
     is_senior_collector = models.BooleanField(
+        verbose_name="كبير متحصل",
         default=False,
         help_text="يسمح للمستخدم بإلغاء إيصالات التحصيل."
     )
 
     is_observer = models.BooleanField(
+        verbose_name="مراقب",
         default=False,
         help_text="يسمح للمستخدم بإنشاء إيصالات مسودة فقط."
     )

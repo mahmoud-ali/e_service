@@ -12,6 +12,18 @@ from unittest import mock
 from form15_tra.cli import sync_e15
 from form15_tra.cli.lib import esali_api as esali_api_mod
 
+# These tests target the standalone CLI worker and are intended to be run via:
+# `python -m unittest form15_tra.cli.tests`
+#
+# When you run `python manage.py test form15_tra`, Django's test discovery will
+# also find this module because it's under the `form15_tra` package tree.
+# That makes the Django test output noisy (intentional logs/tracebacks in CLI tests).
+#
+# When running Django's test runner (manage.py test), we skip this module so it
+# doesn't run twice / spam logs. We detect Django-runner by the env var it sets.
+if os.getenv("DJANGO_SETTINGS_MODULE"):
+    raise unittest.SkipTest("Skip CLI unit tests under Django test runner (run via unittest instead).")
+
 
 @dataclass
 class _FakeResponse:
@@ -487,6 +499,145 @@ class SyncE15Tests(unittest.IsolatedAsyncioTestCase):
             self.assertIsNone(receipt)
             self.assertIsNone(rrn)
 
+    async def test_esali_client_check_paid_missing_receipt_fields_returns_false(self) -> None:
+        class _FakeEsaliAPI:
+            def __init__(self, **_kwargs: Any) -> None:
+                pass
+
+            def login_user(self) -> dict[str, Any]:
+                return {"CenterId": "CID-1"}
+
+            def get_receipt(self, invoice_number: str) -> dict[str, Any]:
+                return {"x": invoice_number}
+
+        async def get_cfg(_collector_username: str) -> sync_e15.EsaliCollectorConfig:
+            return sync_e15.EsaliCollectorConfig(
+                esali_username="u",
+                esali_password_plain="p",
+                esali_service_id="S1",
+            )
+
+        with (
+            mock.patch.object(sync_e15, "EsaliAPI", _FakeEsaliAPI),
+            mock.patch.object(sync_e15.asyncio, "to_thread", side_effect=lambda fn, *a: fn(*a)),
+        ):
+            c = sync_e15.EsaliClient(
+                base_url="https://x/api/",
+                api_key="k",
+                timeout_s=60.0,
+                payment_method_id="6",
+                get_collector_config=get_cfg,
+                note="",
+            )
+            paid, receipt, rrn = await c.check_paid_for_collector("INV-X", "collector1")
+            self.assertFalse(paid)
+            self.assertIsNone(receipt)
+            self.assertIsNone(rrn)
+
+    async def test_esali_client_check_paid_other_error_propagates(self) -> None:
+        class _FakeEsaliAPI:
+            def __init__(self, **_kwargs: Any) -> None:
+                pass
+
+            def login_user(self) -> dict[str, Any]:
+                return {"CenterId": "CID-1"}
+
+            def get_receipt(self, invoice_number: str) -> dict[str, Any]:
+                raise sync_e15.EsaliAPIError("06", "Internal Error")
+
+        async def get_cfg(_collector_username: str) -> sync_e15.EsaliCollectorConfig:
+            return sync_e15.EsaliCollectorConfig(
+                esali_username="u",
+                esali_password_plain="p",
+                esali_service_id="S1",
+            )
+
+        with (
+            mock.patch.object(sync_e15, "EsaliAPI", _FakeEsaliAPI),
+            mock.patch.object(sync_e15.asyncio, "to_thread", side_effect=lambda fn, *a: fn(*a)),
+        ):
+            c = sync_e15.EsaliClient(
+                base_url="https://x/api/",
+                api_key="k",
+                timeout_s=60.0,
+                payment_method_id="6",
+                get_collector_config=get_cfg,
+            )
+            with self.assertRaises(sync_e15.EsaliAPIError):
+                await c.check_paid_for_collector("INV-X", "collector1")
+
+    async def test_esali_client_get_services_normalizes_non_list_to_empty(self) -> None:
+        async def get_cfg(_collector_username: str) -> sync_e15.EsaliCollectorConfig:
+            return sync_e15.EsaliCollectorConfig(
+                esali_username="u",
+                esali_password_plain="p",
+                esali_service_id="S1",
+            )
+
+        c = sync_e15.EsaliClient(
+            base_url="https://x/api/",
+            api_key="k",
+            timeout_s=60.0,
+            payment_method_id="6",
+            get_collector_config=get_cfg,
+        )
+
+        class _Api:
+            def get_services(self) -> Any:
+                return {"x": 1}
+
+        with mock.patch.object(sync_e15.asyncio, "to_thread", side_effect=lambda fn, *a: fn(*a)):
+            out = await c.get_services(_Api())  # type: ignore[arg-type]
+            self.assertEqual(out, [])
+
+    async def test_esali_client_get_services_returns_list(self) -> None:
+        async def get_cfg(_collector_username: str) -> sync_e15.EsaliCollectorConfig:
+            return sync_e15.EsaliCollectorConfig(
+                esali_username="u",
+                esali_password_plain="p",
+                esali_service_id="S1",
+            )
+
+        c = sync_e15.EsaliClient(
+            base_url="https://x/api/",
+            api_key="k",
+            timeout_s=60.0,
+            payment_method_id="6",
+            get_collector_config=get_cfg,
+        )
+
+        class _Api:
+            def get_services(self) -> Any:
+                return [{"ServiceId": "S1"}]
+
+        with mock.patch.object(sync_e15.asyncio, "to_thread", side_effect=lambda fn, *a: fn(*a)):
+            out = await c.get_services(_Api())  # type: ignore[arg-type]
+            self.assertEqual(out, [{"ServiceId": "S1"}])
+
+    async def test_esali_client_login_center_id_non_dict_raises(self) -> None:
+        async def get_cfg(_collector_username: str) -> sync_e15.EsaliCollectorConfig:
+            return sync_e15.EsaliCollectorConfig(
+                esali_username="u",
+                esali_password_plain="p",
+                esali_service_id="S1",
+            )
+
+        c = sync_e15.EsaliClient(
+            base_url="https://x/api/",
+            api_key="k",
+            timeout_s=60.0,
+            payment_method_id="6",
+            get_collector_config=get_cfg,
+        )
+
+        class _Api:
+            def login_user(self) -> Any:
+                return "not-a-dict"
+
+        with mock.patch.object(sync_e15.asyncio, "to_thread", side_effect=lambda fn, *a: fn(*a)):
+            with self.assertRaises(sync_e15.EsaliAPIError):
+                await c._login_center_id(_Api())  # type: ignore[arg-type]
+
     def test_extract_receipt_number_supports_dict_list_and_alt_keys(self) -> None:
         self.assertIsNone(sync_e15._extract_receipt_number([]))
         self.assertIsNone(sync_e15._extract_receipt_number(object()))
@@ -547,6 +698,33 @@ class SyncE15Tests(unittest.IsolatedAsyncioTestCase):
         smrc = sync_e15.SmrcClient("http://example.com", "k", timeout_s=1.0)
         with self.assertRaises(sync_e15.E15APIError):
             await smrc.get_collector_esali_config(fake, "collector1")  # type: ignore[arg-type]
+
+    async def test_smrc_update_esali_service_id_non_dict_raises(self) -> None:
+        fake = _FakeAsyncClient()
+        fake.enqueue(_FakeResponse(status_code=200, _json=["x"]))
+        smrc = sync_e15.SmrcClient("http://example.com", "k", timeout_s=1.0)
+        with self.assertRaises(sync_e15.E15APIError):
+            await smrc.update_esali_service_id(  # type: ignore[arg-type]
+                fake, {"collector_username": "collector1", "esali_service_id": "S1"}
+            )
+
+    async def test_smrc_update_esali_service_id_non_200_raises(self) -> None:
+        fake = _FakeAsyncClient()
+        fake.enqueue(_FakeResponse(status_code=500, _json={"x": 1}, text="boom"))
+        smrc = sync_e15.SmrcClient("http://example.com", "k", timeout_s=1.0)
+        with self.assertRaises(sync_e15.E15APIError):
+            await smrc.update_esali_service_id(  # type: ignore[arg-type]
+                fake, {"collector_username": "collector1", "esali_service_id": "S1"}
+            )
+
+    async def test_smrc_update_esali_service_id_success_returns_dict(self) -> None:
+        fake = _FakeAsyncClient()
+        fake.enqueue(_FakeResponse(status_code=200, _json={"collector_username": "collector1", "esali_service_id": "S1"}))
+        smrc = sync_e15.SmrcClient("http://example.com", "k", timeout_s=1.0)
+        out = await smrc.update_esali_service_id(  # type: ignore[arg-type]
+            fake, {"collector_username": "collector1", "esali_service_id": "S1"}
+        )
+        self.assertEqual(out["esali_service_id"], "S1")
 
     def test_sqlite_init_db_backfills_phone_column(self) -> None:
         with tempfile.TemporaryDirectory() as td:
@@ -1292,6 +1470,58 @@ class SyncE15Tests(unittest.IsolatedAsyncioTestCase):
         out = await sync_e15._run_parallel_check_paid(_E15(), [(1, "inv-1", "m")], concurrency=1)
         self.assertEqual(out, [])
 
+    async def test_run_parallel_check_paid_logs_exception_for_non_runtimeerror(self) -> None:
+        class _E15(sync_e15.E15Client):
+            async def create_invoice(self, item: sync_e15.QueuedInvoice) -> sync_e15.E15Result:
+                return sync_e15.E15Result(id=item.id, invoice_id=f"inv-{item.id}")
+
+            async def check_paid(self, invoice_id: str) -> tuple[bool, str | None]:
+                raise ValueError("bad")
+
+        out = await sync_e15._run_parallel_check_paid(_E15(), [(1, "inv-1", "m")], concurrency=1)
+        self.assertEqual(out, [])
+
+    async def test_run_parallel_check_paid_accepts_two_tuple_from_check_paid_for_collector(self) -> None:
+        class _E15(sync_e15.E15Client):
+            async def create_invoice(self, item: sync_e15.QueuedInvoice) -> sync_e15.E15Result:
+                return sync_e15.E15Result(id=item.id, invoice_id=f"inv-{item.id}")
+
+            async def check_paid_for_collector(self, invoice_id: str, collector_username: str) -> tuple[bool, str | None]:
+                if collector_username != "collector1":
+                    raise AssertionError(f"unexpected collector_username {collector_username!r}")
+                return True, "r1"
+
+        out = await sync_e15._run_parallel_check_paid(_E15(), [(1, "inv-1", "collector1")], concurrency=1)
+        self.assertEqual([(r.id, r.receipt_number) for r in out], [(1, "r1")])
+
+    async def test_run_parallel_check_paid_accepts_three_tuple_from_check_paid_for_collector(self) -> None:
+        class _E15(sync_e15.E15Client):
+            async def create_invoice(self, item: sync_e15.QueuedInvoice) -> sync_e15.E15Result:
+                return sync_e15.E15Result(id=item.id, invoice_id=f"inv-{item.id}")
+
+            async def check_paid_for_collector(
+                self, invoice_id: str, collector_username: str
+            ) -> tuple[bool, str | None, str | None]:
+                return True, "r1", "RRN1"
+
+        out = await sync_e15._run_parallel_check_paid(_E15(), [(1, "inv-1", "collector1")], concurrency=1)
+        self.assertEqual([(r.id, r.receipt_number, r.rrn_number) for r in out], [(1, "r1", "RRN1")])
+
+    async def test_parallel_create_invoices_logs_exception_for_unexpected_errors(self) -> None:
+        class _Boom(sync_e15.E15Client):
+            async def create_invoice(self, item: sync_e15.QueuedInvoice) -> sync_e15.E15Result:
+                raise ValueError("boom")
+
+            async def check_paid(self, invoice_id: str) -> tuple[bool, str | None]:
+                return False, None
+
+        out = await sync_e15._run_parallel_create_invoices(
+            _Boom(),
+            [sync_e15.QueuedInvoice(id=1, miner_name="a", phone="", total_amount=1, market_name="m", collector_username="c")],
+            concurrency=1,
+        )
+        self.assertEqual(out, [])
+
     def test_jittered_sleep(self) -> None:
         self.assertEqual(sync_e15._jittered_sleep_s(60.0, 0.0), 60.0)
         with mock.patch.object(sync_e15.random, "uniform", return_value=6.0):
@@ -1573,6 +1803,241 @@ class SyncE15Tests(unittest.IsolatedAsyncioTestCase):
             os.sys.argv = old_argv
             os.environ.clear()
             os.environ.update(old_env)
+
+
+class EsaliApiTests(unittest.TestCase):
+    def setUp(self) -> None:
+        self._old_env = dict(os.environ)
+
+    def tearDown(self) -> None:
+        os.environ.clear()
+        os.environ.update(self._old_env)
+
+    def test_esali_api_init_missing_env_raises(self) -> None:
+        with mock.patch.dict(os.environ, {}, clear=True):
+            with self.assertRaises(ValueError):
+                esali_api_mod.EsaliAPI()
+
+    def test_esali_api_post_json_string_code_00_normalizes_success(self) -> None:
+        class _Resp:
+            def raise_for_status(self) -> None:
+                return None
+
+            def json(self) -> Any:
+                return "00"
+
+        session = mock.Mock()
+        session.post.return_value = _Resp()
+
+        with (
+            mock.patch.dict(os.environ, {"ESALI_USERNAME": "u", "ESALI_PASSWORD": "p", "ESALI_API_KEY": "k"}, clear=True),
+            mock.patch.object(esali_api_mod.requests, "Session", return_value=session),
+        ):
+            api = esali_api_mod.EsaliAPI(base_url="https://x/")
+            out = api._post("X", {"a": 1})
+            self.assertEqual(out["Response_Code"], "00")
+
+    def test_esali_api_post_json_string_code_non_00_raises(self) -> None:
+        class _Resp:
+            def raise_for_status(self) -> None:
+                return None
+
+            def json(self) -> Any:
+                return "01"
+
+        session = mock.Mock()
+        session.post.return_value = _Resp()
+
+        with (
+            mock.patch.dict(os.environ, {"ESALI_USERNAME": "u", "ESALI_PASSWORD": "p", "ESALI_API_KEY": "k"}, clear=True),
+            mock.patch.object(esali_api_mod.requests, "Session", return_value=session),
+        ):
+            api = esali_api_mod.EsaliAPI(base_url="https://x/")
+            with self.assertRaises(esali_api_mod.EsaliAPIError) as ctx:
+                api._post("X", {"a": 1})
+            self.assertEqual(ctx.exception.code, "01")
+
+    def test_esali_api_post_json_string_invoice_id_normalizes(self) -> None:
+        class _Resp:
+            def raise_for_status(self) -> None:
+                return None
+
+            def json(self) -> Any:
+                return "INV-123"
+
+        session = mock.Mock()
+        session.post.return_value = _Resp()
+
+        with (
+            mock.patch.dict(os.environ, {"ESALI_USERNAME": "u", "ESALI_PASSWORD": "p", "ESALI_API_KEY": "k"}, clear=True),
+            mock.patch.object(esali_api_mod.requests, "Session", return_value=session),
+        ):
+            api = esali_api_mod.EsaliAPI(base_url="https://x/")
+            out = api._post("X", {"a": 1})
+            self.assertEqual(out["InvoiceNo"], "INV-123")
+
+    def test_esali_api_post_list_response_code_non_00_raises(self) -> None:
+        class _Resp:
+            def raise_for_status(self) -> None:
+                return None
+
+            def json(self) -> Any:
+                return [{"Response_Code": "06", "Response_Description": "Internal Error"}]
+
+        session = mock.Mock()
+        session.post.return_value = _Resp()
+
+        with (
+            mock.patch.dict(os.environ, {"ESALI_USERNAME": "u", "ESALI_PASSWORD": "p", "ESALI_API_KEY": "k"}, clear=True),
+            mock.patch.object(esali_api_mod.requests, "Session", return_value=session),
+        ):
+            api = esali_api_mod.EsaliAPI(base_url="https://x/")
+            with self.assertRaises(esali_api_mod.EsaliAPIError) as ctx:
+                api._post("X", {"a": 1})
+            self.assertEqual(ctx.exception.code, "06")
+
+    def test_esali_api_post_dict_response_code_non_00_raises(self) -> None:
+        class _Resp:
+            def raise_for_status(self) -> None:
+                return None
+
+            def json(self) -> Any:
+                return {"Response_Code": "02", "Response_Description": "Authentication Error In Key"}
+
+        session = mock.Mock()
+        session.post.return_value = _Resp()
+
+        with (
+            mock.patch.dict(os.environ, {"ESALI_USERNAME": "u", "ESALI_PASSWORD": "p", "ESALI_API_KEY": "k"}, clear=True),
+            mock.patch.object(esali_api_mod.requests, "Session", return_value=session),
+        ):
+            api = esali_api_mod.EsaliAPI(base_url="https://x/")
+            with self.assertRaises(esali_api_mod.EsaliAPIError) as ctx:
+                api._post("X", {"a": 1})
+            self.assertEqual(ctx.exception.code, "02")
+
+    def test_esali_api_post_timeout_raises_esali_api_error_06(self) -> None:
+        session = mock.Mock()
+        session.post.side_effect = esali_api_mod.requests.exceptions.Timeout()
+
+        with (
+            mock.patch.dict(os.environ, {"ESALI_USERNAME": "u", "ESALI_PASSWORD": "p", "ESALI_API_KEY": "k"}, clear=True),
+            mock.patch.object(esali_api_mod.requests, "Session", return_value=session),
+        ):
+            api = esali_api_mod.EsaliAPI(base_url="https://x/")
+            with self.assertRaises(esali_api_mod.EsaliAPIError) as ctx:
+                api._post("X", {"a": 1})
+            self.assertEqual(ctx.exception.code, "06")
+
+    def test_esali_api_post_invalid_json_raises_esali_api_error_06(self) -> None:
+        class _Resp:
+            def raise_for_status(self) -> None:
+                return None
+
+            def json(self) -> Any:
+                raise ValueError("bad-json")
+
+        session = mock.Mock()
+        session.post.return_value = _Resp()
+
+        with (
+            mock.patch.dict(os.environ, {"ESALI_USERNAME": "u", "ESALI_PASSWORD": "p", "ESALI_API_KEY": "k"}, clear=True),
+            mock.patch.object(esali_api_mod.requests, "Session", return_value=session),
+        ):
+            api = esali_api_mod.EsaliAPI(base_url="https://x/")
+            with self.assertRaises(esali_api_mod.EsaliAPIError) as ctx:
+                api._post("X", {"a": 1})
+            self.assertEqual(ctx.exception.code, "06")
+
+    def test_esali_api_post_request_exception_raises_esali_api_error_06(self) -> None:
+        session = mock.Mock()
+        session.post.side_effect = esali_api_mod.requests.exceptions.RequestException("nope")
+
+        with (
+            mock.patch.dict(os.environ, {"ESALI_USERNAME": "u", "ESALI_PASSWORD": "p", "ESALI_API_KEY": "k"}, clear=True),
+            mock.patch.object(esali_api_mod.requests, "Session", return_value=session),
+        ):
+            api = esali_api_mod.EsaliAPI(base_url="https://x/")
+            with self.assertRaises(esali_api_mod.EsaliAPIError) as ctx:
+                api._post("X", {"a": 1})
+            self.assertEqual(ctx.exception.code, "06")
+
+    def test_esali_api_post_unexpected_response_type_raises_esali_api_error_06(self) -> None:
+        class _Resp:
+            def raise_for_status(self) -> None:
+                return None
+
+            def json(self) -> Any:
+                return 123
+
+        session = mock.Mock()
+        session.post.return_value = _Resp()
+
+        with (
+            mock.patch.dict(os.environ, {"ESALI_USERNAME": "u", "ESALI_PASSWORD": "p", "ESALI_API_KEY": "k"}, clear=True),
+            mock.patch.object(esali_api_mod.requests, "Session", return_value=session),
+        ):
+            api = esali_api_mod.EsaliAPI(base_url="https://x/")
+            with self.assertRaises(esali_api_mod.EsaliAPIError) as ctx:
+                api._post("X", {"a": 1})
+            self.assertEqual(ctx.exception.code, "06")
+
+    def test_esali_api_post_list_response_code_00_returns_list(self) -> None:
+        class _Resp:
+            def raise_for_status(self) -> None:
+                return None
+
+            def json(self) -> Any:
+                return [{"Response_Code": "00"}]
+
+        session = mock.Mock()
+        session.post.return_value = _Resp()
+
+        with (
+            mock.patch.dict(os.environ, {"ESALI_USERNAME": "u", "ESALI_PASSWORD": "p", "ESALI_API_KEY": "k"}, clear=True),
+            mock.patch.object(esali_api_mod.requests, "Session", return_value=session),
+        ):
+            api = esali_api_mod.EsaliAPI(base_url="https://x/")
+            out = api._post("X", {"a": 1})
+            self.assertIsInstance(out, list)
+
+    def test_esali_api_wrapper_methods_call_expected_endpoints(self) -> None:
+        with mock.patch.dict(os.environ, {"ESALI_USERNAME": "u", "ESALI_PASSWORD": "p", "ESALI_API_KEY": "k"}, clear=True):
+            api = esali_api_mod.EsaliAPI(base_url="https://x/")
+
+        with mock.patch.object(api, "_post", return_value={"ok": True}) as p:
+            self.assertEqual(api.login_user(), {"ok": True})
+            p.assert_called_with("APILoginUser", {"UserName": "u", "Password": "p", "Key": "k"})
+
+        with mock.patch.object(api, "_post", return_value=[{"ok": True}]) as p:
+            self.assertEqual(api.get_services("CID"), [{"ok": True}])
+            p.assert_called_with("GetServices", {"CenterId": "CID", "key": "k"})
+
+        with mock.patch.object(api, "_post", return_value={"ok": True}) as p:
+            self.assertEqual(api.get_services_detail("CID", "SID", "PM"), {"ok": True})
+            p.assert_called_with("GetServicesDetail", {"CenterId": "CID", "serviceId": "SID", "Paymentmethodid": "PM", "Key": "k"})
+
+        with mock.patch.object(api, "_post", return_value={"ok": True}) as p:
+            self.assertEqual(api.get_invoice("SID", "C", "0123456789"), {"ok": True})
+            p.assert_called_with(
+                "GetInvoice",
+                {"UserName": "u", "Password": "p", "ServiceId": "SID", "CustomerName": "C", "Phone": "0123456789", "Key": "k"},
+            )
+
+        with self.assertRaises(ValueError):
+            api.get_invoice("SID", "C", "123")
+
+        with mock.patch.object(api, "_post", return_value={"ok": True}) as p:
+            self.assertEqual(api.get_invoice_more_services([{"ServiceId": "S", "Amount": 1}], "C", "CID", "PM", "0123456789", 1.0, "n"), {"ok": True})
+            p.assert_called()
+
+        with mock.patch.object(api, "_post", return_value={"ok": True}) as p:
+            self.assertEqual(api.get_receipt("INV"), {"ok": True})
+            p.assert_called_with("GetReceipt", {"Username": "u", "Password": "p", "InvoiceNumber": "INV", "Key": "k"})
+
+        with mock.patch.object(api, "_post", return_value={"ok": True}) as p:
+            self.assertEqual(api.verify_receipt("R"), {"ok": True})
+            p.assert_called_with("VerifyReceipt", {"Username": "u", "Password": "p", "Receiptno": "R", "Key": "k"})
 
 
 if __name__ == "__main__":
