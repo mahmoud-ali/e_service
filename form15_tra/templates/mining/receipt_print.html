@@ -12,12 +12,12 @@
         (function () {
             try {
                 var params = new URLSearchParams(window.location.search);
-                var paper = (params.get("paper") || "80").trim();
+                var paper = (params.get("paper") || "58").trim();
                 var root = document.documentElement;
                 root.classList.remove("paper-58", "paper-80");
                 root.classList.add(paper === "58" ? "paper-58" : "paper-80");
             } catch (e) {
-                document.documentElement.classList.add("paper-80");
+                document.documentElement.classList.add("paper-58");
             }
         })();
     </script>
@@ -44,21 +44,21 @@
     <style>
         /* Thermal Printer Optimized CSS */
         :root {
-            --paper-width: 80mm;
-            --content-pad-x: 3mm;
-            --content-pad-y: 4mm;
-            --base-font-size: 13px;
-            --base-line-height: 18px;
-            --qr-max-size: 140px;
-        }
-
-        html.paper-58 {
             --paper-width: 58mm;
             --content-pad-x: 2mm;
             --content-pad-y: 3mm;
             --base-font-size: 12px;
             --base-line-height: 17px;
             --qr-max-size: 118px;
+        }
+
+        html.paper-80 {
+            --paper-width: 80mm;
+            --content-pad-x: 3mm;
+            --content-pad-y: 4mm;
+            --base-font-size: 13px;
+            --base-line-height: 18px;
+            --qr-max-size: 140px;
         }
 
         @page {
