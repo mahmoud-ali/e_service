@@ -45,6 +45,8 @@ class DashboardView(LoginRequiredMixin, ListView):
         if query:
             qs = qs.filter(
                 Q(receipt_number=query) |
+                Q(invoice_id=query) |
+                Q(rrn_number=query) |
                 Q(miner_name__icontains=query)
             )
 

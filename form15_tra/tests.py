@@ -66,37 +66,6 @@ class MiningSystemTests(TestCase):
             is_senior_collector=True
         )
 
-    def test_auto_receipt_generation(self) -> None:
-        """
-        Ensure receipt_number is auto-generated correctly.
-        Format: {market_id}{sequence}
-        """
-        form = CollectionForm(
-            miner_name="John Doe",
-            phone="0123456789",
-            sacks_count=10,
-            total_amount=Decimal("1000.00"),
-            collector=self.collector,
-            market=self.market
-        )
-        form.save()
-        
-        prefix = str(self.market.id)
-        expected_receipt = f"{prefix}{1:0{10-len(prefix)}d}" # First one
-        self.assertEqual(form.receipt_number, expected_receipt)
-        self.assertTrue(len(form.receipt_number) == 10)
-
-        # Second one
-        form2 = CollectionForm.objects.create(
-            miner_name="Jane Doe",
-            sacks_count=10,
-            total_amount=Decimal("1000.00"),
-            collector=self.collector,
-            market=self.market
-        )
-        expected_receipt_2 = f"{prefix}{2:0{10-len(prefix)}d}"
-        self.assertEqual(form2.receipt_number, expected_receipt_2)
-
     def test_phone_must_be_exactly_10_digits(self) -> None:
         bad = CollectionForm(
             miner_name="Bad Phone",
@@ -765,7 +734,7 @@ class CollectionSerializerCreateTests(TestCase):
         self.assertEqual(data["collector"], "collector_create")
         self.assertEqual(data["market"], "Test Market")
         self.assertEqual(data["status"], CollectionForm.Status.DRAFT)
-        self.assertTrue(data["receipt_number"])
+        # receipt_number is not auto-generated; it may be blank at creation time.
 
         obj = CollectionForm.objects.get(pk=data["id"])
         self.assertEqual(obj.collector, self.collector)

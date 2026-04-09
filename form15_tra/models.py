@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.db import models
+from django.db.models import Index
 from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator
 from typing import Any
@@ -197,6 +198,11 @@ class CollectionForm(models.Model):
     class Meta:
         verbose_name = "إيصال تحصيل"
         verbose_name_plural = "إيصالات التحصيل"
+        indexes = [
+            Index(fields=["receipt_number"], name="idx_collection_receipt_number"),
+            Index(fields=["rrn_number"], name="idx_collection_rrn_number"),
+            Index(fields=["miner_name"], name="idx_collection_miner_name"),
+        ]
 
     def __str__(self) -> str:
         return f"إيصال {self.receipt_number} - {self.get_status_display()}"
@@ -230,10 +236,8 @@ class CollectionForm(models.Model):
                 raise ValidationError("لا يمكن إلغاء إيصال تم دفعه بالفعل.")
 
     def save(self, *args: Any, **kwargs: Any) -> None:
-        if not self.receipt_number:
-            # Calculate total amount
-            self.total_amount = self.sacks_count * PRICE_PER_SACK
-
+        # Ensure total_amount is always calculated.
+        self.total_amount = self.sacks_count * PRICE_PER_SACK
         self.full_clean()
         super().save(*args, **kwargs)
 

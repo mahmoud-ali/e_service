@@ -4,3 +4,4 @@ from django.apps import AppConfig
 class MiningConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
     name = 'form15_tra'
+    verbose_name = "التحصيل الإلكتروني بالأسواق"
