@@ -66,9 +66,3 @@ Restart manually:
 ```bash
 sudo systemctl restart sync_e15.service
 ```
-
-## Important note about imports (deploying only `cli/`)
-
-`sync_e15.py` currently imports modules using the package path `form15_tra.cli.*`.
-If production truly contains only this folder (no `form15_tra` package root), the worker must be made standalone (e.g. import from `lib.*`) or you must deploy a minimal package wrapper (`form15_tra/__init__.py` + `form15_tra/cli/...`).
-

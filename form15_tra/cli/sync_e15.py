@@ -56,7 +56,21 @@ from typing import Any, Awaitable, Callable, Iterable, Optional
 import httpx
 from dotenv import load_dotenv
 
-from form15_tra.cli.lib.esali_api import EsaliAPI, EsaliAPIError
+import sys
+
+# Standalone deployment support:
+# Ensure this script's directory is on sys.path so `import lib.*` works even
+# when the parent package (`form15_tra`) is not deployed.
+_CLI_DIR = str(Path(__file__).resolve().parent)
+if _CLI_DIR not in sys.path:
+    sys.path.insert(0, _CLI_DIR)
+
+# Prefer local `lib.*` for standalone layout; packaged import remains a fallback
+# for dev installs where `form15_tra` is available.
+try:
+    from lib.esali_api import EsaliAPI, EsaliAPIError
+except Exception:
+    from form15_tra.cli.lib.esali_api import EsaliAPI, EsaliAPIError  # type: ignore
 from cryptography.fernet import Fernet, InvalidToken
 
 
