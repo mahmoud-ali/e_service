@@ -187,4 +187,48 @@
         </div>
     </div>
 </div>
+{% if object.status != 'Paid' and object.status != 'Cancelled' %}
+<script>
+(function () {
+    var pollUrl = "{% url 'collection-status-poll' object.pk %}";
+    var lastStatus = "{{ object.status|escapejs }}";
+    var lastUpdatedAt = "{{ object.updated_at|date:'c' }}";
+    var terminal = { "Paid": true, "Cancelled": true };
+    var intervalMs = 30000;
+    var timer = null;
+
+    function stop() {
+        if (timer !== null) {
+            clearInterval(timer);
+            timer = null;
+        }
+    }
+
+    function tick() {
+        fetch(pollUrl, { credentials: "same-origin", headers: { Accept: "application/json" } })
+            .then(function (r) {
+                if (!r.ok) { return null; }
+                return r.json();
+            })
+            .then(function (data) {
+                if (!data || typeof data.status !== "string") { return; }
+                if (data.status !== lastStatus || data.updated_at !== lastUpdatedAt) {
+                    window.location.reload();
+                    return;
+                }
+                lastStatus = data.status;
+                lastUpdatedAt = data.updated_at;
+                if (terminal[data.status]) {
+                    stop();
+                }
+            })
+            .catch(function () { /* ignore network errors */ });
+    }
+
+    timer = setInterval(tick, intervalMs);
+    window.addEventListener("pagehide", stop);
+    window.addEventListener("beforeunload", stop);
+})();
+</script>
+{% endif %}
 {% endblock %}

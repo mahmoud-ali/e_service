@@ -4,11 +4,33 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib import messages
 from django.urls import reverse_lazy, reverse
 from django.utils import timezone
+from django.utils import dateformat
+from django.http import JsonResponse
 from typing import Any
 
-from django.db.models import Q
+from django.db.models import Q, QuerySet
 from form15_tra.models import CollectionForm, CollectorAssignment
 from form15_tra.forms import CollectionFormModelForm
+
+
+def collections_visible_to_user(user: Any) -> QuerySet[CollectionForm]:
+    """
+    Same row visibility as the mining dashboard (market + role rules).
+    """
+    if not hasattr(user, "assignment"):
+        return CollectionForm.objects.none()
+
+    qs = CollectionForm.objects.filter(market=user.assignment.market)
+
+    if user.assignment.is_senior_collector:
+        qs = qs.exclude(status=CollectionForm.Status.DRAFT)
+    elif user.assignment.is_collector:
+        qs = qs.filter(
+            Q(collector=user) | Q(status=CollectionForm.Status.COLLECTOR_CONFIRMATION)
+        )
+    else:
+        qs = qs.filter(collector=user)
+    return qs
 
 
 class DashboardView(LoginRequiredMixin, ListView):
@@ -25,32 +47,18 @@ class DashboardView(LoginRequiredMixin, ListView):
         return context
 
     def get_queryset(self):
-        qs = super().get_queryset()
+        qs = collections_visible_to_user(self.request.user)
 
-        qs = qs.filter(market=self.request.user.assignment.market)
-
-        if self.request.user.assignment.is_senior_collector:
-            qs = qs.exclude(status=CollectionForm.Status.DRAFT)
-        elif self.request.user.assignment.is_collector:
-            # Collectors see their own drafts + receipts awaiting their confirmation
-            qs = qs.filter(
-                Q(collector=self.request.user) | 
-                Q(status=CollectionForm.Status.COLLECTOR_CONFIRMATION)
-            )
-        else:
-            # Observers (and others) see only their own
-            qs = qs.filter(collector=self.request.user)
-        
         query = self.request.GET.get('q')
         if query:
             qs = qs.filter(
-                Q(receipt_number=query) |
-                Q(invoice_id=query) |
-                Q(rrn_number=query) |
-                Q(miner_name__icontains=query)
+                Q(receipt_number=query)
+                | Q(invoice_id=query)
+                | Q(rrn_number=query)
+                | Q(miner_name__icontains=query)
             )
 
-        return qs
+        return qs.order_by("-created_at")
 
 
 class CollectionCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
@@ -118,10 +126,39 @@ class CollectionDetailView(LoginRequiredMixin, DetailView):
     model = CollectionForm
     template_name = 'mining/collection_detail.html'
 
+    def get_queryset(self) -> QuerySet[CollectionForm]:
+        return collections_visible_to_user(self.request.user)
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-                
+        obj = context["object"]
+        if obj.status == CollectionForm.Status.PENDING_PAYMENT:
+            CollectionForm.objects.filter(
+                pk=obj.pk,
+                status=CollectionForm.Status.PENDING_PAYMENT,
+            ).update(pending_payment_check_now=True)
         return context
+
+
+class CollectionStatusPollView(LoginRequiredMixin, View):
+    """
+    Minimal JSON for collection-detail auto-refresh (status + updated_at only).
+    """
+
+    def get(self, request: Any, pk: int) -> JsonResponse:
+        row = get_object_or_404(
+            collections_visible_to_user(request.user).values("status", "updated_at"),
+            pk=pk,
+        )
+        updated = row["updated_at"]
+        if updated is not None:
+            updated_iso = dateformat.format(timezone.localtime(updated), "c")
+        else:
+            updated_iso = ""
+        resp = JsonResponse({"status": row["status"], "updated_at": updated_iso})
+        resp["Cache-Control"] = "private, max-age=0"
+        return resp
+
 
 class InvoicePrintView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
     """
@@ -144,7 +181,7 @@ class InvoicePrintView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
         if not self.request.user.is_authenticated:
             return super().handle_no_permission()
         messages.error(self.request, "ليس لديك صلاحية للطباعة")
-        return redirect('collection-detail', pk=self.get_object().pk)
+        return redirect("collection-list")
     
 
 class ReceiptPrintView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
@@ -168,7 +205,7 @@ class ReceiptPrintView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
         if not self.request.user.is_authenticated:
             return super().handle_no_permission()
         messages.error(self.request, "ليس لديك صلاحية للطباعة")
-        return redirect('collection-detail', pk=self.get_object().pk)
+        return redirect("collection-list")
 
 
 class CollectionActionView(LoginRequiredMixin, View):
@@ -182,35 +219,60 @@ class CollectionActionView(LoginRequiredMixin, View):
         if action == 'confirm':
             if not (hasattr(request.user, 'assignment') and (request.user.assignment.is_collector or request.user.assignment.is_observer)):
                 messages.error(request, "ليس لديك صلاحية لتأكيد الإيصالات.")
-                return redirect('collection-detail', pk=pk)
+                return redirect("collection-list")
                 
             if collection.status != CollectionForm.Status.DRAFT:
                 messages.error(request, "لا يمكن تأكيد هذا الإيصال.")
             else:
                 if request.user.assignment.is_observer:
-                    collection.status = CollectionForm.Status.COLLECTOR_CONFIRMATION
+                    collection.transition_status(
+                        CollectionForm.Status.COLLECTOR_CONFIRMATION,
+                        action="html_confirm_collection_observer",
+                        user=request.user,
+                        ip_address=request.META.get("REMOTE_ADDR"),
+                        request_data={"id": collection.id},
+                        response_data=None,
+                        status_code=200,
+                        update_fields=["status"],
+                    )
                     messages.success(request, "تم تأكيد الإيصال وإرساله لتأكيد المتحصل.")
                 else:
-                    collection.status = CollectionForm.Status.INVOICE_REQUESTED
+                    collection.transition_status(
+                        CollectionForm.Status.INVOICE_REQUESTED,
+                        action="html_confirm_collection",
+                        user=request.user,
+                        ip_address=request.META.get("REMOTE_ADDR"),
+                        request_data={"id": collection.id},
+                        response_data=None,
+                        status_code=200,
+                        update_fields=["status"],
+                    )
                     messages.success(request, "تم تأكيد الإيصال وتم طلب الفاتورة.")
-                collection.save()
         
         elif action == 'approve':
              if not (hasattr(request.user, 'assignment') and request.user.assignment.is_collector):
                 messages.error(request, "ليس لديك صلاحية للموافقة على الإيصالات.")
-                return redirect('collection-detail', pk=pk)
+                return redirect("collection-list")
 
              if collection.status != CollectionForm.Status.COLLECTOR_CONFIRMATION:
                  messages.error(request, "لا يمكن تأكيد هذا الإيصال في هذه المرحلة.")
              else:
-                 collection.status = CollectionForm.Status.INVOICE_REQUESTED
-                 collection.save()
+                 collection.transition_status(
+                     CollectionForm.Status.INVOICE_REQUESTED,
+                     action="html_approve_collection",
+                     user=request.user,
+                     ip_address=request.META.get("REMOTE_ADDR"),
+                     request_data={"id": collection.id},
+                     response_data=None,
+                     status_code=200,
+                     update_fields=["status"],
+                 )
                  messages.success(request, "تم تأكيد الإيصال وتم طلب الفاتورة.")
 
         elif action == 'cancel':
             if not (hasattr(request.user, 'assignment') and request.user.assignment.is_senior_collector):
                 messages.error(request, "ليس لديك صلاحية لإلغاء الإيصالات.")
-                return redirect('collection-detail', pk=pk)
+                return redirect("collection-list")
 
             if collection.status != CollectionForm.Status.PENDING_PAYMENT:
                 messages.error(request, "لا يمكن إلغاء هذا الإيصال.")
@@ -220,10 +282,18 @@ class CollectionActionView(LoginRequiredMixin, View):
                     messages.error(request, "يجب ذكر سبب الإلغاء.")
                     return redirect('collection-detail', pk=pk)
                 
-                collection.status = CollectionForm.Status.CANCELLED
                 collection.cancelled_by = request.user
                 collection.cancellation_reason = reason
-                collection.save()
+                collection.transition_status(
+                    CollectionForm.Status.CANCELLED,
+                    action="html_cancel_collection",
+                    user=request.user,
+                    ip_address=request.META.get("REMOTE_ADDR"),
+                    request_data={"id": collection.id, "cancellation_reason": reason},
+                    response_data=None,
+                    status_code=200,
+                    update_fields=["cancelled_by", "cancellation_reason", "status"],
+                )
                 messages.success(request, "تم إلغاء الإيصال.")
         
         return redirect('collection-list') 

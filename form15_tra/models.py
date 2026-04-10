@@ -1,3 +1,4 @@
+from tabnanny import verbose
 from django.conf import settings
 from django.db import models
 from django.db.models import Index
@@ -5,6 +6,7 @@ from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator
 from typing import Any
 from django.db import transaction
+from django.utils import timezone
 import os
 
 from cryptography.fernet import Fernet, InvalidToken
@@ -17,8 +19,8 @@ class Market(models.Model):
     """
     Represents a market where revenue is collected.
     """
-    market_name = models.CharField(max_length=255)
-    location = models.CharField(max_length=255)
+    market_name = models.CharField(verbose_name="اسم السوق", max_length=255)
+    location = models.CharField(verbose_name="الموقع", max_length=255)
     state = models.ForeignKey(LkpState, on_delete=models.PROTECT, verbose_name="الولاية",null=True,blank=True)
     # locality = models.ForeignKey(LkpLocality, on_delete=models.PROTECT, verbose_name="المحلية",null=True,blank=True)
 
@@ -36,11 +38,13 @@ class CollectorAssignment(models.Model):
     """
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL,
+        verbose_name="المستخدم",
         on_delete=models.CASCADE,
         related_name='assignment'
     )
     market = models.ForeignKey(
         Market,
+        verbose_name="السوق",
         on_delete=models.CASCADE,
         related_name='collectors'
     )
@@ -63,9 +67,9 @@ class CollectorAssignment(models.Model):
 
     # Esali credentials (used by the TRA invoice daemon).
     # Stored encrypted at rest; the daemon will decrypt locally using ESALI_FERNET_KEY.
-    esali_username = models.CharField(max_length=128, blank=True, default="")
-    esali_password_enc = models.TextField(blank=True, default="")
-    esali_service_id = models.CharField(max_length=64, blank=True, default="")
+    esali_username = models.CharField(verbose_name="مستخدم ايصالي", max_length=128, blank=True, default="")
+    esali_password_enc = models.TextField(verbose_name="كلمة المرور المشفرة لمستخدم ايصالي", blank=True, default="")
+    esali_service_id = models.CharField(verbose_name="رقم الخدمة", max_length=64, blank=True, default="")
 
     class Meta:
         verbose_name = "تكليف متحصل"
@@ -135,13 +139,14 @@ class CollectionForm(models.Model):
         PAID = 'Paid', 'تم الدفع'
         CANCELLED = 'Cancelled', 'ملغي'
 
-    receipt_number = models.CharField(
+    receipt_number = models.CharField(verbose_name="رقم الإيصال",
         max_length=64,
         blank=True
     )
-    rrn_number = models.CharField(max_length=64, blank=True, default="")
-    miner_name = models.CharField(max_length=255)
+    rrn_number = models.CharField(verbose_name="رقم التحويل", max_length=64, blank=True, default="")
+    miner_name = models.CharField(verbose_name="اسم العميل / المعدن", max_length=255)
     phone = models.CharField(
+        verbose_name="رقم الهاتف",
         max_length=10,
         validators=[
             RegexValidator(
@@ -150,37 +155,49 @@ class CollectionForm(models.Model):
             )
         ],
     )
-    sacks_count = models.DecimalField(max_digits=12, decimal_places=2)
-    total_amount = models.DecimalField(max_digits=12, decimal_places=2)
-    invoice_id = models.CharField(max_length=64, null=True, blank=True, db_index=True)
+    sacks_count = models.DecimalField(verbose_name="عدد الجوالات", max_digits=12, decimal_places=2)
+    total_amount = models.DecimalField(verbose_name="المبلغ الإجمالي", max_digits=12, decimal_places=2)
+    invoice_id = models.CharField(verbose_name="رقم الفاتورة", max_length=64, null=True, blank=True, db_index=True)
+    invoice_generated_at = models.DateTimeField(verbose_name="تاريخ إنشاء الفاتورة", null=True, blank=True, db_index=True)
     status = models.CharField(
+        verbose_name="الحالة",
         max_length=30,
         choices=Status.choices,
         default=Status.DRAFT
     )
+    pending_payment_check_now = models.BooleanField(
+        verbose_name="التحقق من الدفع الآن",
+        default=False,
+        db_index=True,
+        help_text="Set when a user opens this collection in Pending Payment; cleared when the sync worker consumes it.",
+    )
     collector = models.ForeignKey(
         settings.AUTH_USER_MODEL,
+        verbose_name="المتحصل",
         on_delete=models.PROTECT,
         related_name='collections'
     )
     market = models.ForeignKey(
         Market,
+        verbose_name="السوق",
         on_delete=models.PROTECT,
         related_name='collections'
     )
     cancelled_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
+        verbose_name="تم الإلغاء بواسطة",
         on_delete=models.PROTECT,
         null=True,
         blank=True,
         related_name='cancelled_collections'
     )
-    cancellation_reason = models.TextField(null=True, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    cancellation_reason = models.TextField(verbose_name="سبب الإلغاء", null=True, blank=True)
+    created_at = models.DateTimeField(verbose_name="تاريخ الإنشاء", auto_now_add=True)
+    updated_at = models.DateTimeField(verbose_name="تاريخ التحديث", auto_now=True)
 
     created_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
+        verbose_name="المنشئ",
         on_delete=models.PROTECT,
         null=True,
         blank=True,
@@ -189,6 +206,7 @@ class CollectionForm(models.Model):
 
     updated_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
+        verbose_name="المحدث",
         on_delete=models.PROTECT,
         null=True,
         blank=True,
@@ -241,30 +259,77 @@ class CollectionForm(models.Model):
         self.full_clean()
         super().save(*args, **kwargs)
 
+    def transition_status(
+        self,
+        new_status: str,
+        *,
+        action: str = "collection_status_change",
+        user: Any = None,
+        ip_address: str | None = None,
+        request_data: dict[str, Any] | None = None,
+        response_data: dict[str, Any] | None = None,
+        status_code: int = 200,
+        update_fields: list[str] | None = None,
+    ) -> None:
+        """
+        Transition to a new status and create a per-record APILog entry.
+
+        Notes:
+        - `user` may be None for API-key / background operations.
+        - `ip_address` may be None outside HTTP requests.
+        """
+        old_status = str(self.status)
+        self.status = new_status
+        if update_fields is None:
+            self.save()
+        else:
+            if "status" not in update_fields:
+                update_fields = [*update_fields, "status"]
+            self.save(update_fields=update_fields)
+
+        payload = dict(request_data or {})
+        payload.setdefault("from", old_status)
+        payload.setdefault("to", new_status)
+        payload.setdefault("at", timezone.now().isoformat())
+
+        from form15_tra.models import APILog  # local import to avoid circulars in migrations
+
+        APILog.objects.create(
+            action=action,
+            user=user if getattr(user, "is_authenticated", False) else None,
+            request_data=payload,
+            response_data=response_data,
+            status_code=int(status_code),
+            ip_address=ip_address,
+            collection_form=self,
+        )
+
 class APILog(models.Model):
     """
     Logs API actions for auditing and debugging.
     """
-    action = models.CharField(max_length=255)
+    action = models.CharField(verbose_name="الإجراء", max_length=255)
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
+        verbose_name="المستخدم",
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
         related_name='api_logs'
     )
-    request_data = models.JSONField(null=True, blank=True)
-    response_data = models.JSONField(null=True, blank=True)
+    request_data = models.JSONField(verbose_name="بيانات الطلب", null=True, blank=True)
+    response_data = models.JSONField(verbose_name="بيانات الرد", null=True, blank=True)
     status_code = models.IntegerField()
-    ip_address = models.GenericIPAddressField(null=True, blank=True)
+    ip_address = models.GenericIPAddressField(verbose_name="عنوان IP", null=True, blank=True)
     collection_form = models.ForeignKey(
         'CollectionForm',
+        verbose_name="إيصال التحصيل",
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
         related_name='api_logs'
     )
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(verbose_name="تاريخ الإنشاء", auto_now_add=True)
 
     class Meta:
         verbose_name = "سجل واجهة البرمجة"

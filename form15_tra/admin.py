@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django import forms
+from django.contrib.auth import get_user_model
 from form15_tra.models import Market, CollectionForm, CollectorAssignment, APILog
 
 
@@ -8,6 +9,15 @@ class CollectorAssignmentAdmin(admin.ModelAdmin):
     list_display = ('user', 'market','is_observer', 'is_collector', 'is_senior_collector')
     search_fields = ('user__username', 'market__market_name')
     readonly_fields = ("esali_password_enc", "esali_service_id") 
+
+    def get_form(self, request, obj=None, **kwargs):
+        form = super().get_form(request, obj, **kwargs)
+        User = get_user_model()
+        # `get_form()` returns a Form *class*, not an instance.
+        # Adjust the declared field via `base_fields`.
+        if "user" in getattr(form, "base_fields", {}):
+            form.base_fields["user"].queryset = User.objects.filter(groups__name="مستخدم التحصيل الإلكتروني")
+        return form
 
     class Form(forms.ModelForm):
         esali_password_plain = forms.CharField(
@@ -52,8 +62,8 @@ class APILogInline(admin.TabularInline):
 @admin.register(CollectionForm)
 class CollectionFormAdmin(admin.ModelAdmin):
     list_display = (
-        'receipt_number', 'miner_name', 'status', 
-        'collector', 'market', 'created_at'
+        'id','miner_name','total_amount', 'sacks_count', 'phone', 'invoice_id', 'receipt_number', 'rrn_number', 'status',
+        
     )
     list_filter = ('status', 'market', 'collector')
     search_fields = ('receipt_number', 'miner_name')
