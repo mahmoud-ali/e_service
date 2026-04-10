@@ -2,6 +2,12 @@
 {{sub_title}}
 <b>{{subject}}</b>
 <b>الولاية</b>: {{data.source_state}}
+{% if data.what %}
 <b>ماذا</b>: {{data.what}}
 <b>متى</b>: {{data.when}}
 <b>اين</b>: {{data.where}}
+{% else %}
+<b>الملخص</b>: {{data.summary}}
+<b>التاريخ والزمن</b>: {{data.incident_date|date:"Y-m-d"}} {{data.incident_time|time:"H:i:s"}}
+<b>الموقع</b>: {{data.locality}} - {{data.market_mine}}
+{% endif %}

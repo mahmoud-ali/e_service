@@ -264,27 +264,6 @@ class HseTraditionalAccident(LoggingModel):
     def __str__(self):
         return f"{self.get_type_display()}/{self.what}"
 
-    def send_notifications(self):
-        subject = 'بلاغ حادث' 
-        url = f"https://mineralsgate.com/app/managers/hse_traditional/hsetraditionalaccident/{self.id}/change/"
-        # logo_url = "https://"+Site.objects.get_current().domain+"/app/static/company_profile/img/smrc_logo.png"
-
-        message_html = render_to_string( 
-            'hse_traditional/telegram/accident.html', 
-            { 
-                'url':url, 
-                # 'logo':logo_url,
-                'subject':subject,
-                'title':"الإدارة العامة للبيئة والسلامة",
-                'sub_title':"إدارة البيئة والسلامة بالتعدين التقليدي",
-                'data':self,
-            },
-        ) 
-
-        for user in NotifiedUser.objects.all():
-            telegram_url = f"https://api.telegram.org/bot{settings.TELEGRAM_HSE_ACCIDENTS_ACCESS_KEY}/sendMessage?chat_id={int(user.telegram_user_id)}&text={message_html}&parse_mode=HTML"
-            # print(telegram_url)
-            requests.get(telegram_url)
 
     def get_next_states(self, user):
         """
@@ -560,16 +539,150 @@ class HseTraditionalCorrectiveActionFinalDecision(models.Model):
         verbose_name = _("Hse Traditional Corrective Action Final Decision")
         verbose_name_plural = _("Hse Traditional Corrective Action Final Decisions")
 
+class HseTraditionalInitialIncidentReport(LoggingModel):
+    INCIDENT_TYPE_WELL_COLLAPSE = 1
+    INCIDENT_TYPE_ROCK_FALL = 2
+    INCIDENT_TYPE_FALL_SLIP = 3
+    INCIDENT_TYPE_VEHICLE = 4
+    INCIDENT_TYPE_FIRE = 5
+    INCIDENT_TYPE_SUFFOCATION = 6
+    INCIDENT_TYPE_DROWNING = 7
+    INCIDENT_TYPE_ELECTRIC_SHOCK = 8
+    INCIDENT_TYPE_OTHER = 9
+
+    INCIDENT_TYPE_CHOICES = {
+        INCIDENT_TYPE_WELL_COLLAPSE: _("انهيار بئر"),
+        INCIDENT_TYPE_ROCK_FALL: _("سقوط صخور"),
+        INCIDENT_TYPE_FALL_SLIP: _("سقوط وانزلاق اثناء الرفع/داخل البئر اثناء المشي"),
+        INCIDENT_TYPE_VEHICLE: _("حادث حركة/مركبة/آلية"),
+        INCIDENT_TYPE_FIRE: _("حريق/انفجار"),
+        INCIDENT_TYPE_SUFFOCATION: _("نقص اوكسجين/اختناق بالغازات"),
+        INCIDENT_TYPE_DROWNING: _("غرق"),
+        INCIDENT_TYPE_ELECTRIC_SHOCK: _("صعقة كهربية"),
+        INCIDENT_TYPE_OTHER: _("اخرى"),
+    }
+
+    CLASSIFICATION_SEVERE = 1
+    CLASSIFICATION_MEDIUM = 2
+    CLASSIFICATION_SIMPLE = 3
+
+    CLASSIFICATION_CHOICES = {
+        CLASSIFICATION_SEVERE: _("جسيم"),
+        CLASSIFICATION_MEDIUM: _("متوسط"),
+        CLASSIFICATION_SIMPLE: _("بسيط"),
+    }
+
+    RESULT_DEATH = 1
+    RESULT_DEATH_INJURY = 2
+    RESULT_INJURY = 3
+    RESULT_DAMAGE = 4
+
+    RESULT_CHOICES = {
+        RESULT_DEATH: _("وفاة"),
+        RESULT_DEATH_INJURY: _("وفاة واصابة"),
+        RESULT_INJURY: _("اصابة"),
+        RESULT_DAMAGE: _("تلف/ضرر"),
+    }
+
+    STATE_DRAFT = 1
+    STATE_CONFIRMED = 2
+    STATE_APPROVED = 3
+
+    STATE_CHOICES = {
+        STATE_DRAFT: _("draft"),
+        STATE_CONFIRMED: _("confirmed"),
+        STATE_APPROVED: _("approved"),
+    }
+
+    incident_date = models.DateField(_("التاريخ"))
+    incident_time = models.TimeField(_("زمن وقوع الحادث"))
+    source_state = models.ForeignKey(LkpState, on_delete=models.PROTECT, verbose_name=_("الولاية"))
+    state = models.IntegerField(_("record_state"), choices=STATE_CHOICES.items(), default=STATE_DRAFT)
+    locality = models.CharField(_("المحلية"), max_length=255)
+    market_mine = models.CharField(_("سوق/منجم"), max_length=255)
+    type = models.IntegerField(_("نوع الحادث"), choices=INCIDENT_TYPE_CHOICES.items())
+    classification = models.IntegerField(_("تصنيف الحادث"), choices=CLASSIFICATION_CHOICES.items())
+    result = models.IntegerField(_("نتيجة الحادث"), choices=RESULT_CHOICES.items())
+    summary = models.TextField(_("ملخص عن الحادث وعدد الاصابات/الوفيات/المفقودين"))
+
+    class Meta:
+        verbose_name = _("تبليغ مبدئي عن حادث")
+        verbose_name_plural = _("تبليغات مبدئية عن حوادث")
+
+    def __str__(self):
+        return f"{self.get_type_display()} - {self.locality}"
+
+    def send_notifications(self):
+        subject = 'بلاغ حادث' 
+        url = f"https://mineralsgate.com/app/managers/hse_traditional/hsetraditionalinitialincidentreport/{self.id}/change/"
+
+        message_html = render_to_string( 
+            'hse_traditional/telegram/accident.html', 
+            { 
+                'url':url, 
+                'subject':subject,
+                'title':"الإدارة العامة للبيئة والسلامة",
+                'sub_title':"إدارة البيئة والسلامة بالتعدين التقليدي",
+                'data':self,
+            },
+        ) 
+
+        for user in NotifiedUser.objects.all():
+            telegram_url = f"https://api.telegram.org/bot{settings.TELEGRAM_HSE_ACCIDENTS_ACCESS_KEY}/sendMessage?chat_id={int(user.telegram_user_id)}&text={message_html}&parse_mode=HTML"
+            requests.get(telegram_url)
+
+
+    def get_next_states(self, user):
+        """
+        Determine the next possible states based on the current state and user's role.
+        """
+        user_groups = list(user.groups.values_list('name', flat=True))
+
+        states = []
+        if 'hse_tra_state_employee' in user_groups:
+            if self.state == self.STATE_DRAFT:
+                states.append((self.STATE_CONFIRMED, self.STATE_CHOICES[self.STATE_CONFIRMED]))
+
+        if 'hse_tra_manager' in user_groups:
+            if self.state == self.STATE_CONFIRMED:
+                states.append((self.STATE_APPROVED, self.STATE_CHOICES[self.STATE_APPROVED]))
+                states.append((self.STATE_DRAFT, self.STATE_CHOICES[self.STATE_DRAFT]))
+
+        return states
+
+    def can_transition_to_next_state(self, user, state):
+        """
+        Check if the given user can transition to the specified state.
+        """
+        if state[0] in map(lambda x: x[0], self.get_next_states(user)):
+            return True
+
+        return False
+
+    def transition_to_next_state(self, user, state):
+        """
+        Transitions the workflow to the given state, after checking user permissions.
+        """
+        if self.can_transition_to_next_state(user, state):
+            self.state = state[0]
+            self.updated_by = user
+            self.save()
+        else:
+            raise Exception(f"User {user.username} cannot transition to state {state} from state {self.state}")
+
+        return self
+
 from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 
-@receiver(pre_save, sender=HseTraditionalAccident)
+@receiver(pre_save, sender=HseTraditionalInitialIncidentReport)
 def send_notifications_event(sender, instance, **kwargs):
     if instance.pk:
         try:
-            obj = HseTraditionalAccident.objects.get(pk=instance.pk)
+            obj = HseTraditionalInitialIncidentReport.objects.get(pk=instance.pk)
 
-            if obj.state != instance.state and instance.state == HseTraditionalAccident.STATE_CONFIRMED:
+            if obj.state != instance.state and instance.state == HseTraditionalInitialIncidentReport.STATE_CONFIRMED:
                 instance.send_notifications()
         except:
             pass
+

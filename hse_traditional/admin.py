@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
 
 from hse_traditional.forms import HseTraditionalCorrectiveActionForm, TblStateRepresentativeForm
-from hse_traditional.models import Achievement, ArrangementOfMarkets, EnvironmentalInspection, EnvironmentalRequirements, HseTraditionalAccident, HseTraditionalAccidentDamage, HseTraditionalAccidentInjury, HseTraditionalAccidentManagerComment, HseTraditionalAccidentWho, HseTraditionalAccidentWhy, HseTraditionalCorrectiveAction, HseTraditionalCorrectiveActionFinalDecision, HseTraditionalCorrectiveActionReccomendation, HseTraditionalNearMiss, HseTraditionalNearMissWho, HseTraditionalNearMissWhy, HseTraditionalReport, ImmediateAction, NotifiedUser, QuickEmergencyTeam, TblStateRepresentative, TrainingAwareness, WasteManagement
+from hse_traditional.models import Achievement, ArrangementOfMarkets, EnvironmentalInspection, EnvironmentalRequirements, HseTraditionalAccident, HseTraditionalAccidentDamage, HseTraditionalAccidentInjury, HseTraditionalAccidentManagerComment, HseTraditionalAccidentWho, HseTraditionalAccidentWhy, HseTraditionalCorrectiveAction, HseTraditionalCorrectiveActionFinalDecision, HseTraditionalCorrectiveActionReccomendation, HseTraditionalNearMiss, HseTraditionalNearMissWho, HseTraditionalNearMissWhy, HseTraditionalReport, ImmediateAction, NotifiedUser, QuickEmergencyTeam, TblStateRepresentative, TrainingAwareness, WasteManagement, HseTraditionalInitialIncidentReport
 from workflow.admin_utils import create_main_form
 
 class LogMixin:
@@ -802,6 +802,48 @@ corrective_action_inline_classes = {
 model_admin, inlines = create_main_form(corrective_action_main_class, corrective_action_inline_classes, corrective_action_main_mixins)
 
 admin.site.register(model_admin.model, model_admin)
+
+initial_incident_main_mixins = [LogMixin]
+initial_incident_main_class = {
+    'model': HseTraditionalInitialIncidentReport,
+    'mixins': [],
+    'kwargs': {
+        'list_display': ('type', 'incident_date', 'incident_time', 'source_state', 'locality', 'market_mine', 'result', 'state'),
+        'list_filter': ('type', 'classification', 'result', 'source_state', 'state'),
+        'exclude': ('state','source_state'),
+        'save_as_continue': False,
+    },
+    'groups': {
+        'hse_tra_state_employee':{
+            'permissions': {
+                HseTraditionalInitialIncidentReport.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
+                HseTraditionalInitialIncidentReport.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                HseTraditionalInitialIncidentReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+            },
+        },
+        'hse_tra_manager':{
+            'permissions': {
+                HseTraditionalInitialIncidentReport.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                HseTraditionalInitialIncidentReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+            },
+        },
+        'hse_tra_gm':{
+            'permissions': {
+                HseTraditionalInitialIncidentReport.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                HseTraditionalInitialIncidentReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+            },
+        },
+        'general_manager':{
+            'permissions': {
+                HseTraditionalInitialIncidentReport.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                HseTraditionalInitialIncidentReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+            },
+        },
+    },
+}
+
+model_admin_initial, inlines_initial = create_main_form(initial_incident_main_class, {}, initial_incident_main_mixins)
+admin.site.register(model_admin_initial.model, model_admin_initial)
 
 class NotifiedUserAdmin(admin.ModelAdmin):
     model = NotifiedUser
