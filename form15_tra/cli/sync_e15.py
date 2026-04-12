@@ -9,6 +9,7 @@ Endpoints (local e_service):
 - POST {BASE_URL}/app/api/v1/invoice/tra/collections/queue-invoices/?limit=N
 - POST {BASE_URL}/app/api/v1/invoice/tra/collections/set-pending-payment/
 - POST {BASE_URL}/app/api/v1/invoice/tra/collections/mark-paid/
+- POST {BASE_URL}/app/api/v1/invoice/tra/collections/consume-pending-payment-check-now/
 
 Auth:
 - Header: X-API-KEY: <key>
@@ -34,6 +35,8 @@ Config via env (or CLI args):
 - DB_PATH (default: form15_tra/cli/sync_e15.sqlite3)
 - MARK_PAID_SLEEP_S (default: 60)
 - MARK_PAID_JITTER_PCT (default: 0.10)
+- MARK_PAID_FIRST_CHECK_DELAY_S (default: 60; wait before first Esali paid check per invoice)
+- MARK_PAID_CHECK_MAX_DELAY_S (default: 3600; cap for 2^retries seconds between unpaid checks)
 - ENABLE_MARK_PAID (set to \"1\" to enable)
 """
 
@@ -41,6 +44,7 @@ from __future__ import annotations
 
 import argparse
 import asyncio
+from functools import partial
 import hashlib
 import json
 import logging
@@ -169,7 +173,9 @@ class SQLiteStore:
                     pending_payment_sent_at INTEGER NULL,
                     paid_at INTEGER NULL,
                     last_error TEXT NULL,
-                    updated_at INTEGER NOT NULL
+                    updated_at INTEGER NOT NULL,
+                    paid_check_retries INTEGER NOT NULL DEFAULT 0,
+                    paid_check_next_at_ms INTEGER NULL
                 )
                 """
             )
@@ -181,6 +187,10 @@ class SQLiteStore:
                 conn.execute("ALTER TABLE e15_sync_invoices ADD COLUMN rrn_number TEXT;")
             if "collector_username" not in cols:
                 conn.execute("ALTER TABLE e15_sync_invoices ADD COLUMN collector_username TEXT;")
+            if "paid_check_retries" not in cols:
+                conn.execute("ALTER TABLE e15_sync_invoices ADD COLUMN paid_check_retries INTEGER NOT NULL DEFAULT 0;")
+            if "paid_check_next_at_ms" not in cols:
+                conn.execute("ALTER TABLE e15_sync_invoices ADD COLUMN paid_check_next_at_ms INTEGER NULL;")
             conn.execute(
                 "CREATE INDEX IF NOT EXISTS idx_e15_status_invoice ON e15_sync_invoices(status, invoice_id)"
             )
@@ -264,17 +274,20 @@ class SQLiteStore:
         finally:
             conn.close()
 
-    def set_invoice_generated(self, results: list["E15Result"]) -> None:
+    def set_invoice_generated(self, results: list["E15Result"], *, first_check_delay_s: float = 60.0) -> None:
         if not results:
             return
         now = int(time.time() * 1000)
-        rows = [(r.invoice_id, now, now, "INVOICE_GENERATED", r.id) for r in results]
+        delay_ms = int(max(0.0, float(first_check_delay_s)) * 1000)
+        next_at = now + delay_ms
+        rows = [(r.invoice_id, now, now, "INVOICE_GENERATED", 0, next_at, r.id) for r in results]
         conn = self._connect()
         try:
             conn.executemany(
                 """
                 UPDATE e15_sync_invoices
-                SET invoice_id=?, invoice_generated_at=?, updated_at=?, status=?
+                SET invoice_id=?, invoice_generated_at=?, updated_at=?, status=?,
+                    paid_check_retries=?, paid_check_next_at_ms=?
                 WHERE collection_id=?
                 """,
                 rows,
@@ -299,7 +312,7 @@ class SQLiteStore:
         finally:
             conn.close()
 
-    def get_unpaid_with_invoice(self, limit: int) -> list[tuple[int, str, str]]:
+    def get_unpaid_with_invoice(self, limit: int, now_ms: int) -> list[tuple[int, str, str]]:
         conn = self._connect()
         try:
             cur = conn.execute(
@@ -307,10 +320,11 @@ class SQLiteStore:
                 SELECT collection_id, invoice_id, collector_username
                 FROM e15_sync_invoices
                 WHERE invoice_id IS NOT NULL AND paid_at IS NULL
+                  AND (paid_check_next_at_ms IS NULL OR paid_check_next_at_ms <= ?)
                 ORDER BY invoice_generated_at ASC, collection_id ASC
                 LIMIT ?
                 """,
-                (limit,),
+                (now_ms, limit),
             )
             return [
                 (int(r["collection_id"]), str(r["invoice_id"]), str(r["collector_username"] or ""))
@@ -319,29 +333,95 @@ class SQLiteStore:
         finally:
             conn.close()
 
-    def mark_paid(self, paid: list[tuple]) -> None:
-        if not paid:
+    def bump_paid_check_backoff(self, collection_ids: list[int], now_ms: int, max_delay_s: float) -> None:
+        if not collection_ids:
             return
-        now = int(time.time() * 1000)
-        norm: list[tuple[int, str, Optional[str]]] = []
-        for row in paid:
-            if len(row) == 2:
-                cid, receipt = row
-                rrn = None
-            else:
-                cid, receipt, rrn = row[0], row[1], row[2]
-            norm.append((int(cid), str(receipt), None if rrn is None else str(rrn)))
-        rows = [(receipt, rrn, now, now, "PAID", cid) for (cid, receipt, rrn) in norm]
+        cap = max(1.0, float(max_delay_s))
         conn = self._connect()
         try:
-            conn.executemany(
-                """
+            for cid in collection_ids:
+                row = conn.execute(
+                    "SELECT paid_check_retries FROM e15_sync_invoices WHERE collection_id=?",
+                    (int(cid),),
+                ).fetchone()
+                if row is None:
+                    continue
+                r = int(row["paid_check_retries"] or 0) + 1
+                delay_s = min(float(2**r), cap)
+                next_ms = now_ms + int(delay_s * 1000)
+                conn.execute(
+                    """
+                    UPDATE e15_sync_invoices
+                    SET paid_check_retries=?, paid_check_next_at_ms=?, updated_at=?
+                    WHERE collection_id=?
+                    """,
+                    (r, next_ms, now_ms, int(cid)),
+                )
+        finally:
+            conn.close()
+
+    def reset_paid_check_schedule_for_ids(self, collection_ids: list[int]) -> int:
+        """
+        Reset paid_check_retries and paid_check_next_at_ms for rows the user asked to re-check soon.
+        Returns SQLite rows updated (may be 0 if no matching local row).
+        """
+        if not collection_ids:
+            return 0
+        now = int(time.time() * 1000)
+        ids = [int(i) for i in collection_ids]
+        qmarks = ",".join("?" * len(ids))
+        conn = self._connect()
+        try:
+            cur = conn.execute(
+                f"""
                 UPDATE e15_sync_invoices
-                SET receipt_number=?, rrn_number=?, paid_at=?, updated_at=?, status=?
-                WHERE collection_id=?
+                SET paid_check_retries=0, paid_check_next_at_ms=NULL, updated_at=?
+                WHERE collection_id IN ({qmarks}) AND invoice_id IS NOT NULL AND paid_at IS NULL
                 """,
-                rows,
+                [now, *ids],
             )
+            return int(cur.rowcount)
+        finally:
+            conn.close()
+
+    def delete_invoices_after_smrc_mark_paid(self, collection_ids: list[int]) -> None:
+        if not collection_ids:
+            return
+        qmarks = ",".join("?" * len(collection_ids))
+        conn = self._connect()
+        try:
+            conn.execute(f"DELETE FROM e15_sync_invoices WHERE collection_id IN ({qmarks})", [int(i) for i in collection_ids])
+        finally:
+            conn.close()
+
+    def mark_paid_idle_sleep_s(self, now_ms: int, ceiling_s: float) -> float:
+        cap = max(1.0, float(ceiling_s))
+        conn = self._connect()
+        try:
+            row = conn.execute(
+                """
+                SELECT 1 AS ok FROM e15_sync_invoices
+                WHERE invoice_id IS NOT NULL AND paid_at IS NULL
+                  AND (paid_check_next_at_ms IS NULL OR paid_check_next_at_ms <= ?)
+                LIMIT 1
+                """,
+                (now_ms,),
+            ).fetchone()
+            if row is not None:
+                return min(cap, 1.0)
+            row2 = conn.execute(
+                """
+                SELECT MIN(paid_check_next_at_ms) AS mn FROM e15_sync_invoices
+                WHERE invoice_id IS NOT NULL AND paid_at IS NULL
+                  AND paid_check_next_at_ms > ?
+                """,
+                (now_ms,),
+            ).fetchone()
+            mn = row2["mn"] if row2 else None
+            if mn is None:
+                return cap
+            delay_ms = max(0, int(mn) - now_ms)
+            return min(cap, max(0.2, delay_ms / 1000.0))
         finally:
             conn.close()
 
@@ -423,6 +503,23 @@ class SmrcClient:
         if resp.status_code != 200:
             raise E15APIError(f"mark_paid failed: {resp.status_code} {resp.text}")
         return resp.json()
+
+    async def consume_pending_payment_check_now(self, client: httpx.AsyncClient) -> list[int]:
+        url = f"{self.base_url}/app/api/v1/invoice/tra/collections/consume-pending-payment-check-now/"
+        resp = await client.post(url, headers=self._headers(), timeout=self.timeout, json={})
+        if resp.status_code != 200:
+            raise E15APIError(f"consume_pending_payment_check_now failed: {resp.status_code} {resp.text}")
+        data = resp.json()
+        if not isinstance(data, dict):
+            raise E15APIError(f"consume_pending_payment_check_now invalid response: {data!r}")
+        raw_ids = data.get("ids") or []
+        out: list[int] = []
+        for raw in raw_ids:
+            try:
+                out.append(int(raw))
+            except (TypeError, ValueError):
+                logger.warning("Skipping malformed check-now id: %r", raw)
+        return out
 
     async def get_collector_esali_config(self, client: httpx.AsyncClient, collector_username: str) -> dict[str, Any]:
         url = f"{self.base_url}/app/api/v1/invoice/tra/collections/collector-esali-config/"
@@ -669,10 +766,10 @@ async def _run_parallel_create_invoices(
 
 async def _run_parallel_check_paid(
     e15: E15Client, invoice_rows: list[tuple[int, str, str]], concurrency: int
-) -> list[E15Result]:
+) -> list[tuple[int, Optional[E15Result]]]:
     sem = asyncio.Semaphore(max(1, concurrency))
 
-    async def one(row: tuple[int, str, str]) -> Optional[E15Result]:
+    async def one(row: tuple[int, str, str]) -> tuple[int, Optional[E15Result]]:
         cid, invoice_id, collector_username = row
         async with sem:
             try:
@@ -687,17 +784,16 @@ async def _run_parallel_check_paid(
                     paid, receipt = await e15.check_paid(invoice_id)
                     rrn = None
                 if not paid or not receipt:
-                    return None
-                return E15Result(id=cid, invoice_id=invoice_id, receipt_number=receipt, rrn_number=rrn)
+                    return cid, None
+                return cid, E15Result(id=cid, invoice_id=invoice_id, receipt_number=receipt, rrn_number=rrn)
             except (KeyError, EsaliAPIError, RuntimeError) as exc:
                 logger.warning("External paid check skipped for id=%s invoice_id=%s (%s)", cid, invoice_id, exc)
-                return None
+                return cid, None
             except Exception:
                 logger.exception("External paid check failed for id=%s invoice_id=%s", cid, invoice_id)
-                return None
+                return cid, None
 
-    results = await asyncio.gather(*(one(r) for r in invoice_rows))
-    return [r for r in results if r is not None]
+    return list(await asyncio.gather(*(one(r) for r in invoice_rows)))
 
 
 async def _request_with_retries(fn, *, attempts: int = 3) -> Any:
@@ -725,6 +821,8 @@ class Settings:
     db_path: str
     mark_paid_sleep_s: float
     mark_paid_jitter_pct: float
+    mark_paid_first_check_delay_s: float
+    mark_paid_check_max_delay_s: float
     external_mode: str
     external_base_url: Optional[str]
     enable_mark_paid: bool
@@ -746,6 +844,18 @@ def _parse_args() -> Settings:
     p.add_argument("--db-path", default=os.getenv("DB_PATH", "form15_tra/cli/sync_e15.sqlite3"))
     p.add_argument("--mark-paid-sleep-s", type=float, default=_env_float("MARK_PAID_SLEEP_S", 60.0))
     p.add_argument("--mark-paid-jitter-pct", type=float, default=_env_float("MARK_PAID_JITTER_PCT", 0.10))
+    p.add_argument(
+        "--mark-paid-first-check-delay-s",
+        type=float,
+        default=None,
+        help="Seconds to wait before first Esali paid check (env MARK_PAID_FIRST_CHECK_DELAY_S if omitted).",
+    )
+    p.add_argument(
+        "--mark-paid-check-max-delay-s",
+        type=float,
+        default=None,
+        help="Cap in seconds for 2^retries backoff (env MARK_PAID_CHECK_MAX_DELAY_S if omitted).",
+    )
     p.add_argument("--external-mode", default=os.getenv("E15_MODE", "mock"))
     p.add_argument("--external-base-url", default=os.getenv("E15_BASE_URL"))
     p.add_argument("--enable-mark-paid", action="store_true", default=os.getenv("ENABLE_MARK_PAID") == "1")
@@ -761,6 +871,17 @@ def _parse_args() -> Settings:
 
     jitter = max(0.0, min(1.0, float(args.mark_paid_jitter_pct)))
 
+    mark_paid_first_check_delay_s = (
+        max(0.0, float(args.mark_paid_first_check_delay_s))
+        if args.mark_paid_first_check_delay_s is not None
+        else _env_float("MARK_PAID_FIRST_CHECK_DELAY_S", 60.0)
+    )
+    mark_paid_check_max_delay_s = (
+        max(1.0, float(args.mark_paid_check_max_delay_s))
+        if args.mark_paid_check_max_delay_s is not None
+        else _env_float("MARK_PAID_CHECK_MAX_DELAY_S", 3600.0)
+    )
+
     return Settings(
         base_url=args.base_url,
         api_key=args.api_key,
@@ -771,6 +892,8 @@ def _parse_args() -> Settings:
         db_path=str(args.db_path),
         mark_paid_sleep_s=max(1.0, float(args.mark_paid_sleep_s)),
         mark_paid_jitter_pct=jitter,
+        mark_paid_first_check_delay_s=mark_paid_first_check_delay_s,
+        mark_paid_check_max_delay_s=mark_paid_check_max_delay_s,
         external_mode=str(args.external_mode or "mock"),
         external_base_url=args.external_base_url,
         enable_mark_paid=bool(args.enable_mark_paid),
@@ -803,6 +926,8 @@ async def step_generate_invoices(
     store: SQLiteStore,
     limit: int,
     concurrency: int,
+    *,
+    mark_paid_first_check_delay_s: float = 60.0,
 ) -> int:
     pending = await asyncio.to_thread(store.get_without_invoice, limit)
     if not pending:
@@ -810,7 +935,9 @@ async def step_generate_invoices(
     generated = await _run_parallel_create_invoices(e15, pending, concurrency)
     if not generated:
         return 0
-    await asyncio.to_thread(store.set_invoice_generated, generated)
+    await asyncio.to_thread(
+        partial(store.set_invoice_generated, generated, first_check_delay_s=mark_paid_first_check_delay_s)
+    )
     await _request_with_retries(lambda: smrc.set_pending_payment(http_client, generated))
     await asyncio.to_thread(store.mark_pending_payment_sent, [r.id for r in generated])
     return len(generated)
@@ -823,23 +950,31 @@ async def step_mark_paid(
     store: SQLiteStore,
     limit: int,
     concurrency: int,
+    *,
+    mark_paid_check_max_delay_s: float = 3600.0,
 ) -> int:
-    invoice_rows = await asyncio.to_thread(store.get_unpaid_with_invoice, limit)
+    now_ms = int(time.time() * 1000)
+    invoice_rows = await asyncio.to_thread(store.get_unpaid_with_invoice, limit, now_ms)
     if not invoice_rows:
         return 0
-    paid_results = await _run_parallel_check_paid(e15, invoice_rows, concurrency)
+    check_pairs = await _run_parallel_check_paid(e15, invoice_rows, concurrency)
+    after_ms = int(time.time() * 1000)
+    unpaid_ids = [cid for cid, res in check_pairs if res is None]
+    if unpaid_ids:
+        await asyncio.to_thread(store.bump_paid_check_backoff, unpaid_ids, after_ms, mark_paid_check_max_delay_s)
+    paid_results = [res for _cid, res in check_pairs if res is not None and res.receipt_number]
     if not paid_results:
         return 0
     await _request_with_retries(lambda: smrc.mark_paid(http_client, paid_results))
-    await asyncio.to_thread(
-        store.mark_paid,
-        [
-            (r.id, r.receipt_number or "", r.rrn_number)
-            for r in paid_results
-            if r.receipt_number
-        ],
-    )
+    await asyncio.to_thread(store.delete_invoices_after_smrc_mark_paid, [r.id for r in paid_results])
     return len(paid_results)
+
+
+async def step_consume_check_now(smrc: SmrcClient, http_client: httpx.AsyncClient, store: SQLiteStore) -> int:
+    ids = await _request_with_retries(lambda: smrc.consume_pending_payment_check_now(http_client))
+    if not ids:
+        return 0
+    return int(await asyncio.to_thread(store.reset_paid_check_schedule_for_ids, ids))
 
 
 def _jittered_sleep_s(base_s: float, jitter_pct: float) -> float:
@@ -949,7 +1084,15 @@ async def run_daemon(settings: Settings) -> None:  # pragma: no cover
                     if queued:
                         logger.info("Saved %s queued invoice records", queued)
 
-                    generated = await step_generate_invoices(smrc, http_client, e15, store, settings.limit, settings.concurrency)
+                    generated = await step_generate_invoices(
+                        smrc,
+                        http_client,
+                        e15,
+                        store,
+                        settings.limit,
+                        settings.concurrency,
+                        mark_paid_first_check_delay_s=settings.mark_paid_first_check_delay_s,
+                    )
                     if generated:
                         logger.info("Generated %s invoices and sent set_pending_payment", generated)
                 except (httpx.TimeoutException, httpx.TransportError, E15APIError) as exc:
@@ -960,14 +1103,33 @@ async def run_daemon(settings: Settings) -> None:  # pragma: no cover
             while not stop_event.is_set():
                 try:
                     if settings.enable_mark_paid:
+                        try:
+                            reset_n = await step_consume_check_now(smrc, http_client, store)
+                            if reset_n:
+                                logger.info(
+                                    "Reset paid-check backoff for %s local row(s) from consume-pending-payment-check-now",
+                                    reset_n,
+                                )
+                        except (httpx.TimeoutException, httpx.TransportError, E15APIError) as exc:
+                            logger.warning("consume check-now error: %s", exc)
                         updated = await step_mark_paid(
-                            smrc, http_client, e15, store, settings.limit, settings.concurrency
+                            smrc,
+                            http_client,
+                            e15,
+                            store,
+                            settings.limit,
+                            settings.concurrency,
+                            mark_paid_check_max_delay_s=settings.mark_paid_check_max_delay_s,
                         )
                         if updated:
                             logger.info("Marked %s invoices paid", updated)
                 except (httpx.TimeoutException, httpx.TransportError, E15APIError) as exc:
                     logger.warning("mark_paid loop error: %s", exc)
-                await asyncio.sleep(_jittered_sleep_s(settings.mark_paid_sleep_s, settings.mark_paid_jitter_pct))
+                now_ms = int(time.time() * 1000)
+                sleep_base = await asyncio.to_thread(
+                    store.mark_paid_idle_sleep_s, now_ms, settings.mark_paid_sleep_s
+                )
+                await asyncio.sleep(_jittered_sleep_s(sleep_base, settings.mark_paid_jitter_pct))
 
         await asyncio.gather(queue_and_generate_loop(), mark_paid_loop())
 

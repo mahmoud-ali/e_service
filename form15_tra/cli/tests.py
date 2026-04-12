@@ -1,6 +1,7 @@
 import os
 import runpy
 import sqlite3
+import time
 import tempfile
 import unittest
 from dataclasses import dataclass
@@ -363,6 +364,8 @@ class SyncE15Tests(unittest.IsolatedAsyncioTestCase):
         self.assertTrue(s.enable_mark_paid)
         self.assertEqual(s.mark_paid_sleep_s, 1.0)
         self.assertEqual(s.mark_paid_jitter_pct, 1.0)
+        self.assertEqual(s.mark_paid_first_check_delay_s, 60.0)
+        self.assertEqual(s.mark_paid_check_max_delay_s, 3600.0)
         self.assertIsNotNone(s.esali_base_url)
         self.assertEqual(s.esali_timeout_s, 60.0)
 
@@ -377,6 +380,8 @@ class SyncE15Tests(unittest.IsolatedAsyncioTestCase):
             db_path=":memory:",
             mark_paid_sleep_s=60.0,
             mark_paid_jitter_pct=0.1,
+            mark_paid_first_check_delay_s=60.0,
+            mark_paid_check_max_delay_s=3600.0,
             external_mode="real",
             external_base_url=None,
             enable_mark_paid=False,
@@ -956,17 +961,28 @@ class SyncE15Tests(unittest.IsolatedAsyncioTestCase):
             store.upsert_queued(
                 [sync_e15.QueuedInvoice(id=1, miner_name="a", phone="0", total_amount=1, market_name="m", collector_username="c")]
             )
-            store.set_invoice_generated([sync_e15.E15Result(id=1, invoice_id="inv1")])
+            store.set_invoice_generated([sync_e15.E15Result(id=1, invoice_id="inv1")], first_check_delay_s=0.0)
             smrc = sync_e15.SmrcClient("http://example.com", "k", timeout_s=1.0)
             fake_http = _FakeAsyncClient()
 
+            before_ms = int(time.time() * 1000)
             with (
-                mock.patch.object(sync_e15, "_run_parallel_check_paid", return_value=[]),
+                mock.patch.object(sync_e15, "_run_parallel_check_paid", return_value=[(1, None)]),
             ):
                 out = await sync_e15.step_mark_paid(
                     smrc, fake_http, sync_e15.MockE15Client(), store, limit=10, concurrency=2  # type: ignore[arg-type]
                 )
                 self.assertEqual(out, 0)
+            conn = sqlite3.connect(db_path)
+            try:
+                row = conn.execute(
+                    "SELECT paid_check_retries, paid_check_next_at_ms FROM e15_sync_invoices WHERE collection_id=1"
+                ).fetchone()
+                self.assertIsNotNone(row)
+                self.assertEqual(int(row[0]), 1)
+                self.assertGreaterEqual(int(row[1]), before_ms + 1500)
+            finally:
+                conn.close()
 
     async def test_run_daemon_esali_mode_missing_env_exits(self) -> None:
         settings = sync_e15.Settings(
@@ -979,6 +995,8 @@ class SyncE15Tests(unittest.IsolatedAsyncioTestCase):
             db_path=":memory:",
             mark_paid_sleep_s=60.0,
             mark_paid_jitter_pct=0.1,
+            mark_paid_first_check_delay_s=60.0,
+            mark_paid_check_max_delay_s=3600.0,
             external_mode="esali",
             external_base_url=None,
             enable_mark_paid=False,
@@ -1002,6 +1020,8 @@ class SyncE15Tests(unittest.IsolatedAsyncioTestCase):
             db_path=":memory:",
             mark_paid_sleep_s=60.0,
             mark_paid_jitter_pct=0.1,
+            mark_paid_first_check_delay_s=60.0,
+            mark_paid_check_max_delay_s=3600.0,
             external_mode="esali",
             external_base_url=None,
             enable_mark_paid=True,
@@ -1058,6 +1078,7 @@ class SyncE15Tests(unittest.IsolatedAsyncioTestCase):
             mock.patch.object(sync_e15.asyncio, "to_thread", side_effect=lambda fn, *a: fn(*a)),
             mock.patch.object(sync_e15, "step_queue_invoices", return_value=0),
             mock.patch.object(sync_e15, "step_generate_invoices", return_value=0),
+            mock.patch.object(sync_e15, "step_consume_check_now", new=mock.AsyncMock(return_value=0)),
             mock.patch.object(sync_e15, "step_mark_paid", return_value=0),
             mock.patch.object(sync_e15.httpx, "AsyncClient", return_value=_FakeAsyncClientCM(_FakeAsyncClient())),
             mock.patch.object(sync_e15.asyncio, "gather", side_effect=_fake_gather),
@@ -1079,6 +1100,8 @@ class SyncE15Tests(unittest.IsolatedAsyncioTestCase):
             db_path=":memory:",
             mark_paid_sleep_s=60.0,
             mark_paid_jitter_pct=0.1,
+            mark_paid_first_check_delay_s=60.0,
+            mark_paid_check_max_delay_s=3600.0,
             external_mode="esali",
             external_base_url=None,
             enable_mark_paid=False,
@@ -1124,7 +1147,9 @@ class SyncE15Tests(unittest.IsolatedAsyncioTestCase):
                     pass
             return None
 
-        async def _fake_generate(smrc: Any, http_client: Any, e15: Any, store: Any, limit: int, concurrency: int) -> int:
+        async def _fake_generate(
+            smrc: Any, http_client: Any, e15: Any, store: Any, limit: int, concurrency: int, **_kwargs: Any
+        ) -> int:
             # Trigger config fetch/decrypt by creating one invoice.
             r = await e15.create_invoice(
                 sync_e15.QueuedInvoice(
@@ -1155,6 +1180,7 @@ class SyncE15Tests(unittest.IsolatedAsyncioTestCase):
             mock.patch.object(sync_e15.asyncio, "to_thread", side_effect=lambda fn, *a: fn(*a)),
             mock.patch.object(sync_e15, "step_queue_invoices", return_value=0),
             mock.patch.object(sync_e15, "step_generate_invoices", new=_fake_generate),
+            mock.patch.object(sync_e15, "step_consume_check_now", new=mock.AsyncMock(return_value=0)),
             mock.patch.object(sync_e15, "step_mark_paid", return_value=0),
             mock.patch.object(sync_e15.SmrcClient, "get_collector_esali_config", new=_fake_get_cfg),
             mock.patch.object(sync_e15.httpx, "AsyncClient", return_value=_FakeAsyncClientCM(_FakeAsyncClient())),
@@ -1177,6 +1203,8 @@ class SyncE15Tests(unittest.IsolatedAsyncioTestCase):
             db_path=":memory:",
             mark_paid_sleep_s=60.0,
             mark_paid_jitter_pct=0.1,
+            mark_paid_first_check_delay_s=60.0,
+            mark_paid_check_max_delay_s=3600.0,
             external_mode="esali",
             external_base_url=None,
             enable_mark_paid=False,
@@ -1230,7 +1258,9 @@ class SyncE15Tests(unittest.IsolatedAsyncioTestCase):
                     seen_errors.append(repr(exc))
             return None
 
-        async def _fake_generate(smrc: Any, http_client: Any, e15: Any, store: Any, limit: int, concurrency: int) -> int:
+        async def _fake_generate(
+            smrc: Any, http_client: Any, e15: Any, store: Any, limit: int, concurrency: int, **_kwargs: Any
+        ) -> int:
             seen_calls["generate"] += 1
             r = await e15.create_invoice(
                 sync_e15.QueuedInvoice(
@@ -1271,6 +1301,7 @@ class SyncE15Tests(unittest.IsolatedAsyncioTestCase):
             mock.patch.object(sync_e15, "_request_with_retries", new=_direct_request),
             mock.patch.object(sync_e15, "step_queue_invoices", new=mock.AsyncMock(return_value=0)),
             mock.patch.object(sync_e15, "step_generate_invoices", new=_fake_generate),
+            mock.patch.object(sync_e15, "step_consume_check_now", new=mock.AsyncMock(return_value=0)),
             mock.patch.object(sync_e15, "step_mark_paid", new=mock.AsyncMock(return_value=0)),
             mock.patch.object(sync_e15.SmrcClient, "get_collector_esali_config", new=_fake_get_cfg),
             mock.patch.object(sync_e15.SmrcClient, "update_esali_service_id", new=_fake_update),
@@ -1299,6 +1330,8 @@ class SyncE15Tests(unittest.IsolatedAsyncioTestCase):
             db_path=":memory:",
             mark_paid_sleep_s=60.0,
             mark_paid_jitter_pct=0.1,
+            mark_paid_first_check_delay_s=60.0,
+            mark_paid_check_max_delay_s=3600.0,
             external_mode="esali",
             external_base_url=None,
             enable_mark_paid=False,
@@ -1346,7 +1379,9 @@ class SyncE15Tests(unittest.IsolatedAsyncioTestCase):
                 "esali_service_id": "",
             }
 
-        async def _fake_generate(smrc: Any, http_client: Any, e15: Any, store: Any, limit: int, concurrency: int) -> int:
+        async def _fake_generate(
+            smrc: Any, http_client: Any, e15: Any, store: Any, limit: int, concurrency: int, **_kwargs: Any
+        ) -> int:
             await e15.create_invoice(
                 sync_e15.QueuedInvoice(
                     id=1,
@@ -1366,6 +1401,7 @@ class SyncE15Tests(unittest.IsolatedAsyncioTestCase):
             mock.patch.object(sync_e15.asyncio, "to_thread", side_effect=lambda fn, *a: fn(*a)),
             mock.patch.object(sync_e15, "step_queue_invoices", return_value=0),
             mock.patch.object(sync_e15, "step_generate_invoices", new=_fake_generate),
+            mock.patch.object(sync_e15, "step_consume_check_now", new=mock.AsyncMock(return_value=0)),
             mock.patch.object(sync_e15, "step_mark_paid", return_value=0),
             mock.patch.object(sync_e15.SmrcClient, "get_collector_esali_config", new=_fake_get_cfg),
             mock.patch.object(sync_e15.SmrcClient, "update_esali_service_id", side_effect=AssertionError("should not persist")),
@@ -1408,7 +1444,9 @@ class SyncE15Tests(unittest.IsolatedAsyncioTestCase):
             self.assertEqual(queued_saved, 1)
 
             # step_generate_invoices should create invoice_ids for existing QUEUED rows and call set_pending_payment
-            generated = await sync_e15.step_generate_invoices(smrc, fake_http, e15, store, limit=10, concurrency=5)  # type: ignore[arg-type]
+            generated = await sync_e15.step_generate_invoices(
+                smrc, fake_http, e15, store, limit=10, concurrency=5, mark_paid_first_check_delay_s=0.0  # type: ignore[arg-type]
+            )
             self.assertGreaterEqual(generated, 1)
 
             # Now mark paid step uses external check + mark_paid API
@@ -1427,24 +1465,25 @@ class SyncE15Tests(unittest.IsolatedAsyncioTestCase):
             )
             self.assertEqual([x.id for x in store.get_without_invoice(10)], [10])
 
-            store.set_invoice_generated([sync_e15.E15Result(id=10, invoice_id="inv10")])
+            store.set_invoice_generated([sync_e15.E15Result(id=10, invoice_id="inv10")], first_check_delay_s=0.0)
             store.mark_pending_payment_sent([10])
             self.assertEqual(store.get_without_invoice(10), [])
 
-            unpaid = store.get_unpaid_with_invoice(10)
+            now_ms = int(time.time() * 1000)
+            unpaid = store.get_unpaid_with_invoice(10, now_ms)
             self.assertEqual(unpaid, [(10, "inv10", "c")])
 
-            store.mark_paid([(10, "rcp10")])
-            self.assertEqual(store.get_unpaid_with_invoice(10), [])
+            store.delete_invoices_after_smrc_mark_paid([10])
+            self.assertEqual(store.get_unpaid_with_invoice(10, now_ms), [])
 
             # also accept rrn tuple
             store.upsert_queued(
                 [sync_e15.QueuedInvoice(id=11, miner_name="m", phone="0", total_amount=5, market_name="x", collector_username="c")]
             )
-            store.set_invoice_generated([sync_e15.E15Result(id=11, invoice_id="inv11")])
+            store.set_invoice_generated([sync_e15.E15Result(id=11, invoice_id="inv11")], first_check_delay_s=0.0)
             store.mark_pending_payment_sent([11])
-            store.mark_paid([(11, "rcp11", "RRN11")])
-            self.assertEqual(store.get_unpaid_with_invoice(10), [])
+            store.delete_invoices_after_smrc_mark_paid([11])
+            self.assertEqual(store.get_unpaid_with_invoice(10, now_ms), [])
 
     async def test_run_parallel_check_paid_filters_only_paid(self) -> None:
         class _E15(sync_e15.E15Client):
@@ -1457,7 +1496,7 @@ class SyncE15Tests(unittest.IsolatedAsyncioTestCase):
                 return False, None
 
         out = await sync_e15._run_parallel_check_paid(_E15(), [(1, "inv-1", "m"), (2, "inv-2", "m")], concurrency=2)
-        self.assertEqual([(r.id, r.receipt_number) for r in out], [(1, "r1")])
+        self.assertEqual([(cid, (r.receipt_number if r else None)) for cid, r in out], [(1, "r1"), (2, None)])
 
     async def test_run_parallel_check_paid_handles_exceptions(self) -> None:
         class _E15(sync_e15.E15Client):
@@ -1468,7 +1507,7 @@ class SyncE15Tests(unittest.IsolatedAsyncioTestCase):
                 raise RuntimeError("fail")
 
         out = await sync_e15._run_parallel_check_paid(_E15(), [(1, "inv-1", "m")], concurrency=1)
-        self.assertEqual(out, [])
+        self.assertEqual(out, [(1, None)])
 
     async def test_run_parallel_check_paid_logs_exception_for_non_runtimeerror(self) -> None:
         class _E15(sync_e15.E15Client):
@@ -1479,7 +1518,7 @@ class SyncE15Tests(unittest.IsolatedAsyncioTestCase):
                 raise ValueError("bad")
 
         out = await sync_e15._run_parallel_check_paid(_E15(), [(1, "inv-1", "m")], concurrency=1)
-        self.assertEqual(out, [])
+        self.assertEqual(out, [(1, None)])
 
     async def test_run_parallel_check_paid_accepts_two_tuple_from_check_paid_for_collector(self) -> None:
         class _E15(sync_e15.E15Client):
@@ -1492,7 +1531,7 @@ class SyncE15Tests(unittest.IsolatedAsyncioTestCase):
                 return True, "r1"
 
         out = await sync_e15._run_parallel_check_paid(_E15(), [(1, "inv-1", "collector1")], concurrency=1)
-        self.assertEqual([(r.id, r.receipt_number) for r in out], [(1, "r1")])
+        self.assertEqual([(cid, r.receipt_number if r else None) for cid, r in out], [(1, "r1")])
 
     async def test_run_parallel_check_paid_accepts_three_tuple_from_check_paid_for_collector(self) -> None:
         class _E15(sync_e15.E15Client):
@@ -1505,7 +1544,12 @@ class SyncE15Tests(unittest.IsolatedAsyncioTestCase):
                 return True, "r1", "RRN1"
 
         out = await sync_e15._run_parallel_check_paid(_E15(), [(1, "inv-1", "collector1")], concurrency=1)
-        self.assertEqual([(r.id, r.receipt_number, r.rrn_number) for r in out], [(1, "r1", "RRN1")])
+        self.assertEqual(len(out), 1)
+        cid, r = out[0]
+        self.assertEqual(cid, 1)
+        self.assertIsNotNone(r)
+        assert r is not None
+        self.assertEqual((r.receipt_number, r.rrn_number), ("r1", "RRN1"))
 
     async def test_parallel_create_invoices_logs_exception_for_unexpected_errors(self) -> None:
         class _Boom(sync_e15.E15Client):
@@ -1527,6 +1571,70 @@ class SyncE15Tests(unittest.IsolatedAsyncioTestCase):
         with mock.patch.object(sync_e15.random, "uniform", return_value=6.0):
             self.assertEqual(sync_e15._jittered_sleep_s(60.0, 0.1), 66.0)
 
+    def test_get_unpaid_respects_first_check_delay_and_next_at(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            db_path = os.path.join(td, "t.sqlite3")
+            store = sync_e15.SQLiteStore(db_path)
+            store.init_db()
+            store.upsert_queued(
+                [sync_e15.QueuedInvoice(id=7, miner_name="m", phone="0", total_amount=1, market_name="x", collector_username="c")]
+            )
+            store.set_invoice_generated([sync_e15.E15Result(id=7, invoice_id="inv7")], first_check_delay_s=3600.0)
+            conn = sqlite3.connect(db_path)
+            try:
+                next_at = int(conn.execute("SELECT paid_check_next_at_ms FROM e15_sync_invoices WHERE collection_id=7").fetchone()[0])
+            finally:
+                conn.close()
+            self.assertEqual(store.get_unpaid_with_invoice(10, next_at - 1), [])
+            self.assertEqual(store.get_unpaid_with_invoice(10, next_at), [(7, "inv7", "c")])
+
+    def test_mark_paid_idle_sleep_s(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            db_path = os.path.join(td, "t2.sqlite3")
+            store = sync_e15.SQLiteStore(db_path)
+            store.init_db()
+            self.assertEqual(store.mark_paid_idle_sleep_s(1_000_000, 60.0), 60.0)
+            store.upsert_queued(
+                [sync_e15.QueuedInvoice(id=8, miner_name="m", phone="0", total_amount=1, market_name="x", collector_username="c")]
+            )
+            store.set_invoice_generated([sync_e15.E15Result(id=8, invoice_id="inv8")], first_check_delay_s=0.0)
+            store.mark_pending_payment_sent([8])
+            self.assertEqual(store.mark_paid_idle_sleep_s(int(time.time() * 1000), 60.0), 1.0)
+            store.bump_paid_check_backoff([8], int(time.time() * 1000), max_delay_s=3600.0)
+            conn = sqlite3.connect(db_path)
+            try:
+                next_at = int(conn.execute("SELECT paid_check_next_at_ms FROM e15_sync_invoices WHERE collection_id=8").fetchone()[0])
+            finally:
+                conn.close()
+            now_ms = next_at - 500
+            s = store.mark_paid_idle_sleep_s(now_ms, 60.0)
+            self.assertLessEqual(s, 60.0)
+            self.assertGreaterEqual(s, 0.2)
+
+    async def test_step_consume_check_now_resets_paid_check_schedule(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            db_path = os.path.join(td, "reset_cn.sqlite3")
+            store = sync_e15.SQLiteStore(db_path)
+            store.init_db()
+            store.upsert_queued(
+                [
+                    sync_e15.QueuedInvoice(
+                        id=99, miner_name="m", phone="0123456789", total_amount=1, market_name="x", collector_username="c"
+                    )
+                ]
+            )
+            store.set_invoice_generated([sync_e15.E15Result(id=99, invoice_id="inv99")], first_check_delay_s=3600.0)
+            self.assertEqual(store.get_unpaid_with_invoice(10, int(time.time() * 1000)), [])
+            smrc = sync_e15.SmrcClient("http://example.com", "k", timeout_s=1.0)
+            fake_http = _FakeAsyncClient()
+            with mock.patch.object(smrc, "consume_pending_payment_check_now", mock.AsyncMock(return_value=[99])):
+                n = await sync_e15.step_consume_check_now(smrc, fake_http, store)
+            self.assertEqual(n, 1)
+            self.assertEqual(
+                store.get_unpaid_with_invoice(10, int(time.time() * 1000)),
+                [(99, "inv99", "c")],
+            )
+
     async def test_run_daemon_runs_both_loops_once(self) -> None:
         settings = sync_e15.Settings(
             base_url="http://example.com/",
@@ -1538,6 +1646,8 @@ class SyncE15Tests(unittest.IsolatedAsyncioTestCase):
             db_path=":memory:",
             mark_paid_sleep_s=60.0,
             mark_paid_jitter_pct=0.1,
+            mark_paid_first_check_delay_s=60.0,
+            mark_paid_check_max_delay_s=3600.0,
             external_mode="mock",
             external_base_url=None,
             enable_mark_paid=True,
@@ -1570,6 +1680,7 @@ class SyncE15Tests(unittest.IsolatedAsyncioTestCase):
             mock.patch.object(sync_e15.asyncio, "to_thread", side_effect=lambda fn, *a: fn(*a)),
             mock.patch.object(sync_e15, "step_queue_invoices", return_value=1),
             mock.patch.object(sync_e15, "step_generate_invoices", return_value=2),
+            mock.patch.object(sync_e15, "step_consume_check_now", new=mock.AsyncMock(return_value=0)),
             mock.patch.object(sync_e15, "step_mark_paid", return_value=3),
             mock.patch.object(sync_e15.httpx, "AsyncClient", return_value=_FakeAsyncClientCM(_FakeAsyncClient())),
         ):
@@ -1586,6 +1697,8 @@ class SyncE15Tests(unittest.IsolatedAsyncioTestCase):
             db_path=":memory:",
             mark_paid_sleep_s=60.0,
             mark_paid_jitter_pct=0.1,
+            mark_paid_first_check_delay_s=60.0,
+            mark_paid_check_max_delay_s=3600.0,
             external_mode="mock",
             external_base_url=None,
             enable_mark_paid=True,
@@ -1620,6 +1733,7 @@ class SyncE15Tests(unittest.IsolatedAsyncioTestCase):
             mock.patch.object(sync_e15.asyncio, "to_thread", side_effect=lambda fn, *a: fn(*a)),
             mock.patch.object(sync_e15, "step_queue_invoices", return_value=1),
             mock.patch.object(sync_e15, "step_generate_invoices", return_value=2),
+            mock.patch.object(sync_e15, "step_consume_check_now", new=mock.AsyncMock(return_value=0)),
             mock.patch.object(sync_e15, "step_mark_paid", return_value=3),
             mock.patch.object(sync_e15.httpx, "AsyncClient", return_value=_FakeAsyncClientCM(_FakeAsyncClient())),
         ):
@@ -1638,6 +1752,8 @@ class SyncE15Tests(unittest.IsolatedAsyncioTestCase):
             db_path=":memory:",
             mark_paid_sleep_s=60.0,
             mark_paid_jitter_pct=0.1,
+            mark_paid_first_check_delay_s=60.0,
+            mark_paid_check_max_delay_s=3600.0,
             external_mode="mock",
             external_base_url=None,
             enable_mark_paid=True,
@@ -1670,6 +1786,7 @@ class SyncE15Tests(unittest.IsolatedAsyncioTestCase):
             mock.patch.object(sync_e15.asyncio, "to_thread", side_effect=lambda fn, *a: fn(*a)),
             mock.patch.object(sync_e15, "step_queue_invoices", side_effect=httpx.TransportError("x")),
             mock.patch.object(sync_e15, "step_generate_invoices", return_value=0),
+            mock.patch.object(sync_e15, "step_consume_check_now", new=mock.AsyncMock(return_value=0)),
             mock.patch.object(sync_e15, "step_mark_paid", side_effect=httpx.TransportError("y")),
             mock.patch.object(sync_e15.httpx, "AsyncClient", return_value=_FakeAsyncClientCM(_FakeAsyncClient())),
         ):
@@ -1702,7 +1819,7 @@ class SyncE15Tests(unittest.IsolatedAsyncioTestCase):
             self.assertEqual(store.upsert_queued([]), 0)
             store.set_invoice_generated([])
             store.mark_pending_payment_sent([])
-            store.mark_paid([])
+            store.delete_invoices_after_smrc_mark_paid([])
 
     async def test_run_daemon_signal_fallback_wires_up_and_starts_tasks(self) -> None:
         settings = sync_e15.Settings(
@@ -1715,6 +1832,8 @@ class SyncE15Tests(unittest.IsolatedAsyncioTestCase):
             db_path=":memory:",
             mark_paid_sleep_s=60.0,
             mark_paid_jitter_pct=0.1,
+            mark_paid_first_check_delay_s=60.0,
+            mark_paid_check_max_delay_s=3600.0,
             external_mode="mock",
             external_base_url=None,
             enable_mark_paid=True,
@@ -1760,6 +1879,8 @@ class SyncE15Tests(unittest.IsolatedAsyncioTestCase):
             db_path=":memory:",
             mark_paid_sleep_s=60.0,
             mark_paid_jitter_pct=0.1,
+            mark_paid_first_check_delay_s=60.0,
+            mark_paid_check_max_delay_s=3600.0,
             external_mode="mock",
             external_base_url=None,
             enable_mark_paid=False,

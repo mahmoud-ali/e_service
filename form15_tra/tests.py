@@ -531,6 +531,124 @@ class MiningSystemTests(TestCase):
         response = self.client.post(url, data={}, content_type="application/json", HTTP_X_API_KEY="EXPECTED_BANK_API_KEY")
         self.assertEqual(response.status_code, 400)
 
+    def test_consume_pending_payment_check_now_requires_api_key(self) -> None:
+        url = reverse("collection-consume-pending-payment-check-now")
+        response = self.client.post(url, data={}, content_type="application/json")
+        self.assertIn(response.status_code, (401, 403))
+
+    def test_consume_pending_payment_check_now_empty(self) -> None:
+        url = reverse("collection-consume-pending-payment-check-now")
+        response = self.client.post(
+            url, data={}, content_type="application/json", HTTP_X_API_KEY="EXPECTED_BANK_API_KEY"
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json().get("ids"), [])
+
+    def test_consume_pending_payment_check_now_returns_and_clears_flags(self) -> None:
+        a = CollectionForm.objects.create(
+            miner_name="CN1",
+            sacks_count=5,
+            total_amount=Decimal("500.00"),
+            collector=self.collector,
+            market=self.market,
+            status=CollectionForm.Status.PENDING_PAYMENT,
+            pending_payment_check_now=True,
+        )
+        b = CollectionForm.objects.create(
+            miner_name="CN2",
+            sacks_count=5,
+            total_amount=Decimal("500.00"),
+            collector=self.collector,
+            market=self.market,
+            status=CollectionForm.Status.PENDING_PAYMENT,
+            pending_payment_check_now=True,
+        )
+        CollectionForm.objects.create(
+            miner_name="Other",
+            sacks_count=5,
+            total_amount=Decimal("500.00"),
+            collector=self.collector,
+            market=self.market,
+            status=CollectionForm.Status.INVOICE_REQUESTED,
+            pending_payment_check_now=True,
+        )
+        url = reverse("collection-consume-pending-payment-check-now")
+        response = self.client.post(
+            url, data={}, content_type="application/json", HTTP_X_API_KEY="EXPECTED_CLIENT_API_KEY"
+        )
+        self.assertEqual(response.status_code, 200)
+        ids = sorted(response.json().get("ids") or [])
+        self.assertEqual(ids, sorted([a.id, b.id]))
+        a.refresh_from_db()
+        b.refresh_from_db()
+        self.assertFalse(a.pending_payment_check_now)
+        self.assertFalse(b.pending_payment_check_now)
+
+        response2 = self.client.post(
+            url, data={}, content_type="application/json", HTTP_X_API_KEY="EXPECTED_BANK_API_KEY"
+        )
+        self.assertEqual(response2.status_code, 200)
+        self.assertEqual(response2.json().get("ids"), [])
+
+    def test_collection_detail_sets_pending_payment_check_now(self) -> None:
+        form = CollectionForm.objects.create(
+            miner_name="DetailFlag",
+            sacks_count=5,
+            total_amount=Decimal("500.00"),
+            collector=self.collector,
+            market=self.market,
+            status=CollectionForm.Status.PENDING_PAYMENT,
+            pending_payment_check_now=False,
+        )
+        self.client.login(username="collector", password="password")
+        resp = self.client.get(reverse("collection-detail", kwargs={"pk": form.pk}))
+        self.assertEqual(resp.status_code, 200)
+        form.refresh_from_db()
+        self.assertTrue(form.pending_payment_check_now)
+
+    def test_collection_status_poll_ok_and_shape(self) -> None:
+        form = CollectionForm.objects.create(
+            miner_name="PollOk",
+            sacks_count=5,
+            total_amount=Decimal("500.00"),
+            collector=self.collector,
+            market=self.market,
+            status=CollectionForm.Status.DRAFT,
+        )
+        self.client.login(username="collector", password="password")
+        url = reverse("collection-status-poll", kwargs={"pk": form.pk})
+        resp = self.client.get(url, HTTP_ACCEPT="application/json")
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp["Cache-Control"], "private, max-age=0")
+        data = resp.json()
+        self.assertEqual(set(data.keys()), {"status", "updated_at"})
+        self.assertEqual(data["status"], CollectionForm.Status.DRAFT)
+        self.assertIsInstance(data["updated_at"], str)
+
+    def test_collection_status_poll_not_visible_returns_404(self) -> None:
+        form = CollectionForm.objects.create(
+            miner_name="PollHidden",
+            sacks_count=5,
+            total_amount=Decimal("500.00"),
+            collector=self.collector,
+            market=self.market,
+            status=CollectionForm.Status.DRAFT,
+        )
+        other = User.objects.create_user(username="other_collector", password="password")
+        other_assignment = CollectorAssignment(
+            user=other,
+            market=self.market,
+            is_collector=True,
+            esali_username="esali_other",
+            esali_service_id="S9",
+        )
+        other_assignment.set_esali_password_plain("esali_pw")
+        other_assignment.save()
+        self.client.login(username="other_collector", password="password")
+        url = reverse("collection-status-poll", kwargs={"pk": form.pk})
+        resp = self.client.get(url)
+        self.assertEqual(resp.status_code, 404)
+
     def test_set_pending_payment_endpoint_bulk_invoices_and_idempotent(self) -> None:
         """
         Verify POST /api/v1/collections/set-pending-payment/ sets invoice_id and transitions
@@ -906,6 +1024,7 @@ class ApiViewsetPermissionsBranchesTests(TestCase):
             "set_pending_payment",
             "collector_esali_config",
             "update_esali_service_id",
+            "consume_pending_payment_check_now",
             "list",
         ):
             v.action = action

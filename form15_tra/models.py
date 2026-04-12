@@ -158,6 +158,11 @@ class CollectionForm(models.Model):
         choices=Status.choices,
         default=Status.DRAFT
     )
+    pending_payment_check_now = models.BooleanField(
+        default=False,
+        db_index=True,
+        help_text="Set when a user opens this collection in Pending Payment; cleared when the sync worker consumes it.",
+    )
     collector = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.PROTECT,

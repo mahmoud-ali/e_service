@@ -51,6 +51,8 @@ class CollectionFormViewSet(viewsets.ModelViewSet):
             permission_classes = [HasAPIKey]
         elif self.action == "update_esali_service_id":
             permission_classes = [HasAPIKey]
+        elif self.action == "consume_pending_payment_check_now":
+            permission_classes = [HasAPIKey]
         else:
             permission_classes = [permissions.IsAuthenticated]
         return [permission() for permission in permission_classes]
@@ -450,4 +452,49 @@ class CollectionFormViewSet(viewsets.ModelViewSet):
             )
             return Response(error_data, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+    @action(detail=False, methods=["post"], url_path="consume-pending-payment-check-now")
+    def consume_pending_payment_check_now(self, request: Any) -> Response:
+        """
+        POST /api/v1/collections/consume-pending-payment-check-now/
+        Returns collection ids flagged for immediate Esali paid check and clears the flag (atomic).
+        Secured by X-API-KEY (sync_e15 worker).
+        """
+        ip_address = request.META.get("REMOTE_ADDR")
+        try:
+            with transaction.atomic():
+                base_qs = CollectionForm.objects.filter(
+                    status=CollectionForm.Status.PENDING_PAYMENT,
+                    pending_payment_check_now=True,
+                ).order_by("id")
+                try:
+                    locked = base_qs.select_for_update(skip_locked=True)
+                except Exception:
+                    locked = base_qs.select_for_update()
+                ids = list(locked.values_list("id", flat=True))
+                if ids:
+                    CollectionForm.objects.filter(id__in=ids).update(pending_payment_check_now=False)
+
+            payload: dict[str, Any] = {"ids": ids}
+            APILog.objects.create(
+                action="consume_pending_payment_check_now",
+                user=None,
+                request_data={},
+                response_data={"count": len(ids)},
+                status_code=status.HTTP_200_OK,
+                ip_address=ip_address,
+                collection_form=None,
+            )
+            return Response(payload, status=status.HTTP_200_OK)
+        except Exception as exc:
+            error_data = {"error": str(exc)}
+            APILog.objects.create(
+                action="consume_pending_payment_check_now_failed",
+                user=None,
+                request_data={},
+                response_data=error_data,
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                ip_address=ip_address,
+                collection_form=None,
+            )
+            return Response(error_data, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
