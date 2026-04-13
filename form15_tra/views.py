@@ -17,6 +17,9 @@ def collections_visible_to_user(user: Any) -> QuerySet[CollectionForm]:
     """
     Same row visibility as the mining dashboard (market + role rules).
     """
+    if not hasattr(user, "assignment"):
+        return CollectionForm.objects.none()
+
     qs = CollectionForm.objects.filter(market=user.assignment.market)
 
     if user.assignment.is_senior_collector:
@@ -178,7 +181,7 @@ class InvoicePrintView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
         if not self.request.user.is_authenticated:
             return super().handle_no_permission()
         messages.error(self.request, "ليس لديك صلاحية للطباعة")
-        return redirect('collection-detail', pk=self.get_object().pk)
+        return redirect("collection-list")
     
 
 class ReceiptPrintView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
@@ -202,7 +205,7 @@ class ReceiptPrintView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
         if not self.request.user.is_authenticated:
             return super().handle_no_permission()
         messages.error(self.request, "ليس لديك صلاحية للطباعة")
-        return redirect('collection-detail', pk=self.get_object().pk)
+        return redirect("collection-list")
 
 
 class CollectionActionView(LoginRequiredMixin, View):
@@ -216,35 +219,60 @@ class CollectionActionView(LoginRequiredMixin, View):
         if action == 'confirm':
             if not (hasattr(request.user, 'assignment') and (request.user.assignment.is_collector or request.user.assignment.is_observer)):
                 messages.error(request, "ليس لديك صلاحية لتأكيد الإيصالات.")
-                return redirect('collection-detail', pk=pk)
+                return redirect("collection-list")
                 
             if collection.status != CollectionForm.Status.DRAFT:
                 messages.error(request, "لا يمكن تأكيد هذا الإيصال.")
             else:
                 if request.user.assignment.is_observer:
-                    collection.status = CollectionForm.Status.COLLECTOR_CONFIRMATION
+                    collection.transition_status(
+                        CollectionForm.Status.COLLECTOR_CONFIRMATION,
+                        action="html_confirm_collection_observer",
+                        user=request.user,
+                        ip_address=request.META.get("REMOTE_ADDR"),
+                        request_data={"id": collection.id},
+                        response_data=None,
+                        status_code=200,
+                        update_fields=["status"],
+                    )
                     messages.success(request, "تم تأكيد الإيصال وإرساله لتأكيد المتحصل.")
                 else:
-                    collection.status = CollectionForm.Status.INVOICE_REQUESTED
+                    collection.transition_status(
+                        CollectionForm.Status.INVOICE_REQUESTED,
+                        action="html_confirm_collection",
+                        user=request.user,
+                        ip_address=request.META.get("REMOTE_ADDR"),
+                        request_data={"id": collection.id},
+                        response_data=None,
+                        status_code=200,
+                        update_fields=["status"],
+                    )
                     messages.success(request, "تم تأكيد الإيصال وتم طلب الفاتورة.")
-                collection.save()
         
         elif action == 'approve':
              if not (hasattr(request.user, 'assignment') and request.user.assignment.is_collector):
                 messages.error(request, "ليس لديك صلاحية للموافقة على الإيصالات.")
-                return redirect('collection-detail', pk=pk)
+                return redirect("collection-list")
 
              if collection.status != CollectionForm.Status.COLLECTOR_CONFIRMATION:
                  messages.error(request, "لا يمكن تأكيد هذا الإيصال في هذه المرحلة.")
              else:
-                 collection.status = CollectionForm.Status.INVOICE_REQUESTED
-                 collection.save()
+                 collection.transition_status(
+                     CollectionForm.Status.INVOICE_REQUESTED,
+                     action="html_approve_collection",
+                     user=request.user,
+                     ip_address=request.META.get("REMOTE_ADDR"),
+                     request_data={"id": collection.id},
+                     response_data=None,
+                     status_code=200,
+                     update_fields=["status"],
+                 )
                  messages.success(request, "تم تأكيد الإيصال وتم طلب الفاتورة.")
 
         elif action == 'cancel':
             if not (hasattr(request.user, 'assignment') and request.user.assignment.is_senior_collector):
                 messages.error(request, "ليس لديك صلاحية لإلغاء الإيصالات.")
-                return redirect('collection-detail', pk=pk)
+                return redirect("collection-list")
 
             if collection.status != CollectionForm.Status.PENDING_PAYMENT:
                 messages.error(request, "لا يمكن إلغاء هذا الإيصال.")
@@ -254,10 +282,18 @@ class CollectionActionView(LoginRequiredMixin, View):
                     messages.error(request, "يجب ذكر سبب الإلغاء.")
                     return redirect('collection-detail', pk=pk)
                 
-                collection.status = CollectionForm.Status.CANCELLED
                 collection.cancelled_by = request.user
                 collection.cancellation_reason = reason
-                collection.save()
+                collection.transition_status(
+                    CollectionForm.Status.CANCELLED,
+                    action="html_cancel_collection",
+                    user=request.user,
+                    ip_address=request.META.get("REMOTE_ADDR"),
+                    request_data={"id": collection.id, "cancellation_reason": reason},
+                    response_data=None,
+                    status_code=200,
+                    update_fields=["cancelled_by", "cancellation_reason", "status"],
+                )
                 messages.success(request, "تم إلغاء الإيصال.")
         
         return redirect('collection-list') 

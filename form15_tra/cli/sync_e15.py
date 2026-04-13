@@ -394,6 +394,60 @@ class SQLiteStore:
         finally:
             conn.close()
 
+    def delete_by_collection_ids(self, collection_ids: list[int]) -> None:
+        self.delete_invoices_after_smrc_mark_paid(collection_ids)
+
+    def get_expired_collection_ids(self, cutoff_ms: int, limit: int) -> list[int]:
+        """
+        Expired means: invoice_id exists, invoice_generated_at exists and <= cutoff_ms, and not locally paid.
+        """
+        conn = self._connect()
+        try:
+            cur = conn.execute(
+                """
+                SELECT collection_id
+                FROM e15_sync_invoices
+                WHERE invoice_id IS NOT NULL
+                  AND invoice_generated_at IS NOT NULL
+                  AND invoice_generated_at <= ?
+                  AND paid_at IS NULL
+                ORDER BY invoice_generated_at ASC, collection_id ASC
+                LIMIT ?
+                """,
+                (int(cutoff_ms), int(limit)),
+            )
+            return [int(r["collection_id"]) for r in cur.fetchall()]
+        finally:
+            conn.close()
+
+    def get_invoice_rows_for_ids(self, collection_ids: list[int]) -> list[tuple[int, str, str]]:
+        """
+        Return (collection_id, invoice_id, collector_username) for ids with invoice_id.
+        """
+        if not collection_ids:
+            return []
+        ids = [int(i) for i in collection_ids]
+        qmarks = ",".join("?" * len(ids))
+        conn = self._connect()
+        try:
+            cur = conn.execute(
+                f"""
+                SELECT collection_id, invoice_id, collector_username
+                FROM e15_sync_invoices
+                WHERE collection_id IN ({qmarks}) AND invoice_id IS NOT NULL AND paid_at IS NULL
+                """,
+                ids,
+            )
+            out: list[tuple[int, str, str]] = []
+            for r in cur.fetchall():
+                inv = str(r["invoice_id"] or "").strip()
+                if not inv:
+                    continue
+                out.append((int(r["collection_id"]), inv, str(r["collector_username"] or "")))
+            return out
+        finally:
+            conn.close()
+
     def mark_paid_idle_sleep_s(self, now_ms: int, ceiling_s: float) -> float:
         cap = max(1.0, float(ceiling_s))
         conn = self._connect()
@@ -540,6 +594,17 @@ class SmrcClient:
         data = resp.json()
         if not isinstance(data, dict):
             raise E15APIError(f"update_esali_service_id invalid response: {data!r}")
+        return data
+
+    async def cancel_expired(self, client: httpx.AsyncClient, ids: list[int]) -> dict[str, Any]:
+        url = f"{self.base_url}/app/api/v1/invoice/tra/collections/cancel-expired/"
+        payload = {"ids": [int(i) for i in ids]} if ids else {}
+        resp = await client.post(url, headers=self._headers(), timeout=self.timeout, json=payload)
+        if resp.status_code != 200:
+            raise E15APIError(f"cancel_expired failed: {resp.status_code} {resp.text}")
+        data = resp.json()
+        if not isinstance(data, dict):
+            raise E15APIError(f"cancel_expired invalid response: {data!r}")
         return data
 
 
@@ -823,6 +888,7 @@ class Settings:
     mark_paid_jitter_pct: float
     mark_paid_first_check_delay_s: float
     mark_paid_check_max_delay_s: float
+    cancel_after_days: int
     external_mode: str
     external_base_url: Optional[str]
     enable_mark_paid: bool
@@ -864,6 +930,12 @@ def _parse_args() -> Settings:
     p.add_argument("--esali-timeout-s", type=float, default=_env_float("ESALI_TIMEOUT_S", 60.0))
     p.add_argument("--esali-payment-method-id", default=os.getenv("ESALI_PAYMENT_METHOD_ID", ""))
     p.add_argument("--esali-note", default=os.getenv("ESALI_NOTE", ""))
+    p.add_argument(
+        "--cancel-after-days",
+        type=int,
+        default=_env_int("CANCEL_AFTER_DAYS", 3),
+        help="Days after invoice generation to auto-cancel (default 3; env CANCEL_AFTER_DAYS).",
+    )
     args = p.parse_args()
 
     if not args.api_key:
@@ -882,6 +954,8 @@ def _parse_args() -> Settings:
         else _env_float("MARK_PAID_CHECK_MAX_DELAY_S", 3600.0)
     )
 
+    cancel_after_days = max(1, int(args.cancel_after_days))
+
     return Settings(
         base_url=args.base_url,
         api_key=args.api_key,
@@ -894,6 +968,7 @@ def _parse_args() -> Settings:
         mark_paid_jitter_pct=jitter,
         mark_paid_first_check_delay_s=mark_paid_first_check_delay_s,
         mark_paid_check_max_delay_s=mark_paid_check_max_delay_s,
+        cancel_after_days=cancel_after_days,
         external_mode=str(args.external_mode or "mock"),
         external_base_url=args.external_base_url,
         enable_mark_paid=bool(args.enable_mark_paid),
@@ -968,6 +1043,52 @@ async def step_mark_paid(
     await _request_with_retries(lambda: smrc.mark_paid(http_client, paid_results))
     await asyncio.to_thread(store.delete_invoices_after_smrc_mark_paid, [r.id for r in paid_results])
     return len(paid_results)
+
+
+async def step_cancel_expired(
+    smrc: SmrcClient,
+    http_client: httpx.AsyncClient,
+    e15: E15Client,
+    store: SQLiteStore,
+    *,
+    cancel_after_days: int,
+    limit: int,
+    concurrency: int,
+) -> dict[str, int]:
+    """
+    1) Find expired invoice rows in local store.
+    2) Check if any are paid; if so, mark paid in SMRC and delete locally.
+    3) For remaining unpaid expired ids, call SMRC cancel-expired and delete locally.
+    """
+    now_ms = int(time.time() * 1000)
+    cutoff_ms = now_ms - int(max(1, cancel_after_days)) * 24 * 60 * 60 * 1000
+    expired_ids = await asyncio.to_thread(store.get_expired_collection_ids, cutoff_ms, limit)
+    if not expired_ids:
+        return {"expired_found": 0, "paid_marked": 0, "cancel_requested": 0}
+
+    invoice_rows = await asyncio.to_thread(store.get_invoice_rows_for_ids, expired_ids)
+    if not invoice_rows:
+        # Nothing usable; best effort delete to prevent endless loops.
+        await asyncio.to_thread(store.delete_by_collection_ids, expired_ids)
+        return {"expired_found": len(expired_ids), "paid_marked": 0, "cancel_requested": len(expired_ids)}
+
+    check_pairs = await _run_parallel_check_paid(e15, invoice_rows, concurrency)
+    paid_results = [res for _cid, res in check_pairs if res is not None and res.receipt_number]
+    paid_ids = [r.id for r in paid_results]
+    if paid_results:
+        await _request_with_retries(lambda: smrc.mark_paid(http_client, paid_results))
+        await asyncio.to_thread(store.delete_by_collection_ids, paid_ids)
+
+    still_unpaid_ids = [cid for cid, res in check_pairs if res is None]
+    if still_unpaid_ids:
+        await _request_with_retries(lambda: smrc.cancel_expired(http_client, still_unpaid_ids))
+        await asyncio.to_thread(store.delete_by_collection_ids, still_unpaid_ids)
+
+    return {
+        "expired_found": len(expired_ids),
+        "paid_marked": len(paid_ids),
+        "cancel_requested": len(still_unpaid_ids),
+    }
 
 
 async def step_consume_check_now(smrc: SmrcClient, http_client: httpx.AsyncClient, store: SQLiteStore) -> int:
@@ -1103,6 +1224,26 @@ async def run_daemon(settings: Settings) -> None:  # pragma: no cover
             while not stop_event.is_set():
                 try:
                     if settings.enable_mark_paid:
+                        try:
+                            stats = await step_cancel_expired(
+                                smrc,
+                                http_client,
+                                e15,
+                                store,
+                                cancel_after_days=settings.cancel_after_days,
+                                limit=settings.limit,
+                                concurrency=settings.concurrency,
+                            )
+                            if stats.get("expired_found"):
+                                logger.info(
+                                    "Expired invoices handled: found=%s paid_marked=%s cancel_requested=%s",
+                                    stats.get("expired_found"),
+                                    stats.get("paid_marked"),
+                                    stats.get("cancel_requested"),
+                                )
+                        except (httpx.TimeoutException, httpx.TransportError, E15APIError) as exc:
+                            logger.warning("cancel-expired step error: %s", exc)
+
                         try:
                             reset_n = await step_consume_check_now(smrc, http_client, store)
                             if reset_n:

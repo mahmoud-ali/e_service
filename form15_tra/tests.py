@@ -268,7 +268,7 @@ class MiningSystemTests(TestCase):
 
         # Test printing paid receipt via invoice endpoint (Should be 302 redirect with error message)
         response = self.client.get(reverse('invoice-print', kwargs={'pk': paid_form.pk}), follow=True)
-        self.assertRedirects(response, reverse('collection-detail', kwargs={'pk': paid_form.pk}))
+        self.assertRedirects(response, reverse('collection-list'))
         self.assertContains(response, "ليس لديك صلاحية للطباعة")
 
         # Test unauthenticated access (Should redirect to login)
@@ -308,7 +308,7 @@ class MiningSystemTests(TestCase):
 
         # Pending invoice should not print as receipt
         response = self.client.get(reverse('receipt-print', kwargs={'pk': pending_form.pk}), follow=True)
-        self.assertRedirects(response, reverse('collection-detail', kwargs={'pk': pending_form.pk}))
+        self.assertRedirects(response, reverse('collection-list'))
         self.assertContains(response, "ليس لديك صلاحية للطباعة")
 
         # Unauthenticated should redirect to login
@@ -341,11 +341,11 @@ class MiningSystemTests(TestCase):
         self.client.login(username="observer", password="password")
 
         resp1 = self.client.get(reverse("invoice-print", kwargs={"pk": pending_form.pk}), follow=True)
-        self.assertRedirects(resp1, reverse("collection-detail", kwargs={"pk": pending_form.pk}))
+        self.assertRedirects(resp1, reverse("collection-list"))
         self.assertContains(resp1, "ليس لديك صلاحية للطباعة")
 
         resp2 = self.client.get(reverse("receipt-print", kwargs={"pk": paid_form.pk}), follow=True)
-        self.assertRedirects(resp2, reverse("collection-detail", kwargs={"pk": paid_form.pk}))
+        self.assertRedirects(resp2, reverse("collection-list"))
         self.assertContains(resp2, "ليس لديك صلاحية للطباعة")
 
     def test_queue_invoices_endpoint_bulk_and_idempotent(self) -> None:
@@ -399,6 +399,12 @@ class MiningSystemTests(TestCase):
         self.assertEqual(f1.status, CollectionForm.Status.INVOICE_QUEUED)
         self.assertEqual(f2.status, CollectionForm.Status.INVOICE_QUEUED)
         self.assertEqual(f3.status, CollectionForm.Status.DRAFT)
+
+        # Per-record APILog for each transitioned record
+        self.assertEqual(
+            APILog.objects.filter(action="queue_invoices", collection_form__in=[f1, f2]).count(),
+            2,
+        )
 
         # Second call is idempotent (updates 0)
         response2 = self.client.post(url, data={}, content_type="application/json", HTTP_X_API_KEY="EXPECTED_BANK_API_KEY")
@@ -520,6 +526,12 @@ class MiningSystemTests(TestCase):
         self.assertEqual(p1.receipt_number, "RCPT-1")
         self.assertEqual(p2.receipt_number, "RCPT-2")
         self.assertNotEqual(other.receipt_number, "RCPT-3")
+
+        # Per-record APILog for each updated row
+        self.assertEqual(
+            APILog.objects.filter(action="mark_paid_bulk", collection_form__in=[p1, p2]).count(),
+            2,
+        )
 
         # Second call should update 0 (already paid / not eligible)
         response2 = self.client.post(url, data=payload, content_type="application/json", HTTP_X_API_KEY="EXPECTED_BANK_API_KEY")
@@ -703,11 +715,88 @@ class MiningSystemTests(TestCase):
         self.assertEqual(q1.invoice_id, "INV-1")
         self.assertEqual(q2.invoice_id, "INV-2")
         self.assertIsNone(other.invoice_id)
+        self.assertIsNotNone(q1.invoice_generated_at)
+        self.assertIsNotNone(q2.invoice_generated_at)
+        self.assertIsNone(other.invoice_generated_at)
+
+        # Per-record APILog for each updated row
+        self.assertEqual(
+            APILog.objects.filter(action="set_pending_payment_bulk", collection_form__in=[q1, q2]).count(),
+            2,
+        )
 
         # Second call should update 0 (already updated / not eligible)
         response2 = self.client.post(url, data=payload, content_type="application/json", HTTP_X_API_KEY="EXPECTED_BANK_API_KEY")
         self.assertEqual(response2.status_code, 200)
         self.assertEqual(response2.json().get("updated"), 0)
+
+    def test_cancel_expired_endpoint_cancels_only_eligible(self) -> None:
+        import os
+        from django.utils import timezone
+        from datetime import timedelta
+
+        os.environ["INVOICE_CANCEL_AFTER_DAYS"] = "3"
+        try:
+            now = timezone.now()
+            expired_at = now - timedelta(days=4)
+            fresh_at = now - timedelta(days=2)
+
+            expired = CollectionForm.objects.create(
+                miner_name="Expired",
+                sacks_count=5,
+                total_amount=Decimal("500.00"),
+                collector=self.collector,
+                market=self.market,
+                status=CollectionForm.Status.PENDING_PAYMENT,
+                invoice_id="INV-EXPIRED",
+                invoice_generated_at=expired_at,
+            )
+            fresh = CollectionForm.objects.create(
+                miner_name="Fresh",
+                sacks_count=5,
+                total_amount=Decimal("500.00"),
+                collector=self.collector,
+                market=self.market,
+                status=CollectionForm.Status.PENDING_PAYMENT,
+                invoice_id="INV-FRESH",
+                invoice_generated_at=fresh_at,
+            )
+            paid = CollectionForm.objects.create(
+                miner_name="Paid",
+                sacks_count=5,
+                total_amount=Decimal("500.00"),
+                collector=self.collector,
+                market=self.market,
+                status=CollectionForm.Status.PAID,
+                invoice_id="INV-PAID",
+                invoice_generated_at=expired_at,
+                receipt_number="R-1",
+            )
+
+            url = reverse("collection-cancel-expired")
+            payload = {"ids": [expired.id, fresh.id, paid.id]}
+            resp = self.client.post(url, data=payload, content_type="application/json", HTTP_X_API_KEY="EXPECTED_BANK_API_KEY")
+            self.assertEqual(resp.status_code, 200)
+            data = resp.json()
+            self.assertEqual(data.get("requested"), 3)
+            self.assertEqual(data.get("updated"), 1)
+
+            expired.refresh_from_db()
+            fresh.refresh_from_db()
+            paid.refresh_from_db()
+
+            self.assertEqual(expired.status, CollectionForm.Status.CANCELLED)
+            self.assertIn("Auto-cancelled after", str(expired.cancellation_reason or ""))
+            self.assertEqual(fresh.status, CollectionForm.Status.PENDING_PAYMENT)
+            self.assertEqual(paid.status, CollectionForm.Status.PAID)
+
+            # Per-record APILog for the cancelled record
+            self.assertEqual(
+                APILog.objects.filter(action="cancel_expired_bulk", collection_form=expired).count(),
+                1,
+            )
+        finally:
+            os.environ.pop("INVOICE_CANCEL_AFTER_DAYS", None)
 
     def test_set_pending_payment_endpoint_requires_invoices(self) -> None:
         url = reverse("collection-set-pending-payment")
@@ -1025,6 +1114,7 @@ class ApiViewsetPermissionsBranchesTests(TestCase):
             "collector_esali_config",
             "update_esali_service_id",
             "consume_pending_payment_check_now",
+            "cancel_expired",
             "list",
         ):
             v.action = action

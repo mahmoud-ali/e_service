@@ -94,3 +94,15 @@ class MarkPaidReceiptsSerializer(serializers.Serializer):
 class UpdateEsaliServiceIdSerializer(serializers.Serializer):
     collector_username = serializers.CharField(required=True, allow_blank=False, trim_whitespace=True)
     esali_service_id = serializers.CharField(required=True, allow_blank=False, trim_whitespace=True)
+
+
+class CancelExpiredInvoicesSerializer(serializers.Serializer):
+    """
+    Optional list of collection ids for bulk cancel-expired.
+    If omitted or empty, server may cancel all expired eligible rows.
+    """
+    ids = serializers.ListField(
+        child=serializers.IntegerField(min_value=1),
+        required=False,
+        allow_empty=True,
+    )

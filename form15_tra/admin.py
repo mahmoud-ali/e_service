@@ -52,8 +52,8 @@ class APILogInline(admin.TabularInline):
 @admin.register(CollectionForm)
 class CollectionFormAdmin(admin.ModelAdmin):
     list_display = (
-        'receipt_number', 'miner_name', 'status', 
-        'collector', 'market', 'created_at'
+        'id','miner_name','total_amount', 'sacks_count', 'phone', 'invoice_id', 'receipt_number', 'rrn_number', 'status',
+        
     )
     list_filter = ('status', 'market', 'collector')
     search_fields = ('receipt_number', 'miner_name')
