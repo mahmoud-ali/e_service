@@ -13,7 +13,10 @@ class CollectorAssignmentAdmin(admin.ModelAdmin):
     def get_form(self, request, obj=None, **kwargs):
         form = super().get_form(request, obj, **kwargs)
         User = get_user_model()
-        form.fields["user"].queryset = User.objects.filter(groups__name="مستخدم التحصيل الإلكتروني")
+        # `get_form()` returns a Form *class*, not an instance.
+        # Adjust the declared field via `base_fields`.
+        if "user" in getattr(form, "base_fields", {}):
+            form.base_fields["user"].queryset = User.objects.filter(groups__name="مستخدم التحصيل الإلكتروني")
         return form
 
     class Form(forms.ModelForm):
