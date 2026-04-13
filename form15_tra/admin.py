@@ -1,14 +1,34 @@
 from django.contrib import admin
 from django import forms
 from django.contrib.auth import get_user_model
-from form15_tra.models import Market, CollectionForm, CollectorAssignment, APILog
+from form15_tra.models import (
+    Market,
+    CollectionForm,
+    CollectorAssignmentCollector,
+    CollectorAssignmentSeniorCollector,
+    CollectorAssignmentObserver,
+    APILog,
+)
 
 
-@admin.register(CollectorAssignment)
-class CollectorAssignmentAdmin(admin.ModelAdmin):
-    list_display = ('user', 'market','is_observer', 'is_collector', 'is_senior_collector')
-    search_fields = ('user__username', 'market__market_name')
-    readonly_fields = ("esali_password_enc", "esali_service_id") 
+class BaseCollectorAssignmentProxyAdmin(admin.ModelAdmin):
+    list_display = ("user", "market", "is_observer", "is_collector", "is_senior_collector")
+    search_fields = ("user__username", "market__market_name")
+
+    def apply_role_flags(self, obj):
+        """
+        Force a single role for each proxy model.
+        """
+        return obj
+
+    def save_model(self, request, obj, form, change):
+        self.apply_role_flags(obj)
+        return super().save_model(request, obj, form, change)
+
+
+@admin.register(CollectorAssignmentCollector)
+class CollectorAssignmentCollectorAdmin(BaseCollectorAssignmentProxyAdmin):
+    readonly_fields = ("esali_password_enc", "esali_service_id")
 
     def get_form(self, request, obj=None, **kwargs):
         form = super().get_form(request, obj, **kwargs)
@@ -16,8 +36,14 @@ class CollectorAssignmentAdmin(admin.ModelAdmin):
         # `get_form()` returns a Form *class*, not an instance.
         # Adjust the declared field via `base_fields`.
         if "user" in getattr(form, "base_fields", {}):
-            form.base_fields["user"].queryset = User.objects.filter(groups__name="مستخدم التحصيل الإلكتروني")
+            form.base_fields["user"].queryset = User.objects.filter(groups__name="التحصيل الإلكتروني/متحصل")
         return form
+
+    def apply_role_flags(self, obj):
+        obj.is_collector = True
+        obj.is_senior_collector = False
+        obj.is_observer = False
+        return obj
 
     class Form(forms.ModelForm):
         esali_password_plain = forms.CharField(
@@ -28,16 +54,62 @@ class CollectorAssignmentAdmin(admin.ModelAdmin):
         )
 
         class Meta:
-            model = CollectorAssignment
-            fields = ["user", "market", "is_collector", "is_senior_collector", "is_observer", "esali_username", "esali_password_enc"] #, "esali_service_id"
+            model = CollectorAssignmentCollector
+            fields = [
+                "user",
+                "market",
+                "esali_username",
+                "esali_password_enc",
+            ]  # `is_*` flags are enforced by the proxy admin.
 
     form = Form
 
     def save_model(self, request, obj, form, change):
+        self.apply_role_flags(obj)
         plain = str(form.cleaned_data.get("esali_password_plain") or "")
         if plain.strip() != "":
             obj.set_esali_password_plain(plain)
         return super().save_model(request, obj, form, change)
+
+
+@admin.register(CollectorAssignmentSeniorCollector)
+class CollectorAssignmentSeniorCollectorAdmin(BaseCollectorAssignmentProxyAdmin):
+    fields = ("user", "market")
+
+    def get_form(self, request, obj=None, **kwargs):
+        form = super().get_form(request, obj, **kwargs)
+        User = get_user_model()
+        # `get_form()` returns a Form *class*, not an instance.
+        # Adjust the declared field via `base_fields`.
+        if "user" in getattr(form, "base_fields", {}):
+            form.base_fields["user"].queryset = User.objects.filter(groups__name="التحصيل الإلكتروني/كبير متحصلين")
+        return form
+
+    def apply_role_flags(self, obj):
+        obj.is_collector = False
+        obj.is_senior_collector = True
+        obj.is_observer = False
+        return obj
+
+
+@admin.register(CollectorAssignmentObserver)
+class CollectorAssignmentObserverAdmin(BaseCollectorAssignmentProxyAdmin):
+    fields = ("user", "market")
+
+    def get_form(self, request, obj=None, **kwargs):
+        form = super().get_form(request, obj, **kwargs)
+        User = get_user_model()
+        # `get_form()` returns a Form *class*, not an instance.
+        # Adjust the declared field via `base_fields`.
+        if "user" in getattr(form, "base_fields", {}):
+            form.base_fields["user"].queryset = User.objects.filter(groups__name="التحصيل الإلكتروني/مراقب")
+        return form
+
+    def apply_role_flags(self, obj):
+        obj.is_collector = False
+        obj.is_senior_collector = False
+        obj.is_observer = True
+        return obj
 
 
 @admin.register(Market)

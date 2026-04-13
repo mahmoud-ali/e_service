@@ -76,7 +76,7 @@ class CollectorAssignment(models.Model):
         verbose_name_plural = "تكليف المتحصلين"
 
     def __str__(self) -> str:
-        return f"{self.user.username} -> {self.market.market_name}"
+        return f"{self.user.get_full_name() or self.user.username} -> {self.market.market_name}"
 
     @staticmethod
     def _get_fernet() -> Fernet:
@@ -121,6 +121,48 @@ class CollectorAssignment(models.Model):
     def save(self, *args: Any, **kwargs: Any) -> None:
         self.full_clean()
         super().save(*args, **kwargs)
+
+class CollectorOnlyManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(is_collector=True)
+
+
+class SeniorCollectorOnlyManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(is_senior_collector=True)
+
+
+class ObserverOnlyManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(is_observer=True)
+
+
+class CollectorAssignmentCollector(CollectorAssignment):
+    objects = CollectorOnlyManager()
+
+    class Meta:
+        proxy = True
+        verbose_name = "متحصل"
+        verbose_name_plural = "المتحصلين"
+
+
+class CollectorAssignmentSeniorCollector(CollectorAssignment):
+    objects = SeniorCollectorOnlyManager()
+
+    class Meta:
+        proxy = True
+        verbose_name = "كبير متحصل"
+        verbose_name_plural = "كبار المتحصلين"
+
+
+class CollectorAssignmentObserver(CollectorAssignment):
+    objects = ObserverOnlyManager()
+
+    class Meta:
+        proxy = True
+        verbose_name = "مراقب"
+        verbose_name_plural = "المراقبين"
+
 
 
 class CollectionForm(models.Model):
