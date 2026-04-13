@@ -6,3 +6,7 @@ media/*
 
 .aider*
 .vscode/
+.coverage
+.coveragerc
+form15_tra/cli/.env
+.gitignore
