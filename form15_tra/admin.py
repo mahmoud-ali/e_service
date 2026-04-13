@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django import forms
+from django.contrib.auth import get_user_model
 from form15_tra.models import Market, CollectionForm, CollectorAssignment, APILog
 
 
@@ -8,6 +9,12 @@ class CollectorAssignmentAdmin(admin.ModelAdmin):
     list_display = ('user', 'market','is_observer', 'is_collector', 'is_senior_collector')
     search_fields = ('user__username', 'market__market_name')
     readonly_fields = ("esali_password_enc", "esali_service_id") 
+
+    def get_form(self, request, obj=None, **kwargs):
+        form = super().get_form(request, obj, **kwargs)
+        User = get_user_model()
+        form.fields["user"].queryset = User.objects.filter(groups__name="مستخدم التحصيل الإلكتروني")
+        return form
 
     class Form(forms.ModelForm):
         esali_password_plain = forms.CharField(
