@@ -52,10 +52,9 @@ class DashboardView(LoginRequiredMixin, ListView):
         query = self.request.GET.get('q')
         if query:
             qs = qs.filter(
-                Q(receipt_number=query)
-                | Q(invoice_id=query)
-                | Q(rrn_number=query)
-                | Q(miner_name__icontains=query)
+                Q(receipt_number__startswith=query)
+                | Q(invoice_id__startswith=query)
+                | Q(phone__startswith=query)
             )
 
         return qs.order_by("-created_at")
