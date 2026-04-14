@@ -12,6 +12,18 @@ The worker is a long-running daemon that:
 
 On production, only the contents of this folder are deployed.
 
+## Note: public UI assets (Tailwind CSS)
+
+The **public `form15_tra` pages** in the main Django app use a **compiled Tailwind CSS** file served via Django static files (no Tailwind CDN in production).
+
+- This compiled CSS is **not required** for the standalone sync worker deployment (this folder-only deployment).
+- If you are deploying the full Django app (including `form15_tra/templates/*`), you must build the CSS from repo root:
+
+```bash
+npm install
+npm run build:form15_css
+```
+
 ## How it works (high level)
 
 The daemon runs two async loops concurrently:

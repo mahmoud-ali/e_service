@@ -66,6 +66,24 @@ python manage.py create_app_groups
 python manage.py runserver
 ```
 
+## Frontend assets (Tailwind for `form15_tra`)
+The `form15_tra` public pages use a compiled Tailwind CSS file (no CDN in production).
+
+1. Install Node dev dependencies:
+```bash
+npm install
+```
+
+2. Build the CSS:
+```bash
+npm run build:form15_css
+```
+
+3. (Optional) Watch during development:
+```bash
+npm run watch:form15_css
+```
+
 5. Access the admin interface at `/admin/` to manage records.
 
 6. Use the following main user groups to control access:

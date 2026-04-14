@@ -1,0 +1,11 @@
+{
+  "name": "e_service-frontend-assets",
+  "private": true,
+  "devDependencies": {
+    "tailwindcss": "^3.4.17"
+  },
+  "scripts": {
+    "build:form15_css": "tailwindcss -c tailwind.form15.config.js -i ./form15_tra/static/form15_tra/css/input.css -o ./form15_tra/static/form15_tra/css/app.css --minify",
+    "watch:form15_css": "tailwindcss -c tailwind.form15.config.js -i ./form15_tra/static/form15_tra/css/input.css -o ./form15_tra/static/form15_tra/css/app.css --watch"
+  }
+}

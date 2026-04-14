@@ -87,11 +87,11 @@
         </dl>
     </div>
 
-    <div class="px-4 py-3 bg-gray-50 text-left sm:px-6 flex flex-row-reverse gap-2">
+    <div class="px-4 py-3 bg-gray-50 text-left sm:px-6 flex flex-col gap-2 sm:flex-row-reverse">
         {% if object.status == 'Paid' %}
         {% if user.assignment.is_collector or user.assignment.is_senior_collector %}
         <a href="{% url 'receipt-print' object.pk %}" 
-            class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+            class="w-full sm:w-auto inline-flex justify-center py-3 sm:py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
             طباعة الإيصال
         </a>
         {% endif %}
@@ -100,7 +100,7 @@
         {% if object.status == 'Pending Payment' %}
         {% if user.assignment.is_collector or user.assignment.is_senior_collector %}
         <a href="{% url 'invoice-print' object.pk %}" 
-            class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+            class="w-full sm:w-auto inline-flex justify-center py-3 sm:py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
             طباعة الفاتورة
         </a>
         {% endif %}
@@ -108,13 +108,13 @@
 
         {% if object.status == 'Draft' %}
         <a href="{% url 'collection-edit' object.pk %}"
-            class="inline-flex justify-center py-2 px-4 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+            class="w-full sm:w-auto inline-flex justify-center py-3 sm:py-2 px-4 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
             تعديل المسودة
         </a>
         <form action="{% url 'collection-action' object.pk 'confirm' %}" method="post">
             {% csrf_token %}
             <button type="submit"
-                class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                class="w-full sm:w-auto inline-flex justify-center py-3 sm:py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                 تأكيد الإيصال
             </button>
         </form>
@@ -124,21 +124,21 @@
         <form action="{% url 'collection-action' object.pk 'approve' %}" method="post">
             {% csrf_token %}
             <button type="submit"
-                class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                class="w-full sm:w-auto inline-flex justify-center py-3 sm:py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
                 تأكيد الإيصال
             </button>
         </form>
         {% endif %}
 
         {% if object.status == 'Pending Payment' and user.assignment.is_senior_collector %}
-        <button onclick="document.getElementById('cancel-modal').classList.remove('hidden')"
-            class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+        <button type="button" data-open-cancel-modal
+            class="w-full sm:w-auto inline-flex justify-center py-3 sm:py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
             إلغاء الإيصال
         </button>
         {% endif %}
 
         <a href="{% url 'collection-list' %}"
-            class="inline-flex justify-center py-2 px-4 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+            class="w-full sm:w-auto inline-flex justify-center py-3 sm:py-2 px-4 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
             عودة
         </a>
     </div>
@@ -146,10 +146,9 @@
 
 <!-- Cancel Modal -->
 <div id="cancel-modal" class="fixed z-10 inset-0 overflow-y-auto hidden" aria-labelledby="modal-title" role="dialog"
-    aria-modal="true">
+    aria-modal="true" aria-hidden="true">
     <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-        <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"
-            onclick="document.getElementById('cancel-modal').classList.add('hidden')"></div>
+        <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true" data-close-cancel-modal></div>
         <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
         <div
             class="inline-block align-bottom bg-white rounded-lg text-right overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
@@ -173,7 +172,7 @@
                                 <p class="text-sm text-gray-500">
                                     هل أنت متأكد من رغبتك في إلغاء هذا الإيصال؟ يجب توضيح السبب.
                                 </p>
-                                <textarea name="cancellation_reason" required
+                                <textarea name="cancellation_reason" required data-cancel-reason
                                     class="mt-2 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md p-2 border"
                                     placeholder="سبب الإلغاء..."></textarea>
                             </div>
@@ -187,7 +186,7 @@
                     </button>
                     <button type="button"
                         class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
-                        onclick="document.getElementById('cancel-modal').classList.add('hidden')">
+                        data-close-cancel-modal>
                         تراجع
                     </button>
                 </div>
@@ -195,6 +194,42 @@
         </div>
     </div>
 </div>
+
+<script>
+(function () {
+    var modal = document.getElementById("cancel-modal");
+    if (!modal) return;
+
+    var openBtn = document.querySelector("[data-open-cancel-modal]");
+    var closeBtns = modal.querySelectorAll("[data-close-cancel-modal]");
+    var closeBackdrop = modal.querySelector("[data-close-cancel-modal]");
+    var reason = modal.querySelector("[data-cancel-reason]");
+    var lastFocus = null;
+
+    function open() {
+        lastFocus = document.activeElement;
+        modal.classList.remove("hidden");
+        modal.setAttribute("aria-hidden", "false");
+        if (reason) reason.focus();
+        document.addEventListener("keydown", onKeyDown);
+    }
+
+    function close() {
+        modal.classList.add("hidden");
+        modal.setAttribute("aria-hidden", "true");
+        document.removeEventListener("keydown", onKeyDown);
+        if (lastFocus && typeof lastFocus.focus === "function") lastFocus.focus();
+    }
+
+    function onKeyDown(e) {
+        if (e.key === "Escape") close();
+    }
+
+    if (openBtn) openBtn.addEventListener("click", open);
+    closeBtns.forEach(function (b) { b.addEventListener("click", close); });
+    if (closeBackdrop) closeBackdrop.addEventListener("click", close);
+})();
+</script>
 {% if object.status != 'Paid' and object.status != 'Cancelled' %}
 <script>
 (function () {
