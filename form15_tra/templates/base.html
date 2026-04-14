@@ -28,6 +28,14 @@
                     <a href="{% url 'collection-list' %}" class="text-gray-700 hover:text-primary px-3 py-2 rounded-md text-sm font-medium">الرئيسية</a>
                     {% if user.is_authenticated %}
                         <span class="text-sm text-gray-500">مرحباً، {{ user.username }}</span>
+                        <form method="post" action="{% url 'account_logout' %}" class="inline">
+                            {% csrf_token %}
+                            <input type="hidden" name="next" value="{% url 'collection-list' %}">
+                            <button type="submit"
+                                class="text-gray-700 hover:text-primary px-3 py-2 rounded-md text-sm font-medium">
+                                تسجيل خروج
+                            </button>
+                        </form>
                     {% else %}
                         <a href="/admin/login/" class="text-gray-700 hover:text-primary">تسجيل دخول</a>
                     {% endif %}
