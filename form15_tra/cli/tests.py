@@ -846,6 +846,195 @@ class SyncE15Tests(unittest.IsolatedAsyncioTestCase):
                     )
                 )
 
+    async def test_esali_client_create_invoice_accepts_alternate_invoice_no_keys(self) -> None:
+        async def get_cfg(_collector_username: str) -> sync_e15.EsaliCollectorConfig:
+            return sync_e15.EsaliCollectorConfig(esali_username="u", esali_password_plain="p", esali_service_id="S1")
+
+        seen = {"calls": 0}
+
+        class _FakeEsaliAPI:
+            def __init__(self, **_kwargs: Any) -> None:
+                pass
+
+            def login_user(self) -> dict[str, Any]:
+                return {"CenterId": "CID-1"}
+
+            def get_invoice_more_services(self, *args: Any, **kwargs: Any) -> dict[str, Any]:
+                seen["calls"] += 1
+                if seen["calls"] == 1:
+                    return {"INVOICENO": "INV-A"}
+                if seen["calls"] == 2:
+                    return {"invoiceNo": "INV-B"}
+                return {"INVOICE_NO": "INV-C"}
+
+        with (
+            mock.patch.object(sync_e15, "EsaliAPI", _FakeEsaliAPI),
+            mock.patch.object(sync_e15.asyncio, "to_thread", side_effect=lambda fn, *a: fn(*a)),
+        ):
+            c = sync_e15.EsaliClient(
+                base_url="https://x/api/",
+                api_key="k",
+                timeout_s=60.0,
+                payment_method_id="6",
+                get_collector_config=get_cfg,
+            )
+
+            r1 = await c.create_invoice(
+                sync_e15.QueuedInvoice(
+                    id=1,
+                    miner_name="n",
+                    phone="0123456789",
+                    total_amount=1,
+                    market_name="m",
+                    collector_username="collector1",
+                )
+            )
+            self.assertEqual(r1.invoice_id, "INV-A")
+
+            r2 = await c.create_invoice(
+                sync_e15.QueuedInvoice(
+                    id=2,
+                    miner_name="n",
+                    phone="0123456789",
+                    total_amount=1,
+                    market_name="m",
+                    collector_username="collector1",
+                )
+            )
+            self.assertEqual(r2.invoice_id, "INV-B")
+
+            r3 = await c.create_invoice(
+                sync_e15.QueuedInvoice(
+                    id=3,
+                    miner_name="n",
+                    phone="0123456789",
+                    total_amount=1,
+                    market_name="m",
+                    collector_username="collector1",
+                )
+            )
+            self.assertEqual(r3.invoice_id, "INV-C")
+
+    async def test_esali_client_create_invoice_non_dict_response_raises(self) -> None:
+        class _FakeEsaliAPI:
+            def __init__(self, **_kwargs: Any) -> None:
+                pass
+
+            def login_user(self) -> dict[str, Any]:
+                return {"CenterId": "CID-1"}
+
+            def get_invoice_more_services(self, *args: Any, **kwargs: Any) -> Any:
+                return ["not-a-dict"]
+
+        async def get_cfg(_collector_username: str) -> sync_e15.EsaliCollectorConfig:
+            return sync_e15.EsaliCollectorConfig(esali_username="u", esali_password_plain="p", esali_service_id="S1")
+
+        with (
+            mock.patch.object(sync_e15, "EsaliAPI", _FakeEsaliAPI),
+            mock.patch.object(sync_e15.asyncio, "to_thread", side_effect=lambda fn, *a: fn(*a)),
+        ):
+            c = sync_e15.EsaliClient(
+                base_url="https://x/api/",
+                api_key="k",
+                timeout_s=60.0,
+                payment_method_id="6",
+                get_collector_config=get_cfg,
+            )
+            with self.assertRaises(sync_e15.EsaliAPIError):
+                await c.create_invoice(
+                    sync_e15.QueuedInvoice(
+                        id=1,
+                        miner_name="n",
+                        phone="0123456789",
+                        total_amount=1,
+                        market_name="m",
+                        collector_username="collector1",
+                    )
+                )
+
+    async def test_step_mark_paid_when_all_paid_does_not_bump_backoff(self) -> None:
+        class _AlwaysPaid(sync_e15.E15Client):
+            async def create_invoice(self, item: sync_e15.QueuedInvoice) -> sync_e15.E15Result:  # pragma: no cover
+                raise NotImplementedError
+
+            async def check_paid(self, invoice_id: str) -> tuple[bool, str | None]:
+                return True, "R-1"
+
+        with tempfile.TemporaryDirectory() as td:
+            db_path = os.path.join(td, "paid.sqlite3")
+            store = sync_e15.SQLiteStore(db_path)
+            store.init_db()
+            store.upsert_queued(
+                [sync_e15.QueuedInvoice(id=1, miner_name="a", phone="0", total_amount=1, market_name="m", collector_username="c")]
+            )
+            store.set_invoice_generated([sync_e15.E15Result(id=1, invoice_id="inv1")], first_check_delay_s=0.0)
+
+            smrc = sync_e15.SmrcClient("http://example.com", "k", timeout_s=1.0)
+            fake_http = _FakeAsyncClient()
+            async def _direct_request(fn: Any, *, attempts: int = 3) -> Any:
+                import inspect
+                res = fn()
+                if inspect.isawaitable(res):
+                    return await res
+                return res
+
+            with (
+                mock.patch.object(sync_e15, "_request_with_retries", new=_direct_request),
+                mock.patch.object(smrc, "mark_paid", new=mock.AsyncMock(return_value={"updated": 1})),
+                mock.patch.object(store, "bump_paid_check_backoff") as bump,
+            ):
+                out = await sync_e15.step_mark_paid(smrc, fake_http, _AlwaysPaid(), store, limit=10, concurrency=2)  # type: ignore[arg-type]
+            self.assertEqual(out, 1)
+            bump.assert_not_called()
+
+    async def test_step_cancel_expired_all_paid_marks_paid_and_no_cancel(self) -> None:
+        class _AlwaysPaid(sync_e15.E15Client):
+            async def create_invoice(self, item: sync_e15.QueuedInvoice) -> sync_e15.E15Result:  # pragma: no cover
+                raise NotImplementedError
+
+            async def check_paid(self, invoice_id: str) -> tuple[bool, str | None]:
+                return True, "R-1"
+
+        with tempfile.TemporaryDirectory() as td:
+            db_path = os.path.join(td, "cancel_paid.sqlite3")
+            store = sync_e15.SQLiteStore(db_path)
+            store.init_db()
+            store.upsert_queued(
+                [sync_e15.QueuedInvoice(id=1, miner_name="a", phone="0", total_amount=1, market_name="m", collector_username="c")]
+            )
+            store.set_invoice_generated([sync_e15.E15Result(id=1, invoice_id="inv1")], first_check_delay_s=0.0)
+            conn = sqlite3.connect(db_path)
+            try:
+                conn.execute("UPDATE e15_sync_invoices SET invoice_generated_at=? WHERE collection_id=1", (0,))
+                conn.commit()
+            finally:
+                conn.close()
+
+            smrc = sync_e15.SmrcClient("http://example.com", "k", timeout_s=1.0)
+            fake_http = _FakeAsyncClient()
+
+            async def _direct_request(fn: Any, *, attempts: int = 3) -> Any:
+                return await fn()
+
+            with (
+                mock.patch.object(sync_e15, "_request_with_retries", new=_direct_request),
+                mock.patch.object(smrc, "mark_paid", new=mock.AsyncMock(return_value={"updated": 1})),
+                mock.patch.object(smrc, "cancel_expired", new=mock.AsyncMock(return_value={"updated": 0})) as canc,
+            ):
+                out = await sync_e15.step_cancel_expired(
+                    smrc,
+                    fake_http,
+                    _AlwaysPaid(),
+                    store,
+                    cancel_after_days=1,
+                    limit=10,
+                    concurrency=2,
+                )  # type: ignore[arg-type]
+            self.assertEqual(out["expired_found"], 1)
+            self.assertEqual(out["paid_marked"], 1)
+            self.assertEqual(out["cancel_requested"], 0)
+            canc.assert_not_called()
+
     async def test_esali_client_map_item_bad_amount_falls_back_to_zero(self) -> None:
         seen: dict[str, Any] = {}
 

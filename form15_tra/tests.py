@@ -416,6 +416,94 @@ class MiningSystemTests(TestCase):
         self.assertEqual(response2.json().get("updated"), 0)
         self.assertEqual(len(response2.json().get("results") or []), 0)
 
+    def test_queue_invoices_skips_rows_that_changed_status_mid_batch(self) -> None:
+        """
+        Cover the defensive `continue` branch in the queue loop.
+        """
+        f1 = CollectionForm.objects.create(
+            miner_name="Req 1",
+            sacks_count=1,
+            total_amount=Decimal("0.00"),
+            collector=self.collector,
+            market=self.market,
+            status=CollectionForm.Status.INVOICE_REQUESTED,
+        )
+        f2 = CollectionForm.objects.create(
+            miner_name="Req 2",
+            sacks_count=1,
+            total_amount=Decimal("0.00"),
+            collector=self.collector,
+            market=self.market,
+            status=CollectionForm.Status.INVOICE_REQUESTED,
+        )
+
+        from unittest import mock
+        import form15_tra.api.views as api_views
+
+        real_filter = api_views.CollectionForm.objects.filter
+
+        def _filter(*args: Any, **kwargs: Any):
+            qs_or_mgr = real_filter(*args, **kwargs)
+            # When the view fetches the locked ids via id__in, mutate one instance's in-memory
+            # status so the loop sees it as not INVOICE_REQUESTED.
+            if "id__in" in kwargs:
+                rows = list(qs_or_mgr)
+                if rows:
+                    rows[0].status = CollectionForm.Status.DRAFT
+                return rows
+            return qs_or_mgr
+
+        url = reverse("collection-queue-invoices")
+        with mock.patch.object(api_views.CollectionForm.objects, "filter", side_effect=_filter):
+            resp = self.client.post(url, data={}, content_type="application/json", HTTP_X_API_KEY="EXPECTED_BANK_API_KEY")
+        self.assertEqual(resp.status_code, 200)
+        # Only one should be transitioned by the loop.
+        self.assertEqual(resp.json().get("updated"), 1)
+
+        f1.refresh_from_db()
+        f2.refresh_from_db()
+        # Our patched queryset simulates the row changing to DRAFT before the loop processes it.
+        # That covers the defensive `continue` branch.
+        self.assertIn(f1.status, {CollectionForm.Status.DRAFT, CollectionForm.Status.INVOICE_REQUESTED})
+        self.assertIn(f2.status, {CollectionForm.Status.INVOICE_QUEUED, CollectionForm.Status.INVOICE_REQUESTED})
+
+    def test_queue_invoices_with_ids_but_updated_zero_skips_bulk_update(self) -> None:
+        """
+        Cover the `if updated:` false branch after ids were selected.
+        """
+        CollectionForm.objects.create(
+            miner_name="Req 1",
+            sacks_count=1,
+            total_amount=Decimal("0.00"),
+            collector=self.collector,
+            market=self.market,
+            status=CollectionForm.Status.INVOICE_REQUESTED,
+        )
+
+        from unittest import mock
+        import form15_tra.api.views as api_views
+
+        real_filter = api_views.CollectionForm.objects.filter
+
+        def _filter(*args: Any, **kwargs: Any):
+            qs_or_mgr = real_filter(*args, **kwargs)
+            if "id__in" in kwargs:
+                rows = list(qs_or_mgr)
+                for r in rows:
+                    r.status = CollectionForm.Status.DRAFT
+                return rows
+            return qs_or_mgr
+
+        url = reverse("collection-queue-invoices")
+        with (
+            mock.patch.object(api_views.CollectionForm.objects, "filter", side_effect=_filter),
+            mock.patch.object(api_views.CollectionForm.objects, "bulk_update") as bu,
+        ):
+            resp = self.client.post(url, data={}, content_type="application/json", HTTP_X_API_KEY="EXPECTED_BANK_API_KEY")
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.json().get("updated"), 0)
+        bu.assert_not_called()
+
     def test_queue_invoices_respects_limit_batches(self) -> None:
         """
         Verify queue-invoices only queues up to `limit` records per call.
@@ -1035,7 +1123,8 @@ class ApiViewsCoverageBranchesTests(TestCase):
             receipt_number="R-1",
         )
         url = reverse("collection-cancel", kwargs={"pk": form.pk})
-        resp = api_client.post(url, data={"cancellation_reason": "nope"}, format="json")
+        # Must satisfy serializer min_length=5 to reach the wrong-status branch (and APILog).
+        resp = api_client.post(url, data={"cancellation_reason": "nope!"}, format="json")
         self.assertEqual(resp.status_code, 400)
         self.assertTrue(APILog.objects.filter(action="cancel_collection_failed", collection_form=form).exists())
 
@@ -1056,13 +1145,16 @@ class ApiViewsCoverageBranchesTests(TestCase):
             resp = self.client.post(url, data={}, content_type="application/json", HTTP_X_API_KEY="EXPECTED_BANK_API_KEY")
             self.assertEqual(resp.status_code, 200)
 
-        with mock.patch("form15_tra.api.views.transaction.atomic", side_effect=Exception("boom")):
+        # Patch inside the view body (not Django's atomic request wrapper).
+        with mock.patch("form15_tra.api.views.CollectionForm.objects.filter", side_effect=Exception("boom")):
             resp2 = self.client.post(url, data={}, content_type="application/json", HTTP_X_API_KEY="EXPECTED_BANK_API_KEY")
             self.assertEqual(resp2.status_code, 500)
             self.assertTrue(APILog.objects.filter(action="consume_pending_payment_check_now_failed").exists())
 
     def test_cancel_expired_env_value_error_and_error_handler(self) -> None:
         from unittest import mock
+        from django.utils import timezone
+        from datetime import timedelta
 
         url = reverse("collection-cancel-expired")
         with mock.patch.dict(os.environ, {"INVOICE_CANCEL_AFTER_DAYS": "bad"}, clear=False):
@@ -1070,10 +1162,139 @@ class ApiViewsCoverageBranchesTests(TestCase):
             self.assertEqual(resp.status_code, 200)
             self.assertEqual(resp.json().get("cancel_after_days"), 3)
 
+        eligible = CollectionForm.objects.create(
+            miner_name="Eligible",
+            sacks_count=1,
+            total_amount=Decimal("0.00"),
+            market=self.market1,
+            collector=self.collector1,
+            status=CollectionForm.Status.PENDING_PAYMENT,
+            invoice_id="INV-X",
+            invoice_generated_at=timezone.now() - timedelta(days=999),
+        )
+
         with mock.patch.object(CollectionForm.objects, "bulk_update", side_effect=Exception("boom")):
-            resp2 = self.client.post(url, data={"ids": []}, content_type="application/json", HTTP_X_API_KEY="EXPECTED_BANK_API_KEY")
+            resp2 = self.client.post(
+                url,
+                data={"ids": [eligible.id]},
+                content_type="application/json",
+                HTTP_X_API_KEY="EXPECTED_BANK_API_KEY",
+            )
             self.assertEqual(resp2.status_code, 500)
             self.assertTrue(APILog.objects.filter(action="cancel_expired_bulk_failed").exists())
+
+
+class ModelsAndHtmlViewsMissingBranchesTests(TestCase):
+    def setUp(self) -> None:
+        settings.ESALI_FERNET_KEY = Fernet.generate_key().decode("utf-8")
+        self.market = Market.objects.create(market_name="M", location="L")
+        self.collector = User.objects.create_user(username="collector_missing", password="password")
+        self.senior = User.objects.create_user(username="senior_missing", password="password")
+        self.observer = User.objects.create_user(username="observer_missing", password="password")
+
+        CollectorAssignment.objects.create(
+            user=self.collector,
+            market=self.market,
+            is_collector=True,
+            esali_username="u",
+            esali_password_enc="x",
+        )
+        CollectorAssignment.objects.create(user=self.senior, market=self.market, is_senior_collector=True)
+        CollectorAssignment.objects.create(user=self.observer, market=self.market, is_observer=True)
+
+    def test_proxy_managers_filter_by_role(self) -> None:
+        from form15_tra.models import (
+            CollectorAssignmentCollector,
+            CollectorAssignmentSeniorCollector,
+            CollectorAssignmentObserver,
+        )
+
+        self.assertEqual(list(CollectorAssignmentCollector.objects.values_list("user__username", flat=True)), ["collector_missing"])
+        self.assertEqual(list(CollectorAssignmentSeniorCollector.objects.values_list("user__username", flat=True)), ["senior_missing"])
+        self.assertEqual(list(CollectorAssignmentObserver.objects.values_list("user__username", flat=True)), ["observer_missing"])
+
+    def test_clean_requires_collector_after_invoice_requested(self) -> None:
+        form = CollectionForm(
+            miner_name="x",
+            sacks_count=1,
+            total_amount=Decimal("0.00"),
+            market=self.market,
+            collector=None,
+            status=CollectionForm.Status.INVOICE_REQUESTED,
+        )
+        with self.assertRaises(ValidationError) as cm:
+            form.full_clean()
+        self.assertIn("collector", getattr(cm.exception, "message_dict", {}))
+
+    def test_transition_status_update_fields_adds_status(self) -> None:
+        form = CollectionForm.objects.create(
+            miner_name="t",
+            sacks_count=1,
+            total_amount=Decimal("0.00"),
+            market=self.market,
+            collector=self.collector,
+            status=CollectionForm.Status.PENDING_PAYMENT,
+        )
+        form.transition_status(
+            CollectionForm.Status.PAID,
+            action="test_transition",
+            user=self.collector,
+            update_fields=["updated_at"],  # intentionally missing "status"
+        )
+        form.refresh_from_db()
+        self.assertEqual(form.status, CollectionForm.Status.PAID)
+        self.assertTrue(APILog.objects.filter(action="test_transition", collection_form=form).exists())
+
+    def test_transition_status_when_update_fields_is_none_calls_save(self) -> None:
+        form = CollectionForm.objects.create(
+            miner_name="t2",
+            sacks_count=1,
+            total_amount=Decimal("0.00"),
+            market=self.market,
+            collector=self.collector,
+            status=CollectionForm.Status.PENDING_PAYMENT,
+        )
+        form.transition_status(
+            CollectionForm.Status.PAID,
+            action="test_transition_none_update_fields",
+            user=None,  # cover user-not-authenticated branch (stores None)
+        )
+        form.refresh_from_db()
+        self.assertEqual(form.status, CollectionForm.Status.PAID)
+        log = APILog.objects.filter(action="test_transition_none_update_fields", collection_form=form).latest("created_at")
+        self.assertIsNone(log.user)
+
+    def test_collection_status_poll_view_sets_empty_when_updated_is_none(self) -> None:
+        from django.test import RequestFactory
+        from unittest import mock
+        from form15_tra.views import CollectionStatusPollView
+
+        rf = RequestFactory()
+        req = rf.get("/fake")
+        req.user = self.collector
+
+        with mock.patch("form15_tra.views.get_object_or_404", return_value={"status": "x", "updated_at": None}):
+            resp = CollectionStatusPollView.as_view()(req, pk=1)
+        self.assertEqual(resp.status_code, 200)
+        import json as _json
+        payload = _json.loads(resp.content.decode("utf-8"))
+        self.assertEqual(payload.get("updated_at"), "")
+
+    def test_collection_detail_pending_payment_sets_check_now_flag(self) -> None:
+        pending = CollectionForm.objects.create(
+            miner_name="Pending",
+            sacks_count=1,
+            total_amount=Decimal("0.00"),
+            market=self.market,
+            collector=self.collector,
+            status=CollectionForm.Status.PENDING_PAYMENT,
+            pending_payment_check_now=False,
+        )
+        self.client.login(username="collector_missing", password="password")
+        resp = self.client.get(reverse("collection-detail", kwargs={"pk": pending.pk}))
+        self.assertEqual(resp.status_code, 200)
+        pending.refresh_from_db()
+        self.assertTrue(pending.pending_payment_check_now)
 
 
 class CollectionSerializerCreateTests(TestCase):
