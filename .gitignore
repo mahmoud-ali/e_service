@@ -10,3 +10,5 @@ media/*
 .coveragerc
 form15_tra/cli/.env
 .gitignore
+node_modules/
+package-lock.json
