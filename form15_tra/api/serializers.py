@@ -25,7 +25,7 @@ class CollectionFormSerializer(serializers.ModelSerializer):
     class Meta:
         model = CollectionForm
         fields = [
-            'id', 'receipt_number', 'miner_name', 'sacks_count', 
+            'id', 'receipt_number', 'miner_name', 'phone', 'arrival_source', 'vehicle_plate', 'sacks_count',
             'total_amount', 'status', 'collector', 'market',
             'created_at', 'updated_at'
         ]

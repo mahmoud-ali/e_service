@@ -134,11 +134,11 @@ class APILogInline(admin.TabularInline):
 @admin.register(CollectionForm)
 class CollectionFormAdmin(admin.ModelAdmin):
     list_display = (
-        'id','miner_name','total_amount', 'sacks_count', 'phone', 'invoice_id', 'receipt_number', 'rrn_number', 'status',
+        'id','miner_name','arrival_source','vehicle_plate','total_amount', 'sacks_count', 'phone', 'invoice_id', 'receipt_number', 'rrn_number', 'status',
         
     )
     list_filter = ('status', 'market',)
-    search_fields = ('phone', 'invoice_id', 'receipt_number', 'rrn_number', 'miner_name')
+    search_fields = ('phone', 'invoice_id', 'receipt_number', 'rrn_number', 'miner_name', 'arrival_source', 'vehicle_plate')
     readonly_fields = [f.name for f in CollectionForm._meta.fields]
     inlines = [APILogInline]
     
