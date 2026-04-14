@@ -25,11 +25,11 @@ def collections_visible_to_user(user: Any) -> QuerySet[CollectionForm]:
     if user.assignment.is_senior_collector:
         qs = qs.exclude(status=CollectionForm.Status.DRAFT)
     elif user.assignment.is_collector:
-        qs = qs.filter(
-            Q(collector=user) | Q(status=CollectionForm.Status.COLLECTOR_CONFIRMATION)
-        )
+        # Collectors can see all non-draft rows in their market.
+        qs = qs.exclude(status=CollectionForm.Status.DRAFT)
     else:
-        qs = qs.filter(collector=user)
+        # Observers (and any non-collector role): can see only records created by them (any status).
+        qs = qs.filter(created_by=user)
     return qs
 
 
@@ -85,8 +85,9 @@ class CollectionCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
             form.add_error(None, "عفواً، أنت غير مسجل في أي سوق. الرجاء مراجعة الإدارة.")
             return self.form_invalid(form)
 
-        form.instance.collector = self.request.user
         form.instance.status = CollectionForm.Status.DRAFT
+        form.instance.created_by = self.request.user
+        form.instance.updated_by = self.request.user
         messages.success(self.request, "تم إنشاء المسودة بنجاح.")
         return super().form_valid(form)
 
@@ -110,11 +111,12 @@ class CollectionUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         )
         return (
             is_authorized and
-            obj.collector == self.request.user and 
+            obj.created_by == self.request.user and
             obj.status == CollectionForm.Status.DRAFT
         )
 
     def form_valid(self, form):
+        form.instance.updated_by = self.request.user
         messages.success(self.request, "تم تحديث المسودة بنجاح.")
         return super().form_valid(form)
 
@@ -236,6 +238,8 @@ class CollectionActionView(LoginRequiredMixin, View):
                     )
                     messages.success(request, "تم تأكيد الإيصال وإرساله لتأكيد المتحصل.")
                 else:
+                    collection.collector = request.user
+                    collection.updated_by = request.user
                     collection.transition_status(
                         CollectionForm.Status.INVOICE_REQUESTED,
                         action="html_confirm_collection",
@@ -244,7 +248,7 @@ class CollectionActionView(LoginRequiredMixin, View):
                         request_data={"id": collection.id},
                         response_data=None,
                         status_code=200,
-                        update_fields=["status"],
+                        update_fields=["collector", "updated_by", "status"],
                     )
                     messages.success(request, "تم تأكيد الإيصال وتم طلب الفاتورة.")
         
@@ -256,6 +260,8 @@ class CollectionActionView(LoginRequiredMixin, View):
              if collection.status != CollectionForm.Status.COLLECTOR_CONFIRMATION:
                  messages.error(request, "لا يمكن تأكيد هذا الإيصال في هذه المرحلة.")
              else:
+                 collection.collector = request.user
+                 collection.updated_by = request.user
                  collection.transition_status(
                      CollectionForm.Status.INVOICE_REQUESTED,
                      action="html_approve_collection",
@@ -264,7 +270,7 @@ class CollectionActionView(LoginRequiredMixin, View):
                      request_data={"id": collection.id},
                      response_data=None,
                      status_code=200,
-                     update_fields=["status"],
+                     update_fields=["collector", "updated_by", "status"],
                  )
                  messages.success(request, "تم تأكيد الإيصال وتم طلب الفاتورة.")
 
@@ -283,6 +289,7 @@ class CollectionActionView(LoginRequiredMixin, View):
                 
                 collection.cancelled_by = request.user
                 collection.cancellation_reason = reason
+                collection.updated_by = request.user
                 collection.transition_status(
                     CollectionForm.Status.CANCELLED,
                     action="html_cancel_collection",
@@ -291,7 +298,7 @@ class CollectionActionView(LoginRequiredMixin, View):
                     request_data={"id": collection.id, "cancellation_reason": reason},
                     response_data=None,
                     status_code=200,
-                    update_fields=["cancelled_by", "cancellation_reason", "status"],
+                    update_fields=["cancelled_by", "cancellation_reason", "updated_by", "status"],
                 )
                 messages.success(request, "تم إلغاء الإيصال.")
         

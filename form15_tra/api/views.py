@@ -37,6 +37,46 @@ class CollectionFormViewSet(viewsets.ModelViewSet):
     queryset = CollectionForm.objects.all()
     serializer_class = CollectionFormSerializer
 
+    def get_queryset(self):
+        """
+        Enforce row-level visibility:
+        - API-key worker actions can operate globally.
+        - Authenticated UI/API users are scoped to their market.
+          - collectors/senior_collectors: all non-drafts in market
+          - observers/others: only rows they created (any status) in their market
+        """
+        qs = super().get_queryset()
+
+        # Background service endpoints (X-API-KEY) should not be market-scoped.
+        api_key_actions = {
+            "queue_invoices",
+            "mark_paid",
+            "set_pending_payment",
+            "collector_esali_config",
+            "update_esali_service_id",
+            "consume_pending_payment_check_now",
+            "cancel_expired",
+        }
+        if getattr(self, "action", None) in api_key_actions:
+            return qs
+
+        user = getattr(self.request, "user", None)
+        if not getattr(user, "is_authenticated", False):
+            return qs.none()
+        if not hasattr(user, "assignment"):
+            return qs.none()
+
+        qs = qs.filter(market=user.assignment.market)
+
+        if user.assignment.is_collector or user.assignment.is_senior_collector:
+            # Collectors should not be able to list/retrieve drafts, but they must be able
+            # to confirm their own draft (detail action).
+            if getattr(self, "action", None) == "confirm":
+                return qs.filter(created_by=user)
+            return qs.exclude(status=CollectionForm.Status.DRAFT)
+
+        return qs.filter(created_by=user)
+
     def get_permissions(self) -> list[Any]:
         """
         Instantiates and returns the list of permissions that this view requires.
@@ -86,6 +126,8 @@ class CollectionFormViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_400_BAD_REQUEST
             )
         
+        instance.collector = request.user
+        instance.updated_by = request.user
         instance.transition_status(
             CollectionForm.Status.INVOICE_REQUESTED,
             action="confirm_collection",
@@ -94,7 +136,7 @@ class CollectionFormViewSet(viewsets.ModelViewSet):
             request_data={"id": instance.id},
             response_data=self.get_serializer(instance).data,
             status_code=status.HTTP_200_OK,
-            update_fields=["status"],
+            update_fields=["collector", "updated_by", "status"],
         )
         
         return Response(self.get_serializer(instance).data)

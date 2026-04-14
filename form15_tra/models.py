@@ -217,7 +217,9 @@ class CollectionForm(models.Model):
         settings.AUTH_USER_MODEL,
         verbose_name="المتحصل",
         on_delete=models.PROTECT,
-        related_name='collections'
+        related_name='collections',
+        null=True,
+        blank=True,
     )
     market = models.ForeignKey(
         Market,
@@ -271,6 +273,17 @@ class CollectionForm(models.Model):
         """
         Custom validation for state transitions and immutability.
         """
+        # Collector is assigned only when the form reaches Invoice Requested.
+        # It must exist for all later workflow statuses.
+        must_have_collector_statuses = {
+            self.Status.INVOICE_REQUESTED,
+            self.Status.INVOICE_QUEUED,
+            self.Status.PENDING_PAYMENT,
+            self.Status.PAID,
+        }
+        if self.status in must_have_collector_statuses and self.collector_id is None:
+            raise ValidationError({"collector": "collector is required once the receipt is invoice-requested or later."})
+
         if self.pk:
             old_instance = CollectionForm.objects.get(pk=self.pk)
             
@@ -288,6 +301,15 @@ class CollectionForm(models.Model):
                     'phone', 'total_amount', 'collector', 'market'
                 ]
                 for field in protected_fields:
+                    # Allow assigning collector exactly when moving into INVOICE_REQUESTED
+                    # from COLLECTOR_CONFIRMATION, as collector may be NULL before that.
+                    if (
+                        field == "collector"
+                        and old_instance.status == self.Status.COLLECTOR_CONFIRMATION
+                        and self.status == self.Status.INVOICE_REQUESTED
+                        and old_instance.collector_id is None
+                    ):
+                        continue
                     if getattr(self, field) != getattr(old_instance, field):
                         raise ValidationError(f"الحقل '{field}' غير قابل للتعديل بعد أن أصبحت حالة الإيصال '{old_instance.get_status_display()}'.")
 

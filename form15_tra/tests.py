@@ -96,11 +96,14 @@ class MiningSystemTests(TestCase):
             miner_name="John Doe",
             sacks_count=5,
             total_amount=Decimal("500.00"),
-            collector=self.collector,
             market=self.market,
-            status=CollectionForm.Status.DRAFT
+            status=CollectionForm.Status.DRAFT,
+            created_by=self.collector,
+            updated_by=self.collector,
         )
         
+        # Collector is assigned only when reaching INVOICE_REQUESTED.
+        form.collector = self.collector
         form.status = CollectionForm.Status.INVOICE_REQUESTED
         form.save()
         self.assertEqual(form.status, CollectionForm.Status.INVOICE_REQUESTED)
@@ -203,9 +206,10 @@ class MiningSystemTests(TestCase):
             miner_name="Old Name",
             sacks_count=10,
             total_amount=100.0,
-            collector=self.collector,
             market=self.market,
-            status=CollectionForm.Status.DRAFT
+            status=CollectionForm.Status.DRAFT,
+            created_by=self.collector,
+            updated_by=self.collector,
         )
         response = self.client.post(reverse('collection-edit', kwargs={'pk': form.pk}), {
             'miner_name': "New Name",
@@ -623,9 +627,11 @@ class MiningSystemTests(TestCase):
             miner_name="PollOk",
             sacks_count=5,
             total_amount=Decimal("500.00"),
-            collector=self.collector,
             market=self.market,
-            status=CollectionForm.Status.DRAFT,
+            status=CollectionForm.Status.INVOICE_REQUESTED,
+            collector=self.collector,
+            created_by=self.observer,
+            updated_by=self.observer,
         )
         self.client.login(username="collector", password="password")
         url = reverse("collection-status-poll", kwargs={"pk": form.pk})
@@ -634,7 +640,7 @@ class MiningSystemTests(TestCase):
         self.assertEqual(resp["Cache-Control"], "private, max-age=0")
         data = resp.json()
         self.assertEqual(set(data.keys()), {"status", "updated_at"})
-        self.assertEqual(data["status"], CollectionForm.Status.DRAFT)
+        self.assertEqual(data["status"], CollectionForm.Status.INVOICE_REQUESTED)
         self.assertIsInstance(data["updated_at"], str)
 
     def test_collection_status_poll_not_visible_returns_404(self) -> None:
@@ -831,9 +837,10 @@ class CollectionApiActionTests(TestCase):
             miner_name="John",
             sacks_count=5,
             total_amount=Decimal("0.00"),
-            collector=self.collector,
             market=self.market,
             status=CollectionForm.Status.DRAFT,
+            created_by=self.collector,
+            updated_by=self.collector,
         )
 
         url = reverse("collection-confirm", kwargs={"pk": form.pk})
@@ -842,6 +849,7 @@ class CollectionApiActionTests(TestCase):
 
         form.refresh_from_db()
         self.assertEqual(form.status, CollectionForm.Status.INVOICE_REQUESTED)
+        self.assertEqual(form.collector, self.collector)
 
         log = APILog.objects.filter(action="confirm_collection", collection_form=form).latest("created_at")
         self.assertEqual(log.status_code, 200)
@@ -856,6 +864,8 @@ class CollectionApiActionTests(TestCase):
             collector=self.collector,
             market=self.market,
             status=CollectionForm.Status.PENDING_PAYMENT,
+            created_by=self.collector,
+            updated_by=self.collector,
         )
 
         url = reverse("collection-confirm", kwargs={"pk": form.pk})
@@ -904,12 +914,8 @@ class CollectionApiActionTests(TestCase):
 
         url = reverse("collection-cancel", kwargs={"pk": form.pk})
         resp = self.api_client.post(url, data={"cancellation_reason": "Reason text"}, format="json")
-        self.assertEqual(resp.status_code, 400)
-        self.assertIn("Cannot cancel from status", (resp.json() or {}).get("error", ""))
-
-        log = APILog.objects.filter(action="cancel_collection_failed", collection_form=form).latest("created_at")
-        self.assertEqual(log.status_code, 400)
-        self.assertEqual(log.user, self.senior)
+        # Seniors cannot access Draft rows (visibility excludes DRAFT), so detail action returns 404.
+        self.assertEqual(resp.status_code, 404)
 
 
 class CollectionSerializerCreateTests(TestCase):
@@ -929,7 +935,7 @@ class CollectionSerializerCreateTests(TestCase):
 
         self.api_client = APIClient()
 
-    def test_create_collection_api_assigns_market_collector_and_draft(self) -> None:
+    def test_create_collection_api_assigns_market_and_draft_without_collector(self) -> None:
         self.api_client.force_authenticate(user=self.collector)
         url = "/app/api/v1/invoice/tra/collections/"
         payload = {"miner_name": "Miner X", "sacks_count": "2", "total_amount": "0.00"}
@@ -938,15 +944,16 @@ class CollectionSerializerCreateTests(TestCase):
 
         data = resp.json()
         self.assertEqual(data["miner_name"], "Miner X")
-        self.assertEqual(data["collector"], "collector_create")
+        self.assertIsNone(data["collector"])
         self.assertEqual(data["market"], "Test Market")
         self.assertEqual(data["status"], CollectionForm.Status.DRAFT)
         # receipt_number is not auto-generated; it may be blank at creation time.
 
         obj = CollectionForm.objects.get(pk=data["id"])
-        self.assertEqual(obj.collector, self.collector)
+        self.assertIsNone(obj.collector)
         self.assertEqual(obj.market, self.market)
         self.assertEqual(obj.status, CollectionForm.Status.DRAFT)
+        self.assertEqual(obj.created_by, self.collector)
 
     def test_serializer_create_fails_without_assignment(self) -> None:
         user = User.objects.create_user(username="no_assignment", password="password")
@@ -1001,9 +1008,10 @@ class ApiPermissionBehaviorTests(TestCase):
             miner_name="John",
             sacks_count=5,
             total_amount=Decimal("0.00"),
-            collector=self.collector,
             market=self.market,
             status=CollectionForm.Status.DRAFT,
+            created_by=self.collector,
+            updated_by=self.collector,
         )
         url = reverse("collection-confirm", kwargs={"pk": form.pk})
 
@@ -1144,47 +1152,50 @@ class HtmlViewsBranchTests(TestCase):
         CollectorAssignment.objects.create(user=self.observer, market=self.market, is_observer=True)
 
     def test_dashboard_queryset_by_role_and_search(self) -> None:
-        # Collector: own drafts OR collector confirmation
+        # Collector: all non-drafts in market (no drafts)
         f1 = CollectionForm.objects.create(
             miner_name="Collector Draft",
             sacks_count=1,
             total_amount=Decimal("0.00"),
             invoice_id="INV-123",
-            collector=self.collector,
             market=self.market,
             status=CollectionForm.Status.DRAFT,
+            created_by=self.collector,
+            updated_by=self.collector,
         )
         f2 = CollectionForm.objects.create(
             miner_name="Other Confirmation",
             sacks_count=1,
             total_amount=Decimal("0.00"),
             invoice_id="OTH-999",
-            collector=self.observer,
             market=self.market,
             status=CollectionForm.Status.COLLECTOR_CONFIRMATION,
+            created_by=self.observer,
+            updated_by=self.observer,
         )
         f3 = CollectionForm.objects.create(
             miner_name="Observer Draft",
             sacks_count=1,
             total_amount=Decimal("0.00"),
-            collector=self.observer,
             market=self.market,
             status=CollectionForm.Status.DRAFT,
+            created_by=self.observer,
+            updated_by=self.observer,
         )
 
         self.client.login(username="collector_html", password="password")
         resp = self.client.get(reverse("collection-list"))
         self.assertEqual(resp.status_code, 200)
         qs = list(resp.context["object_list"])
-        self.assertIn(f1, qs)
         self.assertIn(f2, qs)
+        self.assertNotIn(f1, qs)
         self.assertNotIn(f3, qs)
 
         # Search by invoice_id prefix (dashboard search is prefix-only)
         resp2 = self.client.get(reverse("collection-list"), {"q": "INV-"})
         self.assertEqual(resp2.status_code, 200)
         qs2 = list(resp2.context["object_list"])
-        self.assertIn(f1, qs2)
+        self.assertNotIn(f1, qs2)
         self.assertNotIn(f2, qs2)
 
         # Observer: only own
@@ -1212,9 +1223,10 @@ class HtmlViewsBranchTests(TestCase):
             miner_name="Draft",
             sacks_count=1,
             total_amount=Decimal("0.00"),
-            collector=self.observer,
             market=self.market,
             status=CollectionForm.Status.DRAFT,
+            created_by=self.observer,
+            updated_by=self.observer,
         )
 
         self.client.login(username="observer_html", password="password")
@@ -1223,6 +1235,7 @@ class HtmlViewsBranchTests(TestCase):
         self.assertEqual(resp.status_code, 302)
         draft.refresh_from_db()
         self.assertEqual(draft.status, CollectionForm.Status.COLLECTOR_CONFIRMATION)
+        self.assertIsNone(draft.collector)
 
         self.client.logout()
         self.client.login(username="collector_html", password="password")
@@ -1231,6 +1244,7 @@ class HtmlViewsBranchTests(TestCase):
         self.assertEqual(resp2.status_code, 302)
         draft.refresh_from_db()
         self.assertEqual(draft.status, CollectionForm.Status.INVOICE_REQUESTED)
+        self.assertEqual(draft.collector, self.collector)
 
     def test_collection_action_cancel_requires_reason(self) -> None:
         pending = CollectionForm.objects.create(

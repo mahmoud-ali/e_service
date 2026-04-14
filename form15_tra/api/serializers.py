@@ -17,7 +17,7 @@ class CollectionFormSerializer(serializers.ModelSerializer):
     Serializer for CollectionForm model.
     Handles creation and basic updates.
     """
-    collector = serializers.ReadOnlyField(source='collector.username')
+    collector = serializers.SerializerMethodField()
     status = serializers.ReadOnlyField()
     receipt_number = serializers.ReadOnlyField()
     market = serializers.ReadOnlyField(source='market.market_name')
@@ -30,6 +30,11 @@ class CollectionFormSerializer(serializers.ModelSerializer):
             'created_at', 'updated_at'
         ]
 
+    def get_collector(self, obj: CollectionForm) -> str | None:
+        if obj.collector_id is None:
+            return None
+        return getattr(obj.collector, "username", None)
+
     def create(self, validated_data: dict[str, Any]) -> CollectionForm:
         """
         Assign the current user as the collector and their market upon creation.
@@ -41,8 +46,9 @@ class CollectionFormSerializer(serializers.ModelSerializer):
         except CollectorAssignment.DoesNotExist:
             raise serializers.ValidationError({"error": "You are not assigned to any market."})
 
-        validated_data['collector'] = user
         validated_data['status'] = CollectionForm.Status.DRAFT
+        validated_data["created_by"] = user
+        validated_data["updated_by"] = user
         return super().create(validated_data)
 
 

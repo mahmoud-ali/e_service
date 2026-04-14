@@ -76,7 +76,8 @@ def test_workflow() -> None:
     invoice = CollectionForm.objects.last()
     print(f"Observer created invoice: {invoice.status}")
     assert invoice.status == CollectionForm.Status.DRAFT
-    assert invoice.collector == observer
+    assert invoice.created_by == observer
+    assert invoice.collector is None
 
     # 2. Observer Confirms Draft -> Collector Confirmation
     request = factory.post(reverse('collection-action', kwargs={'pk': invoice.pk, 'action': 'confirm'}))
@@ -107,6 +108,7 @@ def test_workflow() -> None:
     invoice.refresh_from_db()
     print(f"Collector approved invoice: {invoice.status}")
     assert invoice.status == CollectionForm.Status.INVOICE_REQUESTED
+    assert invoice.collector == collector
 
     print("--- Testing Collector Direct Flow ---")
     
@@ -127,6 +129,8 @@ def test_workflow() -> None:
     invoice_b = CollectionForm.objects.filter(miner_name='Miner B').last()
     print(f"Collector created invoice: {invoice_b.status}")
     assert invoice_b.status == CollectionForm.Status.DRAFT
+    assert invoice_b.created_by == collector
+    assert invoice_b.collector is None
 
     # 5. Collector Confirms -> Invoice Requested
     request = factory.post(reverse('collection-action', kwargs={'pk': invoice_b.pk, 'action': 'confirm'}))
@@ -141,6 +145,7 @@ def test_workflow() -> None:
     invoice_b.refresh_from_db()
     print(f"Collector confirmed invoice: {invoice_b.status}")
     assert invoice_b.status == CollectionForm.Status.INVOICE_REQUESTED
+    assert invoice_b.collector == collector
 
     print("\nALL TESTS PASSED")
 
