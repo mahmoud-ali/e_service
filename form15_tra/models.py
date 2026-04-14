@@ -1,9 +1,10 @@
 from tabnanny import verbose
+from decimal import Decimal
 from django.conf import settings
 from django.db import models
 from django.db.models import Index
 from django.core.exceptions import ValidationError
-from django.core.validators import RegexValidator
+from django.core.validators import MinValueValidator, RegexValidator
 from typing import Any
 from django.db import transaction
 from django.utils import timezone
@@ -197,8 +198,15 @@ class CollectionForm(models.Model):
             )
         ],
     )
-    sacks_count = models.DecimalField(verbose_name="عدد الجوالات", max_digits=12, decimal_places=2)
+    sacks_count = models.DecimalField(
+        verbose_name="عدد الجوالات",
+        max_digits=12,
+        decimal_places=2,
+        validators=[MinValueValidator(Decimal("0.1"))],
+    )
     total_amount = models.DecimalField(verbose_name="المبلغ الإجمالي", max_digits=12, decimal_places=2)
+    arrival_source = models.CharField(verbose_name="جهة القدوم", max_length=255, blank=True, default="")
+    vehicle_plate = models.CharField(verbose_name="لوحة العربة", max_length=64, blank=True, default="")
     invoice_id = models.CharField(verbose_name="رقم الفاتورة", max_length=64, null=True, blank=True, db_index=True)
     invoice_generated_at = models.DateTimeField(verbose_name="تاريخ إنشاء الفاتورة", null=True, blank=True, db_index=True)
     status = models.CharField(
@@ -298,7 +306,7 @@ class CollectionForm(models.Model):
                 # List of fields that should not change after Draft
                 protected_fields = [
                     'miner_name', 'sacks_count', 
-                    'phone', 'total_amount', 'collector', 'market'
+                    'phone', 'arrival_source', 'vehicle_plate', 'total_amount', 'collector', 'market'
                 ]
                 for field in protected_fields:
                     # Allow assigning collector exactly when moving into INVOICE_REQUESTED
