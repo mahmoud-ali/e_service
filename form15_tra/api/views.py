@@ -264,10 +264,8 @@ class CollectionFormViewSet(viewsets.ModelViewSet):
         if not collector_username:
             return Response({"error": "collector_username is required"}, status=status.HTTP_400_BAD_REQUEST)
 
-        assignment = (
-            CollectorAssignment.objects.filter(esali_username=collector_username, is_collector=True)
-            .first()
-        )
+        assignment = CollectorAssignment.objects.filter(user__username=collector_username, is_collector=True).first()
+
         if assignment is None:
             return Response(f'{{"error": "collector not found <{collector_username}>"}}', status=status.HTTP_404_NOT_FOUND)
 
