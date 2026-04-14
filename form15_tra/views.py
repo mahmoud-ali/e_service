@@ -238,8 +238,11 @@ class CollectionActionView(LoginRequiredMixin, View):
                     )
                     messages.success(request, "تم تأكيد الإيصال وإرساله لتأكيد المتحصل.")
                 else:
-                    collection.collector = request.user
                     collection.updated_by = request.user
+                    update_fields = ["updated_by", "status"]
+                    if collection.collector_id is None:
+                        collection.collector = request.user
+                        update_fields = ["collector", *update_fields]
                     collection.transition_status(
                         CollectionForm.Status.INVOICE_REQUESTED,
                         action="html_confirm_collection",
@@ -248,7 +251,7 @@ class CollectionActionView(LoginRequiredMixin, View):
                         request_data={"id": collection.id},
                         response_data=None,
                         status_code=200,
-                        update_fields=["collector", "updated_by", "status"],
+                        update_fields=update_fields,
                     )
                     messages.success(request, "تم تأكيد الإيصال وتم طلب الفاتورة.")
         
@@ -260,8 +263,11 @@ class CollectionActionView(LoginRequiredMixin, View):
              if collection.status != CollectionForm.Status.COLLECTOR_CONFIRMATION:
                  messages.error(request, "لا يمكن تأكيد هذا الإيصال في هذه المرحلة.")
              else:
-                 collection.collector = request.user
                  collection.updated_by = request.user
+                 update_fields = ["updated_by", "status"]
+                 if collection.collector_id is None:
+                     collection.collector = request.user
+                     update_fields = ["collector", *update_fields]
                  collection.transition_status(
                      CollectionForm.Status.INVOICE_REQUESTED,
                      action="html_approve_collection",
@@ -270,7 +276,7 @@ class CollectionActionView(LoginRequiredMixin, View):
                      request_data={"id": collection.id},
                      response_data=None,
                      status_code=200,
-                     update_fields=["collector", "updated_by", "status"],
+                     update_fields=update_fields,
                  )
                  messages.success(request, "تم تأكيد الإيصال وتم طلب الفاتورة.")
 

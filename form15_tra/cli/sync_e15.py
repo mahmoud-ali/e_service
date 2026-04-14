@@ -77,8 +77,8 @@ if _CLI_DIR not in sys.path:
 # for dev installs where `form15_tra` is available.
 try:
     from lib.esali_api import EsaliAPI, EsaliAPIError
-except Exception:
-    from form15_tra.cli.lib.esali_api import EsaliAPI, EsaliAPIError  # type: ignore
+except Exception:  # pragma: no cover
+    from form15_tra.cli.lib.esali_api import EsaliAPI, EsaliAPIError  # type: ignore  # pragma: no cover
 from cryptography.fernet import Fernet, InvalidToken
 
 

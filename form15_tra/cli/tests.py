@@ -985,6 +985,59 @@ class SyncE15Tests(unittest.IsolatedAsyncioTestCase):
             finally:
                 conn.close()
 
+    def test_sqlite_backoff_and_reset_and_expired_helpers(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            db_path = os.path.join(td, "helpers.sqlite3")
+            store = sync_e15.SQLiteStore(db_path)
+            store.init_db()
+
+            # bump_paid_check_backoff returns early on empty
+            store.bump_paid_check_backoff([], now_ms=123, max_delay_s=10.0)
+
+            # bump_paid_check_backoff skips unknown ids (row is None)
+            store.bump_paid_check_backoff([999], now_ms=123, max_delay_s=10.0)
+
+            # reset_paid_check_schedule_for_ids returns 0 on empty
+            self.assertEqual(store.reset_paid_check_schedule_for_ids([]), 0)
+
+            # expired helpers
+            store.upsert_queued(
+                [
+                    sync_e15.QueuedInvoice(
+                        id=1,
+                        miner_name="a",
+                        phone="0",
+                        total_amount=1,
+                        market_name="m",
+                        collector_username="c",
+                    )
+                ]
+            )
+            store.set_invoice_generated([sync_e15.E15Result(id=1, invoice_id="inv1")], first_check_delay_s=0.0)
+
+            # Force this invoice to be "expired" by setting invoice_generated_at to 0.
+            conn = sqlite3.connect(db_path)
+            try:
+                conn.execute("UPDATE e15_sync_invoices SET invoice_generated_at=? WHERE collection_id=1", (0,))
+                conn.commit()
+            finally:
+                conn.close()
+
+            expired = store.get_expired_collection_ids(cutoff_ms=1, limit=10)
+            self.assertEqual(expired, [1])
+
+            # get_invoice_rows_for_ids returns only nonblank invoice_id values
+            rows = store.get_invoice_rows_for_ids([1])
+            self.assertEqual(rows, [(1, "inv1", "c")])
+
+            conn = sqlite3.connect(db_path)
+            try:
+                conn.execute("UPDATE e15_sync_invoices SET invoice_id=? WHERE collection_id=1", ("   ",))
+                conn.commit()
+            finally:
+                conn.close()
+            self.assertEqual(store.get_invoice_rows_for_ids([1]), [])
+
     async def test_run_daemon_esali_mode_missing_env_exits(self) -> None:
         settings = sync_e15.Settings(
             base_url="http://example.com/",
@@ -1010,6 +1063,196 @@ class SyncE15Tests(unittest.IsolatedAsyncioTestCase):
         )
         with self.assertRaises(SystemExit):
             await sync_e15.run_daemon(settings)
+
+    async def test_smrc_consume_pending_payment_check_now_parses_and_skips_bad_ids(self) -> None:
+        smrc = sync_e15.SmrcClient("http://example.com", "k", timeout_s=1.0)
+        fake_http = _FakeAsyncClient()
+        fake_http.enqueue(_FakeResponse(status_code=200, _json={"ids": ["1", "bad", None, 2]}))
+        out = await smrc.consume_pending_payment_check_now(fake_http)  # type: ignore[arg-type]
+        self.assertEqual(out, [1, 2])
+
+    async def test_smrc_consume_pending_payment_check_now_non_200_and_non_dict_raise(self) -> None:
+        smrc = sync_e15.SmrcClient("http://example.com", "k", timeout_s=1.0)
+        fake_http = _FakeAsyncClient()
+        fake_http.enqueue(_FakeResponse(status_code=500, _json={"x": 1}, text="boom"))
+        with self.assertRaises(sync_e15.E15APIError):
+            await smrc.consume_pending_payment_check_now(fake_http)  # type: ignore[arg-type]
+
+        fake_http.enqueue(_FakeResponse(status_code=200, _json=["not-a-dict"]))
+        with self.assertRaises(sync_e15.E15APIError):
+            await smrc.consume_pending_payment_check_now(fake_http)  # type: ignore[arg-type]
+
+    async def test_smrc_cancel_expired_success_and_invalid_response_raises(self) -> None:
+        smrc = sync_e15.SmrcClient("http://example.com", "k", timeout_s=1.0)
+        fake_http = _FakeAsyncClient()
+
+        fake_http.enqueue(_FakeResponse(status_code=200, _json={"ok": True}))
+        out = await smrc.cancel_expired(fake_http, [1, 2])  # type: ignore[arg-type]
+        self.assertEqual(out, {"ok": True})
+
+        fake_http.enqueue(_FakeResponse(status_code=200, _json=["not-a-dict"]))
+        with self.assertRaises(sync_e15.E15APIError):
+            await smrc.cancel_expired(fake_http, [1])  # type: ignore[arg-type]
+
+        fake_http.enqueue(_FakeResponse(status_code=503, _json={"x": 1}, text="nope"))
+        with self.assertRaises(sync_e15.E15APIError):
+            await smrc.cancel_expired(fake_http, [1])  # type: ignore[arg-type]
+
+    async def test_step_mark_paid_bumps_backoff_for_unpaid_ids(self) -> None:
+        class _AlwaysUnpaid(sync_e15.E15Client):
+            async def create_invoice(self, item: sync_e15.QueuedInvoice) -> sync_e15.E15Result:  # pragma: no cover
+                raise NotImplementedError
+
+            async def check_paid(self, invoice_id: str) -> tuple[bool, str | None]:
+                return False, None
+
+        with tempfile.TemporaryDirectory() as td:
+            db_path = os.path.join(td, "unpaid.sqlite3")
+            store = sync_e15.SQLiteStore(db_path)
+            store.init_db()
+            store.upsert_queued(
+                [sync_e15.QueuedInvoice(id=1, miner_name="a", phone="0", total_amount=1, market_name="m", collector_username="c")]
+            )
+            store.set_invoice_generated([sync_e15.E15Result(id=1, invoice_id="inv1")], first_check_delay_s=0.0)
+
+            smrc = sync_e15.SmrcClient("http://example.com", "k", timeout_s=1.0)
+            fake_http = _FakeAsyncClient()
+            out = await sync_e15.step_mark_paid(smrc, fake_http, _AlwaysUnpaid(), store, limit=10, concurrency=2)  # type: ignore[arg-type]
+            self.assertEqual(out, 0)
+
+            conn = sqlite3.connect(db_path)
+            try:
+                row = conn.execute(
+                    "SELECT paid_check_retries, paid_check_next_at_ms FROM e15_sync_invoices WHERE collection_id=1"
+                ).fetchone()
+                self.assertIsNotNone(row)
+                self.assertGreaterEqual(int(row[0]), 1)
+                self.assertIsNotNone(row[1])
+            finally:
+                conn.close()
+
+    async def test_step_cancel_expired_branches(self) -> None:
+        # no expired
+        with tempfile.TemporaryDirectory() as td:
+            db_path = os.path.join(td, "cancel.sqlite3")
+            store = sync_e15.SQLiteStore(db_path)
+            store.init_db()
+            smrc = sync_e15.SmrcClient("http://example.com", "k", timeout_s=1.0)
+            fake_http = _FakeAsyncClient()
+            out0 = await sync_e15.step_cancel_expired(
+                smrc,
+                fake_http,
+                sync_e15.MockE15Client(),
+                store,
+                cancel_after_days=1,
+                limit=10,
+                concurrency=2,
+            )  # type: ignore[arg-type]
+            self.assertEqual(out0, {"expired_found": 0, "paid_marked": 0, "cancel_requested": 0})
+
+        # expired found, but invoice_rows empty -> delete best-effort branch
+        with tempfile.TemporaryDirectory() as td:
+            db_path = os.path.join(td, "cancel2.sqlite3")
+            store = sync_e15.SQLiteStore(db_path)
+            store.init_db()
+            store.upsert_queued(
+                [sync_e15.QueuedInvoice(id=1, miner_name="a", phone="0", total_amount=1, market_name="m", collector_username="c")]
+            )
+            store.set_invoice_generated([sync_e15.E15Result(id=1, invoice_id="inv1")], first_check_delay_s=0.0)
+            conn = sqlite3.connect(db_path)
+            try:
+                conn.execute("UPDATE e15_sync_invoices SET invoice_generated_at=?, invoice_id=? WHERE collection_id=1", (0, "   "))
+                conn.commit()
+            finally:
+                conn.close()
+
+            smrc = sync_e15.SmrcClient("http://example.com", "k", timeout_s=1.0)
+            fake_http = _FakeAsyncClient()
+            out1 = await sync_e15.step_cancel_expired(
+                smrc,
+                fake_http,
+                sync_e15.MockE15Client(),
+                store,
+                cancel_after_days=1,
+                limit=10,
+                concurrency=2,
+            )  # type: ignore[arg-type]
+            self.assertEqual(out1["expired_found"], 1)
+            self.assertEqual(out1["paid_marked"], 0)
+            self.assertEqual(out1["cancel_requested"], 1)
+
+    async def test_step_cancel_expired_calls_smrc_cancel_for_unpaid(self) -> None:
+        class _AlwaysUnpaid(sync_e15.E15Client):
+            async def create_invoice(self, item: sync_e15.QueuedInvoice) -> sync_e15.E15Result:  # pragma: no cover
+                raise NotImplementedError
+
+            async def check_paid(self, invoice_id: str) -> tuple[bool, str | None]:
+                return False, None
+
+        with tempfile.TemporaryDirectory() as td:
+            db_path = os.path.join(td, "cancel3.sqlite3")
+            store = sync_e15.SQLiteStore(db_path)
+            store.init_db()
+            store.upsert_queued(
+                [sync_e15.QueuedInvoice(id=1, miner_name="a", phone="0", total_amount=1, market_name="m", collector_username="c")]
+            )
+            store.set_invoice_generated([sync_e15.E15Result(id=1, invoice_id="inv1")], first_check_delay_s=0.0)
+            conn = sqlite3.connect(db_path)
+            try:
+                conn.execute("UPDATE e15_sync_invoices SET invoice_generated_at=? WHERE collection_id=1", (0,))
+                conn.commit()
+            finally:
+                conn.close()
+
+            smrc = sync_e15.SmrcClient("http://example.com", "k", timeout_s=1.0)
+            fake_http = _FakeAsyncClient()
+
+            # cancel_expired should be called and local row deleted
+            called: dict[str, Any] = {"ids": None}
+
+            async def _fake_cancel(self_smrc: Any, _http: Any, ids: list[int]) -> dict[str, Any]:
+                called["ids"] = list(ids)
+                return {"ok": True}
+
+            with mock.patch.object(sync_e15.SmrcClient, "cancel_expired", new=_fake_cancel):
+                out = await sync_e15.step_cancel_expired(
+                    smrc,
+                    fake_http,
+                    _AlwaysUnpaid(),
+                    store,
+                    cancel_after_days=1,
+                    limit=10,
+                    concurrency=2,
+                )  # type: ignore[arg-type]
+            self.assertEqual(out["expired_found"], 1)
+            self.assertEqual(out["paid_marked"], 0)
+            self.assertEqual(out["cancel_requested"], 1)
+            self.assertEqual(called["ids"], [1])
+
+            conn = sqlite3.connect(db_path)
+            try:
+                row = conn.execute("SELECT 1 FROM e15_sync_invoices WHERE collection_id=1").fetchone()
+                self.assertIsNone(row)
+            finally:
+                conn.close()
+
+    async def test_step_consume_check_now_returns_0_when_empty(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            db_path = os.path.join(td, "cn.sqlite3")
+            store = sync_e15.SQLiteStore(db_path)
+            store.init_db()
+            smrc = sync_e15.SmrcClient("http://example.com", "k", timeout_s=1.0)
+            fake_http = _FakeAsyncClient()
+            with mock.patch.object(smrc, "consume_pending_payment_check_now", mock.AsyncMock(return_value=[])):
+                out = await sync_e15.step_consume_check_now(smrc, fake_http, store)
+            self.assertEqual(out, 0)
+
+    def test_sqlite_get_invoice_rows_for_ids_empty_input(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            db_path = os.path.join(td, "empty_ids.sqlite3")
+            store = sync_e15.SQLiteStore(db_path)
+            store.init_db()
+            self.assertEqual(store.get_invoice_rows_for_ids([]), [])
 
     async def test_run_daemon_esali_mode_wires_client_and_starts_tasks(self) -> None:
         settings = sync_e15.Settings(
