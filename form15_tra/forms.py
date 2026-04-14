@@ -7,7 +7,7 @@ class CollectionFormModelForm(forms.ModelForm):
     """
     class Meta:
         model = CollectionForm
-        fields = ['miner_name', 'phone', 'arrival_source', 'vehicle_plate', 'sacks_count',] #, 'total_amount'
+        fields = ['miner_name', 'phone', 'sacks_count', 'arrival_source', 'vehicle_plate',] #, 'total_amount'
         labels = {
             'miner_name': 'اسم العميل / المعدن',
             'phone': 'رقم الهاتف',
