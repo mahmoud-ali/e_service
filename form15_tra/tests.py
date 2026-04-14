@@ -1149,6 +1149,7 @@ class HtmlViewsBranchTests(TestCase):
             miner_name="Collector Draft",
             sacks_count=1,
             total_amount=Decimal("0.00"),
+            invoice_id="INV-123",
             collector=self.collector,
             market=self.market,
             status=CollectionForm.Status.DRAFT,
@@ -1157,6 +1158,7 @@ class HtmlViewsBranchTests(TestCase):
             miner_name="Other Confirmation",
             sacks_count=1,
             total_amount=Decimal("0.00"),
+            invoice_id="OTH-999",
             collector=self.observer,
             market=self.market,
             status=CollectionForm.Status.COLLECTOR_CONFIRMATION,
@@ -1178,8 +1180,8 @@ class HtmlViewsBranchTests(TestCase):
         self.assertIn(f2, qs)
         self.assertNotIn(f3, qs)
 
-        # Search by miner_name
-        resp2 = self.client.get(reverse("collection-list"), {"q": "Collector"})
+        # Search by invoice_id prefix (dashboard search is prefix-only)
+        resp2 = self.client.get(reverse("collection-list"), {"q": "INV-"})
         self.assertEqual(resp2.status_code, 200)
         qs2 = list(resp2.context["object_list"])
         self.assertIn(f1, qs2)
