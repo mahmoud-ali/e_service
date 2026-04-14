@@ -137,8 +137,8 @@ class CollectionFormAdmin(admin.ModelAdmin):
         'id','miner_name','total_amount', 'sacks_count', 'phone', 'invoice_id', 'receipt_number', 'rrn_number', 'status',
         
     )
-    list_filter = ('status', 'market', 'collector')
-    search_fields = ('receipt_number', 'miner_name')
+    list_filter = ('status', 'market',)
+    search_fields = ('phone', 'invoice_id', 'receipt_number', 'rrn_number', 'miner_name')
     readonly_fields = [f.name for f in CollectionForm._meta.fields]
     inlines = [APILogInline]
     
