@@ -25,7 +25,7 @@
                     </div>
                 </div>
                 <div class="flex items-center space-x-4 space-x-reverse">
-                    <a href="{% url 'collection-list' %}" class="text-gray-700 hover:text-primary px-3 py-2 rounded-md text-sm font-medium">لوحة المعلومات</a>
+                    <a href="{% url 'collection-list' %}" class="text-gray-700 hover:text-primary px-3 py-2 rounded-md text-sm font-medium">الرئيسية</a>
                     {% if user.is_authenticated %}
                         <span class="text-sm text-gray-500">مرحباً، {{ user.username }}</span>
                     {% else %}
