@@ -269,7 +269,7 @@ class CollectionFormViewSet(viewsets.ModelViewSet):
             .first()
         )
         if assignment is None:
-            return Response({"error": "collector not found"}, status=status.HTTP_404_NOT_FOUND)
+            return Response(f'{{"error": "collector not found {collector_username}"}}', status=status.HTTP_404_NOT_FOUND)
 
         payload = {
             "collector_username": collector_username,
