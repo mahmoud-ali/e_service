@@ -918,6 +918,164 @@ class CollectionApiActionTests(TestCase):
         self.assertEqual(resp.status_code, 404)
 
 
+class ApiViewsCoverageBranchesTests(TestCase):
+    def setUp(self) -> None:
+        settings.ESALI_FERNET_KEY = Fernet.generate_key().decode("utf-8")
+        self.market1 = Market.objects.create(market_name="M1", location="L1")
+        self.market2 = Market.objects.create(market_name="M2", location="L2")
+
+        self.collector1 = User.objects.create_user(username="collector_cov", password="password")
+        CollectorAssignment.objects.create(user=self.collector1, market=self.market1, is_collector=True, esali_username="u", esali_password_enc="x")
+
+        self.observer = User.objects.create_user(username="observer_cov", password="password")
+        CollectorAssignment.objects.create(user=self.observer, market=self.market1, is_observer=True)
+
+        self.no_assignment_user = User.objects.create_user(username="no_assign_cov", password="password")
+
+        self.factory = APIRequestFactory()
+
+    def test_viewset_get_queryset_api_key_action_is_unscoped(self) -> None:
+        from form15_tra.api.views import CollectionFormViewSet
+
+        f1 = CollectionForm.objects.create(
+            miner_name="a",
+            sacks_count=1,
+            total_amount=Decimal("0.00"),
+            market=self.market1,
+            collector=self.collector1,
+            status=CollectionForm.Status.INVOICE_REQUESTED,
+        )
+        f2 = CollectionForm.objects.create(
+            miner_name="b",
+            sacks_count=1,
+            total_amount=Decimal("0.00"),
+            market=self.market2,
+            collector=self.collector1,
+            status=CollectionForm.Status.INVOICE_REQUESTED,
+        )
+
+        request = self.factory.post("/app/api/v1/invoice/tra/collections/queue-invoices/", {}, format="json")
+        request.user = self.no_assignment_user
+        vs = CollectionFormViewSet()
+        vs.request = request
+        vs.action = "queue_invoices"
+        out = list(vs.get_queryset())
+        self.assertIn(f1, out)
+        self.assertIn(f2, out)
+
+    def test_viewset_get_queryset_unauthenticated_user_returns_none(self) -> None:
+        from django.contrib.auth.models import AnonymousUser
+        from form15_tra.api.views import CollectionFormViewSet
+
+        request = self.factory.get("/app/api/v1/invoice/tra/collections/", {}, format="json")
+        request.user = AnonymousUser()
+        vs = CollectionFormViewSet()
+        vs.request = request
+        vs.action = "list"
+        self.assertEqual(list(vs.get_queryset()), [])
+
+    def test_viewset_get_queryset_user_without_assignment_returns_none(self) -> None:
+        from form15_tra.api.views import CollectionFormViewSet
+
+        request = self.factory.get("/app/api/v1/invoice/tra/collections/", {}, format="json")
+        request.user = self.no_assignment_user
+        vs = CollectionFormViewSet()
+        vs.request = request
+        vs.action = "list"
+        self.assertEqual(list(vs.get_queryset()), [])
+
+    def test_viewset_get_queryset_observer_is_scoped_to_created_by(self) -> None:
+        from form15_tra.api.views import CollectionFormViewSet
+
+        mine = CollectionForm.objects.create(
+            miner_name="mine",
+            sacks_count=1,
+            total_amount=Decimal("0.00"),
+            market=self.market1,
+            collector=self.observer,
+            status=CollectionForm.Status.DRAFT,
+            created_by=self.observer,
+        )
+        other = CollectionForm.objects.create(
+            miner_name="other",
+            sacks_count=1,
+            total_amount=Decimal("0.00"),
+            market=self.market1,
+            collector=self.collector1,
+            status=CollectionForm.Status.DRAFT,
+            created_by=self.collector1,
+        )
+        request = self.factory.get("/app/api/v1/invoice/tra/collections/", {}, format="json")
+        request.user = self.observer
+        vs = CollectionFormViewSet()
+        vs.request = request
+        vs.action = "list"
+        out = list(vs.get_queryset())
+        self.assertIn(mine, out)
+        self.assertNotIn(other, out)
+
+    def test_cancel_action_wrong_status_returns_400_and_logs(self) -> None:
+        api_client = APIClient()
+        api_client.force_authenticate(user=self.collector1)
+
+        # Make collector1 a senior in this market to pass IsSeniorCollector
+        a = self.collector1.assignment
+        a.is_collector = False
+        a.is_senior_collector = True
+        a.save()
+
+        form = CollectionForm.objects.create(
+            miner_name="x",
+            sacks_count=1,
+            total_amount=Decimal("0.00"),
+            market=self.market1,
+            collector=self.collector1,
+            status=CollectionForm.Status.PAID,
+            created_by=self.collector1,
+            receipt_number="R-1",
+        )
+        url = reverse("collection-cancel", kwargs={"pk": form.pk})
+        resp = api_client.post(url, data={"cancellation_reason": "nope"}, format="json")
+        self.assertEqual(resp.status_code, 400)
+        self.assertTrue(APILog.objects.filter(action="cancel_collection_failed", collection_form=form).exists())
+
+    def test_consume_pending_payment_check_now_skip_locked_fallback_and_error_handler(self) -> None:
+        from unittest import mock
+        from django.db.models.query import QuerySet
+
+        url = reverse("collection-consume-pending-payment-check-now")
+
+        orig = QuerySet.select_for_update
+
+        def _sel(self_qs: QuerySet, *args: Any, **kwargs: Any):
+            if kwargs.get("skip_locked"):
+                raise Exception("skip_locked not supported")
+            return orig(self_qs, *args, **kwargs)
+
+        with mock.patch.object(QuerySet, "select_for_update", new=_sel):
+            resp = self.client.post(url, data={}, content_type="application/json", HTTP_X_API_KEY="EXPECTED_BANK_API_KEY")
+            self.assertEqual(resp.status_code, 200)
+
+        with mock.patch("form15_tra.api.views.transaction.atomic", side_effect=Exception("boom")):
+            resp2 = self.client.post(url, data={}, content_type="application/json", HTTP_X_API_KEY="EXPECTED_BANK_API_KEY")
+            self.assertEqual(resp2.status_code, 500)
+            self.assertTrue(APILog.objects.filter(action="consume_pending_payment_check_now_failed").exists())
+
+    def test_cancel_expired_env_value_error_and_error_handler(self) -> None:
+        from unittest import mock
+
+        url = reverse("collection-cancel-expired")
+        with mock.patch.dict(os.environ, {"INVOICE_CANCEL_AFTER_DAYS": "bad"}, clear=False):
+            resp = self.client.post(url, data={"ids": []}, content_type="application/json", HTTP_X_API_KEY="EXPECTED_BANK_API_KEY")
+            self.assertEqual(resp.status_code, 200)
+            self.assertEqual(resp.json().get("cancel_after_days"), 3)
+
+        with mock.patch.object(CollectionForm.objects, "bulk_update", side_effect=Exception("boom")):
+            resp2 = self.client.post(url, data={"ids": []}, content_type="application/json", HTTP_X_API_KEY="EXPECTED_BANK_API_KEY")
+            self.assertEqual(resp2.status_code, 500)
+            self.assertTrue(APILog.objects.filter(action="cancel_expired_bulk_failed").exists())
+
+
 class CollectionSerializerCreateTests(TestCase):
     def setUp(self) -> None:
         settings.ESALI_FERNET_KEY = Fernet.generate_key().decode("utf-8")

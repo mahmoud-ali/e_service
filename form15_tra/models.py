@@ -376,7 +376,7 @@ class APILog(models.Model):
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         verbose_name="المستخدم",
-        on_delete=models.SET_NULL,
+        on_delete=models.PROTECT,
         null=True,
         blank=True,
         related_name='api_logs'
