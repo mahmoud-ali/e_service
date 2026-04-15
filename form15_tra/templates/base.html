@@ -109,7 +109,7 @@
                 <!-- Panel (RTL: slide from right) -->
                 <aside
                     id="mobile-menu-panel"
-                    class="absolute right-0 top-0 h-full w-[320px] max-w-[92vw] bg-white shadow-xl transform translate-x-full transition-transform duration-200 ease-out"
+                    class="absolute left-0 top-0 h-full w-[320px] max-w-[92vw] bg-white shadow-xl transform -translate-x-full transition-transform duration-200 ease-out"
                     role="dialog"
                     aria-modal="true"
                     aria-label="القائمة"
@@ -173,11 +173,11 @@
                     menu.setAttribute("aria-hidden", "false");
                     // next frame for transition
                     requestAnimationFrame(function () {
-                        if (panel) panel.classList.remove("translate-x-full");
+                        if (panel) panel.classList.remove("-translate-x-full");
                     });
                     document.documentElement.style.overflow = "hidden";
                 } else {
-                    if (panel) panel.classList.add("translate-x-full");
+                    if (panel) panel.classList.add("-translate-x-full");
                     menu.setAttribute("aria-hidden", "true");
                     document.documentElement.style.overflow = "";
                     setTimeout(function () {
