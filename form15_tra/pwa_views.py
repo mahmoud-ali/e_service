@@ -42,28 +42,63 @@ def manifest(request):
     return resp
 
 
+def offline(request):
+    """
+    Same-origin offline fallback page for service worker navigations.
+    """
+    from django.conf import settings
+    from django.contrib.staticfiles import finders
+
+    rel_path = "form15_tra/offline.html"
+    abs_path = finders.find(rel_path)
+    if not abs_path:
+        return HttpResponse("Offline", content_type="text/plain; charset=utf-8", status=404)
+
+    with open(abs_path, "rb") as f:
+        data = f.read()
+
+    resp = HttpResponse(data, content_type="text/html; charset=utf-8")
+    resp["Cache-Control"] = "public, max-age=0"
+    return resp
+
+
 def service_worker(request):
     """
     Serve the service worker under /app/invoice/ so it can control that scope.
     """
     css_url = static("form15_tra/css/app.css")
-    offline_url = static("form15_tra/offline.html")
+    offline_url = "/app/invoice/offline/"
     icon_192 = static("form15_tra/icons/icon-192.png")
     icon_512 = static("form15_tra/icons/icon-512.png")
 
     js = f"""/* PWA service worker (Form15 scope) */
 const CACHE_VERSION = "form15-tra-pwa-v1";
+const OFFLINE_URL = "{offline_url}";
 const PRECACHE_URLS = [
   "{css_url}",
-  "{offline_url}",
   "{icon_192}",
   "{icon_512}",
+  OFFLINE_URL,
 ];
 
 self.addEventListener("install", (event) => {{
-  event.waitUntil(
-    caches.open(CACHE_VERSION).then((cache) => cache.addAll(PRECACHE_URLS))
-  );
+  event.waitUntil((async () => {{
+    const cache = await caches.open(CACHE_VERSION);
+    await Promise.all(PRECACHE_URLS.map(async (url) => {{
+      try {{
+        const absolute = new URL(url, self.location.href);
+        const isCrossOrigin = absolute.origin !== self.location.origin;
+        const req = isCrossOrigin ? new Request(absolute.href, {{ mode: "no-cors" }}) : new Request(absolute.href);
+        const res = await fetch(req);
+        // Cache opaque (no-cors) and ok responses. Never fail install for one asset.
+        if (res && (res.ok || res.type === "opaque")) {{
+          await cache.put(absolute.href, res.clone());
+        }}
+      }} catch (e) {{
+        // ignore
+      }}
+    }}));
+  }})());
   self.skipWaiting();
 }});
 
@@ -93,7 +128,7 @@ self.addEventListener("fetch", (event) => {{
           return networkResponse;
         }} catch (e) {{
           const cache = await caches.open(CACHE_VERSION);
-          const cachedOffline = await cache.match("{offline_url}");
+          const cachedOffline = await cache.match(OFFLINE_URL);
           return cachedOffline || new Response("Offline", {{ status: 503, headers: {{ "Content-Type": "text/plain; charset=utf-8" }} }});
         }}
       }})()
