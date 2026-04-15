@@ -108,13 +108,6 @@
                         class="block text-gray-700 hover:text-primary hover:bg-gray-50 px-3 py-2 rounded-md text-sm font-medium">
                         الرئيسية
                     </a>
-                    <button
-                        type="button"
-                        id="pwa-install-btn-mobile"
-                        class="hidden w-full text-right text-white bg-primary hover:bg-indigo-700 px-3 py-2 rounded-md text-sm font-medium"
-                    >
-                        تثبيت التطبيق
-                    </button>
                 </div>
 
                 <div class="mt-2 border-t border-gray-200 pt-2">
@@ -213,7 +206,6 @@
     <script>
         (function () {
             var btnDesktop = document.getElementById("pwa-install-btn-desktop");
-            var btnMobile = document.getElementById("pwa-install-btn-mobile");
             var iosModal = document.getElementById("pwa-ios-modal");
             var iosClose = document.getElementById("pwa-ios-close");
 
@@ -228,14 +220,20 @@
                 return isIOS && isSafari;
             }
 
-            function showInstallButtons() {
-                if (btnDesktop) btnDesktop.classList.remove("hidden");
-                if (btnMobile) btnMobile.classList.remove("hidden");
+            function isAndroidChrome() {
+                var ua = window.navigator.userAgent || "";
+                var isAndroid = /Android/.test(ua);
+                // Chrome on Android uses "Chrome/", Samsung Internet "SamsungBrowser", Edge "EdgA", Opera "OPR", Firefox "Firefox".
+                var isChrome = /Chrome\//.test(ua) && !/EdgA|OPR|SamsungBrowser|Firefox/.test(ua);
+                return isAndroid && isChrome;
             }
 
-            function hideInstallButtons() {
+            function showInstallButton() {
+                if (btnDesktop) btnDesktop.classList.remove("hidden");
+            }
+
+            function hideInstallButton() {
                 if (btnDesktop) btnDesktop.classList.add("hidden");
-                if (btnMobile) btnMobile.classList.add("hidden");
             }
 
             function openIosModal() {
@@ -257,29 +255,31 @@
 
             // iOS Safari: no automatic prompt; show an instructions button.
             if (isIosSafari() && !isStandalone()) {
-                showInstallButtons();
+                showInstallButton();
                 var onClickIos = function () { openIosModal(); };
                 if (btnDesktop) btnDesktop.addEventListener("click", onClickIos);
-                if (btnMobile) btnMobile.addEventListener("click", onClickIos);
                 return;
             }
 
-            // Chrome Desktop / Android Chrome: use beforeinstallprompt when available.
+            // Android Chrome only: use beforeinstallprompt when available.
+            if (!isAndroidChrome() || isStandalone()) {
+                hideInstallButton();
+                return;
+            }
+
             var deferredPrompt = null;
             window.addEventListener("beforeinstallprompt", function (e) {
                 e.preventDefault();
                 deferredPrompt = e;
-                if (!isStandalone()) showInstallButtons();
+                if (!isStandalone()) showInstallButton();
             });
 
-            // Fallback: show the button (and guidance) even if Chrome suppresses the event.
-            if (!isStandalone()) {
-                showInstallButtons();
-            }
+            // Fallback (Android only): show button even if event is throttled.
+            showInstallButton();
 
             window.addEventListener("appinstalled", function () {
                 deferredPrompt = null;
-                hideInstallButtons();
+                hideInstallButton();
             });
 
             async function promptInstall() {
@@ -290,11 +290,10 @@
                 deferredPrompt.prompt();
                 try { await deferredPrompt.userChoice; } catch (e) { }
                 deferredPrompt = null;
-                hideInstallButtons();
+                hideInstallButton();
             }
 
             if (btnDesktop) btnDesktop.addEventListener("click", promptInstall);
-            if (btnMobile) btnMobile.addEventListener("click", promptInstall);
         })();
     </script>
 
