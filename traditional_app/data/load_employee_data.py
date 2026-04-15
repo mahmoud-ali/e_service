@@ -60,7 +60,7 @@ def import_employee_data(file_name='employee_data.csv'):
                 name = row['الاسم'].strip()
                 category_name = row['فئة الموظف'].strip()
                 association_str = row['نوع الارتباط'].strip()
-                state_name = row['الولاية'].strip().replace('أ', 'ا').replace('إ', 'ا')
+                state_name = row['الولاية'].strip()
                 job_title = row.get('المسمى الوظيفي', '').strip()
 
                 state, _ = LkpState.objects.get_or_create(
