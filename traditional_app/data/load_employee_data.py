@@ -63,9 +63,10 @@ def import_employee_data(file_name='employee_data.csv'):
                 state_name = row['الولاية'].strip().replace('أ', 'ا').replace('إ', 'ا')
                 job_title = row.get('المسمى الوظيفي', '').strip()
 
-                state = LkpState.objects.filter(name=state_name).first()
-                if not state:
-                    state, _ = LkpState.objects.get_or_create(name=state_name)
+                state, _ = LkpState.objects.get_or_create(
+                    name=state_name,
+                    defaults={'x': 0.0, 'y': 0.0}
+                )
                     
                 category, _ = EmployeeCategory.objects.get_or_create(name=category_name)
                 
