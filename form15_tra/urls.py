@@ -9,8 +9,11 @@ from form15_tra.views import (
     InvoicePrintView,
     ReceiptPrintView,
 )
+from form15_tra import pwa_views
 
 urlpatterns = [
+    path("manifest.webmanifest", pwa_views.manifest, name="pwa-manifest"),
+    path("sw.js", pwa_views.service_worker, name="pwa-sw"),
     path('', DashboardView.as_view(), name='collection-list'),
     path('new/', CollectionCreateView.as_view(), name='collection-create'),
     path('<int:pk>/', CollectionDetailView.as_view(), name='collection-detail'),

@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}نظام تحصيل التعدين{% endblock %}</title>
     {% load static %}
+
+    <meta name="theme-color" content="#1d4ed8">
+    <link rel="manifest" href="{% url 'pwa-manifest' %}">
+    <link rel="apple-touch-icon" href="{% static 'form15_tra/icons/apple-touch-icon-180.png' %}">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
     
     <!-- Google Fonts: Cairo -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -22,11 +28,25 @@
                 <!-- Brand -->
                 <div class="flex items-center gap-3">
                     <a href="{% url 'collection-list' %}" class="flex items-center gap-3 min-w-0">
-                        <span class="shrink-0 inline-flex items-center justify-center h-9 w-9 rounded bg-white border border-gray-200">
-                            <!-- <img src="{% static 'mining/images/logo.png' %}" alt="SMRC" -->
-                                <!-- class="h-full w-full object-contain"> -->
+                        <span
+                            class="shrink-0 inline-flex items-center justify-center rounded bg-white border border-gray-200"
+                            style="width:36px;height:36px;padding:0;"
+                        >
+                            <picture>
+                                <source type="image/webp" srcset="{% static 'mining/images/logo.webp' %}">
+                                <img
+                                    src="{% static 'mining/images/logo.png' %}"
+                                    alt="التحصيل الإلكتروني"
+                                    width="28"
+                                    height="28"
+                                    decoding="async"
+                                    loading="eager"
+                                    class="object-contain"
+                                    style="display:block;max-width:100%;max-height:100%;width:100%;height:100%;object-fit:contain;"
+                                >
+                            </picture>
                         </span>
-                        <span class="text-xl font-bold text-primary whitespace-nowrap">نظام التحصيل</span>
+                        <span class="text-xl font-bold text-primary whitespace-nowrap">التحصيل الإلكتروني</span>
                     </a>
                 </div>
 
@@ -147,6 +167,15 @@
             </p>
         </div>
     </footer>
+
+    <script>
+        (function () {
+            if (!("serviceWorker" in navigator)) return;
+            window.addEventListener("load", function () {
+                navigator.serviceWorker.register("{% url 'pwa-sw' %}").catch(function () { });
+            });
+        })();
+    </script>
 
 </body>
 </html>
