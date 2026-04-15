@@ -101,58 +101,32 @@
                 </div>
             </div>
 
-            <!-- Mobile drawer -->
-            <div id="mobile-menu" class="sm:hidden hidden fixed inset-0 z-50" aria-hidden="true">
-                <!-- Overlay -->
-                <div id="mobile-menu-overlay" class="absolute inset-0 bg-black/40"></div>
+            <!-- Mobile dropdown -->
+            <div class="sm:hidden hidden border-t border-gray-200 py-2" id="mobile-menu">
+                <div class="space-y-1">
+                    <a href="{% url 'collection-list' %}"
+                        class="block text-gray-700 hover:text-primary hover:bg-gray-50 px-3 py-2 rounded-md text-sm font-medium">
+                        الرئيسية
+                    </a>
+                </div>
 
-                <!-- Panel (RTL: slide from right) -->
-                <aside
-                    id="mobile-menu-panel"
-                    class="absolute left-0 top-0 h-full w-[320px] max-w-[92vw] bg-white shadow-xl transform -translate-x-full transition-transform duration-200 ease-out"
-                    role="dialog"
-                    aria-modal="true"
-                    aria-label="القائمة"
-                >
-                    <div class="flex items-center justify-between px-4 h-16 border-b border-gray-200">
-                        <div class="text-base font-bold text-gray-900">القائمة</div>
-                        <button
-                            type="button"
-                            id="mobile-menu-close"
-                            class="rounded-md p-2 text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                        >
-                            <span class="sr-only">إغلاق القائمة</span>
-                            <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                            </svg>
+                <div class="mt-2 border-t border-gray-200 pt-2">
+                    {% if user.is_authenticated %}
+                    <form method="post" action="{% url 'account_logout' %}" class="px-3">
+                        {% csrf_token %}
+                        <input type="hidden" name="next" value="{% url 'collection-list' %}">
+                        <button type="submit"
+                            class="w-full text-right text-gray-700 hover:text-primary hover:bg-gray-50 px-3 py-2 rounded-md text-sm font-medium">
+                            تسجيل خروج ({{ user.get_full_name|default:user.username }})
                         </button>
-                    </div>
-
-                    <nav class="px-2 py-3 space-y-1">
-                        <a href="{% url 'collection-list' %}"
-                           class="block rounded-md px-3 py-3 text-sm font-medium text-gray-800 hover:bg-gray-50">
-                            الرئيسية
-                        </a>
-                    </nav>
-
-                    <div class="mt-2 border-t border-gray-200 pt-2 px-2">
-                        {% if user.is_authenticated %}
-                        <form method="post" action="{% url 'account_logout' %}">
-                            {% csrf_token %}
-                            <input type="hidden" name="next" value="{% url 'collection-list' %}">
-                            <button type="submit"
-                                class="w-full text-right rounded-md px-3 py-3 text-sm font-medium text-gray-800 hover:bg-gray-50">
-                                تسجيل خروج ({{ user.get_full_name|default:user.username }})
-                            </button>
-                        </form>
-                        {% else %}
-                        <a href="/admin/login/"
-                           class="block rounded-md px-3 py-3 text-sm font-medium text-gray-800 hover:bg-gray-50">
-                            تسجيل دخول
-                        </a>
-                        {% endif %}
-                    </div>
-                </aside>
+                    </form>
+                    {% else %}
+                    <a href="/admin/login/"
+                        class="block text-gray-700 hover:text-primary hover:bg-gray-50 px-3 py-2 rounded-md text-sm font-medium">
+                        تسجيل دخول
+                    </a>
+                    {% endif %}
+                </div>
             </div>
         </div>
     </nav>
@@ -161,29 +135,12 @@
         (function () {
             var btn = document.getElementById("mobile-menu-button");
             var menu = document.getElementById("mobile-menu");
-            var panel = document.getElementById("mobile-menu-panel");
-            var overlay = document.getElementById("mobile-menu-overlay");
-            var closeBtn = document.getElementById("mobile-menu-close");
             if (!btn || !menu) return;
 
             function setExpanded(v) {
                 btn.setAttribute("aria-expanded", v ? "true" : "false");
-                if (v) {
-                    menu.classList.remove("hidden");
-                    menu.setAttribute("aria-hidden", "false");
-                    // next frame for transition
-                    requestAnimationFrame(function () {
-                        if (panel) panel.classList.remove("-translate-x-full");
-                    });
-                    document.documentElement.style.overflow = "hidden";
-                } else {
-                    if (panel) panel.classList.add("-translate-x-full");
-                    menu.setAttribute("aria-hidden", "true");
-                    document.documentElement.style.overflow = "";
-                    setTimeout(function () {
-                        menu.classList.add("hidden");
-                    }, 220);
-                }
+                if (v) menu.classList.remove("hidden");
+                else menu.classList.add("hidden");
             }
 
             btn.addEventListener("click", function () {
@@ -191,12 +148,6 @@
                 setExpanded(!expanded);
             });
 
-            function close() { setExpanded(false); }
-            if (overlay) overlay.addEventListener("click", close);
-            if (closeBtn) closeBtn.addEventListener("click", close);
-            window.addEventListener("keydown", function (e) {
-                if (e.key === "Escape") close();
-            });
             window.addEventListener("pagehide", function () { setExpanded(false); });
         })();
     </script>
