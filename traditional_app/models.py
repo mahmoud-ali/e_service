@@ -86,6 +86,7 @@ class Employee(LoggingModel):
     }
 
     state = models.ForeignKey(LkpState, on_delete=models.PROTECT, verbose_name=_("state"))
+    employee_code = models.CharField(_("الرقم الوظيفي"), max_length=50, null=True, blank=True)
     name = models.CharField(_("الاسم"), max_length=100)
     birth_date = models.DateField(_("تاريخ الميلاد"), null=True, blank=True)
     gender = models.IntegerField(_("الجنس"), choices=GENDER_CHOICES, null=True, blank=True)
@@ -98,6 +99,31 @@ class Employee(LoggingModel):
     def __str__(self):
         return self.name
 
+    def save(self, *args, **kwargs):
+        if not self.employee_code and self.state_id:
+            import re
+            state_prefix = {
+                'نهر النيل': 'RN', 'البحر الاحمر': 'RS', 'الشمالية': 'NO', 
+                'القضارف': 'GD', 'النيل الازرق': 'BN', 'كسلا': 'KS',
+                'جنوب كردفان': 'SK', 'الخرطوم': 'KH', 'شمال دارفور': 'ND',
+                'شمال كردفان': 'NK', 'الجزيرة': 'GZ', 'غرب دارفور': 'WD',
+                'جنوب دارفور': 'SD', 'غرب كردفان': 'WK', 'النيل الابيض': 'WN',
+                'وسط دارفور': 'CD', 'سنار': 'SN'
+            }
+            state_name_clean = self.state.name.replace('أ', 'ا').replace('إ', 'ا')
+            prefix = state_prefix.get(state_name_clean, 'XX')
+            
+            last_emp = Employee.objects.filter(employee_code__startswith=prefix).order_by('-employee_code').first()
+            next_num = 1
+            if last_emp and last_emp.employee_code:
+                match = re.search(r'\d+$', last_emp.employee_code)
+                if match:
+                    next_num = int(match.group()) + 1
+                    
+            self.employee_code = f"{prefix}{str(next_num).zfill(5)}"
+            
+        super().save(*args, **kwargs)
+
     class Meta:
         verbose_name = _("موظف")
         verbose_name_plural = _("الموظفين")
@@ -107,12 +133,14 @@ class EmployeeJobData(LoggingModel):
     ASSOCIATION_CONTRACT = 2
     ASSOCIATION_SECONDMENT = 3
     ASSOCIATION_SECURITY_FORCES = 4
+    ASSOCIATION_SECONDMENT_COMPANY = 5
 
     ASSOCIATION_CHOICES = {
         ASSOCIATION_STRUCTURE: _('الهيكل'),
         ASSOCIATION_CONTRACT: _('تعاقد'),
         ASSOCIATION_SECONDMENT: _('الحاق'),
         ASSOCIATION_SECURITY_FORCES: _('قوات امنية'),
+        ASSOCIATION_SECONDMENT_COMPANY: _('ملحق علي الرئاسة'),
     }
 
     employee = models.OneToOneField(Employee, on_delete=models.CASCADE, verbose_name=_("الموظف"), related_name="job_data")

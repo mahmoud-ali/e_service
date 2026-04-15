@@ -322,18 +322,28 @@ class EmployeePayrollHistoryInline(admin.TabularInline):
 
 class EmployeeAdmin(LogMixin, StateControlMixin, admin.ModelAdmin):
     model = Employee
-    list_display = ['name', 'state', 'category']
-    search_fields = ('name',)
+    list_display = ['employee_code', 'name', 'state', 'category']
+    search_fields = ('employee_code', 'name',)
     list_filter = ('category','state')
+    readonly_fields = ('employee_code',)
     fieldsets = (
         (_('البيانات الأساسية'), {
             'fields': (
-                'name', 'birth_date', 'gender', 'phone', 'email', 'category', 'state',
+                'employee_code', 'name', 'birth_date', 'gender', 'phone', 'email', 'category', 'state',
                 'id_attachment', 'birth_certificate_attachment'
             )
         }),
     )
     inlines = []
+
+    def get_readonly_fields(self, request, obj=None):
+        readonly = super().get_readonly_fields(request, obj)
+        if request.user.is_superuser or request.user.groups.filter(name='traditional_hr').exists():
+            if 'employee_code' in readonly:
+                readonly = list(readonly)
+                readonly.remove('employee_code')
+                return tuple(readonly)
+        return readonly
 
     def get_inlines(self, request, obj):
         inlines = [
