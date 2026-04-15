@@ -62,8 +62,8 @@ admin.site.register(LkpStateDetails, LkpStateDetailsAdmin)
 
 class LkpOwnerAdmin(admin.ModelAdmin):
     model = LkpOwner
-    fields = ("name","owner_name","owner_telephone","address","attachment","state")
-    list_display = ["name","owner_name","owner_telephone","address","state"]
+    fields = ("name","owner_name","owner_telephone","authorized_person_name","authorized_person_phone","address","attachment","state")
+    list_display = ["name","owner_name","owner_telephone","authorized_person_name","authorized_person_phone","address","state"]
     # list_filter = ["name"]
     search_fields = ["name"]
     def get_queryset(self, request):
@@ -80,9 +80,9 @@ class LkpOwnerAdmin(admin.ModelAdmin):
         response = HttpResponse(content_type="text/csv")
         response["Content-Disposition"] = "attachment; filename=owners.csv"
         writer = csv.writer(response)
-        writer.writerow(["اسم الشركة", "اسم المالك", "تلفون المالك", "العنوان", "الحالة"])
+        writer.writerow(["اسم الشركة", "اسم المدير العام", "هاتف المدير العام", "اسم المفوض", "هاتف المفوض", "العنوان", "الحالة"])
         for obj in queryset:
-            writer.writerow([obj.name, obj.owner_name, obj.owner_telephone, obj.address, obj.state])
+            writer.writerow([obj.name, obj.owner_name, obj.owner_telephone, obj.authorized_person_name, obj.authorized_person_phone, obj.address, obj.state])
         return response
 
     actions = ["export_to_csv"]

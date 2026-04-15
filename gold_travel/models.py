@@ -76,8 +76,10 @@ class LkpOwner(models.Model):
 
     name = models.CharField(_("name"),max_length=100)
     state = models.IntegerField(_("record_state"), choices=STATE_CHOICES, default=STATE_ACTIVE)
-    owner_name = models.CharField(_("اسم المالك"),max_length=100,null=True,blank=True)
-    owner_telephone = models.CharField(_("تلفون المالك"),max_length=30,null=True,blank=True)
+    owner_name = models.CharField(_("اسم المدير العام"),max_length=100,null=True,blank=True)
+    owner_telephone = models.CharField(_("هاتف المدير العام"),max_length=30,null=True,blank=True)
+    authorized_person_name = models.CharField(_("اسم المفوض"),max_length=100,null=True,blank=True)
+    authorized_person_phone = models.CharField(_("هاتف المفوض"),max_length=30,null=True,blank=True)
     address = models.TextField(_("العنوان"),max_length=200,null=True,blank=True)
     attachment = models.FileField(_("المرفقات"),upload_to=attachement_path,null=True,blank=True)
 
