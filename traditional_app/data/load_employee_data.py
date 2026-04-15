@@ -93,12 +93,16 @@ def import_employee_data(file_name='employee_data.csv'):
             except Exception as e:
                 print(f"Error processing row {row}: {e}")
 
-if __name__ == "__main__":
+def run_import(file_name='employee_data.csv'):
     clear_existing_data()
     print("Starting employee data import...")
     count = 0
-    for employee in import_employee_data():
+    for employee in import_employee_data(file_name):
         count += 1
         if count % 100 == 0:
             print(f"Imported {count} employees...")
     print(f"Finished. Total imported: {count}")
+
+if __name__ == "__main__":
+    run_import()
+
