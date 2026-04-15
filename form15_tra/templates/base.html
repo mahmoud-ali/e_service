@@ -272,13 +272,21 @@
                 if (!isStandalone()) showInstallButtons();
             });
 
+            // Fallback: show the button (and guidance) even if Chrome suppresses the event.
+            if (!isStandalone()) {
+                showInstallButtons();
+            }
+
             window.addEventListener("appinstalled", function () {
                 deferredPrompt = null;
                 hideInstallButtons();
             });
 
             async function promptInstall() {
-                if (!deferredPrompt) return;
+                if (!deferredPrompt) {
+                    alert("إذا لم تظهر نافذة التثبيت: استخدم أيقونة التثبيت في شريط العنوان أو من القائمة (⋮) ثم Install app.");
+                    return;
+                }
                 deferredPrompt.prompt();
                 try { await deferredPrompt.userChoice; } catch (e) { }
                 deferredPrompt = null;

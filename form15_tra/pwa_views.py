@@ -4,6 +4,16 @@ from django.http import HttpResponse
 from django.templatetags.static import static
 
 
+def _read_static_bytes(rel_path: str) -> bytes | None:
+    from django.contrib.staticfiles import finders
+
+    abs_path = finders.find(rel_path)
+    if not abs_path:
+        return None
+    with open(abs_path, "rb") as f:
+        return f.read()
+
+
 def manifest(request):
     """
     Serve the web app manifest under /app/invoice/ so the PWA is clearly scoped.
@@ -21,12 +31,12 @@ def manifest(request):
         "background_color": "#f9fafb",
         "icons": [
             {
-                "src": static("form15_tra/icons/icon-192.png"),
+                "src": "/app/invoice/icon-192.png",
                 "sizes": "192x192",
                 "type": "image/png",
             },
             {
-                "src": static("form15_tra/icons/icon-512.png"),
+                "src": "/app/invoice/icon-512.png",
                 "sizes": "512x512",
                 "type": "image/png",
             },
@@ -46,19 +56,30 @@ def offline(request):
     """
     Same-origin offline fallback page for service worker navigations.
     """
-    from django.conf import settings
-    from django.contrib.staticfiles import finders
-
-    rel_path = "form15_tra/offline.html"
-    abs_path = finders.find(rel_path)
-    if not abs_path:
+    data = _read_static_bytes("form15_tra/offline.html")
+    if data is None:
         return HttpResponse("Offline", content_type="text/plain; charset=utf-8", status=404)
-
-    with open(abs_path, "rb") as f:
-        data = f.read()
 
     resp = HttpResponse(data, content_type="text/html; charset=utf-8")
     resp["Cache-Control"] = "public, max-age=0"
+    return resp
+
+
+def icon_192(request):
+    data = _read_static_bytes("form15_tra/icons/icon-192.png")
+    if data is None:
+        return HttpResponse(status=404)
+    resp = HttpResponse(data, content_type="image/png")
+    resp["Cache-Control"] = "public, max-age=86400"
+    return resp
+
+
+def icon_512(request):
+    data = _read_static_bytes("form15_tra/icons/icon-512.png")
+    if data is None:
+        return HttpResponse(status=404)
+    resp = HttpResponse(data, content_type="image/png")
+    resp["Cache-Control"] = "public, max-age=86400"
     return resp
 
 
@@ -68,8 +89,8 @@ def service_worker(request):
     """
     css_url = static("form15_tra/css/app.css")
     offline_url = "/app/invoice/offline/"
-    icon_192 = static("form15_tra/icons/icon-192.png")
-    icon_512 = static("form15_tra/icons/icon-512.png")
+    icon_192 = "/app/invoice/icon-192.png"
+    icon_512 = "/app/invoice/icon-512.png"
 
     js = f"""/* PWA service worker (Form15 scope) */
 const CACHE_VERSION = "form15-tra-pwa-v1";
