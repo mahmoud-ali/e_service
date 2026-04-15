@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}نظام تحصيل التعدين{% endblock %}</title>
     {% load static %}
+
+    <meta name="theme-color" content="#1d4ed8">
+    <link rel="manifest" href="{% url 'pwa-manifest' %}">
+    <link rel="apple-touch-icon" href="{% static 'form15_tra/icons/apple-touch-icon-180.png' %}">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
     
     <!-- Google Fonts: Cairo -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -161,6 +167,15 @@
             </p>
         </div>
     </footer>
+
+    <script>
+        (function () {
+            if (!("serviceWorker" in navigator)) return;
+            window.addEventListener("load", function () {
+                navigator.serviceWorker.register("{% url 'pwa-sw' %}").catch(function () { });
+            });
+        })();
+    </script>
 
 </body>
 </html>
