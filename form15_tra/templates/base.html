@@ -62,6 +62,13 @@
                     <div class="h-6 w-px bg-gray-200 mx-1"></div>
 
                     <div class="flex items-center gap-2">
+                        <button
+                            type="button"
+                            id="pwa-install-btn-desktop"
+                            class="hidden text-white bg-primary hover:bg-indigo-700 px-3 py-2 rounded-md text-sm font-medium"
+                        >
+                            تثبيت التطبيق
+                        </button>
                         {% if user.is_authenticated %}
                         <form method="post" action="{% url 'account_logout' %}" class="inline">
                             {% csrf_token %}
@@ -101,6 +108,13 @@
                         class="block text-gray-700 hover:text-primary hover:bg-gray-50 px-3 py-2 rounded-md text-sm font-medium">
                         الرئيسية
                     </a>
+                    <button
+                        type="button"
+                        id="pwa-install-btn-mobile"
+                        class="hidden w-full text-right text-white bg-primary hover:bg-indigo-700 px-3 py-2 rounded-md text-sm font-medium"
+                    >
+                        تثبيت التطبيق
+                    </button>
                 </div>
 
                 <div class="mt-2 border-t border-gray-200 pt-2">
@@ -168,12 +182,111 @@
         </div>
     </footer>
 
+    <!-- iOS install instructions modal -->
+    <div id="pwa-ios-modal" class="hidden fixed inset-0 z-50" aria-hidden="true">
+        <div class="absolute inset-0 bg-black/40"></div>
+        <div class="relative mx-auto mt-24 w-[92%] max-w-md rounded-lg bg-white p-4 shadow-lg">
+            <div class="flex items-start justify-between gap-4">
+                <div class="min-w-0">
+                    <div class="text-base font-bold text-gray-900">تثبيت التطبيق على الآيفون</div>
+                    <div class="mt-2 text-sm text-gray-700 leading-7">
+                        من Safari اضغط زر <span class="font-semibold">المشاركة</span> ثم اختر
+                        <span class="font-semibold">Add to Home Screen</span>.
+                    </div>
+                </div>
+                <button type="button" id="pwa-ios-close" class="shrink-0 rounded-md px-2 py-1 text-sm text-gray-700 hover:bg-gray-50">
+                    إغلاق
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script>
         (function () {
             if (!("serviceWorker" in navigator)) return;
             window.addEventListener("load", function () {
                 navigator.serviceWorker.register("{% url 'pwa-sw' %}").catch(function () { });
             });
+        })();
+    </script>
+
+    <script>
+        (function () {
+            var btnDesktop = document.getElementById("pwa-install-btn-desktop");
+            var btnMobile = document.getElementById("pwa-install-btn-mobile");
+            var iosModal = document.getElementById("pwa-ios-modal");
+            var iosClose = document.getElementById("pwa-ios-close");
+
+            function isStandalone() {
+                return (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches) || (window.navigator && window.navigator.standalone === true);
+            }
+
+            function isIosSafari() {
+                var ua = window.navigator.userAgent || "";
+                var isIOS = /iP(hone|od|ad)/.test(ua) || (ua.includes("Mac") && "ontouchend" in document);
+                var isSafari = /Safari/.test(ua) && !/CriOS|FxiOS|EdgiOS|OPiOS/.test(ua);
+                return isIOS && isSafari;
+            }
+
+            function showInstallButtons() {
+                if (btnDesktop) btnDesktop.classList.remove("hidden");
+                if (btnMobile) btnMobile.classList.remove("hidden");
+            }
+
+            function hideInstallButtons() {
+                if (btnDesktop) btnDesktop.classList.add("hidden");
+                if (btnMobile) btnMobile.classList.add("hidden");
+            }
+
+            function openIosModal() {
+                if (!iosModal) return;
+                iosModal.classList.remove("hidden");
+                iosModal.setAttribute("aria-hidden", "false");
+            }
+
+            function closeIosModal() {
+                if (!iosModal) return;
+                iosModal.classList.add("hidden");
+                iosModal.setAttribute("aria-hidden", "true");
+            }
+
+            if (iosClose) iosClose.addEventListener("click", closeIosModal);
+            if (iosModal) iosModal.addEventListener("click", function (e) {
+                if (e.target === iosModal || (e.target && e.target === iosModal.firstElementChild)) closeIosModal();
+            });
+
+            // iOS Safari: no automatic prompt; show an instructions button.
+            if (isIosSafari() && !isStandalone()) {
+                showInstallButtons();
+                var onClickIos = function () { openIosModal(); };
+                if (btnDesktop) btnDesktop.addEventListener("click", onClickIos);
+                if (btnMobile) btnMobile.addEventListener("click", onClickIos);
+                return;
+            }
+
+            // Chrome Desktop / Android Chrome: use beforeinstallprompt when available.
+            var deferredPrompt = null;
+            window.addEventListener("beforeinstallprompt", function (e) {
+                e.preventDefault();
+                deferredPrompt = e;
+                if (!isStandalone()) showInstallButtons();
+            });
+
+            window.addEventListener("appinstalled", function () {
+                deferredPrompt = null;
+                hideInstallButtons();
+            });
+
+            async function promptInstall() {
+                if (!deferredPrompt) return;
+                deferredPrompt.prompt();
+                try { await deferredPrompt.userChoice; } catch (e) { }
+                deferredPrompt = null;
+                hideInstallButtons();
+            }
+
+            if (btnDesktop) btnDesktop.addEventListener("click", promptInstall);
+            if (btnMobile) btnMobile.addEventListener("click", promptInstall);
         })();
     </script>
 
