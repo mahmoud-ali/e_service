@@ -358,7 +358,7 @@ class EmployeeAdmin(LogMixin, StateControlMixin, admin.ModelAdmin):
         if not request.user.groups.filter(name='state_hr_traditional').exists():
             inlines.insert(1, EmployeePayrollHistoryInline)
 
-        if request.user.is_superuser or request.user.groups.filter(name='traditional_hr').exists():
+        if request.user.is_superuser or request.user.groups.filter(name__in=['traditional_hr', 'state_hr_traditional', 'hr_traditional']).exists():
             inlines.append(AcademicQualificationInline)
         return tuple(inlines)
 
