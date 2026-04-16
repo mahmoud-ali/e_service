@@ -324,7 +324,7 @@ class EmployeeAdmin(LogMixin, StateControlMixin, admin.ModelAdmin):
     model = Employee
     list_display = ['employee_code', 'name', 'state', 'category']
     search_fields = ('employee_code', 'name',)
-    list_filter = ('category','state')
+    list_filter = ('category','job_data__association_type', 'statuses__status')
     readonly_fields = ('employee_code',)
     fieldsets = (
         (_('البيانات الأساسية'), {
