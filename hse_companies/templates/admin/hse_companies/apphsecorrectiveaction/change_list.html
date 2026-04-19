@@ -1,0 +1,33 @@
+{% extends "admin/change_list.html" %}
+{% load i18n admin_urls static %}
+
+{% block result_list %}
+    {% if show_companies %}
+        <div class="results">
+            <table id="result_list">
+                <thead>
+                    <tr>
+                        <th scope="col" class="sortable">
+                            <div class="text"><span>{% trans "Company Name" %}</span></div>
+                            <div class="clear"></div>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in company_list %}
+                        <tr class="{% cycle 'row1' 'row2' %}">
+                            <td>
+                                <a href="?company={{ item.id }}">{{ item }}</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="pagination">
+            {{ company_list.count }} {% trans "Companies" %}
+        </div>
+    {% else %}
+        {{ block.super }}
+    {% endif %}
+{% endblock %}

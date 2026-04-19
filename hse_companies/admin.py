@@ -892,7 +892,43 @@ admin.site.register(report_model_admin.model,report_model_admin)
 
 
 ##############Corrective actions######################
+class CompanyFilter(admin.SimpleListFilter):
+    title = _('Company')
+    parameter_name = 'company'
+
+    def lookups(self, request, model_admin):
+        from company_profile.models import TblCompanyProduction
+        qs = model_admin.get_queryset(request)
+        report_company_ids = qs.exclude(report=None).values_list('report__company_id', flat=True).distinct()
+        incident_company_ids = qs.exclude(incident=None).values_list('incident__company_id', flat=True).distinct()
+        all_company_ids = set(report_company_ids) | set(incident_company_ids)
+        all_company_ids.discard(None)
+        companies = TblCompanyProduction.objects.filter(id__in=all_company_ids).order_by('name_ar')
+        return [(c.id, c.__str__()) for c in companies]
+
+    def queryset(self, request, queryset):
+        if self.value():
+            return queryset.filter(
+                Q(report__company_id=self.value()) | Q(incident__company_id=self.value())
+            )
+        return queryset
+
 class AppHSECorrectiveActionMixin:
+    def changelist_view(self, request, extra_context=None):
+        extra_context = extra_context or {}
+        if 'company' not in request.GET:
+            from company_profile.models import TblCompanyProduction
+            qs = self.get_queryset(request)
+            report_company_ids = qs.exclude(report=None).values_list('report__company_id', flat=True).distinct()
+            incident_company_ids = qs.exclude(incident=None).values_list('incident__company_id', flat=True).distinct()
+            all_company_ids = set(report_company_ids) | set(incident_company_ids)
+            all_company_ids.discard(None)
+            companies = TblCompanyProduction.objects.filter(id__in=all_company_ids).order_by('name_ar')
+            extra_context['show_companies'] = True
+            extra_context['company_list'] = companies
+            
+        return super().changelist_view(request, extra_context)
+
     def get_queryset(self, request):
         qs = super().get_queryset(request)
 
@@ -947,7 +983,7 @@ corrective_main_class = {
     'mixins': [],
     'kwargs': {
         'list_display': ( "belong_to","from_dt","to_dt","corrective_action_summary","state"),
-        'list_filter': ("from_dt","to_dt",'state'),
+        'list_filter': (CompanyFilter,"from_dt","to_dt",'state'),
         'fields': ("report", "incident","corrective_action", "from_dt","to_dt",),
         'readonly_fields':('report',),
         'save_as_continue': False,
