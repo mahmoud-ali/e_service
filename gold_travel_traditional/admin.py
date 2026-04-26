@@ -14,8 +14,8 @@ from django.forms.widgets import TextInput
 from django.contrib import admin
 
 from company_profile.models import LkpState
-from gold_travel_traditional.forms import AppMoveGoldTraditionalAddForm, AppMoveGoldTraditionalRenewForm, AppMoveGoldTraditionalSoldForm, GoldTravelTraditionalUserDetailForm, GoldTravelTraditionalUserForm
-from gold_travel_traditional.models import AppMoveGoldTraditional, GoldTravelTraditionalUser, GoldTravelTraditionalUserDetail, LkpJihatAlaisdar, LkpSoag
+from gold_travel_traditional.forms import AppMoveGoldTraditionalAddForm, AppMoveGoldTraditionalRenewForm, AppMoveGoldTraditionalSoldForm, GoldTravelTraditionalUserJihatAlaisdarForm, GoldTravelTraditionalUserJihatTarhilForm, GoldTravelTraditionalUserForm
+from gold_travel_traditional.models import AppMoveGoldTraditional, AppMoveGoldTraditionalDetail, GoldTravelTraditionalUser, GoldTravelTraditionalUserJihatAlaisdar, GoldTravelTraditionalUserJihatTarhil, LkpJihatAlaisdar, LkpJihatAltarhil
 
 def get_user_state(request):
     try:
@@ -34,13 +34,13 @@ class LogAdminMixin:
             obj.created_by = obj.updated_by = request.user
         return super().save_model(request, obj, form, change)                
 
-class LkpSoagAdmin(admin.ModelAdmin):
-    model = LkpSoag
+class LkpJihatAltarhilAdmin(admin.ModelAdmin):
+    model = LkpJihatAltarhil
     list_display = ["state","name"]
     list_filter = ["state"]
     search_fields = ["name"]
 
-admin.site.register(LkpSoag, LkpSoagAdmin)
+admin.site.register(LkpJihatAltarhil, LkpJihatAltarhilAdmin)
 
 class LkpJihatAlaisdarAdmin(admin.ModelAdmin):
     model = LkpJihatAlaisdar
@@ -50,14 +50,19 @@ class LkpJihatAlaisdarAdmin(admin.ModelAdmin):
 
 admin.site.register(LkpJihatAlaisdar, LkpJihatAlaisdarAdmin)
 
-class GoldTravelTraditionalUserDetailInline(admin.TabularInline):
-    model = GoldTravelTraditionalUserDetail
-    form = GoldTravelTraditionalUserDetailForm
-    extra = 1    
+class GoldTravelTraditionalUserJihatAlaisdarInline(admin.TabularInline):
+    model = GoldTravelTraditionalUserJihatAlaisdar
+    form = GoldTravelTraditionalUserJihatAlaisdarForm
+    extra = 1
+
+class GoldTravelTraditionalUserJihatTarhilInline(admin.TabularInline):
+    model = GoldTravelTraditionalUserJihatTarhil
+    form = GoldTravelTraditionalUserJihatTarhilForm
+    extra = 1
 
 class GoldTravelTraditionalUserAdmin(LogAdminMixin,admin.ModelAdmin):
     form = GoldTravelTraditionalUserForm
-    inlines = [GoldTravelTraditionalUserDetailInline]     
+    inlines = [GoldTravelTraditionalUserJihatAlaisdarInline, GoldTravelTraditionalUserJihatTarhilInline]     
 
     fields = ["user","name","state"]
 
@@ -70,44 +75,54 @@ class GoldTravelTraditionalUserAdmin(LogAdminMixin,admin.ModelAdmin):
     def get_formsets_with_inlines(self, request, obj=None):
         for inline in self.get_inline_instances(request, obj):
             formset = inline.get_formset(request, obj)
-            if isinstance(inline,GoldTravelTraditionalUserDetailInline):
-                formset.form = GoldTravelTraditionalUserDetailForm
+            if isinstance(inline, GoldTravelTraditionalUserJihatAlaisdarInline):
+                formset.form = GoldTravelTraditionalUserJihatAlaisdarForm
+                if obj:
+                    formset.form.allowed_state = obj.state
+            elif isinstance(inline, GoldTravelTraditionalUserJihatTarhilInline):
+                formset.form = GoldTravelTraditionalUserJihatTarhilForm
                 if obj:
                     formset.form.allowed_state = obj.state
             yield formset,inline
 
 admin.site.register(GoldTravelTraditionalUser, GoldTravelTraditionalUserAdmin)
 
+class AppMoveGoldTraditionalDetailInline(admin.TabularInline):
+    model = AppMoveGoldTraditionalDetail
+    extra = 1
+
 class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
     # model = AppMoveGoldTraditional
     form = AppMoveGoldTraditionalAddForm
+    inlines = [AppMoveGoldTraditionalDetailInline]
 
     fieldsets = [
         (
             None,
             {
-                'fields': [("code","issue_date"),"gold_weight_in_gram"]
+                'fields': ["code","issue_date"]
             },
         ),
         (
-            _("almustafid data"),
+            _("almustafid data",),
             {
-                'fields': [("almustafid_name","almustafid_phone")]
+                'fields': [("almustafid_name","almustafid_phone"), ("almustafid_identity_type", "almustafid_identity")]
             },
         ),
         (
             _("others"),
             {
-                'fields': [("jihat_alaisdar","wijhat_altarhil",),("muharir_alaistimara","almushtari_name"),("attachement_file",)]
+                'fields': [("jihat_alaisdar","wijhat_altarhil",),("attachement_file",)]
             },
         ),
     ]
+    readonly_fields = ["code"]
     # readonly_fields = ["almushtari_name"]
-    list_display = ["code","issue_date","gold_weight_in_gram","almustafid_name","almustafid_phone","jihat_alaisdar","wijhat_altarhil","almushtari_name","source_state","parent_link","state","show_actions"]
+    list_display = ["code","issue_date","total_gold_weight_display","almustafid_name","almustafid_phone","jihat_alaisdar","wijhat_altarhil","almushtari_name","source_state","parent_link","state","show_actions"]
     list_filter = ["issue_date",("state",admin.ChoicesFieldListFilter),("source_state",admin.RelatedFieldListFilter),("jihat_alaisdar",admin.RelatedFieldListFilter),("wijhat_altarhil",admin.RelatedFieldListFilter)]
-    search_fields = ["code","muharir_alaistimara","almustafid_name","almustafid_phone","almushtari_name"]
+    search_fields = ["code","almustafid_name","almustafid_phone","almushtari_name"]
     actions = ['export_as_csv']
-    autocomplete_fields = ["jihat_alaisdar","wijhat_altarhil"]
+    # autocomplete_fields = ["jihat_alaisdar","wijhat_altarhil"]
     # list_editable = ['owner_name_lst']
     formfield_overrides = {
         models.FloatField: {"widget": TextInput},
@@ -134,9 +149,15 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
 
         try:
             gold_travel_traditional_user = request.user.gold_travel_traditional
-            qs = qs\
-                .filter(source_state=gold_travel_traditional_user.state)\
-                .filter(wijhat_altarhil__in=gold_travel_traditional_user.goldtraveltraditionaluserdetail_set.values_list('soug',flat=True))
+            
+            allowed_alaisdar = gold_travel_traditional_user.goldtraveltraditionaluserjihatalaisdar_set.values_list('jihat_alaisdar', flat=True)
+            allowed_tarhil = gold_travel_traditional_user.goldtraveltraditionaluserjihattarhil_set.values_list('wijhat_altarhil', flat=True)
+            
+            qs = qs.filter(source_state=gold_travel_traditional_user.state)
+            qs = qs.filter(
+                models.Q(jihat_alaisdar__in=allowed_alaisdar) | 
+                models.Q(wijhat_altarhil__in=allowed_tarhil)
+            )
         except:
             qs = qs.none()
 
@@ -144,13 +165,19 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
 
     def get_form(self, request, obj=None, **kwargs):
         my_form = self.form
+        my_form.user = request.user
         my_form.allowed_state = get_user_state(request)
         kwargs["form"] = my_form
         return super().get_form(request, obj, **kwargs)
 
     def has_add_permission(self, request):
+        if request.user.is_superuser:
+            return False
         try:
-            request.user.gold_travel_traditional
+            gold_user = request.user.gold_travel_traditional
+            # Check if user has any assigned jihat_alaisdar
+            if not gold_user.goldtraveltraditionaluserjihatalaisdar_set.exists():
+                return False
             return True
         except:
             pass
@@ -158,23 +185,40 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
         return super().has_add_permission(request)
 
     def has_change_permission(self, request, obj=None):
-        # try:
-        #     request.user.gold_travel_traditional
-        #     if obj and obj.state in [AppMoveGoldTraditional.STATE_NEW,AppMoveGoldTraditional.STATE_RENEW]:
-        #         return True
-        #     else:
-        #         return False
-        # except:
-        #     pass
-
-        if obj and obj.state in [AppMoveGoldTraditional.STATE_SOLD,AppMoveGoldTraditional.STATE_CANCLED]:
+        if request.user.is_superuser:
             return False
+            
+        if obj:
+            if obj.state != AppMoveGoldTraditional.STATE_NEW:
+                return False
+            
+            # Check if user belongs to the jihat_alaisdar of the record
+            try:
+                gold_user = request.user.gold_travel_traditional
+                allowed_alaisdar = gold_user.goldtraveltraditionaluserjihatalaisdar_set.values_list('jihat_alaisdar', flat=True)
+                if obj.jihat_alaisdar_id not in allowed_alaisdar:
+                    return False
+            except:
+                return False
         
         return super().has_change_permission(request,obj)
 
     def has_delete_permission(self, request, obj=None):
-        if obj and obj.state in [AppMoveGoldTraditional.STATE_SOLD,AppMoveGoldTraditional.STATE_CANCLED]:
+        if request.user.is_superuser:
             return False
+
+        if obj:
+            if obj.state != AppMoveGoldTraditional.STATE_NEW:
+                return False
+
+            # Check if user belongs to the jihat_alaisdar of the record
+            try:
+                gold_user = request.user.gold_travel_traditional
+                allowed_alaisdar = gold_user.goldtraveltraditionaluserjihatalaisdar_set.values_list('jihat_alaisdar', flat=True)
+                if obj.jihat_alaisdar_id not in allowed_alaisdar:
+                    return False
+            except:
+                return False
 
         return super().has_delete_permission(request,obj)
 
@@ -183,8 +227,34 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
         my_urls = [
             path("<int:pk>/sold/", self.admin_site.admin_view(self.sold_view)),
             path("<int:pk>/renew/", self.admin_site.admin_view(self.renew_view)),
+            path("<int:pk>/arrived/", self.admin_site.admin_view(self.arrived_view)),
         ]
         return my_urls + urls
+    
+    def arrived_view(self, request, pk):
+        if request.user.is_superuser:
+             self.message_user(request, _('Superusers cannot change record states.'), level='error')
+             return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
+
+        obj = AppMoveGoldTraditional.objects.get(pk=pk)
+        
+        # Check if user has permission for this destination
+        try:
+            gold_user = request.user.gold_travel_traditional
+            if obj.wijhat_altarhil not in LkpJihatAltarhil.objects.filter(id__in=gold_user.goldtraveltraditionaluserjihattarhil_set.values_list('wijhat_altarhil', flat=True)):
+                 self.message_user(request, _('Only users assigned to the destination location can mark this as arrived.'), level='error')
+                 return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
+        except:
+             return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
+
+        if obj.state in [AppMoveGoldTraditional.STATE_NEW, AppMoveGoldTraditional.STATE_RENEW, AppMoveGoldTraditional.STATE_EXPIRED]:
+            obj.state = AppMoveGoldTraditional.STATE_ARRIVED
+            obj.updated_by = request.user
+            obj.save()
+            self.log_change(request, obj, _('state_arrived'))
+            self.message_user(request, _('application marked as arrived successfully!'))
+        
+        return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
     
     def sold_view(self, request, pk):
         obj = AppMoveGoldTraditional.objects.get(pk=pk)
@@ -192,7 +262,7 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
         if request.method == "POST":
             my_form = AppMoveGoldTraditionalSoldForm(request.POST,instance=obj)
             if my_form.is_valid():
-                if obj and obj.state in [AppMoveGoldTraditional.STATE_NEW,AppMoveGoldTraditional.STATE_RENEW]:
+                if obj and obj.state in [AppMoveGoldTraditional.STATE_NEW,AppMoveGoldTraditional.STATE_RENEW, AppMoveGoldTraditional.STATE_EXPIRED, AppMoveGoldTraditional.STATE_ARRIVED]:
                     new_obj = my_form.save(commit=False)
                     new_obj.state = AppMoveGoldTraditional.STATE_SOLD
                     new_obj.save()
@@ -218,6 +288,7 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
 
         if request.method == "POST":
             my_form = AppMoveGoldTraditionalRenewForm(request.POST)
+            my_form.user = request.user
 
             if my_form.is_valid():
                 if obj and obj.state in [AppMoveGoldTraditional.STATE_EXPIRED]:
@@ -250,24 +321,25 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
             obj.code = ''
             obj.issue_date = timezone.now().date()
             my_form = AppMoveGoldTraditionalRenewForm(instance=obj)
+            my_form.user = request.user
 
         fieldsets = [
             (
                 None,
                 {
-                    'fields': [("code","issue_date"),"gold_weight_in_gram"]
+                    'fields': [("code","issue_date")]
                 },
             ),
             (
                 _("almustafid data"),
                 {
-                    'fields': [("almustafid_name","almustafid_phone")]
+                    'fields': [("almustafid_name","almustafid_phone"), ("almustafid_identity_type", "almustafid_identity")]
                 },
             ),
             (
                 _("others"),
                 {
-                    'fields': [("jihat_alaisdar","wijhat_altarhil",),("muharir_alaistimara",)]
+                    'fields': [("jihat_alaisdar","wijhat_altarhil",)]
                 },
             ),
         ]
@@ -293,6 +365,10 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
         # return TemplateResponse(request, "admin/gold_travel_traditional/appmovegoldtraditional/renew_application.html", context)
         return TemplateResponse(request, "admin/change_form.html", context)
 
+    @admin.display(description=_('gold_weight_in_gram'))
+    def total_gold_weight_display(self, obj):
+        return obj.gold_weight_in_gram
+
     @admin.display(description=_('parent'))
     def parent_link(self,obj):
         if obj.parent:
@@ -303,30 +379,65 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
     
     @admin.display(description=_('show_actions'))
     def show_actions(self, obj):
-        url = 'url'
+        request = self.current_request
 
         def get_allowed_actions(obj):
-            if obj.state in [AppMoveGoldTraditional.STATE_NEW,AppMoveGoldTraditional.STATE_RENEW]:
-                return format_html('''
-                    <ul class="actions-list">
-                        <li>
-                            <a class="changelink" href="{id}/sold">{action1} </a>
-                        </li>
-                    </ul>
-                ''',id=obj.pk,action1=_('state_sold'))
+            actions = []
             
+            # Action for Alaisdar users (Sold)
+            if obj.state in [AppMoveGoldTraditional.STATE_NEW, AppMoveGoldTraditional.STATE_RENEW, AppMoveGoldTraditional.STATE_EXPIRED, AppMoveGoldTraditional.STATE_ARRIVED]:
+                # is_alaisdar_user = False
+                # if not request.user.is_superuser:
+                #     try:
+                #         gold_user = request.user.gold_travel_traditional
+                #         if obj.jihat_alaisdar_id in gold_user.goldtraveltraditionaluserjihatalaisdar_set.values_list('jihat_alaisdar', flat=True):
+                #             is_alaisdar_user = True
+                #     except:
+                #         pass
+                
+                # if is_alaisdar_user:
+                #     actions.append(f'<li><a class="changelink" href="{obj.pk}/sold">{_("state_sold")}</a></li>')
+                actions.append(f'<li><a class="changelink" href="{obj.pk}/sold">{_("state_sold")}</a></li>')
+            
+            # Action for Alaisdar users (Renew)
             if obj.state in [AppMoveGoldTraditional.STATE_EXPIRED]:
-                return format_html('''
-                    <ul class="actions-list">
-                        <li>
-                            <a class="changelink" href="{id}/renew">{action1} </a>
-                        </li>
-                    </ul>
-                ''',id=obj.pk,action1=_('state_renew'))
+                # is_alaisdar_user = False
+                # if not request.user.is_superuser:
+                #     try:
+                #         gold_user = request.user.gold_travel_traditional
+                #         if obj.jihat_alaisdar_id in gold_user.goldtraveltraditionaluserjihatalaisdar_set.values_list('jihat_alaisdar', flat=True):
+                #             is_alaisdar_user = True
+                #     except:
+                #         pass
+                
+                # if is_alaisdar_user:
+                #     actions.append(f'<li><a class="changelink" href="{obj.pk}/renew">{_("state_renew")}</a></li>')
+                actions.append(f'<li><a class="changelink" href="{obj.pk}/renew">{_("state_renew")}</a></li>')                            
+                
+            # Action for Altarhil users (Arrived)
+            if obj.state in [AppMoveGoldTraditional.STATE_NEW, AppMoveGoldTraditional.STATE_RENEW]:
+                is_altarhil_user = False
+                if not request.user.is_superuser:
+                    try:
+                        gold_user = request.user.gold_travel_traditional
+                        if obj.wijhat_altarhil_id in gold_user.goldtraveltraditionaluserjihattarhil_set.values_list('wijhat_altarhil', flat=True):
+                            is_altarhil_user = True
+                    except:
+                        pass
+                
+                if is_altarhil_user:
+                    actions.append(f'<li><a class="changelink" href="{obj.pk}/arrived">{_("وصل")}</a></li>')
+
+            if not actions:
+                return format_html('<ul class="actions-list"><li>&nbsp;</li></ul>')
             
-            return format_html('<ul class="actions-list"><li>&nbsp;</li></ul>')
+            return format_html('<ul class="actions-list">{links}</ul>', links=format_html(''.join(actions)))
 
         return get_allowed_actions(obj)
+
+    def changelist_view(self, request, extra_context=None):
+        self.current_request = request
+        return super().changelist_view(request, extra_context=extra_context)
 
     @admin.action(description=_('Export data'))
     def export_as_csv(self, request, queryset):
@@ -335,8 +446,9 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
             headers={"Content-Disposition": f'attachment; filename="move_gold_form.csv"'},
         )
         header = [
-                    _("code"),_("issue_date"),_('gold_weight_in_gram'),_("almustafid_name"),_("almustafid_phone"),_( "jihat_alaisdar"),\
-                    _("wijhat_altarhil"),_("almushtari_name"),_("muharir_alaistimara"),_("source_state"),_("record_state"),_("parent"),\
+                    _("code"),_("issue_date"),_('gold_weight_in_gram'),_("almustafid_name"),_("almustafid_phone"),
+                    _("almustafid_identity_type"), _("almustafid_identity"), _( "jihat_alaisdar"),
+                    _("wijhat_altarhil"),_("almushtari_name"),_("source_state"),_("record_state"),_("parent"),
                     _("created_at"),_("created_by"),_("updated_at"),_("updated_by")
         ]
 
@@ -352,8 +464,9 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
                 parent_code = app.parent.code
 
             row = [
-                    app.code,app.issue_date,app.gold_weight_in_gram,app.almustafid_name,app.almustafid_phone,app.jihat_alaisdar,\
-                    app.wijhat_altarhil,app.almushtari_name,app.muharir_alaistimara,app.source_state,app.get_state_display(),parent_code,\
+                    app.code,app.issue_date,app.gold_weight_in_gram,app.almustafid_name,app.almustafid_phone,
+                    app.get_almustafid_identity_type_display(), app.almustafid_identity, app.jihat_alaisdar,
+                    app.wijhat_altarhil,app.almushtari_name,app.source_state,app.get_state_display(),parent_code,
                     app.created_at,app.created_by,app.updated_at,app.updated_by,
             ]
             writer.writerow(row)
