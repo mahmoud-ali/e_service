@@ -142,7 +142,17 @@ class AppMoveGoldTraditional(LoggingModel):
             import datetime
             from django.db import transaction, IntegrityError
             
+            # Get user state code if possible
             prefix = "G"
+            try:
+                # We expect created_by to be set before save or via current request
+                # However, since save() doesn't always have access to request, 
+                # we rely on source_state being set in admin's save_model
+                if self.source_state and self.source_state.code:
+                    prefix = self.source_state.code
+            except:
+                pass
+
             date_str = datetime.datetime.now().strftime("%Y%m%d")
             
             for attempt in range(5):

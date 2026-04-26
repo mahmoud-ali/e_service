@@ -75,6 +75,9 @@ class GoldTravelTraditionalUserAdmin(LogAdminMixin,admin.ModelAdmin):
     def get_formsets_with_inlines(self, request, obj=None):
         for inline in self.get_inline_instances(request, obj):
             formset = inline.get_formset(request, obj)
+            if not obj:
+                return formset, None
+
             if isinstance(inline, GoldTravelTraditionalUserJihatAlaisdarInline):
                 formset.form = GoldTravelTraditionalUserJihatAlaisdarForm
                 if obj:
@@ -119,7 +122,8 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
     readonly_fields = ["code"]
     # readonly_fields = ["almushtari_name"]
     list_display = ["code","issue_date","total_gold_weight_display","almustafid_name","almustafid_phone","jihat_alaisdar","wijhat_altarhil","almushtari_name","source_state","parent_link","state","show_actions"]
-    list_filter = ["issue_date",("state",admin.ChoicesFieldListFilter),("source_state",admin.RelatedFieldListFilter),("jihat_alaisdar",admin.RelatedFieldListFilter),("wijhat_altarhil",admin.RelatedFieldListFilter)]
+    list_filter = [("state",admin.ChoicesFieldListFilter),("source_state",admin.RelatedFieldListFilter),("jihat_alaisdar",admin.RelatedFieldListFilter),("wijhat_altarhil",admin.RelatedFieldListFilter)]
+    date_hierarchy = "issue_date"
     search_fields = ["code","almustafid_name","almustafid_phone","almushtari_name"]
     actions = ['export_as_csv']
     # autocomplete_fields = ["jihat_alaisdar","wijhat_altarhil"]
@@ -171,8 +175,6 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
         return super().get_form(request, obj, **kwargs)
 
     def has_add_permission(self, request):
-        if request.user.is_superuser:
-            return False
         try:
             gold_user = request.user.gold_travel_traditional
             # Check if user has any assigned jihat_alaisdar
@@ -182,12 +184,9 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
         except:
             pass
         
-        return super().has_add_permission(request)
+        return False
 
-    def has_change_permission(self, request, obj=None):
-        if request.user.is_superuser:
-            return False
-            
+    def has_change_permission(self, request, obj=None):            
         if obj:
             if obj.state != AppMoveGoldTraditional.STATE_NEW:
                 return False
@@ -201,12 +200,9 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
             except:
                 return False
         
-        return super().has_change_permission(request,obj)
+        return False
 
     def has_delete_permission(self, request, obj=None):
-        if request.user.is_superuser:
-            return False
-
         if obj:
             if obj.state != AppMoveGoldTraditional.STATE_NEW:
                 return False
@@ -220,7 +216,7 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
             except:
                 return False
 
-        return super().has_delete_permission(request,obj)
+        return False
 
     def get_urls(self):
         urls = super().get_urls()
@@ -228,14 +224,50 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
             path("<int:pk>/sold/", self.admin_site.admin_view(self.sold_view)),
             path("<int:pk>/renew/", self.admin_site.admin_view(self.renew_view)),
             path("<int:pk>/arrived/", self.admin_site.admin_view(self.arrived_view)),
+            path("<int:pk>/print/", self.admin_site.admin_view(self.print_view)),
         ]
         return my_urls + urls
+
+    def print_view(self, request, pk):
+        from gold_travel_traditional.models import AppMoveGoldTraditional
+        obj = AppMoveGoldTraditional.objects.get(pk=pk)
+
+        # Permission check: Alaisdar user or superuser
+        try:
+            gold_user = request.user.gold_travel_traditional
+            allowed_alaisdar = gold_user.goldtraveltraditionaluserjihatalaisdar_set.values_list('jihat_alaisdar', flat=True)
+            if obj.jihat_alaisdar_id not in allowed_alaisdar:
+                self.message_user(request, _('Only users from the issuing location can print this report.'), level='error')
+                return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
+        except:
+            return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
+
+        # Prepare alloy chunks for the template
+        details = list(obj.details.all())
+        chunk_size = 40
+        alloy_chunks = []
+        for i in range(0, len(details), chunk_size):
+            chunk = details[i:i + chunk_size]
+            half = (len(chunk) + 1) // 2
+            left_half = chunk[:half]
+            right_half = chunk[half:]
+            # Zip them together for the template, padding with None if necessary
+            from itertools import zip_longest
+            rows = list(zip_longest(left_half, right_half))
+            alloy_chunks.append({
+                'rows': rows,
+                'start_index': i + 1,
+                'half_offset': half
+            })
+
+        context = {
+            'object': obj,
+            'alloy_chunks': alloy_chunks,
+            'has_astikhbarat': False, 
+        }
+        return TemplateResponse(request, "gold_travel_traditional/gold_travel_traditional.html", context)
     
     def arrived_view(self, request, pk):
-        if request.user.is_superuser:
-             self.message_user(request, _('Superusers cannot change record states.'), level='error')
-             return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
-
         obj = AppMoveGoldTraditional.objects.get(pk=pk)
         
         # Check if user has permission for this destination
@@ -380,51 +412,44 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
     @admin.display(description=_('show_actions'))
     def show_actions(self, obj):
         request = self.current_request
+        is_manager = request.user.groups.filter(name="gold_travel_traditional_manager").exists()
 
         def get_allowed_actions(obj):
             actions = []
             
+            is_alaisdar_user = False
+            try:
+                gold_user = request.user.gold_travel_traditional
+                if obj.jihat_alaisdar_id in gold_user.goldtraveltraditionaluserjihatalaisdar_set.values_list('jihat_alaisdar', flat=True):
+                    is_alaisdar_user = True
+            except:
+                pass
+
             # Action for Alaisdar users (Sold)
-            if obj.state in [AppMoveGoldTraditional.STATE_NEW, AppMoveGoldTraditional.STATE_RENEW, AppMoveGoldTraditional.STATE_EXPIRED, AppMoveGoldTraditional.STATE_ARRIVED]:
-                # is_alaisdar_user = False
-                # if not request.user.is_superuser:
-                #     try:
-                #         gold_user = request.user.gold_travel_traditional
-                #         if obj.jihat_alaisdar_id in gold_user.goldtraveltraditionaluserjihatalaisdar_set.values_list('jihat_alaisdar', flat=True):
-                #             is_alaisdar_user = True
-                #     except:
-                #         pass
-                
-                # if is_alaisdar_user:
-                #     actions.append(f'<li><a class="changelink" href="{obj.pk}/sold">{_("state_sold")}</a></li>')
-                actions.append(f'<li><a class="changelink" href="{obj.pk}/sold">{_("state_sold")}</a></li>')
+            # if obj.state in [AppMoveGoldTraditional.STATE_NEW, AppMoveGoldTraditional.STATE_RENEW, AppMoveGoldTraditional.STATE_EXPIRED, AppMoveGoldTraditional.STATE_ARRIVED]:
+            #     if is_alaisdar_user:
+            #         actions.append(f'<li><a class="changelink" href="{obj.pk}/sold">{_("state_sold")}</a></li>')
             
             # Action for Alaisdar users (Renew)
             if obj.state in [AppMoveGoldTraditional.STATE_EXPIRED]:
-                # is_alaisdar_user = False
-                # if not request.user.is_superuser:
-                #     try:
-                #         gold_user = request.user.gold_travel_traditional
-                #         if obj.jihat_alaisdar_id in gold_user.goldtraveltraditionaluserjihatalaisdar_set.values_list('jihat_alaisdar', flat=True):
-                #             is_alaisdar_user = True
-                #     except:
-                #         pass
-                
-                # if is_alaisdar_user:
-                #     actions.append(f'<li><a class="changelink" href="{obj.pk}/renew">{_("state_renew")}</a></li>')
-                actions.append(f'<li><a class="changelink" href="{obj.pk}/renew">{_("state_renew")}</a></li>')                            
-                
+                if is_alaisdar_user:
+                    actions.append(f'<li><a class="changelink" href="{obj.pk}/renew">{_("state_renew")}</a></li>')                            
+            
+            # Action for Alaisdar users (Print)
+            if obj.state in [AppMoveGoldTraditional.STATE_NEW, AppMoveGoldTraditional.STATE_RENEW, ]:            
+                if is_alaisdar_user or is_manager:
+                    actions.append(f'<li><a class="changelink" target="_blank" href="{obj.pk}/print">{_("طباعة")}</a></li>')
+
             # Action for Altarhil users (Arrived)
-            if obj.state in [AppMoveGoldTraditional.STATE_NEW, AppMoveGoldTraditional.STATE_RENEW]:
-                is_altarhil_user = False
-                if not request.user.is_superuser:
-                    try:
-                        gold_user = request.user.gold_travel_traditional
-                        if obj.wijhat_altarhil_id in gold_user.goldtraveltraditionaluserjihattarhil_set.values_list('wijhat_altarhil', flat=True):
-                            is_altarhil_user = True
-                    except:
-                        pass
-                
+            is_altarhil_user = False
+            try:
+                gold_user = request.user.gold_travel_traditional
+                if obj.wijhat_altarhil_id in gold_user.goldtraveltraditionaluserjihattarhil_set.values_list('wijhat_altarhil', flat=True):
+                    is_altarhil_user = True
+            except:
+                pass
+
+            if obj.state in [AppMoveGoldTraditional.STATE_NEW, AppMoveGoldTraditional.STATE_RENEW, AppMoveGoldTraditional.STATE_EXPIRED, ]:            
                 if is_altarhil_user:
                     actions.append(f'<li><a class="changelink" href="{obj.pk}/arrived">{_("وصل")}</a></li>')
 

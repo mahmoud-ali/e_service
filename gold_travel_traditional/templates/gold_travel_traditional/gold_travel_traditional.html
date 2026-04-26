@@ -1,0 +1,155 @@
+{% extends 'gold_travel_traditional/report_base.html' %}
+{% load i18n %}
+{% load bootstrap3 %}
+{% load auth_extras %}
+{% load static %}
+{% load humanize %}
+{% block content %}
+<div class="row">
+    <div class="col-xs-6" style="text-align:right">التاريخ: {{object.issue_date|date:"Y/m/d"}}م</div>
+    <div class="col-xs-6" style="text-align:left">الرقم: {{object.code}}</div>
+</div>
+<center>
+    <h3 style="font-weight: bold !important;text-decoration: underline         
+ !important;">
+        إفادة ترحيل الذهب
+    </h3>
+</center>
+
+<br />
+
+<div class="table-responsive">
+    <table class="table" style="border: none !important;">
+        <tr style="border: none !important;">
+            <th width="15%" class="active" style="border: none !important;">اسم المستفيد</th>
+            <td colspan="3" style="border: none !important;">{{object.almustafid_name}}</td>
+
+        </tr>
+        <tr style="border: none !important;">
+            <th width="15%" class="active" style="border: none !important;">إثبات الهوية</th>
+            <td style="border: none !important;">{{object.get_almustafid_identity_type_display}} -
+                {{object.almustafid_identity}}</td>
+            <th width="15%" class="active" style="border: none !important;">رقم الهاتف</th>
+            <td style="border: none !important;">{{object.almustafid_phone}}</td>
+        </tr>
+        <tr style="border: none !important;">
+            <th width="15%" class="active" style="border: none !important;">جهة الإصدار</th>
+            <td style="border: none !important;">{{object.jihat_alaisdar.name}}</td>
+            <th width="15%" class="active" style="border: none !important;">الوجهة</th>
+            <td style="border: none !important;">{{object.wijhat_altarhil.name}}</td>
+        </tr>
+        <tr style="border: none !important;">
+            <th width="15%" class="active" style="border: none !important;">وزن الذهب المنقول</th>
+            <td style="border: none !important;">{{object.gold_weight_in_gram|intcomma}} جرام</td>
+            <th width="15%" class="active" style="border: none !important;">عدد القطع</th>
+            <td style="border: none !important;">
+                {% regroup object.details.all by alloy_shape as alloy_shapes %}
+                {% for shape in alloy_shapes %}
+                {{ shape.list|length }} {{ shape.list.0.get_alloy_shape_display }}{% if not forloop.last %} - {% endif%}
+                {% endfor %}
+            </td>
+        </tr>
+        {% if object.almushtari_name %}
+        <tr style="border: none !important;">
+            <th width="15%" class="active" style="border: none !important;">اسم المشتري</th>
+            <td colspan="3" style="border: none !important;">{{object.almushtari_name}}</td>
+        </tr>
+        {% endif %}
+    </table>
+</div>
+
+<h4>تفاصيل السبائك:</h4>
+
+{% for chunk in alloy_chunks %}
+{% if forloop.counter > 1 %}
+<div style="page-break-after: always;"></div>
+<br />
+<h4>تابع تفاصيل السبائك:</h4>
+<br />
+{% endif %}
+
+<div class="table-responsive">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th class="active" width="5%">#</th>
+                <th class="active" width="20%">الوزن (جرام)</th>
+                <th class="active" width="25%">الشكل</th>
+                <th class="active" width="5%">#</th>
+                <th class="active" width="20%">الوزن (جرام)</th>
+                <th class="active" width="25%">الشكل</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for left, right in chunk.rows %}
+            <tr>
+                <!-- Left Side -->
+                <td>{{ forloop.counter|add:chunk.start_index|add:-1 }}</td>
+                <td>{{ left.alloy_weight_gram|intcomma }}</td>
+                <td>{{ left.get_alloy_shape_display }}</td>
+
+                <!-- Right Side -->
+                <td>{% if right %}{{ forloop.counter|add:chunk.start_index|add:chunk.half_offset|add:-1 }}
+                    {% else %}-{%endif %}</td>
+                <td>{% if right %}{{ right.alloy_weight_gram|intcomma }}{%else %}-{% endif %}</td>
+                <td>{% if right %}{{ right.get_alloy_shape_display }}{%else %}-{% endif %}</td>
+            </tr>
+            {% endfor %}
+
+            {% if forloop.last %}
+            <tr>
+                <th colspan="4" class="active" style="text-align:center">المجموع الكلي</th>
+                <th colspan="2" class="active" style="text-align:center">{{object.gold_weight_in_gram|intcomma}}</th>
+            </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+{% endfor %}
+
+
+<h4>الإعتماد:</h4>
+<div class="table-responsive">
+    <table class="table table-bordered">
+        <tr class="active">
+            <th>البيان</th>
+            <th width="30%">ممثل الشركة السودانية للموارد
+                المعدنية المحدودة</th>
+            <th {% if has_astikhbarat %} width="23%" {% else %} width="30%" {% endif %}>ممثل أمن إقتصاديات المعادن</th>
+            <th {% if has_astikhbarat %} width="23%" {% else %} width="30%" {% endif %}>ممثل شرطة تأمين التعدين</th>
+
+        </tr>
+        <tr>
+            <th height="30px" class="active">الإسم</th>
+            <td height="30px">&nbsp;</td>
+            <td height="30px">&nbsp;</td>
+            <td height="30px">&nbsp;</td>
+
+        </tr>
+        <tr>
+            <th height="30px" class="active">التوقيع</th>
+            <td height="30px">&nbsp;</td>
+            <td height="30px">&nbsp;</td>
+            <td height="30px">&nbsp;</td>
+
+        </tr>
+        <tr>
+            <th height="80px" class="active">الختم</th>
+            <td height="80px">&nbsp;</td>
+            <td height="80px">&nbsp;</td>
+            <td height="80px">&nbsp;</td>
+            {% if has_astikhbarat %}
+            <td height="80px">&nbsp;</td>
+            {% endif %}
+        </tr>
+
+    </table>
+</div>
+<p>تنبيهات هامة:</p>
+<ol>
+    <li>مدة سريان الإستمارة ثلاثة أيام عمل رسمية.</li>
+    <li>أي تعديل أو كشط يلغي الإستمارة.</li>
+    <li>في حالة التنازل يتم الإفادة عن الصائغ الذي تم البيع له</li>
+</ol>
+
+{% endblock content %}
