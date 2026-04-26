@@ -12,7 +12,7 @@ from form15_tra.models import (
 
 
 class BaseCollectorAssignmentProxyAdmin(admin.ModelAdmin):
-    list_display = ("user", "market", "is_observer", "is_collector", "is_senior_collector")
+    list_display = ("market", "user", "is_observer", "is_collector", "is_senior_collector")
     search_fields = ("user__username", "market__market_name")
 
     def apply_role_flags(self, obj):
