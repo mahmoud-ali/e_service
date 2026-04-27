@@ -160,6 +160,7 @@ class LkpSector(models.Model):
 class LkpState(gis_models.Model):
     sector = gis_models.ForeignKey(LkpSector, on_delete=gis_models.PROTECT,verbose_name=_("sector"), null=True, blank=True)
     name = gis_models.CharField(_("name"),max_length=100)
+    code = gis_models.CharField(_("كود"),max_length=10, null=True, blank=True)
     x = gis_models.FloatField(_("x"))
     y = gis_models.FloatField(_("y"))
     geom = gis_models.MultiPolygonField(srid=4326,null=True)

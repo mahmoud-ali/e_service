@@ -112,6 +112,7 @@ class AppMoveGoldTraditional(LoggingModel):
     almustafid_phone = models.CharField(_("almustafid_phone"),max_length=30)
     almustafid_identity_type = models.IntegerField(_("نوع الإثبات"), choices=IDENTITY_CHOICES, default=IDENTITY_PASSPORT)
     almustafid_identity = models.CharField(_("رقم الإثبات"),max_length=50)
+    almustafid_identity_attachement = models.FileField(_("مرفق الإثبات"),upload_to=attachement_path,null=True,blank=True)
     # almustafid_identity_issue_date = models.DateField(_("تاريخ إصدار الإثبات"))
     
     jihat_alaisdar = models.ForeignKey(LkpJihatAlaisdar, on_delete=models.PROTECT,verbose_name=_("جهة الإصدار"))

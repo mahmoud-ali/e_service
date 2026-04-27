@@ -678,8 +678,8 @@ class TblCompanyProductionLicenseAdmin(LoggingAdminMixin,LeafletGeoAdmin): #admi
                     
 class LkpStateAdmin(admin.ModelAdmin): 
     model = LkpState
-    fields = ["name","sector"]
-    list_display = ["name","sector"]
+    fields = ["name","sector","code"]
+    list_display = ["name","sector","code"]
     list_filter = []
     view_on_site = False             
 
