@@ -5,7 +5,9 @@ from pa.forms.commitment import TblCompanyCommitmentAdminForm, TblCompanyCommitm
 from pa.forms.payment import TblCompanyPaymentAdminForm, TblCompanyPaymentDetailForm
 from pa.forms.request import TblCompanyRequestAdminForm, TblCompanyRequestDetailsForm
 from pa.utils import get_company_types_from_groups
-from .models import STATE_TYPE_CONFIRM, STATE_TYPE_DRAFT, LkpItem, LkpPaymentMethod,TblCompanyCommitmentMaster,TblCompanyCommitmentDetail, TblCompanyCommitmentSchedular, TblCompanyOpenningBalanceDetail, TblCompanyOpenningBalanceMaster, TblCompanyPaymentDetail, TblCompanyPaymentMaster, TblCompanyPaymentMethod, TblCompanyRequestDetail, TblCompanyRequestMaster, TblCompanyRequestReceive
+from .models import STATE_TYPE_CONFIRM, STATE_TYPE_DRAFT, LkpItem, LkpPaymentMethod,TblCompanyCommitmentMaster,TblCompanyCommitmentDetail, TblCompanyCommitmentSchedular, TblCompanyOpenningBalanceDetail, TblCompanyOpenningBalanceMaster, TblCompanyPaymentDetail, TblCompanyPaymentMaster, TblCompanyPaymentMethod, TblCompanyRequestDetail, TblCompanyRequestMaster, TblCompanyRequestReceive, OdooConfig
+from pa.odoo_sync import OdooSync
+from django.contrib import messages
 
 class LogAdminMixin:
     def save_model(self, request, obj, form, change):
@@ -138,6 +140,19 @@ class TblCompanyRequestMasterAdmin(LogAdminMixin,StateMixin,admin.ModelAdmin):
     search_fields = ["commitment__company__name_ar","commitment__company__name_en","commitment__license__license_no","commitment__license__sheet_no"]
     list_select_related = ["commitment__license","commitment__company"]
     # autocomplete_fields = ["commitment"]
+    actions = ['sync_to_odoo']
+
+    @admin.action(description=_("Sync to Odoo"))
+    def sync_to_odoo(self, request, queryset):
+        try:
+            sync = OdooSync()
+            count = 0
+            for obj in queryset:
+                sync.push_request(obj)
+                count += 1
+            self.message_user(request, _("%d requests synced to Odoo successfully.") % count)
+        except Exception as e:
+            self.message_user(request, str(e), level=messages.ERROR)
 
     view_on_site = False
             
@@ -192,6 +207,19 @@ class TblCompanyPaymentMasterAdmin(LogAdminMixin,StateMixin,admin.ModelAdmin):
     list_filter = ["request__commitment__company__company_type","currency","state"]
     search_fields = ["request__commitment__company__name_ar","request__commitment__company__name_en"]
     # autocomplete_fields = ["request"]
+    actions = ['sync_to_odoo']
+
+    @admin.action(description=_("Sync to Odoo"))
+    def sync_to_odoo(self, request, queryset):
+        try:
+            sync = OdooSync()
+            count = 0
+            for obj in queryset:
+                sync.push_payment(obj)
+                count += 1
+            self.message_user(request, _("%d payments synced to Odoo successfully.") % count)
+        except Exception as e:
+            self.message_user(request, str(e), level=messages.ERROR)
     view_on_site = False
             
     def get_formsets_with_inlines(self, request, obj=None):
@@ -212,3 +240,15 @@ class TblCompanyPaymentMasterAdmin(LogAdminMixin,StateMixin,admin.ModelAdmin):
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
 admin.site.register(TblCompanyPaymentMaster, TblCompanyPaymentMasterAdmin)
+
+@admin.register(OdooConfig)
+class OdooConfigAdmin(LogAdminMixin, admin.ModelAdmin):
+    list_display = ['url', 'db', 'username', 'is_active', 'sync_button']
+    list_filter = ['is_active']
+
+    def sync_button(self, obj):
+        from django.urls import reverse
+        from django.utils.html import format_html
+        url = reverse('pa:odoo_sync')
+        return format_html('<a class="button" href="{}">{}</a>', url, _("Go to Sync Progress"))
+    sync_button.short_description = _("Sync Process")

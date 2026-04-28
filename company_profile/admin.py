@@ -45,6 +45,8 @@ from .models import AppCyanideCertificate, AppExplosivePermission, AppFuelPermis
                                       AppRequirementsListChemicalLabEquipments,AppRequirementsListChemicalEquipments, \
                                       AppRequirementsListMotafjeratEquipments,AppRequirementsListVehiclesEquipments,TblCompany,AppVisibityStudy,AppVisibityStudyDetail
 
+from pa.odoo_sync import OdooSync
+
 from .forms import AppCyanideCertificateAdminForm, AppExplosivePermissionAdminForm, AppFuelPermissionAdminForm, AppFuelPermissionDetailForm, AppGoldProductionAdminForm, AppHSEAccidentReportAdminForm, AppHSEPerformanceReportAdminForm, AppImportPermissionAdminForm, AppLocalPurchaseAdminForm, AppRenewalContractAdminForm, AppRestartActivityAdminForm, AppTemporaryExemptionAdminForm, AppWhomConcernAdminForm, TblCompanyProductionForm,AppForignerMovementAdminForm,AppBorrowMaterialAdminForm,AppWorkPlanAdminForm, \
                    AppTechnicalFinancialReportAdminForm,AppChangeCompanyNameAdminForm, AppExplorationTimeAdminForm, \
                    AppAddAreaAdminForm,AppRemoveAreaAdminForm,AppTnazolShrakaAdminForm, AppTajeelTnazolAdminForm, \
@@ -121,11 +123,11 @@ class WorkflowAdminMixin:
         filter = []
         company_types = []
 
-        if request.user.groups.filter(name__in=["pro_company_application_accept","hse_accept"]).exists():
+        if request.user.groups.filter(name__in=["pro_company_application_accept","hse_accept","hse_read_only"]).exists():
             filter += ["submitted","review_accept"]
-        if request.user.groups.filter(name__in=["pro_company_application_approve","hse_approve"]).exists():
+        if request.user.groups.filter(name__in=["pro_company_application_approve","hse_approve","hse_read_only"]).exists():
             filter += ["accepted","approved","rejected"]
-        if request.user.groups.filter(name__in=["pro_company_application_show"]).exists():
+        if request.user.groups.filter(name__in=["pro_company_application_show","hse_read_only"]).exists():
             filter += ["submitted","review_accept","accepted","approved","rejected"]
         if self.model == AppFuelPermission:
             if request.user.groups.filter(name__in=["fuel_permission"]).exists():
@@ -381,6 +383,19 @@ class TblCompanyProductionAdmin(ExportActionMixin,LoggingAdminMixin,admin.ModelA
     search_fields = ["code","name_ar","name_en","email"]
     exclude = ["created_at","created_by","updated_at","updated_by"]
     view_on_site = False
+    actions = ['sync_to_odoo']
+
+    @admin.action(description=_("Sync to Odoo"))
+    def sync_to_odoo(self, request, queryset):
+        try:
+            sync = OdooSync()
+            count = 0
+            for obj in queryset:
+                sync.push_company(obj)
+                count += 1
+            self.message_user(request, _("%d companies synced to Odoo successfully.") % count)
+        except Exception as e:
+            self.message_user(request, str(e), level=messages.ERROR)
 
     @admin.display(description=_("license_count"))
     def license_count(self, obj):
@@ -1227,9 +1242,9 @@ class AppHSEPerformanceReportAdmin(admin.ModelAdmin):
         filter = []
         company_types = []
 
-        if request.user.groups.filter(name__in=["hse_accept"]).exists():
+        if request.user.groups.filter(name__in=["hse_accept","hse_read_only"]).exists():
             filter += ["submitted","review_accept"]
-        if request.user.groups.filter(name__in=["hse_approve"]).exists():
+        if request.user.groups.filter(name__in=["hse_approve","hse_read_only"]).exists():
             filter += ["accepted","approved","rejected"]
 
         # company_types = [TblCompany.COMPANY_TYPE_ENTAJ, TblCompany.COMPANY_TYPE_MOKHALFAT, TblCompany.COMPANY_TYPE_EMTIAZ, TblCompany.COMPANY_TYPE_SAGEER]

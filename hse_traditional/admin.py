@@ -34,6 +34,9 @@ class LogMixin:
     def get_queryset(self, request):
         qs = super().get_queryset(request)
 
+        if request.user.groups.filter(name='hse_read_only').exists():
+            return qs
+
         try:
             source_state = request.user.hse_tra_state.state
             qs = qs.filter(source_state=source_state)
