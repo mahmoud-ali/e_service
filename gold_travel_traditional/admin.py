@@ -203,19 +203,9 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
         return False
 
     def has_delete_permission(self, request, obj=None):
-        if obj:
-            if obj.state != AppMoveGoldTraditional.STATE_NEW:
-                return False
-
-            # Check if user belongs to the jihat_alaisdar of the record
-            try:
-                gold_user = request.user.gold_travel_traditional
-                allowed_alaisdar = gold_user.goldtraveltraditionaluserjihatalaisdar_set.values_list('jihat_alaisdar', flat=True)
-                if obj.jihat_alaisdar_id not in allowed_alaisdar:
-                    return False
-            except:
-                return False
-
+        if request.user.is_superuser and obj.state == AppMoveGoldTraditional.STATE_NEW:
+            return True
+        
         return False
 
     def get_urls(self):
