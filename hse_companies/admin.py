@@ -54,7 +54,7 @@ class AppHSEPerformanceReportMixin(LogMixin):
             return qs
 
         # print("User groups",request.user.groups.all())
-        if request.user.groups.filter(name__in=("hse_cmpny_department_mngr","hse_cmpny_gm",)).exists():
+        if request.user.groups.filter(name__in=("hse_cmpny_department_mngr","hse_cmpny_gm","hse_read_only",)).exists():
             # print("has group hse_cmpny_department_mngr or hse_cmpny_gm")
             return qs
         
@@ -936,7 +936,7 @@ class AppHSECorrectiveActionMixin:
             return qs
 
         # print("User groups",request.user.groups.all())
-        if request.user.groups.filter(name__in=("hse_cmpny_department_mngr","hse_cmpny_gm",)).exists():
+        if request.user.groups.filter(name__in=("hse_cmpny_department_mngr","hse_cmpny_gm","hse_read_only",)).exists():
             # print("has group hse_cmpny_department_mngr or hse_cmpny_gm")
             return qs
         
@@ -1037,7 +1037,7 @@ class AppHSECorrectiveActionFeedbackMixin:
             return qs
 
         # print("User groups",request.user.groups.all())
-        if request.user.groups.filter(name__in=("hse_cmpny_department_mngr","hse_cmpny_gm",)).exists():
+        if request.user.groups.filter(name__in=("hse_cmpny_department_mngr","hse_cmpny_gm","hse_read_only",)).exists():
             # print("has group hse_cmpny_department_mngr or hse_cmpny_gm")
             return qs
         
@@ -1121,7 +1121,7 @@ class IncidentInfoMixin:
             return qs
 
         # print("User groups",request.user.groups.all())
-        if request.user.groups.filter(name__in=("hse_cmpny_department_mngr","hse_cmpny_gm",)).exists():
+        if request.user.groups.filter(name__in=("hse_cmpny_department_mngr","hse_cmpny_gm","hse_read_only",)).exists():
             # print("has group hse_cmpny_department_mngr or hse_cmpny_gm")
             return qs
         
