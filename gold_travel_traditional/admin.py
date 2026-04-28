@@ -109,7 +109,7 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
         (
             _("almustafid data",),
             {
-                'fields': [("almustafid_name","almustafid_phone"), ("almustafid_identity_type", "almustafid_identity")]
+                'fields': [("almustafid_name","almustafid_phone"), ("almustafid_identity_type", "almustafid_identity","almustafid_identity_attachement")]
             },
         ),
         (
@@ -121,7 +121,7 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
     ]
     readonly_fields = ["code"]
     # readonly_fields = ["almushtari_name"]
-    list_display = ["code","issue_date","total_gold_weight_display","almustafid_name","almustafid_phone","jihat_alaisdar","wijhat_altarhil","almushtari_name","source_state","parent_link","state","show_actions"]
+    list_display = ["code","issue_date","total_gold_weight_display","almustafid_name","jihat_alaisdar","wijhat_altarhil","source_state","state","show_actions"]
     list_filter = [("state",admin.ChoicesFieldListFilter),("source_state",admin.RelatedFieldListFilter),("jihat_alaisdar",admin.RelatedFieldListFilter),("wijhat_altarhil",admin.RelatedFieldListFilter)]
     date_hierarchy = "issue_date"
     search_fields = ["code","almustafid_name","almustafid_phone","almushtari_name"]
