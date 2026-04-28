@@ -203,8 +203,9 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
         return False
 
     def has_delete_permission(self, request, obj=None):
-        if request.user.is_superuser and obj.state == AppMoveGoldTraditional.STATE_NEW:
-            return True
+        if obj:
+            if request.user.is_superuser and obj.state == AppMoveGoldTraditional.STATE_NEW:
+                return True
         
         return False
 
