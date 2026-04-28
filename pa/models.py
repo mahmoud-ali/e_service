@@ -70,7 +70,7 @@ class LkpItem(models.Model):
         CALCULATION_METHOD_NO_CONTRACTS: _('no_contracts'),
     }
 
-    name = models.CharField(_("item_name"),max_length=50)
+    name = models.CharField(_("item_name"),max_length=100)
     company_type = models.CharField(_("company_type"),max_length=15, choices=TblCompany.COMPANY_TYPE_CHOICES)
     calculation_method = models.CharField(_("calculation_method"),max_length=20, choices=CALCULATION_METHOD_CHOICES, default=CALCULATION_METHOD_FIXED_VALUE)
 
@@ -527,7 +527,7 @@ class TblCompanyRequestDetail(models.Model):
 class TblCompanyRequestReceive(models.Model):
     request_master  = models.ForeignKey(TblCompanyRequestMaster, on_delete=models.PROTECT)
     receive_dt = models.DateField(_("receive_dt"))
-    receiver_name = models.CharField(_("receiver_name"),max_length=50)
+    receiver_name = models.CharField(_("receiver_name"),max_length=100)
 
 class TblCompanyPaymentMaster(LoggingModel):
     def attachement_path(self, filename):
@@ -685,7 +685,7 @@ class TblCompanyPaymentMethod(models.Model):
     payment_master  = models.ForeignKey(TblCompanyPaymentMaster, on_delete=models.PROTECT)
     amount = models.FloatField(_("amount"))
     method  = models.ForeignKey(LkpPaymentMethod, on_delete=models.PROTECT,verbose_name=_("Payment method"))    
-    ref_key = models.CharField(_("reference_key"),max_length=50)
+    ref_key = models.CharField(_("reference_key"),max_length=100)
     attachement_file = models.FileField(_("attachement_file"),upload_to=attachement_path)
 
     # def clean(self):
@@ -693,3 +693,21 @@ class TblCompanyPaymentMethod(models.Model):
     #         raise ValidationError(
     #             {"attachement_file":_("attach document")}
     #         )
+
+class OdooConfig(LoggingModel):
+    url = models.URLField(_("Odoo URL"), help_text=_("e.g. http://odoo.example.com"))
+    db = models.CharField(_("Odoo Database"), max_length=100)
+    username = models.CharField(_("Odoo Username"), max_length=100)
+    password = models.CharField(_("Odoo Password/API Key"), max_length=100)
+    is_active = models.BooleanField(_("Is Active"), default=True)
+
+    class Meta:
+        verbose_name = _("Odoo Configuration")
+        verbose_name_plural = _("Odoo Configurations")
+
+    def __str__(self):
+        return f"{self.url} ({self.db})"
+
+    @classmethod
+    def get_config(cls):
+        return cls.objects.filter(is_active=True).first()

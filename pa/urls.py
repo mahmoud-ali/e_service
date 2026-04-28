@@ -10,6 +10,7 @@ from pa.views.payment import TblCompanyPaymentDeleteView, TblCompanyPaymentUpdat
 from pa.views.payment_status import PaymentStatusView
 from pa.views.request import TblCompanyRequestDeleteView, TblCompanyRequestUpdateView
 from pa.views.request_status import RequestStatusView
+from pa.views.odoo import odoo_sync_view
 
 from .views import LkpLicenseSelectView, TblCompanyOpenningBalanceListView,TblCompanyOpenningBalanceCreateView,TblCompanyOpenningBalanceReadonlyView,TblCompanyOpenningBalanceUpdateView,TblCompanyOpenningBalanceDeleteView, \
                    TblCompanyCommitmentListView,TblCompanyCommitmentCreateView,TblCompanyCommitmentReadonlyView, \
@@ -61,5 +62,6 @@ urlpatterns = [
     path('daily/', PaDailyView.as_view(), name='daily_list'),
     path('request_status/', RequestStatusView.as_view(), name='request_status'),
     path('payment_status/', PaymentStatusView.as_view(), name='payment_status'),
+    path('odoo_sync/', odoo_sync_view, name='odoo_sync'),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

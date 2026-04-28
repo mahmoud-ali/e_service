@@ -1,0 +1,140 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static %}
+
+{% block extrastyle %}
+{{ block.super }}
+<style>
+    .sync-container {
+        max-width: 800px;
+        margin: 20px auto;
+        padding: 30px;
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .sync-header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+    .sync-header h2 {
+        color: #2c3e50;
+        margin-bottom: 10px;
+        font-weight: 600;
+    }
+    #log-window {
+        height: 400px;
+        background: #f8f9fa;
+        border: 1px solid #e9ecef;
+        border-radius: 8px;
+        padding: 15px;
+        overflow-y: auto;
+        font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+        font-size: 14px;
+        line-height: 1.6;
+        margin-bottom: 20px;
+    }
+    .log-entry p { margin: 5px 0; }
+    .info { color: #007bff; font-weight: bold; border-bottom: 1px solid #eee; padding-bottom: 5px; margin-top: 15px !important; }
+    .success { color: #28a745; }
+    .error { color: #dc3545; background: #fff5f5; padding: 2px 5px; border-radius: 3px; }
+    .done { color: #17a2b8; font-weight: bold; text-align: center; margin-top: 20px !important; border-top: 2px dashed #ccc; padding-top: 10px; }
+    
+    .sync-btn {
+        display: block;
+        width: 100%;
+        padding: 12px;
+        background: #417690;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background 0.3s;
+    }
+    .sync-btn:hover { background: #2b5063; }
+    .sync-btn:disabled { background: #ccc; cursor: not-allowed; }
+
+    .progress-bar-container {
+        height: 8px;
+        background: #eee;
+        border-radius: 4px;
+        margin-bottom: 20px;
+        overflow: hidden;
+        display: none;
+    }
+    .progress-bar-fill {
+        height: 100%;
+        background: #28a745;
+        width: 0%;
+        transition: width 0.3s;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="sync-container">
+    <div class="sync-header">
+        <h2>{% trans "Odoo Data Migration" %}</h2>
+        <p>{% trans "Syncing companies, requests, and payments to Odoo" %}</p>
+    </div>
+
+    <div class="progress-bar-container" id="progress-container">
+        <div class="progress-bar-fill" id="progress-fill"></div>
+    </div>
+
+    <div id="log-window">
+        <div class="log-entry" id="log-content">
+            <p style="color: #666; text-align: center;">{% trans "Click the button below to start syncing..." %}</p>
+        </div>
+    </div>
+
+    <button id="start-sync" class="sync-btn">{% trans "Start Migration to Odoo" %}</button>
+    <a href="{% url 'admin:pa_odooconfig_changelist' %}" style="display: block; text-align: center; margin-top: 15px; color: #666;">{% trans "Back to Settings" %}</a>
+</div>
+
+<script>
+    const logContent = document.getElementById('log-content');
+    const logWindow = document.getElementById('log-window');
+    const startBtn = document.getElementById('start-sync');
+    const progressContainer = document.getElementById('progress-container');
+
+    startBtn.addEventListener('click', function() {
+        startBtn.disabled = true;
+        logContent.innerHTML = '';
+        progressContainer.style.display = 'block';
+
+        fetch(window.location.href, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}'
+            }
+        }).then(response => {
+            const reader = response.body.getReader();
+            const decoder = new TextDecoder();
+
+            function read() {
+                reader.read().then(({ done, value }) => {
+                    if (done) {
+                        startBtn.disabled = false;
+                        return;
+                    }
+                    const text = decoder.decode(value);
+                    const lines = text.split('\n\n');
+                    lines.forEach(line => {
+                        if (line.startsWith('data: ')) {
+                            const html = line.replace('data: ', '');
+                            const div = document.createElement('div');
+                            div.innerHTML = html;
+                            logContent.appendChild(div);
+                            logWindow.scrollTop = logWindow.scrollHeight;
+                        }
+                    });
+                    read();
+                });
+            }
+            read();
+        });
+    });
+</script>
+{% endblock %}
