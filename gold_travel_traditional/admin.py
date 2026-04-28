@@ -224,14 +224,15 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
         obj = AppMoveGoldTraditional.objects.get(pk=pk)
 
         # Permission check: Alaisdar user or superuser
-        try:
-            gold_user = request.user.gold_travel_traditional
-            allowed_alaisdar = gold_user.goldtraveltraditionaluserjihatalaisdar_set.values_list('jihat_alaisdar', flat=True)
-            if obj.jihat_alaisdar_id not in allowed_alaisdar:
-                self.message_user(request, _('Only users from the issuing location can print this report.'), level='error')
+        if not (request.user.is_superuser or request.user.groups.filter(name="gold_travel_traditional_manager").exists()):
+            try:
+                gold_user = request.user.gold_travel_traditional
+                allowed_alaisdar = gold_user.goldtraveltraditionaluserjihatalaisdar_set.values_list('jihat_alaisdar', flat=True)
+                if obj.jihat_alaisdar_id not in allowed_alaisdar:
+                    self.message_user(request, _('Only users from the issuing location can print this report.'), level='error')
+                    return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
+            except:
                 return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
-        except:
-            return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
 
         # Prepare alloy chunks for the template
         details = list(obj.details.all())
