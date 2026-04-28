@@ -92,7 +92,7 @@ admin.site.register(GoldTravelTraditionalUser, GoldTravelTraditionalUserAdmin)
 
 class AppMoveGoldTraditionalDetailInline(admin.TabularInline):
     model = AppMoveGoldTraditionalDetail
-    extra = 1
+    min_num = 1
 
 class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
     # model = AppMoveGoldTraditional
