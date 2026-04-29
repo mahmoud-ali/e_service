@@ -98,9 +98,11 @@ class WorkflowAdminMixin:
     def get_queryset(self, request):
         qs = super().get_queryset(request)
 
-        # Hide procedures related to expired and stopped companies unless searching OR show_inactive is set
+        # Hide procedures related to expired and stopped companies only in the LIST view
+        is_changelist = request.resolver_match and request.resolver_match.url_name.endswith('_changelist')
         show_inactive = request.GET.get('show_inactive') == '1'
-        if not (show_inactive or request.GET.get('q')):
+        
+        if is_changelist and not (show_inactive or request.GET.get('q')):
             # Check if the model has a 'company' field or similar
             if hasattr(self.model, 'company'):
                 qs = qs.exclude(company__status__name__in=["منتهية", "متوقفة", "ملغية","متوقفه"])
@@ -458,9 +460,11 @@ class TblCompanyProductionAdmin(ExportActionMixin,LoggingAdminMixin,admin.ModelA
         qs = qs.filter(company_type__in=company_types)
         qs= qs.prefetch_related(models.Prefetch("tblcompanyproductionlicense_set"))
         
-        # Hide expired and stopped companies unless searching OR show_inactive is set
+        # Hide expired and stopped companies only in the LIST view
+        is_changelist = request.resolver_match and request.resolver_match.url_name.endswith('_changelist')
         show_inactive = request.GET.get('show_inactive') == '1'
-        if not (show_inactive or request.GET.get('q')):
+        
+        if is_changelist and not (show_inactive or request.GET.get('q')):
             qs = qs.exclude(status__name__in=["منتهية", "متوقفة", "ملغية","متوقفه"])
 
         return qs
@@ -1292,9 +1296,11 @@ class AppHSEPerformanceReportAdmin(admin.ModelAdmin):
     def get_queryset(self, request):
         qs = super().get_queryset(request) #AppHSEPerformanceReport.objects.all() #
         
-        # Hide reports related to expired and stopped companies unless searching OR show_inactive is set
+        # Hide reports related to expired and stopped companies only in the LIST view
+        is_changelist = request.resolver_match and request.resolver_match.url_name.endswith('_changelist')
         show_inactive = request.GET.get('show_inactive') == '1'
-        if not (show_inactive or request.GET.get('q')):
+        
+        if is_changelist and not (show_inactive or request.GET.get('q')):
             qs = qs.exclude(company__status__name__in=["منتهية", "متوقفة", "ملغية","متوقفه"])
 
         filter = []
