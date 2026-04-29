@@ -78,48 +78,39 @@ class LoggingAdminMixin:
             obj.created_by = obj.updated_by = request.user
         super().save_model(request, obj, form, change)                
 
+class InactiveCompaniesFilter(admin.SimpleListFilter):
+    title = _('رؤية الشركات')
+    parameter_name = 'show_inactive'
+
+    def lookups(self, request, model_admin):
+        return (
+            ('1', _('إظهار الكل (بما في ذلك المتوقفة والمنتهية)')),
+        )
+
+    def queryset(self, request, queryset):
+        return queryset
+
 class WorkflowAdminMixin:
     #list_select_related = True
     class Media:
         js = ('admin/js/jquery.init.js',"company_profile/js/state_control.js",)
 
-    def has_change_permission(self, request, obj=None):
-        if self.model == AppFuelPermission:
-            if request.user.groups.filter(name__in=["pro_company_application_accept"]).exists() and obj and obj.state != SUBMITTED:
-                return False
-
-        if obj and obj.state in[APPROVED,REJECTED]:
-           return False
-#        
-        return super().has_change_permission(request, obj)
-
-    def has_delete_permission(self, request, obj=None):
-        return False
-
-    def has_add_permission(self, request, obj=None):
-        return False
-
-    def get_exclude(self,request, obj=None):
-        fields = list(super().get_exclude(request, obj) or [])
-
-        if not obj or obj.state == SUBMITTED or obj.state == REVIEW_ACCEPTANCE:
-            fields += ['reject_comments']
-        
-        return fields
-    
-    def get_readonly_fields(self,request, obj=None):
-        fields = list(super().get_readonly_fields(request, obj) or [])
-
-        if not obj or obj.state == ACCEPTED:
-            fields += ['recommendation_comments']
-
-        if not obj or obj.state == REJECTED:
-            fields += ['reject_comments','recommendation_comments']
-
-        return fields
-
     def get_queryset(self, request):
         qs = super().get_queryset(request)
+
+        # Hide procedures related to expired and stopped companies unless searching OR show_inactive is set
+        show_inactive = request.GET.get('show_inactive') == '1'
+        if not (show_inactive or request.GET.get('q')):
+            # Check if the model has a 'company' field or similar
+            if hasattr(self.model, 'company'):
+                qs = qs.exclude(company__status__name__in=["منتهية", "متوقفة", "متوقفه"])
+            elif hasattr(self.model, 'license'):
+                 qs = qs.exclude(license__company__status__name__in=["منتهية", "متوقفة", "متوقفه"])
+
+        if request.user.groups.filter(name="pro_company_user").exists():
+            if hasattr(request.user, "pro_company"):
+                return qs.filter(company=request.user.pro_company.company)
+
         filter = []
         company_types = []
 
@@ -129,6 +120,7 @@ class WorkflowAdminMixin:
             filter += ["accepted","approved","rejected"]
         if request.user.groups.filter(name__in=["pro_company_application_show","hse_read_only"]).exists():
             filter += ["submitted","review_accept","accepted","approved","rejected"]
+
         if self.model == AppFuelPermission:
             if request.user.groups.filter(name__in=["fuel_permission"]).exists():
                 filter += ["accepted",]
@@ -170,6 +162,47 @@ class WorkflowAdminMixin:
         qs = qs.filter(company__company_type__in=company_types)
 
         return qs
+
+    def get_list_filter(self, request):
+        filters = list(super().get_list_filter(request))
+        if InactiveCompaniesFilter not in filters:
+            filters.append(InactiveCompaniesFilter)
+        return filters
+
+    def has_change_permission(self, request, obj=None):
+        if self.model == AppFuelPermission:
+            if request.user.groups.filter(name__in=["pro_company_application_accept"]).exists() and obj and obj.state != SUBMITTED:
+                return False
+
+        if obj and obj.state in[APPROVED,REJECTED]:
+           return False
+#        
+        return super().has_change_permission(request, obj)
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+    def has_add_permission(self, request, obj=None):
+        return False
+
+    def get_exclude(self,request, obj=None):
+        fields = list(super().get_exclude(request, obj) or [])
+
+        if not obj or obj.state == SUBMITTED or obj.state == REVIEW_ACCEPTANCE:
+            fields += ['reject_comments']
+        
+        return fields
+    
+    def get_readonly_fields(self,request, obj=None):
+        fields = list(super().get_readonly_fields(request, obj) or [])
+
+        if not obj or obj.state == ACCEPTED:
+            fields += ['recommendation_comments']
+
+        if not obj or obj.state == REJECTED:
+            fields += ['reject_comments','recommendation_comments']
+
+        return fields
 
     def save_model(self, request, obj, form, change):
         if obj.pk:
@@ -369,6 +402,9 @@ class CompanyStateFilter(admin.SimpleListFilter):
 #     extra = 1    
 
 
+    def queryset(self, request, queryset):
+        return queryset
+
 class TblCompanyProductionAdmin(ExportActionMixin,LoggingAdminMixin,admin.ModelAdmin):
     form = TblCompanyProductionForm
     # inlines = [TblCompanyProductionLicenseInline]
@@ -379,7 +415,7 @@ class TblCompanyProductionAdmin(ExportActionMixin,LoggingAdminMixin,admin.ModelA
      ]
      
     list_display = ["company_type","code","name_ar", "name_en", "status",'license_count','states'] #,'show_summary_link'
-    list_filter = ["company_type","nationality","status",CompanyStateFilter,"created_at",LicenseCountFilter,('email',admin.EmptyFieldListFilter)]
+    list_filter = ["company_type","nationality","status",CompanyStateFilter,InactiveCompaniesFilter,"created_at",LicenseCountFilter,('email',admin.EmptyFieldListFilter)]
     search_fields = ["code","name_ar","name_en","email"]
     exclude = ["created_at","created_by","updated_at","updated_by"]
     view_on_site = False
@@ -422,7 +458,15 @@ class TblCompanyProductionAdmin(ExportActionMixin,LoggingAdminMixin,admin.ModelA
         qs = qs.filter(company_type__in=company_types)
         qs= qs.prefetch_related(models.Prefetch("tblcompanyproductionlicense_set"))
         
+        # Hide expired and stopped companies unless searching OR show_inactive is set
+        show_inactive = request.GET.get('show_inactive') == '1'
+        if not (show_inactive or request.GET.get('q')):
+            qs = qs.exclude(status__name__in=["منتهية", "متوقفة", "متوقفه"])
+
         return qs
+
+    def get_readonly_fields(self, request, obj=None):
+        return super().get_readonly_fields(request, obj)
 
     
     def get_form(self, request, *args, **kwargs):
@@ -705,7 +749,15 @@ admin.site.register(LkpSector)
 # admin.site.register(LkpLocality)
 admin.site.register(LkpMineral)
 admin.site.register(LkpForeignerProcedureType)
-admin.site.register(LkpCompanyProductionStatus) 
+class LkpCompanyProductionStatusAdmin(admin.ModelAdmin):
+    def has_add_permission(self, request):
+        return request.user.is_superuser
+    def has_change_permission(self, request, obj=None):
+        return request.user.is_superuser
+    def has_delete_permission(self, request, obj=None):
+        return request.user.is_superuser
+
+admin.site.register(LkpCompanyProductionStatus, LkpCompanyProductionStatusAdmin)
 admin.site.register(TblCompanyProduction,TblCompanyProductionAdmin)
 admin.site.register(LkpAccidentType) 
 
@@ -1234,11 +1286,17 @@ class AppHSEPerformanceReportAdmin(admin.ModelAdmin):
     ]
 
     list_display = ["company", "year", "month","album"] #,"ask_ai_link"
-    list_filter = ["year", "month",]
+    list_filter = ["year", "month", InactiveCompaniesFilter]
     view_on_site = False
 
     def get_queryset(self, request):
         qs = super().get_queryset(request) #AppHSEPerformanceReport.objects.all() #
+        
+        # Hide reports related to expired and stopped companies unless searching OR show_inactive is set
+        show_inactive = request.GET.get('show_inactive') == '1'
+        if not (show_inactive or request.GET.get('q')):
+            qs = qs.exclude(company__status__name__in=["منتهية", "متوقفة", "متوقفه"])
+
         filter = []
         company_types = []
 
