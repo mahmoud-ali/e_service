@@ -14,13 +14,7 @@ from django.forms.formsets import DELETION_FIELD_NAME, all_valid
 def view_model_states(inline_val={},user_groups=[],check_permission=['view']):
     """Check if the user can view the model based on their group permissions"""
     view_states = set()
-
-    if 'hse_read_only' in user_groups and 'view' in check_permission:
-        model = inline_val.get('model')
-        if model and hasattr(model, 'STATE_CHOICES'):
-            return set(model.STATE_CHOICES.keys())
-    
-    for group,group_dict in inline_val.get("groups", {}).items():
+    for group,group_dict in inline_val.get("groups").items():
         if group in user_groups:
             state_permissions = group_dict.get("permissions",{})
             for state,permissions in state_permissions.items():
