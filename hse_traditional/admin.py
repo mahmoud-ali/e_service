@@ -82,6 +82,12 @@ report_main_class = {
                 HseTraditionalReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
             },
         },
+        "hse_read_only":{
+            "permissions": {
+                HseTraditionalReport.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                HseTraditionalReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+            },
+        },
 
     },
 }
@@ -117,7 +123,13 @@ report_inline_classes = {
                     HseTraditionalReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
-
+            "hse_read_only":{
+                "permissions": {
+                    HseTraditionalReport.STATE_DRAFT: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    HseTraditionalReport.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    HseTraditionalReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
         },
     },
     'WasteManagement': {
@@ -145,6 +157,13 @@ report_inline_classes = {
             'hse_tra_gm':{
                 'permissions': {
                     HseTraditionalReport.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
+                    HseTraditionalReport.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    HseTraditionalReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
+            "hse_read_only":{
+                "permissions": {
+                    HseTraditionalReport.STATE_DRAFT: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     HseTraditionalReport.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     HseTraditionalReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
@@ -181,6 +200,13 @@ report_inline_classes = {
                     HseTraditionalReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
+            "hse_read_only":{
+                "permissions": {
+                    HseTraditionalReport.STATE_DRAFT: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    HseTraditionalReport.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    HseTraditionalReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
 
         },
     },
@@ -209,6 +235,13 @@ report_inline_classes = {
             'hse_tra_gm':{
                 'permissions': {
                     HseTraditionalReport.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
+                    HseTraditionalReport.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    HseTraditionalReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
+            "hse_read_only":{
+                "permissions": {
+                    HseTraditionalReport.STATE_DRAFT: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     HseTraditionalReport.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     HseTraditionalReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
@@ -245,7 +278,13 @@ report_inline_classes = {
                     HseTraditionalReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
-
+            "hse_read_only":{
+                "permissions": {
+                    HseTraditionalReport.STATE_DRAFT: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    HseTraditionalReport.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    HseTraditionalReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
         },
     },
     'QuickEmergencyTeam': {
@@ -273,6 +312,13 @@ report_inline_classes = {
             'hse_tra_gm':{
                 'permissions': {
                     HseTraditionalReport.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
+                    HseTraditionalReport.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    HseTraditionalReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
+            "hse_read_only":{
+                "permissions": {
+                    HseTraditionalReport.STATE_DRAFT: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     HseTraditionalReport.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     HseTraditionalReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
@@ -305,6 +351,13 @@ report_inline_classes = {
             'hse_tra_gm':{
                 'permissions': {
                     HseTraditionalReport.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
+                    HseTraditionalReport.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    HseTraditionalReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
+            "hse_read_only":{
+                "permissions": {
+                    HseTraditionalReport.STATE_DRAFT: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     HseTraditionalReport.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     HseTraditionalReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
@@ -357,6 +410,12 @@ accident_main_class = {
                 HseTraditionalAccident.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
             },
         },
+        "hse_read_only":{
+            "permissions": {
+                HseTraditionalAccident.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                HseTraditionalAccident.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+            },
+        },
     },
 }
 
@@ -398,6 +457,12 @@ accident_inline_classes = {
                     HseTraditionalAccident.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
+            "hse_read_only":{
+                "permissions": {
+                    HseTraditionalAccident.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    HseTraditionalAccident.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
         },
     },
     'HseTraditionalAccidentWhy': {
@@ -431,6 +496,12 @@ accident_inline_classes = {
             },
             'general_manager':{
                 'permissions': {
+                    HseTraditionalAccident.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    HseTraditionalAccident.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
+            "hse_read_only":{
+                "permissions": {
                     HseTraditionalAccident.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     HseTraditionalAccident.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
@@ -472,6 +543,12 @@ accident_inline_classes = {
                     HseTraditionalAccident.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
+            "hse_read_only":{
+                "permissions": {
+                    HseTraditionalAccident.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    HseTraditionalAccident.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
         },
     },
     'HseTraditionalAccidentDamage': {
@@ -505,6 +582,12 @@ accident_inline_classes = {
             },
             'general_manager':{
                 'permissions': {
+                    HseTraditionalAccident.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    HseTraditionalAccident.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
+            "hse_read_only":{
+                "permissions": {
                     HseTraditionalAccident.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     HseTraditionalAccident.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
@@ -546,6 +629,12 @@ accident_inline_classes = {
                     HseTraditionalAccident.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
+            "hse_read_only":{
+                "permissions": {
+                    HseTraditionalAccident.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    HseTraditionalAccident.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
         },
     },
     'HseTraditionalAccidentManagerComment': {
@@ -571,6 +660,11 @@ accident_inline_classes = {
             },
             'hse_tra_gm':{
                 'permissions': {
+                    HseTraditionalAccident.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
+            "hse_read_only":{
+                "permissions": {
                     HseTraditionalAccident.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
@@ -613,6 +707,12 @@ near_miss_main_class = {
                 HseTraditionalNearMiss.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
             },
         },
+        "hse_read_only":{
+            "permissions": {
+                HseTraditionalNearMiss.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                HseTraditionalNearMiss.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+            },
+        },
     },
 }
 
@@ -648,6 +748,13 @@ near_miss_inline_classes = {
                     HseTraditionalNearMiss.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
+            "hse_read_only":{
+                "permissions": {
+                    HseTraditionalNearMiss.STATE_DRAFT: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    HseTraditionalNearMiss.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    HseTraditionalNearMiss.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
         },
     },
     'HseTraditionalNearMissWhy': {
@@ -675,6 +782,13 @@ near_miss_inline_classes = {
             'hse_tra_gm':{
                 'permissions': {
                     HseTraditionalNearMiss.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
+                    HseTraditionalNearMiss.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    HseTraditionalNearMiss.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
+            "hse_read_only":{
+                "permissions": {
+                    HseTraditionalNearMiss.STATE_DRAFT: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     HseTraditionalNearMiss.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     HseTraditionalNearMiss.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
@@ -729,6 +843,13 @@ corrective_action_main_class = {
                 HseTraditionalCorrectiveAction.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
             },
         },
+        "hse_read_only":{
+            "permissions": {
+                HseTraditionalCorrectiveAction.STATE_CONFIRMED1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                HseTraditionalCorrectiveAction.STATE_CONFIRMED2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                HseTraditionalCorrectiveAction.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+            },
+        },
     },
 }
 
@@ -764,6 +885,12 @@ corrective_action_inline_classes = {
                     HseTraditionalCorrectiveAction.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
+            "hse_read_only":{
+                "permissions": {
+                    HseTraditionalCorrectiveAction.STATE_CONFIRMED2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    HseTraditionalCorrectiveAction.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
 
         },
     },
@@ -794,6 +921,12 @@ corrective_action_inline_classes = {
                     # HseTraditionalCorrectiveAction.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
                     # HseTraditionalCorrectiveAction.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     HseTraditionalCorrectiveAction.STATE_CONFIRMED2: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
+                    HseTraditionalCorrectiveAction.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
+            "hse_read_only":{
+                "permissions": {
+                    HseTraditionalCorrectiveAction.STATE_CONFIRMED2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     HseTraditionalCorrectiveAction.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
@@ -838,6 +971,12 @@ initial_incident_main_class = {
         },
         'general_manager':{
             'permissions': {
+                HseTraditionalInitialIncidentReport.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                HseTraditionalInitialIncidentReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+            },
+        },
+        "hse_read_only":{
+            "permissions": {
                 HseTraditionalInitialIncidentReport.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 HseTraditionalInitialIncidentReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
             },

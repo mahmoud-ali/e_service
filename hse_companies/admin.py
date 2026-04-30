@@ -124,6 +124,11 @@ report_main_class = {
                 AppHSEPerformanceReport.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
             },
         },
+        "hse_read_only":{
+            "permissions": {
+                AppHSEPerformanceReport.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+            },
+        }
     },
 }
 
@@ -159,6 +164,11 @@ report_inline_classes = {
                     AppHSEPerformanceReport.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
+            "hse_read_only":{
+                "permissions": {
+                    AppHSEPerformanceReport.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            }
 
         },
     },
@@ -193,6 +203,11 @@ report_inline_classes = {
                     AppHSEPerformanceReport.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
+            "hse_read_only":{
+                "permissions": {
+                    AppHSEPerformanceReport.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            }
         },
     },
     'AppHSEPerformanceReportWorkEnvironment': {
@@ -226,6 +241,11 @@ report_inline_classes = {
                     AppHSEPerformanceReport.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
+            "hse_read_only":{
+                "permissions": {
+                    AppHSEPerformanceReport.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            }
         },
     },
     'AppHSEPerformanceReportProactiveIndicators': {
@@ -259,6 +279,11 @@ report_inline_classes = {
                     AppHSEPerformanceReport.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
+            "hse_read_only":{
+                "permissions": {
+                    AppHSEPerformanceReport.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            }
         },
     },
     'AppHSEPerformanceReportActivities': {
@@ -292,6 +317,11 @@ report_inline_classes = {
                     AppHSEPerformanceReport.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
+            "hse_read_only":{
+                "permissions": {
+                    AppHSEPerformanceReport.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            }
         },
     },
     'AppHSEPerformanceReportChemicalUsed': {
@@ -325,6 +355,11 @@ report_inline_classes = {
                     AppHSEPerformanceReport.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
+            "hse_read_only":{
+                "permissions": {
+                    AppHSEPerformanceReport.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            }
         },
     },
     'AppHSEPerformanceReportOtherChemicalUsed': {
@@ -358,6 +393,11 @@ report_inline_classes = {
                     AppHSEPerformanceReport.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
+            "hse_read_only":{
+                "permissions": {
+                    AppHSEPerformanceReport.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            }
         },
     },
     'AppHSEPerformanceReportCyanideTable': {
@@ -391,6 +431,11 @@ report_inline_classes = {
                     AppHSEPerformanceReport.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
+            "hse_read_only":{
+                "permissions": {
+                    AppHSEPerformanceReport.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            }
         },
     },
     'AppHSEPerformanceReportCyanideCNStorageSpecification': {
@@ -424,6 +469,11 @@ report_inline_classes = {
                     AppHSEPerformanceReport.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
+            "hse_read_only":{
+                "permissions": {
+                    AppHSEPerformanceReport.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            }
         },
     },
     'AppHSEPerformanceReportWaterUsed': {
@@ -457,6 +507,11 @@ report_inline_classes = {
                     AppHSEPerformanceReport.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
+            "hse_read_only":{
+                "permissions": {
+                    AppHSEPerformanceReport.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            }
         },
     },
     'AppHSEPerformanceReportOilUsed': {
@@ -490,6 +545,11 @@ report_inline_classes = {
                     AppHSEPerformanceReport.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
+            "hse_read_only":{
+                "permissions": {
+                    AppHSEPerformanceReport.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            }
         },
     },
     'AppHSEPerformanceReportWasteDisposal': {
@@ -523,6 +583,11 @@ report_inline_classes = {
                     AppHSEPerformanceReport.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
+            "hse_read_only":{
+                "permissions": {
+                    AppHSEPerformanceReport.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            }
         },
     },
     'AppHSEPerformanceReportTherapeuticUnit': {
@@ -556,6 +621,11 @@ report_inline_classes = {
                     AppHSEPerformanceReport.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
+            "hse_read_only":{
+                "permissions": {
+                    AppHSEPerformanceReport.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            }
         },
     },
     'AppHSEPerformanceReportDiseasesForWorkers': {
@@ -589,6 +659,11 @@ report_inline_classes = {
                     AppHSEPerformanceReport.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
+            "hse_read_only":{
+                "permissions": {
+                    AppHSEPerformanceReport.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            }
         },
     },
     'AppHSEPerformanceReportStatisticalData': {
@@ -622,6 +697,11 @@ report_inline_classes = {
                     AppHSEPerformanceReport.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
+            "hse_read_only":{
+                "permissions": {
+                    AppHSEPerformanceReport.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },  
+            }
         },
     },
     'AppHSEPerformanceReportCatering': {
@@ -655,6 +735,11 @@ report_inline_classes = {
                     AppHSEPerformanceReport.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
+            "hse_read_only":{
+                "permissions": {
+                    AppHSEPerformanceReport.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            }
         },
     },
     'AppHSEPerformanceReportExplosivesUsed': {
@@ -688,6 +773,11 @@ report_inline_classes = {
                     AppHSEPerformanceReport.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
+            "hse_read_only":{
+                "permissions": {
+                    AppHSEPerformanceReport.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            }
         },
     },
     'AppHSEPerformanceReportExplosivesUsedSpecification': {
@@ -721,6 +811,11 @@ report_inline_classes = {
                     AppHSEPerformanceReport.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
+            "hse_read_only":{
+                "permissions": {
+                    AppHSEPerformanceReport.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            }
         },
     },
     'AppHSEPerformanceReportBillsOfQuantities': {
@@ -754,6 +849,11 @@ report_inline_classes = {
                     AppHSEPerformanceReport.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
+            "hse_read_only":{
+                "permissions": {
+                    AppHSEPerformanceReport.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            }
         },
     },
     'AppHSEPerformanceReportCadastralOperations': {
@@ -787,6 +887,11 @@ report_inline_classes = {
                     AppHSEPerformanceReport.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
+            "hse_read_only":{
+                "permissions": {
+                    AppHSEPerformanceReport.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            }
         },
     },
     'AppHSEPerformanceReportCadastralOperationsTwo': {
@@ -820,6 +925,11 @@ report_inline_classes = {
                     AppHSEPerformanceReport.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
+            "hse_read_only":{
+                "permissions": {
+                    AppHSEPerformanceReport.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            }
         },
     },
     'AppHSEPerformanceReportAuditorComment': {
@@ -854,6 +964,11 @@ report_inline_classes = {
                     AppHSEPerformanceReport.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
+            "hse_read_only":{
+                "permissions": {
+                    AppHSEPerformanceReport.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            }
         },
     },
     'AppHSECorrectiveAction': {
@@ -882,6 +997,11 @@ report_inline_classes = {
                     AppHSEPerformanceReport.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
+            "hse_read_only":{
+                "permissions": {
+                    AppHSEPerformanceReport.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            }
         },
     },
 }
@@ -1019,6 +1139,12 @@ corrective_main_class = {
                 AppHSECorrectiveAction.STATE_GM_APPROVE: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
             },
         },
+        "hse_read_only":{
+            "permissions": {
+                AppHSECorrectiveAction.STATE_DEPARTMENT_MNGR_CONFIRM: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                AppHSECorrectiveAction.STATE_GM_APPROVE: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+            },
+        }
     },
 }
 
@@ -1196,6 +1322,12 @@ incident_main_class = {
                 IncidentInfo.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
             },
         },
+        "hse_read_only":{
+            "permissions": {
+                IncidentInfo.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                IncidentInfo.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+            },
+        }
     },
 }
 
@@ -1243,6 +1375,12 @@ incident_inline_classes = {
                     IncidentInfo.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
+            "hse_read_only":{
+                "permissions": {
+                    IncidentInfo.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    IncidentInfo.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            }
         },
     },
     'IncidentInjuredPPE': {
@@ -1287,6 +1425,12 @@ incident_inline_classes = {
                     IncidentInfo.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
+            "hse_read_only":{
+                "permissions": {
+                    IncidentInfo.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    IncidentInfo.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            }
         },
     },
     'IncidentInjuredDetails': {
@@ -1331,6 +1475,12 @@ incident_inline_classes = {
                     IncidentInfo.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
+            "hse_read_only":{
+                "permissions": {
+                    IncidentInfo.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    IncidentInfo.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            }
         },
     },
     'IncidentProperty': {
@@ -1375,6 +1525,12 @@ incident_inline_classes = {
                     IncidentInfo.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
+            "hse_read_only":{
+                "permissions": {
+                    IncidentInfo.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    IncidentInfo.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            }
         },
     },
     'IncidentCost': {
@@ -1419,6 +1575,12 @@ incident_inline_classes = {
                     IncidentInfo.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
+            "hse_read_only":{
+                "permissions": {
+                    IncidentInfo.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    IncidentInfo.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
         },
     },
     'IncidentWitness': {
@@ -1459,6 +1621,12 @@ incident_inline_classes = {
                     IncidentInfo.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
+            "hse_read_only":{
+                "permissions": {
+                    IncidentInfo.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    IncidentInfo.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
         },
     },
     'IncidentPhoto': {
@@ -1494,6 +1662,12 @@ incident_inline_classes = {
             },
             'general_manager':{
                 'permissions': {
+                    IncidentInfo.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    IncidentInfo.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
+            "hse_read_only":{
+                "permissions": {
                     IncidentInfo.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     IncidentInfo.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
@@ -1542,6 +1716,12 @@ incident_inline_classes = {
                     IncidentInfo.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
+            "hse_read_only":{
+                "permissions": {
+                    IncidentInfo.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    IncidentInfo.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
         },
     },
     'ContributingFactor': {
@@ -1578,6 +1758,12 @@ incident_inline_classes = {
             },
             'general_manager':{
                 'permissions': {
+                    IncidentInfo.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    IncidentInfo.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
+            "hse_read_only":{
+                "permissions": {
                     IncidentInfo.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     IncidentInfo.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
@@ -1643,6 +1829,12 @@ incident_inline_classes = {
                     IncidentInfo.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
+            "hse_read_only":{
+                "permissions": {
+                    IncidentInfo.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    IncidentInfo.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
         },
     },
     'AppHSECorrectiveAction': {
@@ -1672,6 +1864,11 @@ incident_inline_classes = {
                     IncidentInfo.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
+            "hse_read_only":{
+                "permissions": {
+                    IncidentInfo.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
         },
     },
     'LeasonLearnt': {
@@ -1698,6 +1895,12 @@ incident_inline_classes = {
             },
             'hse_cmpny_gm':{
                 'permissions': {
+                    IncidentInfo.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                },
+            },
+            "hse_read_only":{
+                "permissions": {
+                    IncidentInfo.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     IncidentInfo.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
