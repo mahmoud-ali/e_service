@@ -33,7 +33,7 @@ class GoldTravelTraditionalUserJihatTarhilForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.fields["wijhat_altarhil"].queryset = LkpJihatAltarhil.objects.filter(state=self.allowed_state)
+        self.fields["wijhat_altarhil"].queryset = LkpJihatAltarhil.objects.all() #filter(state=self.allowed_state)
 
     class Meta:
         model = GoldTravelTraditionalUserJihatTarhil   
