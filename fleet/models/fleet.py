@@ -135,8 +135,16 @@ class VehicleDriver(LoggingModel):
         verbose_name_plural = _("سائقي المركبات")
 
 class VehicleAssignment(LoggingModel):
+    ASSIGNMENT_STATUS_CHOICES = [
+        ('allocation', _('تخصيص')),
+        ('missions', _('ماموريات')),
+        ('transport', _('تراحيل')),
+        ('administrative', _('ادارية')),
+        ('state_office', _('مكتب ولائي')),
+    ]
     vehicle = models.ForeignKey(Vehicle, on_delete=models.PROTECT,verbose_name=_("المركبة"))
     assign_to = models.CharField(_("اسم الموظف او الجهة المخصص لها"),max_length=100)
+    status = models.CharField(_("الحالة"), max_length=20, choices=ASSIGNMENT_STATUS_CHOICES, default='allocation')
     start_date = models.DateField(_("تاريخ البدء"))
     end_date = models.DateField(_("تاريخ الانتهاء"),blank=True,null=True)
 
@@ -216,15 +224,60 @@ class Mission(LoggingModel):
     notes = models.TextField(_("ملاحظات"),blank=True,null=True)
     attachments = models.FileField(_("المرفقات"),blank=True,null=True)
 
+    is_extended = models.BooleanField(_("تمديد المأمورية؟"), default=False)
+    extension_days = models.IntegerField(_("عدد أيام التمديد"), blank=True, null=True)
+    extended_planned_end_date = models.DateField(_("تاريخ الانتهاء المخطط بعد التمديد"), blank=True, null=True, editable=False)
+    extended_actual_end_date = models.DateField(_("تاريخ الانتهاء الفعلي بعد التمديد"), blank=True, null=True, editable=False)
+
     def __str__(self) -> str:
         return f'{self.requested_by}({self.destination}) {self.planned_start_date} - {self.no_of_days}'
     
+    def clean(self):
+        # Calculate proposed end dates for validation
+        planned_end = self.planned_start_date + timedelta(days=self.no_of_days - 1)
+        effective_end = planned_end
+        if self.is_extended and self.extension_days:
+            effective_end = planned_end + timedelta(days=self.extension_days)
+        
+        from django.db.models import Q, F
+        from django.db.models.functions import Coalesce
+
+        # Check for overlaps with other missions for same driver or vehicle
+        # Logic: (Other.start <= Our.effective_end) AND (Other.effective_end >= Our.start)
+        conflicts = Mission.objects.annotate(
+            other_effective_end=Coalesce(F('extended_planned_end_date'), F('planned_end_date'))
+        ).filter(
+            Q(driver=self.driver) | Q(vehicle=self.vehicle),
+            planned_start_date__lte=effective_end,
+            other_effective_end__gte=self.planned_start_date
+        ).exclude(pk=self.pk)
+
+        if conflicts.exists():
+            conflict = conflicts.first()
+            if conflict.driver == self.driver:
+                raise ValidationError(_("السائق في مأمورية أخرى في هذه الفترة (بما في ذلك التمديد)"))
+            if conflict.vehicle == self.vehicle:
+                raise ValidationError(_("المركبة في مأمورية أخرى في هذه الفترة (بما في ذلك التمديد)"))
+
+        return super().clean()
+
     def save(self, *args, **kwargs):
-        self.planned_end_date = self.planned_start_date + timedelta(days=self.no_of_days)
+        self.planned_end_date = self.planned_start_date + timedelta(days=self.no_of_days - 1)
         if self.actual_start_date:
-            self.actual_end_date = self.actual_start_date + timedelta(days=self.no_of_days)
+            self.actual_end_date = self.actual_start_date + timedelta(days=self.no_of_days - 1)
         else:
             self.actual_end_date = None
+
+        if self.is_extended and self.extension_days:
+            self.extended_planned_end_date = self.planned_end_date + timedelta(days=self.extension_days)
+            if self.actual_end_date:
+                self.extended_actual_end_date = self.actual_end_date + timedelta(days=self.extension_days)
+            else:
+                self.extended_actual_end_date = None
+        else:
+            self.extended_planned_end_date = None
+            self.extended_actual_end_date = None
+
         super().save(*args, **kwargs)
 
 

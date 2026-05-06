@@ -106,8 +106,8 @@ class DriverAdmin(LogMixin):
 
 @admin.register(models.VehicleAssignment)
 class VehicleAssignmentAdmin(LogMixin):
-    list_display = ('vehicle', 'assign_to', 'start_date', 'end_date')
-    list_filter = ('vehicle__model__make','vehicle__model','vehicle__year')
+    list_display = ('vehicle', 'assign_to', 'status', 'start_date', 'end_date')
+    list_filter = ('status', 'vehicle__model__make','vehicle__model','vehicle__year')
     search_fields = ('assign_to', 'vehicle__license_plate')
     autocomplete_fields = ["vehicle"]
 
@@ -122,12 +122,28 @@ class TcDevicesAdmin(LogMixin):
 
 @admin.register(models.Mission)
 class MissionAdmin(LogMixin):
-    fields = ('vehicle','driver','destination','requested_by',('planned_start_date','actual_start_date'),'no_of_days',('planned_end_date','actual_end_date'),'notes','attachments')
+    fieldsets = (
+        (None, {
+            'fields': ('vehicle', 'driver', 'destination', 'requested_by')
+        }),
+        ('التواريخ', {
+            'fields': (('planned_start_date', 'actual_start_date'), 'no_of_days', ('planned_end_date', 'actual_end_date'))
+        }),
+        ('تمديد المأمورية', {
+            'fields': ('is_extended', 'extension_days', ('extended_planned_end_date', 'extended_actual_end_date'))
+        }),
+        ('ملاحظات ومرفقات', {
+            'fields': ('notes', 'attachments')
+        }),
+    )
     list_display = ('vehicle', 'driver','requested_by','destination', 'planned_start_date', 'planned_end_date','actual_end_date')
     list_filter = ('vehicle__model__make','vehicle__model','vehicle__year','planned_start_date', 'planned_end_date','actual_end_date','requested_by')
     search_fields = ('driver__name', 'vehicle__license_plate')
-    readonly_fields = ('planned_end_date','actual_end_date',)
+    readonly_fields = ('planned_end_date','actual_end_date','extended_planned_end_date','extended_actual_end_date')
     autocomplete_fields = ["vehicle","driver"]
+
+    class Media:
+        js = ('fleet/js/mission_extension.js',)
 
 class VehicleMaintenancePartInline(admin.TabularInline):
     model = models.VehicleMaintenancePart
