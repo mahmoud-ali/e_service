@@ -344,3 +344,104 @@ def calc_summary():
     for obj in PayrollMaster.objects.filter(confirmed=True):
         payroll = Payroll(obj.year,obj.month)
         payroll.calc_summary()
+
+def update_drjat_3lawat(filename='promotion2026.csv'):
+    with open('./hr/data/'+filename, newline='') as csvfile:
+        reader = csv.reader(csvfile, delimiter=',')
+        next(reader, None)  # skip the headers
+        for row in reader:
+            try:
+                code = int(row[0])
+                drja = int(row[2])
+                alawa = int(row[3])
+
+                emp = EmployeeBasic.objects.get(code=code)
+                emp.draja_wazifia = drja
+                emp.alawa_sanawia = alawa
+                emp.save(update_fields=['draja_wazifia','alawa_sanawia'])
+
+                print('Employee',row[0],row[1],'Ok')
+
+            except Exception as e:
+                print('Employee',row[0],row[1],'Error:',e)
+
+                
+def import_onb_bank_accounts():    
+    with open(f'./hr/data/onb_accounts.csv', newline='') as csvfile:
+        reader = csv.reader(csvfile, delimiter=',')
+        next(reader, None)  # skip the headers
+        for row in reader:
+            try:
+                code = int(row[1])
+                account_no = str(row[3]).strip()
+                branch_code = str(row[4]).strip()
+                account_type = str(row[5]).strip()
+                if code:
+                    emp = EmployeeBasic.objects.get(code=code)
+
+                    try:
+                        EmployeeBankAccount.objects.filter(
+                            employee=emp,
+                            bank='onb',
+                        ).delete()
+
+                        obj = EmployeeBankAccount.objects.create(
+                            employee=emp,
+                            bank='onb',
+                            account_no=account_no,
+                            branch_code=branch_code,
+                            account_type=account_type,
+                            active=True,
+                            created_by=admin_user,
+                            updated_by=admin_user
+                        )
+                        #print('created',obj)
+                    except:
+                        print('unable to create account',code,emp,e)
+
+            except Exception as e:
+                print('not imported',code,emp,e)
+
+def import_salafiat_jan2026():    
+    with open(f'./hr/data/salafiat_mokaf2a_jan_2026.csv', newline='') as csvfile:
+        reader = csv.reader(csvfile, delimiter=',')
+        next(reader, None)  # skip the headers
+        for row in reader:
+            try:
+                code = int(row[0])
+                mokafa = float(row[2])
+
+                if code:
+                    emp = EmployeeBasic.objects.get(code=code)
+
+                    try:
+                        try:
+                            old_obj = EmployeeSalafiat.objects.get(
+                                employee=emp,
+                                no3_2lsalafia=EmployeeSalafiat.NO3_2LSALAFIA_3LA_2LMOKAF2,
+                                year=2026,
+                                month=1,
+                            )
+
+                            mokafa += old_obj.amount
+
+                            old_obj.delete()
+                        except:
+                            pass
+
+                        obj = EmployeeSalafiat.objects.create(
+                            employee=emp,
+                            no3_2lsalafia=EmployeeSalafiat.NO3_2LSALAFIA_3LA_2LMOKAF2,
+                            year=2026,
+                            month=1,
+                            note='تم التصدير بطلب من ادارة الموارد البشرية',
+                            amount=mokafa,
+                            created_by=admin_user,
+                            updated_by=admin_user
+                        )
+                        #print('created',obj)
+                    except Exception as e:
+                        print('unable to create salafia',code,emp,e)
+
+            except Exception as e:
+                print('not imported',row[0],e)

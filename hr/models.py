@@ -220,6 +220,7 @@ class Settings(LoggingModel):
     SETTINGS_MOKAF2T_ADA2 = 'mokaf2t_ada2'
 
     SETTINGS_MOKAF2T_ADA2_FI_MOKAF2 = 'mokaf2t_ada2_fi_mokaf2'
+    SETTINGS_CALCULATE_MOKAF2T_ADA2 = 'calculate_mokaf2t_ada2'
 
     SETTINGS_CHOICES = {
         SETTINGS_ZAKA_KAFAF: _('SETTINGS_ZAKAT_KAFAF'),
@@ -245,7 +246,9 @@ class Settings(LoggingModel):
         SETTINGS_MAJLIS_EL2DARA_3ODO: _('SETTINGS_MAJLIS_EL2DARA_3ODO'),
 
         SETTINGS_MODIR_3AM_ASAI: _('SETTINGS_MODIR_3AM_ASAI'),
-        SETTINGS_MOKAF2T_ADA2_FI_MOKAF2: 'حساب مكافئة الاداء في المرتب',
+
+        SETTINGS_CALCULATE_MOKAF2T_ADA2: 'حساب مكافئة الاداء؟',
+        SETTINGS_MOKAF2T_ADA2_FI_MOKAF2: 'حساب مكافئة الاداء في المكافئة',
     }
 
     for moahil in MOAHIL_CHOICES:
@@ -464,6 +467,7 @@ class EmployeeBasic(LoggingModel):
 
     NO3_2LERTIBAT_TA3EEN = 'ta3een'
     NO3_2LERTIBAT_NAGL = 'nagl'
+    NO3_2LERTIBAT_NAGL_NIHA2I = 'nagl_niha2i'
     NO3_2LERTIBAT_2L7ag = '2l7ag'
     NO3_2LERTIBAT_2NTEDAB = '2ntedab'
     NO3_2LERTIBAT_TAKLEEF = 'takleef'
@@ -475,6 +479,7 @@ class EmployeeBasic(LoggingModel):
     NO3_2LERTIBAT_CHOICES = {
         NO3_2LERTIBAT_TA3EEN: _("NO3_2LERTIBAT_TA3EEN"),
         NO3_2LERTIBAT_NAGL: _("NO3_2LERTIBAT_NAGL"),
+        NO3_2LERTIBAT_NAGL_NIHA2I: _("نقل نهائي"),
         NO3_2LERTIBAT_2NTEDAB: _("NO3_2LERTIBAT_2NTEDAB"),
         NO3_2LERTIBAT_TAKLEEF: _("NO3_2LERTIBAT_TAKLEEF"),
         NO3_2LERTIBAT_2L7ag: _("NO3_2LERTIBAT_2L7ag"), #wi7dat mosa3da
@@ -533,14 +538,14 @@ class EmployeeBasic(LoggingModel):
     sex = models.CharField(_("sex"),max_length=7, choices=SEX_CHOICES)
     phone = models.CharField(_("phone"),max_length=30,blank=True,null=True)
     email = models.EmailField(_("email"),max_length=30,blank=True,null=True)
-    no3_2lertibat = models.CharField(_("no3_2lertibat"),max_length=15, choices=NO3_2LERTIBAT_CHOICES)
+    no3_2lertibat = models.CharField(_("no3_2lertibat"),max_length=15, choices=NO3_2LERTIBAT_CHOICES, blank=True, null=True)
     sanoat_2lkhibra = models.FloatField(_("sanoat_2lkhibra"),default=0)
     gasima = models.BooleanField(_("gasima"),default=False)
     atfal = models.IntegerField(_("3dad_atfal"),default=0)
     moahil = models.CharField(_("moahil"),max_length=30, choices=MOAHIL_CHOICES,default=MOAHIL_BAKLARIOS)
     m3ash = models.FloatField(_("m3ash"),default=0)
     aadoa = models.BooleanField(_("aadoa"),default=False)
-    status = models.IntegerField(_("status"), choices=STATUS_CHOICES,default=STATUS_ACTIVE)
+    status = models.IntegerField(_("status"), choices=STATUS_CHOICES,default=STATUS_ACTIVE, blank=True, null=True)
     hikal_wazifi = TreeForeignKey(HikalWazifi, on_delete=models.PROTECT,verbose_name=_("hikal_wazifi"),blank=True,null=True)
 
     def __str__(self) -> str:
@@ -611,6 +616,91 @@ class EmployeeBasic(LoggingModel):
                     {"alawa_sanawia":_("akhtar 3lawat gair t3akod")}
                 )
 
+class EmployeeNo32lertibat(LoggingModel):
+    employee = models.ForeignKey(EmployeeBasic, on_delete=models.PROTECT,verbose_name=_("employee_name"))
+    no3_2lertibat = models.CharField(_("no3_2lertibat"),max_length=15, choices=EmployeeBasic.NO3_2LERTIBAT_CHOICES)
+    tarikh_start_dt = models.DateField(_("تاريخ البداية"))
+    tarikh_end_dt = models.DateField(_("تاريخ النهاية"), blank=True, null=True)
+
+    class Meta:
+        verbose_name = "نوع الإرتباط"
+        verbose_name_plural = "أنواع الإرتباط"
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        # Update EmployeeBasic.no3_2lertibat if this is the latest record
+        latest = EmployeeNo32lertibat.objects.filter(employee=self.employee).order_by('-tarikh_start_dt', '-id').first()
+        if latest and latest.id == self.id:
+            self.employee.no3_2lertibat = self.no3_2lertibat
+            self.employee.save()
+
+class EmployeeStatus(LoggingModel):
+    employee = models.ForeignKey(EmployeeBasic, on_delete=models.PROTECT,verbose_name=_("employee_name"))
+    status = models.IntegerField(_("status"), choices=EmployeeBasic.STATUS_CHOICES,default=EmployeeBasic.STATUS_ACTIVE)
+    tarikh_dt = models.DateField(_("التاريخ"))
+
+    class Meta:
+        verbose_name = "حالة الموظف"
+        verbose_name_plural = "حالة الموظفين"
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        # Update EmployeeBasic.status if this is the latest record
+        latest = EmployeeStatus.objects.filter(employee=self.employee).order_by('-tarikh_dt', '-id').first()
+        if latest and latest.id == self.id:
+            self.employee.status = self.status
+            self.employee.save()
+class EmployeeKhibra(LoggingModel):
+    KHIBRA_TYPE_MUTABAQA = 'mutabaqa'
+    KHIBRA_TYPE_MUSHTABAHA = 'mushtabaha'
+
+    KHIBRA_TYPE_CHOICES = {
+        KHIBRA_TYPE_MUTABAQA: _('مطابقة'),
+        KHIBRA_TYPE_MUSHTABAHA: _('مشتبهة'),
+    }
+
+    employee = models.ForeignKey(EmployeeBasic, on_delete=models.PROTECT, verbose_name=_("employee_name"))
+    jiha = models.CharField(_("الجهة"), max_length=150)
+    mosama_wazifi = models.CharField(_("المسمى الوظيفي"), max_length=100)
+    start_dt = models.DateField(_("تاريخ البداية"))
+    end_dt = models.DateField(_("تاريخ النهاية"))
+    no3_khibra = models.CharField(_("نوع الخبرة"), choices=KHIBRA_TYPE_CHOICES, max_length=20)
+
+    class Meta:
+        verbose_name = _("خبرة العامل")
+        verbose_name_plural = _("خبرات العاملين")
+
+    def __str__(self):
+        return f"{self.employee.name} - {self.jiha} ({self.get_no3_khibra_display()})"
+    
+class EmployeeArchive(LoggingModel):
+    DOCUMENT_TYPE_CONTRACT = 'contract'
+    DOCUMENT_TYPE_CERTIFICATE = 'certificate'
+    DOCUMENT_TYPE_DECISION = 'decision'
+    DOCUMENT_TYPE_LETTER = 'letter'
+    DOCUMENT_TYPE_OTHER = 'other'
+
+    DOCUMENT_TYPE_CHOICES = {
+        DOCUMENT_TYPE_CONTRACT: _('عقد'),
+        DOCUMENT_TYPE_CERTIFICATE: _('شهادة'),
+        DOCUMENT_TYPE_DECISION: _('قرار'),
+        DOCUMENT_TYPE_LETTER: _('خطاب'),
+        DOCUMENT_TYPE_OTHER: _('أخرى'),
+    }
+
+    employee = models.ForeignKey(EmployeeBasic, on_delete=models.PROTECT, verbose_name=_("employee_name"))
+    document_type = models.CharField(_("نوع المستند"), choices=DOCUMENT_TYPE_CHOICES, max_length=20)
+    document_date = models.DateField(_("تاريخ المستند"))
+    attachment = models.FileField(_("المرفق"), upload_to=attachement_path)
+    notes = models.CharField(_("ملاحظات"), max_length=255, blank=True, null=True)
+
+    class Meta:
+        verbose_name = _("ارشيف رقمي")
+        verbose_name_plural = _("الارشيف الرقمي")
+
+    def __str__(self):
+        return f"{self.employee.name} - {self.get_document_type_display()} ({self.document_date})"
+        
 class EmployeeWi7datMosa3da(LoggingModel):
     employee = models.OneToOneField(EmployeeBasic, on_delete=models.PROTECT,verbose_name=_("employee_name"),related_name="wi7dat_mosa3da")
     has_diff = models.BooleanField(_("has_diff"),default=False)
@@ -655,6 +745,8 @@ class EmployeeBankAccount(LoggingModel):
 
     employee = models.ForeignKey(EmployeeBasic, on_delete=models.PROTECT,verbose_name=_("employee_name"))
     bank = models.CharField(_("bank"), choices=BANK_CHOICES,max_length=10)
+    branch_code = models.CharField(_("كود الفرع"),max_length=5,null=True,blank=True,help_text="خاص ببنك امدرمان الوطني")
+    account_type = models.CharField(_("نوع الحساب"),max_length=5,null=True,blank=True,help_text="خاص ببنك امدرمان الوطني")
     account_no = models.CharField(_("account_no"),max_length=20)
     active = models.BooleanField(_("active"),default=False)
 
@@ -671,6 +763,20 @@ class EmployeeBankAccount(LoggingModel):
 
     def __str__(self) -> str:
         return f'{self.employee.name} ({self.BANK_CHOICES[self.bank]})'# / {self.edara_3ama.name}'
+
+    def clean(self):            
+        if self.bank == self.BANK_OMDURMAN:
+            if not self.branch_code:
+                raise ValidationError(
+                    {"branch_code":_("ادخل كود الفرع")}
+                )
+
+            if not self.account_type:
+                raise ValidationError(
+                    {"account_type":_("ادخل نوع الحساب")}
+                )
+
+        return super().clean()
 
     def deactivate_other_accounts(self):
         if self.active:
@@ -1073,7 +1179,9 @@ class PayrollDetailHikalRatibiAbstract(PayrollDetailAbstract):
 
 class PayrollDetail(PayrollDetailHikalRatibiAbstract):
     aadoa = models.FloatField(_("aadoa"),default=0)
+    calculate_mokaf2t_ada2 = models.BooleanField("حساب بدل المكافئة؟",default=True)
     mokaf2at_2da2 = models.FloatField(_("mokaf2at_2da2"),default=0)
+    mokaf2at_majlis = models.FloatField(_("مكافئة اداء مجلس الوزراء"),default=0)
     mokaf2at_2da2_fi_mokaf2 = models.BooleanField("حساب بدل المكافئة في كشف المكافئة",default=True)
     gasima = models.FloatField(_("gasima"),default=0)
     atfal = models.FloatField(_("atfal"),default=0)
@@ -1141,6 +1249,7 @@ class PayrollTasoia(models.Model):
     total_mihna = models.FloatField(_("mihna"),default=0)
     total_ma3adin = models.FloatField(_("ma3adin"),default=0)
     total_aadoa = models.FloatField(_("aadoa"),default=0)
+    calculate_mokaf2t_ada2 = models.BooleanField("حساب مكافئة الاداء؟",default=True)
     total_mokaf2at_2da2 = models.FloatField(_("aadoa"),default=0)
     total_ajtima3ia = models.FloatField(_("ajtima3ia"),default=0)
     total_moahil = models.FloatField(_("moahil"),default=0)
@@ -1168,4 +1277,5 @@ class PayrollSummary(models.Model):
     total_salary = models.FloatField(_("اجمالي المرتب"),default=0)
     net_salary = models.FloatField(_("صافي الإستحقاق"),default=0)
     mokaf2 = models.FloatField(_("المكافئة"),default=0)
+    salary_calculate_mokaf2t_ada2 = models.BooleanField("حساب مكافئة الاداء؟",default=True)
     salary_mokaf2 = models.FloatField(_("مكافئة اداء"),default=0)

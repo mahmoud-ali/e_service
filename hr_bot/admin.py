@@ -65,6 +65,27 @@ class FlowMixin:
             return self.exclude+['employee']
 
         return self.exclude
+
+    def get_fieldsets(self, request, obj=None):
+        fieldsets = super().get_fieldsets(request, obj)
+        if request.user.groups.filter(name__in=["hr_employee",]).exists():
+            new_fieldsets = []
+            for title, opts in fieldsets:
+                new_fields = []
+                for field in opts.get('fields', []):
+                    if isinstance(field, (list, tuple)):
+                        new_tuple = [f for f in field if f != 'employee']
+                        if new_tuple:
+                            new_fields.append(type(field)(new_tuple))
+                    elif field != 'employee':
+                        new_fields.append(field)
+                
+                if new_fields:
+                    new_opts = dict(opts)
+                    new_opts['fields'] = new_fields
+                    new_fieldsets.append((title, new_opts))
+            return new_fieldsets
+        return fieldsets
     
     def get_readonly_fields(self,request, obj=None):
         if request.user.groups.filter(name__in=["hr_employee",]).exists():
@@ -129,12 +150,20 @@ class EmployeeTelegramRegistrationAdmin(FlowMixin,admin.ModelAdmin):
     exclude = ["created_at","created_by","updated_at","updated_by","state"] #,"user_id"
     list_display = ["employee","name","phone","state"]        
     list_filter = ["created_at","state"]
+    search_fields = ["employee__name","phone","name"]
+    date_hierarchy = "created_at"
+    list_per_page = 20
     actions = ['accept','reject','reset_password']
     view_on_site = False
-    search_fields = ["employee__name","phone","name"]
     formfield_overrides = {
         models.FloatField: {"widget": TextInput},
     }    
+    fieldsets = [
+        (_("بيانات الموظف"), {
+            "fields": [("employee", "user_id"), ("name", "phone")],
+            "classes": ["fieldset-card", "fieldset-basic"],
+        }),
+    ]
 
     def has_add_permission(self, request):
         return False
@@ -214,10 +243,22 @@ class EmployeeTelegramFamilyAdmin(PermissionMixin,FlowMixin,admin.ModelAdmin):
     model = EmployeeTelegramFamily
     exclude = ["created_at","created_by","updated_at","updated_by","state"] #,"user_id"
     list_display = ["employee","name","relation","attachement_file","state"]        
-    list_filter = ["created_at","state"]
+    list_filter = ["created_at","state", "relation"]
+    search_fields = ["employee__name","employee__code", "name"]
+    date_hierarchy = "created_at"
+    list_per_page = 20
     autocomplete_fields = ["employee"]
     view_on_site = False
-    search_fields = ["employee__name","employee__code"]
+    fieldsets = [
+        (_("بيانات الموظف"), {
+            "fields": ["employee"],
+            "classes": ["fieldset-card", "fieldset-basic"],
+        }),
+        (_("بيانات العائلة"), {
+            "fields": ["relation", "name", "tarikh_el2dafa", "attachement_file"],
+            "classes": ["fieldset-card", "fieldset-extra"],
+        }),
+    ]
 
     formfield_overrides = {
         models.FloatField: {"widget": TextInput},
@@ -257,9 +298,21 @@ class EmployeeTelegramMoahilAdmin(PermissionMixin,FlowMixin,admin.ModelAdmin):
     exclude = ["created_at","created_by","updated_at","updated_by","state","tarikh_el2dafa"] #,"user_id"
     list_display = ["employee","moahil","university","graduate_dt","state"]        
     list_filter = ["created_at","moahil","state"]
+    search_fields = ["employee__name","employee__code", "university"]
+    date_hierarchy = "created_at"
+    list_per_page = 20
     autocomplete_fields = ["employee"]
     view_on_site = False
-    search_fields = ["employee__name","employee__code"]
+    fieldsets = [
+        (_("بيانات الموظف"), {
+            "fields": ["employee"],
+            "classes": ["fieldset-card", "fieldset-basic"],
+        }),
+        (_("بيانات المؤهل"), {
+            "fields": ["moahil", "graduate_dt","university", "takhasos", "attachement_file"],
+            "classes": ["fieldset-card", "fieldset-extra"],
+        }),
+    ]
 
     # formfield_overrides = {
     #     models.FloatField: {"widget": TextInput},
@@ -300,10 +353,18 @@ class EmployeeTelegramBankAccountAdmin(PermissionMixin,FlowMixin,admin.ModelAdmi
     model = EmployeeTelegramBankAccount
     exclude = ["created_at","created_by","updated_at","updated_by","state"] #,"user_id"
     list_display = ["employee","bank","account_no","active","state"]        
-    list_filter = ["created_at","bank","state"]
+    list_filter = ["created_at","bank","state", "active"]
+    search_fields = ["employee__name","employee__code", "account_no"]
+    date_hierarchy = "created_at"
+    list_per_page = 20
     autocomplete_fields = ["employee"]
     view_on_site = False
-    search_fields = ["employee__name","employee__code"]
+    fieldsets = [
+        (_("البيانات البنكية"), {
+            "fields": ["bank", "branch_code", "account_type", "account_no",  "active"],
+            "classes": ["fieldset-card", "fieldset-extra"],
+        }),
+    ]
 
     # formfield_overrides = {
     #     models.FloatField: {"widget": TextInput},
@@ -317,6 +378,8 @@ class EmployeeTelegramBankAccountAdmin(PermissionMixin,FlowMixin,admin.ModelAdmi
                     EmployeeBankAccount.objects.update_or_create(
                         employee=obj.employee,
                         bank=obj.bank,
+                        branch_code=obj.branch_code,
+                        account_type=obj.account_type,
                         account_no=obj.account_no,
                         active=obj.active,
 
@@ -379,11 +442,31 @@ class JazaatInline(admin.TabularInline):
 @admin.register(EmployeeBasicProxy)
 class EmployeeBasicProxyAdmin(admin.ModelAdmin):
     model = EmployeeBasicProxy
+    change_list_template = "admin/hr_bot/employeebasicproxy/dashboard.html"
     inlines = [EmployeeBankAccountInline, EmployeeFamilyInline, EmployeeMoahilInline,SalafiatInline,JazaatInline]
-    fields = ["code","name", "draja_wazifia","alawa_sanawia","hikal_wazifi", "mosama_wazifi","sex","tarikh_milad","tarikh_ta3in","tarikh_akhir_targia","gasima","atfal","moahil","phone","email","no3_2lertibat","sanoat_2lkhibra","aadoa","m3ash","status"]        
+    fieldsets = [
+        (_("البيانات الأساسية"), {
+            "fields": [("code", "name"), ("phone", "email"), ("sex", "moahil")],
+            "classes": ["fieldset-card", "fieldset-basic"],
+        }),
+        (_("البيانات الوظيفية"), {
+            "fields": [("hikal_wazifi", "mosama_wazifi"), ("draja_wazifia", "alawa_sanawia"), "sanoat_2lkhibra"],
+            "classes": ["fieldset-card", "fieldset-job"],
+        }),
+        (_("التواريخ"), {
+            "fields": [("tarikh_milad", "tarikh_ta3in"), "tarikh_akhir_targia"],
+            "classes": ["fieldset-card", "fieldset-dates"],
+        }),
+        (_("بيانات إضافية"), {
+            "fields": [("status", "no3_2lertibat"), ("gasima", "atfal"), ("m3ash", "aadoa")],
+            "classes": ["fieldset-card", "fieldset-extra"],
+        }),
+    ]        
     readonly_fields = ["code","name", "draja_wazifia","alawa_sanawia","hikal_wazifi", "mosama_wazifi","sex","tarikh_milad","tarikh_ta3in","tarikh_akhir_targia","gasima","atfal","phone","email","no3_2lertibat","sanoat_2lkhibra","aadoa","m3ash","status"]        
     list_display_links = ["code","name"]
     list_display = ["code","name", "draja_wazifia","alawa_sanawia", "edara_3ama","edara_far3ia","gisim", "mosama_wazifi","tarikh_ta3in",]        
+    search_fields = ["code", "name", "phone", "email"]
+    list_filter = ["status", "sex"]
     view_on_site = False
 
     def has_add_permission(self, request):
@@ -397,11 +480,56 @@ class EmployeeBasicProxyAdmin(admin.ModelAdmin):
     
     def get_queryset(self, request):
         qs = super().get_queryset(request)
-
         email = request.user.email
-
         return qs.filter(email=email)
 
+    def changelist_view(self, request, extra_context=None):
+        extra_context = extra_context or {}
+        
+        try:
+            employee = EmployeeBasicProxy.objects.get(email=request.user.email)
+            
+            # Approved counts
+            extra_context['approved_family_count'] = EmployeeFamily.objects.filter(employee=employee).count()
+            extra_context['approved_moahil_count'] = EmployeeMoahil.objects.filter(employee=employee).count()
+            extra_context['approved_bank_count'] = EmployeeBankAccount.objects.filter(employee=employee).count()
+            
+            # Pending counts (Registration, Family, Moahil, Bank)
+            extra_context['pending_family_count'] = EmployeeTelegramFamily.objects.filter(employee=employee, state=STATE_DRAFT).count()
+            extra_context['pending_moahil_count'] = EmployeeTelegramMoahil.objects.filter(employee=employee, state=STATE_DRAFT).count()
+            extra_context['pending_bank_count'] = EmployeeTelegramBankAccount.objects.filter(employee=employee, state=STATE_DRAFT).count()
+            
+            extra_context['employee_obj'] = employee
+            
+        except EmployeeBasicProxy.DoesNotExist:
+            extra_context['employee_obj'] = None
+            
+        return super().changelist_view(request, extra_context=extra_context)
+
+# @admin.register(EmployeeBankAccountProxy)
+# class EmployeeBankAccountProxyAdmin(admin.ModelAdmin):
+#     model = EmployeeBankAccountProxy
+#     fields = ["bank","branch_code", "account_type","account_no","active", ]        
+#     readonly_fields = ["bank","branch_code", "account_type","account_no",]        
+#     list_display_links = ["bank","branch_code"]
+#     list_display = ["bank","branch_code", "account_type","account_no","active"]        
+#     view_on_site = False
+
+#     def has_add_permission(self, request):
+#         return False
+
+#     def has_change_permission(self, request, obj=None):
+#         return True
+
+#     def has_delete_permission(self, request, obj=None):
+#         return False
+    
+#     def get_queryset(self, request):
+#         qs = super().get_queryset(request)
+
+#         email = request.user.email
+
+#         return qs.filter(email=email)
 @admin.register(ApplicationRequirement)
 class ApplicationRequirementAdmin(admin.ModelAdmin):
     model = ApplicationRequirement
@@ -412,9 +540,17 @@ class ApplicationRequirementAdmin(admin.ModelAdmin):
 @admin.register(EmployeeBankAccountProxy)
 class EmployeeBankAccountAdmin(admin.ModelAdmin):
     model = EmployeeBankAccountProxy
-    list_display = ('bank', 'account_no','active')
-    fields = ('employee','bank','account_no','active')
-    exclude = ["created_at","created_by","updated_at","updated_by"]
+    list_display = ('employee', 'bank', 'account_no','active')
+    fieldsets = [
+        (_("بيانات الموظف"), {
+            "fields": ["employee"],
+            "classes": ["fieldset-card", "fieldset-basic"],
+        }),
+        (_("البيانات البنكية"), {
+            "fields": ["bank", "branch_code", "account_type", "account_no", "active"],
+            "classes": ["fieldset-card", "fieldset-extra"],
+        }),
+    ]
     readonly_fields = ('employee','bank','account_no',)
 
     def get_queryset(self, request):

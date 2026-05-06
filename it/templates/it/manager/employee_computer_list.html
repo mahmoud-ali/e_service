@@ -47,7 +47,8 @@
                         </td>
                         <td>{{ ec.computer.template.get_os_type_display }} {{ ec.computer.template.os_version }}</td>
                         <td>
-                            <a href="{% url 'it:manager_employee_computer_detail' ec.pk %}" class="btn btn-sm btn-primary">عرض التفاصيل</a>
+                            <a href="{% url 'it:manager_employee_computer_detail' ec.pk %}" class="btn btn-sm btn-primary">التفاصيل</a>
+                            <a href="{% url 'it:manager_employee_computer_qrcode' ec.pk %}" target="_blank" class="btn btn-sm btn-outline">QR</a>
                         </td>
                     </tr>
                     {% empty %}

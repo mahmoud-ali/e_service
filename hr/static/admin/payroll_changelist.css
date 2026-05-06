@@ -1,0 +1,276 @@
+/* PayrollMaster Card-Based Change List */
+
+/* ─── Card Grid ─── */
+.payroll-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+    gap: 20px;
+    padding: 20px 0;
+}
+
+/* ─── Individual Card ─── */
+.payroll-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e8e8e8;
+    overflow: hidden;
+    transition: box-shadow 0.25s ease, transform 0.2s ease;
+}
+
+.payroll-card:hover {
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+    transform: translateY(-2px);
+}
+
+/* ─── Card Header ─── */
+.payroll-card-header {
+    background: linear-gradient(135deg, #417690 0%, #2c5f7c 100%);
+    color: #fff;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.payroll-card-title {
+    font-size: 1.2em;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.payroll-card-title .card-icon {
+    font-size: 1.3em;
+}
+
+.payroll-status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 14px;
+    border-radius: 20px;
+    font-size: 0.8em;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    white-space: nowrap;
+}
+
+.payroll-status-badge.confirmed {
+    background: rgba(40, 167, 69, 0.2);
+    color: #d4edda;
+    border: 1px solid rgba(40, 167, 69, 0.35);
+}
+
+.payroll-status-badge.unconfirmed {
+    background: rgba(255, 193, 7, 0.2);
+    color: #fff3cd;
+    border: 1px solid rgba(255, 193, 7, 0.35);
+}
+
+/* Checkbox area */
+.payroll-card-check {
+    padding: 0 20px;
+    padding-top: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85em;
+    color: #666;
+}
+
+.payroll-card-check input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    accent-color: #417690;
+}
+
+/* ─── Card Body ─── */
+.payroll-card-body {
+    padding: 8px 20px 20px;
+}
+
+/* ─── Link Groups ─── */
+.payroll-link-group {
+    margin-bottom: 12px;
+}
+
+.payroll-link-group:last-child {
+    margin-bottom: 0;
+}
+
+.payroll-link-group-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85em;
+    font-weight: 700;
+    color: #417690;
+    margin-bottom: 8px;
+    padding-bottom: 5px;
+    border-bottom: 2px solid #e8f0f5;
+}
+
+.payroll-link-group-title .group-icon {
+    font-size: 1.1em;
+}
+
+/* ─── Link Items ─── */
+.payroll-link-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.payroll-link-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #f7f9fb;
+    border: 1px solid #e0e8ed;
+    border-radius: 8px;
+    padding: 6px 10px;
+    font-size: 0.82em;
+    transition: all 0.2s ease;
+}
+
+.payroll-link-item:hover {
+    background: #ecf3f8;
+    border-color: #c0d4e0;
+}
+
+.payroll-link-item a {
+    text-decoration: none !important;
+    color: #2c5f7c;
+    font-weight: 500;
+}
+
+.payroll-link-item a:hover {
+    color: #1a3d52;
+    text-decoration: underline !important;
+}
+
+.payroll-link-item .link-sep {
+    color: #b0bec5;
+    font-size: 0.9em;
+}
+
+.payroll-link-item .link-sub {
+    font-size: 0.9em;
+    color: #7a8f9c;
+    font-weight: 400;
+}
+
+.payroll-link-item .link-sub:hover {
+    color: #417690;
+}
+
+/* ─── Empty State ─── */
+.payroll-empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: #999;
+    font-size: 1.1em;
+}
+
+.payroll-empty-state .empty-icon {
+    font-size: 3em;
+    margin-bottom: 15px;
+    display: block;
+}
+
+/* ─── Actions bar integration ─── */
+.payroll-actions-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 0;
+    flex-wrap: wrap;
+}
+
+.payroll-select-all-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.9em;
+    color: #555;
+    cursor: pointer;
+}
+
+.payroll-select-all-label input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    accent-color: #417690;
+}
+
+/* ─── Edit link in header ─── */
+.payroll-edit-link {
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    font-size: 0.8em;
+    padding: 3px 10px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.payroll-edit-link:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 768px) {
+    .payroll-cards-grid {
+        grid-template-columns: 1fr;
+        gap: 14px;
+        padding: 10px 0;
+    }
+
+    .payroll-card-header {
+        flex-wrap: wrap;
+    }
+
+    .payroll-link-items {
+        gap: 5px;
+    }
+
+    .payroll-link-item {
+        font-size: 0.78em;
+        padding: 5px 8px;
+    }
+}
+
+/* ─── hide default result list table when cards are active ─── */
+#result_list {
+    display: none !important;
+}
+
+/* ─── Sticky Filter Sidebar ─── */
+#changelist-filter {
+    position: sticky;
+    top: 20px;
+    max-height: 90vh;
+    overflow-y: auto;
+    align-self: flex-start;
+}
+
+/* ─── Delete link ─── */
+.payroll-delete-link {
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    font-size: 0.8em;
+    padding: 3px 10px;
+    border: 1px solid rgba(255, 100, 100, 0.3);
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.payroll-delete-link:hover {
+    color: #fff;
+    background: rgba(220, 53, 69, 0.4);
+    border-color: rgba(220, 53, 69, 0.6);
+}

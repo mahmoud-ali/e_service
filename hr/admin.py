@@ -16,7 +16,7 @@ from django.contrib import messages
 from hr.calculations import PayrollValidation
 from hr.payroll import M2moriaSheet, MajlisEl2daraMokaf2Payroll, MobasharaSheet, Mokaf2Sheet, Payroll, Ta3agodMosimiPayroll, TasoiaPayroll, Wi7datMosa3idaMokaf2tFarigMoratabPayroll
 
-from .models import Drajat3lawat, EmployeeBankAccount, EmployeeFamily, EmployeeM2moria, EmployeeM2moriaMonthly, EmployeeMajlisEl2dara, EmployeeMoahil, EmployeeJazaat, EmployeeMobashra, EmployeeSalafiatMaster, EmployeeSalafiatSandog, EmployeeVacation, EmployeeWi7datMosa3da, Gisim, HikalWazifi, MosamaWazifi,Edara3ama,Edarafar3ia,EmployeeBasic, PayrollDetail, PayrollDetailMajlisEl2dara, PayrollDetailTa3agodMosimi, PayrollDetailWi7datMosa3ida, PayrollMaster, EmployeeSalafiat, PayrollTasoia,Settings, Wi7da
+from .models import Drajat3lawat, EmployeeArchive, EmployeeBankAccount, EmployeeFamily, EmployeeKhibra, EmployeeM2moria, EmployeeM2moriaMonthly, EmployeeMajlisEl2dara, EmployeeMoahil, EmployeeJazaat, EmployeeMobashra, EmployeeNo32lertibat, EmployeeSalafiatMaster, EmployeeSalafiatSandog, EmployeeStatus, EmployeeVacation, EmployeeWi7datMosa3da, Gisim, HikalWazifi, MosamaWazifi,Edara3ama,Edarafar3ia,EmployeeBasic, PayrollDetail, PayrollDetailMajlisEl2dara, PayrollDetailTa3agodMosimi, PayrollDetailWi7datMosa3ida, PayrollMaster, EmployeeSalafiat, PayrollTasoia,Settings, Wi7da
 from mptt.admin import MPTTModelAdmin,TreeRelatedFieldListFilter
 
 class SalafiatMixin(ModelForm):
@@ -403,25 +403,68 @@ class EmployeeMajlisEl2daraInline(admin.TabularInline):
     exclude = ["created_at","created_by","updated_at","updated_by"]
     extra = 1
 
+class EmployeeNo32lertibatInline(admin.TabularInline):
+    model = EmployeeNo32lertibat
+    exclude = ["created_at", "created_by", "updated_at", "updated_by"]
+    extra = 1
+
+class EmployeeStatusInline(admin.TabularInline):
+    model = EmployeeStatus
+    exclude = ["created_at", "created_by", "updated_at", "updated_by"]
+    extra = 1
+
+class EmployeeKhibraInline(admin.TabularInline):
+    model = EmployeeKhibra
+    exclude = ["created_at", "created_by", "updated_at", "updated_by"]
+    extra = 1
+
+class EmployeeArchiveInline(admin.TabularInline):
+    model = EmployeeArchive
+    exclude = ["created_at", "created_by", "updated_at", "updated_by"]
+    extra = 1
+
 class EmployeeBasicAdmin(admin.ModelAdmin):
-    fields = ["code","name", "draja_wazifia","alawa_sanawia","hikal_wazifi", "mosama_wazifi","sex","tarikh_milad","tarikh_ta3in","tarikh_akhir_targia","phone","email","no3_2lertibat","sanoat_2lkhibra","moahil","gasima","atfal","aadoa","m3ash","status"]        
-    inlines = [EmployeeFamilyInline,EmployeeMoahilInline,EmployeeBankAccountInline,SalafiatInline,JazaatInline,EmployeeMobashraInline,EmployeeVacationInline,EmployeeM2moriaInline]
+    change_form_template = "admin/hr/employeebasic/change_form.html"
+    fieldsets = [
+        (_("البيانات الأساسية"), {
+            "fields": ["code", "name", "sex", "phone", "email"],
+            "classes": ["fieldset-card", "fieldset-basic"],
+        }),
+        (_("البيانات الوظيفية"), {
+            "fields": ["hikal_wazifi", "mosama_wazifi", "draja_wazifia", "alawa_sanawia", "sanoat_2lkhibra"],
+            "classes": ["fieldset-card", "fieldset-job"],
+        }),
+        (_("التواريخ"), {
+            "fields": ["tarikh_milad", "tarikh_ta3in", "tarikh_akhir_targia"],
+            "classes": ["fieldset-card", "fieldset-dates"],
+        }),
+        (_("بيانات إضافية"), {
+            "fields": ["no3_2lertibat", "moahil", "gasima", "atfal", "aadoa", "m3ash", "status"],
+            "classes": ["fieldset-card", "fieldset-extra"],
+        }),
+    ]
+    inlines = [EmployeeStatusInline, EmployeeFamilyInline,EmployeeMoahilInline,EmployeeBankAccountInline,EmployeeNo32lertibatInline, EmployeeKhibraInline, EmployeeArchiveInline,SalafiatInline,JazaatInline,EmployeeMobashraInline,EmployeeVacationInline,EmployeeM2moriaInline]
     list_display = ["code","name", "draja_wazifia","alawa_sanawia", "edara_3ama","edara_far3ia","gisim", "mosama_wazifi","tarikh_ta3in","tarikh_akhir_targia","sex","moahil","gasima","atfal","aadoa","m3ash","status"]    
     list_display_links = ["code","name"]
-    list_filter = ["draja_wazifia","alawa_sanawia",Edara3amaFilter,Edarafar3iaFilter,EmployeeWi7daMosa3daFilter,"no3_2lertibat","mosama_wazifi__category","gasima","atfal",EmployeeTarikhTa3inFilter,EmployeeWifg2lwazaifFilter,EmployeeWifg2lmostawiatFilter,"sex","moahil","aadoa","status"] #
+    list_filter = ["status","draja_wazifia","alawa_sanawia",Edara3amaFilter,Edarafar3iaFilter,EmployeeWi7daMosa3daFilter,"no3_2lertibat","mosama_wazifi__category","gasima","atfal",EmployeeTarikhTa3inFilter,EmployeeWifg2lwazaifFilter,EmployeeWifg2lmostawiatFilter,"sex","moahil","aadoa",] #
     view_on_site = False
     autocomplete_fields = ["mosama_wazifi"] #,"hikal_wazifi"
     search_fields = ["name","code","email"]
-    readonly_fields = ["moahil","gasima","atfal"] #,"edara_3ama_tmp","edara_far3ia_tmp"
+    readonly_fields = ["moahil","gasima","atfal","no3_2lertibat","status",] #,"edara_3ama_tmp","edara_far3ia_tmp"
     actions = ['export_as_csv','export_as_contacts']
 
     formfield_overrides = {
         models.FloatField: {"widget": TextInput},
+        models.BooleanField: {"widget": forms.Select(choices=((True, _('Yes')), (False, _('No'))))},
     }    
 
     def get_readonly_fields(self,request,obj):
         if request.user.groups.filter(name="hr_payroll").exists():
-            return self.fields
+            # All fields from all fieldsets
+            all_fields = []
+            for name, opts in self.fieldsets:
+                all_fields.extend(opts.get("fields", []))
+            return all_fields
         
         if obj:
             return self.readonly_fields + ["code"]
@@ -738,178 +781,172 @@ class PayrollMasterAdmin(admin.ModelAdmin):
     exclude = ["created_at","created_by","updated_at","updated_by","zaka_kafaf","zaka_nisab","confirmed","enable_sandog_kahraba","enable_youm_algoat_almosalaha","daribat_2lmokafa","m3ash_age","khasm_salafiat_elsandog_min_elomoratab"]
     inlines = [PayrollDetailInline,PayrollDetailWi7datMosa3idaInline,PayrollDetailTa3agodMosimiInline,PayrollDetailMajlisEl2daraInline,EmployeeM2moriaMonthlyInline,PayrollTasoiaInline]
 
-    # list_display = ["year","month","confirmed","show_badalat_link","show_khosomat_link","show_mokaf2_link","show_mobashara_link"]
+    list_display = ["year","month","confirmed"]
     list_filter = ["year","month","confirmed"]
     view_on_site = False
     list_select_related = True
     save_on_top = True
+    change_list_template = "admin/hr/payrollmaster/change_list.html"
 
     actions = ["confirm_payroll"]
 
-    # readonly_fields = ["year","month","confirmed"]
+    def _build_card_data(self, obj, request):
+        """Build structured link data for a single payroll object."""
+        year = obj.year
+        month = obj.month
+        prev_year = year
+        prev_month = int(month) - 1
+        if prev_month == 0:
+            prev_month = 12
+            prev_year -= 1
 
-    def get_list_display(self,request):
-        links = ["year","month","confirmed","show_badalat_link","cmp_badalat_prev_month_link","show_khosomat_link","cmp_khosomat_prev_month_link","show_mokaf2_link","show_moratab_mokaf2_link","show_wi7dat_mosa3ida_farig_moratab_link","show_wi7dat_mosa3ida_mokaf2_link","show_ta3agod_mosimi_moratab_link","show_ta3agod_mosimi_mokaf2_link","show_majlis_el2dara_link","show_modir_3am_badalat_link","show_modir_3am_khosomat_link","show_modir_3am_mokaf2_link"]
-        if request.user.groups.filter(name="hr_manager").exists():
-            return links + ["show_mobashara_link","show_m2moria_link"]
-        else:
-            return links
-
-    @admin.display(description=_('Show badalat sheet'))
-    def show_badalat_link(self, obj):
-        url = reverse('hr:payroll_badalat')
-        return format_html('<a target="_blank" class="viewlink" href="{url}?year={year}&month={month}">'+_('Show badalat sheet')\
-                               +'</a> / '\
-                               +'<a target="_blank" href="{url}?year={year}&month={month}&format=csv">CSV</a>',
-                           url=url,year=obj.year,month=obj.month)
-
-    @admin.display(description=_('Show khosomat sheet'))
-    def show_khosomat_link(self, obj):
-        url = reverse('hr:payroll_khosomat')
+        # URL lookups
+        url_badalat = reverse('hr:payroll_badalat')
+        url_khosomat = reverse('hr:payroll_khosomat')
         url_tasoia = reverse('hr:payroll_tasoia')
-        check_payroll_url = reverse('hr:payroll_check')
-        return format_html('<a target="_blank" class="viewlink" href="{url}?year={year}&month={month}">'+_('Show khosomat sheet')\
-                               +'</a> / '\
-                               +'<a target="_blank" href="{url_tasoia}?year={year}&month={month}">'+_('tasoia sheet')+'</a> / '\
-                               +'<a target="_blank" href="{url}?year={year}&month={month}&format=csv&bank_sheet=1">'+_('bank sheet')+'</a> / '\
-                               +'<a target="_blank" href="{check_payroll_url}?year={year}&month={month}">'+_('check payroll')+'</a> / '\
-                               +'<a target="_blank" href="{url}?year={year}&month={month}&format=csv">CSV</a>',
-                           url=url,url_tasoia=url_tasoia,check_payroll_url=check_payroll_url,year=obj.year,month=obj.month)
+        url_check = reverse('hr:payroll_check')
+        url_mokaf2 = reverse('hr:payroll_mokaf2')
+        url_mokaf2_majlis = reverse('hr:payroll_mokaf2_majlis')
+        url_moratab_mokaf2 = reverse('hr:payroll_moratab_mokaf2')
+        url_mobashara = reverse('hr:payroll_mobashara')
+        url_m2moria = reverse('hr:payroll_m2moria')
+        url_wi7dat_farg = reverse('hr:payroll_wi7dat_mosa3ida_farg_moratab')
+        url_wi7dat_mokaf2 = reverse('hr:payroll_wi7dat_mosa3ida_mokaf2')
+        url_ta3agod_moratab = reverse('hr:payroll_ta3agod_mosimi_moratab')
+        url_ta3agod_mokaf2 = reverse('hr:payroll_ta3agod_mosimi_mokaf2')
+        url_majlis = reverse('hr:payroll_majlis_el2dara_mokaf2')
+        url_diff_badalat = reverse('hr:payroll_diff_badalat')
+        url_diff_khosomat = reverse('hr:payroll_diff_khosomat')
+        url_modir_badalat = reverse('hr:payroll_modir_3am_badalat')
+        url_modir_khosomat = reverse('hr:payroll_modir_3am_khosomat')
+        url_modir_mokaf2 = reverse('hr:payroll_modir_3am_mokaf2')
 
-    @admin.display(description=_('Diff badalat sheet'))
-    def cmp_badalat_prev_month_link(self, obj):
-        url = reverse('hr:payroll_diff_badalat')
-        prev_year = obj.year
-        prev_month = int(obj.month) -1
-        if prev_month == 0:
-            prev_month = 12
-            prev_year -= 1
-        return format_html('<a target="_blank" class="viewlink" href="{url}?year={year}&month={month}&cmp_year={cmp_year}&cmp_month={cmp_month}">'+_('Diff badalat sheet')\
-                               +'</a> / '\
-                               +'<a target="_blank" href="{url}?year={year}&month={month}&cmp_year={cmp_year}&cmp_month={cmp_month}&format=csv">CSV</a>',
-                           url=url,year=obj.year,month=obj.month,cmp_year=prev_year,cmp_month=prev_month)
+        q = f'year={year}&month={month}'
+        cmp_q = f'year={year}&month={month}&cmp_year={prev_year}&cmp_month={prev_month}'
 
-    @admin.display(description=_('Diff khosomat sheet'))
-    def cmp_khosomat_prev_month_link(self, obj):
-        url = reverse('hr:payroll_diff_khosomat')
-        prev_year = obj.year
-        prev_month = int(obj.month) -1
-        if prev_month == 0:
-            prev_month = 12
-            prev_year -= 1
-        return format_html('<a target="_blank" class="viewlink" href="{url}?year={year}&month={month}&cmp_year={cmp_year}&cmp_month={cmp_month}">'+_('Diff khosomat sheet')\
-                               +'</a> / '\
-                               +'<a target="_blank" href="{url}?year={year}&month={month}&cmp_year={cmp_year}&cmp_month={cmp_month}&bank_sheet=1">'+_('diff bank sheet')+'</a> / '\
-                               +'<a target="_blank" href="{url}?year={year}&month={month}&cmp_year={cmp_year}&cmp_month={cmp_month}&format=csv">CSV</a>',
-                           url=url,year=obj.year,month=obj.month,cmp_year=prev_year,cmp_month=prev_month)
+        # Helpers
+        def link(label, url, sub_links=None):
+            return {'label': str(label), 'url': url, 'sub_links': sub_links or []}
 
-    @admin.display(description=_('Show mobashara sheet'))
-    def show_mobashara_link(self, obj):
-        url = reverse('hr:payroll_mobashara')
-        return format_html('<a target="_blank" class="viewlink" href="{url}?year={year}&month={month}">'+_('Show mobashara sheet')\
-                               +'</a> / '\
-                               +'<a target="_blank" href="{url}?year={year}&month={month}&format=csv&bank_sheet=1">'+_('bank sheet')+'</a> / '\
-                               +'<a target="_blank" href="{url}?year={year}&month={month}&format=csv">CSV</a>',
-                           url=url,year=obj.year,month=obj.month)
+        def sub(label, url):
+            return {'label': str(label), 'url': url}
 
-    @admin.display(description=_('Show mokaf2 sheet'))
-    def show_mokaf2_link(self, obj):
-        url = reverse('hr:payroll_mokaf2')
-        return format_html('<a target="_blank" class="viewlink" href="{url}?year={year}&month={month}">'+_('Show mokaf2 sheet')\
-                               +'</a> / '\
-                               +'<a target="_blank" href="{url}?year={year}&month={month}&format=csv&bank_sheet=1">'+_('bank sheet')+'</a> / '\
-                               +'<a target="_blank" href="{url}?year={year}&month={month}&format=csv">CSV</a>',
-                           url=url,year=obj.year,month=obj.month)
+        core_links = [
+            link(_('Show badalat sheet'), f'{url_badalat}?{q}', [
+                sub('CSV', f'{url_badalat}?{q}&format=csv'),
+            ]),
+            link(_('Show khosomat sheet'), f'{url_khosomat}?{q}', [
+                sub(str(_('tasoia sheet')), f'{url_tasoia}?{q}'),
+                sub(str(_('bank sheet')), f'{url_khosomat}?{q}&format=csv&bank_sheet=1'),
+                sub(str(_('check payroll')), f'{url_check}?{q}'),
+                sub('CSV', f'{url_khosomat}?{q}&format=csv'),
+            ]),
+            link(_('Show mokaf2 sheet'), f'{url_mokaf2}?{q}', [
+                sub(str(_('bank sheet')), f'{url_mokaf2}?{q}&format=csv&bank_sheet=1'),
+                sub('CSV', f'{url_mokaf2}?{q}&format=csv'),
+            ]),
+            link('كشف المرتب والمكافئات', f'{url_moratab_mokaf2}?{q}', [
+                sub(str(_('bank sheet')), f'{url_moratab_mokaf2}?{q}&bank_sheet=1'),
+                sub('CSV', f'{url_moratab_mokaf2}?{q}&format=csv&bank_sheet=1'),
+            ]),
+        ]
 
-    @admin.display(description=_('كشف المرتب والمكافئة'))
-    def show_moratab_mokaf2_link(self, obj):
-        url = reverse('hr:payroll_moratab_mokaf2')
-        return format_html('<a target="_blank" class="viewlink" href="{url}?year={year}&month={month}">'+_('كشف المرتب والمكافئة')\
-                               +'</a> / '\
-                               +'<a target="_blank" href="{url}?year={year}&month={month}&bank_sheet=1">'+_('bank sheet')+'</a> / '\
-                               +'<a target="_blank" href="{url}?year={year}&month={month}&format=csv&bank_sheet=1">CSV</a>',
-                           url=url,year=obj.year,month=obj.month)
+        comparison_links = [
+            link(_('Diff badalat sheet'), f'{url_diff_badalat}?{cmp_q}', [
+                sub('CSV', f'{url_diff_badalat}?{cmp_q}&format=csv'),
+            ]),
+            link(_('Diff khosomat sheet'), f'{url_diff_khosomat}?{cmp_q}', [
+                sub(str(_('diff bank sheet')), f'{url_diff_khosomat}?{cmp_q}&bank_sheet=1'),
+                sub('CSV', f'{url_diff_khosomat}?{cmp_q}&format=csv'),
+            ]),
+        ]
 
-    @admin.display(description=_('Show m2moria sheet'))
-    def show_m2moria_link(self, obj):
-        url = reverse('hr:payroll_m2moria')
-        return format_html('<a target="_blank" class="viewlink" href="{url}?year={year}&month={month}">'+_('Show m2moria sheet')\
-                               +'</a> / '\
-                               +'<a target="_blank" href="{url}?year={year}&month={month}&format=csv&bank_sheet=1">'+_('bank sheet')+'</a> / '\
-                               +'<a target="_blank" href="{url}?year={year}&month={month}&format=csv">CSV</a>',
-                           url=url,year=obj.year,month=obj.month)
+        special_links = [
+            link('كشف مكافئة مجلس الوزراء', f'{url_mokaf2_majlis}?{q}', [
+                sub(str(_('bank sheet')), f'{url_mokaf2_majlis}?{q}&format=csv&bank_sheet=1'),
+                sub('CSV', f'{url_mokaf2_majlis}?{q}&format=csv'),
+            ]),
+            link(_('Show wi7dat mosa3ida farig moratab sheet'), f'{url_wi7dat_farg}?{q}', [
+                sub(str(_('bank sheet')), f'{url_wi7dat_farg}?{q}&format=csv&bank_sheet=1'),
+                sub('CSV', f'{url_wi7dat_farg}?{q}&format=csv'),
+            ]),
+            link(_('Show wi7dat mosa3ida mokaf2 sheet'), f'{url_wi7dat_mokaf2}?{q}', [
+                sub(str(_('bank sheet')), f'{url_wi7dat_mokaf2}?{q}&format=csv&bank_sheet=1'),
+                sub('CSV', f'{url_wi7dat_mokaf2}?{q}&format=csv'),
+            ]),
+            link(_('Show ta3agod mosimi moratab sheet'), f'{url_ta3agod_moratab}?{q}', [
+                sub(str(_('bank sheet')), f'{url_ta3agod_moratab}?{q}&format=csv&bank_sheet=1'),
+                sub('CSV', f'{url_ta3agod_moratab}?{q}&format=csv'),
+            ]),
+            link(_('Show ta3agod mosimi mokaf2 sheet'), f'{url_ta3agod_mokaf2}?{q}', [
+                sub(str(_('bank sheet')), f'{url_ta3agod_mokaf2}?{q}&format=csv&bank_sheet=1'),
+                sub('CSV', f'{url_ta3agod_mokaf2}?{q}&format=csv'),
+            ]),
+            link(_('Show majlis el2dara sheet'), f'{url_majlis}?{q}', [
+                sub(str(_('bank sheet')), f'{url_majlis}?{q}&format=csv&bank_sheet=1'),
+                sub('CSV', f'{url_majlis}?{q}&format=csv'),
+            ]),
+        ]
 
-    @admin.display(description=_('Show wi7dat mosa3ida farig moratab sheet'))
-    def show_wi7dat_mosa3ida_farig_moratab_link(self, obj):
-        url = reverse('hr:payroll_wi7dat_mosa3ida_farg_moratab')
-        return format_html('<a target="_blank" class="viewlink" href="{url}?year={year}&month={month}">'+_('Show wi7dat mosa3ida farig moratab sheet')\
-                               +'</a> / '\
-                               +'<a target="_blank" href="{url}?year={year}&month={month}&format=csv&bank_sheet=1">'+_('bank sheet')+'</a> / '\
-                               +'<a target="_blank" href="{url}?year={year}&month={month}&format=csv">CSV</a>',
-                           url=url,year=obj.year,month=obj.month)
+        manager_links = [
+            link(_('Show modir 3am badalat sheet'), f'{url_modir_badalat}?{q}', [
+                sub('CSV', f'{url_modir_badalat}?{q}&format=csv'),
+            ]),
+            link(_('Show modir 3am khosomat sheet'), f'{url_modir_khosomat}?{q}', [
+                sub(str(_('bank sheet')), f'{url_modir_khosomat}?{q}&format=csv&bank_sheet=1'),
+                sub('CSV', f'{url_modir_khosomat}?{q}&format=csv'),
+            ]),
+            link(_('Show modir 3am mokaf2 sheet'), f'{url_modir_mokaf2}?{q}', [
+                sub(str(_('bank sheet')), f'{url_modir_mokaf2}?{q}&format=csv&bank_sheet=1'),
+                sub('CSV', f'{url_modir_mokaf2}?{q}&format=csv'),
+            ]),
+        ]
 
-    @admin.display(description=_('Show wi7dat mosa3ida mokaf2 sheet'))
-    def show_wi7dat_mosa3ida_mokaf2_link(self, obj):
-        url = reverse('hr:payroll_wi7dat_mosa3ida_mokaf2')
-        return format_html('<a target="_blank" class="viewlink" href="{url}?year={year}&month={month}">'+_('Show wi7dat mosa3ida mokaf2 sheet')\
-                               +'</a> / '\
-                               +'<a target="_blank" href="{url}?year={year}&month={month}&format=csv&bank_sheet=1">'+_('bank sheet')+'</a> / '\
-                               +'<a target="_blank" href="{url}?year={year}&month={month}&format=csv">CSV</a>',
-                           url=url,year=obj.year,month=obj.month)
+        additional_links = []
+        if request.user.groups.filter(name="hr_manager").exists():
+            additional_links = [
+                link(_('Show mobashara sheet'), f'{url_mobashara}?{q}', [
+                    sub(str(_('bank sheet')), f'{url_mobashara}?{q}&format=csv&bank_sheet=1'),
+                    sub('CSV', f'{url_mobashara}?{q}&format=csv'),
+                ]),
+                link(_('Show m2moria sheet'), f'{url_m2moria}?{q}', [
+                    sub(str(_('bank sheet')), f'{url_m2moria}?{q}&format=csv&bank_sheet=1'),
+                    sub('CSV', f'{url_m2moria}?{q}&format=csv'),
+                ]),
+            ]
 
+        info = self.model._meta.app_label, self.model._meta.model_name
+        can_delete = self.has_delete_permission(request, obj)
 
-    @admin.display(description=_('Show ta3agod mosimi moratab sheet'))
-    def show_ta3agod_mosimi_moratab_link(self, obj):
-        url = reverse('hr:payroll_ta3agod_mosimi_moratab')
-        return format_html('<a target="_blank" class="viewlink" href="{url}?year={year}&month={month}">'+_('Show ta3agod mosimi moratab sheet')\
-                               +'</a> / '\
-                               +'<a target="_blank" href="{url}?year={year}&month={month}&format=csv&bank_sheet=1">'+_('bank sheet')+'</a> / '\
-                               +'<a target="_blank" href="{url}?year={year}&month={month}&format=csv">CSV</a>',
-                           url=url,year=obj.year,month=obj.month)
+        return {
+            'pk': obj.pk,
+            'year': year,
+            'month': month,
+            'month_display': obj.get_month_display(),
+            'confirmed': obj.confirmed,
+            'edit_url': reverse('admin:%s_%s_change' % info, args=[obj.pk]),
+            'delete_url': reverse('admin:%s_%s_delete' % info, args=[obj.pk]) if can_delete else '',
+            'can_delete': can_delete,
+            'core_links': core_links,
+            'comparison_links': comparison_links,
+            'special_links': special_links,
+            'manager_links': manager_links,
+            'additional_links': additional_links,
+        }
 
-    @admin.display(description=_('Show ta3agod mosimi mokaf2 sheet'))
-    def show_ta3agod_mosimi_mokaf2_link(self, obj):
-        url = reverse('hr:payroll_ta3agod_mosimi_mokaf2')
-        return format_html('<a target="_blank" class="viewlink" href="{url}?year={year}&month={month}">'+_('Show ta3agod mosimi mokaf2 sheet')\
-                               +'</a> / '\
-                               +'<a target="_blank" href="{url}?year={year}&month={month}&format=csv&bank_sheet=1">'+_('bank sheet')+'</a> / '\
-                               +'<a target="_blank" href="{url}?year={year}&month={month}&format=csv">CSV</a>',
-                           url=url,year=obj.year,month=obj.month)
+    def changelist_view(self, request, extra_context=None):
+        extra_context = extra_context or {}
+        # Get the filtered queryset from the ChangeList
+        response = super().changelist_view(request, extra_context=extra_context)
 
-    @admin.display(description=_('Show majlis el2dara sheet'))
-    def show_majlis_el2dara_link(self, obj):
-        url = reverse('hr:payroll_majlis_el2dara_mokaf2')
-        return format_html('<a target="_blank" class="viewlink" href="{url}?year={year}&month={month}">'+_('Show majlis el2dara sheet')\
-                               +'</a> / '\
-                               +'<a target="_blank" href="{url}?year={year}&month={month}&format=csv&bank_sheet=1">'+_('bank sheet')+'</a> / '\
-                               +'<a target="_blank" href="{url}?year={year}&month={month}&format=csv">CSV</a>',
-                           url=url,year=obj.year,month=obj.month)
+        # Only process for template responses (not redirects from actions)
+        if hasattr(response, 'context_data'):
+            cl = response.context_data.get('cl')
+            if cl:
+                results = [self._build_card_data(obj, request) for obj in cl.queryset]
+                response.context_data['results'] = results
 
-    @admin.display(description=_('Show modir 3am badalat sheet'))
-    def show_modir_3am_badalat_link(self, obj):
-        url = reverse('hr:payroll_modir_3am_badalat')
-        return format_html('<a target="_blank" class="viewlink" href="{url}?year={year}&month={month}">'+_('Show modir 3am badalat sheet')\
-                               +'</a> / '\
-                               +'<a target="_blank" href="{url}?year={year}&month={month}&format=csv">CSV</a>',
-                           url=url,year=obj.year,month=obj.month)
-
-    @admin.display(description=_('Show modir 3am khosomat sheet'))
-    def show_modir_3am_khosomat_link(self, obj):
-        url = reverse('hr:payroll_modir_3am_khosomat')
-        return format_html('<a target="_blank" class="viewlink" href="{url}?year={year}&month={month}">'+_('Show modir 3am khosomat sheet')\
-                               +'</a> / '\
-                               +'<a target="_blank" href="{url}?year={year}&month={month}&format=csv&bank_sheet=1">'+_('bank sheet')+'</a> / '\
-                               +'<a target="_blank" href="{url}?year={year}&month={month}&format=csv">CSV</a>',
-                           url=url,year=obj.year,month=obj.month)
-
-    @admin.display(description=_('Show modir 3am mokaf2 sheet'))
-    def show_modir_3am_mokaf2_link(self, obj):
-        url = reverse('hr:payroll_modir_3am_mokaf2')
-        return format_html('<a target="_blank" class="viewlink" href="{url}?year={year}&month={month}">'+_('Show modir 3am mokaf2 sheet')\
-                               +'</a> / '\
-                               +'<a target="_blank" href="{url}?year={year}&month={month}&format=csv&bank_sheet=1">'+_('bank sheet')+'</a> / '\
-                               +'<a target="_blank" href="{url}?year={year}&month={month}&format=csv">CSV</a>',
-                           url=url,year=obj.year,month=obj.month)
+        return response
 
     def save_model(self, request, obj, form, change):
         payroll = Payroll(obj.year,obj.month)

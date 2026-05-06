@@ -132,7 +132,7 @@
                                 {% endif %}
                             </div>
 
-                            <div class="col-md-6">
+                            <div class="col-md-12">
                                 <label class="form-label fw-bold">
                                     <i class="fas fa-building text-muted"></i> {{ form.department.label }}
                                 </label>
@@ -142,7 +142,7 @@
                                 {% endif %}
                             </div>
 
-                            <div class="col-md-6">
+                            <div class="col-md-12 pt-3 border-top">
                                 <label class="form-label fw-bold">
                                     <i class="fas fa-sim-card text-muted"></i> {{ form.sim_number.label }}
                                 </label>
@@ -152,12 +152,13 @@
                                 {% endif %}
                             </div>
                         </div>
-
-                        <div class="mt-5 pt-3 border-top d-flex justify-content-center">
+                        {% if can_submit %}
+                        <div class="mt-5 d-flex justify-content-center">
                             <button type="submit" class="btn btn-submit text-white shadow-sm">
-                                <i class="fas fa-check-circle me-1"></i> حفظ البيانات المسجلة
+                                <i class="fas fa-check-circle me-1"></i> حفظ البيانات 
                             </button>
                         </div>
+                         {% endif %}
                     </form>
                 </div>
             </div>

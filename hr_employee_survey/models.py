@@ -51,7 +51,7 @@ class Employee_Data_Emergency(models.Model):
     ) 
 
     class Meta:
-        verbose_name = "بيانات موظف مستوردة من بيانات المباشرين"
+        verbose_name = "بيانات موظف لتقييم 2025"
 
 
 class Employee_Sim_Card(models.Model):
@@ -61,8 +61,10 @@ class Employee_Sim_Card(models.Model):
         verbose_name="اسم الموظف"
     )
 
-    sim_number = models.IntegerField(
-        verbose_name="رقم الشريحة ")
+    sim_number = models.CharField(
+        max_length=15,
+        verbose_name="رقم الشريحة ",unique=True,
+    )
 
     department = models.CharField(
        blank=True, null=True,max_length=255,  
@@ -76,7 +78,7 @@ class Employee_Sim_Card(models.Model):
     )
 
     class Meta:
-        verbose_name = "بيانات موظف مستوردة من بيانات المباشرين"
+        verbose_name = "بيانات شريحة موظف 2025"
 
 
 class EmergencyEvaluation(models.Model):

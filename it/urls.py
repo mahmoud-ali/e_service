@@ -9,6 +9,7 @@ from it.views import (
     ManagerHelpRequestUpdateView,
     ManagerEmployeeComputerListView,
     ManagerEmployeeComputerDetailView,
+    ManagerEmployeeComputerQRCodeView,
 )
 
 app_name = "it"
@@ -23,4 +24,5 @@ urlpatterns = [
     path('help-requests/<uuid:pk>/update/', ManagerHelpRequestUpdateView.as_view(), name='manager_help_request_update'),
     path('computers/', ManagerEmployeeComputerListView.as_view(), name='manager_employee_computer_list'),
     path('computers/<int:pk>/', ManagerEmployeeComputerDetailView.as_view(), name='manager_employee_computer_detail'),
+    path('computers/<int:pk>/qrcode/', ManagerEmployeeComputerQRCodeView.as_view(), name='manager_employee_computer_qrcode'),
 ]

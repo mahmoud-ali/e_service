@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title|default:"الشامل - بوابة الموظف" }}</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'ui-sans-serif', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'Noto Sans', 'sans-serif', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji'],
+                    },
+                }
+            }
+        }
+    </script>
+
+    <!-- React and Babel for In-Browser JSX Compilation -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <!-- Lucide Icons -->
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Smooth scroll etc. */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        .animate-in {
+            animation-duration: 0.5s;
+            animation-fill-mode: both;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideInFromBottom {
+            from {
+                transform: translateY(1rem);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes zoomIn {
+            from {
+                transform: scale(0.95);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .fade-in {
+            animation-name: fadeIn;
+        }
+
+        .slide-in-from-bottom-4 {
+            animation-name: slideInFromBottom;
+        }
+
+        .zoom-in-95 {
+            animation-name: zoomIn;
+        }
+    </style>
+</head>
+
+<body class="bg-slate-50">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        {% verbatim %}
+        // Injecting the React code from App.jsx
+        // Note: For a real production app, this would be bundled.
+        // I am stripping the ES module imports as we are using globals from CDNs.
+
+        const { useState, useEffect } = React;
+
+        const LucideIcon = ({ name, size = 20, strokeWidth = 2, className = "" }) => {
+            const iconRef = React.useRef(null);
+            React.useEffect(() => {
+                const icon = lucide.icons[name.charAt(0).toLowerCase() + name.slice(1)]; // Map PascalCase to camelCase if needed, or just match exactly
+                // Lucide vanilla uses lowercase keys for some icons, but the names passed are usually PascalCase.
+                // Actually lucide.icons[name] where name is e.g. 'layout-dashboard' or 'LayoutDashboard'?
+                // Let's check lucide.icons keys.
+                if (icon && iconRef.current) {
+                    iconRef.current.innerHTML = icon.toSvg({
+                        width: size,
+                        height: size,
+                        'stroke-width': strokeWidth,
+                        class: className
+                    });
+                }
+            }, [name, size, strokeWidth, className]);
+            return <span ref={iconRef} className={`inline-flex items-center justify-center ${className}`} />;
+        };
+
+        // --- API Helpers ---
+        const getCookie = (name) => {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        const fetchDashboardStats = () =>
+            fetch('/bpmn/api/dashboard/summary/')
+                .then(r => r.json())
+                .then(data => ({
+                    waitingTasks: data.waiting_tasks_count || 0,
+                    activeRequests: data.active_requests_count || 0,
+                    completedTasks: data.archived_count || 0
+                }));
+
+        const fetchRecentTasks = () =>
+            fetch('/bpmn/api/task-inbox/?limit=5')
+                .then(r => r.json())
+                .then(data => (data.results || data).map(t => ({
+                    id: t.id,
+                    title: t.node_name || 'مهام بدون اسم',
+                    type: t.process_name || 'طلب عام',
+                    priority: t.due_date ? (new Date(t.due_date) < new Date() ? 'urgent' : 'normal') : 'normal',
+                    date: t.created_at ? new Date(t.created_at).toLocaleDateString('ar-EG') : ''
+                })));
+
+        const fetchMyRequests = () =>
+            fetch('/bpmn/api/my-requests/')
+                .then(r => r.json())
+                .then(data => (data.results || data).map(req => ({
+                    id: req.id,
+                    type: req.workflow_name || 'طلب',
+                    currentStep: req.current_node_name || 'قيد الرفع',
+                    progress: req.progress_percentage || 0,
+                    updated: req.modified_at ? new Date(req.modified_at).toLocaleDateString('ar-EG') : 'غير متوفر'
+                })));
+
+        const fetchTimeline = (id) =>
+            fetch(`/bpmn/api/timeline/${id}/`)
+                .then(r => r.json());
+
+        const fetchProcessInstance = (id) =>
+            fetch(`/bpmn/api/my-requests/${id}/`)
+                .then(r => r.json());
+
+        // --- Components ---
+
+        const SidebarItem = ({ icon: iconName, label, active, onClick }) => (
+            <button
+                onClick={onClick}
+                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${active
+                    ? 'bg-blue-600 text-white shadow-lg shadow-blue-200'
+                    : 'text-slate-600 hover:bg-blue-50 hover:text-blue-600'
+                    }`}
+            >
+                {iconName && <LucideIcon name={iconName} size={20} />}
+                <span className="font-medium">{label}</span>
+            </button>
+        );
+
+        const Card = ({ children, className = "" }) => (
+            <div className={`bg-white rounded-3xl shadow-xl shadow-slate-100 border border-slate-100 p-6 ${className}`}>
+                {children}
+            </div>
+        );
+
+        const StatCard = ({ label, value, icon: iconName, color }) => (
+            <Card className="hover:scale-[1.02] transition-transform cursor-default">
+                <div className="flex justify-between items-start">
+                    <div>
+                        <p className="text-slate-500 text-sm mb-1">{label}</p>
+                        <h3 className="text-3xl font-bold text-slate-800">{value}</h3>
+                    </div>
+                    <div className={`p-3 rounded-2xl ${color}`}>
+                        {iconName && <LucideIcon name={iconName} size={24} />}
+                    </div>
+                </div>
+            </Card>
+        );
+
+        const TimelineItem = ({ title, user, status, date, isLast }) => {
+            const getStatusStyle = () => {
+                switch (status) {
+                    case 'completed': return 'bg-emerald-500 text-white';
+                    case 'active': return 'bg-blue-600 text-white ring-4 ring-blue-100 animate-pulse';
+                    default: return 'bg-slate-200 text-slate-400';
+                }
+            };
+
+            return (
+                <div className="relative flex gap-4 pb-8">
+                    {!isLast && <div className="absolute top-8 right-2.5 w-0.5 h-full bg-slate-100" />}
+                    <div className={`mt-1 h-5 w-5 rounded-full flex items-center justify-center z-10 ${getStatusStyle()}`}>
+                        {status === 'completed' && <LucideIcon name="check-circle-2" size={12} />}
+                    </div>
+                    <div className="flex-1">
+                        <div className="flex justify-between items-start mb-1">
+                            <h4 className={`font-bold ${status === 'active' ? 'text-blue-600' : 'text-slate-800'}`}>{title}</h4>
+                            <span className="text-xs text-slate-400">{date}</span>
+                        </div>
+                        <p className="text-sm text-slate-500">{user}</p>
+                    </div>
+                </div>
+            );
+        };
+
+        // --- Main Views ---
+
+        const Dashboard = ({ onNavigate }) => {
+            const [stats, setStats] = useState({ waitingTasks: 0, activeRequests: 0, completedTasks: 0 });
+            const [tasks, setTasks] = useState([]);
+
+            useEffect(() => {
+                fetchDashboardStats().then(setStats).catch(console.error);
+                fetchRecentTasks().then(setTasks).catch(console.error);
+            }, []);
+
+            return (
+                <div className="space-y-8 animate-in fade-in duration-500">
+                    <header>
+                        <h1 className="text-2xl font-bold text-slate-800">مرحباً بك، محمد أحمد</h1>
+                        <p className="text-slate-500">لديك {stats.waitingTasks} مهام تتطلب انتباهك اليوم.</p>
+                    </header>
+
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <StatCard label="مهام قيد الانتظار" value={stats.waitingTasks} icon="clock" color="bg-orange-100 text-orange-600" />
+                        <StatCard label="طلبات نشطة" value={stats.activeRequests} icon="list-todo" color="bg-blue-100 text-blue-600" />
+                        <StatCard label="طلبات مكتملة" value={stats.completedTasks} icon="check-circle-2" color="bg-emerald-100 text-emerald-600" />
+                    </div>
+
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        <div className="lg:col-span-2 space-y-6">
+                            <Card>
+                                <div className="flex justify-between items-center mb-6">
+                                    <h2 className="text-lg font-bold text-slate-800">أحدث المهام</h2>
+                                    <button
+                                        onClick={() => onNavigate('waiting-tasks')}
+                                        className="text-blue-600 text-sm font-medium hover:underline"
+                                    >
+                                        عرض الكل
+                                    </button>
+                                </div>
+                                <div className="space-y-4">
+                                    {tasks.length > 0 ? tasks.map(task => (
+                                        <div key={task.id} className="flex items-center justify-between p-4 rounded-2xl hover:bg-slate-50 transition-colors border border-transparent hover:border-slate-100 group">
+                                            <div className="flex items-center gap-4">
+                                                <div className={`p-2 rounded-xl ${task.priority === 'urgent' ? 'bg-red-100 text-red-600' : 'bg-slate-100 text-slate-600'}`}>
+                                                    <LucideIcon name="alert-circle" size={20} />
+                                                </div>
+                                                <div>
+                                                    <h4 className="font-bold text-slate-800">{task.title}</h4>
+                                                    <p className="text-xs text-slate-500">{task.type} • {task.id}</p>
+                                                </div>
+                                            </div>
+                                            <button
+                                                onClick={() => onNavigate('details', task.id)}
+                                                className="p-2 rounded-lg bg-white shadow-sm border border-slate-200 text-slate-400 group-hover:text-blue-600 group-hover:border-blue-200 transition-all"
+                                            >
+                                                <LucideIcon name="chevron-left" size={18} />
+                                            </button>
+                                        </div>
+                                    )) : (
+                                        <p className="text-center text-slate-400 py-4">لا توجد مهام حالية</p>
+                                    )}
+                                </div>
+                            </Card>
+                        </div>
+
+                        <div className="space-y-6">
+                            <Card>
+                                <h2 className="text-lg font-bold text-slate-800 mb-6">روابط سريعة</h2>
+                                <div className="space-y-3">
+                                    <button
+                                        onClick={() => onNavigate('new-request')}
+                                        className="w-full flex items-center justify-between p-4 rounded-2xl bg-gradient-to-l from-blue-600 to-blue-500 text-white shadow-lg shadow-blue-100 hover:scale-[1.02] transition-transform"
+                                    >
+                                        <div className="flex items-center gap-3">
+                                            <LucideIcon name="plus-circle" size={20} />
+                                            <span className="font-medium">إنشاء طلب جديد</span>
+                                        </div>
+                                        <LucideIcon name="chevron-left" size={18} opacity={0.7} />
+                                    </button>
+                                </div>
+                            </Card>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const MyRequests = ({ onNavigate }) => {
+            const [requests, setRequests] = useState([]);
+            const [loading, setLoading] = useState(true);
+
+            useEffect(() => {
+                fetchMyRequests().then(data => {
+                    setRequests(data);
+                    setLoading(false);
+                }).catch(err => {
+                    console.error(err);
+                    setLoading(false);
+                });
+            }, []);
+
+            return (
+                <div className="space-y-6 animate-in slide-in-from-bottom-4 duration-500">
+                    <header className="flex justify-between items-center">
+                        <h1 className="text-2xl font-bold text-slate-800">طلباتي</h1>
+                        <button
+                            onClick={() => onNavigate('new-request')}
+                            className="px-4 py-2 bg-blue-600 text-white rounded-xl shadow-lg shadow-blue-200 hover:bg-blue-700 transition-all flex items-center gap-2"
+                        >
+                            <LucideIcon name="plus-circle" size={18} />
+                            <span>طلب جديد</span>
+                        </button>
+                    </header>
+
+                    <Card className="overflow-hidden p-0">
+                        <table className="w-full text-right">
+                            <thead>
+                                <tr className="bg-slate-50 text-slate-500 text-sm">
+                                    <th className="px-6 py-4 font-bold">المعرف</th>
+                                    <th className="px-6 py-4 font-bold">نوع الطلب</th>
+                                    <th className="px-6 py-4 font-bold">المرحلة الحالية</th>
+                                    <th className="px-6 py-4 font-bold">التقدم</th>
+                                    <th className="px-6 py-4 font-bold">آخر تحديث</th>
+                                    <th className="px-6 py-4"></th>
+                                </tr>
+                            </thead>
+                            <tbody className="divide-y divide-slate-100">
+                                {loading ? (
+                                    <tr><td colSpan="6" className="text-center py-10 text-slate-400">جاري التحميل...</td></tr>
+                                ) : requests.length > 0 ? requests.map(req => (
+                                    <tr key={req.id} className="hover:bg-slate-50/50 transition-colors cursor-pointer group" onClick={() => onNavigate('details', req.id)}>
+                                        <td className="px-6 py-4 text-sm font-medium text-slate-900">#REQ-{req.id.toString().slice(0, 8)}</td>
+                                        <td className="px-6 py-4 text-sm text-slate-600">{req.type}</td>
+                                        <td className="px-6 py-4 text-sm text-slate-600">
+                                            <span className="inline-flex items-center gap-1.5 py-1 px-3 rounded-full bg-blue-50 text-blue-600 text-xs font-bold">
+                                                {req.currentStep}
+                                            </span>
+                                        </td>
+                                        <td className="px-6 py-4">
+                                            <div className="w-32 h-2 bg-slate-100 rounded-full overflow-hidden">
+                                                <div className="h-full bg-blue-500 rounded-full" style={{ width: `${req.progress}%` }} />
+                                            </div>
+                                        </td>
+                                        <td className="px-6 py-4 text-sm text-slate-400">{req.updated}</td>
+                                        <td className="px-6 py-4 text-left">
+                                            <LucideIcon name="chevron-left" size={18} className="text-slate-300 group-hover:text-blue-500 group-hover:translate-x-1 transition-all inline" />
+                                        </td>
+                                    </tr>
+                                )) : (
+                                    <tr><td colSpan="6" className="text-center py-10 text-slate-400">لا توجد طلبات سابقة</td></tr>
+                                )}
+                            </tbody>
+                        </table>
+                    </Card>
+                </div>
+            );
+        };
+
+        // Helper functions moved to top
+
+        const DetailsView = ({ requestId, onBack }) => {
+            const [details, setDetails] = useState(null);
+            const [timeline, setTimeline] = useState([]);
+            const [loading, setLoading] = useState(true);
+
+            useEffect(() => {
+                if (requestId) {
+                    setLoading(true);
+                    Promise.all([
+                        fetchProcessInstance(requestId),
+                        fetchTimeline(requestId)
+                    ]).then(([detailData, timelineData]) => {
+                        setDetails(detailData);
+                        setTimeline(timelineData);
+                        setLoading(false);
+                    }).catch(err => {
+                        console.error(err);
+                        setLoading(false);
+                    });
+                }
+            }, [requestId]);
+
+            return (
+                <div className="space-y-6 animate-in zoom-in-95 duration-300">
+                    <header className="flex items-center gap-4">
+                        <button
+                            onClick={onBack}
+                            className="p-2 rounded-xl hover:bg-slate-100 text-slate-500 transition-colors"
+                        >
+                            <LucideIcon name="chevron-right" size={24} />
+                        </button>
+                        <div>
+                            <h1 className="text-2xl font-bold text-slate-800">تفاصيل الطلب #{requestId?.toString().slice(0, 8)}</h1>
+                            <p className="text-slate-500 text-sm">{details?.workflow_name || 'جاري التحميل...'}</p>
+                        </div>
+                    </header>
+
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        <div className="lg:col-span-2 space-y-6">
+                            <Card>
+                                <h2 className="text-lg font-bold text-slate-800 mb-6 border-b pb-4">معلومات الطلب</h2>
+                                {loading ? (
+                                    <p className="text-center py-10 text-slate-400">جاري التحميل...</p>
+                                ) : (
+                                    <div className="grid grid-cols-2 gap-6">
+                                        <div>
+                                            <p className="text-slate-400 text-xs mb-1">الموظف</p>
+                                            <p className="font-medium text-slate-800">{details?.started_by_name}</p>
+                                        </div>
+                                        <div>
+                                            <p className="text-slate-400 text-xs mb-1">الحالة الحالية</p>
+                                            <p className="font-medium text-slate-800">{details?.status}</p>
+                                        </div>
+                                        <div className="col-span-2">
+                                            <p className="text-slate-400 text-xs mb-1">بيانات العمل</p>
+                                            <pre className="bg-slate-50 p-4 rounded-xl text-xs overflow-auto max-h-40">
+                                                {JSON.stringify(details?.business_object_data, null, 2)}
+                                            </pre>
+                                        </div>
+                                    </div>
+                                )}
+                            </Card>
+                        </div>
+
+                        <div className="space-y-6">
+                            <Card>
+                                <h2 className="text-lg font-bold text-slate-800 mb-8 border-b pb-4">مسار الاعتمادات</h2>
+                                {loading ? (
+                                    <p className="text-center text-slate-400 py-10">جاري تحميل المسار...</p>
+                                ) : (
+                                    <div className="pr-2">
+                                        {timeline.map((item, idx) => (
+                                            <TimelineItem
+                                                key={idx}
+                                                title={item.activity_description || item.node_name}
+                                                user={item.actor_name || 'النظام'}
+                                                status={item.status === 'completed' ? 'completed' : (idx === timeline.length - 1 ? 'active' : 'pending')}
+                                                date={item.timestamp ? new Date(item.timestamp).toLocaleDateString('ar-EG') : ''}
+                                                isLast={idx === timeline.length - 1}
+                                            />
+                                        ))}
+                                    </div>
+                                )}
+                            </Card>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        // --- App Component ---
+
+        function App() {
+            const [activeTab, setActiveTab] = useState('home');
+            const [prevTab, setPrevTab] = useState('home');
+            const [isSidebarOpen, setSidebarOpen] = useState(true);
+            const [selectedRequestId, setSelectedRequestId] = useState(null);
+
+            const handleNavigate = (tab, id = null) => {
+                setPrevTab(activeTab);
+                setActiveTab(tab);
+                if (id) setSelectedRequestId(id);
+            };
+
+            const renderContent = () => {
+                switch (activeTab) {
+                    case 'home': return <Dashboard onNavigate={handleNavigate} />;
+                    case 'my-requests': return <MyRequests onNavigate={handleNavigate} />;
+                    case 'details': return <DetailsView requestId={selectedRequestId} onBack={() => handleNavigate(prevTab)} />;
+                    case 'archive': return <div className="p-20 text-center text-slate-400">قريباً: الأرشيف</div>;
+                    case 'waiting-tasks': return <div className="p-20 text-center text-slate-400">قريباً: صندوق المهام</div>;
+                    case 'new-request': return <div className="p-20 text-center text-slate-400">قريباً: إنشاء طلب جديد</div>;
+                    default: return <Dashboard onNavigate={handleNavigate} />;
+                }
+            };
+
+            return (
+                <div className="min-h-screen bg-[#F8FAFC] font-sans" dir="rtl">
+                    {/* Sidebar */}
+                    <aside className={`fixed top-0 bottom-0 right-0 z-50 bg-white border-l border-slate-100 transition-all duration-300 shadow-2xl shadow-slate-200 ${isSidebarOpen ? 'w-72' : 'w-20'}`}>
+                        <div className="flex flex-col h-full p-4">
+                            <div className="flex items-center gap-3 mb-10 px-2 py-4 border-b border-slate-50">
+                                <div className="h-10 w-10 bg-blue-600 rounded-2xl flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-blue-200">
+                                    ش
+                                </div>
+                                {isSidebarOpen && <span className="text-xl font-black text-slate-800 tracking-tight">شامل</span>}
+                            </div>
+
+                            <nav className="flex-1 space-y-2">
+                                <SidebarItem icon="layout-dashboard" label={isSidebarOpen ? "لوحة التحكم" : ""} active={activeTab === 'home'} onClick={() => handleNavigate('home')} />
+                                <SidebarItem icon="clock" label={isSidebarOpen ? "صندوق المهام" : ""} active={activeTab === 'waiting-tasks'} onClick={() => handleNavigate('waiting-tasks')} />
+                                <SidebarItem icon="list-todo" label={isSidebarOpen ? "طلباتي" : ""} active={activeTab === 'my-requests' || activeTab === 'details'} onClick={() => handleNavigate('my-requests')} />
+                                <SidebarItem icon="archive" label={isSidebarOpen ? "الأرشيف" : ""} active={activeTab === 'archive'} onClick={() => handleNavigate('archive')} />
+                            </nav>
+
+                            <div className="pt-4 border-t border-slate-50">
+                                <button className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-red-500 hover:bg-red-50 transition-colors">
+                                    <LucideIcon name="log-out" size={20} />
+                                    {isSidebarOpen && <span className="font-medium">تسجيل الخروج</span>}
+                                </button>
+                            </div>
+                        </div>
+                    </aside>
+
+                    {/* Main Content */}
+                    <main className={`transition-all duration-300 min-h-screen ${isSidebarOpen ? 'pr-72' : 'pr-20'}`}>
+                        {/* Top Navbar */}
+                        <header className="h-20 bg-white/80 backdrop-blur-md sticky top-0 z-40 px-8 flex items-center justify-between border-b border-slate-100/50">
+                            <div className="flex items-center gap-4">
+                                <button
+                                    onClick={() => setSidebarOpen(!isSidebarOpen)}
+                                    className="p-2 rounded-lg hover:bg-slate-100 text-slate-500 transition-colors"
+                                >
+                                    {isSidebarOpen ? <LucideIcon name="chevron-right" size={20} /> : <LucideIcon name="chevron-left" size={20} />}
+                                </button>
+                                <div className="relative group hidden sm:block">
+                                    <LucideIcon name="search" size={18} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-500 transition-colors" />
+                                    <input
+                                        type="text"
+                                        placeholder="ابحث عن طلبات، مهام..."
+                                        className="bg-slate-50 border-transparent border focus:border-blue-200 focus:bg-white rounded-2xl pr-10 pl-4 py-2 text-sm outline-none transition-all w-64"
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="flex items-center gap-4">
+                                <button className="relative p-2 rounded-xl text-slate-400 hover:bg-slate-100 transition-colors">
+                                    <LucideIcon name="bell" size={20} />
+                                    <span className="absolute top-2 left-2.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white" />
+                                </button>
+                                <div className="h-8 w-[1px] bg-slate-100 mx-2" />
+                                <div className="flex items-center gap-3">
+                                    <div className="text-left hidden sm:block text-right">
+                                        <p className="text-sm font-bold text-slate-800 leading-none">محمد أحمد</p>
+                                        <p className="text-[10px] text-slate-400 mt-1 uppercase tracking-widest font-semibold">محلل نظم أول</p>
+                                    </div>
+                                    <div className="h-10 w-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 border border-slate-100 overflow-hidden">
+                                        <LucideIcon name="user" size={24} />
+                                    </div>
+                                </div>
+                            </div>
+                        </header>
+
+                        {/* Content Area */}
+                        <div className="p-8 max-w-7xl mx-auto">
+                            {renderContent()}
+                        </div>
+                    </main>
+                </div>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+        {% endverbatim %}
+    </script>
+</body>
+
+</html>

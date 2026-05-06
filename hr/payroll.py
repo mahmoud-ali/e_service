@@ -75,6 +75,7 @@ class Payroll():
         k = Settings.SETTINGS_AADOA+'_daraja_' + str(employee.draja_wazifia)
         aadoa = self.hr_settings.get_code_as_float(k)
 
+        calculate_mokaf2t_ada2 = self.hr_settings.get_code_as_boolean(Settings.SETTINGS_CALCULATE_MOKAF2T_ADA2)
         k2 = Settings.SETTINGS_MOKAF2T_ADA2+'_daraja_' + str(employee.draja_wazifia)
         mokaf2at_2da2 = self.hr_settings.get_code_as_float(k2)
 
@@ -91,6 +92,7 @@ class Payroll():
                 draj_obj.galaa_m3isha,
                 shakhsia=draj_obj.shakhsia,
                 aadoa=aadoa,
+                calculate_mokaf2t_ada2=calculate_mokaf2t_ada2,
                 mokaf2at_2da2=mokaf2at_2da2,
                 gasima=gasima,
                 atfal=(employee.atfal *self.hr_settings.get_code_as_float(Settings.SETTINGS_ATFAL)),
@@ -134,6 +136,7 @@ class Payroll():
             emp_payroll.galaa_m3isha,
             shakhsia=emp_payroll.shakhsia,
             aadoa=emp_payroll.aadoa,
+            calculate_mokaf2t_ada2=emp_payroll.calculate_mokaf2t_ada2,
             mokaf2at_2da2=emp_payroll.mokaf2at_2da2,
             gasima=emp_payroll.gasima,
             atfal=emp_payroll.atfal,
@@ -245,7 +248,9 @@ class Payroll():
                         galaa_m3isha = badalat.galaa_m3isha*factor,
                         shakhsia = badalat.shakhsia*factor,
                         aadoa = badalat.aadoa*factor,
+                        calculate_mokaf2t_ada2=badalat.calculate_mokaf2t_ada2,
                         mokaf2at_2da2 = badalat.mokaf2at_2da2*factor,
+                        mokaf2at_majlis = badalat.mokaf2at_majlis*factor,
                         mokaf2at_2da2_fi_mokaf2 = mokaf2at_2da2_fi_mokaf2,
                         gasima = badalat.ajtima3ia_gasima*factor,
                         atfal = badalat.ajtima3ia_atfal*factor,
@@ -314,6 +319,7 @@ class Payroll():
                     employee=emp,
                     total_salary=badalat.ajmali_almoratab,
                     net_salary=khosomat.safi_alisti7gag,
+                    salary_calculate_mokaf2t_ada2=badalat.calculate_mokaf2t_ada2,
                     salary_mokaf2=badalat.mokaf2at_2da2,
                 )
             )
@@ -391,6 +397,7 @@ class MobasharaSheet():
                             emp_payroll.galaa_m3isha,
                             shakhsia=emp_payroll.shakhsia,
                             aadoa=emp_payroll.aadoa,
+                            calculate_mokaf2t_ada2 =emp_payroll.calculate_mokaf2t_ada2,
                             mokaf2at_2da2=emp_payroll.mokaf2at_2da2,
                             gasima=emp_payroll.gasima,
                             atfal=emp_payroll.atfal,
@@ -456,6 +463,7 @@ class Mokaf2Sheet():
             emp_payroll.galaa_m3isha,
             shakhsia=emp_payroll.shakhsia,
             aadoa=emp_payroll.aadoa,
+            calculate_mokaf2t_ada2=emp_payroll.calculate_mokaf2t_ada2,
             mokaf2at_2da2=mokaf2at_2da2,
             gasima=emp_payroll.gasima,
             atfal=emp_payroll.atfal,
@@ -470,7 +478,44 @@ class Mokaf2Sheet():
             x = self.employee_mokaf2_from_db(emp)
             if x:
                 yield(emp.employee,x)
+
 ################
+class Mokaf2MajlisWzaraSheet():
+    def __init__(self,year,month) -> None:
+        self.year = year
+        self.month = month
+
+        self.hr_settings = HrSettings()
+        self.employees = PayrollDetail.objects \
+            .exclude(employee__no3_2lertibat__in=[EmployeeBasic.NO3_2LERTIBAT_2L7ag, EmployeeBasic.NO3_2LERTIBAT_TA3AGOD, EmployeeBasic.NO3_2LERTIBAT_TA3AGOD_MOSIMI,EmployeeBasic.NO3_2LERTIBAT_MASHRO3]) \
+            .filter(payroll_master__year = self.year,payroll_master__month = self.month).prefetch_related("payroll_master","employee").filter(employee__status=EmployeeBasic.STATUS_ACTIVE)
+            # .exclude(employee__hikal_wazifi=self.hr_settings.get_code_as_float(Settings.SETTINGS_KHARJ_ELSHARIKA))\
+
+    def employee_mokaf2_from_db(self,emp_payroll:PayrollDetail):
+        mokaf2at_majlis = emp_payroll.mokaf2at_majlis
+
+        badal = Badalat_3lawat(
+            emp_payroll.abtdai,
+            emp_payroll.galaa_m3isha,
+            shakhsia=emp_payroll.shakhsia,
+            aadoa=emp_payroll.aadoa,
+            calculate_mokaf2t_ada2=True,
+            mokaf2at_2da2=mokaf2at_majlis,
+            gasima=emp_payroll.gasima,
+            atfal=emp_payroll.atfal,
+            moahil=emp_payroll.moahil,
+            ma3adin=emp_payroll.ma3adin
+        )
+
+        return badal
+
+    def all_employees_mokaf2_from_db(self):
+        for emp in self.employees:
+            x = self.employee_mokaf2_from_db(emp)
+            if x:
+                yield(emp.employee,x)
+################
+
 class MoratabMokaf2Sheet():
     def __init__(self,year,month) -> None:
         self.year = int(year)
@@ -508,6 +553,7 @@ class MoratabMokaf2Sheet():
             emp_payroll.galaa_m3isha,
             shakhsia=emp_payroll.shakhsia,
             aadoa=emp_payroll.aadoa,
+            calculate_mokaf2t_ada2=emp_payroll.calculate_mokaf2t_ada2,
             mokaf2at_2da2=emp_payroll.mokaf2at_2da2,
             gasima=emp_payroll.gasima,
             atfal=emp_payroll.atfal,
@@ -522,6 +568,7 @@ class MoratabMokaf2Sheet():
             emp_payroll.galaa_m3isha,
             shakhsia=emp_payroll.shakhsia,
             aadoa=emp_payroll.aadoa,
+            calculate_mokaf2t_ada2=emp_payroll.calculate_mokaf2t_ada2,
             mokaf2at_2da2=mokaf2at_2da2,
             gasima=emp_payroll.gasima,
             atfal=emp_payroll.atfal,
@@ -551,7 +598,7 @@ class MoratabMokaf2Sheet():
             dariba_mokaf2=self.hr_settings.get_code_as_float(Settings.SETTINGS_DARIBAT_2LMOKAFA),
         )
 
-        return (khosomat,Mokaf2(badal_mokaf2,emp_payroll.payroll_master.daribat_2lmokafa,emp_payroll.damga,khasm_salafiat_elsandog_min_elmokaf2=(not emp_payroll.payroll_master.khasm_salafiat_elsandog_min_elomoratab),salafiat_sandog=emp_payroll.salafiat_sandog,salafiat_3la_2lmokaf2=emp_payroll.salafiat_3la_2lmokaf2))
+        return (khosomat,Mokaf2(badal_mokaf2,emp_payroll.payroll_master.daribat_2lmokafa,emp_payroll.damga,khasm_salafiat_elsandog_min_elmokaf2=(not emp_payroll.payroll_master.khasm_salafiat_elsandog_min_elomoratab),salafiat_sandog=emp_payroll.salafiat_sandog,salafiat_3la_2lmokaf2=emp_payroll.salafiat_3la_2lmokaf2),emp_payroll.mokaf2at_majlis)
 
     def all_employees_from_db(self):
         for emp in self.payroll_details:
@@ -596,6 +643,7 @@ class M2moriaSheet():
         k = Settings.SETTINGS_AADOA+'_daraja_' + str(employee.draja_wazifia)
         aadoa = self.hr_settings.get_code_as_float(k)
 
+        calculate_mokaf2t_ada2 = self.hr_settings.get_code_as_float(Settings.SETTINGS_CALCULATE_MOKAF2T_ADA2)
         k2 = Settings.SETTINGS_MOKAF2T_ADA2+'_daraja_' + str(employee.draja_wazifia)
         mokaf2at_2da2 = self.hr_settings.get_code_as_float(k2)
 
@@ -606,6 +654,7 @@ class M2moriaSheet():
                 draj_obj.galaa_m3isha,
                 shakhsia=draj_obj.shakhsia,
                 aadoa=aadoa,
+                calculate_mokaf2t_ada2=calculate_mokaf2t_ada2,
                 mokaf2at_2da2=mokaf2at_2da2,
                 gasima=gasima,
                 atfal=(employee.atfal *self.hr_settings.get_code_as_float(Settings.SETTINGS_ATFAL)),
@@ -718,6 +767,7 @@ class Wi7datMosa3idaMokaf2tFarigMoratabPayroll():
                 draj_obj.galaa_m3isha,
                 shakhsia=draj_obj.shakhsia,
                 aadoa=aadoa,
+                calculate_mokaf2t_ada2=False,
                 mokaf2at_2da2=mokaf2at_2da2,
                 gasima=gasima,
                 atfal=atfal,
@@ -751,6 +801,7 @@ class Wi7datMosa3idaMokaf2tFarigMoratabPayroll():
             emp_payroll.galaa_m3isha,
             shakhsia=emp_payroll.shakhsia,
             aadoa=0,
+            calculate_mokaf2t_ada2=False,
             mokaf2at_2da2=0,
             gasima=0,
             atfal=0,
@@ -897,6 +948,7 @@ class Wi7datMosa3idaMokaf2tPayroll():
             emp_payroll.galaa_m3isha,
             shakhsia=emp_payroll.shakhsia,
             aadoa=0,
+            calculate_mokaf2t_ada2=False,
             mokaf2at_2da2=0,
             gasima=0,
             atfal=0,
@@ -1378,6 +1430,7 @@ class TasoiaPayroll():
 
         total_ma3adin = 0
         total_aadoa = 0
+        calculate_mokaf2t_ada2 = False
         total_mokaf2at_2da2 = 0
         total_gasima = 0
         total_atfal = 0
@@ -1406,6 +1459,7 @@ class TasoiaPayroll():
             total_mihna += badalat.mihna
             total_ma3adin += badalat.ma3adin
             total_aadoa += badalat.aadoa
+            calculate_mokaf2t_ada2 = badalat.calculate_mokaf2t_ada2
             total_mokaf2at_2da2 += badalat.mokaf2at_2da2
             total_gasima += badalat.ajtima3ia_gasima
             total_atfal += badalat.ajtima3ia_atfal
@@ -1437,6 +1491,7 @@ class TasoiaPayroll():
                 total_mihna = total_mihna,
                 total_ma3adin = total_ma3adin,
                 total_aadoa = total_aadoa,
+                calculate_mokaf2t_ada2 = calculate_mokaf2t_ada2,
                 total_mokaf2at_2da2 = total_mokaf2at_2da2,
                 total_ajtima3ia = ajtima3ia,
                 total_moahil = total_moahil,
