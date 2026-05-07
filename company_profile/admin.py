@@ -84,7 +84,7 @@ class InactiveCompaniesFilter(admin.SimpleListFilter):
 
     def lookups(self, request, model_admin):
         return (
-            ('1', _('إظهار الكل (بما في ذلك المتوقفة والمنتهية)')),
+            ('1', _('إظهار الكل (بما في ذلك الملغية والمنتهية)')),
         )
 
     def queryset(self, request, queryset):
@@ -105,9 +105,9 @@ class WorkflowAdminMixin:
         if is_changelist and not (show_inactive or request.GET.get('q')):
             # Check if the model has a 'company' field or similar
             if hasattr(self.model, 'company'):
-                qs = qs.exclude(company__status__name__in=["منتهية", "متوقفة", "ملغية","متوقفه"])
+                qs = qs.exclude(company__status__name__in=["منتهية",  "ملغية"])
             elif hasattr(self.model, 'license'):
-                 qs = qs.exclude(license__company__status__name__in=["منتهية", "متوقفة", "ملغية","متوقفه"])
+                 qs = qs.exclude(license__company__status__name__in=["منتهية",  "ملغية"])
 
         if request.user.groups.filter(name="pro_company_user").exists():
             if hasattr(request.user, "pro_company"):
@@ -465,7 +465,7 @@ class TblCompanyProductionAdmin(ExportActionMixin,LoggingAdminMixin,admin.ModelA
         show_inactive = request.GET.get('show_inactive') == '1'
         
         if is_changelist and not (show_inactive or request.GET.get('q')):
-            qs = qs.exclude(status__name__in=["منتهية", "متوقفة", "ملغية","متوقفه"])
+            qs = qs.exclude(status__name__in=["منتهية",  "ملغية"])
 
         return qs
 
@@ -1301,7 +1301,7 @@ class AppHSEPerformanceReportAdmin(admin.ModelAdmin):
         show_inactive = request.GET.get('show_inactive') == '1'
         
         if is_changelist and not (show_inactive or request.GET.get('q')):
-            qs = qs.exclude(company__status__name__in=["منتهية", "متوقفة", "ملغية","متوقفه"])
+            qs = qs.exclude(company__status__name__in=["منتهية",  "ملغية"])
 
         filter = []
         company_types = []
