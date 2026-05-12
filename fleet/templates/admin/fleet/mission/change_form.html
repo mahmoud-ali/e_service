@@ -1,0 +1,36 @@
+{% extends "admin/change_form.html" %}
+{% load i18n admin_urls %}
+
+{% block inline_field_sets %}
+    {# We will manually place inlines where we want #}
+{% endblock %}
+
+{% block field_sets %}
+    {# First two fieldsets (General and Dates) #}
+    {% for fieldset in adminform %}
+        {% if forloop.counter <= 2 %}
+            {% include "admin/includes/fieldset.html" %}
+        {% endif %}
+    {% endfor %}
+
+    {# Now place the MissionVehicleInline #}
+    {% for inline_admin_formset in inline_admin_formsets %}
+        {% if inline_admin_formset.formset.prefix == 'missionvehicle_set' %}
+            {% include "admin/edit_inline/tabular.html" %}
+        {% endif %}
+    {% endfor %}
+
+    {# Now place the remaining fieldsets (Extension and Notes) #}
+    {% for fieldset in adminform %}
+        {% if forloop.counter > 2 %}
+            {% include "admin/includes/fieldset.html" %}
+        {% endif %}
+    {% endfor %}
+
+    {# Place other inlines if any (though currently there are none) #}
+    {% for inline_admin_formset in inline_admin_formsets %}
+        {% if inline_admin_formset.formset.prefix != 'missionvehicle_set' %}
+            {% include "admin/edit_inline/tabular.html" %}
+        {% endif %}
+    {% endfor %}
+{% endblock %}

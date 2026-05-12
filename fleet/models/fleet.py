@@ -212,10 +212,11 @@ class VehicleCertificate(LoggingModel):
 #         verbose_name_plural = _("عداد المسافة")
 
 class Mission(LoggingModel):
-    vehicle = models.ForeignKey(Vehicle, on_delete=models.PROTECT,verbose_name=_("المركبة"))
-    driver = models.ForeignKey(Driver, on_delete=models.PROTECT,verbose_name=_("السائق"))
+    vehicle = models.ForeignKey(Vehicle, on_delete=models.PROTECT,verbose_name=_("المركبة"), blank=True, null=True)
+    driver = models.ForeignKey(Driver, on_delete=models.PROTECT,verbose_name=_("السائق"), blank=True, null=True)
     destination = models.CharField(_("الوجهة"),max_length=100)
     requested_by = models.CharField(_("الجهة الطالبة"),max_length=100)
+    no_of_vehicles = models.IntegerField(_("عدد المركبات"), default=1)
     planned_start_date = models.DateField(_("تاريخ البدء المخطط"))
     actual_start_date = models.DateField(_("تاريخ البدء الفعلي"),blank=True,null=True)
     no_of_days = models.IntegerField(_("عدد الأيام"),)
@@ -233,6 +234,9 @@ class Mission(LoggingModel):
         return f'{self.requested_by}({self.destination}) {self.planned_start_date} - {self.no_of_days}'
     
     def clean(self):
+        if not self.planned_start_date or self.no_of_days is None:
+            return super().clean()
+
         # Calculate proposed end dates for validation
         planned_end = self.planned_start_date + timedelta(days=self.no_of_days - 1)
         effective_end = planned_end
@@ -242,22 +246,24 @@ class Mission(LoggingModel):
         from django.db.models import Q, F
         from django.db.models.functions import Coalesce
 
-        # Check for overlaps with other missions for same driver or vehicle
-        # Logic: (Other.start <= Our.effective_end) AND (Other.effective_end >= Our.start)
-        conflicts = Mission.objects.annotate(
-            other_effective_end=Coalesce(F('extended_planned_end_date'), F('planned_end_date'))
-        ).filter(
-            Q(driver=self.driver) | Q(vehicle=self.vehicle),
-            planned_start_date__lte=effective_end,
-            other_effective_end__gte=self.planned_start_date
-        ).exclude(pk=self.pk)
+        # Check for overlaps with other missions for same driver or vehicle (Primary)
+        if self.driver or self.vehicle:
+            conflicts = Mission.objects.annotate(
+                other_effective_end=Coalesce(F('extended_planned_end_date'), F('planned_end_date'))
+            ).filter(
+                planned_start_date__lte=effective_end,
+                other_effective_end__gte=self.planned_start_date
+            ).exclude(pk=self.pk)
 
-        if conflicts.exists():
-            conflict = conflicts.first()
-            if conflict.driver == self.driver:
-                raise ValidationError(_("السائق في مأمورية أخرى في هذه الفترة (بما في ذلك التمديد)"))
-            if conflict.vehicle == self.vehicle:
-                raise ValidationError(_("المركبة في مأمورية أخرى في هذه الفترة (بما في ذلك التمديد)"))
+            if self.driver:
+                driver_conflicts = conflicts.filter(Q(driver=self.driver) | Q(missionvehicle__assignment__driver=self.driver))
+                if driver_conflicts.exists():
+                     raise ValidationError(_("السائق في مأمورية أخرى في هذه الفترة (بما في ذلك التمديد)"))
+            
+            if self.vehicle:
+                vehicle_conflicts = conflicts.filter(Q(vehicle=self.vehicle) | Q(missionvehicle__assignment__vehicle=self.vehicle))
+                if vehicle_conflicts.exists():
+                    raise ValidationError(_("المركبة في مأمورية أخرى في هذه الفترة (بما في ذلك التمديد)"))
 
         return super().clean()
 
@@ -284,6 +290,61 @@ class Mission(LoggingModel):
     class Meta:
         verbose_name = _("المأمورية")
         verbose_name_plural = _("إدارة المأموريات")
+
+class MissionVehicle(LoggingModel):
+    mission = models.ForeignKey(Mission, on_delete=models.CASCADE, verbose_name=_("المأمورية"))
+    assignment = models.ForeignKey(VehicleDriver, on_delete=models.PROTECT, verbose_name=_("المركبة والسائق"), null=True)
+
+    def __str__(self) -> str:
+        return f'{self.assignment}'
+    
+    def clean(self):
+        if not self.mission.planned_start_date or self.mission.no_of_days is None:
+            return super().clean()
+        
+        if not self.assignment_id:
+             return super().clean()
+
+        # Calculate proposed end dates for validation
+        planned_end = self.mission.planned_start_date + timedelta(days=self.mission.no_of_days - 1)
+        effective_end = planned_end
+        if self.mission.is_extended and self.mission.extension_days:
+            effective_end = planned_end + timedelta(days=self.mission.extension_days)
+        
+        from django.db.models import Q, F
+        from django.db.models.functions import Coalesce
+
+        # Check for overlaps with other missions for same driver or vehicle
+        conflicts = Mission.objects.annotate(
+            other_effective_end=Coalesce(F('extended_planned_end_date'), F('planned_end_date'))
+        ).filter(
+            planned_start_date__lte=effective_end,
+            other_effective_end__gte=self.mission.planned_start_date
+        ).exclude(pk=self.mission.pk)
+
+        # Check in other missions (primary or secondary)
+        driver_conflicts = conflicts.filter(Q(driver=self.assignment.driver) | Q(missionvehicle__assignment__driver=self.assignment.driver))
+        if driver_conflicts.exists():
+             raise ValidationError(_("السائق في مأمورية أخرى في هذه الفترة (بما في ذلك التمديد)"))
+        
+        vehicle_conflicts = conflicts.filter(Q(vehicle=self.assignment.vehicle) | Q(missionvehicle__assignment__vehicle=self.assignment.vehicle))
+        if vehicle_conflicts.exists():
+            raise ValidationError(_("المركبة في مأمورية أخرى في هذه الفترة (بما في ذلك التمديد)"))
+        
+        # Check in same mission (other vehicles/drivers in the inline)
+        if self.mission.pk:
+            same_mission_conflicts = MissionVehicle.objects.filter(mission=self.mission).exclude(pk=self.pk)
+            if same_mission_conflicts.filter(assignment__driver=self.assignment.driver).exists():
+                 raise ValidationError(_("هذا السائق مضاف مسبقاً في هذه المأمورية"))
+            if same_mission_conflicts.filter(assignment__vehicle=self.assignment.vehicle).exists():
+                 raise ValidationError(_("هذه المركبة مضافة مسبقاً في هذه المأمورية"))
+
+        return super().clean()
+
+    class Meta:
+        verbose_name = _("مركبة المأمورية")
+        verbose_name_plural = _("مركبات المأمورية")
+
 
 
 #maintenance
