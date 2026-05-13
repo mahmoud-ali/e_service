@@ -43,7 +43,7 @@ class CollectionFormModelForm(forms.ModelForm):
                 'dir': 'ltr',
                 'inputmode': 'numeric',
                 'min': '0',
-                'step': '1',
+                'step': '0.1',
             }), # Numbers often LTR even in RTL
             # 'total_amount': forms.NumberInput(attrs={'step': '0.01', 'class': 'block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm text-left', 'dir': 'ltr'}),
             'market': forms.Select(attrs={'class': 'block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm text-right'}),
