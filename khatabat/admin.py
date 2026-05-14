@@ -185,7 +185,7 @@ class Motab3atKhatabatInline(admin.TabularInline):
 @admin.register(Khatabat)
 class KhatabatAdmin(MaktabTanfiziMixin,LogMixin,admin.ModelAdmin):
     exclude = ('maktab_tanfizi','created_by', 'updated_by')
-    list_display = ('letter_number', 'subject','first_haraka')
+    list_display = ('letter_number', 'subject','first_haraka','last_haraka',)
     list_display_links = ('letter_number', 'subject',)
     search_fields = ('letter_number', 'subject',)
     inlines = [HarkatKhatabatInboxInline,HarkatKhatabatOutboxInline,]
@@ -223,6 +223,17 @@ class KhatabatAdmin(MaktabTanfiziMixin,LogMixin,admin.ModelAdmin):
     def first_haraka(self, obj):
         if obj.harkatkhatabat_set.exists():
             haraka_obj = obj.harkatkhatabat_set.first()
+            if haraka_obj.id:
+                url = reverse("admin:khatabat_harkatkhatabat_change", args=[haraka_obj.id])
+                return format_html('<a href="{}">{}</a>', url, haraka_obj.get_movement_type_display())            
+            
+        
+        return '-'
+
+    @admin.display(description='الحركة الاخيرة')
+    def last_haraka(self, obj):
+        if obj.harkatkhatabat_set.exists():
+            haraka_obj = obj.harkatkhatabat_set.last()
             if haraka_obj.id:
                 url = reverse("admin:khatabat_harkatkhatabat_change", args=[haraka_obj.id])
                 return format_html('<a href="{}">{}</a>', url, haraka_obj.get_movement_type_display())            
@@ -331,6 +342,7 @@ class HarkatKhatabatAdmin(admin.ModelAdmin):
     search_fields = ('letter__letter_number', 'letter__subject','note')
     list_filter = ('movement_type','date', 'procedure', 'delivery_date', 'source_entity', 'forwarded_to')
     actions = [print_html_table]
+    date_hierarchy = "date"
 
     @admin.display(description='رقم الخطاب')
     def letter_number(self, obj):
