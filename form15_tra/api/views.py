@@ -266,19 +266,20 @@ class CollectionFormViewSet(viewsets.ModelViewSet):
                 "results": results,
             }
 
-            APILog.objects.create(
-                action="queue_invoices",
-                user=None,
-                request_data={},
-                response_data={
-                    "updated": updated,
-                    "limit": limit,
-                    "returned": len(results),
-                },
-                status_code=status.HTTP_200_OK,
-                ip_address=ip_address,
-                collection_form=None,
-            )
+            if results:
+                APILog.objects.create(
+                    action="queue_invoices",
+                    user=None,
+                    request_data={},
+                    response_data={
+                        "updated": updated,
+                        "limit": limit,
+                        "returned": len(results),
+                    },
+                    status_code=status.HTTP_200_OK,
+                    ip_address=ip_address,
+                    collection_form=None,
+                )
 
             return Response(payload, status=status.HTTP_200_OK)
         except Exception as exc:
