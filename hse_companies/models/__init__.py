@@ -4,6 +4,7 @@ from company_profile.models import LkpState
 from .performance_report import *
 from .incidents import *
 from .corrective_actions import *
+from .evaluation import *
 
 class TblStateRepresentative(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.PROTECT,related_name="hse_cmpny_state",verbose_name=_("user"))
