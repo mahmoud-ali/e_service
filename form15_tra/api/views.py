@@ -266,19 +266,20 @@ class CollectionFormViewSet(viewsets.ModelViewSet):
                 "results": results,
             }
 
-            APILog.objects.create(
-                action="queue_invoices",
-                user=None,
-                request_data={},
-                response_data={
-                    "updated": updated,
-                    "limit": limit,
-                    "returned": len(results),
-                },
-                status_code=status.HTTP_200_OK,
-                ip_address=ip_address,
-                collection_form=None,
-            )
+            if results:
+                APILog.objects.create(
+                    action="queue_invoices",
+                    user=None,
+                    request_data={},
+                    response_data={
+                        "updated": updated,
+                        "limit": limit,
+                        "returned": len(results),
+                    },
+                    status_code=status.HTTP_200_OK,
+                    ip_address=ip_address,
+                    collection_form=None,
+                )
 
             return Response(payload, status=status.HTTP_200_OK)
         except Exception as exc:
@@ -552,17 +553,17 @@ class CollectionFormViewSet(viewsets.ModelViewSet):
                 ids = list(locked.values_list("id", flat=True))
                 if ids:
                     CollectionForm.objects.filter(id__in=ids).update(pending_payment_check_now=False)
+                    APILog.objects.create(
+                        action="consume_pending_payment_check_now",
+                        user=None,
+                        request_data={},
+                        response_data={"count": len(ids)},
+                        status_code=status.HTTP_200_OK,
+                        ip_address=ip_address,
+                        collection_form=None,
+                    )
 
             payload: dict[str, Any] = {"ids": ids}
-            APILog.objects.create(
-                action="consume_pending_payment_check_now",
-                user=None,
-                request_data={},
-                response_data={"count": len(ids)},
-                status_code=status.HTTP_200_OK,
-                ip_address=ip_address,
-                collection_form=None,
-            )
             return Response(payload, status=status.HTTP_200_OK)
         except Exception as exc:
             error_data = {"error": str(exc)}

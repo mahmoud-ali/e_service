@@ -22,7 +22,7 @@ class HarkatKhatabatInboxAdminForm(ModelForm):
 
     class Meta:
         model = HarkatKhatabatInbox
-        fields = ["date","source_entity","letter_attachment","delivery_date","note"]
+        fields = ["date","source_entity","letter_attachment","note"]
         widgets = {
             "date":AdminDateWidget(),
             "delivery_date":AdminDateWidget(),
