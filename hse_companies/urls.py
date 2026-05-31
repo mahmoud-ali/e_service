@@ -4,6 +4,7 @@ from django.conf.urls.static import static
 # from django.conf import settings
 
 from hse_companies.views.incident import IncidentInfoCreateView, IncidentInfoListView, IncidentInfoReadonlyView
+from hse_companies.views import evaluation
 
 
 app_name = "hse_companies"

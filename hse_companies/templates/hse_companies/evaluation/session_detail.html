@@ -1,0 +1,187 @@
+{% extends 'company_profile/base.html' %}
+{% load i18n %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-12">
+        <h1 class="page-header">{{ title }}</h1>
+    </div>
+</div>
+
+<div class="row" style="margin-bottom: 20px;">
+    <div class="col-md-12">
+        <div class="panel panel-default" style="box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+            <div class="panel-heading" style="font-size: 16px; font-weight: bold;">
+                <i class="fa fa-info-circle"></i> بيانات التقييم الأساسية للشركة
+            </div>
+            <div class="panel-body">
+                <table class="table table-bordered" style="margin-bottom: 0;">
+                    <tr>
+                        <th style="width: 25%; background-color: #f9f9f9; font-weight: bold;">الشركة:</th>
+                        <td style="font-weight: bold; font-size: 16px;">{{ session.company.name_ar }}</td>
+                        <th style="width: 25%; background-color: #f9f9f9; font-weight: bold;">تاريخ التقييم:</th>
+                        <td style="font-weight: bold;">{{ session.evaluation_date }}</td>
+                    </tr>
+                    <tr>
+                        <th style="background-color: #f9f9f9; font-weight: bold;">الولاية:</th>
+                        <td>{% if session.state %}{{ session.state }}{% else %}-{% endif %}</td>
+                        <th style="background-color: #f9f9f9; font-weight: bold;">المحلية:</th>
+                        <td>{% if session.locality %}{{ session.locality }}{% else %}-{% endif %}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Nav tabs -->
+<ul class="nav nav-tabs" role="tablist">
+    <li role="presentation" class="active">
+        <a href="#environment" aria-controls="environment" role="tab" data-toggle="tab" style="font-weight: bold; font-size: 16px;">
+            محور البيئة <span class="badge" style="background-color: {% if env_avg < 1 %}#d9534f{% elif env_avg <= 2 %}#f0ad4e{% else %}#5cb85c{% endif %}; font-size: 14px;">{{ env_avg }}</span>
+        </a>
+    </li>
+    <li role="presentation">
+        <a href="#safety" aria-controls="safety" role="tab" data-toggle="tab" style="font-weight: bold; font-size: 16px;">
+            محور السلامة <span class="badge" style="background-color: {% if safe_avg < 1 %}#d9534f{% elif safe_avg <= 2 %}#f0ad4e{% else %}#5cb85c{% endif %}; font-size: 14px;">{{ safe_avg }}</span>
+        </a>
+    </li>
+    <li role="presentation">
+        <a href="#general" aria-controls="general" role="tab" data-toggle="tab" style="font-weight: bold; font-size: 16px;">
+            المطلوبات العامة <span class="badge" style="background-color: {% if gen_avg < 1 %}#d9534f{% elif gen_avg <= 2 %}#f0ad4e{% else %}#5cb85c{% endif %}; font-size: 14px;">{{ gen_avg }}</span>
+        </a>
+    </li>
+</ul>
+
+<!-- Tab panes -->
+<div class="tab-content" style="padding-top: 20px;">
+    
+    <!-- Environment Tab -->
+    <div role="tabpanel" class="tab-pane active" id="environment">
+        <div class="panel panel-info" style="box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+            <div class="panel-heading"><h3 class="panel-title" style="font-size: 18px;"><i class="fa fa-leaf"></i> تفاصيل تقييم البيئة</h3></div>
+            <div class="panel-body">
+                {% if env_fields %}
+                <table class="table table-striped table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th>المعيار</th>
+                            <th class="text-center" style="width: 150px;">الدرجة</th>
+                            <th>التقييم الفني المختار</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for field in env_fields %}
+                        <tr>
+                            <td><strong>{{ field.label }}</strong></td>
+                            <td class="text-center">
+                                <span class="label {% if field.value < 1 %}label-danger{% elif field.value < 2 %}label-warning{% else %}label-success{% endif %}" style="font-size:14px; padding: 6px 10px; display: inline-block; min-width: 30px;">
+                                    {{ field.value }}
+                                </span>
+                            </td>
+                            <td>{{ field.value_display }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <p class="text-center text-muted" style="padding: 20px; font-size: 16px;">لم يتم استكمال بيانات هذا المحور.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- Safety Tab -->
+    <div role="tabpanel" class="tab-pane" id="safety">
+        <div class="panel panel-warning" style="box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+            <div class="panel-heading"><h3 class="panel-title" style="font-size: 18px;"><i class="fa fa-shield"></i> تفاصيل تقييم السلامة المهنية</h3></div>
+            <div class="panel-body">
+                {% if safe_fields %}
+                <table class="table table-striped table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th>المعيار</th>
+                            <th class="text-center" style="width: 150px;">الدرجة</th>
+                            <th>التقييم الفني المختار</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for field in safe_fields %}
+                        <tr>
+                            <td><strong>{{ field.label }}</strong></td>
+                            <td class="text-center">
+                                <span class="label {% if field.value < 1 %}label-danger{% elif field.value < 2 %}label-warning{% else %}label-success{% endif %}" style="font-size:14px; padding: 6px 10px; display: inline-block; min-width: 30px;">
+                                    {{ field.value }}
+                                </span>
+                            </td>
+                            <td>{{ field.value_display }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <p class="text-center text-muted" style="padding: 20px; font-size: 16px;">لم يتم استكمال بيانات هذا المحور.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- General Requirements Tab -->
+    <div role="tabpanel" class="tab-pane" id="general">
+        <div class="panel panel-success" style="box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+            <div class="panel-heading"><h3 class="panel-title" style="font-size: 18px;"><i class="fa fa-check-square-o"></i> تفاصيل تقييم المطلوبات العامة للشركة</h3></div>
+            <div class="panel-body">
+                {% if gen_fields %}
+                <table class="table table-striped table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th>المعيار</th>
+                            <th class="text-center" style="width: 150px;">الدرجة</th>
+                            <th>التقييم الفني المختار</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for field in gen_fields %}
+                        <tr>
+                            <td><strong>{{ field.label }}</strong></td>
+                            <td class="text-center">
+                                <span class="label {% if field.value < 1 %}label-danger{% elif field.value < 2 %}label-warning{% else %}label-success{% endif %}" style="font-size:14px; padding: 6px 10px; display: inline-block; min-width: 30px;">
+                                    {{ field.value }}
+                                </span>
+                            </td>
+                            <td>{{ field.value_display }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <p class="text-center text-muted" style="padding: 20px; font-size: 16px;">لم يتم استكمال بيانات هذا المحور.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="row" style="margin-bottom: 30px; margin-top: 10px;">
+    <div class="col-lg-12">
+        <a href="{% url 'hse_companies:evaluation_edit' session.id %}" class="btn btn-warning btn-lg" style="box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
+            <i class="fa fa-edit"></i> تعديل التقييم
+        </a>
+        <a href="{% url 'hse_companies:evaluation_list' %}" class="btn btn-default btn-lg" style="box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
+            <i class="fa fa-arrow-right"></i> العودة للقائمة
+        </a>
+    </div>
+</div>
+
+<style>
+    .nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
+        background-color: #f8f9fa;
+        border-bottom-color: transparent;
+        color: #333;
+    }
+    .table > tbody > tr > td {
+        vertical-align: middle;
+    }
+</style>
+{% endblock %}

@@ -105,6 +105,7 @@ report_main_class = {
                 AppHSEPerformanceReport.STATE_SUBMITTED: {'add': 0, 'change': 1, 'delete': 0, 'view': 1},
                 AppHSEPerformanceReport.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 AppHSEPerformanceReport.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                
             },
         },
         'hse_cmpny_state_mngr':{
@@ -116,6 +117,8 @@ report_main_class = {
         },
         'hse_cmpny_department_mngr':{
             'permissions': {
+                AppHSEPerformanceReport.STATE_SUBMITTED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                AppHSEPerformanceReport.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 AppHSEPerformanceReport.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
             },
         },
@@ -156,6 +159,8 @@ report_inline_classes = {
             },
             'hse_cmpny_department_mngr':{
                 'permissions': {
+                    AppHSEPerformanceReport.STATE_SUBMITTED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    AppHSEPerformanceReport.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     AppHSEPerformanceReport.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
@@ -195,6 +200,8 @@ report_inline_classes = {
             },
             'hse_cmpny_department_mngr':{
                 'permissions': {
+                    AppHSEPerformanceReport.STATE_SUBMITTED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    AppHSEPerformanceReport.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},                   
                     AppHSEPerformanceReport.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
@@ -233,6 +240,8 @@ report_inline_classes = {
             },
             'hse_cmpny_department_mngr':{
                 'permissions': {
+                    AppHSEPerformanceReport.STATE_SUBMITTED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    AppHSEPerformanceReport.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     AppHSEPerformanceReport.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
@@ -271,6 +280,8 @@ report_inline_classes = {
             },
             'hse_cmpny_department_mngr':{
                 'permissions': {
+                    AppHSEPerformanceReport.STATE_SUBMITTED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    AppHSEPerformanceReport.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},    
                     AppHSEPerformanceReport.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
@@ -309,6 +320,8 @@ report_inline_classes = {
             },
             'hse_cmpny_department_mngr':{
                 'permissions': {
+                    AppHSEPerformanceReport.STATE_SUBMITTED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    AppHSEPerformanceReport.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1}, 
                     AppHSEPerformanceReport.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
@@ -347,6 +360,8 @@ report_inline_classes = {
             },
             'hse_cmpny_department_mngr':{
                 'permissions': {
+                    AppHSEPerformanceReport.STATE_SUBMITTED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    AppHSEPerformanceReport.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1}, 
                     AppHSEPerformanceReport.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
@@ -385,6 +400,8 @@ report_inline_classes = {
             },
             'hse_cmpny_department_mngr':{
                 'permissions': {
+                    AppHSEPerformanceReport.STATE_SUBMITTED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    AppHSEPerformanceReport.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1}, 
                     AppHSEPerformanceReport.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
@@ -423,6 +440,8 @@ report_inline_classes = {
             },
             'hse_cmpny_department_mngr':{
                 'permissions': {
+                    AppHSEPerformanceReport.STATE_SUBMITTED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    AppHSEPerformanceReport.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1}, 
                     AppHSEPerformanceReport.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
@@ -461,6 +480,8 @@ report_inline_classes = {
             },
             'hse_cmpny_department_mngr':{
                 'permissions': {
+                    AppHSEPerformanceReport.STATE_SUBMITTED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    AppHSEPerformanceReport.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1}, 
                     AppHSEPerformanceReport.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
@@ -499,6 +520,8 @@ report_inline_classes = {
             },
             'hse_cmpny_department_mngr':{
                 'permissions': {
+                    AppHSEPerformanceReport.STATE_SUBMITTED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    AppHSEPerformanceReport.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1}, 
                     AppHSEPerformanceReport.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
@@ -537,6 +560,8 @@ report_inline_classes = {
             },
             'hse_cmpny_department_mngr':{
                 'permissions': {
+                    AppHSEPerformanceReport.STATE_SUBMITTED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    AppHSEPerformanceReport.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1}, 
                     AppHSEPerformanceReport.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
@@ -575,6 +600,8 @@ report_inline_classes = {
             },
             'hse_cmpny_department_mngr':{
                 'permissions': {
+                    AppHSEPerformanceReport.STATE_SUBMITTED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    AppHSEPerformanceReport.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1}, 
                     AppHSEPerformanceReport.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
@@ -613,6 +640,8 @@ report_inline_classes = {
             },
             'hse_cmpny_department_mngr':{
                 'permissions': {
+                    AppHSEPerformanceReport.STATE_SUBMITTED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    AppHSEPerformanceReport.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1}, 
                     AppHSEPerformanceReport.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
@@ -651,6 +680,8 @@ report_inline_classes = {
             },
             'hse_cmpny_department_mngr':{
                 'permissions': {
+                    AppHSEPerformanceReport.STATE_SUBMITTED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    AppHSEPerformanceReport.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1}, 
                     AppHSEPerformanceReport.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
@@ -689,6 +720,8 @@ report_inline_classes = {
             },
             'hse_cmpny_department_mngr':{
                 'permissions': {
+                    AppHSEPerformanceReport.STATE_SUBMITTED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    AppHSEPerformanceReport.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1}, 
                     AppHSEPerformanceReport.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
@@ -727,6 +760,8 @@ report_inline_classes = {
             },
             'hse_cmpny_department_mngr':{
                 'permissions': {
+                    AppHSEPerformanceReport.STATE_SUBMITTED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    AppHSEPerformanceReport.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1}, 
                     AppHSEPerformanceReport.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
@@ -765,6 +800,8 @@ report_inline_classes = {
             },
             'hse_cmpny_department_mngr':{
                 'permissions': {
+                    AppHSEPerformanceReport.STATE_SUBMITTED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    AppHSEPerformanceReport.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1}, 
                     AppHSEPerformanceReport.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
@@ -803,6 +840,8 @@ report_inline_classes = {
             },
             'hse_cmpny_department_mngr':{
                 'permissions': {
+                    AppHSEPerformanceReport.STATE_SUBMITTED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    AppHSEPerformanceReport.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1}, 
                     AppHSEPerformanceReport.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
@@ -841,6 +880,8 @@ report_inline_classes = {
             },
             'hse_cmpny_department_mngr':{
                 'permissions': {
+                    AppHSEPerformanceReport.STATE_SUBMITTED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    AppHSEPerformanceReport.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1}, 
                     AppHSEPerformanceReport.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
@@ -879,6 +920,8 @@ report_inline_classes = {
             },
             'hse_cmpny_department_mngr':{
                 'permissions': {
+                    AppHSEPerformanceReport.STATE_SUBMITTED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    AppHSEPerformanceReport.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1}, 
                     AppHSEPerformanceReport.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
@@ -917,6 +960,8 @@ report_inline_classes = {
             },
             'hse_cmpny_department_mngr':{
                 'permissions': {
+                    AppHSEPerformanceReport.STATE_SUBMITTED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    AppHSEPerformanceReport.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1}, 
                     AppHSEPerformanceReport.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
@@ -956,6 +1001,8 @@ report_inline_classes = {
             },
             'hse_cmpny_department_mngr':{
                 'permissions': {
+                    AppHSEPerformanceReport.STATE_SUBMITTED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    AppHSEPerformanceReport.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1}, 
                     AppHSEPerformanceReport.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
@@ -989,6 +1036,8 @@ report_inline_classes = {
             },
             'hse_cmpny_department_mngr':{
                 'permissions': {
+                    AppHSEPerformanceReport.STATE_SUBMITTED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    AppHSEPerformanceReport.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1}, 
                     AppHSEPerformanceReport.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
@@ -1125,8 +1174,8 @@ corrective_main_class = {
         },
         'hse_cmpny_department_mngr':{
             'permissions': {
-                # AppHSECorrectiveAction.STATE_STATE_MNGR_SUBMIT: {'add': 0, 'change': 1, 'delete': 0, 'view': 1},
-                AppHSECorrectiveAction.STATE_STATE_MNGR_CONFIRM: {'add': 0, 'change': 1, 'delete': 0, 'view': 1},
+                AppHSECorrectiveAction.STATE_STATE_MNGR_SUBMIT: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                AppHSECorrectiveAction.STATE_STATE_MNGR_CONFIRM: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 AppHSECorrectiveAction.STATE_DEPARTMENT_MNGR_CONFIRM: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 AppHSECorrectiveAction.STATE_GM_APPROVE: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
             },
@@ -1308,6 +1357,8 @@ incident_main_class = {
         },
         'hse_cmpny_department_mngr':{
             'permissions': {
+                IncidentInfo.STATE_SUBMITTED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                IncidentInfo.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},    
                 IncidentInfo.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
             },
         },
@@ -1360,7 +1411,8 @@ incident_inline_classes = {
             },
             'hse_cmpny_department_mngr':{
                 'permissions': {
-                    
+                    IncidentInfo.STATE_SUBMITTED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    IncidentInfo.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     IncidentInfo.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
@@ -1411,6 +1463,8 @@ incident_inline_classes = {
             },
             'hse_cmpny_department_mngr':{
                 'permissions': {
+                    IncidentInfo.STATE_SUBMITTED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    IncidentInfo.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     IncidentInfo.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
@@ -1461,6 +1515,8 @@ incident_inline_classes = {
             },
             'hse_cmpny_department_mngr':{
                 'permissions': {
+                    IncidentInfo.STATE_SUBMITTED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    IncidentInfo.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     IncidentInfo.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
@@ -1511,6 +1567,8 @@ incident_inline_classes = {
             },
             'hse_cmpny_department_mngr':{
                 'permissions': {
+                    IncidentInfo.STATE_SUBMITTED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    IncidentInfo.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     IncidentInfo.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
@@ -1561,6 +1619,8 @@ incident_inline_classes = {
             },
             'hse_cmpny_department_mngr':{
                 'permissions': {
+                    IncidentInfo.STATE_SUBMITTED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    IncidentInfo.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     IncidentInfo.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
@@ -1607,6 +1667,8 @@ incident_inline_classes = {
             },
             'hse_cmpny_department_mngr':{
                 'permissions': {
+                    IncidentInfo.STATE_SUBMITTED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    IncidentInfo.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     IncidentInfo.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
@@ -1652,6 +1714,8 @@ incident_inline_classes = {
             },
             'hse_cmpny_department_mngr':{
                 'permissions': {
+                    IncidentInfo.STATE_SUBMITTED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    IncidentInfo.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     IncidentInfo.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
@@ -1702,6 +1766,8 @@ incident_inline_classes = {
             },
             'hse_cmpny_department_mngr':{
                 'permissions': {
+                    IncidentInfo.STATE_SUBMITTED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    IncidentInfo.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     IncidentInfo.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
@@ -1748,6 +1814,8 @@ incident_inline_classes = {
             },
             'hse_cmpny_department_mngr':{
                 'permissions': {
+                    IncidentInfo.STATE_SUBMITTED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    IncidentInfo.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     IncidentInfo.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
@@ -1815,6 +1883,8 @@ incident_inline_classes = {
             },
             'hse_cmpny_department_mngr':{
                 'permissions': {
+                    IncidentInfo.STATE_SUBMITTED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    IncidentInfo.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     IncidentInfo.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
@@ -1856,6 +1926,8 @@ incident_inline_classes = {
             },
             'hse_cmpny_department_mngr':{
                 'permissions': {
+                    IncidentInfo.STATE_SUBMITTED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    IncidentInfo.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     IncidentInfo.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
@@ -1890,6 +1962,8 @@ incident_inline_classes = {
             },
             'hse_cmpny_department_mngr':{
                 'permissions': {
+                    IncidentInfo.STATE_SUBMITTED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                    IncidentInfo.STATE_AUDITOR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                     IncidentInfo.STATE_STATE_MNGR_APPROVAL: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
@@ -1912,3 +1986,94 @@ incident_inline_classes = {
 incident_feedback_model_admin, incident_feedback_inlines = create_main_form(incident_main_class,incident_inline_classes,incident_main_mixins)
 
 admin.site.register(incident_feedback_model_admin.model,incident_feedback_model_admin)
+
+
+
+from hse_companies.models import (
+    TblCompanyEvaluationSession,
+    TblCompanyEvaluationEnvironment,
+    TblCompanyEvaluationSafety,
+    TblCompanyEvaluationGeneral
+)
+
+class AppHSEEvaluationSessionMixin:
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+
+        if request.user.is_superuser:
+            return qs
+
+        if request.user.groups.filter(name__in=("hse_cmpny_department_mngr", "hse_cmpny_gm", "hse_read_only")).exists():
+            return qs
+        
+        if request.user.groups.filter(name__in=("hse_cmpny_state_mngr",)).exists():
+            try:
+                original_state = request.user.hse_cmpny_state.state
+                companies = TblCompanyProductionLicense.objects.filter(state=original_state).values_list('company', flat=True)
+                return qs.filter(company__in=companies)
+            except Exception as e:
+                print("Error Evaluation State Mngr:", e)
+
+        if request.user.groups.filter(name__in=("production_control_auditor",)).exists():
+            try:
+                company_lst = request.user.moragib_list.moragib_distribution.goldproductionuserdetail_set.filter(master__state=PRODUCTION_STATE_CONFIRMED).values_list('company', flat=True)
+                return qs.filter(company__id__in=company_lst)
+            except Exception as e:
+                print("Error Evaluation Auditor:", e)
+
+        return qs.none()
+
+class TblCompanyEvaluationEnvironmentInline(admin.StackedInline):
+    model = TblCompanyEvaluationEnvironment
+    extra = 1
+    max_num = 1
+
+class TblCompanyEvaluationSafetyInline(admin.StackedInline):
+    model = TblCompanyEvaluationSafety
+    extra = 1
+    max_num = 1
+
+class TblCompanyEvaluationGeneralInline(admin.StackedInline):
+    model = TblCompanyEvaluationGeneral
+    extra = 1
+    max_num = 1
+
+class TblCompanyEvaluationSessionAdmin(AppHSEEvaluationSessionMixin, admin.ModelAdmin):
+    list_display = ('company', 'evaluation_date', 'state', 'locality')
+    list_filter = ('evaluation_date', 'state')
+    search_fields = ('company__name_ar', 'company__name_en')
+    autocomplete_fields = ['company']
+    inlines = [
+        TblCompanyEvaluationEnvironmentInline,
+        TblCompanyEvaluationSafetyInline,
+        TblCompanyEvaluationGeneralInline
+    ]
+
+    def get_form(self, request, obj=None, **kwargs):
+        form = super().get_form(request, obj, **kwargs)
+        if not request.user.is_superuser:
+            for field in ['company', 'state', 'locality']:
+                if field in form.base_fields:
+                    form.base_fields[field].widget.can_add_related = False
+                    form.base_fields[field].widget.can_change_related = False
+                    form.base_fields[field].widget.can_delete_related = False
+        return form
+
+    def save_model(self, request, obj, form, change):
+        if not obj.pk:
+            obj.created_by = request.user
+        obj.updated_by = request.user
+        super().save_model(request, obj, form, change)
+
+    def save_formset(self, request, form, formset, change):
+        instances = formset.save(commit=False)
+        for instance in instances:
+            if not instance.pk:
+                instance.created_by = request.user
+            instance.updated_by = request.user
+            instance.save()
+        for instance in formset.deleted_objects:
+            instance.delete()
+        formset.save_m2m()
+
+admin.site.register(TblCompanyEvaluationSession, TblCompanyEvaluationSessionAdmin)

@@ -1,0 +1,147 @@
+{% extends 'company_profile/base.html' %}
+{% load i18n %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-12">
+        <h1 class="page-header">{{ title }}</h1>
+    </div>
+</div>
+
+<div class="row" style="margin-bottom: 20px;">
+    <div class="col-md-4">
+        <div class="panel panel-info" style="box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+            <div class="panel-heading">
+                <h3 class="panel-title"><i class="fa fa-leaf"></i> تقييمات البيئة المنجزة</h3>
+            </div>
+            <div class="panel-body text-center" style="font-size: 32px; font-weight: bold; color: #31708f;">
+                {{ env_count }}
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="panel panel-warning" style="box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+            <div class="panel-heading">
+                <h3 class="panel-title"><i class="fa fa-shield"></i> تقييمات السلامة المنجزة</h3>
+            </div>
+            <div class="panel-body text-center" style="font-size: 32px; font-weight: bold; color: #8a6d3b;">
+                {{ safe_count }}
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="panel panel-success" style="box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+            <div class="panel-heading">
+                <h3 class="panel-title"><i class="fa fa-check-square-o"></i> تقييمات المطلوبات المنجزة</h3>
+            </div>
+            <div class="panel-body text-center" style="font-size: 32px; font-weight: bold; color: #3c763d;">
+                {{ gen_count }}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row" style="margin-bottom: 20px;">
+    <div class="col-lg-12">
+        <a href="{% url 'hse_companies:evaluation_add' %}" class="btn btn-primary btn-lg" style="box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
+            <i class="fa fa-plus-circle"></i> إجراء تقييم جديد لشركة
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel panel-default" style="box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+            <div class="panel-heading" style="font-weight: bold; font-size: 16px;">
+                قائمة التقييمات الشاملة للشركات
+            </div>
+            <div class="panel-body">
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-hover" id="dataTables-evaluations">
+                        <thead>
+                            <tr>
+                                <th>الشركة</th>
+                                <th>تاريخ التقييم</th>
+                                <th>الولاية / المحلية</th>
+                                <th class="text-center">نتيجة البيئة</th>
+                                <th class="text-center">نتيجة السلامة</th>
+                                <th class="text-center">المطلوبات العامة</th>
+                                <th class="text-center" style="width: 100px;">الإجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for session in sessions %}
+                            <tr>
+                                <td><strong>{{ session.company.name_ar }}</strong></td>
+                                <td>{{ session.evaluation_date|date:"Y-m-d" }}</td>
+                                <td>
+                                    {% if session.state %}{{ session.state }}{% else %}-{% endif %} / 
+                                    {% if session.locality %}{{ session.locality }}{% else %}-{% endif %}
+                                </td>
+                                <td class="text-center">
+                                    {% if session.environment %}
+                                        {% with score=session.environment.get_average_score %}
+                                        <span class="label {% if score < 1.0 %}label-danger{% elif score <= 2.0 %}label-warning{% else %}label-success{% endif %}" style="font-size:14px; padding: 6px 10px; display: inline-block; min-width: 40px;">
+                                            {{ score }}
+                                        </span>
+                                        {% endwith %}
+                                    {% else %}
+                                        <span class="label label-default">لم يتم التقييم</span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-center">
+                                    {% if session.safety %}
+                                        {% with score=session.safety.get_average_score %}
+                                        <span class="label {% if score < 1.0 %}label-danger{% elif score <= 2.0 %}label-warning{% else %}label-success{% endif %}" style="font-size:14px; padding: 6px 10px; display: inline-block; min-width: 40px;">
+                                            {{ score }}
+                                        </span>
+                                        {% endwith %}
+                                    {% else %}
+                                        <span class="label label-default">لم يتم التقييم</span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-center">
+                                    {% if session.general %}
+                                        {% with score=session.general.get_average_score %}
+                                        <span class="label {% if score < 1.0 %}label-danger{% elif score <= 2.0 %}label-warning{% else %}label-success{% endif %}" style="font-size:14px; padding: 6px 10px; display: inline-block; min-width: 40px;">
+                                            {{ score }}
+                                        </span>
+                                        {% endwith %}
+                                    {% else %}
+                                        <span class="label label-default">لم يتم التقييم</span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-center">
+                                    <a href="{% url 'hse_companies:evaluation_detail' session.id %}" class="btn btn-info btn-sm" title="عرض التفاصيل"><i class="fa fa-eye"></i></a>
+                                    <a href="{% url 'hse_companies:evaluation_edit' session.id %}" class="btn btn-warning btn-sm" title="تعديل"><i class="fa fa-edit"></i></a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="7" class="text-center" style="padding: 30px;">
+                                    <i class="fa fa-info-circle text-muted" style="font-size: 24px; margin-bottom: 10px; display: block;"></i>
+                                    لا توجد تقييمات مسجلة حتى الآن.
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        if (typeof jQuery !== 'undefined' && $.fn.DataTable) {
+            $('#dataTables-evaluations').DataTable({
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/Arabic.json"
+                },
+                "order": [[ 1, "desc" ]] // Order by date descending by default
+            });
+        }
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,91 @@
+{% extends 'company_profile/base.html' %}
+{% load i18n %}
+{% load bootstrap3 %}
+
+{% block content %}
+<h1 class="page-header">{{ title }}</h1>
+{% bootstrap_messages %}
+
+<form method="post" enctype="multipart/form-data" novalidate onsubmit="this.querySelector('button[type=submit]').disabled = true;">
+    {% csrf_token %}
+    
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="active">
+            <a href="#session" aria-controls="session" role="tab" data-toggle="tab" style="font-weight: bold; font-size: 16px;">بيانات التقييم الأساسية</a>
+        </li>
+        <li role="presentation">
+            <a href="#environment" aria-controls="environment" role="tab" data-toggle="tab" style="font-weight: bold; font-size: 16px;">محور البيئة</a>
+        </li>
+        <li role="presentation">
+            <a href="#safety" aria-controls="safety" role="tab" data-toggle="tab" style="font-weight: bold; font-size: 16px;">محور السلامة</a>
+        </li>
+        <li role="presentation">
+            <a href="#general" aria-controls="general" role="tab" data-toggle="tab" style="font-weight: bold; font-size: 16px;">محور المطلوبات العامة</a>
+        </li>
+    </ul>
+
+    <!-- Tab panes -->
+    <div class="tab-content" style="padding-top: 20px; min-height: 400px;">
+        <div role="tabpanel" class="tab-pane active" id="session">
+            <div class="panel panel-default" style="box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+                <div class="panel-body">
+                    {% bootstrap_form form layout='horizontal' %}
+                </div>
+            </div>
+        </div>
+        
+        <div role="tabpanel" class="tab-pane" id="environment">
+            <div class="panel panel-info" style="box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+                <div class="panel-heading"><h3 class="panel-title" style="font-size: 18px;">معايير البيئة</h3></div>
+                <div class="panel-body">
+                    {% bootstrap_form env_form layout='horizontal' %}
+                </div>
+            </div>
+        </div>
+        
+        <div role="tabpanel" class="tab-pane" id="safety">
+            <div class="panel panel-warning" style="box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+                <div class="panel-heading"><h3 class="panel-title" style="font-size: 18px;">معايير السلامة المهنية</h3></div>
+                <div class="panel-body">
+                    {% bootstrap_form safe_form layout='horizontal' %}
+                </div>
+            </div>
+        </div>
+        
+        <div role="tabpanel" class="tab-pane" id="general">
+            <div class="panel panel-success" style="box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+                <div class="panel-heading"><h3 class="panel-title" style="font-size: 18px;">المطلوبات العامة للشركة</h3></div>
+                <div class="panel-body">
+                    {% bootstrap_form gen_form layout='horizontal' %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group" style="margin-top: 20px; border-top: 1px solid #eee; padding-top: 20px;">
+        <button type="submit" class="btn btn-primary btn-lg">
+            <i class="fa fa-save"></i> {% trans "حفظ التقييم الشامل" %}
+        </button>
+        <a href="{% url 'hse_companies:evaluation_list' %}" class="btn btn-default btn-lg">
+            <i class="fa fa-times"></i> {% trans "إلغاء" %}
+        </a>
+    </div>
+</form>
+
+<style>
+    /* Custom Styling for the Form */
+    .nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
+        background-color: #f8f9fa;
+        border-bottom-color: transparent;
+        color: #337ab7;
+    }
+    .form-group {
+        margin-bottom: 15px;
+    }
+    select.form-control {
+        height: auto;
+        padding: 6px 12px;
+    }
+</style>
+{% endblock %}
