@@ -9,7 +9,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('company_profile', '0142_merge_20260429_1656'),
+        ('company_profile', '0139_lkpstate_code'),
         ('hse_companies', '0032_tblcompanyevaluationenvironment_and_more'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
