@@ -167,7 +167,7 @@ class MissionAdmin(LogMixin):
             'fields': ('notes', 'attachments')
         }),
     )
-    list_display = ('requested_by','destination', 'no_of_vehicles', 'planned_start_date', 'effective_end_display', 'status_tag')
+    list_display = ('requested_by', 'destination', 'no_of_vehicles', 'no_of_days', 'planned_start_date', 'effective_end_display', 'actual_start_date', 'actual_end_date_display', 'status_tag')
     list_filter = ('planned_start_date', 'planned_end_date','actual_end_date','requested_by')
     search_fields = ('destination', 'requested_by', 'missionvehicle__assignment__driver__name', 'missionvehicle__assignment__vehicle__license_plate')
     readonly_fields = ('planned_end_date','actual_end_date','extended_planned_end_date','extended_actual_end_date')
@@ -178,27 +178,45 @@ class MissionAdmin(LogMixin):
             return format_html('<b>{}</b> <span style="color:orange;">(ممدد)</span>', obj.extended_planned_end_date)
         return obj.planned_end_date
 
+    @admin.display(description="تاريخ الانتهاء الفعلي", ordering='actual_end_date')
+    def actual_end_date_display(self, obj):
+        if obj.actual_end_date:
+            if obj.is_extended and obj.extended_actual_end_date:
+                return format_html('<b>{}</b> <span style="color:orange;">(ممدد)</span>', obj.extended_actual_end_date)
+            return obj.actual_end_date
+        return format_html('<span style="color: green; font-weight: bold;">جارية</span>')
+
     @admin.display(description="حالة الانتهاء")
     def status_tag(self, obj):
         from django.utils import timezone
         today = timezone.now().date()
         
-        # Determine effective end date
-        end_date = obj.extended_planned_end_date if (obj.is_extended and obj.extended_planned_end_date) else obj.planned_end_date
+        # 1. Determine effective start date
+        start_date = obj.actual_start_date or obj.planned_start_date
         
-        if not end_date:
-            return ""
-        
-        diff = (end_date - today).days
-        
-        if diff == 0:
-            return format_html('<span style="color: white; background-color: #d9534f; padding: 3px 10px; border-radius: 10px; font-weight: bold;">تنتهي اليوم</span>')
-        elif 0 < diff <= 2:
-            return format_html('<span style="color: white; background-color: #f0ad4e; padding: 3px 10px; border-radius: 10px; font-weight: bold;">متبقي {} أيام</span>', diff)
-        elif diff < 0:
+        # 2. Determine effective end date
+        if obj.is_extended:
+            end_date = obj.extended_actual_end_date or obj.extended_planned_end_date
+        else:
+            end_date = obj.actual_end_date or obj.planned_end_date
+            
+        # 3. If start date is in the future, it has not started yet
+        if start_date and start_date > today:
+            return format_html('<span style="color: #0275d8; font-weight: bold;">لم تبدأ بعد</span>')
+            
+        # 4. If end date is in the past, it is completed
+        if end_date and end_date < today:
             return format_html('<span style="color: #777; font-weight: bold;">منتهية</span>')
+            
+        # 5. Within the date range (Active / Notifications)
+        if end_date:
+            diff = (end_date - today).days
+            if diff == 0:
+                return format_html('<span style="color: white; background-color: #d9534f; padding: 3px 10px; border-radius: 10px; font-weight: bold;">تنتهي اليوم</span>')
+            elif 0 < diff <= 2:
+                return format_html('<span style="color: white; background-color: #f0ad4e; padding: 3px 10px; border-radius: 10px; font-weight: bold;">متبقي {} أيام</span>', diff)
         
-        return ""
+        return format_html('<span style="color: green; font-weight: bold;">جارية</span>')
 
     @admin.display(description="المركبات")
     def get_vehicles(self, obj):
