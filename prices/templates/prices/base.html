@@ -1,0 +1,94 @@
+{% load i18n static bootstrap3 %}<!doctype html>
+<html lang="en" {% if request.LANGUAGE_CODE == "ar" %} dir="rtl" {% endif %}>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}{% trans "رصد ومراقبة الأسعار" %}{% endblock %}</title>
+
+  <style>
+    {% if request.LANGUAGE_CODE == "ar" %}
+    .form-control { text-align: right !important; }
+    {% endif %}
+    body {
+      font-family: 'Tajawal', 'Roboto', sans-serif !important;
+      padding-top: 50px;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 700;
+      letter-spacing: 0;
+    }
+    .navbar-brand { font-family: 'Tajawal', sans-serif !important; font-weight: 700; }
+  </style>
+
+  {% bootstrap_css %}
+
+  {% if request.LANGUAGE_CODE == "ar" %}
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-rtl/3.4.0/css/bootstrap-rtl.min.css"
+        integrity="sha512-3Lr2MkT5iW+jVhwKFUBa+zQk8Uklef98/3mebU6wNxTzj65enYrFXaeuqPAYWxcQd1GAt9aUBvYHOIcl2SUsKA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+  {% endif %}
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+  <script src="https://code.jquery.com/jquery-1.12.4.min.js"
+          integrity="sha384-nvAa0+6Qg9clwYCGGPpDQLVpLNn0fRaROjHqs13t4Ggj3Ez50XnGQqc/r8MhnRDZ"
+          crossorigin="anonymous"></script>
+  <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+  {% bootstrap_javascript %}
+</head>
+<body>
+
+  <!-- ===== Custom Navbar ===== -->
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#prices-navbar"
+                aria-expanded="false" aria-controls="prices-navbar">
+          <span class="sr-only">{% trans "تبديل التنقل" %}</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="{% if perms.prices.add_globalgoldprice or perms.prices.add_dollarprice or perms.prices.add_stategoldprice %}{% url 'prices:entry' %}{% else %}{% url 'prices:report' %}{% endif %}">
+          {% trans "رصد الأسعار" %}
+        </a>
+      </div>
+
+      <div id="prices-navbar" class="navbar-collapse collapse">
+        <ul class="nav navbar-nav">
+          {% if perms.prices.add_globalgoldprice or perms.prices.add_dollarprice or perms.prices.add_stategoldprice %}
+          <li {% if request.resolver_match.url_name == 'entry' %}class="active"{% endif %}>
+            <a href="{% url 'prices:entry' %}">{% trans "إدخال الأسعار" %}</a>
+          </li>
+          {% endif %}
+          <li {% if request.resolver_match.url_name == 'report' %}class="active"{% endif %}>
+            <a href="{% url 'prices:report' %}">{% trans "التقرير الملخص" %}</a>
+          </li>
+          <li {% if request.resolver_match.url_name == 'history' %}class="active"{% endif %}>
+            <a href="{% url 'prices:history' %}">{% trans "سجل الأسعار" %}</a>
+          </li>
+          <li {% if request.resolver_match.url_name == 'comparison' %}class="active"{% endif %}>
+            <a href="{% url 'prices:comparison' %}">{% trans "تقرير المقارنة" %}</a>
+          </li>
+        </ul>
+
+        {% if user.is_authenticated %}
+        <ul class="nav navbar-nav {% if request.LANGUAGE_CODE == 'ar' %}navbar-left{% else %}navbar-right{% endif %}">
+          <li><a href="{% url 'account_change_password' %}">{% trans "تغيير كلمة المرور" %}</a></li>
+          <li><a href="{% url 'account_logout' %}">{% trans "تسجيل الخروج" %}</a></li>
+        </ul>
+        {% endif %}
+      </div>
+    </div>
+  </nav>
+
+  <!-- ===== Full-width content (no sidebar) ===== -->
+  <div class="container-fluid">
+    {% block content %}{% endblock %}
+  </div>
+
+</body>
+</html>

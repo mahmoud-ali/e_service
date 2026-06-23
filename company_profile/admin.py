@@ -744,6 +744,7 @@ class LkpStateAdmin(admin.ModelAdmin):
     fields = ["name","sector","code"]
     list_display = ["name","sector","code"]
     list_filter = []
+    search_fields = ["name", "code"]
     view_on_site = False             
 
 admin.site.register(LkpState,LkpStateAdmin)

@@ -1,0 +1,308 @@
+{% extends "prices/base.html" %}
+{% load i18n humanize %}
+
+{% block title %}{% trans "سجل الأسعار" %}{% endblock %}
+
+{% block content %}
+<div class="container" dir="rtl">
+  <h2 class="mb-4">{% trans "سجل الأسعار" %}</h2>
+
+  <!-- Date range filter -->
+  <form method="get" class="form-inline" style="margin-bottom: 20px;">
+    <div class="form-group" style="margin-right: 10px;">
+      <label for="start_date" style="margin-right: 5px;">{% trans "من تاريخ" %}</label>
+      <input type="date" class="form-control" name="start_date" id="start_date"
+             value="{{ start_date }}">
+    </div>
+    <div class="form-group" style="margin-right: 10px;">
+      <label for="end_date" style="margin-right: 5px;">{% trans "إلى تاريخ" %}</label>
+      <input type="date" class="form-control" name="end_date" id="end_date"
+             value="{{ end_date }}">
+    </div>
+    <button type="submit" class="btn btn-primary">{% trans "عرض" %}</button>
+  </form>
+
+  <!-- ===== ملخص الإحصائيات ===== -->
+  <div class="panel panel-primary" style="margin-bottom: 20px;">
+    <div class="panel-heading">
+      <h5 class="panel-title">{% trans "ملخص الإحصائيات للفترة المحددة" %}</h5>
+    </div>
+    <div class="panel-body">
+      <div class="table-responsive">
+        <table class="table table-bordered table-condensed text-center">
+          <thead>
+            <tr>
+              <th>{% trans "النوع" %}</th>
+              <th>{% trans "المتوسط" %}</th>
+              <th>{% trans "الأدنى" %}</th>
+              <th>{% trans "الأعلى" %}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>{% trans "ذهب عالمي عيار 24 (دولار)" %}</strong></td>
+              <td>{{ global_24k_stats.avg|default:"—" }}</td>
+              <td>{{ global_24k_stats.min|default:"—" }}</td>
+              <td>{{ global_24k_stats.max|default:"—" }}</td>
+            </tr>
+            <tr>
+              <td><strong>{% trans "ذهب عالمي عيار 21 (دولار)" %}</strong></td>
+              <td>{{ global_21k_stats.avg|default:"—" }}</td>
+              <td>{{ global_21k_stats.min|default:"—" }}</td>
+              <td>{{ global_21k_stats.max|default:"—" }}</td>
+            </tr>
+            <tr>
+              <td><strong>{% trans "بنك السودان — شركات الامتياز (جنيه)" %}</strong></td>
+              <td>{{ concession_stats.avg|default:"—" }}</td>
+              <td>{{ concession_stats.min|default:"—" }}</td>
+              <td>{{ concession_stats.max|default:"—" }}</td>
+            </tr>
+            <tr>
+              <td><strong>{% trans "بنك السودان — شركات المخلفات (جنيه)" %}</strong></td>
+              <td>{{ waste_stats.avg|default:"—" }}</td>
+              <td>{{ waste_stats.min|default:"—" }}</td>
+              <td>{{ waste_stats.max|default:"—" }}</td>
+            </tr>
+            <tr>
+              <td><strong>{% trans "دولار رسمي (جنيه)" %}</strong></td>
+              <td>{{ official_stats.avg|default:"—" }}</td>
+              <td>{{ official_stats.min|default:"—" }}</td>
+              <td>{{ official_stats.max|default:"—" }}</td>
+            </tr>
+            <tr>
+              <td><strong>{% trans "دولار سوق موازي (جنيه)" %}</strong></td>
+              <td>{{ parallel_stats.avg|default:"—" }}</td>
+              <td>{{ parallel_stats.min|default:"—" }}</td>
+              <td>{{ parallel_stats.max|default:"—" }}</td>
+            </tr>
+            {% if state_stats.avg is not None %}
+            <tr>
+              <td><strong>{% trans "أسعار الذهب بالولايات (جنيه)" %}</strong></td>
+              <td>{{ state_stats.avg }}</td>
+              <td>{{ state_stats.min }}</td>
+              <td>{{ state_stats.max }}</td>
+            </tr>
+            {% endif %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== الذهب العالمي ===== -->
+  <div class="panel panel-warning">
+    <div class="panel-heading">
+      <h5 class="panel-title">{% trans "سعر الذهب العالمي" %}</h5>
+    </div>
+    <div class="panel-body">
+      {% if global_prices %}
+      <div class="table-responsive">
+        <table class="table table-bordered table-condensed">
+          <thead>
+            <tr>
+              <th>{% trans "التاريخ والوقت" %}</th>
+              <th>{% trans "العيار" %}</th>
+              <th>{% trans "السعر (دولار/جرام)" %}</th>
+              <th>{% trans "المستخدم" %}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for p in global_prices %}
+            <tr>
+              <td>{{ p.created_at|date:"Y-m-d H:i" }}</td>
+              <td>{{ p.get_karat_display }}</td>
+              <td>{{ p.price_per_gram_usd|floatformat:2 }}</td>
+              <td>{{ p.created_by }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+        <span class="text-muted">{% trans "لا توجد بيانات في الفترة المحددة." %}</span>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- ===== بنك السودان - شركات الامتياز ===== -->
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h5 class="panel-title">{% trans "شراء بنك السودان — شركات الامتياز" %}</h5>
+    </div>
+    <div class="panel-body">
+      {% if bank_concession_prices %}
+      <div class="table-responsive">
+        <table class="table table-bordered table-condensed">
+          <thead>
+            <tr>
+              <th>{% trans "التاريخ والوقت" %}</th>
+              <th>{% trans "السعر (جنيه/جرام)" %}</th>
+              <th>{% trans "المستخدم" %}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for p in bank_concession_prices %}
+            <tr>
+              <td>{{ p.created_at|date:"Y-m-d H:i" }}</td>
+              <td>{{ p.price_per_gram_sdg|floatformat:2 }}</td>
+              <td>{{ p.created_by }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+        <span class="text-muted">{% trans "لا توجد بيانات في الفترة المحددة." %}</span>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- ===== بنك السودان - شركات المخلفات ===== -->
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h5 class="panel-title">{% trans "شراء بنك السودان — شركات المخلفات" %}</h5>
+    </div>
+    <div class="panel-body">
+      {% if bank_waste_prices %}
+      <div class="table-responsive">
+        <table class="table table-bordered table-condensed">
+          <thead>
+            <tr>
+              <th>{% trans "التاريخ والوقت" %}</th>
+              <th>{% trans "السعر (جنيه/جرام)" %}</th>
+              <th>{% trans "المستخدم" %}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for p in bank_waste_prices %}
+            <tr>
+              <td>{{ p.created_at|date:"Y-m-d H:i" }}</td>
+              <td>{{ p.price_per_gram_sdg|floatformat:2 }}</td>
+              <td>{{ p.created_by }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+        <span class="text-muted">{% trans "لا توجد بيانات في الفترة المحددة." %}</span>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- ===== الدولار الرسمي ===== -->
+  <div class="panel panel-success">
+    <div class="panel-heading">
+      <h5 class="panel-title">{% trans "الدولار الرسمي" %}</h5>
+    </div>
+    <div class="panel-body">
+      {% if official_prices %}
+      <div class="table-responsive">
+        <table class="table table-bordered table-condensed">
+          <thead>
+            <tr>
+              <th>{% trans "التاريخ والوقت" %}</th>
+              <th>{% trans "السعر (جنيه)" %}</th>
+              <th>{% trans "المستخدم" %}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for p in official_prices %}
+            <tr>
+              <td>{{ p.created_at|date:"Y-m-d H:i" }}</td>
+              <td>{{ p.price_in_sdg|floatformat:2 }}</td>
+              <td>{{ p.created_by }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+        <span class="text-muted">{% trans "لا توجد بيانات في الفترة المحددة." %}</span>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- ===== الدولار الموازي ===== -->
+  <div class="panel panel-success">
+    <div class="panel-heading">
+      <h5 class="panel-title">{% trans "الدولار بالسوق الموازي" %}</h5>
+    </div>
+    <div class="panel-body">
+      {% if parallel_prices %}
+      <div class="table-responsive">
+        <table class="table table-bordered table-condensed">
+          <thead>
+            <tr>
+              <th>{% trans "التاريخ والوقت" %}</th>
+              <th>{% trans "السعر (جنيه)" %}</th>
+              <th>{% trans "المستخدم" %}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for p in parallel_prices %}
+            <tr>
+              <td>{{ p.created_at|date:"Y-m-d H:i" }}</td>
+              <td>{{ p.price_in_sdg|floatformat:2 }}</td>
+              <td>{{ p.created_by }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+        <span class="text-muted">{% trans "لا توجد بيانات في الفترة المحددة." %}</span>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- ===== أسعار الولايات ===== -->
+  <div class="panel panel-info">
+    <div class="panel-heading">
+      <h5 class="panel-title">{% trans "أسعار الذهب بالولايات" %}</h5>
+    </div>
+    <div class="panel-body">
+      {% if state_prices %}
+      <div class="table-responsive">
+        <table class="table table-bordered table-condensed">
+          <thead>
+            <tr>
+              <th>{% trans "التاريخ والوقت" %}</th>
+              <th>{% trans "الولاية" %}</th>
+              <th>{% trans "السعر (جنيه/جرام)" %}</th>
+              <th>{% trans "المستخدم" %}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for p in state_prices %}
+            <tr>
+              <td>{{ p.created_at|date:"Y-m-d H:i" }}</td>
+              <td>{{ p.state.name }}</td>
+              <td>{{ p.price_per_gram_sdg|floatformat:2 }}</td>
+              <td>{{ p.created_by }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+        <span class="text-muted">{% trans "لا توجد بيانات في الفترة المحددة." %}</span>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="row" style="margin-top: 20px;">
+    <div class="col-md-4">
+      {% if perms.prices.add_globalgoldprice or perms.prices.add_dollarprice or perms.prices.add_stategoldprice %}
+      <a href="{% url 'prices:entry' %}" class="btn btn-primary btn-block">{% trans "إدخال أسعار جديدة" %}</a>
+      {% endif %}
+    </div>
+    <div class="col-md-4">
+      <a href="{% url 'prices:report' %}" class="btn btn-default btn-block">{% trans "التقرير الملخص" %}</a>
+    </div>
+    <div class="col-md-4">
+      <a href="{% url 'prices:comparison' %}" class="btn btn-info btn-block">{% trans "تقرير المقارنة" %}</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

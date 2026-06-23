@@ -1,0 +1,238 @@
+{% extends "prices/base.html" %}
+{% load i18n humanize %}
+
+{% block title %}{% trans "تقرير مقارنة الأسعار" %}{% endblock %}
+
+{% block content %}
+<div class="container" dir="rtl">
+  <h2 class="mb-4">{% trans "مقارنة أسعار الذهب المحلية مع السعر العالمي" %}</h2>
+
+  {% if last_parallel %}
+  {% else %}
+    <div class="alert alert-warning">
+      {% trans "لا يوجد سعر صرف موازي مسجل. لا يمكن إجراء المقارنة." %}
+    </div>
+  {% endif %}
+
+  {% if comparison_rows %}
+
+  <!-- ===== Time-Series: Gold (SDG) ===== -->
+  <div class="row" style="margin-bottom: 30px;">
+    <div class="col-md-12">
+      <div class="panel panel-warning">
+        <div class="panel-heading">
+          <h5 class="panel-title">{% trans "حركة أسعار الذهب — آخر 30 يوماً" %}</h5>
+        </div>
+        <div class="panel-body">
+          <div style="position: relative; height: 350px;">
+            <canvas id="timeseriesGoldChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Time-Series: Dollar (SDG) ===== -->
+  <div class="row" style="margin-bottom: 30px;">
+    <div class="col-md-12">
+      <div class="panel panel-success">
+        <div class="panel-heading">
+          <h5 class="panel-title">{% trans "حركة أسعار الدولار — آخر 30 يوماً" %}</h5>
+        </div>
+        <div class="panel-body">
+          <div style="position: relative; height: 350px;">
+            <canvas id="timeseriesDollarChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  </div>
+
+  <!-- ===== أسعار صرف الدولار ===== -->
+  <div class="row" style="margin-bottom: 20px;">
+    <div class="col-md-6">
+      <div class="panel panel-success">
+        <div class="panel-heading">
+          <h5 class="panel-title">{% trans "سعر الدولار الرسمي" %}</h5>
+        </div>
+        <div class="panel-body text-center">
+          {% if last_official %}
+            <h3 style="margin: 5px 0;">{{ last_official.price_in_sdg|floatformat:2 }} <small>{% trans "جنيه" %}</small></h3>
+            <small class="text-muted">{{ last_official.created_at|date:"Y-m-d H:i" }}</small>
+          {% else %}
+            <span class="text-muted">{% trans "لا توجد بيانات" %}</span>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="panel panel-warning">
+        <div class="panel-heading">
+          <h5 class="panel-title">{% trans "سعر الدولار بالسوق الموازي" %}</h5>
+        </div>
+        <div class="panel-body text-center">
+          {% if last_parallel %}
+            <h3 style="margin: 5px 0;">{{ last_parallel.price_in_sdg|floatformat:2 }} <small>{% trans "جنيه" %}</small></h3>
+            <small class="text-muted">{{ last_parallel.created_at|date:"Y-m-d H:i" }}</small>
+          {% else %}
+            <span class="text-muted">{% trans "لا توجد بيانات" %}</span>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="table-responsive">
+    <table class="table table-bordered table-striped table-condensed">
+      <thead>
+        <tr>
+          <th>{% trans "مصدر السعر" %}</th>
+          <th>{% trans "السعر المحلي (جنيه/جرام)" %}</th>
+          <th>{% trans "السعر المحلي (دولار/جرام)" %}</th>
+          <th>{% trans "السعر العالمي (دولار/جرام)" %}</th>
+          <th>{% trans "الفجوة (دولار)" %}</th>
+          <th>{% trans "الفجوة (%)" %}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in comparison_rows %}
+        <tr>
+          <td><strong>{{ row.label }}</strong></td>
+          <td>{{ row.local_sdg|floatformat:2 }}</td>
+          <td>{{ row.local_usd|floatformat:2 }}</td>
+          <td>{{ row.global_usd|floatformat:2 }}</td>
+          <td class="{% if row.gap_usd > 0 %}text-danger{% else %}text-success{% endif %}">
+            {{ row.gap_usd|floatformat:2 }}
+          </td>
+          <td class="{% if row.gap_pct > 0 %}text-danger{% else %}text-success{% endif %}">
+            {{ row.gap_pct|floatformat:2 }}%
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Legend -->
+  <div class="panel panel-default">
+    <div class="panel-body">
+      <h5>{% trans "ملاحظات" %}</h5>
+      <ul>
+        <li>{% trans "القيم الموجبة (باللون الأحمر) تعني أن السعر المحلي أعلى من السعر العالمي." %}</li>
+        <li>{% trans "القيم السالبة (باللون الأخضر) تعني أن السعر المحلي أقل من السعر العالمي." %}</li>
+        <li>{% trans "يتم التحويل باستخدام آخر سعر مسجل للدولار في السوق الموازي." %}</li>
+      </ul>
+    </div>
+  </div>
+  {% else %}
+    <div class="alert alert-info">
+      {% trans "لا توجد بيانات كافية لإجراء المقارنة. يرجى إدخال الأسعار أولاً." %}
+    </div>
+  {% endif %}
+
+  <div class="row" style="margin-top: 20px;">
+    <div class="col-md-4">
+      {% if perms.prices.add_globalgoldprice or perms.prices.add_dollarprice or perms.prices.add_stategoldprice %}
+      <a href="{% url 'prices:entry' %}" class="btn btn-primary btn-block">{% trans "إدخال أسعار جديدة" %}</a>
+      {% endif %}
+    </div>
+    <div class="col-md-4">
+      <a href="{% url 'prices:report' %}" class="btn btn-default btn-block">{% trans "التقرير الملخص" %}</a>
+    </div>
+    <div class="col-md-4">
+      <a href="{% url 'prices:history' %}" class="btn btn-default btn-block">{% trans "استعراض السجل" %}</a>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>
+  var chartData = {{ comparison_rows_json|safe }};
+  console.log('comparison chart data:', chartData);
+
+  var tsLabels = {{ timeseries_labels_json|safe }};
+  var tsConcession = {{ timeseries_concession_json|safe }};
+  var tsWaste = {{ timeseries_waste_json|safe }};
+  var tsOfficial = {{ timeseries_official_json|safe }};
+  var tsParallel = {{ timeseries_parallel_json|safe }};
+
+  // --- Time-Series: Gold (SDG) ---
+  var ctxGold = document.getElementById('timeseriesGoldChart').getContext('2d');
+  new Chart(ctxGold, {
+    type: 'line',
+    data: {
+      labels: tsLabels,
+      datasets: [
+        {
+          label: '{% trans "شركات الامتياز" %}',
+          data: tsConcession,
+          borderColor: 'rgba(54, 162, 235, 1)',
+          backgroundColor: 'rgba(54, 162, 235, 0.1)',
+          tension: 0.3,
+          spanGaps: true
+        },
+        {
+          label: '{% trans "شركات المخلفات" %}',
+          data: tsWaste,
+          borderColor: 'rgba(75, 192, 192, 1)',
+          backgroundColor: 'rgba(75, 192, 192, 0.1)',
+          tension: 0.3,
+          spanGaps: true
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: { legend: { position: 'top' } },
+      scales: {
+        y: {
+          title: { display: true, text: '{% trans "جنيه/جرام" %}' }
+        }
+      }
+    }
+  });
+
+  // --- Time-Series: Dollar (SDG) ---
+  var ctxDollar = document.getElementById('timeseriesDollarChart').getContext('2d');
+  new Chart(ctxDollar, {
+    type: 'line',
+    data: {
+      labels: tsLabels,
+      datasets: [
+        {
+          label: '{% trans "دولار رسمي" %}',
+          data: tsOfficial,
+          borderColor: 'rgba(255, 99, 132, 1)',
+          backgroundColor: 'rgba(255, 99, 132, 0.1)',
+          tension: 0.3,
+          borderDash: [5, 5],
+          spanGaps: true
+        },
+        {
+          label: '{% trans "دولار سوق موازي" %}',
+          data: tsParallel,
+          borderColor: 'rgba(255, 159, 64, 1)',
+          backgroundColor: 'rgba(255, 159, 64, 0.1)',
+          tension: 0.3,
+          spanGaps: true
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: { legend: { position: 'top' } },
+      scales: {
+        y: {
+          title: { display: true, text: '{% trans "جنيه" %}' }
+        }
+      }
+    }
+  });
+</script>
+{% endblock %}

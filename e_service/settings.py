@@ -124,6 +124,7 @@ INSTALLED_APPS = [
     'khatabat',
     'company_profile_entaj',
     'form15_tra',
+    'prices',
     # 'billing_api',
 
     # Debug
