@@ -40,7 +40,7 @@
 
         {% if 'global_gold_24k' in form.fields %}
         <div class="row">
-          <div class="col-md-6">
+          <div class="col-md-4">
             <div class="form-group">
               <label for="{{ form.global_gold_24k.id_for_label }}">
                 {{ form.global_gold_24k.label }}
@@ -60,7 +60,21 @@
               {% endif %}
             </div>
           </div>
-          <div class="col-md-6">
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="{{ form.global_gold_24k_ounce.id_for_label }}">
+                {{ form.global_gold_24k_ounce.label }}
+              </label>
+              {{ form.global_gold_24k_ounce }}
+              <span class="help-block small text-muted">
+                {% trans "يتم احتسابه تلقائياً: الأوقية = الجرام × 31.103" %}
+              </span>
+              {% if form.global_gold_24k_ounce.errors %}
+                <span class="help-block text-danger">{{ form.global_gold_24k_ounce.errors }}</span>
+              {% endif %}
+            </div>
+          </div>
+          <div class="col-md-4">
             <div class="form-group">
               <label for="{{ form.global_gold_21k.id_for_label }}">
                 {{ form.global_gold_21k.label }}
@@ -195,15 +209,17 @@
 <script>
   {% if 'global_gold_24k' in form.fields %}
   var gold24kField = document.getElementById('{{ form.global_gold_24k.id_for_label }}');
+  var gold24kOunceField = document.getElementById('{{ form.global_gold_24k_ounce.id_for_label }}');
   var gold21kField = document.getElementById('{{ form.global_gold_21k.id_for_label }}');
 
-  function update21k() {
+  function updateDerived() {
     var val24 = parseFloat(gold24kField.value);
     if (!isNaN(val24) && val24 > 0) {
+      gold24kOunceField.value = (val24 * 31.1034768).toFixed(2);
       gold21kField.value = (val24 * 0.875).toFixed(2);
     }
   }
-  gold24kField.addEventListener('input', update21k);
+  gold24kField.addEventListener('input', updateDerived);
 
   document.getElementById('fetch-gold-btn').addEventListener('click', function() {
     var btn = this;
@@ -216,7 +232,8 @@
       .then(function(data) {
         if (data.success) {
           gold24kField.value = data.price_per_gram_usd;
-          update21k();
+          gold24kOunceField.value = data.price_per_ounce_usd;
+          updateDerived();
           alert('{% trans "تم تحديث السعر بنجاح" %}: ' + data.price_per_gram_usd + ' $/g\n{% trans "آخر تحديث" %}: ' + data.updated_at);
         } else {
           alert('{% trans "فشل تحديث السعر" %}: ' + data.error);

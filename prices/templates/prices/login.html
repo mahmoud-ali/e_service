@@ -1,0 +1,33 @@
+{% extends "prices/base.html" %}
+{% load i18n bootstrap3 %}
+
+{% block title %}{% trans "تسجيل الدخول" %}{% endblock %}
+
+{% block content %}
+<div class="container" dir="rtl">
+  <div class="row" style="margin-top: 24px; margin-bottom: 24px;">
+    <div class="col-xs-12 col-sm-8 col-md-5 col-lg-4 col-sm-offset-2 col-md-offset-3 col-lg-offset-4">
+      <div class="panel panel-default" style="border-radius: 10px;">
+        <div class="panel-body" style="padding: 22px 22px 18px;">
+          <h2 class="h3" style="margin: 0 0 6px; font-weight: 700;">{% trans "تسجيل الدخول" %}</h2>
+          <p class="text-muted" style="margin: 0;">{% trans "استخدم اسم المستخدم وكلمة المرور للمتابعة." %}</p>
+
+          {% bootstrap_messages %}
+          {% if form.non_field_errors %}
+            <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+          {% endif %}
+
+          <form method="post" action="{% url 'prices:login' %}?next={% url 'prices:entry' %}" novalidate>
+            {% csrf_token %}
+            {% if redirect_field_value %}
+              <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}">
+            {% endif %}
+            {% bootstrap_form form %}
+            <button type="submit" class="btn btn-primary btn-block" style="margin-top: 10px;">{% trans "تسجيل الدخول" %}</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

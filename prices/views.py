@@ -26,6 +26,7 @@ from prices.models import (
     DOLLAR_PARALLEL,
     GOLD_KARAT_24,
     GOLD_KARAT_21,
+    OUNCE_TO_GRAM,
 )
 
 
@@ -33,6 +34,7 @@ from prices.models import (
 # 1. نموذج الإدخال
 # ---------------------------------------------------------------------------
 class PriceEntryView(LoginRequiredMixin, FormView):
+    login_url = reverse_lazy('prices:login')
     template_name = 'prices/price_entry.html'
     form_class = PriceEntryForm
     success_url = reverse_lazy('prices:report')
@@ -77,6 +79,7 @@ class PriceEntryView(LoginRequiredMixin, FormView):
 # 2. تقرير ملخص — آخر الأسعار المسجلة لجميع العناصر
 # ---------------------------------------------------------------------------
 class PriceReportView(LoginRequiredMixin, TemplateView):
+    login_url = reverse_lazy('prices:login')
     template_name = 'prices/price_report.html'
 
     def get_context_data(self, **kwargs):
@@ -116,6 +119,7 @@ class PriceReportView(LoginRequiredMixin, TemplateView):
 # 3. سجل الأسعار — تاريخ لفترة زمنية محددة
 # ---------------------------------------------------------------------------
 class PriceHistoryView(LoginRequiredMixin, TemplateView):
+    login_url = reverse_lazy('prices:login')
     template_name = 'prices/price_history.html'
 
     def get_context_data(self, **kwargs):
@@ -184,6 +188,7 @@ class PriceHistoryView(LoginRequiredMixin, TemplateView):
 # 4. تقرير مقارنة — مقارنة أسعار الذهب المحلية (محولة للدولار) مع السعر العالمي
 # ---------------------------------------------------------------------------
 class PriceComparisonView(LoginRequiredMixin, TemplateView):
+    login_url = reverse_lazy('prices:login')
     template_name = 'prices/price_comparison.html'
 
     def get_context_data(self, **kwargs):
@@ -346,11 +351,11 @@ class PriceComparisonView(LoginRequiredMixin, TemplateView):
 # ---------------------------------------------------------------------------
 # 5. جلب سعر الذهب العالمي من الإنترنت
 # ---------------------------------------------------------------------------
-OUNCE_TO_GRAM = 31.1034768
 GOLD_API_URL = 'https://data-asg.goldprice.org/dbXRates/USD'
 
 
 class FetchGoldPriceView(LoginRequiredMixin, View):
+    login_url = reverse_lazy('prices:login')
     """Proxy endpoint to fetch live global gold price (USD/gram) from a free API."""
 
     def get(self, request):

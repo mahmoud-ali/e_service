@@ -33,6 +33,7 @@ GOLD_KARAT_CHOICES = {
 }
 
 KARAT_21_FACTOR = 0.875  # 21K = 24K × 0.875
+OUNCE_TO_GRAM = 31.1034768
 
 
 # --- Models ---
@@ -48,10 +49,15 @@ class GlobalGoldPrice(LoggingModel):
         _('سعر الجرام بالدولار'),
         max_digits=10, decimal_places=2,
     )
+    price_per_ounce_usd = models.DecimalField(
+        _('سعر الأوقية بالدولار'),
+        max_digits=10, decimal_places=2,
+        default=0,
+    )
 
     def __str__(self):
         karat_label = dict(GOLD_KARAT_CHOICES).get(self.karat, self.karat)
-        return f'{karat_label} — ${self.price_per_gram_usd} — {self.created_at:%Y-%m-%d %H:%M}'
+        return f'{karat_label} — ${self.price_per_gram_usd}/g (${self.price_per_ounce_usd}/oz) — {self.created_at:%Y-%m-%d %H:%M}'
 
     class Meta:
         verbose_name = _('سعر الذهب العالمي')

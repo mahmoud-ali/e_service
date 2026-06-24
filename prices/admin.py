@@ -20,7 +20,7 @@ class LogMixin:
 
 @admin.register(GlobalGoldPrice)
 class GlobalGoldPriceAdmin(LogMixin, admin.ModelAdmin):
-    list_display = ('karat', 'price_per_gram_usd', 'created_at', 'created_by')
+    list_display = ('karat', 'price_per_gram_usd', 'price_per_ounce_usd', 'created_at', 'created_by')
     list_filter = ('karat', 'created_at')
     search_fields = ('price_per_gram_usd',)
     date_hierarchy = 'created_at'

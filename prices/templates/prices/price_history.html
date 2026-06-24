@@ -103,6 +103,7 @@
               <th>{% trans "التاريخ والوقت" %}</th>
               <th>{% trans "العيار" %}</th>
               <th>{% trans "السعر (دولار/جرام)" %}</th>
+              <th>{% trans "السعر (دولار/أوقية)" %}</th>
               <th>{% trans "المستخدم" %}</th>
             </tr>
           </thead>
@@ -112,6 +113,7 @@
               <td>{{ p.created_at|date:"Y-m-d H:i" }}</td>
               <td>{{ p.get_karat_display }}</td>
               <td>{{ p.price_per_gram_usd|floatformat:2 }}</td>
+              <td>{{ p.price_per_ounce_usd|floatformat:2 }}</td>
               <td>{{ p.created_by }}</td>
             </tr>
             {% endfor %}

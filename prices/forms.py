@@ -16,6 +16,7 @@ from prices.models import (
     GOLD_KARAT_24,
     GOLD_KARAT_21,
     KARAT_21_FACTOR,
+    OUNCE_TO_GRAM,
 )
 
 
@@ -28,6 +29,16 @@ class PriceEntryForm(forms.Form):
         max_digits=10, decimal_places=2,
         min_value=0,
         widget=forms.NumberInput(attrs={'step': '0.01', 'class': 'form-control'}),
+    )
+
+    global_gold_24k_ounce = forms.DecimalField(
+        label=_('سعر الذهب العالمي عيار 24 (دولار/أوقية)'),
+        max_digits=10, decimal_places=2,
+        min_value=0,
+        required=False,
+        widget=forms.NumberInput(attrs={
+            'step': '0.01', 'class': 'form-control', 'readonly': 'readonly',
+        }),
     )
 
     global_gold_21k = forms.DecimalField(
@@ -109,7 +120,7 @@ class PriceEntryForm(forms.Form):
 
         # Main fields: global gold (both karats), bank sudan (both), official dollar
         main_fields = {
-            'global_gold_24k', 'global_gold_21k',
+            'global_gold_24k', 'global_gold_24k_ounce', 'global_gold_21k',
             'bank_concession_price', 'bank_waste_price',
             'official_dollar_price',
         }
@@ -138,6 +149,7 @@ class PriceEntryForm(forms.Form):
             last = GlobalGoldPrice.objects.filter(karat=GOLD_KARAT_24).order_by('-created_at').first()
             if last:
                 self.fields['global_gold_24k'].initial = last.price_per_gram_usd
+                self.fields['global_gold_24k_ounce'].initial = last.price_per_ounce_usd
 
         if 'global_gold_21k' in self.fields:
             last = GlobalGoldPrice.objects.filter(karat=GOLD_KARAT_21).order_by('-created_at').first()
@@ -170,9 +182,13 @@ class PriceEntryForm(forms.Form):
 
         # الذهب العالمي - عيار 24
         if 'global_gold_24k' in data:
+            ounce_price = data.get('global_gold_24k_ounce')
+            if ounce_price is None:
+                ounce_price = round(float(data['global_gold_24k']) * OUNCE_TO_GRAM, 2)
             GlobalGoldPrice.objects.create(
                 karat=GOLD_KARAT_24,
                 price_per_gram_usd=data['global_gold_24k'],
+                price_per_ounce_usd=ounce_price,
                 created_by=user,
                 updated_by=user,
             )

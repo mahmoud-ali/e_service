@@ -20,8 +20,8 @@
     </div>
     <div class="panel-body">
       <div class="row">
-        <div class="col-md-6">
-          <strong>{% trans "عيار 24:" %}</strong>
+        <div class="col-md-4">
+          <strong>{% trans "عيار 24 (جرام):" %}</strong>
           {% if last_global %}
             {{ last_global.price_per_gram_usd|floatformat:2 }} $
             <br><small class="text-muted">
@@ -31,7 +31,15 @@
             <span class="text-muted">—</span>
           {% endif %}
         </div>
-        <div class="col-md-6">
+        <div class="col-md-4">
+          <strong>{% trans "عيار 24 (أوقية):" %}</strong>
+          {% if last_global %}
+            {{ last_global.price_per_ounce_usd|floatformat:2 }} $
+          {% else %}
+            <span class="text-muted">—</span>
+          {% endif %}
+        </div>
+        <div class="col-md-4">
           <strong>{% trans "عيار 21:" %}</strong>
           {% if last_global_21k %}
             {{ last_global_21k.price_per_gram_usd|floatformat:2 }} $

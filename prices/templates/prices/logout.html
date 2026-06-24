@@ -1,0 +1,15 @@
+{% extends "prices/base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "تسجيل الخروج" %}{% endblock %}
+
+{% block content %}
+<div class="container" dir="rtl">
+  <h2>{% trans "تسجيل الخروج" %}</h2>
+  <p>{% trans "هل أنت متأكد من تسجيل الخروج؟" %}</p>
+  <form method="post" action="{% url 'prices:logout' %}?next={% url 'prices:login' %}">
+    {% csrf_token %}
+    <button class="btn btn-danger" type="submit">{% trans "تسجيل الخروج" %}</button>
+  </form>
+</div>
+{% endblock %}
