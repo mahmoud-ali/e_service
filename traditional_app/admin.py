@@ -335,6 +335,78 @@ class EmployeeAdmin(LogMixin, StateControlMixin, admin.ModelAdmin):
         }),
     )
     inlines = []
+    actions = ["export_employees_to_csv"]
+
+    @admin.action(description=_('تصدير الموظفين المحددين إلى CSV'))
+    def export_employees_to_csv(self, request, queryset):
+        import csv
+        import codecs
+        from django.http import HttpResponse
+
+        response = HttpResponse(
+            content_type="text/csv",
+            headers={"Content-Disposition": 'attachment; filename="employees_export.csv"'},
+        )
+        response.write(codecs.BOM_UTF8)
+        writer = csv.writer(response)
+        
+        header = [
+            'الرقم الوظيفي',
+            'الاسم',
+            'تاريخ الميلاد',
+            'الجنس',
+            'الهاتف',
+            'البريد الإلكتروني',
+            'الولاية',
+            'فئة الموظف',
+            'البنك',
+            'كود البنك',
+            'نوع الحساب',
+            'رقم الحساب',
+            'الحالة',
+            'تاريخ الحالة'
+        ]
+        writer.writerow(header)
+        
+        queryset = queryset.select_related('state', 'category').prefetch_related('bank_accounts', 'statuses')
+        
+        for employee in queryset:
+            bank_account = employee.bank_accounts.first()
+            bank_name = bank_account.bank_name if bank_account else ''
+            bank_code = bank_account.bank_code if bank_account else ''
+            account_type = bank_account.get_account_type_display() if bank_account else ''
+            account_number = bank_account.account_number if bank_account else ''
+            
+            status_obj = employee.statuses.first()
+            status = status_obj.get_status_display() if status_obj else ''
+            status_date = status_obj.status_date if status_obj else ''
+            
+            row = [
+                employee.employee_code or '',
+                employee.name,
+                employee.birth_date or '',
+                employee.get_gender_display() if employee.gender else '',
+                employee.phone or '',
+                employee.email or '',
+                employee.state.name if employee.state else '',
+                employee.category.name if employee.category else '',
+                bank_name,
+                bank_code,
+                account_type,
+                account_number,
+                status,
+                status_date
+            ]
+            writer.writerow(row)
+            
+        return response
+
+    def get_actions(self, request):
+        actions = super().get_actions(request)
+        if not (request.user.is_superuser or request.user.groups.filter(name='traditional_hr').exists()):
+            if 'export_employees_to_csv' in actions:
+                del actions['export_employees_to_csv']
+        return actions
 
     def get_readonly_fields(self, request, obj=None):
         readonly = super().get_readonly_fields(request, obj)
@@ -929,7 +1001,71 @@ class PayrollMasterAdmin(admin.ModelAdmin):
     list_select_related = True
     save_on_top = True
 
-    actions = ["confirm_payroll"]
+    actions = ["confirm_payroll", "export_payroll_to_csv"]
+
+    @admin.action(description=_('تصدير كشف المرتبات المحددة إلى CSV'))
+    def export_payroll_to_csv(self, request, queryset):
+        import csv
+        import codecs
+        from django.http import HttpResponse
+        
+        response = HttpResponse(
+            content_type="text/csv",
+            headers={"Content-Disposition": 'attachment; filename="payroll_export.csv"'},
+        )
+        response.write(codecs.BOM_UTF8)
+        writer = csv.writer(response)
+        
+        header = [
+            'السنة',
+            'الشهر',
+            'الرمز',
+            'الموظف',
+            'الولاية',
+            'المرتب الاساسي',
+            'غلاء معيشة',
+            'بدل السكن',
+            'بدل ترحيل',
+            'طبيعة عمل',
+            'بدل لبن',
+            'بدل علاج',
+            'اجمالي المرتب',
+            'تأمين اجتماعي',
+            'ضريبة',
+            'دمغة',
+            'صافي الإستحقاق'
+        ]
+        writer.writerow(header)
+        
+        user = request.user
+        has_full_access = user.is_superuser or user.groups.filter(name='traditional_hr').exists()
+        try:
+            user_state = user.traditional_app_user.state if not has_full_access else None
+        except:
+            user_state = None
+            
+        for master in queryset:
+            payroll = T3agoodPayroll(master.year, master.month)
+            for (emp, badalat, khosomat) in payroll.employees_payroll_from_db(state=user_state):
+                badalat_list = [b[1] for b in badalat]
+                khsomat_list = [k[1] for k in khosomat]
+                row = [
+                    master.year,
+                    master.get_month_display(),
+                    emp.employee.id,
+                    emp.employee.name,
+                    emp.employee.state.name if emp.employee.state else '',
+                ] + badalat_list + khsomat_list
+                writer.writerow(row)
+                
+        return response
+
+    def get_actions(self, request):
+        actions = super().get_actions(request)
+        if not (request.user.is_superuser or request.user.groups.filter(name='traditional_hr').exists()):
+            if 'export_payroll_to_csv' in actions:
+                del actions['export_payroll_to_csv']
+        return actions
 
     # readonly_fields = ["year","month","confirmed"]
 
@@ -947,14 +1083,17 @@ class PayrollMasterAdmin(admin.ModelAdmin):
 
         try:
             user = getattr(self, "_current_user", None)
-            user_state = user.traditional_app_user.state
-            qs = LkpState.objects.filter(id=user_state.id) #request.user
+            if user.is_superuser or user.groups.filter(name='traditional_hr').exists():
+                qs = LkpState.objects.all()
+            else:
+                qs = LkpState.objects.none()
+                
             for state in qs:
                 urls_list.append(
                     f'<a target="_blank" class="viewlink" href="{url}?year={obj.year}&month={obj.month}&state={state.id}">'+'مرتب '+state.name+'</a> / '\
                         +f' <a target="_blank" href="{url}?year={obj.year}&month={obj.month}&state={state.id}&format=csv">'+'تصدير '+state.name+'</a>'
                 )            
-        except:
+        except Exception as e:
             pass
 
         return format_html(" ".join(urls_list))

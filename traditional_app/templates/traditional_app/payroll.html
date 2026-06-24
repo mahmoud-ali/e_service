@@ -71,7 +71,7 @@
 						<td>{{ forloop.counter }}</td>
 						{% for cell in row %}
 						<td class="col_{{ forloop.counter }}">
-							{% if forloop.counter <= 4 %}
+							{% if forloop.counter <= 3 %}
 								{{ cell }}
 							{% else%}
 									{{ cell|floatformat:"2g" }}
@@ -81,6 +81,7 @@
 					</tr>
 					{% endfor %}        	
 					<tr>
+						<th>-</th>
 						<th>-</th>
 						<th>-</th>
 						<th>-</th>

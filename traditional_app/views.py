@@ -15,10 +15,13 @@ class UserPermissionMixin(UserPassesTestMixin):
     user_groups = []
 
     def test_func(self):
-        return self.request.user.groups.filter(name__in=self.user_groups).exists()
+        return (
+            self.request.user.is_superuser or
+            self.request.user.groups.filter(name__in=self.user_groups).exists()
+        )
 
 class PayrollT3agood(LoginRequiredMixin,UserPermissionMixin,View):
-    user_groups = ['tra_state_manager',]
+    user_groups = ['traditional_hr',]
     def get(self,*args,**kwargs):
         year = self.request.GET['year']
         month = int(self.request.GET['month'])
@@ -26,23 +29,26 @@ class PayrollT3agood(LoginRequiredMixin,UserPermissionMixin,View):
         format = self.request.GET.get('format',None)
         data = []
 
-        try:
-            user_state = self.request.user.traditional_app_user.state
-            # print(user_state ,state)
-            if user_state != state:
-                raise Exception
-        except:
-            raise Http404
+        user = self.request.user
+        has_full_access = user.is_superuser or user.groups.filter(name='traditional_hr').exists()
+        if not has_full_access:
+            try:
+                user_state = user.traditional_app_user.state
+                # print(user_state ,state)
+                if user_state != state:
+                    raise Exception
+            except:
+                raise Http404
 
         
         payroll = T3agoodPayroll(year,month)
-        header = ['الرمز','الموظف','المرتب الاساسي','غلاء معيشة','بدل السكن','بدل ترحيل','طبيعة عمل','بدل لبن','بدل علاج','اجمالي المرتب','تأمين اجتماعي','ضريبة','دمغة','صافي الإستحقاق',]
+        header = ['الرمز','الموظف','الولاية','المرتب الاساسي','غلاء معيشة','بدل السكن','بدل ترحيل','طبيعة عمل','بدل لبن','بدل علاج','اجمالي المرتب','تأمين اجتماعي','ضريبة','دمغة','صافي الإستحقاق',]
         summary_list = []
 
         for (emp,badalat,khosomat,) in payroll.employees_payroll_from_db(state=state):
             badalat_list = [b[1] for b in badalat]
             khsomat_list = [k[1] for k in khosomat]
-            l = [emp.employee.id,emp.employee.name,] + badalat_list + khsomat_list
+            l = [emp.employee.id,emp.employee.name, emp.employee.state.name if emp.employee.state else ''] + badalat_list + khsomat_list
             data.append(l)
 
             for idx,s in enumerate(badalat_list):
