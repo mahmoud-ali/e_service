@@ -2059,6 +2059,21 @@ class TblCompanyEvaluationSessionAdmin(AppHSEEvaluationSessionMixin, admin.Model
                     form.base_fields[field].widget.can_delete_related = False
         return form
 
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if not request.user.is_superuser and request.user.groups.filter(name="hse_cmpny_state_mngr").exists():
+            try:
+                original_state = request.user.hse_cmpny_state.state
+                if db_field.name == "state":
+                    kwargs["queryset"] = db_field.related_model.objects.filter(id=original_state.id)
+                elif db_field.name == "locality":
+                    kwargs["queryset"] = db_field.related_model.objects.filter(state=original_state)
+            except Exception as e:
+                print("Error formfield_for_foreignkey for hse_cmpny_state_mngr:", e)
+                if db_field.name in ("state", "locality"):
+                    kwargs["queryset"] = db_field.related_model.objects.none()
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
+
+
     def save_model(self, request, obj, form, change):
         if not obj.pk:
             obj.created_by = request.user
@@ -2077,3 +2092,80 @@ class TblCompanyEvaluationSessionAdmin(AppHSEEvaluationSessionMixin, admin.Model
         formset.save_m2m()
 
 admin.site.register(TblCompanyEvaluationSession, TblCompanyEvaluationSessionAdmin)
+
+from company_profile.admin import TblCompanyProductionAdmin
+from company_profile.models import TblCompany, TblCompanyProductionLicense
+from django.db import models
+
+def hse_tbl_company_production_get_queryset(self, request):
+    qs = super(TblCompanyProductionAdmin, self).get_queryset(request)
+
+    if (
+        request.user.is_superuser
+        or request.user.groups.filter(name__in=("hse_cmpny_department_mngr", "hse_cmpny_gm", "hse_read_only")).exists()
+    ):
+        pass
+    elif request.user.groups.filter(name__in=("hse_cmpny_state_mngr",)).exists():
+        try:
+            original_state = request.user.hse_cmpny_state.state
+            companies = TblCompanyProductionLicense.objects.filter(state=original_state).values_list('company', flat=True)
+            qs = qs.filter(id__in=companies)
+        except Exception as e:
+            print("Error TblCompanyProductionAdmin get_queryset for hse_cmpny_state_mngr:", e)
+            qs = qs.none()
+    else:
+        company_types = []
+        if request.user.groups.filter(name="company_type_entaj").exists():
+            company_types += [TblCompany.COMPANY_TYPE_ENTAJ]
+        if request.user.groups.filter(name="company_type_mokhalfat").exists():
+            company_types += [TblCompany.COMPANY_TYPE_MOKHALFAT]
+        if request.user.groups.filter(name="company_type_emtiaz").exists():
+            company_types += [TblCompany.COMPANY_TYPE_EMTIAZ]
+        if request.user.groups.filter(name="company_type_sageer").exists():
+            company_types += [TblCompany.COMPANY_TYPE_SAGEER]
+
+        qs = qs.filter(company_type__in=company_types)
+
+    qs = qs.prefetch_related(models.Prefetch("tblcompanyproductionlicense_set"))
+    
+    is_changelist = request.resolver_match and request.resolver_match.url_name.endswith('_changelist')
+    show_inactive = request.GET.get('show_inactive') == '1'
+    
+    if is_changelist and not (show_inactive or request.GET.get('q')):
+        qs = qs.exclude(status__name__in=["منتهية",  "ملغية"])
+
+    return qs
+
+TblCompanyProductionAdmin.get_queryset = hse_tbl_company_production_get_queryset
+
+def hse_tbl_company_production_has_view_permission(self, request, obj=None):
+    if request and request.user and request.user.is_authenticated:
+        if request.user.groups.filter(name__in=("hse_cmpny_state_mngr", "hse_cmpny_department_mngr", "hse_cmpny_gm", "hse_read_only")).exists():
+            return True
+    return super(TblCompanyProductionAdmin, self).has_view_permission(request, obj)
+
+TblCompanyProductionAdmin.has_view_permission = hse_tbl_company_production_has_view_permission
+
+def hse_tbl_company_production_get_fieldsets(self, request, obj=None):
+    fieldsets = super(TblCompanyProductionAdmin, self).get_fieldsets(request, obj)
+    if request.user and not request.user.is_superuser:
+        if request.user.groups.filter(name__in=("hse_cmpny_state_mngr", "hse_cmpny_department_mngr", "hse_cmpny_gm", "hse_read_only")).exists():
+            new_fieldsets = []
+            for title, fs_options in fieldsets:
+                fields = fs_options.get('fields', [])
+                flat_fields = []
+                for f in fields:
+                    if isinstance(f, (list, tuple)):
+                        flat_fields.extend(f)
+                    else:
+                        flat_fields.append(f)
+                if any(x in flat_fields for x in ("website", "email", "manager_name", "manager_phone", "rep_name", "rep_phone", "address")):
+                    continue
+                new_fieldsets.append((title, fs_options))
+            return new_fieldsets
+    return fieldsets
+
+TblCompanyProductionAdmin.get_fieldsets = hse_tbl_company_production_get_fieldsets
+
+
+
