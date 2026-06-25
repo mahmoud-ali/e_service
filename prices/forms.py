@@ -90,9 +90,28 @@ class PriceEntryForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         self._user = kwargs.pop('user', None)
+        self._allowed_state_ids = kwargs.pop('allowed_state_ids', None)
         super().__init__(*args, **kwargs)
         self._apply_role_restrictions()
         self._prefill_last_prices()
+
+    def clean_state_gold_prices(self):
+        raw = self.cleaned_data.get('state_gold_prices', '')
+        if not raw:
+            return raw
+        try:
+            import json
+            entries = json.loads(raw)
+        except (ValueError, json.JSONDecodeError):
+            raise forms.ValidationError(_('بيانات الولايات غير صالحة.'))
+        if self._allowed_state_ids is not None:
+            allowed = set(self._allowed_state_ids)
+            for entry in entries:
+                if entry.get('state_id') not in allowed:
+                    raise forms.ValidationError(
+                        _('ليس لديك صلاحية لإدخال سعر هذه الولاية.')
+                    )
+        return raw
 
     def _apply_role_restrictions(self):
         """Remove fields the user's role is not authorized to enter."""

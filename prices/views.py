@@ -20,6 +20,7 @@ from prices.models import (
     DollarPrice,
     GlobalGoldPrice,
     StateGoldPrice,
+    PricesStateUser,
     BANK_CATEGORY_CONCESSION,
     BANK_CATEGORY_WASTE,
     DOLLAR_OFFICIAL,
@@ -53,19 +54,37 @@ class PriceEntryView(LoginRequiredMixin, FormView):
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs['user'] = self.request.user
+        kwargs['allowed_state_ids'] = list(
+            self._get_allowed_states().values_list('pk', flat=True)
+        )
         return kwargs
+
+    def _get_allowed_states(self):
+        """Return states the user is allowed to enter prices for."""
+        user = self.request.user
+        if user.is_superuser:
+            return LkpState.objects.all().order_by('name')
+        state_ids = PricesStateUser.objects.filter(
+            user=user
+        ).values_list('state_id', flat=True)
+        return LkpState.objects.filter(pk__in=state_ids).order_by('name')
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
-        # Last state prices for the dynamic widget
+        ctx['states'] = self._get_allowed_states()
+
+        # Last state prices for the dynamic widget (user's states only)
+        allowed_state_ids = ctx['states'].values_list('pk', flat=True)
         last_state_prices = {}
         for sp in StateGoldPrice.objects.filter(
+            state__in=allowed_state_ids
+        ).filter(
             pk__in=StateGoldPrice.objects.values('state').annotate(
                 max_id=DMax('id')
             ).values('max_id')
         ).select_related('state'):
             last_state_prices[sp.state_id] = float(sp.price_per_gram_sdg)
-        ctx['states'] = LkpState.objects.all().order_by('name')
+        ctx['states'] = self._get_allowed_states()
         ctx['last_state_prices_json'] = json.dumps(last_state_prices)
         return ctx
 

@@ -128,3 +128,27 @@ class DollarPrice(LoggingModel):
         verbose_name = _('سعر صرف الدولار')
         verbose_name_plural = _('أسعار صرف الدولار')
         ordering = ['-created_at']
+
+
+class PricesStateUser(LoggingModel):
+    """ربط مستخدم بولاية معينة لإدخال أسعار الذهب بالولايات"""
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.PROTECT,
+        related_name='prices_state_users',
+        verbose_name=_('المستخدم'),
+    )
+    state = models.ForeignKey(
+        LkpState,
+        on_delete=models.PROTECT,
+        verbose_name=_('الولاية'),
+    )
+
+    def __str__(self):
+        return f'{self.user} — {self.state.name}'
+
+    class Meta:
+        verbose_name = _('مستخدم ولاية - الأسعار')
+        verbose_name_plural = _('مستخدمي الولايات - الأسعار')
+        ordering = ['user']
+        unique_together = [('user', 'state')]
