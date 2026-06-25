@@ -84,35 +84,38 @@
     </div>
   </div>
 
-  <div class="table-responsive">
-    <table class="table table-bordered table-striped table-condensed">
-      <thead>
-        <tr>
-          <th>{% trans "مصدر السعر" %}</th>
-          <th>{% trans "السعر المحلي (جنيه/جرام)" %}</th>
-          <th>{% trans "السعر المحلي (دولار/جرام)" %}</th>
-          <th>{% trans "السعر العالمي (دولار/جرام)" %}</th>
-          <th>{% trans "الفجوة (دولار)" %}</th>
-          <th>{% trans "الفجوة (%)" %}</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for row in comparison_rows %}
-        <tr>
-          <td><strong>{{ row.label }}</strong></td>
-          <td>{{ row.local_sdg|floatformat:2 }}</td>
-          <td>{{ row.local_usd|floatformat:2 }}</td>
-          <td>{{ row.global_usd|floatformat:2 }}</td>
-          <td class="{% if row.gap_usd > 0 %}text-danger{% else %}text-success{% endif %}">
-            {{ row.gap_usd|floatformat:2 }}
-          </td>
-          <td class="{% if row.gap_pct > 0 %}text-danger{% else %}text-success{% endif %}">
-            {{ row.gap_pct|floatformat:2 }}%
-          </td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+  <div class="row">
+    {% for row in comparison_rows %}
+    <div class="col-xs-12 col-sm-6 col-md-4">
+      <div class="panel panel-default">
+        <div class="panel-heading"><strong>{{ row.label }}</strong></div>
+        <div class="panel-body" style="padding: 10px;">
+          <div class="row small">
+            <div class="col-xs-6">
+              <span class="text-muted">{% trans "محلي (جنيه)" %}</span><br>
+              <strong>{{ row.local_sdg|floatformat:2 }}</strong>
+            </div>
+            <div class="col-xs-6">
+              <span class="text-muted">{% trans "محلي (دولار)" %}</span><br>
+              <strong>{{ row.local_usd|floatformat:2 }}</strong>
+            </div>
+          </div>
+          <div class="row small" style="margin-top: 8px;">
+            <div class="col-xs-6">
+              <span class="text-muted">{% trans "عالمي (دولار)" %}</span><br>
+              <strong>{{ row.global_usd|floatformat:2 }}</strong>
+            </div>
+            <div class="col-xs-6">
+              <span class="text-muted">{% trans "الفجوة" %}</span><br>
+              <strong class="{% if row.gap_usd > 0 %}text-danger{% else %}text-success{% endif %}">
+                {{ row.gap_usd|floatformat:2 }} $ ({{ row.gap_pct|floatformat:2 }}%)
+              </strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
   </div>
 
   <!-- Legend -->

@@ -98,6 +98,11 @@ class StateGoldPrice(LoggingModel):
         _('سعر الجرام بالجنيه'),
         max_digits=12, decimal_places=2,
     )
+    comment = models.TextField(
+        _('ملاحظات'),
+        blank=True,
+        default='',
+    )
 
     def __str__(self):
         return f'{self.state.name} — {self.price_per_gram_sdg} SDG — {self.created_at:%Y-%m-%d %H:%M}'

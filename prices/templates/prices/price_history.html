@@ -11,80 +11,108 @@
   <form method="get" class="form-inline" style="margin-bottom: 20px;">
     <div class="form-group" style="margin-right: 10px;">
       <label for="start_date" style="margin-right: 5px;">{% trans "من تاريخ" %}</label>
-      <input type="date" class="form-control" name="start_date" id="start_date"
-             value="{{ start_date }}">
+      <input type="date" class="form-control" name="start_date" id="start_date" value="{{ start_date }}">
     </div>
     <div class="form-group" style="margin-right: 10px;">
       <label for="end_date" style="margin-right: 5px;">{% trans "إلى تاريخ" %}</label>
-      <input type="date" class="form-control" name="end_date" id="end_date"
-             value="{{ end_date }}">
+      <input type="date" class="form-control" name="end_date" id="end_date" value="{{ end_date }}">
     </div>
     <button type="submit" class="btn btn-primary">{% trans "عرض" %}</button>
   </form>
 
-  <!-- ===== ملخص الإحصائيات ===== -->
+  <!-- ===== ملخص الإحصائيات (cards) ===== -->
   <div class="panel panel-primary" style="margin-bottom: 20px;">
     <div class="panel-heading">
       <h5 class="panel-title">{% trans "ملخص الإحصائيات للفترة المحددة" %}</h5>
     </div>
     <div class="panel-body">
-      <div class="table-responsive">
-        <table class="table table-bordered table-condensed text-center">
-          <thead>
-            <tr>
-              <th>{% trans "النوع" %}</th>
-              <th>{% trans "المتوسط" %}</th>
-              <th>{% trans "الأدنى" %}</th>
-              <th>{% trans "الأعلى" %}</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><strong>{% trans "ذهب عالمي عيار 24 (دولار)" %}</strong></td>
-              <td>{{ global_24k_stats.avg|default:"—" }}</td>
-              <td>{{ global_24k_stats.min|default:"—" }}</td>
-              <td>{{ global_24k_stats.max|default:"—" }}</td>
-            </tr>
-            <tr>
-              <td><strong>{% trans "ذهب عالمي عيار 21 (دولار)" %}</strong></td>
-              <td>{{ global_21k_stats.avg|default:"—" }}</td>
-              <td>{{ global_21k_stats.min|default:"—" }}</td>
-              <td>{{ global_21k_stats.max|default:"—" }}</td>
-            </tr>
-            <tr>
-              <td><strong>{% trans "بنك السودان — شركات الامتياز (جنيه)" %}</strong></td>
-              <td>{{ concession_stats.avg|default:"—" }}</td>
-              <td>{{ concession_stats.min|default:"—" }}</td>
-              <td>{{ concession_stats.max|default:"—" }}</td>
-            </tr>
-            <tr>
-              <td><strong>{% trans "بنك السودان — شركات المخلفات (جنيه)" %}</strong></td>
-              <td>{{ waste_stats.avg|default:"—" }}</td>
-              <td>{{ waste_stats.min|default:"—" }}</td>
-              <td>{{ waste_stats.max|default:"—" }}</td>
-            </tr>
-            <tr>
-              <td><strong>{% trans "دولار رسمي (جنيه)" %}</strong></td>
-              <td>{{ official_stats.avg|default:"—" }}</td>
-              <td>{{ official_stats.min|default:"—" }}</td>
-              <td>{{ official_stats.max|default:"—" }}</td>
-            </tr>
-            <tr>
-              <td><strong>{% trans "دولار سوق موازي (جنيه)" %}</strong></td>
-              <td>{{ parallel_stats.avg|default:"—" }}</td>
-              <td>{{ parallel_stats.min|default:"—" }}</td>
-              <td>{{ parallel_stats.max|default:"—" }}</td>
-            </tr>
-            {% if state_stats.avg is not None %}
-            <tr>
-              <td><strong>{% trans "أسعار الذهب بالولايات (جنيه)" %}</strong></td>
-              <td>{{ state_stats.avg }}</td>
-              <td>{{ state_stats.min }}</td>
-              <td>{{ state_stats.max }}</td>
-            </tr>
-            {% endif %}
-          </tbody>
-        </table>
+      <div class="row">
+        <div class="col-xs-12 col-sm-4 col-md-4">
+          <div class="panel panel-default" style="margin-bottom: 10px;">
+            <div class="panel-body text-center" style="padding: 8px;">
+              <small class="text-muted">{% trans "ذهب عالمي عيار 24 (دولار)" %}</small>
+              <div class="row" style="margin-top: 5px;">
+                <div class="col-xs-4"><strong>{{ global_24k_stats.min|default:"—" }}</strong><br><small class="text-muted">{% trans "الأدنى" %}</small></div>
+                <div class="col-xs-4"><strong>{{ global_24k_stats.avg|default:"—" }}</strong><br><small class="text-muted">{% trans "المتوسط" %}</small></div>
+                <div class="col-xs-4"><strong>{{ global_24k_stats.max|default:"—" }}</strong><br><small class="text-muted">{% trans "الأعلى" %}</small></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-xs-12 col-sm-4 col-md-4">
+          <div class="panel panel-default" style="margin-bottom: 10px;">
+            <div class="panel-body text-center" style="padding: 8px;">
+              <small class="text-muted">{% trans "ذهب عالمي عيار 21 (دولار)" %}</small>
+              <div class="row" style="margin-top: 5px;">
+                <div class="col-xs-4"><strong>{{ global_21k_stats.min|default:"—" }}</strong><br><small class="text-muted">{% trans "الأدنى" %}</small></div>
+                <div class="col-xs-4"><strong>{{ global_21k_stats.avg|default:"—" }}</strong><br><small class="text-muted">{% trans "المتوسط" %}</small></div>
+                <div class="col-xs-4"><strong>{{ global_21k_stats.max|default:"—" }}</strong><br><small class="text-muted">{% trans "الأعلى" %}</small></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-xs-12 col-sm-4 col-md-4">
+          <div class="panel panel-default" style="margin-bottom: 10px;">
+            <div class="panel-body text-center" style="padding: 8px;">
+              <small class="text-muted">{% trans "شركات الامتياز (جنيه)" %}</small>
+              <div class="row" style="margin-top: 5px;">
+                <div class="col-xs-4"><strong>{{ concession_stats.min|default:"—" }}</strong><br><small class="text-muted">{% trans "الأدنى" %}</small></div>
+                <div class="col-xs-4"><strong>{{ concession_stats.avg|default:"—" }}</strong><br><small class="text-muted">{% trans "المتوسط" %}</small></div>
+                <div class="col-xs-4"><strong>{{ concession_stats.max|default:"—" }}</strong><br><small class="text-muted">{% trans "الأعلى" %}</small></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-xs-12 col-sm-4 col-md-4">
+          <div class="panel panel-default" style="margin-bottom: 10px;">
+            <div class="panel-body text-center" style="padding: 8px;">
+              <small class="text-muted">{% trans "شركات المخلفات (جنيه)" %}</small>
+              <div class="row" style="margin-top: 5px;">
+                <div class="col-xs-4"><strong>{{ waste_stats.min|default:"—" }}</strong><br><small class="text-muted">{% trans "الأدنى" %}</small></div>
+                <div class="col-xs-4"><strong>{{ waste_stats.avg|default:"—" }}</strong><br><small class="text-muted">{% trans "المتوسط" %}</small></div>
+                <div class="col-xs-4"><strong>{{ waste_stats.max|default:"—" }}</strong><br><small class="text-muted">{% trans "الأعلى" %}</small></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-xs-12 col-sm-4 col-md-4">
+          <div class="panel panel-default" style="margin-bottom: 10px;">
+            <div class="panel-body text-center" style="padding: 8px;">
+              <small class="text-muted">{% trans "دولار رسمي (جنيه)" %}</small>
+              <div class="row" style="margin-top: 5px;">
+                <div class="col-xs-4"><strong>{{ official_stats.min|default:"—" }}</strong><br><small class="text-muted">{% trans "الأدنى" %}</small></div>
+                <div class="col-xs-4"><strong>{{ official_stats.avg|default:"—" }}</strong><br><small class="text-muted">{% trans "المتوسط" %}</small></div>
+                <div class="col-xs-4"><strong>{{ official_stats.max|default:"—" }}</strong><br><small class="text-muted">{% trans "الأعلى" %}</small></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-xs-12 col-sm-4 col-md-4">
+          <div class="panel panel-default" style="margin-bottom: 10px;">
+            <div class="panel-body text-center" style="padding: 8px;">
+              <small class="text-muted">{% trans "دولار سوق موازي (جنيه)" %}</small>
+              <div class="row" style="margin-top: 5px;">
+                <div class="col-xs-4"><strong>{{ parallel_stats.min|default:"—" }}</strong><br><small class="text-muted">{% trans "الأدنى" %}</small></div>
+                <div class="col-xs-4"><strong>{{ parallel_stats.avg|default:"—" }}</strong><br><small class="text-muted">{% trans "المتوسط" %}</small></div>
+                <div class="col-xs-4"><strong>{{ parallel_stats.max|default:"—" }}</strong><br><small class="text-muted">{% trans "الأعلى" %}</small></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% if state_stats.avg is not None %}
+        <div class="col-xs-12 col-sm-4 col-md-4">
+          <div class="panel panel-default" style="margin-bottom: 10px;">
+            <div class="panel-body text-center" style="padding: 8px;">
+              <small class="text-muted">{% trans "أسعار الذهب بالولايات" %}</small>
+              <div class="row" style="margin-top: 5px;">
+                <div class="col-xs-4"><strong>{{ state_stats.min }}</strong><br><small class="text-muted">{% trans "الأدنى" %}</small></div>
+                <div class="col-xs-4"><strong>{{ state_stats.avg }}</strong><br><small class="text-muted">{% trans "المتوسط" %}</small></div>
+                <div class="col-xs-4"><strong>{{ state_stats.max }}</strong><br><small class="text-muted">{% trans "الأعلى" %}</small></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endif %}
       </div>
     </div>
   </div>
@@ -96,33 +124,21 @@
     </div>
     <div class="panel-body">
       {% if global_prices %}
-      <div class="table-responsive">
-        <table class="table table-bordered table-condensed">
-          <thead>
-            <tr>
-              <th>{% trans "التاريخ والوقت" %}</th>
-              <th>{% trans "العيار" %}</th>
-              <th>{% trans "السعر (دولار/جرام)" %}</th>
-              <th>{% trans "السعر (دولار/أوقية)" %}</th>
-              <th>{% trans "المستخدم" %}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for p in global_prices %}
-            <tr>
-              <td>{{ p.created_at|date:"Y-m-d H:i" }}</td>
-              <td>{{ p.get_karat_display }}</td>
-              <td>{{ p.price_per_gram_usd|floatformat:2 }}</td>
-              <td>{{ p.price_per_ounce_usd|floatformat:2 }}</td>
-              <td>{{ p.created_by }}</td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
+      <div class="row">
+        {% for p in global_prices %}
+        <div class="col-xs-12 col-sm-6 col-md-4">
+          <div class="panel panel-default">
+            <div class="panel-body text-center" style="padding: 10px;">
+              <span class="label label-warning pull-{% if request.LANGUAGE_CODE == 'ar' %}left{% else %}right{% endif %}">{{ p.get_karat_display }}</span>
+              <h4 style="margin: 5px 0;">{{ p.price_per_gram_usd|floatformat:2 }} <small>$/g</small></h4>
+              {% if p.price_per_ounce_usd %}<small class="text-muted">{{ p.price_per_ounce_usd|floatformat:2 }} $/oz</small>{% endif %}
+              <br><small class="text-muted">{{ p.created_at|date:"Y-m-d H:i" }} — {{ p.created_by }}</small>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
       </div>
-      {% else %}
-        <span class="text-muted">{% trans "لا توجد بيانات في الفترة المحددة." %}</span>
-      {% endif %}
+      {% else %}<span class="text-muted">{% trans "لا توجد بيانات في الفترة المحددة." %}</span>{% endif %}
     </div>
   </div>
 
@@ -133,29 +149,19 @@
     </div>
     <div class="panel-body">
       {% if bank_concession_prices %}
-      <div class="table-responsive">
-        <table class="table table-bordered table-condensed">
-          <thead>
-            <tr>
-              <th>{% trans "التاريخ والوقت" %}</th>
-              <th>{% trans "السعر (جنيه/جرام)" %}</th>
-              <th>{% trans "المستخدم" %}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for p in bank_concession_prices %}
-            <tr>
-              <td>{{ p.created_at|date:"Y-m-d H:i" }}</td>
-              <td>{{ p.price_per_gram_sdg|floatformat:2 }}</td>
-              <td>{{ p.created_by }}</td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
+      <div class="row">
+        {% for p in bank_concession_prices %}
+        <div class="col-xs-6 col-sm-4 col-md-2">
+          <div class="panel panel-default">
+            <div class="panel-body text-center" style="padding: 8px;">
+              <h5 style="margin: 0;">{{ p.price_per_gram_sdg|floatformat:2 }}</h5>
+              <small class="text-muted">{{ p.created_at|date:"Y-m-d H:i" }}</small>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
       </div>
-      {% else %}
-        <span class="text-muted">{% trans "لا توجد بيانات في الفترة المحددة." %}</span>
-      {% endif %}
+      {% else %}<span class="text-muted">{% trans "لا توجد بيانات في الفترة المحددة." %}</span>{% endif %}
     </div>
   </div>
 
@@ -166,29 +172,19 @@
     </div>
     <div class="panel-body">
       {% if bank_waste_prices %}
-      <div class="table-responsive">
-        <table class="table table-bordered table-condensed">
-          <thead>
-            <tr>
-              <th>{% trans "التاريخ والوقت" %}</th>
-              <th>{% trans "السعر (جنيه/جرام)" %}</th>
-              <th>{% trans "المستخدم" %}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for p in bank_waste_prices %}
-            <tr>
-              <td>{{ p.created_at|date:"Y-m-d H:i" }}</td>
-              <td>{{ p.price_per_gram_sdg|floatformat:2 }}</td>
-              <td>{{ p.created_by }}</td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
+      <div class="row">
+        {% for p in bank_waste_prices %}
+        <div class="col-xs-6 col-sm-4 col-md-2">
+          <div class="panel panel-default">
+            <div class="panel-body text-center" style="padding: 8px;">
+              <h5 style="margin: 0;">{{ p.price_per_gram_sdg|floatformat:2 }}</h5>
+              <small class="text-muted">{{ p.created_at|date:"Y-m-d H:i" }}</small>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
       </div>
-      {% else %}
-        <span class="text-muted">{% trans "لا توجد بيانات في الفترة المحددة." %}</span>
-      {% endif %}
+      {% else %}<span class="text-muted">{% trans "لا توجد بيانات في الفترة المحددة." %}</span>{% endif %}
     </div>
   </div>
 
@@ -199,29 +195,19 @@
     </div>
     <div class="panel-body">
       {% if official_prices %}
-      <div class="table-responsive">
-        <table class="table table-bordered table-condensed">
-          <thead>
-            <tr>
-              <th>{% trans "التاريخ والوقت" %}</th>
-              <th>{% trans "السعر (جنيه)" %}</th>
-              <th>{% trans "المستخدم" %}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for p in official_prices %}
-            <tr>
-              <td>{{ p.created_at|date:"Y-m-d H:i" }}</td>
-              <td>{{ p.price_in_sdg|floatformat:2 }}</td>
-              <td>{{ p.created_by }}</td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
+      <div class="row">
+        {% for p in official_prices %}
+        <div class="col-xs-6 col-sm-4 col-md-2">
+          <div class="panel panel-default">
+            <div class="panel-body text-center" style="padding: 8px;">
+              <h5 style="margin: 0;">{{ p.price_in_sdg|floatformat:2 }}</h5>
+              <small class="text-muted">{{ p.created_at|date:"Y-m-d H:i" }}</small>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
       </div>
-      {% else %}
-        <span class="text-muted">{% trans "لا توجد بيانات في الفترة المحددة." %}</span>
-      {% endif %}
+      {% else %}<span class="text-muted">{% trans "لا توجد بيانات في الفترة المحددة." %}</span>{% endif %}
     </div>
   </div>
 
@@ -232,29 +218,19 @@
     </div>
     <div class="panel-body">
       {% if parallel_prices %}
-      <div class="table-responsive">
-        <table class="table table-bordered table-condensed">
-          <thead>
-            <tr>
-              <th>{% trans "التاريخ والوقت" %}</th>
-              <th>{% trans "السعر (جنيه)" %}</th>
-              <th>{% trans "المستخدم" %}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for p in parallel_prices %}
-            <tr>
-              <td>{{ p.created_at|date:"Y-m-d H:i" }}</td>
-              <td>{{ p.price_in_sdg|floatformat:2 }}</td>
-              <td>{{ p.created_by }}</td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
+      <div class="row">
+        {% for p in parallel_prices %}
+        <div class="col-xs-6 col-sm-4 col-md-2">
+          <div class="panel panel-default">
+            <div class="panel-body text-center" style="padding: 8px;">
+              <h5 style="margin: 0;">{{ p.price_in_sdg|floatformat:2 }}</h5>
+              <small class="text-muted">{{ p.created_at|date:"Y-m-d H:i" }}</small>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
       </div>
-      {% else %}
-        <span class="text-muted">{% trans "لا توجد بيانات في الفترة المحددة." %}</span>
-      {% endif %}
+      {% else %}<span class="text-muted">{% trans "لا توجد بيانات في الفترة المحددة." %}</span>{% endif %}
     </div>
   </div>
 
@@ -265,31 +241,21 @@
     </div>
     <div class="panel-body">
       {% if state_prices %}
-      <div class="table-responsive">
-        <table class="table table-bordered table-condensed">
-          <thead>
-            <tr>
-              <th>{% trans "التاريخ والوقت" %}</th>
-              <th>{% trans "الولاية" %}</th>
-              <th>{% trans "السعر (جنيه/جرام)" %}</th>
-              <th>{% trans "المستخدم" %}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for p in state_prices %}
-            <tr>
-              <td>{{ p.created_at|date:"Y-m-d H:i" }}</td>
-              <td>{{ p.state.name }}</td>
-              <td>{{ p.price_per_gram_sdg|floatformat:2 }}</td>
-              <td>{{ p.created_by }}</td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
+      <div class="row">
+        {% for p in state_prices %}
+        <div class="col-xs-12 col-sm-6 col-md-4">
+          <div class="panel panel-default">
+            <div class="panel-heading"><strong>{{ p.state.name }}</strong></div>
+            <div class="panel-body text-center" style="padding: 8px;">
+              <h4 style="margin: 0 0 5px;">{{ p.price_per_gram_sdg|floatformat:2 }} <small>SDG/g</small></h4>
+              {% if p.comment %}<p class="small text-muted">{{ p.comment }}</p>{% endif %}
+              <small class="text-muted">{{ p.created_at|date:"Y-m-d H:i" }} — {{ p.created_by }}</small>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
       </div>
-      {% else %}
-        <span class="text-muted">{% trans "لا توجد بيانات في الفترة المحددة." %}</span>
-      {% endif %}
+      {% else %}<span class="text-muted">{% trans "لا توجد بيانات في الفترة المحددة." %}</span>{% endif %}
     </div>
   </div>
 

@@ -58,7 +58,7 @@ class StateGoldPriceResource(LogResourceMixin):
     class Meta:
         model = StateGoldPrice
         import_id_fields = []
-        fields = ('id', 'state', 'price_per_gram_sdg', 'created_at')
+        fields = ('id', 'state', 'price_per_gram_sdg', 'comment', 'created_at')
         export_order = fields
 
     def dehydrate_state_name(self, obj):
@@ -96,7 +96,7 @@ class BankSudanGoldPriceAdmin(LogMixin, ImportExportModelAdmin):
 @admin.register(StateGoldPrice)
 class StateGoldPriceAdmin(LogMixin, ImportExportModelAdmin):
     resource_class = StateGoldPriceResource
-    list_display = ('state', 'price_per_gram_sdg', 'created_at', 'created_by')
+    list_display = ('state', 'price_per_gram_sdg', 'comment', 'created_at', 'created_by')
     list_filter = ('state', 'created_at')
     search_fields = ('state__name', 'price_per_gram_sdg')
     date_hierarchy = 'created_at'

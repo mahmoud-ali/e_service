@@ -131,27 +131,25 @@
     </div>
     <div class="panel-body">
       {% if last_state_prices %}
-      <div class="table-responsive">
-        <table class="table table-bordered table-condensed">
-          <thead>
-            <tr>
-              <th>{% trans "الولاية" %}</th>
-              <th>{% trans "سعر الجرام (جنيه)" %}</th>
-              <th>{% trans "آخر تحديث" %}</th>
-              <th>{% trans "بواسطة" %}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for sp in last_state_prices %}
-            <tr>
-              <td>{{ sp.state.name }}</td>
-              <td>{{ sp.price_per_gram_sdg|floatformat:2 }}</td>
-              <td>{{ sp.created_at|date:"Y-m-d H:i" }}</td>
-              <td>{{ sp.created_by }}</td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
+      <div class="row">
+        {% for sp in last_state_prices %}
+        <div class="col-xs-12 col-sm-6 col-md-4">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <strong>{{ sp.state.name }}</strong>
+            </div>
+            <div class="panel-body">
+              <h4 class="text-center" style="margin: 0 0 10px;">{{ sp.price_per_gram_sdg|floatformat:2 }} <small>{% trans "جنيه/جرام" %}</small></h4>
+              {% if sp.comment %}
+              <p class="small text-muted"><strong>{% trans "ملاحظات:" %}</strong> {{ sp.comment }}</p>
+              {% endif %}
+              <p class="small text-muted" style="margin: 0;">
+                {{ sp.created_at|date:"Y-m-d H:i" }} — {{ sp.created_by }}
+              </p>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
       </div>
       {% else %}
         <span class="text-muted">{% trans "لا توجد بيانات بعد." %}</span>

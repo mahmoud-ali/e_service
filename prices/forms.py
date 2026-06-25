@@ -268,10 +268,12 @@ class PriceEntryForm(forms.Form):
                 for entry in state_prices:
                     state_id = entry.get('state_id')
                     price = entry.get('price')
+                    comment = entry.get('comment', '')
                     if state_id and price is not None:
                         StateGoldPrice.objects.create(
                             state_id=state_id,
                             price_per_gram_sdg=price,
+                            comment=comment,
                             created_by=user,
                             updated_by=user,
                         )

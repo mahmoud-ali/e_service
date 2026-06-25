@@ -168,31 +168,36 @@
         <h5 class="panel-title">{% trans "أسعار الذهب بالولايات" %}</h5>
       </div>
       <div class="panel-body">
-        <div class="table-responsive">
-          <table class="table table-bordered table-condensed" id="state-prices-table">
-            <thead>
-              <tr>
-                <th style="width: 50%;">{% trans "الولاية" %}</th>
-                <th>{% trans "سعر الجرام (جنيه)" %}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for state in states %}
-              <tr>
-                <td>{{ state.name }}</td>
-                <td>
+        <div class="row" id="state-cards-container">
+          {% for state in states %}
+          <div class="col-xs-12 col-sm-6 col-md-4">
+            <div class="panel panel-default state-card">
+              <div class="panel-heading">
+                <strong>{{ state.name }}</strong>
+              </div>
+              <div class="panel-body">
+                <div class="form-group">
+                  <label class="small text-muted">{% trans "سعر الجرام (جنيه)" %}</label>
                   <input type="number"
                          step="0.01"
                          min="0"
                          class="form-control input-sm state-price-input"
                          data-state-id="{{ state.pk }}"
                          value=""
-                         placeholder="{% trans 'السعر بالجنيه' %}">
-                </td>
-              </tr>
-              {% endfor %}
-            </tbody>
-          </table>
+                         placeholder="{% trans 'السعر' %}">
+                </div>
+                <div class="form-group" style="margin-bottom: 0;">
+                  <label class="small text-muted">{% trans "ملاحظات" %}</label>
+                  <input type="text"
+                         class="form-control input-sm state-comment-input"
+                         data-state-id="{{ state.pk }}"
+                         value=""
+                         placeholder="{% trans 'ملاحظات' %}">
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
         </div>
         {{ form.state_gold_prices }}
       </div>
@@ -271,12 +276,14 @@
 
   document.getElementById('price-entry-form').addEventListener('submit', function() {
     var rows = document.querySelectorAll('.state-price-input');
+    var comments = document.querySelectorAll('.state-comment-input');
     var data = [];
     for (var i = 0; i < rows.length; i++) {
       var stateId = parseInt(rows[i].dataset.stateId);
       var price = rows[i].value ? parseFloat(rows[i].value) : null;
+      var comment = comments[i] ? comments[i].value.trim() : '';
       if (price !== null && price >= 0) {
-        data.push({state_id: stateId, price: price});
+        data.push({state_id: stateId, price: price, comment: comment});
       }
     }
     document.querySelector('#{{ form.state_gold_prices.id_for_label }}').value = JSON.stringify(data);

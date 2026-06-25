@@ -1,0 +1,22 @@
+{% load i18n %}
+<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
+  <div class="panel panel-default" style="margin-bottom: 15px;">
+    <div class="panel-body text-center" style="padding: 10px;">
+      <small class="text-muted">{{ label }}</small>
+      <div class="row" style="margin-top: 8px;">
+        <div class="col-xs-4">
+          <strong style="font-size: 16px;">{{ stats.min|default:"—" }}</strong>
+          <br><small class="text-muted">{% trans "الأدنى" %}</small>
+        </div>
+        <div class="col-xs-4">
+          <strong style="font-size: 16px;">{{ stats.avg|default:"—" }}</strong>
+          <br><small class="text-muted">{% trans "المتوسط" %}</small>
+        </div>
+        <div class="col-xs-4">
+          <strong style="font-size: 16px;">{{ stats.max|default:"—" }}</strong>
+          <br><small class="text-muted">{% trans "الأعلى" %}</small>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
