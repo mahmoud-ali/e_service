@@ -30,7 +30,7 @@
       </div>
     {% else %}
 
-    {% if 'global_gold_24k' in form.fields or 'bank_concession_price' in form.fields %}
+    {% if 'global_gold_24k' in form.fields or 'bank_sudan_price' in form.fields %}
     <!-- ===== قسم الذهب ===== -->
     <div class="panel panel-warning">
       <div class="panel-heading">
@@ -91,27 +91,16 @@
         </div>
         {% endif %}
 
-        {% if 'bank_concession_price' in form.fields %}
+        {% if 'bank_sudan_price' in form.fields %}
         <div class="row">
           <div class="col-md-6">
             <div class="form-group">
-              <label for="{{ form.bank_concession_price.id_for_label }}">
-                {{ form.bank_concession_price.label }}
+              <label for="{{ form.bank_sudan_price.id_for_label }}">
+                {{ form.bank_sudan_price.label }}
               </label>
-              {{ form.bank_concession_price }}
-              {% if form.bank_concession_price.errors %}
-                <span class="help-block text-danger">{{ form.bank_concession_price.errors }}</span>
-              {% endif %}
-            </div>
-          </div>
-          <div class="col-md-6">
-            <div class="form-group">
-              <label for="{{ form.bank_waste_price.id_for_label }}">
-                {{ form.bank_waste_price.label }}
-              </label>
-              {{ form.bank_waste_price }}
-              {% if form.bank_waste_price.errors %}
-                <span class="help-block text-danger">{{ form.bank_waste_price.errors }}</span>
+              {{ form.bank_sudan_price }}
+              {% if form.bank_sudan_price.errors %}
+                <span class="help-block text-danger">{{ form.bank_sudan_price.errors }}</span>
               {% endif %}
             </div>
           </div>

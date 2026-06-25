@@ -54,23 +54,11 @@
         <div class="col-xs-12 col-sm-4 col-md-4">
           <div class="panel panel-default" style="margin-bottom: 10px;">
             <div class="panel-body text-center" style="padding: 8px;">
-              <small class="text-muted">{% trans "شركات الامتياز (جنيه)" %}</small>
+              <small class="text-muted">{% trans "بنك السودان (جنيه)" %}</small>
               <div class="row" style="margin-top: 5px;">
-                <div class="col-xs-4"><strong>{{ concession_stats.min|default:"—" }}</strong><br><small class="text-muted">{% trans "الأدنى" %}</small></div>
-                <div class="col-xs-4"><strong>{{ concession_stats.avg|default:"—" }}</strong><br><small class="text-muted">{% trans "المتوسط" %}</small></div>
-                <div class="col-xs-4"><strong>{{ concession_stats.max|default:"—" }}</strong><br><small class="text-muted">{% trans "الأعلى" %}</small></div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-xs-12 col-sm-4 col-md-4">
-          <div class="panel panel-default" style="margin-bottom: 10px;">
-            <div class="panel-body text-center" style="padding: 8px;">
-              <small class="text-muted">{% trans "شركات المخلفات (جنيه)" %}</small>
-              <div class="row" style="margin-top: 5px;">
-                <div class="col-xs-4"><strong>{{ waste_stats.min|default:"—" }}</strong><br><small class="text-muted">{% trans "الأدنى" %}</small></div>
-                <div class="col-xs-4"><strong>{{ waste_stats.avg|default:"—" }}</strong><br><small class="text-muted">{% trans "المتوسط" %}</small></div>
-                <div class="col-xs-4"><strong>{{ waste_stats.max|default:"—" }}</strong><br><small class="text-muted">{% trans "الأعلى" %}</small></div>
+                <div class="col-xs-4"><strong>{{ bank_sudan_stats.min|default:"—" }}</strong><br><small class="text-muted">{% trans "الأدنى" %}</small></div>
+                <div class="col-xs-4"><strong>{{ bank_sudan_stats.avg|default:"—" }}</strong><br><small class="text-muted">{% trans "المتوسط" %}</small></div>
+                <div class="col-xs-4"><strong>{{ bank_sudan_stats.max|default:"—" }}</strong><br><small class="text-muted">{% trans "الأعلى" %}</small></div>
               </div>
             </div>
           </div>
@@ -142,38 +130,15 @@
     </div>
   </div>
 
-  <!-- ===== بنك السودان - شركات الامتياز ===== -->
+  <!-- ===== بنك السودان ===== -->
   <div class="panel panel-default">
     <div class="panel-heading">
-      <h5 class="panel-title">{% trans "شراء بنك السودان — شركات الامتياز" %}</h5>
+      <h5 class="panel-title">{% trans "شراء بنك السودان" %}</h5>
     </div>
     <div class="panel-body">
-      {% if bank_concession_prices %}
+      {% if bank_sudan_prices %}
       <div class="row">
-        {% for p in bank_concession_prices %}
-        <div class="col-xs-6 col-sm-4 col-md-2">
-          <div class="panel panel-default">
-            <div class="panel-body text-center" style="padding: 8px;">
-              <h5 style="margin: 0;">{{ p.price_per_gram_sdg|floatformat:2 }}</h5>
-              <small class="text-muted">{{ p.created_at|date:"Y-m-d H:i" }}</small>
-            </div>
-          </div>
-        </div>
-        {% endfor %}
-      </div>
-      {% else %}<span class="text-muted">{% trans "لا توجد بيانات في الفترة المحددة." %}</span>{% endif %}
-    </div>
-  </div>
-
-  <!-- ===== بنك السودان - شركات المخلفات ===== -->
-  <div class="panel panel-default">
-    <div class="panel-heading">
-      <h5 class="panel-title">{% trans "شراء بنك السودان — شركات المخلفات" %}</h5>
-    </div>
-    <div class="panel-body">
-      {% if bank_waste_prices %}
-      <div class="row">
-        {% for p in bank_waste_prices %}
+        {% for p in bank_sudan_prices %}
         <div class="col-xs-6 col-sm-4 col-md-2">
           <div class="panel panel-default">
             <div class="panel-body text-center" style="padding: 8px;">

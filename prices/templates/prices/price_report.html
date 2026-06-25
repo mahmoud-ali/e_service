@@ -62,23 +62,11 @@
     <div class="panel-body">
       <div class="row">
         <div class="col-md-6">
-          <p><strong>{% trans "شركات الامتياز:" %}</strong>
-          {% if last_concession %}
-            {{ last_concession.price_per_gram_sdg|floatformat:2 }} {% trans "جنيه" %}
+          <p><strong>{% trans "شراء بنك السودان:" %}</strong>
+          {% if last_bank_sudan %}
+            {{ last_bank_sudan.price_per_gram_sdg|floatformat:2 }} {% trans "جنيه" %}
             <br><small class="text-muted">
-              {{ last_concession.created_at|date:"Y-m-d H:i" }} — {{ last_concession.created_by }}
-            </small>
-          {% else %}
-            <span class="text-muted">—</span>
-          {% endif %}
-          </p>
-        </div>
-        <div class="col-md-6">
-          <p><strong>{% trans "شركات المخلفات:" %}</strong>
-          {% if last_waste %}
-            {{ last_waste.price_per_gram_sdg|floatformat:2 }} {% trans "جنيه" %}
-            <br><small class="text-muted">
-              {{ last_waste.created_at|date:"Y-m-d H:i" }} — {{ last_waste.created_by }}
+              {{ last_bank_sudan.created_at|date:"Y-m-d H:i" }} — {{ last_bank_sudan.created_by }}
             </small>
           {% else %}
             <span class="text-muted">—</span>

@@ -48,7 +48,7 @@ class BankSudanGoldPriceResource(LogResourceMixin):
     class Meta:
         model = BankSudanGoldPrice
         import_id_fields = []
-        fields = ('id', 'category', 'price_per_gram_sdg', 'created_at')
+        fields = ('id', 'price_per_gram_sdg', 'created_at')
         export_order = fields
 
 
@@ -87,8 +87,8 @@ class GlobalGoldPriceAdmin(LogMixin, ImportExportModelAdmin):
 @admin.register(BankSudanGoldPrice)
 class BankSudanGoldPriceAdmin(LogMixin, ImportExportModelAdmin):
     resource_class = BankSudanGoldPriceResource
-    list_display = ('category', 'price_per_gram_sdg', 'created_at', 'created_by')
-    list_filter = ('category', 'created_at')
+    list_display = ('price_per_gram_sdg', 'created_at', 'created_by')
+    list_filter = ('created_at',)
     search_fields = ('price_per_gram_sdg',)
     date_hierarchy = 'created_at'
 

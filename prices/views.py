@@ -21,8 +21,6 @@ from prices.models import (
     GlobalGoldPrice,
     StateGoldPrice,
     PricesStateUser,
-    BANK_CATEGORY_CONCESSION,
-    BANK_CATEGORY_WASTE,
     DOLLAR_OFFICIAL,
     DOLLAR_PARALLEL,
     GOLD_KARAT_24,
@@ -111,12 +109,7 @@ class PriceReportView(LoginRequiredMixin, TemplateView):
         ctx['last_global_21k'] = GlobalGoldPrice.objects.filter(
             karat=GOLD_KARAT_21
         ).order_by('-created_at').first()
-        ctx['last_concession'] = BankSudanGoldPrice.objects.filter(
-            category=BANK_CATEGORY_CONCESSION
-        ).order_by('-created_at').first()
-        ctx['last_waste'] = BankSudanGoldPrice.objects.filter(
-            category=BANK_CATEGORY_WASTE
-        ).order_by('-created_at').first()
+        ctx['last_bank_sudan'] = BankSudanGoldPrice.objects.order_by('-created_at').first()
         ctx['last_official'] = DollarPrice.objects.filter(
             rate_type=DOLLAR_OFFICIAL
         ).order_by('-created_at').first()
@@ -157,12 +150,7 @@ class PriceHistoryView(LoginRequiredMixin, TemplateView):
         dt_filter = {'created_at__date__gte': start_date, 'created_at__date__lte': end_date}
 
         ctx['global_prices'] = GlobalGoldPrice.objects.filter(**dt_filter)
-        ctx['bank_concession_prices'] = BankSudanGoldPrice.objects.filter(
-            category=BANK_CATEGORY_CONCESSION, **dt_filter
-        )
-        ctx['bank_waste_prices'] = BankSudanGoldPrice.objects.filter(
-            category=BANK_CATEGORY_WASTE, **dt_filter
-        )
+        ctx['bank_sudan_prices'] = BankSudanGoldPrice.objects.filter(**dt_filter)
         ctx['official_prices'] = DollarPrice.objects.filter(
             rate_type=DOLLAR_OFFICIAL, **dt_filter
         )
@@ -194,8 +182,7 @@ class PriceHistoryView(LoginRequiredMixin, TemplateView):
             GlobalGoldPrice.objects.filter(karat=GOLD_KARAT_21, **dt_filter),
             'price_per_gram_usd',
         )
-        ctx['concession_stats'] = _stats(ctx['bank_concession_prices'], 'price_per_gram_sdg')
-        ctx['waste_stats'] = _stats(ctx['bank_waste_prices'], 'price_per_gram_sdg')
+        ctx['bank_sudan_stats'] = _stats(ctx['bank_sudan_prices'], 'price_per_gram_sdg')
         ctx['official_stats'] = _stats(ctx['official_prices'], 'price_in_sdg')
         ctx['parallel_stats'] = _stats(ctx['parallel_prices'], 'price_in_sdg')
         ctx['state_stats'] = _stats(ctx['state_prices'], 'price_per_gram_sdg')
@@ -237,43 +224,23 @@ class PriceComparisonView(LoginRequiredMixin, TemplateView):
             ctx['last_global_21k'] = last_global_21k
 
             # Bank Sudan prices → USD
-            last_concession = BankSudanGoldPrice.objects.filter(
-                category=BANK_CATEGORY_CONCESSION
-            ).order_by('-created_at').first()
-            last_waste = BankSudanGoldPrice.objects.filter(
-                category=BANK_CATEGORY_WASTE
-            ).order_by('-created_at').first()
+            last_bank = BankSudanGoldPrice.objects.order_by('-created_at').first()
 
             rows = []
 
-            # Concession comparison
-            if last_concession:
-                local_usd = float(last_concession.price_per_gram_sdg) / rate
+            # Bank Sudan comparison
+            if last_bank:
+                local_usd = float(last_bank.price_per_gram_sdg) / rate
                 gap = local_usd - float(last_global.price_per_gram_usd) if last_global else 0
                 gap_pct = (gap / float(last_global.price_per_gram_usd) * 100) if last_global and float(last_global.price_per_gram_usd) > 0 else 0
                 rows.append({
-                    'label': _('شركات الامتياز'),
-                    'local_sdg': float(last_concession.price_per_gram_sdg),
+                    'label': _('شراء بنك السودان'),
+                    'local_sdg': float(last_bank.price_per_gram_sdg),
                     'local_usd': round(local_usd, 2),
                     'global_usd': float(last_global.price_per_gram_usd) if last_global else None,
                     'gap_usd': round(gap, 2),
                     'gap_pct': round(gap_pct, 2),
-                    'source_record': last_concession,
-                })
-
-            # Waste comparison
-            if last_waste:
-                local_usd = float(last_waste.price_per_gram_sdg) / rate
-                gap = local_usd - float(last_global.price_per_gram_usd) if last_global else 0
-                gap_pct = (gap / float(last_global.price_per_gram_usd) * 100) if last_global and float(last_global.price_per_gram_usd) > 0 else 0
-                rows.append({
-                    'label': _('شركات المخلفات'),
-                    'local_sdg': float(last_waste.price_per_gram_sdg),
-                    'local_usd': round(local_usd, 2),
-                    'global_usd': float(last_global.price_per_gram_usd) if last_global else None,
-                    'gap_usd': round(gap, 2),
-                    'gap_pct': round(gap_pct, 2),
-                    'source_record': last_waste,
+                    'source_record': last_bank,
                 })
 
             # State prices comparison
@@ -327,12 +294,8 @@ class PriceComparisonView(LoginRequiredMixin, TemplateView):
                     result[d] = float(getattr(record, value_attr))
             return result
 
-        concession_by_date = _latest_per_date(
-            BankSudanGoldPrice.objects.filter(category=BANK_CATEGORY_CONCESSION),
-            'price_per_gram_sdg',
-        )
-        waste_by_date = _latest_per_date(
-            BankSudanGoldPrice.objects.filter(category=BANK_CATEGORY_WASTE),
+        bank_by_date = _latest_per_date(
+            BankSudanGoldPrice.objects.all(),
             'price_per_gram_sdg',
         )
         official_by_date = _latest_per_date(
@@ -346,18 +309,14 @@ class PriceComparisonView(LoginRequiredMixin, TemplateView):
 
         # Collect all dates across all datasets
         all_dates = sorted(set(
-            list(concession_by_date.keys())
-            + list(waste_by_date.keys())
+            list(bank_by_date.keys())
             + list(official_by_date.keys())
             + list(parallel_by_date.keys())
         ))
 
         ctx['timeseries_labels_json'] = json.dumps(all_dates)
-        ctx['timeseries_concession_json'] = json.dumps([
-            concession_by_date.get(d) for d in all_dates
-        ])
-        ctx['timeseries_waste_json'] = json.dumps([
-            waste_by_date.get(d) for d in all_dates
+        ctx['timeseries_bank_json'] = json.dumps([
+            bank_by_date.get(d) for d in all_dates
         ])
         ctx['timeseries_official_json'] = json.dumps([
             official_by_date.get(d) for d in all_dates

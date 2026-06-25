@@ -8,14 +8,6 @@ from company_profile.models import LkpState
 
 # --- Constants ---
 
-BANK_CATEGORY_CONCESSION = 'concession'
-BANK_CATEGORY_WASTE = 'waste'
-
-BANK_CATEGORY_CHOICES = {
-    BANK_CATEGORY_CONCESSION: _('شركات الامتياز'),
-    BANK_CATEGORY_WASTE: _('شركات المخلفات'),
-}
-
 DOLLAR_OFFICIAL = 'official'
 DOLLAR_PARALLEL = 'parallel'
 
@@ -67,19 +59,13 @@ class GlobalGoldPrice(LoggingModel):
 
 class BankSudanGoldPrice(LoggingModel):
     """سعر شراء بنك السودان للجرام (بالجنيه السوداني)"""
-    category = models.CharField(
-        _('الفئة'),
-        max_length=20,
-        choices=BANK_CATEGORY_CHOICES,
-    )
     price_per_gram_sdg = models.DecimalField(
         _('سعر الجرام بالجنيه'),
         max_digits=12, decimal_places=2,
     )
 
     def __str__(self):
-        cat = dict(BANK_CATEGORY_CHOICES).get(self.category, self.category)
-        return f'{cat} — {self.price_per_gram_sdg} SDG — {self.created_at:%Y-%m-%d %H:%M}'
+        return f'{self.price_per_gram_sdg} SDG — {self.created_at:%Y-%m-%d %H:%M}'
 
     class Meta:
         verbose_name = _('سعر الذهب - بنك السودان')

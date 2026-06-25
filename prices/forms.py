@@ -7,12 +7,9 @@ from prices.models import (
     BankSudanGoldPrice,
     StateGoldPrice,
     DollarPrice,
-    BANK_CATEGORY_CHOICES,
     DOLLAR_TYPE_CHOICES,
     DOLLAR_OFFICIAL,
     DOLLAR_PARALLEL,
-    BANK_CATEGORY_CONCESSION,
-    BANK_CATEGORY_WASTE,
     GOLD_KARAT_24,
     GOLD_KARAT_21,
     KARAT_21_FACTOR,
@@ -51,15 +48,8 @@ class PriceEntryForm(forms.Form):
         }),
     )
 
-    bank_concession_price = forms.DecimalField(
-        label=_('سعر شراء بنك السودان - شركات الامتياز (جنيه/جرام)'),
-        max_digits=12, decimal_places=2,
-        min_value=0,
-        widget=forms.NumberInput(attrs={'step': '0.01', 'class': 'form-control'}),
-    )
-
-    bank_waste_price = forms.DecimalField(
-        label=_('سعر شراء بنك السودان - شركات المخلفات (جنيه/جرام)'),
+    bank_sudan_price = forms.DecimalField(
+        label=_('سعر شراء بنك السودان (جنيه/جرام)'),
         max_digits=12, decimal_places=2,
         min_value=0,
         widget=forms.NumberInput(attrs={'step': '0.01', 'class': 'form-control'}),
@@ -140,7 +130,7 @@ class PriceEntryForm(forms.Form):
         # Main fields: global gold (both karats), bank sudan (both), official dollar
         main_fields = {
             'global_gold_24k', 'global_gold_24k_ounce', 'global_gold_21k',
-            'bank_concession_price', 'bank_waste_price',
+            'bank_sudan_price',
             'official_dollar_price',
         }
 
@@ -175,15 +165,10 @@ class PriceEntryForm(forms.Form):
             if last:
                 self.fields['global_gold_21k'].initial = last.price_per_gram_usd
 
-        if 'bank_concession_price' in self.fields:
-            last = BankSudanGoldPrice.objects.filter(category=BANK_CATEGORY_CONCESSION).order_by('-created_at').first()
+        if 'bank_sudan_price' in self.fields:
+            last = BankSudanGoldPrice.objects.order_by('-created_at').first()
             if last:
-                self.fields['bank_concession_price'].initial = last.price_per_gram_sdg
-
-        if 'bank_waste_price' in self.fields:
-            last = BankSudanGoldPrice.objects.filter(category=BANK_CATEGORY_WASTE).order_by('-created_at').first()
-            if last:
-                self.fields['bank_waste_price'].initial = last.price_per_gram_sdg
+                self.fields['bank_sudan_price'].initial = last.price_per_gram_sdg
 
         if 'official_dollar_price' in self.fields:
             last = DollarPrice.objects.filter(rate_type=DOLLAR_OFFICIAL).order_by('-created_at').first()
@@ -223,20 +208,10 @@ class PriceEntryForm(forms.Form):
                 updated_by=user,
             )
 
-        # بنك السودان - شركات الامتياز
-        if 'bank_concession_price' in data:
+        # بنك السودان
+        if 'bank_sudan_price' in data:
             BankSudanGoldPrice.objects.create(
-                category=BANK_CATEGORY_CONCESSION,
-                price_per_gram_sdg=data['bank_concession_price'],
-                created_by=user,
-                updated_by=user,
-            )
-
-        # بنك السودان - شركات المخلفات
-        if 'bank_waste_price' in data:
-            BankSudanGoldPrice.objects.create(
-                category=BANK_CATEGORY_WASTE,
-                price_per_gram_sdg=data['bank_waste_price'],
+                price_per_gram_sdg=data['bank_sudan_price'],
                 created_by=user,
                 updated_by=user,
             )

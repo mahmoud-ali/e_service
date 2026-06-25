@@ -7,8 +7,7 @@
 <div class="container" dir="rtl">
   <h2 class="mb-4">{% trans "مقارنة أسعار الذهب المحلية مع السعر العالمي" %}</h2>
 
-  {% if last_parallel %}
-  {% else %}
+  {% if not last_parallel %}
     <div class="alert alert-warning">
       {% trans "لا يوجد سعر صرف موازي مسجل. لا يمكن إجراء المقارنة." %}
     </div>
@@ -48,8 +47,6 @@
     </div>
   </div>
 
-  </div>
-
   <!-- ===== أسعار صرف الدولار ===== -->
   <div class="row" style="margin-bottom: 20px;">
     <div class="col-md-6">
@@ -84,38 +81,63 @@
     </div>
   </div>
 
-  <div class="row">
-    {% for row in comparison_rows %}
-    <div class="col-xs-12 col-sm-6 col-md-4">
-      <div class="panel panel-default">
-        <div class="panel-heading"><strong>{{ row.label }}</strong></div>
-        <div class="panel-body" style="padding: 10px;">
-          <div class="row small">
-            <div class="col-xs-6">
-              <span class="text-muted">{% trans "محلي (جنيه)" %}</span><br>
-              <strong>{{ row.local_sdg|floatformat:2 }}</strong>
-            </div>
-            <div class="col-xs-6">
-              <span class="text-muted">{% trans "محلي (دولار)" %}</span><br>
-              <strong>{{ row.local_usd|floatformat:2 }}</strong>
-            </div>
-          </div>
-          <div class="row small" style="margin-top: 8px;">
-            <div class="col-xs-6">
-              <span class="text-muted">{% trans "عالمي (دولار)" %}</span><br>
-              <strong>{{ row.global_usd|floatformat:2 }}</strong>
-            </div>
-            <div class="col-xs-6">
-              <span class="text-muted">{% trans "الفجوة" %}</span><br>
-              <strong class="{% if row.gap_usd > 0 %}text-danger{% else %}text-success{% endif %}">
-                {{ row.gap_usd|floatformat:2 }} $ ({{ row.gap_pct|floatformat:2 }}%)
-              </strong>
+  <!-- ===== سعر الذهب ببنك السودان والولايات ===== -->
+  <div class="panel panel-warning" style="margin-bottom: 20px;">
+    <div class="panel-heading">
+      <h5 class="panel-title">{% trans "سعر الذهب ببنك السودان والولايات (جنيه/جرام)" %}</h5>
+    </div>
+    <div class="panel-body">
+      <div class="row">
+        {% for row in comparison_rows %}
+        <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
+          <div class="panel panel-default" style="margin-bottom: 10px;">
+            <div class="panel-body text-center" style="padding: 8px;">
+              <small class="text-muted">{{ row.label }}</small>
+              <h5 style="margin: 3px 0 0;">{{ row.local_sdg|floatformat:2 }}</h5>
             </div>
           </div>
         </div>
+        {% endfor %}
       </div>
     </div>
-    {% endfor %}
+  </div>
+
+  <!-- ===== مقارنة (محول للدولار) ===== -->
+  <div class="panel panel-info" style="margin-bottom: 20px;">
+    <div class="panel-heading">
+      <h5 class="panel-title">{% trans "المقارنة مع السعر العالمي (محول للدولار)" %}</h5>
+    </div>
+    <div class="panel-body">
+      <div class="row">
+        {% for row in comparison_rows %}
+        <div class="col-xs-12 col-sm-6 col-md-4">
+          <div class="panel panel-default">
+            <div class="panel-heading"><strong>{{ row.label }}</strong></div>
+            <div class="panel-body" style="padding: 10px;">
+              <div class="row small">
+                <div class="col-xs-6">
+                  <span class="text-muted">{% trans "محلي (دولار)" %}</span><br>
+                  <strong>{{ row.local_usd|floatformat:2 }}</strong>
+                </div>
+                <div class="col-xs-6">
+                  <span class="text-muted">{% trans "عالمي (دولار)" %}</span><br>
+                  <strong>{{ row.global_usd|floatformat:2 }}</strong>
+                </div>
+              </div>
+              <div class="row small" style="margin-top: 8px;">
+                <div class="col-xs-12">
+                  <span class="text-muted">{% trans "الفجوة" %}</span><br>
+                  <strong class="{% if row.gap_usd > 0 %}text-danger{% else %}text-success{% endif %}">
+                    {{ row.gap_usd|floatformat:2 }} $ ({{ row.gap_pct|floatformat:2 }}%)
+                  </strong>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
   </div>
 
   <!-- Legend -->
@@ -156,8 +178,7 @@
   console.log('comparison chart data:', chartData);
 
   var tsLabels = {{ timeseries_labels_json|safe }};
-  var tsConcession = {{ timeseries_concession_json|safe }};
-  var tsWaste = {{ timeseries_waste_json|safe }};
+  var tsBank = {{ timeseries_bank_json|safe }};
   var tsOfficial = {{ timeseries_official_json|safe }};
   var tsParallel = {{ timeseries_parallel_json|safe }};
 
@@ -169,18 +190,10 @@
       labels: tsLabels,
       datasets: [
         {
-          label: '{% trans "شركات الامتياز" %}',
-          data: tsConcession,
+          label: '{% trans "بنك السودان" %}',
+          data: tsBank,
           borderColor: 'rgba(54, 162, 235, 1)',
           backgroundColor: 'rgba(54, 162, 235, 0.1)',
-          tension: 0.3,
-          spanGaps: true
-        },
-        {
-          label: '{% trans "شركات المخلفات" %}',
-          data: tsWaste,
-          borderColor: 'rgba(75, 192, 192, 1)',
-          backgroundColor: 'rgba(75, 192, 192, 0.1)',
           tension: 0.3,
           spanGaps: true
         }
