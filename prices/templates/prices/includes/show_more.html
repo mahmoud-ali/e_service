@@ -1,0 +1,7 @@
+{% load i18n %}
+<div class="text-center" style="margin-top: 5px;">
+  <a href="?start_date={{ start_date }}&end_date={{ end_date }}&{{ param }}={{ next_val }}#section-{{ anchor }}"
+     class="btn btn-default btn-xs btn-block">
+    {% trans "عرض المزيد" %} ({{ val }} → {{ next_val }})
+  </a>
+</div>

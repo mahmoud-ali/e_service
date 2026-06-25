@@ -147,19 +147,43 @@ class PriceHistoryView(LoginRequiredMixin, TemplateView):
         ctx['start_date'] = start_date
         ctx['end_date'] = end_date
 
+        # Pagination: per-category limits with show-more buttons
+        def _get_limit(param_name):
+            return int(self.request.GET.get(param_name, 20))
+
+        limits = {
+            'global_lim': _get_limit('global_limit'),
+            'bank': _get_limit('bank_limit'),
+            'official': _get_limit('official_limit'),
+            'parallel': _get_limit('parallel_limit'),
+            'state': _get_limit('state_limit'),
+        }
+        ctx['limits'] = limits
+        ctx['next_limits'] = {k: v + 20 for k, v in limits.items()}
+
         dt_filter = {'created_at__date__gte': start_date, 'created_at__date__lte': end_date}
 
-        ctx['global_prices'] = GlobalGoldPrice.objects.filter(**dt_filter)
-        ctx['bank_sudan_prices'] = BankSudanGoldPrice.objects.filter(**dt_filter)
-        ctx['official_prices'] = DollarPrice.objects.filter(
-            rate_type=DOLLAR_OFFICIAL, **dt_filter
-        )
-        ctx['parallel_prices'] = DollarPrice.objects.filter(
-            rate_type=DOLLAR_PARALLEL, **dt_filter
-        )
-        ctx['state_prices'] = StateGoldPrice.objects.filter(
-            **dt_filter
-        ).select_related('state', 'created_by')
+        # Querysets with limits
+        base_global = GlobalGoldPrice.objects.filter(**dt_filter)
+        base_bank = BankSudanGoldPrice.objects.filter(**dt_filter)
+        base_official = DollarPrice.objects.filter(rate_type=DOLLAR_OFFICIAL, **dt_filter)
+        base_parallel = DollarPrice.objects.filter(rate_type=DOLLAR_PARALLEL, **dt_filter)
+        base_state = StateGoldPrice.objects.filter(**dt_filter)
+
+        ctx['global_prices'] = base_global[:limits['global_lim']]
+        ctx['bank_sudan_prices'] = base_bank[:limits['bank']]
+        ctx['official_prices'] = base_official[:limits['official']]
+        ctx['parallel_prices'] = base_parallel[:limits['parallel']]
+        ctx['state_prices'] = base_state.select_related('state', 'created_by')[:limits['state']]
+
+        # Has-more flags
+        ctx['has_more'] = {
+            'global': base_global.count() > limits['global_lim'],
+            'bank': base_bank.count() > limits['bank'],
+            'official': base_official.count() > limits['official'],
+            'parallel': base_parallel.count() > limits['parallel'],
+            'state': base_state.count() > limits['state'],
+        }
 
         # --- Compute stats (avg / min / max) for each price type ---
         def _stats(qs, value_field):
@@ -174,18 +198,20 @@ class PriceHistoryView(LoginRequiredMixin, TemplateView):
                 'max': round(agg['max'], 2) if agg['max'] is not None else None,
             }
 
-        ctx['global_24k_stats'] = _stats(
-            GlobalGoldPrice.objects.filter(karat=GOLD_KARAT_24, **dt_filter),
-            'price_per_gram_usd',
-        )
-        ctx['global_21k_stats'] = _stats(
-            GlobalGoldPrice.objects.filter(karat=GOLD_KARAT_21, **dt_filter),
-            'price_per_gram_usd',
-        )
-        ctx['bank_sudan_stats'] = _stats(ctx['bank_sudan_prices'], 'price_per_gram_sdg')
-        ctx['official_stats'] = _stats(ctx['official_prices'], 'price_in_sdg')
-        ctx['parallel_stats'] = _stats(ctx['parallel_prices'], 'price_in_sdg')
-        ctx['state_stats'] = _stats(ctx['state_prices'], 'price_per_gram_sdg')
+        # Stats use full queryset (not limited)
+        full_bank = BankSudanGoldPrice.objects.filter(**dt_filter)
+        full_official = DollarPrice.objects.filter(rate_type=DOLLAR_OFFICIAL, **dt_filter)
+        full_parallel = DollarPrice.objects.filter(rate_type=DOLLAR_PARALLEL, **dt_filter)
+        full_state = StateGoldPrice.objects.filter(**dt_filter)
+        full_global_24k = GlobalGoldPrice.objects.filter(karat=GOLD_KARAT_24, **dt_filter)
+        full_global_21k = GlobalGoldPrice.objects.filter(karat=GOLD_KARAT_21, **dt_filter)
+
+        ctx['global_24k_stats'] = _stats(full_global_24k, 'price_per_gram_usd')
+        ctx['global_21k_stats'] = _stats(full_global_21k, 'price_per_gram_usd')
+        ctx['bank_sudan_stats'] = _stats(full_bank, 'price_per_gram_sdg')
+        ctx['official_stats'] = _stats(full_official, 'price_in_sdg')
+        ctx['parallel_stats'] = _stats(full_parallel, 'price_in_sdg')
+        ctx['state_stats'] = _stats(full_state, 'price_per_gram_sdg')
 
         return ctx
 
