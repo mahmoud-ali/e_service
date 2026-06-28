@@ -193,16 +193,33 @@ def assign_tarhil_to_alaisdar_users(file_path, wijhat_altarhil_id):
 
     print(f"Assigned tarhil to {created} users (total with alaisdar in CSV: {gt_users.count()})")
 
+def load_and_setup(file_path, wijhat_altarhil_id=None, make_staff=True):
+    """
+    Combined: load users from CSV, make them staff, and assign tarhil
+    to all users with jihat_alaisdar.
+    """
+    load_users_from_csv(file_path)
+    if make_staff:
+        make_users_staff(file_path)
+    if wijhat_altarhil_id is not None:
+        assign_tarhil_to_alaisdar_users(file_path, wijhat_altarhil_id)
+
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print("Usage: python load_data.py <path_to_csv> [--staff] [--assign-tarhil <wijhat_altarhil_id>]")
+        print("Usage: python load_data.py <path_to_csv> [--staff] [--assign-tarhil <wijhat_altarhil_id>] [--setup <wijhat_altarhil_id>]")
         print("  --staff                      Make users staff after loading")
         print("  --assign-tarhil <id>         Assign wijhat_altarhil to all users with jihat_alaisdar")
+        print("  --setup <id>                 load + staff + assign-tarhil in one step")
     else:
-        load_users_from_csv(sys.argv[1])
-        if '--staff' in sys.argv:
-            make_users_staff(sys.argv[1])
-        if '--assign-tarhil' in sys.argv:
-            idx = sys.argv.index('--assign-tarhil')
-            if idx + 1 < len(sys.argv):
-                assign_tarhil_to_alaisdar_users(sys.argv[1], sys.argv[idx + 1])
+        if '--setup' in sys.argv:
+            idx = sys.argv.index('--setup')
+            tarhil_id = int(sys.argv[idx + 1]) if idx + 1 < len(sys.argv) else None
+            load_and_setup(sys.argv[1], wijhat_altarhil_id=tarhil_id)
+        else:
+            load_users_from_csv(sys.argv[1])
+            if '--staff' in sys.argv:
+                make_users_staff(sys.argv[1])
+            if '--assign-tarhil' in sys.argv:
+                idx = sys.argv.index('--assign-tarhil')
+                if idx + 1 < len(sys.argv):
+                    assign_tarhil_to_alaisdar_users(sys.argv[1], sys.argv[idx + 1])
