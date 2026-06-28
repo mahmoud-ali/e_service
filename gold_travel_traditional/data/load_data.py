@@ -33,8 +33,9 @@ def load_users_from_csv(file_path):
         print(f"File not found: {file_path}")
         return
 
-    # Ensure the group exists (get or create)
-    group, _ = Group.objects.get_or_create(name='gold_travel_traditional_state')
+    # Ensure groups exist
+    travel_group, _ = Group.objects.get_or_create(name='gold_travel_traditional_state')
+    manager_group, _ = Group.objects.get_or_create(name='gold_travel_traditional_manager_show')
 
     with open(file_path, mode='r', encoding='utf-8') as csvfile:
         reader = csv.DictReader(csvfile)
@@ -43,16 +44,10 @@ def load_users_from_csv(file_path):
             password = row.get('password', '').strip()
             name = row.get('name', '').strip()
             state_id = row.get('state_id', '').strip()
+            jiha_type = row.get('jiha_type', '').strip()
 
             if not username or not password:
                 print(f"Skipping row missing username or password: {row}")
-                continue
-
-            # Fetch state (required for GoldTravelTraditionalUser)
-            try:
-                state = LkpState.objects.get(id=state_id)
-            except LkpState.DoesNotExist:
-                print(f"Skipping {username}: LkpState id={state_id} not found")
                 continue
 
             # Create or update User
@@ -62,13 +57,31 @@ def load_users_from_csv(file_path):
                 user.save()
                 print(f"Created user: {username}")
             else:
-                # Update password even for existing users
                 user.set_password(password)
                 user.save()
                 print(f"User already exists (password updated): {username}")
 
-            # Add to group
-            user.groups.add(group)
+            # jiha_type=3: manager — user + manager group only, no profile
+            if jiha_type == '3':
+                user.groups.add(manager_group)
+                print(f"  Added to manager group")
+                continue
+
+            # jiha_type=1,2: needs state for profile + jihat
+            if not state_id:
+                print(f"  WARNING: no state_id — skipping profile/jihat for {username}")
+                user.groups.add(travel_group)
+                continue
+
+            try:
+                state = LkpState.objects.get(id=state_id)
+            except LkpState.DoesNotExist:
+                print(f"  WARNING: LkpState id={state_id} not found — skipping profile/jihat for {username}")
+                user.groups.add(travel_group)
+                continue
+
+            # Add to travel group
+            user.groups.add(travel_group)
 
             # Create GoldTravelTraditionalUser profile if it doesn't exist
             gt_user, gt_created = GoldTravelTraditionalUser.objects.get_or_create(
@@ -87,8 +100,7 @@ def load_users_from_csv(file_path):
 
             # Assign jihat based on jiha_type
             jiha_name = row.get('jiha', '').strip()
-            jiha_type = row.get('jiha_type', '').strip()
-            if jiha_name and jiha_type:
+            if jiha_name:
                 if jiha_type == '1':
                     jihat, jihat_created = LkpJihatAlaisdar.objects.get_or_create(
                         name=jiha_name,
