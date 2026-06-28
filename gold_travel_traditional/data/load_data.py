@@ -140,11 +140,48 @@ def make_users_staff(file_path):
                 updated += 1
         print(f"Made {updated} users staff")
 
+def assign_tarhil_to_alaisdar_users(wijhat_altarhil_id):
+    """
+    For every GoldTravelTraditionalUser that has at least one
+    GoldTravelTraditionalUserJihatAlaisdar, create a
+    GoldTravelTraditionalUserJihatTarhil pointing to the given wijhat_altarhil.
+    """
+    try:
+        wijhat = LkpJihatAltarhil.objects.get(id=wijhat_altarhil_id)
+    except LkpJihatAltarhil.DoesNotExist:
+        print(f"LkpJihatAltarhil id={wijhat_altarhil_id} not found")
+        return
+
+    # Users that have at least one GoldTravelTraditionalUserJihatAlaisdar
+    master_ids = (
+        GoldTravelTraditionalUserJihatAlaisdar.objects
+        .values_list('master_id', flat=True)
+        .distinct()
+    )
+    gt_users = GoldTravelTraditionalUser.objects.filter(id__in=master_ids)
+
+    created = 0
+    for gt_user in gt_users:
+        _, c = GoldTravelTraditionalUserJihatTarhil.objects.get_or_create(
+            master=gt_user,
+            wijhat_altarhil=wijhat,
+        )
+        if c:
+            created += 1
+            print(f"  Assigned wijhat_altarhil '{wijhat.name}' to {gt_user.user.username}")
+
+    print(f"Assigned tarhil to {created} users (total with alaisdar: {gt_users.count()})")
+
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print("Usage: python load_data.py <path_to_csv> [--staff]")
-        print("  --staff  Make users staff after loading")
+        print("Usage: python load_data.py <path_to_csv> [--staff] [--assign-tarhil <wijhat_altarhil_id>]")
+        print("  --staff                      Make users staff after loading")
+        print("  --assign-tarhil <id>         Assign wijhat_altarhil to all users with jihat_alaisdar")
     else:
         load_users_from_csv(sys.argv[1])
         if '--staff' in sys.argv:
             make_users_staff(sys.argv[1])
+        if '--assign-tarhil' in sys.argv:
+            idx = sys.argv.index('--assign-tarhil')
+            if idx + 1 < len(sys.argv):
+                assign_tarhil_to_alaisdar_users(sys.argv[idx + 1])
