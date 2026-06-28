@@ -116,8 +116,35 @@ def load_users_from_csv(file_path):
                     if assigned:
                         print(f"  Assigned wijhat_altarhil: {jihat.name}")
 
+def make_users_staff(file_path):
+    """Set is_staff=True for all users listed in the CSV."""
+    if not os.path.exists(file_path):
+        print(f"File not found: {file_path}")
+        return
+
+    with open(file_path, mode='r', encoding='utf-8') as csvfile:
+        reader = csv.DictReader(csvfile)
+        updated = 0
+        for row in reader:
+            username = row.get('username', '').strip()
+            if not username:
+                continue
+            try:
+                user = User.objects.get(username=username)
+            except User.DoesNotExist:
+                print(f"  User not found: {username}")
+                continue
+            if not user.is_staff:
+                user.is_staff = True
+                user.save()
+                updated += 1
+        print(f"Made {updated} users staff")
+
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print("Usage: python load_data.py <path_to_csv>")
+        print("Usage: python load_data.py <path_to_csv> [--staff]")
+        print("  --staff  Make users staff after loading")
     else:
         load_users_from_csv(sys.argv[1])
+        if '--staff' in sys.argv:
+            make_users_staff(sys.argv[1])
