@@ -140,21 +140,30 @@ def make_users_staff(file_path):
                 updated += 1
         print(f"Made {updated} users staff")
 
-def assign_tarhil_to_alaisdar_users(wijhat_altarhil_id):
+def assign_tarhil_to_alaisdar_users(file_path, wijhat_altarhil_id):
     """
-    For every GoldTravelTraditionalUser that has at least one
+    For every user in the CSV that has at least one
     GoldTravelTraditionalUserJihatAlaisdar, create a
     GoldTravelTraditionalUserJihatTarhil pointing to the given wijhat_altarhil.
     """
+    if not os.path.exists(file_path):
+        print(f"File not found: {file_path}")
+        return
+
     try:
         wijhat = LkpJihatAltarhil.objects.get(id=wijhat_altarhil_id)
     except LkpJihatAltarhil.DoesNotExist:
         print(f"LkpJihatAltarhil id={wijhat_altarhil_id} not found")
         return
 
-    # Users that have at least one GoldTravelTraditionalUserJihatAlaisdar
+    # Read usernames from CSV
+    with open(file_path, mode='r', encoding='utf-8') as csvfile:
+        usernames = [row['username'].strip() for row in csv.DictReader(csvfile)]
+
+    # Users from CSV that have at least one GoldTravelTraditionalUserJihatAlaisdar
     master_ids = (
         GoldTravelTraditionalUserJihatAlaisdar.objects
+        .filter(master__user__username__in=usernames)
         .values_list('master_id', flat=True)
         .distinct()
     )
@@ -170,7 +179,7 @@ def assign_tarhil_to_alaisdar_users(wijhat_altarhil_id):
             created += 1
             print(f"  Assigned wijhat_altarhil '{wijhat.name}' to {gt_user.user.username}")
 
-    print(f"Assigned tarhil to {created} users (total with alaisdar: {gt_users.count()})")
+    print(f"Assigned tarhil to {created} users (total with alaisdar in CSV: {gt_users.count()})")
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
@@ -184,4 +193,4 @@ if __name__ == "__main__":
         if '--assign-tarhil' in sys.argv:
             idx = sys.argv.index('--assign-tarhil')
             if idx + 1 < len(sys.argv):
-                assign_tarhil_to_alaisdar_users(sys.argv[idx + 1])
+                assign_tarhil_to_alaisdar_users(sys.argv[1], sys.argv[idx + 1])
