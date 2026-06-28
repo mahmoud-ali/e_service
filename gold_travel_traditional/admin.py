@@ -148,7 +148,7 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
     def get_queryset(self, request):
         qs = super().get_queryset(request)
 
-        if request.user.is_superuser or request.user.groups.filter(name="gold_travel_traditional_manager").exists():
+        if request.user.is_superuser or request.user.groups.filter(name__in=("gold_travel_traditional_manager","gold_travel_traditional_manager_show")).exists():
             return qs
 
         try:
@@ -224,7 +224,7 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
         obj = AppMoveGoldTraditional.objects.get(pk=pk)
 
         # Permission check: Alaisdar user or superuser
-        if not (request.user.is_superuser or request.user.groups.filter(name="gold_travel_traditional_manager").exists()):
+        if not (request.user.is_superuser or request.user.groups.filter(name__in=("gold_travel_traditional_manager","gold_travel_traditional_manager_show")).exists()):
             try:
                 gold_user = request.user.gold_travel_traditional
                 allowed_alaisdar = gold_user.goldtraveltraditionaluserjihatalaisdar_set.values_list('jihat_alaisdar', flat=True)
@@ -404,7 +404,7 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
     @admin.display(description=_('show_actions'))
     def show_actions(self, obj):
         request = self.current_request
-        is_manager = request.user.groups.filter(name="gold_travel_traditional_manager").exists()
+        is_manager = request.user.groups.filter(name__in=("gold_travel_traditional_manager","gold_travel_traditional_manager_show")).exists()
 
         def get_allowed_actions(obj):
             actions = []
