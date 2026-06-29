@@ -18,6 +18,7 @@ django.setup()
 from django.contrib.auth.models import Group
 from django.contrib.auth import get_user_model
 from gold_travel_traditional.models import (
+    AppMoveGoldTraditional,
     GoldTravelTraditionalUser,
     GoldTravelTraditionalUserJihatAlaisdar,
     GoldTravelTraditionalUserJihatTarhil,
@@ -193,6 +194,11 @@ def assign_tarhil_to_alaisdar_users(file_path, wijhat_altarhil_id):
 
     print(f"Assigned tarhil to {created} users (total with alaisdar in CSV: {gt_users.count()})")
 
+def drop_app_move_gold():
+    """Delete all AppMoveGoldTraditional records (cascades to details)."""
+    count, _ = AppMoveGoldTraditional.objects.all().delete()
+    print(f"Deleted {count} AppMoveGoldTraditional records")
+
 def load_and_setup(file_path, wijhat_altarhil_id=None, make_staff=True):
     """
     Combined: load users from CSV, make them staff, and assign tarhil
@@ -206,12 +212,15 @@ def load_and_setup(file_path, wijhat_altarhil_id=None, make_staff=True):
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print("Usage: python load_data.py <path_to_csv> [--staff] [--assign-tarhil <wijhat_altarhil_id>] [--setup <wijhat_altarhil_id>]")
+        print("Usage: python load_data.py <path_to_csv> [--staff] [--assign-tarhil <id>] [--setup <id>] [--drop-moves]")
         print("  --staff                      Make users staff after loading")
         print("  --assign-tarhil <id>         Assign wijhat_altarhil to all users with jihat_alaisdar")
         print("  --setup <id>                 load + staff + assign-tarhil in one step")
+        print("  --drop-moves                 Delete all AppMoveGoldTraditional records")
     else:
-        if '--setup' in sys.argv:
+        if '--drop-moves' in sys.argv:
+            drop_app_move_gold()
+        elif '--setup' in sys.argv:
             idx = sys.argv.index('--setup')
             tarhil_id = int(sys.argv[idx + 1]) if idx + 1 < len(sys.argv) else None
             load_and_setup(sys.argv[1], wijhat_altarhil_id=tarhil_id)
