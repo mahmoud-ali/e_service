@@ -94,6 +94,12 @@ class IncidentInfo(LoggingModel):
     site_closed_now = models.BooleanField(default=False, verbose_name=_("هل موقع العمل مغلق؟ Site closed now?"))
     site_closed_because_of_incident = models.BooleanField(default=False, verbose_name=_("تم الاغلاق نتيجة الحادث؟ Shutdown because of the incident?"))
     
+    # Reporter info
+    reporter_name = models.CharField(_("اسم محرر التقرير"), max_length=150, blank=True, null=True)
+    reporter_phone = models.CharField(_("هاتف محرر التقرير"), max_length=30, blank=True, null=True)
+    approver_name = models.CharField(_("اسم معتمد التقرير"), max_length=150, blank=True, null=True)
+    approver_phone = models.CharField(_("هاتف معتمد التقرير"), max_length=30, blank=True, null=True)
+
     #Incident state
     state = models.IntegerField(_("record_state"), choices=STATE_CHOICES.items(), default=STATE_SUBMITTED)
 

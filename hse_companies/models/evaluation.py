@@ -73,9 +73,6 @@ class TblCompanyEvaluationEnvironment(LoggingModel):
 class TblCompanyEvaluationSafety(LoggingModel):
     session = models.OneToOneField(TblCompanyEvaluationSession, on_delete=models.CASCADE, related_name="safety", verbose_name="جلسة التقييم", null=True, blank=True)
 
-    safe_mine_barriers = models.IntegerField(choices=SCORE_CHOICES, default=0, verbose_name="حواجز المناجم")
-    safe_mine_faces = models.IntegerField(choices=SCORE_CHOICES, default=0, verbose_name="واجهات المناجم")
-    safe_mine_lighting = models.IntegerField(choices=SCORE_CHOICES, default=0, verbose_name="إضاءة المناجم")
     safe_food_storage = models.IntegerField(choices=SCORE_CHOICES, default=0, verbose_name="مخزن المواد الغذائية")
     safe_kitchen = models.IntegerField(choices=SCORE_CHOICES, default=0, verbose_name="المطبخ")
     safe_dining_hall = models.IntegerField(choices=SCORE_CHOICES, default=0, verbose_name="صالة الطعام")
@@ -109,9 +106,6 @@ class TblCompanyEvaluationSafety(LoggingModel):
 
     def get_average_score(self):
         fields = [
-            self.safe_mine_barriers,
-            self.safe_mine_faces,
-            self.safe_mine_lighting,
             self.safe_food_storage,
             self.safe_kitchen,
             self.safe_dining_hall,

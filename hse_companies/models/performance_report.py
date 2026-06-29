@@ -44,6 +44,10 @@ class AppHSEPerformanceReport(LoggingModel):
     month = models.PositiveIntegerField(verbose_name=_("month"), choices=MONTH_CHOICES)
     album = models.FileField(_('album'),upload_to=company_applications_path,blank=True,null=True)
     note = models.TextField(verbose_name=_("comment"),blank=True,null=True)
+    reporter_name = models.CharField(_("اسم محرر التقرير"), max_length=150, blank=True, null=True)
+    reporter_phone = models.CharField(_("هاتف محرر التقرير"), max_length=30, blank=True, null=True)
+    approver_name = models.CharField(_("اسم معتمد التقرير"), max_length=150, blank=True, null=True)
+    approver_phone = models.CharField(_("هاتف معتمد التقرير"), max_length=30, blank=True, null=True)
     state = models.IntegerField(_("record_state"), choices=STATE_CHOICES.items(), default=STATE_SUBMITTED)
 
     def __str__(self):

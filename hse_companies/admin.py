@@ -87,6 +87,15 @@ class AppHSEPerformanceReportMixin(LogMixin):
                     url=url
                 )
 
+    def get_fields(self, request, obj=None):
+        fields = list(super().get_fields(request, obj))
+        if request.user.is_superuser or request.user.groups.filter(name='production_control_auditor').exists():
+            if 'approver_name' not in fields:
+                fields.extend(['approver_name', 'approver_phone'])
+        else:
+            fields = [f for f in fields if f not in ('approver_name', 'approver_phone')]
+        return fields
+
 report_main_mixins = [AppHSEPerformanceReportMixin,]
 report_main_class = {
     'model': AppHSEPerformanceReport,
@@ -95,7 +104,7 @@ report_main_class = {
         'list_display': ("company","license", "year", "month","created_at","state","ask_ai_link"), #,"ask_ai_link"
         'list_filter': ('year', 'month','state','created_at'),
         'readonly_fields':('company','license'),
-        'fields': ("company","license", "year", "month","album",),
+        'fields': ("company","license", "year", "month","album",("reporter_name","reporter_phone"),),
         'save_as_continue': False,
         'view_on_site': False,
     },
@@ -1322,6 +1331,14 @@ class IncidentInfoMixin:
                 print(request.user,e)
 
         return qs.none() #super().get_queryset(request)
+    def get_fieldsets(self, request, obj=None):
+        fieldsets = list(super().get_fieldsets(request, obj))
+        if request.user.is_superuser or request.user.groups.filter(name='production_control_auditor').exists():
+            fieldsets.append((
+                _("بيانات معتمد التقرير"),
+                {"fields": (("approver_name", "approver_phone"),)}
+            ))
+        return fieldsets
 
 incident_main_mixins = [IncidentInfoMixin,LogMixin]
 incident_main_class = {
@@ -1336,6 +1353,7 @@ incident_main_class = {
             (None,{"fields": ("company", ("incident_category","classification"), ("incident_type","other_type_details"))}),
             ("تفاصيل الحادث Details of Incident",{"fields": (("equipment_vehicle_no","client_contractor"), "date_time_occurred","date_time_reported","reported_to","location","incident_description")}),
             ("تفاصيل العملية والمكان في زمن الحادث Location and Operation at Time of Incident",{"fields": ("precise_location", "precise_operation","site_closed_now","site_closed_because_of_incident")}),
+            ("بيانات محرر التقرير",{"fields": (("reporter_name","reporter_phone"),)}),
         ],
         'save_as_continue': False,
         'view_on_site': False,
@@ -1381,6 +1399,10 @@ incident_main_class = {
         }
     },
 }
+
+def incident_corrective_action_display(self, obj):
+    return obj.corrective_action if obj else '-'
+incident_corrective_action_display.short_description = _("الإجراء التصحيحي")
 
 incident_inline_classes = {
     'IncidentInjuredPerson': {
@@ -1914,7 +1936,10 @@ incident_inline_classes = {
             'extra': 0,
             'min_num': 1,
             'view_on_site': False,
-            'exclude': ('report', 'state',),
+            'show_change_link': True,
+            'incident_corrective_action_display': incident_corrective_action_display,
+            'readonly_fields': ('incident_corrective_action_display',),
+            'fields': ('corrective_action', 'from_dt', 'to_dt',),
         },
         'groups': {
             'hse_cmpny_state_mngr':{
@@ -2039,8 +2064,42 @@ class TblCompanyEvaluationGeneralInline(admin.StackedInline):
     max_num = 1
 
 class TblCompanyEvaluationSessionAdmin(AppHSEEvaluationSessionMixin, admin.ModelAdmin):
-    list_display = ('company', 'evaluation_date', 'state', 'locality')
+    list_display = ('company', 'evaluation_date', 'state', 'locality', 'total_score_display')
     list_filter = ('evaluation_date', 'state')
+
+    @admin.display(description=_("النتيجة الإجمالية"))
+    def total_score_display(self, obj):
+        scores = []
+        try:
+            scores.append(obj.environment.get_average_score())
+        except Exception:
+            pass
+        try:
+            scores.append(obj.safety.get_average_score())
+        except Exception:
+            pass
+        try:
+            scores.append(obj.general.get_average_score())
+        except Exception:
+            pass
+
+        if not scores:
+            return '-'
+
+        avg = round(sum(scores) / len(scores), 2)
+        pct = round((avg - 1) / 2 * 100) if avg > 0 else 0
+
+        if pct > 70:
+            color = '#28a745'  # أخضر - ممتاز
+        elif pct >= 50:
+            color = '#ffc107'  # أصفر - متوسط
+        else:
+            color = '#dc3545'  # أحمر - ضعيف
+
+        return format_html(
+            '<span style="color:{color}; font-weight:bold; font-size:1.05em;">{pct}%</span>',
+            color=color, pct=pct
+        )
     search_fields = ('company__name_ar', 'company__name_en')
     autocomplete_fields = ['company']
     inlines = [
