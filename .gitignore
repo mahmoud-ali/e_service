@@ -37,3 +37,4 @@ prices/*.pem
 .gitignore
 prices/*.pgp
 prices/credentials
+gold_travel_traditional/data/select_app_move_gold.sql
