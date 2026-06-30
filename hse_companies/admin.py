@@ -2058,6 +2058,13 @@ class TblCompanyEvaluationSafetyInline(admin.StackedInline):
     extra = 1
     max_num = 1
 
+    def get_exclude(self, request, obj=None):
+        from company_profile.models import TblCompany
+        # obj هو TblCompanyEvaluationSession
+        if obj and getattr(obj.company, 'company_type', None) == TblCompany.COMPANY_TYPE_MOKHALFAT:
+            return ('safe_mine_barriers', 'safe_mine_faces', 'safe_mine_lighting')
+        return super().get_exclude(request, obj)
+
 class TblCompanyEvaluationGeneralInline(admin.StackedInline):
     model = TblCompanyEvaluationGeneral
     extra = 1

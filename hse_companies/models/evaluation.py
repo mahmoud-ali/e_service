@@ -73,6 +73,9 @@ class TblCompanyEvaluationEnvironment(LoggingModel):
 class TblCompanyEvaluationSafety(LoggingModel):
     session = models.OneToOneField(TblCompanyEvaluationSession, on_delete=models.CASCADE, related_name="safety", verbose_name="جلسة التقييم", null=True, blank=True)
 
+    safe_mine_barriers = models.IntegerField(choices=SCORE_CHOICES, default=0, verbose_name="حواجز المناجم")
+    safe_mine_faces = models.IntegerField(choices=SCORE_CHOICES, default=0, verbose_name="واجهات المناجم")
+    safe_mine_lighting = models.IntegerField(choices=SCORE_CHOICES, default=0, verbose_name="إضاءة المناجم")
     safe_food_storage = models.IntegerField(choices=SCORE_CHOICES, default=0, verbose_name="مخزن المواد الغذائية")
     safe_kitchen = models.IntegerField(choices=SCORE_CHOICES, default=0, verbose_name="المطبخ")
     safe_dining_hall = models.IntegerField(choices=SCORE_CHOICES, default=0, verbose_name="صالة الطعام")
@@ -104,8 +107,22 @@ class TblCompanyEvaluationSafety(LoggingModel):
     def __str__(self):
         return f"سلامة - {self.session}"
 
-    def get_average_score(self):
-        fields = [
+    def get_average_score(self, company_type=None):
+        from company_profile.models import TblCompany
+        fields = []
+        # إضافة حقول المناجم فقط لشركات غير مخلفات
+        if company_type is None:
+            try:
+                company_type = self.session.company.company_type
+            except Exception:
+                pass
+        if company_type != TblCompany.COMPANY_TYPE_MOKHALFAT:
+            fields += [
+                self.safe_mine_barriers,
+                self.safe_mine_faces,
+                self.safe_mine_lighting,
+            ]
+        fields += [
             self.safe_food_storage,
             self.safe_kitchen,
             self.safe_dining_hall,
