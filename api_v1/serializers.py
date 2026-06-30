@@ -54,13 +54,17 @@ class GoldProductionDetailSerializer(serializers.ModelSerializer):
 
 class GoldProductionMasterSerializer(serializers.ModelSerializer):
     company = CompanyNameField(read_only=True)
-    
+    state = serializers.SerializerMethodField()
+
     # alloy_list = serializers.JSONField()
     alloy_list = GoldProductionDetailSerializer(source='goldproductionformalloy_set', many=True)
     class Meta:
         model = GoldProductionForm
 
-        fields = ['id','form_no','date','company','alloy_jaf','alloy_khabath','alloy_remaind','alloy_weight_expected','alloy_list']
+        fields = ['id','form_no','date','company','state','alloy_jaf','alloy_khabath','alloy_remaind','alloy_weight_expected','alloy_list']
+
+    def get_state(self, obj):
+        return {'id': obj.state, 'label': obj.get_state_display()}
     
 ########### Gold shipping(ترحيل ذهب شركات) ##############
 class GoldShippingListSerializer(serializers.ModelSerializer):
@@ -80,10 +84,14 @@ class GoldShippingDetailSerializer(serializers.ModelSerializer):
 
 class GoldShippingMasterSerializer(serializers.ModelSerializer):
     company = CompanyNameField(read_only=True)
-    
+    state = serializers.SerializerMethodField()
+
     # alloy_list = serializers.JSONField()
     alloy_list = GoldShippingDetailSerializer(source='goldshippingformalloy_set', many=True)
     class Meta:
         model = GoldShippingForm
 
-        fields = ['id','form_no','date','company','alloy_list']
+        fields = ['id','form_no','date','company','state','alloy_list']
+
+    def get_state(self, obj):
+        return {'id': obj.state, 'label': obj.get_state_display()}
