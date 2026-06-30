@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from gold_travel.models import AppMoveGold, AppMoveGoldDetails
 from production_control.models import GoldProductionForm, GoldProductionFormAlloy, GoldShippingForm, GoldShippingFormAlloy
+from gold_travel_traditional.models import AppMoveGoldTraditional, AppMoveGoldTraditionalDetail
 
 ########### Gold travel(ترحيل بغرض الصادر) ##############
 class OwnerNameField(serializers.RelatedField):
@@ -92,6 +93,51 @@ class GoldShippingMasterSerializer(serializers.ModelSerializer):
         model = GoldShippingForm
 
         fields = ['id','form_no','date','company','state','alloy_list']
+
+    def get_state(self, obj):
+        return {'id': obj.state, 'label': obj.get_state_display()}
+
+########### Gold travel traditional(ترحيل تقليدي) ##############
+class JihatAlaisdarNameField(serializers.RelatedField):
+    def to_representation(self, value):
+        return value.name
+
+class JihatAltarhilNameField(serializers.RelatedField):
+    def to_representation(self, value):
+        return value.name
+
+class SourceStateNameField(serializers.RelatedField):
+    def to_representation(self, value):
+        return value.name
+
+class GoldTravelTraditionalListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AppMoveGoldTraditional
+
+        fields = ['id', ]
+
+class GoldTravelTraditionalDetailSerializer(serializers.ModelSerializer):
+    alloy_shape = serializers.CharField(source='get_alloy_shape_display', read_only=True)
+
+    class Meta:
+        model = AppMoveGoldTraditionalDetail
+
+        fields = ['alloy_weight_gram', 'alloy_shape']
+
+class GoldTravelTraditionalMasterSerializer(serializers.ModelSerializer):
+    almustafid_identity_type = serializers.CharField(source='get_almustafid_identity_type_display', read_only=True)
+    jihat_alaisdar = JihatAlaisdarNameField(read_only=True)
+    wijhat_altarhil = JihatAltarhilNameField(read_only=True)
+    source_state = SourceStateNameField(read_only=True)
+    state = serializers.SerializerMethodField()
+    gold_weight_in_gram = serializers.FloatField(read_only=True)
+
+    alloy_list = GoldTravelTraditionalDetailSerializer(source='details', many=True)
+
+    class Meta:
+        model = AppMoveGoldTraditional
+
+        fields = ['id', 'code', 'issue_date', 'almustafid_name', 'almustafid_phone', 'almustafid_identity_type', 'almustafid_identity', 'jihat_alaisdar', 'wijhat_altarhil', 'almushtari_name', 'state', 'source_state', 'gold_weight_in_gram', 'alloy_list']
 
     def get_state(self, obj):
         return {'id': obj.state, 'label': obj.get_state_display()}
