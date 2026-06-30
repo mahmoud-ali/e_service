@@ -112,7 +112,7 @@ class AppMoveGoldTraditional(LoggingModel):
     almustafid_phone = models.CharField(_("almustafid_phone"),max_length=30)
     almustafid_identity_type = models.IntegerField(_("نوع الإثبات"), choices=IDENTITY_CHOICES, default=IDENTITY_PASSPORT)
     almustafid_identity = models.CharField(_("رقم الإثبات"),max_length=50)
-    almustafid_identity_attachement = models.FileField(_("مرفق الإثبات"),upload_to=attachement_path,null=True,blank=True)
+    almustafid_identity_attachement = models.FileField(_("مرفق الإثبات"),upload_to=attachement_path)
     # almustafid_identity_issue_date = models.DateField(_("تاريخ إصدار الإثبات"))
     
     jihat_alaisdar = models.ForeignKey(LkpJihatAlaisdar, on_delete=models.PROTECT,verbose_name=_("جهة الإصدار"))
@@ -125,7 +125,7 @@ class AppMoveGoldTraditional(LoggingModel):
     parent = models.OneToOneField('self', on_delete=models.PROTECT,related_name="child",verbose_name=_("parent"),null=True,blank=True)
 
     state = models.IntegerField(_("record_state"), choices=STATE_CHOICES, default=STATE_NEW)
-    attachement_file = models.FileField(_("attachement_file"),upload_to=attachement_path,null=True,blank=True)
+    attachement_file = models.FileField(_("attachement_file"),upload_to=attachement_path)
     # attachement_file = models.ImageField(_("attachement_file"),upload_to ='gold_travel_traditional/',null=True,blank=True) 
     source_state = models.ForeignKey(LkpState, on_delete=models.PROTECT,verbose_name=_("state"))
 

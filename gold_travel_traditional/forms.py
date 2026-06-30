@@ -68,7 +68,7 @@ class AppMoveGoldTraditionalAddForm(forms.ModelForm):
 
     class Meta:
         model = AppMoveGoldTraditional    
-        fields = ["issue_date","almustafid_name","almustafid_phone","almustafid_identity_type","almustafid_identity","jihat_alaisdar","wijhat_altarhil","state","source_state"] 
+        fields = ["issue_date","almustafid_name","almustafid_phone","almustafid_identity_type","almustafid_identity","almustafid_identity_attachement","jihat_alaisdar","wijhat_altarhil","attachement_file","state","source_state"] 
         
 class AppMoveGoldTraditionalSoldForm(forms.ModelForm):
     class Meta:
