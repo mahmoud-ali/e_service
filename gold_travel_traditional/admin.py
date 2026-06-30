@@ -121,7 +121,7 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
     ]
     readonly_fields = ["code"]
     # readonly_fields = ["almushtari_name"]
-    list_display = ["code","issue_date","total_gold_weight_display","almustafid_name","jihat_alaisdar","wijhat_altarhil","source_state","state","show_actions"]
+    list_display = ["code","issue_date","renew_date","total_gold_weight_display","almustafid_name","jihat_alaisdar","wijhat_altarhil","source_state","state","show_actions"]
     list_filter = [("state",admin.ChoicesFieldListFilter),("source_state",admin.RelatedFieldListFilter),("jihat_alaisdar",admin.RelatedFieldListFilter),("wijhat_altarhil",admin.RelatedFieldListFilter)]
     date_hierarchy = "issue_date"
     search_fields = ["code","almustafid_name","almustafid_phone","almushtari_name"]
@@ -316,19 +316,11 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
 
             if my_form.is_valid():
                 if obj and obj.state in [AppMoveGoldTraditional.STATE_EXPIRED]:
-                    obj.state = AppMoveGoldTraditional.STATE_CANCLED
+                    obj.state = AppMoveGoldTraditional.STATE_RENEW
+                    obj.renew_date = timezone.now().date()
+
                     obj.save()
-                    self.log_change(request,obj,_('state_cancled'))
-
-                    new_obj = my_form.save(commit=False)
-                    new_obj.id = new_obj.pk = None
-                    new_obj.state = AppMoveGoldTraditional.STATE_RENEW
-                    new_obj.created_by = new_obj.updated_by = request.user
-                    new_obj.source_state = get_user_state(request)
-                    new_obj.parent = obj
-
-                    new_obj.save()
-                    self.log_change(request,new_obj,_('state_renew'))
+                    self.log_change(request,obj,_('state_renew'))
                     self.message_user(request,_('application changed successfully!'))
 
                 return HttpResponseRedirect(
@@ -342,8 +334,8 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
                     )
                 )
         else:
-            obj.code = ''
-            obj.issue_date = timezone.now().date()
+            # obj.code = ''
+            obj.renew_date = timezone.now().date()
             my_form = AppMoveGoldTraditionalRenewForm(instance=obj)
             my_form.user = request.user
 
@@ -351,7 +343,7 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
             (
                 None,
                 {
-                    'fields': [("code","issue_date")]
+                    'fields': [("code","renew_date")]
                 },
             ),
             (
@@ -376,7 +368,7 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
             adminform =admin_form, 
             opts=self.opts,
             title=_("renew_data"),
-            has_add_permission=True,
+            has_add_permission=False,
             has_change_permission=True,
             has_delete_permission=False,
             has_view_permission=True,
@@ -463,7 +455,7 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
             headers={"Content-Disposition": f'attachment; filename="move_gold_form.csv"'},
         )
         header = [
-                    _("code"),_("issue_date"),_('gold_weight_in_gram'),_("almustafid_name"),_("almustafid_phone"),
+                    _("code"),_("issue_date"),_("renew_date"),_('gold_weight_in_gram'),_("almustafid_name"),_("almustafid_phone"),
                     _("almustafid_identity_type"), _("almustafid_identity"), _( "jihat_alaisdar"),
                     _("wijhat_altarhil"),_("almushtari_name"),_("source_state"),_("record_state"),_("parent"),
                     _("created_at"),_("created_by"),_("updated_at"),_("updated_by")
@@ -481,7 +473,7 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
                 parent_code = app.parent.code
 
             row = [
-                    app.code,app.issue_date,app.gold_weight_in_gram,app.almustafid_name,app.almustafid_phone,
+                    app.code,app.issue_date,app.renew_date,app.gold_weight_in_gram,app.almustafid_name,app.almustafid_phone,
                     app.get_almustafid_identity_type_display(), app.almustafid_identity, app.jihat_alaisdar,
                     app.wijhat_altarhil,app.almushtari_name,app.source_state,app.get_state_display(),parent_code,
                     app.created_at,app.created_by,app.updated_at,app.updated_by,

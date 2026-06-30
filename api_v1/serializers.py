@@ -137,7 +137,7 @@ class GoldTravelTraditionalMasterSerializer(serializers.ModelSerializer):
     class Meta:
         model = AppMoveGoldTraditional
 
-        fields = ['id', 'code', 'issue_date', 'almustafid_name', 'almustafid_phone', 'almustafid_identity_type', 'almustafid_identity', 'jihat_alaisdar', 'wijhat_altarhil', 'almushtari_name', 'state', 'source_state', 'gold_weight_in_gram', 'alloy_list']
+        fields = ['id', 'code', 'issue_date', 'renew_date', 'almustafid_name', 'almustafid_phone', 'almustafid_identity_type', 'almustafid_identity', 'jihat_alaisdar', 'wijhat_altarhil', 'almushtari_name', 'state', 'source_state', 'gold_weight_in_gram', 'alloy_list']
 
     def get_state(self, obj):
         return {'id': obj.state, 'label': obj.get_state_display()}

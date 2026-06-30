@@ -127,6 +127,7 @@ class AppMoveGoldTraditional(LoggingModel):
     state = models.IntegerField(_("record_state"), choices=STATE_CHOICES, default=STATE_NEW)
     attachement_file = models.FileField(_("attachement_file"),upload_to=attachement_path)
     # attachement_file = models.ImageField(_("attachement_file"),upload_to ='gold_travel_traditional/',null=True,blank=True) 
+    renew_date = models.DateField(_("renew_date"), null=True, blank=True, editable=False)
     source_state = models.ForeignKey(LkpState, on_delete=models.PROTECT,verbose_name=_("state"))
 
     def clean(self):
