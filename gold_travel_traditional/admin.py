@@ -63,6 +63,7 @@ class GoldTravelTraditionalUserJihatTarhilInline(admin.TabularInline):
 class GoldTravelTraditionalUserAdmin(LogAdminMixin,admin.ModelAdmin):
     form = GoldTravelTraditionalUserForm
     inlines = [GoldTravelTraditionalUserJihatAlaisdarInline, GoldTravelTraditionalUserJihatTarhilInline]     
+    list_display = ["name","state",]
 
     fields = ["user","name","state"]
 
