@@ -64,6 +64,7 @@ class GoldTravelTraditionalUserAdmin(LogAdminMixin,admin.ModelAdmin):
     form = GoldTravelTraditionalUserForm
     inlines = [GoldTravelTraditionalUserJihatAlaisdarInline, GoldTravelTraditionalUserJihatTarhilInline]     
     list_display = ["name","state",]
+    list_filter = ["state"]
 
     fields = ["user","name","state"]
 
