@@ -153,20 +153,31 @@ def make_users_staff(file_path):
                 updated += 1
         print(f"Made {updated} users staff")
 
-def assign_tarhil_to_alaisdar_users(file_path, wijhat_altarhil_id):
+def assign_tarhil_to_alaisdar_users(file_path, wijhat_altarhil_ids):
     """
     For every user in the CSV that has at least one
     GoldTravelTraditionalUserJihatAlaisdar, create a
-    GoldTravelTraditionalUserJihatTarhil pointing to the given wijhat_altarhil.
+    GoldTravelTraditionalUserJihatTarhil pointing to each given wijhat_altarhil.
+
+    Accepts a single int or a list of ints.
     """
+    if isinstance(wijhat_altarhil_ids, (int, str)):
+        wijhat_altarhil_ids = [int(wijhat_altarhil_ids)]
+
     if not os.path.exists(file_path):
         print(f"File not found: {file_path}")
         return
 
-    try:
-        wijhat = LkpJihatAltarhil.objects.get(id=wijhat_altarhil_id)
-    except LkpJihatAltarhil.DoesNotExist:
-        print(f"LkpJihatAltarhil id={wijhat_altarhil_id} not found")
+    # Fetch all wijhat records
+    wijhats = []
+    for wid in wijhat_altarhil_ids:
+        try:
+            wijhats.append(LkpJihatAltarhil.objects.get(id=wid))
+        except LkpJihatAltarhil.DoesNotExist:
+            print(f"LkpJihatAltarhil id={wid} not found — skipping")
+
+    if not wijhats:
+        print("No valid wijhat_altarhil IDs provided")
         return
 
     # Read usernames from CSV
@@ -184,22 +195,23 @@ def assign_tarhil_to_alaisdar_users(file_path, wijhat_altarhil_id):
 
     created = 0
     for gt_user in gt_users:
-        _, c = GoldTravelTraditionalUserJihatTarhil.objects.get_or_create(
-            master=gt_user,
-            wijhat_altarhil=wijhat,
-        )
-        if c:
-            created += 1
-            print(f"  Assigned wijhat_altarhil '{wijhat.name}' to {gt_user.user.username}")
+        for wijhat in wijhats:
+            _, c = GoldTravelTraditionalUserJihatTarhil.objects.get_or_create(
+                master=gt_user,
+                wijhat_altarhil=wijhat,
+            )
+            if c:
+                created += 1
+                print(f"  Assigned wijhat_altarhil '{wijhat.name}' to {gt_user.user.username}")
 
-    print(f"Assigned tarhil to {created} users (total with alaisdar in CSV: {gt_users.count()})")
+    print(f"Assigned tarhil to {created} user-jihat pairs ({len(gt_users)} users x {len(wijhats)} wijhats)")
 
 def drop_app_move_gold():
     """Delete all AppMoveGoldTraditional records (cascades to details)."""
     count, _ = AppMoveGoldTraditional.objects.all().delete()
     print(f"Deleted {count} AppMoveGoldTraditional records")
 
-def load_and_setup(file_path, wijhat_altarhil_id=None, make_staff=True):
+def load_and_setup(file_path, wijhat_altarhil_ids=None, make_staff=True):
     """
     Combined: load users from CSV, make them staff, and assign tarhil
     to all users with jihat_alaisdar.
@@ -207,23 +219,27 @@ def load_and_setup(file_path, wijhat_altarhil_id=None, make_staff=True):
     load_users_from_csv(file_path)
     if make_staff:
         make_users_staff(file_path)
-    if wijhat_altarhil_id is not None:
-        assign_tarhil_to_alaisdar_users(file_path, wijhat_altarhil_id)
+    if wijhat_altarhil_ids is not None:
+        assign_tarhil_to_alaisdar_users(file_path, wijhat_altarhil_ids)
+
+def _parse_ids(raw):
+    """Parse '1,2,3' into [1, 2, 3]."""
+    return [int(x.strip()) for x in raw.split(',') if x.strip()]
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print("Usage: python load_data.py <path_to_csv> [--staff] [--assign-tarhil <id>] [--setup <id>] [--drop-moves]")
+        print("Usage: python load_data.py <path_to_csv> [--staff] [--assign-tarhil <ids>] [--setup <ids>] [--drop-moves]")
         print("  --staff                      Make users staff after loading")
-        print("  --assign-tarhil <id>         Assign wijhat_altarhil to all users with jihat_alaisdar")
-        print("  --setup <id>                 load + staff + assign-tarhil in one step")
+        print("  --assign-tarhil <ids>        Comma-separated wijhat_altarhil IDs (e.g. 1,3,4)")
+        print("  --setup <ids>                load + staff + assign-tarhil in one step")
         print("  --drop-moves                 Delete all AppMoveGoldTraditional records")
     else:
         if '--drop-moves' in sys.argv:
             drop_app_move_gold()
         elif '--setup' in sys.argv:
             idx = sys.argv.index('--setup')
-            tarhil_id = int(sys.argv[idx + 1]) if idx + 1 < len(sys.argv) else None
-            load_and_setup(sys.argv[1], wijhat_altarhil_id=tarhil_id)
+            ids = _parse_ids(sys.argv[idx + 1]) if idx + 1 < len(sys.argv) else None
+            load_and_setup(sys.argv[1], wijhat_altarhil_ids=ids)
         else:
             load_users_from_csv(sys.argv[1])
             if '--staff' in sys.argv:
@@ -231,4 +247,4 @@ if __name__ == "__main__":
             if '--assign-tarhil' in sys.argv:
                 idx = sys.argv.index('--assign-tarhil')
                 if idx + 1 < len(sys.argv):
-                    assign_tarhil_to_alaisdar_users(sys.argv[1], sys.argv[idx + 1])
+                    assign_tarhil_to_alaisdar_users(sys.argv[1], _parse_ids(sys.argv[idx + 1]))
