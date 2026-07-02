@@ -683,7 +683,7 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
 
     @admin.display(description=_('gold_weight_in_gram'))
     def total_gold_weight_display(self, obj):
-        return obj.gold_weight_in_gram
+        return round(obj.gold_weight_in_gram, 2) if obj.gold_weight_in_gram else 0.0
 
     @admin.display(description=_('parent'))
     def parent_link(self,obj):
