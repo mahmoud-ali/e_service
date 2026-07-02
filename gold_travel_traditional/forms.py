@@ -63,7 +63,7 @@ class AppMoveGoldTraditionalAddForm(forms.ModelForm):
         if self.user: # and not self.user.is_superuser
             try:
                 gold_user = self.user.gold_travel_traditional
-                if gold_user.is_state_manager:
+                if gold_user.is_state_manager or gold_user.is_state_viewer:
                     self.fields["jihat_alaisdar"].queryset = LkpJihatAlaisdar.objects.all()
                     self.fields["wijhat_altarhil"].queryset = LkpJihatAltarhil.objects.all()
                 else:
@@ -105,7 +105,7 @@ class AppMoveGoldTraditionalRenewForm(forms.ModelForm):
         if self.user and not self.user.is_superuser:
             try:
                 gold_user = self.user.gold_travel_traditional
-                if gold_user.is_state_manager:
+                if gold_user.is_state_manager or gold_user.is_state_viewer:
                     self.fields["jihat_alaisdar"].queryset = LkpJihatAlaisdar.objects.all()
                     self.fields["wijhat_altarhil"].queryset = LkpJihatAltarhil.objects.all()
                 else:

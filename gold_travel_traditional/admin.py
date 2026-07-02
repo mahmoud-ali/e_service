@@ -160,7 +160,7 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
             
             qs = qs.filter(source_state=gold_travel_traditional_user.state)
             
-            if gold_travel_traditional_user.is_state_manager:
+            if gold_travel_traditional_user.is_state_manager or gold_travel_traditional_user.is_state_viewer:
                 return qs
             
             allowed_alaisdar = gold_travel_traditional_user.goldtraveltraditionaluserjihatalaisdar_set.values_list('jihat_alaisdar', flat=True)
@@ -187,7 +187,7 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
     def has_add_permission(self, request):
         try:
             gold_user = request.user.gold_travel_traditional
-            if gold_user.is_state_manager:
+            if gold_user.is_state_manager or gold_user.is_state_viewer:
                 return False
             if not gold_user.is_alaisdar_user:
                 return False
@@ -204,6 +204,8 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
             
             try:
                 gold_user = request.user.gold_travel_traditional
+                if gold_user.is_state_viewer:
+                    return False
                 if not gold_user.is_state_manager:
                     return False
             except:
@@ -220,6 +222,8 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
             
             try:
                 gold_user = request.user.gold_travel_traditional
+                if gold_user.is_state_viewer:
+                    return False
                 if not gold_user.is_state_manager:
                     return False
             except:
@@ -245,6 +249,9 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
 
         try:
             gold_user = request.user.gold_travel_traditional
+            if gold_user.is_state_viewer:
+                self.message_user(request, _('Only state managers can cancel records.'), level='error')
+                return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
             if not gold_user.is_state_manager:
                 self.message_user(request, _('Only state managers can cancel records.'), level='error')
                 return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
@@ -268,6 +275,9 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
         if not (request.user.is_superuser or request.user.groups.filter(name__in=("gold_travel_traditional_manager","gold_travel_traditional_manager_show")).exists()):
             try:
                 gold_user = request.user.gold_travel_traditional
+                if gold_user.is_state_viewer:
+                    self.message_user(request, _('Only users from the issuing location can print this report.'), level='error')
+                    return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
                 if not gold_user.is_alaisdar_user:
                     self.message_user(request, _('Only users from the issuing location can print this report.'), level='error')
                     return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
@@ -309,6 +319,9 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
         # Check if user has permission for this destination
         try:
             gold_user = request.user.gold_travel_traditional
+            if gold_user.is_state_viewer:
+                 self.message_user(request, _('Only users assigned to the destination location can mark this as arrived.'), level='error')
+                 return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
             if not gold_user.is_tarhil_user:
                  self.message_user(request, _('Only users assigned to the destination location can mark this as arrived.'), level='error')
                  return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
@@ -451,8 +464,11 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
             is_alaisdar_user = False
             is_altarhil_user = False
             is_state_manager = False
+            is_state_viewer = False
             try:
                 gold_user = request.user.gold_travel_traditional
+                if gold_user.is_state_viewer:
+                    return format_html('<ul class="actions-list"><li>&nbsp;</li></ul>')
                 is_alaisdar_user = gold_user.is_alaisdar_user
                 is_altarhil_user = gold_user.is_tarhil_user
                 is_state_manager = gold_user.is_state_manager
@@ -478,7 +494,6 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
             if obj.state not in [AppMoveGoldTraditional.STATE_SOLD, AppMoveGoldTraditional.STATE_CANCLED]:
                 if is_state_manager:
                     actions.append(f'<li><a class="changelink" href="{obj.pk}/cancel">{_("إلغاء")}</a></li>')
-                    actions.append(f'<li><a class="changelink" href="{obj.pk}/arrived">{_("وصل")}</a></li>')
 
             if not actions:
                 return format_html('<ul class="actions-list"><li>&nbsp;</li></ul>')

@@ -41,12 +41,14 @@ class GoldTravelTraditionalUser(LoggingModel):
     JIHAT_TARHIL = 2
     BOTH = 3
     STATE_MANAGER = 4
+    STATE_VIEWER = 5
 
     USER_TYPE_CHOICES = {
         JIHAT_ALAISDAR: _('جهة الإصدار'),
         JIHAT_TARHIL: _('جهة الوصول'),
         BOTH: _('كلاهما'),
         STATE_MANAGER: _('مدير الولاية'),
+        STATE_VIEWER: _('مشاهد الولاية'),
     }
 
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.PROTECT,related_name="gold_travel_traditional",verbose_name=_("user"))
@@ -68,6 +70,10 @@ class GoldTravelTraditionalUser(LoggingModel):
     @property
     def is_state_manager(self):
         return self.user_type == self.STATE_MANAGER
+
+    @property
+    def is_state_viewer(self):
+        return self.user_type == self.STATE_VIEWER
 
     class Meta:
         verbose_name = _("gold_travel_user")
