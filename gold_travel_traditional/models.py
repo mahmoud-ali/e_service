@@ -236,10 +236,12 @@ class AppMoveGoldTraditional(LoggingModel):
 class AppMoveGoldTraditionalDetail(models.Model):
     SHAPE_CIRCULAR = 1
     SHAPE_RECTANGULAR = 2
+    SHAPE_OTHER = 3
     
     SHAPE_CHOICES = {
         SHAPE_CIRCULAR: _('دائري'),
         SHAPE_RECTANGULAR: _('مستطيل'),
+        SHAPE_OTHER: _('أخرى'),
     }
 
     master = models.ForeignKey(AppMoveGoldTraditional, on_delete=models.CASCADE, related_name="details", verbose_name=_("master"))
