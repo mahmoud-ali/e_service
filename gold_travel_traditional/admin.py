@@ -66,7 +66,7 @@ class GoldTravelTraditionalUserAdmin(LogAdminMixin,admin.ModelAdmin):
     list_display = ["name","state",]
     list_filter = ["state"]
 
-    fields = ["user","name","state"]
+    fields = ["user","name","state","user_type"]
 
     def get_readonly_fields(self,request, obj=None):
         if obj:
@@ -144,6 +144,8 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
 
     def save_model(self, request, obj, form, change):
         obj.source_state = get_user_state(request)
+        if not obj.pk:
+            obj.issue_date = timezone.now().date()
 
         return super().save_model(request, obj, form, change)                
 
@@ -160,10 +162,13 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
             allowed_tarhil = gold_travel_traditional_user.goldtraveltraditionaluserjihattarhil_set.values_list('wijhat_altarhil', flat=True)
             
             qs = qs.filter(source_state=gold_travel_traditional_user.state)
-            qs = qs.filter(
-                models.Q(jihat_alaisdar__in=allowed_alaisdar) | 
-                models.Q(wijhat_altarhil__in=allowed_tarhil)
-            )
+            
+            filters = models.Q()
+            if gold_travel_traditional_user.is_alaisdar_user:
+                filters |= models.Q(jihat_alaisdar__in=allowed_alaisdar)
+            if gold_travel_traditional_user.is_tarhil_user:
+                filters |= models.Q(wijhat_altarhil__in=allowed_tarhil)
+            qs = qs.filter(filters)
         except:
             qs = qs.none()
 
@@ -179,8 +184,7 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
     def has_add_permission(self, request):
         try:
             gold_user = request.user.gold_travel_traditional
-            # Check if user has any assigned jihat_alaisdar
-            if not gold_user.goldtraveltraditionaluserjihatalaisdar_set.exists():
+            if not gold_user.is_alaisdar_user:
                 return False
             return True
         except:
@@ -196,6 +200,8 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
             # Check if user belongs to the jihat_alaisdar of the record
             try:
                 gold_user = request.user.gold_travel_traditional
+                if not gold_user.is_alaisdar_user:
+                    return False
                 allowed_alaisdar = gold_user.goldtraveltraditionaluserjihatalaisdar_set.values_list('jihat_alaisdar', flat=True)
                 if obj.jihat_alaisdar_id not in allowed_alaisdar:
                     return False
@@ -229,6 +235,9 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
         if not (request.user.is_superuser or request.user.groups.filter(name__in=("gold_travel_traditional_manager","gold_travel_traditional_manager_show")).exists()):
             try:
                 gold_user = request.user.gold_travel_traditional
+                if not gold_user.is_alaisdar_user:
+                    self.message_user(request, _('Only users from the issuing location can print this report.'), level='error')
+                    return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
                 allowed_alaisdar = gold_user.goldtraveltraditionaluserjihatalaisdar_set.values_list('jihat_alaisdar', flat=True)
                 if obj.jihat_alaisdar_id not in allowed_alaisdar:
                     self.message_user(request, _('Only users from the issuing location can print this report.'), level='error')
@@ -267,6 +276,9 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
         # Check if user has permission for this destination
         try:
             gold_user = request.user.gold_travel_traditional
+            if not gold_user.is_tarhil_user:
+                 self.message_user(request, _('Only users assigned to the destination location can mark this as arrived.'), level='error')
+                 return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
             if obj.wijhat_altarhil not in LkpJihatAltarhil.objects.filter(id__in=gold_user.goldtraveltraditionaluserjihattarhil_set.values_list('wijhat_altarhil', flat=True)):
                  self.message_user(request, _('Only users assigned to the destination location can mark this as arrived.'), level='error')
                  return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
@@ -406,16 +418,17 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
             is_alaisdar_user = False
             try:
                 gold_user = request.user.gold_travel_traditional
-                if obj.jihat_alaisdar_id in gold_user.goldtraveltraditionaluserjihatalaisdar_set.values_list('jihat_alaisdar', flat=True):
-                    is_alaisdar_user = True
+                is_alaisdar_user = gold_user.is_alaisdar_user
             except:
                 pass
 
-            # Action for Alaisdar users (Sold)
-            # if obj.state in [AppMoveGoldTraditional.STATE_NEW, AppMoveGoldTraditional.STATE_RENEW, AppMoveGoldTraditional.STATE_EXPIRED, AppMoveGoldTraditional.STATE_ARRIVED]:
-            #     if is_alaisdar_user:
-            #         actions.append(f'<li><a class="changelink" href="{obj.pk}/sold">{_("state_sold")}</a></li>')
-            
+            is_altarhil_user = False
+            try:
+                gold_user = request.user.gold_travel_traditional
+                is_altarhil_user = gold_user.is_tarhil_user
+            except:
+                pass
+
             # Action for Alaisdar users (Renew)
             if obj.state in [AppMoveGoldTraditional.STATE_EXPIRED]:
                 if is_alaisdar_user:
@@ -427,14 +440,6 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
                     actions.append(f'<li><a class="changelink" target="_blank" href="{obj.pk}/print">{_("طباعة")}</a></li>')
 
             # Action for Altarhil users (Arrived)
-            is_altarhil_user = False
-            try:
-                gold_user = request.user.gold_travel_traditional
-                if obj.wijhat_altarhil_id in gold_user.goldtraveltraditionaluserjihattarhil_set.values_list('wijhat_altarhil', flat=True):
-                    is_altarhil_user = True
-            except:
-                pass
-
             if obj.state in [AppMoveGoldTraditional.STATE_NEW, AppMoveGoldTraditional.STATE_RENEW, AppMoveGoldTraditional.STATE_EXPIRED, ]:            
                 if is_altarhil_user:
                     actions.append(f'<li><a class="changelink" href="{obj.pk}/arrived">{_("وصل")}</a></li>')

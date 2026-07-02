@@ -37,12 +37,31 @@ class LkpJihatAlaisdar(models.Model):
         verbose_name_plural = _("jihat_alaisdar")
 
 class GoldTravelTraditionalUser(LoggingModel):
+    JIHAT_ALAISDAR = 1
+    JIHAT_TARHIL = 2
+    BOTH = 3
+
+    USER_TYPE_CHOICES = {
+        JIHAT_ALAISDAR: _('جهة الإصدار'),
+        JIHAT_TARHIL: _('جهة الوصول'),
+        BOTH: _('كلاهما'),
+    }
+
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.PROTECT,related_name="gold_travel_traditional",verbose_name=_("user"))
     name = models.CharField(_("name"),max_length=100)
     state = models.ForeignKey(LkpState, on_delete=models.PROTECT,verbose_name=_("state"))
+    user_type = models.IntegerField(_('user_type'), choices=USER_TYPE_CHOICES, default=JIHAT_ALAISDAR)
 
     def __str__(self):
         return f'{self.user} ({self.name})'
+
+    @property
+    def is_alaisdar_user(self):
+        return self.user_type in [self.JIHAT_ALAISDAR, self.BOTH]
+
+    @property
+    def is_tarhil_user(self):
+        return self.user_type in [self.JIHAT_TARHIL, self.BOTH]
 
     class Meta:
         verbose_name = _("gold_travel_user")

@@ -2,6 +2,7 @@ from django import forms
 from django.conf import settings
 from django.contrib import admin
 from django.contrib.auth import get_user_model
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 from gold_travel_traditional.models import AppMoveGoldTraditional, GoldTravelTraditionalUser, GoldTravelTraditionalUserJihatAlaisdar, GoldTravelTraditionalUserJihatTarhil, LkpJihatAlaisdar, LkpJihatAltarhil
@@ -13,7 +14,7 @@ class GoldTravelTraditionalUserForm(forms.ModelForm):
 
     class Meta:
         model = GoldTravelTraditionalUser    
-        fields = ["user","name","state",] 
+        fields = ["user","name","state","user_type"] 
 
 class GoldTravelTraditionalUserJihatAlaisdarForm(forms.ModelForm):
     jihat_alaisdar = forms.ModelChoiceField(queryset=LkpJihatAlaisdar.objects.none(), label=_("جهة الإصدار"))
@@ -40,6 +41,7 @@ class GoldTravelTraditionalUserJihatTarhilForm(forms.ModelForm):
         fields = ["wijhat_altarhil",] 
 
 class AppMoveGoldTraditionalAddForm(forms.ModelForm):
+    issue_date = forms.DateField(label=_("issue_date"), initial=timezone.now().date(), disabled=True, required=True)
     jihat_alaisdar = forms.ModelChoiceField(queryset=LkpJihatAlaisdar.objects.none(), label=_("جهة الإصدار"))
     wijhat_altarhil = forms.ModelChoiceField(queryset=LkpJihatAltarhil.objects.none(), label=_("جهة الوصول"))
     almushtari_name = forms.CharField(label=_("almushtari_name"), max_length=150, disabled=True, required=False)
@@ -53,9 +55,13 @@ class AppMoveGoldTraditionalAddForm(forms.ModelForm):
         if self.user: # and not self.user.is_superuser
             try:
                 gold_user = self.user.gold_travel_traditional
-                self.fields["jihat_alaisdar"].queryset = LkpJihatAlaisdar.objects.filter(
-                    id__in=gold_user.goldtraveltraditionaluserjihatalaisdar_set.values_list('jihat_alaisdar', flat=True)
-                )
+                if gold_user.is_alaisdar_user:
+                    self.fields["jihat_alaisdar"].queryset = LkpJihatAlaisdar.objects.filter(
+                        id__in=gold_user.goldtraveltraditionaluserjihatalaisdar_set.values_list('jihat_alaisdar', flat=True)
+                    )
+                else:
+                    self.fields["jihat_alaisdar"].queryset = LkpJihatAlaisdar.objects.none()
+                
                 self.fields["wijhat_altarhil"].queryset = LkpJihatAltarhil.objects.filter(
                     id__in=gold_user.goldtraveltraditionaluserjihattarhil_set.values_list('wijhat_altarhil', flat=True)
                 )
@@ -87,9 +93,13 @@ class AppMoveGoldTraditionalRenewForm(forms.ModelForm):
         if self.user and not self.user.is_superuser:
             try:
                 gold_user = self.user.gold_travel_traditional
-                self.fields["jihat_alaisdar"].queryset = LkpJihatAlaisdar.objects.filter(
-                    id__in=gold_user.goldtraveltraditionaluserjihatalaisdar_set.values_list('jihat_alaisdar', flat=True)
-                )
+                if gold_user.is_alaisdar_user:
+                    self.fields["jihat_alaisdar"].queryset = LkpJihatAlaisdar.objects.filter(
+                        id__in=gold_user.goldtraveltraditionaluserjihatalaisdar_set.values_list('jihat_alaisdar', flat=True)
+                    )
+                else:
+                    self.fields["jihat_alaisdar"].queryset = LkpJihatAlaisdar.objects.none()
+                
                 self.fields["wijhat_altarhil"].queryset = LkpJihatAltarhil.objects.filter(
                     id__in=gold_user.goldtraveltraditionaluserjihattarhil_set.values_list('wijhat_altarhil', flat=True)
                 )
