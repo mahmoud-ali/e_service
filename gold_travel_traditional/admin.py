@@ -123,7 +123,7 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
     ]
     readonly_fields = ["code"]
     # readonly_fields = ["almushtari_name"]
-    list_display = ["code","issue_date","renew_date","total_gold_weight_display","almustafid_name","jihat_alaisdar","wijhat_altarhil","source_state","state","show_actions"]
+    list_display = ["code","issue_date","renew_date","total_gold_weight_display","show_actions","almustafid_name","jihat_alaisdar","wijhat_altarhil","source_state","state",]
     list_filter = [("state",admin.ChoicesFieldListFilter),("source_state",admin.RelatedFieldListFilter),("jihat_alaisdar",admin.RelatedFieldListFilter),("wijhat_altarhil",admin.RelatedFieldListFilter)]
     date_hierarchy = "issue_date"
     search_fields = ["code","almustafid_name","almustafid_phone","almushtari_name"]
