@@ -6,7 +6,11 @@
 {% load humanize %}
 {% block content %}
 <div class="row">
+    {% if object.renew_date %}
+    <div class="col-xs-6" style="text-align:right">تاريخ التجديد: {{object.renew_date|date:"Y/m/d"}}م</div>
+    {% else %}
     <div class="col-xs-6" style="text-align:right">التاريخ: {{object.issue_date|date:"Y/m/d"}}م</div>
+    {% endif %}
     <div class="col-xs-6" style="text-align:left">الرقم: {{object.code}}</div>
 </div>
 <center>
