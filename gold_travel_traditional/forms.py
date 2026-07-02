@@ -5,7 +5,7 @@ from django.contrib.auth import get_user_model
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
-from gold_travel_traditional.models import AppMoveGoldTraditional, GoldTravelTraditionalUser, GoldTravelTraditionalUserJihatAlaisdar, GoldTravelTraditionalUserJihatTarhil, LkpJihatAlaisdar, LkpJihatAltarhil
+from gold_travel_traditional.models import AppMoveGoldTraditional, GoldTravelTraditionalUser, GoldTravelTraditionalUserJihatAlaisdar, GoldTravelTraditionalUserJihatTarhil, LkpJihatAlaisdar, LkpJihatAltarhil, MeltBatch
 
 UserModel = get_user_model()
 
@@ -92,6 +92,49 @@ class AppMoveGoldTraditionalSoldForm(forms.ModelForm):
     class Meta:
         model = AppMoveGoldTraditional    
         fields = ["almushtari_name",] 
+
+class AppMoveGoldTraditionalMeltForm(forms.Form):
+    batch_choice = forms.ChoiceField(
+        label=_('نوع الدفعة'),
+        choices=[('new', _('دفعة جديدة')), ('existing', _('إضافة لدفعة موجودة'))],
+        initial='new',
+        widget=forms.RadioSelect()
+    )
+    existing_batch = forms.ModelChoiceField(
+        queryset=MeltBatch.objects.none(),
+        label=_('اختر الدفعة'),
+        required=False
+    )
+    melt_date = forms.DateField(
+        label=_('تاريخ الصهر'),
+        initial=timezone.now().date(),
+        required=True,
+        widget=forms.DateInput(attrs={'type': 'date', 'class': 'vDateField'})
+    )
+    melt_workshop = forms.CharField(label=_('ورشة الصهر'), max_length=150, required=True)
+    standardization_lab = forms.CharField(label=_('مختبر المعايرة'), max_length=150, required=True)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # New/Existing fields only required if that choice is selected
+        self.fields['melt_date'].required = False
+        self.fields['melt_workshop'].required = False
+        self.fields['standardization_lab'].required = False
+
+    def clean(self):
+        cleaned = super().clean()
+        choice = cleaned.get('batch_choice')
+        if choice == 'new':
+            if not cleaned.get('melt_date'):
+                self.add_error('melt_date', _('This field is required.'))
+            if not cleaned.get('melt_workshop'):
+                self.add_error('melt_workshop', _('This field is required.'))
+            if not cleaned.get('standardization_lab'):
+                self.add_error('standardization_lab', _('This field is required.'))
+        elif choice == 'existing':
+            if not cleaned.get('existing_batch'):
+                self.add_error('existing_batch', _('Please select a batch.'))
+        return cleaned
 
 class AppMoveGoldTraditionalRenewForm(forms.ModelForm):
     jihat_alaisdar = forms.ModelChoiceField(queryset=LkpJihatAlaisdar.objects.none(), label=_("جهة الإصدار"))

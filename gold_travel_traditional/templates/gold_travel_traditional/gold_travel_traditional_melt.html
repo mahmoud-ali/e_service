@@ -1,0 +1,150 @@
+{% extends 'gold_travel_traditional/report_base.html' %}
+{% load i18n %}
+{% load bootstrap3 %}
+{% load auth_extras %}
+{% load static %}
+{% load humanize %}
+{% block content %}
+<div class="row">
+    <div class="col-xs-6" style="text-align:right">التاريخ: {{batch.melt_date|date:"Y/m/d"}}م</div>
+    <div class="col-xs-6" style="text-align:left">رقم الدفعة: {{batch.code}}</div>
+</div>
+<center>
+    <h3 style="font-weight: bold !important;text-decoration: underline !important;">
+        إستمارة تسييح ومعايرة الذهب
+    </h3>
+</center>
+
+<div class="table-responsive">
+    <table class="table" style="border: none !important;">
+        <tr style="border: none !important;">
+            <th width="15%" class="active" style="border: none !important;">ورشة الصهر</th>
+            <td style="border: none !important; border-bottom: 1px solid #000 !important;">{{batch.melt_workshop}}</td>
+            <th width="15%" class="active" style="border: none !important;">مختبر المعايرة</th>
+            <td style="border: none !important; border-bottom: 1px solid #000 !important;">{{batch.standardization_lab}}</td>
+        </tr>
+        <tr style="border: none !important;">
+            <th width="15%" class="active" style="border: none !important;">وزن الذهب الكلي</th>
+            <td style="border: none !important;">{{batch.total_weight|intcomma}} جرام</td>
+            <th width="15%" class="active" style="border: none !important;">عدد القطع الكلي</th>
+            <td style="border: none !important;">{{batch.total_alloy_count}}</td>
+        </tr>
+    </table>
+</div>
+
+<h4>استمارات الترحيل:</h4>
+<div class="table-responsive">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th class="active">#</th>
+                <th class="active">الرقم</th>
+                <th class="active">المستفيد</th>
+                <th class="active">جهة الإصدار</th>
+                <th class="active">الوزن (جرام)</th>
+                <th class="active">عدد القطع</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for record in records %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ record.code }}</td>
+                <td>{{ record.almustafid_name }}</td>
+                <td>{{ record.jihat_alaisdar.name }}</td>
+                <td>{{ record.gold_weight_in_gram|intcomma }}</td>
+                <td>{{ record.alloy_count }}</td>
+            </tr>
+            {% endfor %}
+            <tr>
+                <th colspan="4" class="active" style="text-align:center">المجموع الكلي</th>
+                <th class="active">{{ batch.total_weight|intcomma }}</th>
+                <th class="active">{{ batch.total_alloy_count }}</th>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- <h4>تفاصيل السبائك:</h4>
+
+{% for chunk in alloy_chunks %}
+    {% if forloop.counter > 1 %}
+    <div style="page-break-after: always;"></div>
+    <br />
+    <h4>تابع تفاصيل السبائك:</h4>
+    <br />
+    {% endif %}
+
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th class="active" width="5%">#</th>
+                    <th class="active" width="20%">الوزن (جرام)</th>
+                    <th class="active" width="25%">الشكل</th>
+                    <th class="active" width="5%">#</th>
+                    <th class="active" width="20%">الوزن (جرام)</th>
+                    <th class="active" width="25%">الشكل</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for left, right in chunk.rows %}
+                <tr>
+                    <td>{{ forloop.counter|add:chunk.start_index|add:-1 }}</td>
+                    <td>{{ left.alloy_weight_gram|intcomma }}</td>
+                    <td>{{ left.get_alloy_shape_display }}</td>
+
+                    <td>{% if right %}{{ forloop.counter|add:chunk.start_index|add:chunk.half_offset|add:-1 }}{% else %}-{% endif %}</td>
+                    <td>{% if right %}{{ right.alloy_weight_gram|intcomma }}{% else %}-{% endif %}</td>
+                    <td>{% if right %}{{ right.get_alloy_shape_display }}{% else %}-{% endif %}</td>
+                </tr>
+                {% endfor %}
+
+                {% if forloop.last %}
+                <tr>
+                    <th colspan="4" class="active" style="text-align:center">المجموع الكلي</th>
+                    <th colspan="2" class="active" style="text-align:center">{{batch.total_weight|intcomma}}</th>
+                </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+{% endfor %} -->
+
+<h4>الإعتماد:</h4>
+<div class="table-responsive">
+    <table class="table table-bordered">
+        <tr class="active">
+            <th>البيان</th>
+            <th width="30%">ممثل الشركة السودانية للموارد المعدنية المحدودة</th>
+            <th width="30%">ممثل أمن إقتصاديات المعادن</th>
+            <th width="30%">ممثل شرطة تأمين التعدين</th>
+        </tr>
+        <tr>
+            <th height="30px" class="active">الإسم</th>
+            <td height="30px">&nbsp;</td>
+            <td height="30px">&nbsp;</td>
+            <td height="30px">&nbsp;</td>
+        </tr>
+        <tr>
+            <th height="30px" class="active">التوقيع</th>
+            <td height="30px">&nbsp;</td>
+            <td height="30px">&nbsp;</td>
+            <td height="30px">&nbsp;</td>
+        </tr>
+        <tr>
+            <th height="80px" class="active">الختم</th>
+            <td height="80px">&nbsp;</td>
+            <td height="80px">&nbsp;</td>
+            <td height="80px">&nbsp;</td>
+        </tr>
+    </table>
+</div>
+<p>تنبيهات هامة:</p>
+<ol>
+    <li>تسري الإستمارة لمدة 24 ساعة.</li>
+    <li>أي تعديل أو كشط يلغي الإستمارة.</li>
+    <li>في حالة التنازل يتم الإفادة عن الصائغ الذي تم البيع له</li>
+    <li>عدم حمل الإستمارة رفقة الذهب المرحل مخالفة لضوابط النقل وأي استمارة لاحقة غير مبرئة للذمة.</li>
+</ol>
+{% endblock content %}

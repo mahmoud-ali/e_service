@@ -46,7 +46,7 @@ class GoldTravelTraditionalUser(LoggingModel):
     USER_TYPE_CHOICES = {
         JIHAT_ALAISDAR: _('جهة الإصدار'),
         JIHAT_TARHIL: _('جهة الوصول'),
-        BOTH: _('كلاهما'),
+        BOTH: _('جهة الإصدار والوصول'),
         STATE_MANAGER: _('مدير الولاية'),
         STATE_VIEWER: _('مشاهد الولاية'),
     }
@@ -153,6 +153,11 @@ class AppMoveGoldTraditional(LoggingModel):
 
     almushtari_name = models.CharField(_("almushtari_name"),max_length=150,null=True,blank=True)
 
+    melt_workshop = models.CharField(_("ورشة الصهر"), max_length=150, null=True, blank=True)
+    standardization_lab = models.CharField(_("مختبر المعايرة"), max_length=150, null=True, blank=True)
+    melt_date = models.DateField(_("تاريخ الصهر"), null=True, blank=True)
+    melt_batch = models.ForeignKey('MeltBatch', on_delete=models.SET_NULL, null=True, blank=True, related_name='records', verbose_name=_('دفعة الصهر'))
+
     parent = models.OneToOneField('self', on_delete=models.PROTECT,related_name="child",verbose_name=_("parent"),null=True,blank=True)
 
     state = models.IntegerField(_("record_state"), choices=STATE_CHOICES, default=STATE_NEW)
@@ -164,11 +169,10 @@ class AppMoveGoldTraditional(LoggingModel):
     def clean(self):
         super().clean()
         if self.pk:
-            # Re-fetch the original object from DB to check current state
             original = AppMoveGoldTraditional.objects.get(pk=self.pk)
-            if original.state != self.STATE_NEW:
+            if original.state not in [self.STATE_NEW, self.STATE_ARRIVED]:
                 from django.core.exceptions import ValidationError
-                raise ValidationError(_("Record cannot be modified unless its state is 'New'."))
+                raise ValidationError(_("Record cannot be modified in its current state."))
 
     def save(self, *args, **kwargs):
         if not self.code:
@@ -222,6 +226,10 @@ class AppMoveGoldTraditional(LoggingModel):
     def gold_weight_in_gram(self):
         return self.details.aggregate(total=models.Sum('alloy_weight_gram'))['total'] or 0.0
 
+    @property
+    def alloy_count(self):
+        return self.details.count()
+
     def __str__(self):
         return f'{self.almustafid_name} ({self.code})'
 
@@ -254,3 +262,68 @@ class AppMoveGoldTraditionalDetail(models.Model):
     class Meta:
         verbose_name = _("تفاصيل السبيكة")
         verbose_name_plural = _("تفاصيل السبائك")
+
+class MeltBatch(LoggingModel):
+    STATE_PENDING = 1
+    STATE_COMPLETE = 2
+
+    STATE_CHOICES = {
+        STATE_PENDING: _('قيد الصهر'),
+        STATE_COMPLETE: _('مكتمل'),
+    }
+
+    code = models.CharField(_('code'), max_length=20, unique=True)
+    melt_date = models.DateField(_('تاريخ الصهر'))
+    melt_workshop = models.CharField(_('ورشة الصهر'), max_length=150)
+    standardization_lab = models.CharField(_('مختبر المعايرة'), max_length=150)
+    source_state = models.ForeignKey(LkpState, on_delete=models.PROTECT, verbose_name=_('state'))
+    state = models.IntegerField(_('record_state'), choices=STATE_CHOICES, default=STATE_PENDING)
+
+    @property
+    def total_weight(self):
+        return self.records.aggregate(
+            total=models.Sum('details__alloy_weight_gram')
+        )['total'] or 0.0
+
+    @property
+    def total_alloy_count(self):
+        return sum(r.details.count() for r in self.records.all())
+
+    @property
+    def record_count(self):
+        return self.records.count()
+
+    def save(self, *args, **kwargs):
+        if not self.code:
+            import datetime
+            from django.db import transaction, IntegrityError
+            prefix = "MB"
+            date_str = datetime.datetime.now().strftime("%Y%m%d")
+            for attempt in range(5):
+                try:
+                    with transaction.atomic():
+                        last = MeltBatch.objects.select_for_update().filter(
+                            code__startswith=f"{prefix}-{date_str}-"
+                        ).order_by('code').last()
+                        if last:
+                            new_num = int(last.code.split('-')[-1]) + 1
+                        else:
+                            new_num = 1
+                        new_num += attempt
+                        self.code = f"{prefix}-{date_str}-{new_num:04d}"
+                        super().save(*args, **kwargs)
+                        return
+                except IntegrityError:
+                    if attempt == 4:
+                        raise
+                    continue
+        else:
+            super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f'{self.code} - {self.melt_workshop}'
+
+    class Meta:
+        ordering = ["-id"]
+        verbose_name = _('دفعة الصهر')
+        verbose_name_plural = _('دفعات الصهر')

@@ -14,8 +14,8 @@ from django.forms.widgets import TextInput
 from django.contrib import admin
 
 from company_profile.models import LkpState
-from gold_travel_traditional.forms import AppMoveGoldTraditionalAddForm, AppMoveGoldTraditionalRenewForm, AppMoveGoldTraditionalSoldForm, GoldTravelTraditionalUserJihatAlaisdarForm, GoldTravelTraditionalUserJihatTarhilForm, GoldTravelTraditionalUserForm
-from gold_travel_traditional.models import AppMoveGoldTraditional, AppMoveGoldTraditionalDetail, GoldTravelTraditionalUser, GoldTravelTraditionalUserJihatAlaisdar, GoldTravelTraditionalUserJihatTarhil, LkpJihatAlaisdar, LkpJihatAltarhil
+from gold_travel_traditional.forms import AppMoveGoldTraditionalAddForm, AppMoveGoldTraditionalMeltForm, AppMoveGoldTraditionalRenewForm, AppMoveGoldTraditionalSoldForm, GoldTravelTraditionalUserJihatAlaisdarForm, GoldTravelTraditionalUserJihatTarhilForm, GoldTravelTraditionalUserForm
+from gold_travel_traditional.models import AppMoveGoldTraditional, AppMoveGoldTraditionalDetail, GoldTravelTraditionalUser, GoldTravelTraditionalUserJihatAlaisdar, GoldTravelTraditionalUserJihatTarhil, LkpJihatAlaisdar, LkpJihatAltarhil, MeltBatch
 
 def get_user_state(request):
     try:
@@ -70,7 +70,7 @@ class GoldTravelTraditionalUserAdmin(LogAdminMixin,admin.ModelAdmin):
 
     def get_readonly_fields(self,request, obj=None):
         if obj:
-            return self.fields
+            return ["user","name","state"]
         
         return super().get_readonly_fields(request,obj)
     
@@ -122,6 +122,25 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
         ),
     ]
     readonly_fields = ["code"]
+
+    def get_fieldsets(self, request, obj=None):
+        fieldsets = super().get_fieldsets(request, obj)
+        if obj and obj.melt_batch:
+            fieldsets = list(fieldsets) + [
+                (
+                    _("تفاصيل التسييح والمعايرة"),
+                    {
+                        'fields': [("melt_batch",), ("melt_date",), ("melt_workshop", "standardization_lab")]
+                    },
+                ),
+            ]
+        return fieldsets
+
+    def get_readonly_fields(self, request, obj=None):
+        readonly_fields = super().get_readonly_fields(request, obj)
+        if obj and obj.melt_batch:
+            readonly_fields = list(readonly_fields) + ["melt_batch", "melt_date", "melt_workshop", "standardization_lab"]
+        return readonly_fields
     # readonly_fields = ["almushtari_name"]
     list_display = ["code","issue_date","total_gold_weight_display","show_actions","almustafid_name","jihat_alaisdar","wijhat_altarhil","source_state","renew_date","state",]
     list_filter = [("state",admin.ChoicesFieldListFilter),("source_state",admin.RelatedFieldListFilter),("jihat_alaisdar",admin.RelatedFieldListFilter),("wijhat_altarhil",admin.RelatedFieldListFilter)]
@@ -241,8 +260,131 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
             path("<int:pk>/arrived/", self.admin_site.admin_view(self.arrived_view)),
             path("<int:pk>/print/", self.admin_site.admin_view(self.print_view)),
             path("<int:pk>/cancel/", self.admin_site.admin_view(self.cancel_view)),
+            path("<int:pk>/melt/", self.admin_site.admin_view(self.melt_view)),
+            path("<int:pk>/melt/print/", self.admin_site.admin_view(self.print_melt_view)),
         ]
         return my_urls + urls
+
+    def melt_view(self, request, pk):
+        obj = AppMoveGoldTraditional.objects.get(pk=pk)
+
+        try:
+            gold_user = request.user.gold_travel_traditional
+            if not gold_user.is_tarhil_user:
+                self.message_user(request, _('Only destination users can fill melt details.'), level='error')
+                return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
+        except:
+            return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
+
+        if obj.state != AppMoveGoldTraditional.STATE_ARRIVED:
+            self.message_user(request, _('Record must be in arrived state.'), level='error')
+            return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
+
+        if request.method == "POST":
+            my_form = AppMoveGoldTraditionalMeltForm(request.POST)
+            my_form.fields['existing_batch'].queryset = MeltBatch.objects.filter(
+                source_state=obj.source_state,
+                state=MeltBatch.STATE_PENDING
+            )
+            if my_form.is_valid():
+                choice = my_form.cleaned_data['batch_choice']
+                if choice == 'new':
+                    batch = MeltBatch.objects.create(
+                        melt_date=my_form.cleaned_data['melt_date'],
+                        melt_workshop=my_form.cleaned_data['melt_workshop'],
+                        standardization_lab=my_form.cleaned_data['standardization_lab'],
+                        source_state=obj.source_state,
+                        created_by=request.user,
+                        updated_by=request.user,
+                    )
+                    obj.melt_batch = batch
+                    obj.melt_date = batch.melt_date
+                    obj.melt_workshop = batch.melt_workshop
+                    obj.standardization_lab = batch.standardization_lab
+                    obj.save()
+                    self.log_change(request, obj, _('melt_batch_created'))
+                else:
+                    batch = my_form.cleaned_data['existing_batch']
+                    obj.melt_batch = batch
+                    obj.melt_date = batch.melt_date
+                    obj.melt_workshop = batch.melt_workshop
+                    obj.standardization_lab = batch.standardization_lab
+                    obj.save()
+                    self.log_change(request, obj, _('melt_batch_assigned'))
+
+                self.message_user(request, _('Melt details saved successfully!'))
+                return HttpResponseRedirect(
+                    reverse(
+                        "%s:%s_%s_changelist"
+                        % (
+                            self.admin_site.name,
+                            obj._meta.app_label,
+                            obj._meta.model_name,
+                        )
+                    ) + f"{obj.pk}/melt/print/"
+                )
+        else:
+            my_form = AppMoveGoldTraditionalMeltForm()
+            # Filter existing batches by source_state and show only pending ones
+            my_form.fields['existing_batch'].queryset = MeltBatch.objects.filter(
+                source_state=obj.source_state,
+                state=MeltBatch.STATE_PENDING
+            )
+
+        context = dict(
+            self.admin_site.each_context(request),
+            object=obj,
+            form=my_form,
+            opts=AppMoveGoldTraditional._meta,
+            title=_("melt_details"),
+        )
+        return TemplateResponse(request, "admin/gold_travel_traditional/appmovegoldtraditional/melt_form.html", context)
+
+    def print_melt_view(self, request, pk):
+        obj = AppMoveGoldTraditional.objects.get(pk=pk)
+
+        try:
+            gold_user = request.user.gold_travel_traditional
+            if not (gold_user.is_tarhil_user or gold_user.is_state_manager):
+                self.message_user(request, _('Only destination users can print this form.'), level='error')
+                return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
+        except:
+            return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
+
+        batch = obj.melt_batch
+        if not batch:
+            self.message_user(request, _('No melt batch found.'), level='error')
+            return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
+
+        from itertools import zip_longest
+
+        records = batch.records.all()
+
+        # Aggregate all alloy details from all records
+        all_details = []
+        for record in records:
+            all_details.extend(record.details.all())
+
+        chunk_size = 40
+        alloy_chunks = []
+        for i in range(0, len(all_details), chunk_size):
+            chunk = all_details[i:i + chunk_size]
+            half = (len(chunk) + 1) // 2
+            left_half = chunk[:half]
+            right_half = chunk[half:]
+            rows = list(zip_longest(left_half, right_half))
+            alloy_chunks.append({
+                'rows': rows,
+                'start_index': i + 1,
+                'half_offset': half
+            })
+
+        context = {
+            'batch': batch,
+            'records': records,
+            'alloy_chunks': alloy_chunks,
+        }
+        return TemplateResponse(request, "gold_travel_traditional/gold_travel_traditional_melt.html", context)
 
     def cancel_view(self, request, pk):
         obj = AppMoveGoldTraditional.objects.get(pk=pk)
@@ -490,6 +632,14 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
                 if is_altarhil_user:
                     actions.append(f'<li><a class="changelink" href="{obj.pk}/arrived">{_("وصل")}</a></li>')
 
+            # Action for Altarhil users (Melt) - only on ARRIVED records
+            if obj.state == AppMoveGoldTraditional.STATE_ARRIVED:
+                if not obj.melt_batch and is_altarhil_user:
+                    actions.append(f'<li><a class="changelink" href="{obj.pk}/melt">{_("استمارة الصهر والمعايرة")}</a></li>')
+                if obj.melt_batch:
+                    if is_altarhil_user or is_state_manager:
+                        actions.append(f'<li><a class="changelink" target="_blank" href="{obj.pk}/melt/print">{_("طباعة دفعة صهر")}</a></li>')
+
             # Action for State Manager (Cancel)
             if obj.state not in [AppMoveGoldTraditional.STATE_SOLD, AppMoveGoldTraditional.STATE_CANCLED]:
                 if is_state_manager:
@@ -541,3 +691,38 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
         return response
 
 admin.site.register(AppMoveGoldTraditional, AppMoveGoldTraditionalAdmin)
+
+class MeltBatchRecordsInline(admin.TabularInline):
+    model = AppMoveGoldTraditional
+    fields = ['code', 'almustafid_name', 'jihat_alaisdar', 'gold_weight_in_gram']
+    readonly_fields = ['code', 'almustafid_name', 'jihat_alaisdar', 'gold_weight_in_gram']
+    can_delete = False
+    extra = 0
+    max_num = 0
+
+    def has_add_permission(self, request, obj):
+        return False
+
+class MeltBatchAdmin(LogAdminMixin, admin.ModelAdmin):
+    inlines = [MeltBatchRecordsInline]
+    list_display = ['code', 'melt_date', 'melt_workshop', 'standardization_lab', 'record_count', 'total_weight', 'state']
+    list_filter = ['melt_date', 'state']
+    search_fields = ['code', 'melt_workshop', 'standardization_lab']
+    readonly_fields = ['code']
+    actions = ['mark_complete']
+
+    fieldsets = [
+        (None, {'fields': ['code', 'melt_date']}),
+        (_('melt_details'), {'fields': [('melt_workshop', 'standardization_lab')]}),
+        (None, {'fields': ['state']}),
+    ]
+
+    def has_add_permission(self, request):
+        return False
+
+    @admin.action(description=_('Mark as Complete'))
+    def mark_complete(self, request, queryset):
+        queryset.filter(state=MeltBatch.STATE_PENDING).update(state=MeltBatch.STATE_COMPLETE, updated_by=request.user)
+        self.message_user(request, _('Selected batches marked as complete.'))
+
+admin.site.register(MeltBatch, MeltBatchAdmin)
