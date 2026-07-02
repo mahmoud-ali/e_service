@@ -268,6 +268,37 @@ def load_and_setup(file_path, wijhat_altarhil_ids=None, make_staff=True):
     if wijhat_altarhil_ids is not None:
         assign_tarhil_to_alaisdar_users(file_path, wijhat_altarhil_ids)
 
+def sync_user_first_names(file_path):
+    """Update User.first_name from GoldTravelTraditionalUser.name for users in CSV."""
+    if not os.path.exists(file_path):
+        print(f"File not found: {file_path}")
+        return
+
+    with open(file_path, mode='r', encoding='utf-8') as csvfile:
+        usernames = [row['username'].strip() for row in csv.DictReader(csvfile)]
+
+    updated = 0
+    for gt in GoldTravelTraditionalUser.objects.filter(user__username__in=usernames):
+        if gt.user.first_name != gt.name:
+            gt.user.first_name = gt.name
+            gt.user.save()
+            updated += 1
+            print(f"  Updated first_name: {gt.user.username} → {gt.name}")
+
+    print(f"Updated {updated} users")
+
+def sync_user_first_names_all():
+    """Update User.first_name for all GoldTravelTraditionalUser profiles."""
+    updated = 0
+    for gt in GoldTravelTraditionalUser.objects.all():
+        if not gt.user.first_name:
+            gt.user.first_name = gt.name
+            gt.user.save()
+            updated += 1
+            print(f"  Updated first_name: {gt.user.username} → {gt.name}")
+
+    print(f"Updated {updated} of {GoldTravelTraditionalUser.objects.count()} users")
+
 def reload_all_csvs():
     """Re-run load_users_from_csv for all _users.csv files."""
     data_dir = os.path.dirname(os.path.abspath(__file__))
@@ -293,11 +324,17 @@ if __name__ == "__main__":
         print("  --add-user-type              Add user_type column to the given CSV")
         print("  --add-user-type-all          Add user_type column to all _users.csv files")
         print("  --reload-all                 Re-run load_users_from_csv on all _users.csv files")
+        print("  --sync-names                 Update User.first_name from GoldTravelTraditionalUser.name (CSV)")
+        print("  --sync-names-all             Same, for all GoldTravelTraditionalUser profiles")
     else:
         if '--add-user-type-all' in sys.argv:
             add_user_type_to_all_csvs()
         elif '--add-user-type' in sys.argv:
             add_user_type_to_csv(sys.argv[1])
+        elif '--sync-names-all' in sys.argv:
+            sync_user_first_names_all()
+        elif '--sync-names' in sys.argv:
+            sync_user_first_names(sys.argv[1])
         elif '--reload-all' in sys.argv:
             reload_all_csvs()
         elif '--drop-moves' in sys.argv:
