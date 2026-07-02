@@ -1,6 +1,9 @@
+import io
+
 from django.db import models
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
+from PIL import Image
 
 from company_profile.models import LkpState
 
@@ -141,7 +144,7 @@ class AppMoveGoldTraditional(LoggingModel):
     almustafid_phone = models.CharField(_("almustafid_phone"),max_length=30)
     almustafid_identity_type = models.IntegerField(_("نوع الإثبات"), choices=IDENTITY_CHOICES, default=IDENTITY_PASSPORT)
     almustafid_identity = models.CharField(_("رقم الإثبات"),max_length=50)
-    almustafid_identity_attachement = models.FileField(_("مرفق الإثبات"),upload_to=attachement_path)
+    almustafid_identity_attachement = models.ImageField(_("مرفق الإثبات"),upload_to=attachement_path)
     # almustafid_identity_issue_date = models.DateField(_("تاريخ إصدار الإثبات"))
     
     jihat_alaisdar = models.ForeignKey(LkpJihatAlaisdar, on_delete=models.PROTECT,verbose_name=_("جهة الإصدار"))
@@ -160,10 +163,12 @@ class AppMoveGoldTraditional(LoggingModel):
     parent = models.OneToOneField('self', on_delete=models.PROTECT,related_name="child",verbose_name=_("parent"),null=True,blank=True)
 
     state = models.IntegerField(_("record_state"), choices=STATE_CHOICES, default=STATE_NEW)
-    attachement_file = models.FileField(_("صورة الذهب المرحل"),upload_to=attachement_path)
-    # attachement_file = models.ImageField(_("attachement_file"),upload_to ='gold_travel_traditional/',null=True,blank=True) 
+    attachement_file = models.ImageField(_("صورة الذهب المرحل"),upload_to=attachement_path)
     renew_date = models.DateField(_("renew_date"), null=True, blank=True, editable=False)
     source_state = models.ForeignKey(LkpState, on_delete=models.PROTECT,verbose_name=_("state"))
+
+    MAX_IMAGE_DIMENSION = 1920
+    JPEG_QUALITY = 85
 
     def clean(self):
         super().clean()
@@ -173,7 +178,36 @@ class AppMoveGoldTraditional(LoggingModel):
                 from django.core.exceptions import ValidationError
                 raise ValidationError(_("Record cannot be modified in its current state."))
 
+    def _optimize_image(self, image_field):
+        """Resize and compress an uploaded image to reduce file size."""
+        img_file = getattr(self, image_field)
+        if not img_file:
+            return
+
+        img = Image.open(img_file)
+
+        # Convert RGBA to RGB for JPEG compatibility
+        if img.mode in ('RGBA', 'P'):
+            img = img.convert('RGB')
+
+        # Resize if larger than max dimension, preserving aspect ratio
+        w, h = img.size
+        if w > self.MAX_IMAGE_DIMENSION or h > self.MAX_IMAGE_DIMENSION:
+            img.thumbnail((self.MAX_IMAGE_DIMENSION, self.MAX_IMAGE_DIMENSION), Image.LANCZOS)
+
+        # Save optimized image to an in-memory buffer
+        output = io.BytesIO()
+        img.save(output, format='JPEG', quality=self.JPEG_QUALITY, optimize=True)
+        output.seek(0)
+
+        # Replace the file content
+        img_file.file = output
+        img_file.name = img_file.name.rsplit('.', 1)[0] + '.jpg'
+
     def save(self, *args, **kwargs):
+        self._optimize_image('attachement_file')
+        self._optimize_image('almustafid_identity_attachement')
+
         if not self.code:
             import datetime
             from django.db import transaction, IntegrityError

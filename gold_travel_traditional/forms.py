@@ -87,6 +87,40 @@ class AppMoveGoldTraditionalAddForm(forms.ModelForm):
     class Meta:
         model = AppMoveGoldTraditional    
         fields = ["issue_date","almustafid_name","almustafid_phone","almustafid_identity_type","almustafid_identity","almustafid_identity_attachement","jihat_alaisdar","wijhat_altarhil","attachement_file","state","source_state"] 
+
+    def clean_attachement_file(self):
+        from django.core.exceptions import ValidationError
+        file = self.cleaned_data.get('attachement_file')
+        if file:
+            # Check file extension
+            ext = file.name.rsplit('.', 1)[-1].lower() if '.' in file.name else ''
+            if ext not in ('jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp'):
+                raise ValidationError(_('يجب رفع صورة بصيغة JPG, PNG, GIF, WEBP أو BMP فقط'))
+            # Verify it's a valid image
+            from PIL import Image
+            try:
+                img = Image.open(file)
+                img.verify()
+                file.seek(0)
+            except Exception:
+                raise ValidationError(_('الملف المرفوع ليس صورة صالحة'))
+        return file
+
+    def clean_almustafid_identity_attachement(self):
+        from django.core.exceptions import ValidationError
+        file = self.cleaned_data.get('almustafid_identity_attachement')
+        if file:
+            ext = file.name.rsplit('.', 1)[-1].lower() if '.' in file.name else ''
+            if ext not in ('jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp'):
+                raise ValidationError(_('يجب رفع صورة بصيغة JPG, PNG, GIF, WEBP أو BMP فقط'))
+            from PIL import Image
+            try:
+                img = Image.open(file)
+                img.verify()
+                file.seek(0)
+            except Exception:
+                raise ValidationError(_('الملف المرفوع ليس صورة صالحة'))
+        return file
         
 class AppMoveGoldTraditionalMeltForm(forms.Form):
     batch_choice = forms.ChoiceField(
