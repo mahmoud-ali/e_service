@@ -167,7 +167,7 @@ class AppMoveGoldTraditional(LoggingModel):
     renew_date = models.DateField(_("renew_date"), null=True, blank=True, editable=False)
     source_state = models.ForeignKey(LkpState, on_delete=models.PROTECT,verbose_name=_("state"))
 
-    MAX_IMAGE_DIMENSION = 1920
+    MAX_IMAGE_DIMENSION = 1200
     JPEG_QUALITY = 85
 
     def clean(self):
