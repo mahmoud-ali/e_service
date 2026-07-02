@@ -705,11 +705,11 @@ class MeltBatchRecordsInline(admin.TabularInline):
 
 class MeltBatchAdmin(LogAdminMixin, admin.ModelAdmin):
     inlines = [MeltBatchRecordsInline]
-    list_display = ['code', 'melt_date', 'melt_workshop', 'standardization_lab', 'record_count', 'total_weight', 'state']
+    list_display = ['code', 'melt_date', 'melt_workshop', 'standardization_lab', 'record_count', 'total_weight', 'state', 'print_button']
     list_filter = ['melt_date', 'state']
     search_fields = ['code', 'melt_workshop', 'standardization_lab']
     readonly_fields = ['code']
-    actions = ['mark_complete']
+    actions = ['mark_complete', 'print_selected_batches']
 
     fieldsets = [
         (None, {'fields': ['code', 'melt_date']}),
@@ -720,9 +720,59 @@ class MeltBatchAdmin(LogAdminMixin, admin.ModelAdmin):
     def has_add_permission(self, request):
         return False
 
-    @admin.action(description=_('Mark as Complete'))
+    def get_urls(self):
+        urls = super().get_urls()
+        my_urls = [
+            path("<int:pk>/batch-print/", self.admin_site.admin_view(self.batch_print_view), name="gold_travel_traditional_meltbatch_print"),
+        ]
+        return my_urls + urls
+
+    @admin.display(description=_('print'))
+    def print_button(self, obj):
+        url = reverse("admin:gold_travel_traditional_meltbatch_print", args=[obj.pk])
+        return format_html('<a class="changelink" target="_blank" href="{url}">{txt}</a>', url=url, txt=_('طباعة'))
+
+    def batch_print_view(self, request, pk):
+        from itertools import zip_longest
+
+        batch = MeltBatch.objects.get(pk=pk)
+        records = batch.records.all()
+
+        all_details = []
+        for record in records:
+            all_details.extend(record.details.all())
+
+        chunk_size = 40
+        alloy_chunks = []
+        for i in range(0, len(all_details), chunk_size):
+            chunk = all_details[i:i + chunk_size]
+            half = (len(chunk) + 1) // 2
+            left_half = chunk[:half]
+            right_half = chunk[half:]
+            rows = list(zip_longest(left_half, right_half))
+            alloy_chunks.append({
+                'rows': rows,
+                'start_index': i + 1,
+                'half_offset': half
+            })
+
+        context = {
+            'batch': batch,
+            'records': records,
+            'alloy_chunks': alloy_chunks,
+        }
+        return TemplateResponse(request, "gold_travel_traditional/gold_travel_traditional_melt.html", context)
+
+    @admin.action(description=_('مكتمل'))
     def mark_complete(self, request, queryset):
         queryset.filter(state=MeltBatch.STATE_PENDING).update(state=MeltBatch.STATE_COMPLETE, updated_by=request.user)
         self.message_user(request, _('Selected batches marked as complete.'))
+
+    @admin.action(description=_('طباعة الدفعات المحددة'))
+    def print_selected_batches(self, request, queryset):
+        # Redirect to print the first selected batch
+        batch = queryset.first()
+        if batch:
+            return redirect(reverse("admin:gold_travel_traditional_meltbatch_print", args=[batch.pk]))
 
 admin.site.register(MeltBatch, MeltBatchAdmin)
