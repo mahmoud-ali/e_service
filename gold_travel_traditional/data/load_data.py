@@ -84,18 +84,24 @@ def load_users_from_csv(file_path):
             # Add to travel group
             user.groups.add(travel_group)
 
-            # Create GoldTravelTraditionalUser profile if it doesn't exist
+            # Create or update GoldTravelTraditionalUser profile
+            user_type = int(row.get('user_type', '0') or '0')
             gt_user, gt_created = GoldTravelTraditionalUser.objects.get_or_create(
                 user=user,
                 defaults={
                     'name': name or username,
                     'state': state,
+                    'user_type': user_type,
                     'created_by': user,
                     'updated_by': user
                 }
             )
             if gt_created:
                 print(f"  Created GoldTravelTraditionalUser profile")
+            elif gt_user.user_type != user_type:
+                gt_user.user_type = user_type
+                gt_user.save()
+                print(f"  Updated user_type to {gt_user.get_user_type_display()}")
             else:
                 print(f"  GoldTravelTraditionalUser profile already exists")
 
@@ -211,6 +217,46 @@ def drop_app_move_gold():
     count, _ = AppMoveGoldTraditional.objects.all().delete()
     print(f"Deleted {count} AppMoveGoldTraditional records")
 
+# jiha_type → user_type mapping
+JIHATYPE_TO_USERTYPE = {'1': 1, '2': 2, '3': 4}  # 1=جهة الإصدار, 2=جهة الوصول, 4=مدير الولاية
+
+def add_user_type_to_csv(file_path):
+    """Add user_type column to a CSV based on jiha_type mapping."""
+    if not os.path.exists(file_path):
+        print(f"File not found: {file_path}")
+        return
+
+    with open(file_path, 'r', encoding='utf-8') as f:
+        reader = csv.DictReader(f)
+        fieldnames = reader.fieldnames
+        rows = list(reader)
+
+    if 'user_type' in fieldnames:
+        print(f"  user_type already exists in {os.path.basename(file_path)}")
+        return
+
+    # Insert user_type after jiha_type
+    jt_idx = fieldnames.index('jiha_type')
+    fieldnames.insert(jt_idx + 1, 'user_type')
+
+    for row in rows:
+        jt = row.get('jiha_type', '').strip()
+        row['user_type'] = str(JIHATYPE_TO_USERTYPE.get(jt, ''))
+
+    with open(file_path, 'w', encoding='utf-8', newline='') as f:
+        writer = csv.DictWriter(f, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerows(rows)
+
+    print(f"  Added user_type to {os.path.basename(file_path)} ({len(rows)} rows)")
+
+def add_user_type_to_all_csvs():
+    """Add user_type to all _users.csv files in the data directory."""
+    data_dir = os.path.dirname(os.path.abspath(__file__))
+    for f in sorted(os.listdir(data_dir)):
+        if f.endswith('_users.csv'):
+            add_user_type_to_csv(os.path.join(data_dir, f))
+
 def load_and_setup(file_path, wijhat_altarhil_ids=None, make_staff=True):
     """
     Combined: load users from CSV, make them staff, and assign tarhil
@@ -228,13 +274,19 @@ def _parse_ids(raw):
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print("Usage: python load_data.py <path_to_csv> [--staff] [--assign-tarhil <ids>] [--setup <ids>] [--drop-moves]")
+        print("Usage: python load_data.py <path_to_csv> [--staff] [--assign-tarhil <ids>] [--setup <ids>] [--drop-moves] [--add-user-type] [--add-user-type-all]")
         print("  --staff                      Make users staff after loading")
         print("  --assign-tarhil <ids>        Comma-separated wijhat_altarhil IDs (e.g. 1,3,4)")
         print("  --setup <ids>                load + staff + assign-tarhil in one step")
         print("  --drop-moves                 Delete all AppMoveGoldTraditional records")
+        print("  --add-user-type              Add user_type column to the given CSV")
+        print("  --add-user-type-all          Add user_type column to all _users.csv files")
     else:
-        if '--drop-moves' in sys.argv:
+        if '--add-user-type-all' in sys.argv:
+            add_user_type_to_all_csvs()
+        elif '--add-user-type' in sys.argv:
+            add_user_type_to_csv(sys.argv[1])
+        elif '--drop-moves' in sys.argv:
             drop_app_move_gold()
         elif '--setup' in sys.argv:
             idx = sys.argv.index('--setup')

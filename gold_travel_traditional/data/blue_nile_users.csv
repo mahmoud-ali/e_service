@@ -1,7 +1,7 @@
-name,jiha,jiha_type,state_id,username,password
-احمد عثمان محمد عبدالخالق,سوق بلنق,1,7,ahmd.abdalkhalq,Gold@2026
-عمر احمد المرضي,سوق بكوري,1,7,amr.almrdy,Gold@2026
-اكرم جعفر مدني,سوق بكوري,1,7,akrm.mdny,Gold@2026
-اسماعيل تيربو علي,سوق بلقوة,1,7,asmaayl.aly,Gold@2026
-محمد علي مجذوب عبدالرحمن,سوق بلقوة,1,7,mohamed.abdalrhmn,Gold@2026
-بله مصطفى محمد احمد,سوق مقنزا,1,7,blh.ahmd,Gold@2026
+name,jiha,jiha_type,user_type,state_id,username,password
+احمد عثمان محمد عبدالخالق,سوق بلنق,1,1,7,ahmd.abdalkhalq,Gold@2026
+عمر احمد المرضي,سوق بكوري,1,1,7,amr.almrdy,Gold@2026
+اكرم جعفر مدني,سوق بكوري,1,1,7,akrm.mdny,Gold@2026
+اسماعيل تيربو علي,سوق بلقوة,1,1,7,asmaayl.aly,Gold@2026
+محمد علي مجذوب عبدالرحمن,سوق بلقوة,1,1,7,mohamed.abdalrhmn,Gold@2026
+بله مصطفى محمد احمد,سوق مقنزا,1,1,7,blh.ahmd,Gold@2026
