@@ -17,7 +17,8 @@ class GoldTravelTraditionalUserForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['user'].label_from_instance = lambda obj: f"{obj.get_full_name()} ({obj.username})"
+        if 'user' in self.fields:
+            self.fields['user'].label_from_instance = lambda obj: f"{obj.get_full_name()} ({obj.username})"
 
     class Meta:
         model = GoldTravelTraditionalUser    
