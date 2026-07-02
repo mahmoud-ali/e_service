@@ -10,7 +10,14 @@ from gold_travel_traditional.models import AppMoveGoldTraditional, GoldTravelTra
 UserModel = get_user_model()
 
 class GoldTravelTraditionalUserForm(forms.ModelForm):
-    user = forms.ModelChoiceField(queryset=UserModel.objects.filter(groups__name__in=['gold_travel_traditional_state',]), label=_("user"))
+    user = forms.ModelChoiceField(
+        queryset=UserModel.objects.filter(groups__name__in=['gold_travel_traditional_state',]),
+        label=_("user")
+    )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['user'].label_from_instance = lambda obj: f"{obj.get_full_name()} ({obj.username})"
 
     class Meta:
         model = GoldTravelTraditionalUser    
@@ -55,16 +62,20 @@ class AppMoveGoldTraditionalAddForm(forms.ModelForm):
         if self.user: # and not self.user.is_superuser
             try:
                 gold_user = self.user.gold_travel_traditional
-                if gold_user.is_alaisdar_user:
-                    self.fields["jihat_alaisdar"].queryset = LkpJihatAlaisdar.objects.filter(
-                        id__in=gold_user.goldtraveltraditionaluserjihatalaisdar_set.values_list('jihat_alaisdar', flat=True)
-                    )
+                if gold_user.is_state_manager:
+                    self.fields["jihat_alaisdar"].queryset = LkpJihatAlaisdar.objects.all()
+                    self.fields["wijhat_altarhil"].queryset = LkpJihatAltarhil.objects.all()
                 else:
-                    self.fields["jihat_alaisdar"].queryset = LkpJihatAlaisdar.objects.none()
-                
-                self.fields["wijhat_altarhil"].queryset = LkpJihatAltarhil.objects.filter(
-                    id__in=gold_user.goldtraveltraditionaluserjihattarhil_set.values_list('wijhat_altarhil', flat=True)
-                )
+                    if gold_user.is_alaisdar_user:
+                        self.fields["jihat_alaisdar"].queryset = LkpJihatAlaisdar.objects.filter(
+                            id__in=gold_user.goldtraveltraditionaluserjihatalaisdar_set.values_list('jihat_alaisdar', flat=True)
+                        )
+                    else:
+                        self.fields["jihat_alaisdar"].queryset = LkpJihatAlaisdar.objects.none()
+                    
+                    self.fields["wijhat_altarhil"].queryset = LkpJihatAltarhil.objects.filter(
+                        id__in=gold_user.goldtraveltraditionaluserjihattarhil_set.values_list('wijhat_altarhil', flat=True)
+                    )
             except:
                 self.fields["jihat_alaisdar"].queryset = LkpJihatAlaisdar.objects.none()
                 self.fields["wijhat_altarhil"].queryset = LkpJihatAltarhil.objects.none()
@@ -93,16 +104,20 @@ class AppMoveGoldTraditionalRenewForm(forms.ModelForm):
         if self.user and not self.user.is_superuser:
             try:
                 gold_user = self.user.gold_travel_traditional
-                if gold_user.is_alaisdar_user:
-                    self.fields["jihat_alaisdar"].queryset = LkpJihatAlaisdar.objects.filter(
-                        id__in=gold_user.goldtraveltraditionaluserjihatalaisdar_set.values_list('jihat_alaisdar', flat=True)
-                    )
+                if gold_user.is_state_manager:
+                    self.fields["jihat_alaisdar"].queryset = LkpJihatAlaisdar.objects.all()
+                    self.fields["wijhat_altarhil"].queryset = LkpJihatAltarhil.objects.all()
                 else:
-                    self.fields["jihat_alaisdar"].queryset = LkpJihatAlaisdar.objects.none()
-                
-                self.fields["wijhat_altarhil"].queryset = LkpJihatAltarhil.objects.filter(
-                    id__in=gold_user.goldtraveltraditionaluserjihattarhil_set.values_list('wijhat_altarhil', flat=True)
-                )
+                    if gold_user.is_alaisdar_user:
+                        self.fields["jihat_alaisdar"].queryset = LkpJihatAlaisdar.objects.filter(
+                            id__in=gold_user.goldtraveltraditionaluserjihatalaisdar_set.values_list('jihat_alaisdar', flat=True)
+                        )
+                    else:
+                        self.fields["jihat_alaisdar"].queryset = LkpJihatAlaisdar.objects.none()
+                    
+                    self.fields["wijhat_altarhil"].queryset = LkpJihatAltarhil.objects.filter(
+                        id__in=gold_user.goldtraveltraditionaluserjihattarhil_set.values_list('wijhat_altarhil', flat=True)
+                    )
             except:
                 self.fields["jihat_alaisdar"].queryset = LkpJihatAlaisdar.objects.none()
                 self.fields["wijhat_altarhil"].queryset = LkpJihatAltarhil.objects.none()

@@ -158,10 +158,13 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
         try:
             gold_travel_traditional_user = request.user.gold_travel_traditional
             
+            qs = qs.filter(source_state=gold_travel_traditional_user.state)
+            
+            if gold_travel_traditional_user.is_state_manager:
+                return qs
+            
             allowed_alaisdar = gold_travel_traditional_user.goldtraveltraditionaluserjihatalaisdar_set.values_list('jihat_alaisdar', flat=True)
             allowed_tarhil = gold_travel_traditional_user.goldtraveltraditionaluserjihattarhil_set.values_list('wijhat_altarhil', flat=True)
-            
-            qs = qs.filter(source_state=gold_travel_traditional_user.state)
             
             filters = models.Q()
             if gold_travel_traditional_user.is_alaisdar_user:
@@ -184,6 +187,8 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
     def has_add_permission(self, request):
         try:
             gold_user = request.user.gold_travel_traditional
+            if gold_user.is_state_manager:
+                return False
             if not gold_user.is_alaisdar_user:
                 return False
             return True
@@ -197,23 +202,30 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
             if obj.state != AppMoveGoldTraditional.STATE_NEW:
                 return False
             
-            # Check if user belongs to the jihat_alaisdar of the record
             try:
                 gold_user = request.user.gold_travel_traditional
-                if not gold_user.is_alaisdar_user:
-                    return False
-                allowed_alaisdar = gold_user.goldtraveltraditionaluserjihatalaisdar_set.values_list('jihat_alaisdar', flat=True)
-                if obj.jihat_alaisdar_id not in allowed_alaisdar:
+                if not gold_user.is_state_manager:
                     return False
             except:
                 return False
+            
+            return True
         
         return False
 
     def has_delete_permission(self, request, obj=None):
         if obj:
-            if request.user.is_superuser and obj.state == AppMoveGoldTraditional.STATE_NEW:
-                return True
+            if obj.state != AppMoveGoldTraditional.STATE_NEW:
+                return False
+            
+            try:
+                gold_user = request.user.gold_travel_traditional
+                if not gold_user.is_state_manager:
+                    return False
+            except:
+                return False
+            
+            return True
         
         return False
 
@@ -224,8 +236,29 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
             path("<int:pk>/renew/", self.admin_site.admin_view(self.renew_view)),
             path("<int:pk>/arrived/", self.admin_site.admin_view(self.arrived_view)),
             path("<int:pk>/print/", self.admin_site.admin_view(self.print_view)),
+            path("<int:pk>/cancel/", self.admin_site.admin_view(self.cancel_view)),
         ]
         return my_urls + urls
+
+    def cancel_view(self, request, pk):
+        obj = AppMoveGoldTraditional.objects.get(pk=pk)
+
+        try:
+            gold_user = request.user.gold_travel_traditional
+            if not gold_user.is_state_manager:
+                self.message_user(request, _('Only state managers can cancel records.'), level='error')
+                return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
+        except:
+            return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
+
+        if obj.state not in [AppMoveGoldTraditional.STATE_SOLD, AppMoveGoldTraditional.STATE_CANCLED]:
+            obj.state = AppMoveGoldTraditional.STATE_CANCLED
+            obj.updated_by = request.user
+            obj.save()
+            self.log_change(request, obj, _('state_cancled'))
+            self.message_user(request, _('application cancelled successfully!'))
+        
+        return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
 
     def print_view(self, request, pk):
         from gold_travel_traditional.models import AppMoveGoldTraditional
@@ -416,16 +449,13 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
             actions = []
             
             is_alaisdar_user = False
+            is_altarhil_user = False
+            is_state_manager = False
             try:
                 gold_user = request.user.gold_travel_traditional
                 is_alaisdar_user = gold_user.is_alaisdar_user
-            except:
-                pass
-
-            is_altarhil_user = False
-            try:
-                gold_user = request.user.gold_travel_traditional
                 is_altarhil_user = gold_user.is_tarhil_user
+                is_state_manager = gold_user.is_state_manager
             except:
                 pass
 
@@ -434,14 +464,20 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
                 if is_alaisdar_user:
                     actions.append(f'<li><a class="changelink" href="{obj.pk}/renew">{_("state_renew")}</a></li>')                            
             
-            # Action for Alaisdar users (Print)
+            # Action for Alaisdar users / State Manager (Print)
             if obj.state in [AppMoveGoldTraditional.STATE_NEW, AppMoveGoldTraditional.STATE_RENEW, ]:            
-                if is_alaisdar_user or is_manager:
+                if is_alaisdar_user or is_manager or is_state_manager:
                     actions.append(f'<li><a class="changelink" target="_blank" href="{obj.pk}/print">{_("طباعة")}</a></li>')
 
             # Action for Altarhil users (Arrived)
             if obj.state in [AppMoveGoldTraditional.STATE_NEW, AppMoveGoldTraditional.STATE_RENEW, AppMoveGoldTraditional.STATE_EXPIRED, ]:            
                 if is_altarhil_user:
+                    actions.append(f'<li><a class="changelink" href="{obj.pk}/arrived">{_("وصل")}</a></li>')
+
+            # Action for State Manager (Cancel)
+            if obj.state not in [AppMoveGoldTraditional.STATE_SOLD, AppMoveGoldTraditional.STATE_CANCLED]:
+                if is_state_manager:
+                    actions.append(f'<li><a class="changelink" href="{obj.pk}/cancel">{_("إلغاء")}</a></li>')
                     actions.append(f'<li><a class="changelink" href="{obj.pk}/arrived">{_("وصل")}</a></li>')
 
             if not actions:

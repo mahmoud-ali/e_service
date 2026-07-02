@@ -40,11 +40,13 @@ class GoldTravelTraditionalUser(LoggingModel):
     JIHAT_ALAISDAR = 1
     JIHAT_TARHIL = 2
     BOTH = 3
+    STATE_MANAGER = 4
 
     USER_TYPE_CHOICES = {
         JIHAT_ALAISDAR: _('جهة الإصدار'),
         JIHAT_TARHIL: _('جهة الوصول'),
         BOTH: _('كلاهما'),
+        STATE_MANAGER: _('مدير الولاية'),
     }
 
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.PROTECT,related_name="gold_travel_traditional",verbose_name=_("user"))
@@ -62,6 +64,10 @@ class GoldTravelTraditionalUser(LoggingModel):
     @property
     def is_tarhil_user(self):
         return self.user_type in [self.JIHAT_TARHIL, self.BOTH]
+
+    @property
+    def is_state_manager(self):
+        return self.user_type == self.STATE_MANAGER
 
     class Meta:
         verbose_name = _("gold_travel_user")
