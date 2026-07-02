@@ -5,7 +5,7 @@ from django.contrib.auth import get_user_model
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
-from gold_travel_traditional.models import AppMoveGoldTraditional, GoldTravelTraditionalUser, GoldTravelTraditionalUserJihatAlaisdar, GoldTravelTraditionalUserJihatTarhil, LkpJihatAlaisdar, LkpJihatAltarhil, MeltBatch
+from gold_travel_traditional.models import AppMoveGoldTraditional, GoldTravelTraditionalUser, GoldTravelTraditionalUserJihatAlaisdar, GoldTravelTraditionalUserJihatTarhil, LkpJihatAlaisdar, LkpJihatAltarhil, MeltBatch, Sale
 
 UserModel = get_user_model()
 
@@ -88,11 +88,6 @@ class AppMoveGoldTraditionalAddForm(forms.ModelForm):
         model = AppMoveGoldTraditional    
         fields = ["issue_date","almustafid_name","almustafid_phone","almustafid_identity_type","almustafid_identity","almustafid_identity_attachement","jihat_alaisdar","wijhat_altarhil","attachement_file","state","source_state"] 
         
-class AppMoveGoldTraditionalSoldForm(forms.ModelForm):
-    class Meta:
-        model = AppMoveGoldTraditional    
-        fields = ["almushtari_name",] 
-
 class AppMoveGoldTraditionalMeltForm(forms.Form):
     batch_choice = forms.ChoiceField(
         label=_('نوع الدفعة'),
@@ -134,6 +129,50 @@ class AppMoveGoldTraditionalMeltForm(forms.Form):
         elif choice == 'existing':
             if not cleaned.get('existing_batch'):
                 self.add_error('existing_batch', _('Please select a batch.'))
+        return cleaned
+
+class AppMoveGoldTraditionalSaleForm(forms.Form):
+    batch_choice = forms.ChoiceField(
+        label=_('نوع الفاتورة'),
+        choices=[('new', _('فاتورة جديدة')), ('existing', _('إضافة لفاتورة موجودة'))],
+        initial='new',
+        widget=forms.RadioSelect()
+    )
+    existing_sale = forms.ModelChoiceField(
+        queryset=Sale.objects.none(),
+        label=_('اختر الفاتورة'),
+        required=False
+    )
+    sale_date = forms.DateField(
+        label=_('تاريخ البيع'),
+        initial=timezone.now().date(),
+        required=True,
+        widget=forms.DateInput(attrs={'type': 'date', 'class': 'vDateField'})
+    )
+    buyer = forms.ModelChoiceField(
+        queryset=None,
+        label=_('المشتري'),
+        required=True
+    )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        from gold_travel.models import LkpOwner
+        self.fields['buyer'].queryset = LkpOwner.objects.filter(state=LkpOwner.STATE_ACTIVE)
+        self.fields['sale_date'].required = False
+        self.fields['buyer'].required = False
+
+    def clean(self):
+        cleaned = super().clean()
+        choice = cleaned.get('batch_choice')
+        if choice == 'new':
+            if not cleaned.get('sale_date'):
+                self.add_error('sale_date', _('This field is required.'))
+            if not cleaned.get('buyer'):
+                self.add_error('buyer', _('This field is required.'))
+        elif choice == 'existing':
+            if not cleaned.get('existing_sale'):
+                self.add_error('existing_sale', _('Please select a sale.'))
         return cleaned
 
 class AppMoveGoldTraditionalRenewForm(forms.ModelForm):

@@ -104,7 +104,6 @@ class GoldTravelTraditionalUserJihatTarhil(models.Model):
 
 class AppMoveGoldTraditional(LoggingModel):
     STATE_NEW = 1
-    STATE_SOLD = 2
     STATE_EXPIRED = 3
     STATE_RENEW = 4
     STATE_CANCLED = 5
@@ -112,7 +111,6 @@ class AppMoveGoldTraditional(LoggingModel):
 
     STATE_CHOICES = {
         STATE_NEW: _('state_new'),
-        STATE_SOLD: _('state_sold'),
         STATE_EXPIRED: _('state_expired'),
         STATE_RENEW: _('state_renew'),
         STATE_CANCLED: _('state_cancled'),
@@ -157,6 +155,7 @@ class AppMoveGoldTraditional(LoggingModel):
     standardization_lab = models.CharField(_("مختبر المعايرة"), max_length=150, null=True, blank=True)
     melt_date = models.DateField(_("تاريخ الصهر"), null=True, blank=True)
     melt_batch = models.ForeignKey('MeltBatch', on_delete=models.SET_NULL, null=True, blank=True, related_name='records', verbose_name=_('دفعة الصهر'))
+    sale = models.ForeignKey('Sale', on_delete=models.SET_NULL, null=True, blank=True, related_name='records', verbose_name=_('فاتورة البيع'))
 
     parent = models.OneToOneField('self', on_delete=models.PROTECT,related_name="child",verbose_name=_("parent"),null=True,blank=True)
 
@@ -325,5 +324,69 @@ class MeltBatch(LoggingModel):
 
     class Meta:
         ordering = ["-id"]
-        verbose_name = _('دفعة الصهر')
-        verbose_name_plural = _('دفعات الصهر')
+        verbose_name = _('استمارة تسييح ومعاييرة')
+        verbose_name_plural = _('استمارات تسييح ومعاييرة')
+
+class Sale(LoggingModel):
+    STATE_PENDING = 1
+    STATE_COMPLETE = 2
+
+    STATE_CHOICES = {
+        STATE_PENDING: _('قيد البيع'),
+        STATE_COMPLETE: _('مكتمل'),
+    }
+
+    code = models.CharField(_('code'), max_length=20, unique=True)
+    sale_date = models.DateField(_('تاريخ البيع'))
+    buyer = models.ForeignKey('gold_travel.LkpOwner', on_delete=models.PROTECT, verbose_name=_('المشتري'))
+    source_state = models.ForeignKey(LkpState, on_delete=models.PROTECT, verbose_name=_('state'))
+    state = models.IntegerField(_('state'), choices=STATE_CHOICES, default=STATE_PENDING)
+
+    @property
+    def total_weight(self):
+        return self.records.aggregate(
+            total=models.Sum('details__alloy_weight_gram')
+        )['total'] or 0.0
+
+    @property
+    def total_alloy_count(self):
+        return sum(r.details.count() for r in self.records.all())
+
+    @property
+    def record_count(self):
+        return self.records.count()
+
+    def save(self, *args, **kwargs):
+        if not self.code:
+            import datetime
+            from django.db import transaction, IntegrityError
+            prefix = "S"
+            date_str = datetime.datetime.now().strftime("%Y%m%d")
+            for attempt in range(5):
+                try:
+                    with transaction.atomic():
+                        last = Sale.objects.select_for_update().filter(
+                            code__startswith=f"{prefix}-{date_str}-"
+                        ).order_by('code').last()
+                        if last:
+                            new_num = int(last.code.split('-')[-1]) + 1
+                        else:
+                            new_num = 1
+                        new_num += attempt
+                        self.code = f"{prefix}-{date_str}-{new_num:04d}"
+                        super().save(*args, **kwargs)
+                        return
+                except IntegrityError:
+                    if attempt == 4:
+                        raise
+                    continue
+        else:
+            super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f'{self.code} - {self.buyer}'
+
+    class Meta:
+        ordering = ["-id"]
+        verbose_name = _('استمارة بيع')
+        verbose_name_plural = _('استمارات البيع')

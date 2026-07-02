@@ -14,8 +14,8 @@ from django.forms.widgets import TextInput
 from django.contrib import admin
 
 from company_profile.models import LkpState
-from gold_travel_traditional.forms import AppMoveGoldTraditionalAddForm, AppMoveGoldTraditionalMeltForm, AppMoveGoldTraditionalRenewForm, AppMoveGoldTraditionalSoldForm, GoldTravelTraditionalUserJihatAlaisdarForm, GoldTravelTraditionalUserJihatTarhilForm, GoldTravelTraditionalUserForm
-from gold_travel_traditional.models import AppMoveGoldTraditional, AppMoveGoldTraditionalDetail, GoldTravelTraditionalUser, GoldTravelTraditionalUserJihatAlaisdar, GoldTravelTraditionalUserJihatTarhil, LkpJihatAlaisdar, LkpJihatAltarhil, MeltBatch
+from gold_travel_traditional.forms import AppMoveGoldTraditionalAddForm, AppMoveGoldTraditionalMeltForm, AppMoveGoldTraditionalRenewForm, AppMoveGoldTraditionalSaleForm, GoldTravelTraditionalUserJihatAlaisdarForm, GoldTravelTraditionalUserJihatTarhilForm, GoldTravelTraditionalUserForm
+from gold_travel_traditional.models import AppMoveGoldTraditional, AppMoveGoldTraditionalDetail, GoldTravelTraditionalUser, GoldTravelTraditionalUserJihatAlaisdar, GoldTravelTraditionalUserJihatTarhil, LkpJihatAlaisdar, LkpJihatAltarhil, MeltBatch, Sale
 
 def get_user_state(request):
     try:
@@ -134,12 +134,23 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
                     },
                 ),
             ]
+        if obj and obj.sale:
+            fieldsets = list(fieldsets) + [
+                (
+                    _("تفاصيل البيع"),
+                    {
+                        'fields': [("sale", "almushtari_name")]
+                    },
+                ),
+            ]
         return fieldsets
 
     def get_readonly_fields(self, request, obj=None):
         readonly_fields = super().get_readonly_fields(request, obj)
         if obj and obj.melt_batch:
             readonly_fields = list(readonly_fields) + ["melt_batch", "melt_date", "melt_workshop", "standardization_lab"]
+        if obj and obj.sale:
+            readonly_fields = list(readonly_fields) + ["sale", "almushtari_name"]
         return readonly_fields
     # readonly_fields = ["almushtari_name"]
     list_display = ["code","issue_date","total_gold_weight_display","show_actions","almustafid_name","jihat_alaisdar","wijhat_altarhil","source_state","renew_date","state",]
@@ -255,13 +266,14 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
     def get_urls(self):
         urls = super().get_urls()
         my_urls = [
-            path("<int:pk>/sold/", self.admin_site.admin_view(self.sold_view)),
             path("<int:pk>/renew/", self.admin_site.admin_view(self.renew_view)),
             path("<int:pk>/arrived/", self.admin_site.admin_view(self.arrived_view)),
             path("<int:pk>/print/", self.admin_site.admin_view(self.print_view)),
             path("<int:pk>/cancel/", self.admin_site.admin_view(self.cancel_view)),
             path("<int:pk>/melt/", self.admin_site.admin_view(self.melt_view)),
             path("<int:pk>/melt/print/", self.admin_site.admin_view(self.print_melt_view)),
+            path("<int:pk>/sale/", self.admin_site.admin_view(self.sale_view)),
+            path("<int:pk>/sale/print/", self.admin_site.admin_view(self.print_sale_view)),
         ]
         return my_urls + urls
 
@@ -386,6 +398,119 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
         }
         return TemplateResponse(request, "gold_travel_traditional/gold_travel_traditional_melt.html", context)
 
+    def sale_view(self, request, pk):
+        obj = AppMoveGoldTraditional.objects.get(pk=pk)
+
+        try:
+            gold_user = request.user.gold_travel_traditional
+            if not gold_user.is_tarhil_user:
+                self.message_user(request, _('Only destination users can create sales.'), level='error')
+                return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
+        except:
+            return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
+
+        if obj.state not in [AppMoveGoldTraditional.STATE_ARRIVED]:
+            self.message_user(request, _('Record must be in arrived state.'), level='error')
+            return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
+
+        if request.method == "POST":
+            my_form = AppMoveGoldTraditionalSaleForm(request.POST)
+            my_form.fields['existing_sale'].queryset = Sale.objects.filter(
+                source_state=obj.source_state,
+                state=Sale.STATE_PENDING
+            )
+            if my_form.is_valid():
+                choice = my_form.cleaned_data['batch_choice']
+                if choice == 'new':
+                    sale = Sale.objects.create(
+                        sale_date=my_form.cleaned_data['sale_date'],
+                        buyer=my_form.cleaned_data['buyer'],
+                        source_state=obj.source_state,
+                        created_by=request.user,
+                        updated_by=request.user,
+                    )
+                    obj.sale = sale
+                    obj.almushtari_name = str(sale.buyer)
+                    obj.save()
+                    self.log_change(request, obj, _('sale_created'))
+                else:
+                    sale = my_form.cleaned_data['existing_sale']
+                    obj.sale = sale
+                    obj.almushtari_name = str(sale.buyer)
+                    obj.save()
+                    self.log_change(request, obj, _('sale_assigned'))
+
+                self.message_user(request, _('Sale saved successfully!'))
+                return HttpResponseRedirect(
+                    reverse(
+                        "%s:%s_%s_changelist"
+                        % (
+                            self.admin_site.name,
+                            obj._meta.app_label,
+                            obj._meta.model_name,
+                        )
+                    ) + f"{obj.pk}/sale/print/"
+                )
+        else:
+            my_form = AppMoveGoldTraditionalSaleForm()
+            my_form.fields['existing_sale'].queryset = Sale.objects.filter(
+                source_state=obj.source_state,
+                state=Sale.STATE_PENDING
+            )
+
+        context = dict(
+            self.admin_site.each_context(request),
+            object=obj,
+            form=my_form,
+            opts=AppMoveGoldTraditional._meta,
+            title=_("sale_details"),
+        )
+        return TemplateResponse(request, "admin/gold_travel_traditional/appmovegoldtraditional/sale_form.html", context)
+
+    def print_sale_view(self, request, pk):
+        obj = AppMoveGoldTraditional.objects.get(pk=pk)
+
+        try:
+            gold_user = request.user.gold_travel_traditional
+            if not (gold_user.is_tarhil_user or gold_user.is_state_manager):
+                self.message_user(request, _('Only destination users can print this form.'), level='error')
+                return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
+        except:
+            return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
+
+        sale = obj.sale
+        if not sale:
+            self.message_user(request, _('No sale found.'), level='error')
+            return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
+
+        from itertools import zip_longest
+
+        records = sale.records.all()
+        all_details = []
+        for record in records:
+            all_details.extend(record.details.all())
+
+        chunk_size = 40
+        alloy_chunks = []
+        for i in range(0, len(all_details), chunk_size):
+            chunk = all_details[i:i + chunk_size]
+            half = (len(chunk) + 1) // 2
+            left_half = chunk[:half]
+            right_half = chunk[half:]
+            rows = list(zip_longest(left_half, right_half))
+            alloy_chunks.append({
+                'rows': rows,
+                'start_index': i + 1,
+                'half_offset': half
+            })
+
+        context = {
+            'sale': sale,
+            'records': records,
+            'alloy_chunks': alloy_chunks,
+        }
+        return TemplateResponse(request, "gold_travel_traditional/gold_travel_traditional_sale.html", context)
+
     def cancel_view(self, request, pk):
         obj = AppMoveGoldTraditional.objects.get(pk=pk)
 
@@ -400,7 +525,7 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
         except:
             return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
 
-        if obj.state not in [AppMoveGoldTraditional.STATE_SOLD, AppMoveGoldTraditional.STATE_CANCLED]:
+        if obj.state not in [AppMoveGoldTraditional.STATE_CANCLED] and not obj.sale:
             obj.state = AppMoveGoldTraditional.STATE_CANCLED
             obj.updated_by = request.user
             obj.save()
@@ -482,33 +607,6 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
         
         return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
     
-    def sold_view(self, request, pk):
-        obj = AppMoveGoldTraditional.objects.get(pk=pk)
-
-        if request.method == "POST":
-            my_form = AppMoveGoldTraditionalSoldForm(request.POST,instance=obj)
-            if my_form.is_valid():
-                if obj and obj.state in [AppMoveGoldTraditional.STATE_NEW,AppMoveGoldTraditional.STATE_RENEW, AppMoveGoldTraditional.STATE_EXPIRED, AppMoveGoldTraditional.STATE_ARRIVED]:
-                    new_obj = my_form.save(commit=False)
-                    new_obj.state = AppMoveGoldTraditional.STATE_SOLD
-                    new_obj.save()
-                    self.log_change(request,obj,_('state_sold'))
-                    self.message_user(request,_('application changed successfully!'))
-
-            return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
-        else:
-            my_form = AppMoveGoldTraditionalSoldForm(instance=obj)
-
-
-        context = dict(
-            self.admin_site.each_context(request),
-            object=obj,
-            form=my_form,
-            opts=AppMoveGoldTraditional._meta,
-            title=_("almushtari_data"),
-        )
-        return TemplateResponse(request, "admin/gold_travel_traditional/appmovegoldtraditional/sold_application.html", context)
-
     def renew_view(self, request, pk):
         obj = AppMoveGoldTraditional.objects.get(pk=pk)
 
@@ -625,7 +723,7 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
             # Action for Alaisdar users / State Manager (Print)
             if obj.state in [AppMoveGoldTraditional.STATE_NEW, AppMoveGoldTraditional.STATE_RENEW, ]:            
                 if is_alaisdar_user or is_manager or is_state_manager:
-                    actions.append(f'<li><a class="changelink" target="_blank" href="{obj.pk}/print">{_("طباعة")}</a></li>')
+                    actions.append(f'<li><a class="changelink" target="_blank" href="{obj.pk}/print">{_("طباعة استمارة ترحيل")}</a></li>')
 
             # Action for Altarhil users (Arrived)
             if obj.state in [AppMoveGoldTraditional.STATE_NEW, AppMoveGoldTraditional.STATE_RENEW, AppMoveGoldTraditional.STATE_EXPIRED, ]:            
@@ -634,14 +732,18 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
 
             # Action for Altarhil users (Melt) - only on ARRIVED records
             if obj.state == AppMoveGoldTraditional.STATE_ARRIVED:
-                if not obj.melt_batch and is_altarhil_user:
-                    actions.append(f'<li><a class="changelink" href="{obj.pk}/melt">{_("استمارة الصهر والمعايرة")}</a></li>')
+                if not obj.melt_batch and not obj.sale and is_altarhil_user:
+                    actions.append(f'<li><a class="changelink" href="{obj.pk}/melt">{_("استمارة التسييح والمعايرة")}</a></li>')
                 if obj.melt_batch:
                     if is_altarhil_user or is_state_manager:
-                        actions.append(f'<li><a class="changelink" target="_blank" href="{obj.pk}/melt/print">{_("طباعة دفعة صهر")}</a></li>')
+                        actions.append(f'<li><a class="changelink" target="_blank" href="{obj.pk}/melt/print">{_("طباعة استمارة تسييح ومعاييرة")}</a></li>')
+                if not obj.sale and is_altarhil_user:
+                    actions.append(f'<li><a class="changelink" href="{obj.pk}/sale">{_("بيع")}</a></li>')
+                if obj.sale and (is_altarhil_user or is_state_manager):
+                    actions.append(f'<li><a class="changelink" target="_blank" href="{obj.pk}/sale/print">{_("طباعة استمارة بيع")}</a></li>')
 
             # Action for State Manager (Cancel)
-            if obj.state not in [AppMoveGoldTraditional.STATE_SOLD, AppMoveGoldTraditional.STATE_CANCLED]:
+            if obj.state != AppMoveGoldTraditional.STATE_CANCLED and not obj.sale:
                 if is_state_manager:
                     actions.append(f'<li><a class="changelink" href="{obj.pk}/cancel">{_("إلغاء")}</a></li>')
 
@@ -768,7 +870,7 @@ class MeltBatchAdmin(LogAdminMixin, admin.ModelAdmin):
         queryset.filter(state=MeltBatch.STATE_PENDING).update(state=MeltBatch.STATE_COMPLETE, updated_by=request.user)
         self.message_user(request, _('Selected batches marked as complete.'))
 
-    @admin.action(description=_('طباعة الدفعات المحددة'))
+    @admin.action(description=_('طباعة الاستمارات المحددة'))
     def print_selected_batches(self, request, queryset):
         # Redirect to print the first selected batch
         batch = queryset.first()
@@ -776,3 +878,46 @@ class MeltBatchAdmin(LogAdminMixin, admin.ModelAdmin):
             return redirect(reverse("admin:gold_travel_traditional_meltbatch_print", args=[batch.pk]))
 
 admin.site.register(MeltBatch, MeltBatchAdmin)
+
+class SaleRecordsInline(admin.TabularInline):
+    model = AppMoveGoldTraditional
+    fields = ['code', 'almustafid_name', 'gold_weight_in_gram']
+    readonly_fields = ['code', 'almustafid_name', 'gold_weight_in_gram']
+    can_delete = False
+    extra = 0
+    max_num = 0
+
+    def has_add_permission(self, request, obj):
+        return False
+
+class SaleAdmin(LogAdminMixin, admin.ModelAdmin):
+    inlines = [SaleRecordsInline]
+    list_display = ['code', 'sale_date', 'buyer', 'record_count', 'total_weight', 'state', 'print_button']
+    list_filter = ['sale_date', 'state']
+    search_fields = ['code', 'buyer__name']
+    readonly_fields = ['code']
+    actions = ['mark_complete']
+
+    fieldsets = [
+        (None, {'fields': ['code', 'sale_date']}),
+        (_('sale_details'), {'fields': [('buyer',)]}),
+        (None, {'fields': ['state']}),
+    ]
+
+    def has_add_permission(self, request):
+        return False
+
+    @admin.display(description=_('print'))
+    def print_button(self, obj):
+        record = obj.records.first()
+        if record:
+            url = f"{record.pk}/sale/print/"
+            return format_html('<a class="changelink" target="_blank" href="{url}">{txt}</a>', url=url, txt=_('طباعة'))
+        return '-'
+
+    @admin.action(description=_('Mark as Complete'))
+    def mark_complete(self, request, queryset):
+        queryset.filter(state=Sale.STATE_PENDING).update(state=Sale.STATE_COMPLETE, updated_by=request.user)
+        self.message_user(request, _('Selected sales marked as complete.'))
+
+admin.site.register(Sale, SaleAdmin)
