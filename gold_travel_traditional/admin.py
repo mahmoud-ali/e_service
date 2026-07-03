@@ -188,19 +188,19 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
         try:
             gold_travel_traditional_user = request.user.gold_travel_traditional
             
-            qs = qs.filter(source_state=gold_travel_traditional_user.state)
-            
             if gold_travel_traditional_user.is_state_manager or gold_travel_traditional_user.is_state_viewer:
-                return qs
-            
-            allowed_alaisdar = gold_travel_traditional_user.goldtraveltraditionaluserjihatalaisdar_set.values_list('jihat_alaisdar', flat=True)
-            allowed_tarhil = gold_travel_traditional_user.goldtraveltraditionaluserjihattarhil_set.values_list('wijhat_altarhil', flat=True)
-            
+                return qs.filter(source_state=gold_travel_traditional_user.state)
+
             filters = models.Q()
             if gold_travel_traditional_user.is_alaisdar_user:
-                filters |= models.Q(jihat_alaisdar__in=allowed_alaisdar)
+                filters |= models.Q(
+                    jihat_alaisdar__in=gold_travel_traditional_user.goldtraveltraditionaluserjihatalaisdar_set.values_list('jihat_alaisdar', flat=True),
+                    source_state=gold_travel_traditional_user.state,
+                )
             if gold_travel_traditional_user.is_tarhil_user:
-                filters |= models.Q(wijhat_altarhil__in=allowed_tarhil)
+                filters |= models.Q(
+                    wijhat_altarhil__in=gold_travel_traditional_user.goldtraveltraditionaluserjihattarhil_set.values_list('wijhat_altarhil', flat=True),
+                )
             qs = qs.filter(filters)
         except:
             qs = qs.none()
