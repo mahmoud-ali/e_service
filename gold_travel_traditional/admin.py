@@ -239,8 +239,9 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
                 gold_user = request.user.gold_travel_traditional
                 if gold_user.is_state_viewer:
                     return False
-                if not gold_user.is_state_manager:
-                    return False
+                if gold_user.is_state_manager:
+                    return obj.jihat_alaisdar.state_id == gold_user.state_id
+                return False
             except:
                 return False
             
@@ -257,8 +258,9 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
                 gold_user = request.user.gold_travel_traditional
                 if gold_user.is_state_viewer:
                     return False
-                if not gold_user.is_state_manager:
-                    return False
+                if gold_user.is_state_manager:
+                    return obj.jihat_alaisdar.state_id == gold_user.state_id
+                return False
             except:
                 return False
             
@@ -522,7 +524,11 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
             if gold_user.is_state_viewer:
                 self.message_user(request, _('Only state managers can cancel records.'), level='error')
                 return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
-            if not gold_user.is_state_manager:
+            if gold_user.is_state_manager:
+                if obj.jihat_alaisdar.state_id != gold_user.state_id:
+                    self.message_user(request, _('You can only cancel records from your state.'), level='error')
+                    return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
+            else:
                 self.message_user(request, _('Only state managers can cancel records.'), level='error')
                 return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
         except:
