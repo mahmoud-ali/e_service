@@ -189,7 +189,12 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
             gold_travel_traditional_user = request.user.gold_travel_traditional
             
             if gold_travel_traditional_user.is_state_manager or gold_travel_traditional_user.is_state_viewer:
-                return qs.filter(source_state=gold_travel_traditional_user.state)
+                return qs.filter(
+                    source_state=gold_travel_traditional_user.state
+                ).filter(
+                    models.Q(jihat_alaisdar__state=gold_travel_traditional_user.state) |
+                    models.Q(wijhat_altarhil__state=gold_travel_traditional_user.state)
+                )
 
             filters = models.Q()
             if gold_travel_traditional_user.is_alaisdar_user:
