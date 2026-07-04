@@ -263,6 +263,7 @@ def load_and_setup(file_path, wijhat_altarhil_ids=None, make_staff=True):
     to all users with jihat_alaisdar.
     """
     load_users_from_csv(file_path)
+    sync_user_first_names(file_path)
     if make_staff:
         make_users_staff(file_path)
     if wijhat_altarhil_ids is not None:
