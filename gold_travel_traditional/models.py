@@ -96,6 +96,7 @@ class GoldTravelTraditionalUserJihatAlaisdar(models.Model):
 class GoldTravelTraditionalUserJihatTarhil(models.Model):
     master = models.ForeignKey(GoldTravelTraditionalUser, on_delete=models.CASCADE)    
     wijhat_altarhil  = models.ForeignKey(LkpJihatAltarhil, on_delete=models.PROTECT,verbose_name=_("جهة الوصول"))
+    can_arrive = models.BooleanField(_('يمكنه التوصيل'), default=True)
 
     def __str__(self):
         return f'{self.master.user.username} - {self.wijhat_altarhil.name}'

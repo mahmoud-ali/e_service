@@ -58,6 +58,7 @@ class GoldTravelTraditionalUserJihatAlaisdarInline(admin.TabularInline):
 class GoldTravelTraditionalUserJihatTarhilInline(admin.TabularInline):
     model = GoldTravelTraditionalUserJihatTarhil
     form = GoldTravelTraditionalUserJihatTarhilForm
+    fields = ["wijhat_altarhil", "can_arrive"]
     extra = 1
 
 class GoldTravelTraditionalUserAdmin(LogAdminMixin,admin.ModelAdmin):
@@ -601,7 +602,7 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
             if not gold_user.is_tarhil_user:
                  self.message_user(request, _('Only users assigned to the destination location can mark this as arrived.'), level='error')
                  return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
-            if obj.wijhat_altarhil not in LkpJihatAltarhil.objects.filter(id__in=gold_user.goldtraveltraditionaluserjihattarhil_set.values_list('wijhat_altarhil', flat=True)):
+            if obj.wijhat_altarhil not in LkpJihatAltarhil.objects.filter(id__in=gold_user.goldtraveltraditionaluserjihattarhil_set.filter(can_arrive=True).values_list('wijhat_altarhil', flat=True)):
                  self.message_user(request, _('Only users assigned to the destination location can mark this as arrived.'), level='error')
                  return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
         except:
@@ -739,7 +740,12 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
             # Action for Altarhil users (Arrived)
             if obj.state in [AppMoveGoldTraditional.STATE_NEW, AppMoveGoldTraditional.STATE_RENEW, AppMoveGoldTraditional.STATE_EXPIRED, ]:            
                 if is_altarhil_user:
-                    actions.append(f'<li><a class="changelink" href="{obj.pk}/arrived">{_("وصل")}</a></li>')
+                    try:
+                        gold_user = request.user.gold_travel_traditional
+                        if gold_user.goldtraveltraditionaluserjihattarhil_set.filter(wijhat_altarhil=obj.wijhat_altarhil, can_arrive=True).exists():
+                            actions.append(f'<li><a class="changelink" href="{obj.pk}/arrived">{_("وصل")}</a></li>')
+                    except:
+                        pass
 
             # Action for Altarhil users (Melt) - only on ARRIVED records
             if obj.state == AppMoveGoldTraditional.STATE_ARRIVED:

@@ -46,7 +46,7 @@ class GoldTravelTraditionalUserJihatTarhilForm(forms.ModelForm):
 
     class Meta:
         model = GoldTravelTraditionalUserJihatTarhil   
-        fields = ["wijhat_altarhil",] 
+        fields = ["wijhat_altarhil", "can_arrive"] 
 
 class AppMoveGoldTraditionalAddForm(forms.ModelForm):
     issue_date = forms.DateField(label=_("issue_date"), disabled=True, required=True)
