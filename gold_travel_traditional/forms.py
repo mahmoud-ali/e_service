@@ -49,7 +49,7 @@ class GoldTravelTraditionalUserJihatTarhilForm(forms.ModelForm):
         fields = ["wijhat_altarhil",] 
 
 class AppMoveGoldTraditionalAddForm(forms.ModelForm):
-    issue_date = forms.DateField(label=_("issue_date"), initial=timezone.now().date(), disabled=True, required=True)
+    issue_date = forms.DateField(label=_("issue_date"), disabled=True, required=True)
     jihat_alaisdar = forms.ModelChoiceField(queryset=LkpJihatAlaisdar.objects.none(), label=_("جهة الإصدار"))
     wijhat_altarhil = forms.ModelChoiceField(queryset=LkpJihatAltarhil.objects.none(), label=_("جهة الوصول"))
     almushtari_name = forms.CharField(label=_("almushtari_name"), max_length=150, disabled=True, required=False)
@@ -59,6 +59,7 @@ class AppMoveGoldTraditionalAddForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.fields['issue_date'].initial = timezone.now().date()
 
         if self.user: # and not self.user.is_superuser
             try:
