@@ -203,7 +203,7 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
                 )
             if gold_travel_traditional_user.is_tarhil_user:
                 filters |= models.Q(
-                    wijhat_altarhil__in=gold_travel_traditional_user.goldtraveltraditionaluserjihattarhil_set.values_list('wijhat_altarhil', flat=True),
+                    wijhat_altarhil__in=gold_travel_traditional_user.goldtraveltraditionaluserjihattarhil_set.filter(can_arrive=True).values_list('wijhat_altarhil', flat=True),
                 )
             qs = qs.filter(filters)
         except:
