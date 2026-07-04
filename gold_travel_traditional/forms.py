@@ -76,7 +76,7 @@ class AppMoveGoldTraditionalAddForm(forms.ModelForm):
                         self.fields["jihat_alaisdar"].queryset = LkpJihatAlaisdar.objects.none()
                     
                     self.fields["wijhat_altarhil"].queryset = LkpJihatAltarhil.objects.filter(
-                        id__in=gold_user.goldtraveltraditionaluserjihattarhil_set.values_list('wijhat_altarhil', flat=True)
+                        id__in=gold_user.goldtraveltraditionaluserjihattarhil_set.filter(can_arrive=False).values_list('wijhat_altarhil', flat=True)
                     )
             except:
                 self.fields["jihat_alaisdar"].queryset = LkpJihatAlaisdar.objects.none()
@@ -234,7 +234,7 @@ class AppMoveGoldTraditionalRenewForm(forms.ModelForm):
                         self.fields["jihat_alaisdar"].queryset = LkpJihatAlaisdar.objects.none()
                     
                     self.fields["wijhat_altarhil"].queryset = LkpJihatAltarhil.objects.filter(
-                        id__in=gold_user.goldtraveltraditionaluserjihattarhil_set.values_list('wijhat_altarhil', flat=True)
+                        id__in=gold_user.goldtraveltraditionaluserjihattarhil_set.filter(can_arrive=False).values_list('wijhat_altarhil', flat=True)
                     )
             except:
                 self.fields["jihat_alaisdar"].queryset = LkpJihatAlaisdar.objects.none()
