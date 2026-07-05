@@ -375,7 +375,7 @@ class Sale(LoggingModel):
     sale_date = models.DateField(_('تاريخ البيع'))
     buyer = models.ForeignKey('gold_travel.LkpOwner', on_delete=models.PROTECT, verbose_name=_('المشتري'))
     source_state = models.ForeignKey(LkpState, on_delete=models.PROTECT, verbose_name=_('state'))
-    state = models.IntegerField(_('state'), choices=STATE_CHOICES, default=STATE_PENDING)
+    state = models.IntegerField(_('record_state'), choices=STATE_CHOICES, default=STATE_PENDING)
 
     @property
     def total_weight(self):
