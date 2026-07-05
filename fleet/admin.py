@@ -192,16 +192,16 @@ class MissionAdmin(LogMixin):
         today = timezone.now().date()
         
         # 1. Determine effective start date
-        start_date = obj.actual_start_date or obj.planned_start_date
+        start_date = obj.actual_start_date
         
         # 2. Determine effective end date
         if obj.is_extended:
-            end_date = obj.extended_actual_end_date or obj.extended_planned_end_date
+            end_date = obj.extended_actual_end_date
         else:
-            end_date = obj.actual_end_date or obj.planned_end_date
+            end_date = obj.actual_end_date
             
-        # 3. If start date is in the future, it has not started yet
-        if start_date and start_date > today:
+        # 3. If start date is in the future or not set, it has not started yet
+        if not start_date or start_date > today:
             return format_html('<span style="color: #0275d8; font-weight: bold;">لم تبدأ بعد</span>')
             
         # 4. If end date is in the past, it is completed
