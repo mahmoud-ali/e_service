@@ -952,7 +952,7 @@ class SaleRecordsInline(admin.TabularInline):
 
 class SaleAdmin(LogAdminMixin, admin.ModelAdmin):
     inlines = [SaleRecordsInline]
-    list_display = ['code', 'sale_date', 'buyer', 'record_count', 'total_weight', 'state', 'print_button']
+    list_display = ['code', 'sale_date', 'buyer', 'record_count', 'total_weight_display', 'state', 'print_button']
     list_filter = ['sale_date', 'state']
     search_fields = ['code', 'buyer__name']
     readonly_fields = ['code']
@@ -966,6 +966,10 @@ class SaleAdmin(LogAdminMixin, admin.ModelAdmin):
 
     def has_add_permission(self, request):
         return False
+
+    @admin.display(description=_('total_weight'))
+    def total_weight_display(self, obj):
+        return round(obj.total_weight, 2) if obj.total_weight else 0.0
 
     @admin.display(description=_('print'))
     def print_button(self, obj):
