@@ -1,0 +1,98 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_urls %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+<a href="{% url 'admin:index' %}">{% translate 'Home' %}</a>
+&rsaquo; <a href="{% url 'admin:app_list' app_label=opts.app_label %}">{{ opts.app_config.verbose_name }}</a>
+&rsaquo; <a href="{% url opts|admin_urlname:'changelist' %}">{{ opts.verbose_name_plural|capfirst }}</a>
+&rsaquo; <a href="{% url opts|admin_urlname:'change' object.pk|admin_urlquote %}">{{ object|truncatewords:"18" }}</a>
+&rsaquo; {% translate 'تخزين' %}
+</div>
+{% endblock %}
+
+{% block content %}
+<div id="content-main">
+    <div style="background:#f8f8f8; padding:12px 15px; margin-bottom:20px; border:1px solid #eee; border-radius:4px;">
+        <strong>{{ object.almustafid_name }}</strong> —
+        <a href="{% url opts|admin_urlname:'change' object.pk|admin_urlquote %}">{{ object.code }}</a>
+        <span style="margin:0 10px;">|</span>
+        {{ object.wijhat_altarhil.name }}
+        <span style="margin:0 10px;">|</span>
+        {{ object.gold_weight_in_gram }} {% translate 'جرام' %}
+    </div>
+
+    <form method="post" novalidate>{% csrf_token %}
+        <div>
+            {% if form.errors %}
+            <p class="errornote">
+                {% blocktranslate count counter=form.errors|length %}Please correct the error below.{% plural %}Please correct the errors below.{% endblocktranslate %}
+            </p>
+            {{ form.non_field_errors }}
+            {% endif %}
+
+            <fieldset class="module aligned">
+                <div class="form-row">
+                    <div>
+                        {{ form.batch_choice.label_tag }}
+                        {{ form.batch_choice }}
+                        {{ form.batch_choice.errors }}
+                    </div>
+                </div>
+
+                <div class="form-row" id="row-existing-storage" style="display:none;">
+                    <div>
+                        {{ form.existing_storage.label_tag }}
+                        {{ form.existing_storage }}
+                        {{ form.existing_storage.errors }}
+                    </div>
+                </div>
+
+                <div class="form-row" id="row-storage-date">
+                    <div>
+                        {{ form.storage_date.label_tag }}
+                        {{ form.storage_date }}
+                        {{ form.storage_date.errors }}
+                    </div>
+                </div>
+                <div class="form-row" id="row-note">
+                    <div>
+                        {{ form.note.label_tag }}
+                        {{ form.note }}
+                        {{ form.note.errors }}
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+        <div class="submit-row">
+            <input class="default" type="submit" value="{% translate 'Save' %}" name="_save">
+        </div>
+    </form>
+</div>
+
+<script>
+(function() {
+    var radios = document.querySelectorAll('input[name="batch_choice"]');
+    var existingRow = document.getElementById('row-existing-storage');
+    var newFields = ['row-storage-date', 'row-note'];
+
+    function toggle() {
+        var val = document.querySelector('input[name="batch_choice"]:checked').value;
+        if (val === 'existing') {
+            existingRow.style.display = '';
+            newFields.forEach(function(id) {
+                document.getElementById(id).style.display = 'none';
+            });
+        } else {
+            existingRow.style.display = 'none';
+            newFields.forEach(function(id) {
+                document.getElementById(id).style.display = '';
+            });
+        }
+    }
+
+    radios.forEach(function(r) { r.addEventListener('change', toggle); });
+    toggle();
+})();
+</script>
+{% endblock %}

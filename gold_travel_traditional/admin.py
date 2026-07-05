@@ -14,8 +14,8 @@ from django.forms.widgets import TextInput
 from django.contrib import admin
 
 from company_profile.models import LkpState
-from gold_travel_traditional.forms import AppMoveGoldTraditionalAddForm, AppMoveGoldTraditionalMeltForm, AppMoveGoldTraditionalRenewForm, AppMoveGoldTraditionalSaleForm, GoldTravelTraditionalUserJihatAlaisdarForm, GoldTravelTraditionalUserJihatTarhilForm, GoldTravelTraditionalUserForm
-from gold_travel_traditional.models import AppMoveGoldTraditional, AppMoveGoldTraditionalDetail, GoldTravelTraditionalUser, GoldTravelTraditionalUserJihatAlaisdar, GoldTravelTraditionalUserJihatTarhil, LkpJihatAlaisdar, LkpJihatAltarhil, MeltBatch, Sale
+from gold_travel_traditional.forms import AppMoveGoldTraditionalAddForm, AppMoveGoldTraditionalMeltForm, AppMoveGoldTraditionalRenewForm, AppMoveGoldTraditionalSaleForm, AppMoveGoldTraditionalStorageForm, GoldTravelTraditionalUserJihatAlaisdarForm, GoldTravelTraditionalUserJihatTarhilForm, GoldTravelTraditionalUserForm
+from gold_travel_traditional.models import AppMoveGoldTraditional, AppMoveGoldTraditionalDetail, GoldTravelTraditionalUser, GoldTravelTraditionalUserJihatAlaisdar, GoldTravelTraditionalUserJihatTarhil, LkpJihatAlaisdar, LkpJihatAltarhil, MeltBatch, Sale, Storage
 
 def get_user_state(request):
     try:
@@ -183,6 +183,15 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
                     },
                 ),
             ]
+        if obj and obj.storage:
+            fieldsets = list(fieldsets) + [
+                (
+                    _("تفاصيل التخزين"),
+                    {
+                        'fields': [("storage",)]
+                    },
+                ),
+            ]
         return fieldsets
 
     def get_readonly_fields(self, request, obj=None):
@@ -191,6 +200,8 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
             readonly_fields = list(readonly_fields) + ["melt_batch", "melt_date", "melt_workshop", "standardization_lab"]
         if obj and obj.sale:
             readonly_fields = list(readonly_fields) + ["sale", "almushtari_name"]
+        if obj and obj.storage:
+            readonly_fields = list(readonly_fields) + ["storage"]
         return readonly_fields
     # readonly_fields = ["almushtari_name"]
     list_display = ["code","issue_date","total_gold_weight_display","show_actions","almustafid_name","jihat_alaisdar","wijhat_altarhil","source_state","renew_date","state",]
@@ -319,6 +330,8 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
             path("<int:pk>/melt/print/", self.admin_site.admin_view(self.print_melt_view)),
             path("<int:pk>/sale/", self.admin_site.admin_view(self.sale_view)),
             path("<int:pk>/sale/print/", self.admin_site.admin_view(self.print_sale_view)),
+            path("<int:pk>/storage/", self.admin_site.admin_view(self.storage_view)),
+            path("<int:pk>/storage/print/", self.admin_site.admin_view(self.print_storage_view)),
         ]
         return my_urls + urls
 
@@ -558,6 +571,118 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
         }
         return TemplateResponse(request, "gold_travel_traditional/gold_travel_traditional_sale.html", context)
 
+    def storage_view(self, request, pk):
+        obj = AppMoveGoldTraditional.objects.get(pk=pk)
+
+        try:
+            gold_user = request.user.gold_travel_traditional
+            if not gold_user.is_tarhil_user:
+                self.message_user(request, _('Only destination users can create storage receipts.'), level='error')
+                return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
+        except:
+            return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
+
+        if obj.state != AppMoveGoldTraditional.STATE_ARRIVED:
+            self.message_user(request, _('Record must be in arrived state.'), level='error')
+            return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
+
+        if request.method == "POST":
+            my_form = AppMoveGoldTraditionalStorageForm(request.POST)
+            my_form.fields['existing_storage'].queryset = Storage.objects.filter(
+                source_state=obj.source_state,
+                state=Storage.STATE_PENDING
+            )
+            if my_form.is_valid():
+                choice = my_form.cleaned_data['batch_choice']
+                if choice == 'new':
+                    storage = Storage.objects.create(
+                        storage_date=my_form.cleaned_data['storage_date'],
+                        note=my_form.cleaned_data.get('note', ''),
+                        source_state=obj.source_state,
+                        created_by=request.user,
+                        updated_by=request.user,
+                    )
+                    obj.storage = storage
+                    obj.save()
+                    self.log_change(request, obj, _('storage_created'))
+                else:
+                    storage = my_form.cleaned_data['existing_storage']
+                    obj.storage = storage
+                    obj.save()
+                    self.log_change(request, obj, _('storage_assigned'))
+
+                self.message_user(request, _('Storage receipt saved successfully!'))
+                return HttpResponseRedirect(
+                    reverse(
+                        "%s:%s_%s_changelist"
+                        % (
+                            self.admin_site.name,
+                            obj._meta.app_label,
+                            obj._meta.model_name,
+                        )
+                    ) + f"{obj.pk}/storage/print/"
+                )
+        else:
+            my_form = AppMoveGoldTraditionalStorageForm()
+            my_form.fields['existing_storage'].queryset = Storage.objects.filter(
+                source_state=obj.source_state,
+                state=Storage.STATE_PENDING
+            )
+
+        context = dict(
+            self.admin_site.each_context(request),
+            object=obj,
+            form=my_form,
+            opts=AppMoveGoldTraditional._meta,
+            title=_("تخزين"),
+        )
+        return TemplateResponse(request, "admin/gold_travel_traditional/appmovegoldtraditional/storage_form.html", context)
+
+    def print_storage_view(self, request, pk):
+        obj = AppMoveGoldTraditional.objects.get(pk=pk)
+
+        if not (request.user.is_superuser or request.user.groups.filter(name__in=("gold_travel_traditional_manager","gold_travel_traditional_manager_show")).exists()):
+            try:
+                gold_user = request.user.gold_travel_traditional
+                if not (gold_user.is_tarhil_user or gold_user.is_state_manager):
+                    self.message_user(request, _('Only destination users can print this form.'), level='error')
+                    return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
+            except:
+                return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
+
+        storage = obj.storage
+        if not storage:
+            self.message_user(request, _('No storage receipt found.'), level='error')
+            return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
+
+        from itertools import zip_longest
+
+        records = storage.records.all()
+        all_details = []
+        for record in records:
+            all_details.extend(record.details.all())
+
+        chunk_size = 40
+        alloy_chunks = []
+        for i in range(0, len(all_details), chunk_size):
+            chunk = all_details[i:i + chunk_size]
+            half = (len(chunk) + 1) // 2
+            left_half = chunk[:half]
+            right_half = chunk[half:]
+            rows = list(zip_longest(left_half, right_half))
+            alloy_chunks.append({
+                'rows': rows,
+                'start_index': i + 1,
+                'half_offset': half
+            })
+
+        context = {
+            'storage': storage,
+            'records': records,
+            'alloy_chunks': alloy_chunks,
+        }
+        return TemplateResponse(request, "gold_travel_traditional/gold_travel_traditional_storage.html", context)
+
     def cancel_view(self, request, pk):
         obj = AppMoveGoldTraditional.objects.get(pk=pk)
 
@@ -576,7 +701,7 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
         except:
             return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
 
-        if obj.state not in [AppMoveGoldTraditional.STATE_CANCLED] and not obj.sale:
+        if obj.state not in [AppMoveGoldTraditional.STATE_CANCLED] and not obj.sale and not obj.storage:
             obj.state = AppMoveGoldTraditional.STATE_CANCLED
             obj.updated_by = request.user
             obj.save()
@@ -790,7 +915,7 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
 
             # Action for Altarhil users (Melt) - only on ARRIVED records
             if obj.state == AppMoveGoldTraditional.STATE_ARRIVED:
-                if not obj.melt_batch and not obj.sale and is_altarhil_user:
+                if not obj.melt_batch and not obj.sale and not obj.storage and is_altarhil_user:
                     actions.append(f'<li><a class="changelink" href="{obj.pk}/melt">{_("استمارة التسييح والمعايرة")}</a></li>')
                 if obj.melt_batch:
                     if is_altarhil_user or can_manage:
@@ -799,9 +924,13 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
                     actions.append(f'<li><a class="changelink" href="{obj.pk}/sale">{_("بيع")}</a></li>')
                 if obj.sale and (is_altarhil_user or can_manage):
                     actions.append(f'<li><a class="changelink" target="_blank" href="{obj.pk}/sale/print">{_("طباعة استمارة بيع")}</a></li>')
+                if not obj.storage and is_altarhil_user:
+                    actions.append(f'<li><a class="changelink" href="{obj.pk}/storage">{_("تخزين")}</a></li>')
+                if obj.storage and (is_altarhil_user or can_manage):
+                    actions.append(f'<li><a class="changelink" target="_blank" href="{obj.pk}/storage/print">{_("طباعة شهادة تخزين")}</a></li>')
 
             # Action for State Manager (Cancel)
-            if obj.state != AppMoveGoldTraditional.STATE_CANCLED and not obj.sale:
+            if obj.state != AppMoveGoldTraditional.STATE_CANCLED and not obj.sale and not obj.storage:
                 if can_manage:
                     actions.append(f'<li><a class="changelink" href="{obj.pk}/cancel">{_("إلغاء")}</a></li>')
 
@@ -1095,3 +1224,107 @@ class SaleAdmin(LogAdminMixin, admin.ModelAdmin):
         self.message_user(request, _('Selected sales marked as complete.'))
 
 admin.site.register(Sale, SaleAdmin)
+
+class StorageRecordsInline(admin.TabularInline):
+    model = AppMoveGoldTraditional
+    fields = ['code', 'almustafid_name', 'gold_weight_in_gram']
+    readonly_fields = ['code', 'almustafid_name', 'gold_weight_in_gram']
+    can_delete = False
+    extra = 0
+    max_num = 0
+
+    def has_add_permission(self, request, obj):
+        return False
+
+class StorageAdmin(LogAdminMixin, admin.ModelAdmin):
+    inlines = [StorageRecordsInline]
+    list_display = ['code', 'storage_date', 'expiry_date', 'note', 'record_count', 'total_weight', 'state', 'print_button', 'complete_button']
+    list_filter = ['storage_date', 'state']
+    search_fields = ['code', 'note']
+    readonly_fields = ['code']
+    actions = ['mark_complete']
+
+    fieldsets = [
+        (None, {'fields': ['code', 'storage_date']}),
+        (None, {'fields': ['note']}),
+        (None, {'fields': ['state']}),
+    ]
+
+    def has_add_permission(self, request):
+        return False
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        if request.user.is_superuser or request.user.groups.filter(name__in=("gold_travel_traditional_manager","gold_travel_traditional_manager_show")).exists():
+            return qs
+        try:
+            gold_user = request.user.gold_travel_traditional
+            if gold_user.is_state_manager or gold_user.is_state_viewer:
+                return qs.filter(source_state=gold_user.state)
+            if gold_user.user_type in [GoldTravelTraditionalUser.JIHAT_TARHIL, GoldTravelTraditionalUser.BOTH]:
+                return qs.filter(source_state=gold_user.state, state=Storage.STATE_PENDING)
+            return qs.none()
+        except:
+            return qs.none()
+
+    def has_change_permission(self, request, obj=None):
+        if request.user.is_superuser or request.user.groups.filter(name__in=("gold_travel_traditional_manager","gold_travel_traditional_manager_show")).exists():
+            return True
+        if obj and obj.state == Storage.STATE_COMPLETE:
+            return False
+        try:
+            gold_user = request.user.gold_travel_traditional
+            return gold_user.user_type in [GoldTravelTraditionalUser.JIHAT_TARHIL, GoldTravelTraditionalUser.BOTH, GoldTravelTraditionalUser.STATE_MANAGER]
+        except:
+            return False
+
+    def has_view_permission(self, request, obj=None):
+        if request.user.is_superuser or request.user.groups.filter(name__in=("gold_travel_traditional_manager","gold_travel_traditional_manager_show")).exists():
+            return True
+        try:
+            gold_user = request.user.gold_travel_traditional
+            return gold_user.user_type in [GoldTravelTraditionalUser.JIHAT_TARHIL, GoldTravelTraditionalUser.BOTH, GoldTravelTraditionalUser.STATE_MANAGER, GoldTravelTraditionalUser.STATE_VIEWER]
+        except:
+            return False
+
+    @admin.display(description=_('expiry_date'))
+    def expiry_date(self, obj):
+        return obj.expiry_date
+
+    @admin.display(description=_('print'))
+    def print_button(self, obj):
+        record = obj.records.first()
+        if record:
+            url = reverse("admin:gold_travel_traditional_appmovegoldtraditional_changelist") + f"{record.pk}/storage/print/"
+            return format_html('<a class="changelink" target="_blank" href="{url}">{txt}</a>', url=url, txt=_('طباعة'))
+        return '-'
+
+    @admin.display(description=_('complete'))
+    def complete_button(self, obj):
+        if obj.state == Storage.STATE_PENDING:
+            url = reverse("admin:gold_travel_traditional_storage_changelist") + f"{obj.pk}/complete/"
+            return format_html('<a class="changelink" href="{url}">{txt}</a>', url=url, txt=_('إكمال'))
+        return '-'
+
+    def get_urls(self):
+        urls = super().get_urls()
+        my_urls = [
+            path("<int:pk>/complete/", self.admin_site.admin_view(self.complete_view)),
+        ]
+        return my_urls + urls
+
+    def complete_view(self, request, pk):
+        storage = Storage.objects.get(pk=pk)
+        if storage.state == Storage.STATE_PENDING:
+            storage.state = Storage.STATE_COMPLETE
+            storage.updated_by = request.user
+            storage.save()
+            self.message_user(request, _('Storage marked as complete.'))
+        return redirect(reverse("admin:gold_travel_traditional_storage_changelist"))
+
+    @admin.action(description=_('Mark as Complete'))
+    def mark_complete(self, request, queryset):
+        queryset.filter(state=Storage.STATE_PENDING).update(state=Storage.STATE_COMPLETE, updated_by=request.user)
+        self.message_user(request, _('Selected storage receipts marked as complete.'))
+
+admin.site.register(Storage, StorageAdmin)
