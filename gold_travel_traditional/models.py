@@ -158,7 +158,7 @@ class AppMoveGoldTraditional(LoggingModel):
     melt_workshop = models.CharField(_("ورشة الصهر"), max_length=150, null=True, blank=True)
     standardization_lab = models.CharField(_("مختبر المعايرة"), max_length=150, null=True, blank=True)
     melt_date = models.DateField(_("تاريخ الصهر"), null=True, blank=True)
-    melt_batch = models.ForeignKey('MeltBatch', on_delete=models.SET_NULL, null=True, blank=True, related_name='records', verbose_name=_('دفعة الصهر'))
+    melt_batch = models.ForeignKey('MeltBatch', on_delete=models.SET_NULL, null=True, blank=True, related_name='records', verbose_name=_('استمارة تسييح ومعايرة'))
     sale = models.ForeignKey('Sale', on_delete=models.SET_NULL, null=True, blank=True, related_name='records', verbose_name=_('فاتورة البيع'))
     storage = models.ForeignKey('Storage', on_delete=models.SET_NULL, null=True, blank=True, related_name='records', verbose_name=_('شهادة تخزين'))
     arrival_attachement = models.ImageField(_('مرفق الاستمارة'), help_text=_('ارفاق استمارة  الترحيل'), upload_to=attachement_path, null=True, blank=True)

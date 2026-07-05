@@ -165,30 +165,16 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
 
     def get_fieldsets(self, request, obj=None):
         fieldsets = super().get_fieldsets(request, obj)
-        if obj and obj.melt_batch:
+        if obj:
             fieldsets = list(fieldsets) + [
                 (
-                    _("تفاصيل التسييح والمعايرة"),
+                    _("مراجع اخرى"),
                     {
-                        'fields': [("melt_batch",), ("melt_date",), ("melt_workshop", "standardization_lab")]
-                    },
-                ),
-            ]
-        if obj and obj.sale:
-            fieldsets = list(fieldsets) + [
-                (
-                    _("تفاصيل البيع"),
-                    {
-                        'fields': [("sale", "almushtari_name")]
-                    },
-                ),
-            ]
-        if obj and obj.storage:
-            fieldsets = list(fieldsets) + [
-                (
-                    _("تفاصيل التخزين"),
-                    {
-                        'fields': [("storage",)]
+                        'fields': [
+                            ("renew_date", "parent"),
+                            ("arrival_attachement",),
+                            ("melt_batch", "sale", "storage"),
+                        ]
                     },
                 ),
             ]
@@ -196,12 +182,12 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
 
     def get_readonly_fields(self, request, obj=None):
         readonly_fields = super().get_readonly_fields(request, obj)
-        if obj and obj.melt_batch:
-            readonly_fields = list(readonly_fields) + ["melt_batch", "melt_date", "melt_workshop", "standardization_lab"]
-        if obj and obj.sale:
-            readonly_fields = list(readonly_fields) + ["sale", "almushtari_name"]
-        if obj and obj.storage:
-            readonly_fields = list(readonly_fields) + ["storage"]
+        if obj:
+            readonly_fields = list(readonly_fields) + [
+                "renew_date", "parent", "arrival_attachement",
+                "melt_batch", "melt_date", "melt_workshop", "standardization_lab",
+                "sale", "almushtari_name", "storage"
+            ]
         return readonly_fields
     # readonly_fields = ["almushtari_name"]
     list_display = ["code","issue_date","total_gold_weight_display","show_actions","almustafid_name","jihat_alaisdar","wijhat_altarhil","source_state","renew_date","state",]
