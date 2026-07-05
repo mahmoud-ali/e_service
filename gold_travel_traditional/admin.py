@@ -971,7 +971,7 @@ class SaleAdmin(LogAdminMixin, admin.ModelAdmin):
     def print_button(self, obj):
         record = obj.records.first()
         if record:
-            url = f"{record.pk}/sale/print/"
+            url = reverse("admin:gold_travel_traditional_appmovegoldtraditional_changelist") + f"{record.pk}/sale/print/"
             return format_html('<a class="changelink" target="_blank" href="{url}">{txt}</a>', url=url, txt=_('طباعة'))
         return '-'
 
