@@ -863,7 +863,7 @@ class MeltBatchRecordsInline(admin.TabularInline):
 
 class MeltBatchAdmin(LogAdminMixin, admin.ModelAdmin):
     inlines = [MeltBatchRecordsInline]
-    list_display = ['code', 'melt_date', 'melt_workshop', 'standardization_lab', 'record_count', 'total_weight', 'state', 'print_button']
+    list_display = ['code', 'melt_date', 'melt_workshop', 'standardization_lab', 'record_count', 'total_weight_display', 'state', 'print_button']
     list_filter = ['melt_date', 'state']
     search_fields = ['code', 'melt_workshop', 'standardization_lab']
     readonly_fields = ['code']
@@ -884,6 +884,10 @@ class MeltBatchAdmin(LogAdminMixin, admin.ModelAdmin):
             path("<int:pk>/batch-print/", self.admin_site.admin_view(self.batch_print_view), name="gold_travel_traditional_meltbatch_print"),
         ]
         return my_urls + urls
+
+    @admin.display(description=_('total_weight'))
+    def total_weight_display(self, obj):
+        return round(obj.total_weight, 2) if obj.total_weight else 0.0
 
     @admin.display(description=_('print'))
     def print_button(self, obj):
