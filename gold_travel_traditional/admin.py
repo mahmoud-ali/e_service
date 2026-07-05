@@ -207,7 +207,7 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
     list_display = ["code","issue_date","total_gold_weight_display","show_actions","almustafid_name","jihat_alaisdar","wijhat_altarhil","source_state","renew_date","state",]
     list_filter = [("state",admin.ChoicesFieldListFilter),("source_state",RelatedOnlyFieldListFilterNotEmpty),("jihat_alaisdar",RelatedOnlyFieldListFilterNotEmpty),("wijhat_altarhil",RelatedOnlyFieldListFilterNotEmpty)]
     date_hierarchy = "issue_date"
-    search_fields = ["code","almustafid_name","almustafid_phone","almushtari_name"]
+    search_fields = ["code","almustafid_name","almustafid_phone","almustafid_identity","almushtari_name"]
     actions = ['export_as_csv']
     # autocomplete_fields = ["jihat_alaisdar","wijhat_altarhil"]
     # list_editable = ['owner_name_lst']
