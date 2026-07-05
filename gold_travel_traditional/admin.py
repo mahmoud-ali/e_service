@@ -174,7 +174,8 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
                             ("renew_date", "parent"),
                             ("arrival_attachement",),
                             ("melt_batch", "sale", "storage"),
-                        ]
+                        ],
+                        'classes': ['collapse'],
                     },
                 ),
             ]
