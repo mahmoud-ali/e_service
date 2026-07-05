@@ -400,13 +400,14 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
     def print_melt_view(self, request, pk):
         obj = AppMoveGoldTraditional.objects.get(pk=pk)
 
-        try:
-            gold_user = request.user.gold_travel_traditional
-            if not (gold_user.is_tarhil_user or gold_user.is_state_manager):
-                self.message_user(request, _('Only destination users can print this form.'), level='error')
+        if not (request.user.is_superuser or request.user.groups.filter(name__in=("gold_travel_traditional_manager","gold_travel_traditional_manager_show")).exists()):
+            try:
+                gold_user = request.user.gold_travel_traditional
+                if not (gold_user.is_tarhil_user or gold_user.is_state_manager):
+                    self.message_user(request, _('Only destination users can print this form.'), level='error')
+                    return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
+            except:
                 return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
-        except:
-            return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
 
         batch = obj.melt_batch
         if not batch:
@@ -515,13 +516,14 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
     def print_sale_view(self, request, pk):
         obj = AppMoveGoldTraditional.objects.get(pk=pk)
 
-        try:
-            gold_user = request.user.gold_travel_traditional
-            if not (gold_user.is_tarhil_user or gold_user.is_state_manager):
-                self.message_user(request, _('Only destination users can print this form.'), level='error')
+        if not (request.user.is_superuser or request.user.groups.filter(name__in=("gold_travel_traditional_manager","gold_travel_traditional_manager_show")).exists()):
+            try:
+                gold_user = request.user.gold_travel_traditional
+                if not (gold_user.is_tarhil_user or gold_user.is_state_manager):
+                    self.message_user(request, _('Only destination users can print this form.'), level='error')
+                    return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
+            except:
                 return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
-        except:
-            return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
 
         sale = obj.sale
         if not sale:
