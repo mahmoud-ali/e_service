@@ -865,7 +865,7 @@ class MeltBatchRecordsInline(admin.TabularInline):
 
 class MeltBatchAdmin(LogAdminMixin, admin.ModelAdmin):
     inlines = [MeltBatchRecordsInline]
-    list_display = ['code', 'melt_date', 'melt_workshop', 'standardization_lab', 'record_count', 'total_weight_display', 'state', 'print_button']
+    list_display = ['code', 'melt_date', 'melt_workshop', 'standardization_lab', 'record_count', 'total_weight_display', 'state', 'print_button', 'complete_button']
     list_filter = ['melt_date', 'state']
     search_fields = ['code', 'melt_workshop', 'standardization_lab']
     readonly_fields = ['code']
@@ -880,10 +880,45 @@ class MeltBatchAdmin(LogAdminMixin, admin.ModelAdmin):
     def has_add_permission(self, request):
         return False
 
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        if request.user.is_superuser or request.user.groups.filter(name__in=("gold_travel_traditional_manager","gold_travel_traditional_manager_show")).exists():
+            return qs
+        try:
+            gold_user = request.user.gold_travel_traditional
+            if gold_user.is_state_manager or gold_user.is_state_viewer:
+                return qs.filter(source_state=gold_user.state)
+            if gold_user.user_type in [GoldTravelTraditionalUser.JIHAT_TARHIL, GoldTravelTraditionalUser.BOTH]:
+                return qs.filter(source_state=gold_user.state, state=MeltBatch.STATE_PENDING)
+            return qs.none()
+        except:
+            return qs.none()
+
+    def has_change_permission(self, request, obj=None):
+        if request.user.is_superuser or request.user.groups.filter(name__in=("gold_travel_traditional_manager","gold_travel_traditional_manager_show")).exists():
+            return True
+        if obj and obj.state == MeltBatch.STATE_COMPLETE:
+            return False
+        try:
+            gold_user = request.user.gold_travel_traditional
+            return gold_user.user_type in [GoldTravelTraditionalUser.JIHAT_TARHIL, GoldTravelTraditionalUser.BOTH, GoldTravelTraditionalUser.STATE_MANAGER]
+        except:
+            return False
+
+    def has_view_permission(self, request, obj=None):
+        if request.user.is_superuser or request.user.groups.filter(name__in=("gold_travel_traditional_manager","gold_travel_traditional_manager_show")).exists():
+            return True
+        try:
+            gold_user = request.user.gold_travel_traditional
+            return gold_user.user_type in [GoldTravelTraditionalUser.JIHAT_TARHIL, GoldTravelTraditionalUser.BOTH, GoldTravelTraditionalUser.STATE_MANAGER, GoldTravelTraditionalUser.STATE_VIEWER]
+        except:
+            return False
+
     def get_urls(self):
         urls = super().get_urls()
         my_urls = [
             path("<int:pk>/batch-print/", self.admin_site.admin_view(self.batch_print_view), name="gold_travel_traditional_meltbatch_print"),
+            path("<int:pk>/complete/", self.admin_site.admin_view(self.complete_view)),
         ]
         return my_urls + urls
 
@@ -895,6 +930,22 @@ class MeltBatchAdmin(LogAdminMixin, admin.ModelAdmin):
     def print_button(self, obj):
         url = reverse("admin:gold_travel_traditional_meltbatch_print", args=[obj.pk])
         return format_html('<a class="changelink" target="_blank" href="{url}">{txt}</a>', url=url, txt=_('طباعة'))
+
+    @admin.display(description=_('complete'))
+    def complete_button(self, obj):
+        if obj.state == MeltBatch.STATE_PENDING:
+            url = reverse("admin:gold_travel_traditional_meltbatch_changelist") + f"{obj.pk}/complete/"
+            return format_html('<a class="changelink" href="{url}">{txt}</a>', url=url, txt=_('إكمال'))
+        return '-'
+
+    def complete_view(self, request, pk):
+        batch = MeltBatch.objects.get(pk=pk)
+        if batch.state == MeltBatch.STATE_PENDING:
+            batch.state = MeltBatch.STATE_COMPLETE
+            batch.updated_by = request.user
+            batch.save()
+            self.message_user(request, _('Batch marked as complete.'))
+        return redirect(reverse("admin:gold_travel_traditional_meltbatch_changelist"))
 
     def batch_print_view(self, request, pk):
         from itertools import zip_longest
@@ -954,7 +1005,7 @@ class SaleRecordsInline(admin.TabularInline):
 
 class SaleAdmin(LogAdminMixin, admin.ModelAdmin):
     inlines = [SaleRecordsInline]
-    list_display = ['code', 'sale_date', 'buyer', 'record_count', 'total_weight_display', 'state', 'print_button']
+    list_display = ['code', 'sale_date', 'buyer', 'record_count', 'total_weight_display', 'state', 'print_button', 'complete_button']
     list_filter = ['sale_date', 'state']
     search_fields = ['code', 'buyer__name']
     readonly_fields = ['code']
@@ -969,6 +1020,40 @@ class SaleAdmin(LogAdminMixin, admin.ModelAdmin):
     def has_add_permission(self, request):
         return False
 
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        if request.user.is_superuser or request.user.groups.filter(name__in=("gold_travel_traditional_manager","gold_travel_traditional_manager_show")).exists():
+            return qs
+        try:
+            gold_user = request.user.gold_travel_traditional
+            if gold_user.is_state_manager or gold_user.is_state_viewer:
+                return qs.filter(source_state=gold_user.state)
+            if gold_user.user_type in [GoldTravelTraditionalUser.JIHAT_TARHIL, GoldTravelTraditionalUser.BOTH]:
+                return qs.filter(source_state=gold_user.state, state=Sale.STATE_PENDING)
+            return qs.none()
+        except:
+            return qs.none()
+
+    def has_change_permission(self, request, obj=None):
+        if request.user.is_superuser or request.user.groups.filter(name__in=("gold_travel_traditional_manager","gold_travel_traditional_manager_show")).exists():
+            return True
+        if obj and obj.state == Sale.STATE_COMPLETE:
+            return False
+        try:
+            gold_user = request.user.gold_travel_traditional
+            return gold_user.user_type in [GoldTravelTraditionalUser.JIHAT_TARHIL, GoldTravelTraditionalUser.BOTH, GoldTravelTraditionalUser.STATE_MANAGER]
+        except:
+            return False
+
+    def has_view_permission(self, request, obj=None):
+        if request.user.is_superuser or request.user.groups.filter(name__in=("gold_travel_traditional_manager","gold_travel_traditional_manager_show")).exists():
+            return True
+        try:
+            gold_user = request.user.gold_travel_traditional
+            return gold_user.user_type in [GoldTravelTraditionalUser.JIHAT_TARHIL, GoldTravelTraditionalUser.BOTH, GoldTravelTraditionalUser.STATE_MANAGER, GoldTravelTraditionalUser.STATE_VIEWER]
+        except:
+            return False
+
     @admin.display(description=_('total_weight'))
     def total_weight_display(self, obj):
         return round(obj.total_weight, 2) if obj.total_weight else 0.0
@@ -980,6 +1065,29 @@ class SaleAdmin(LogAdminMixin, admin.ModelAdmin):
             url = reverse("admin:gold_travel_traditional_appmovegoldtraditional_changelist") + f"{record.pk}/sale/print/"
             return format_html('<a class="changelink" target="_blank" href="{url}">{txt}</a>', url=url, txt=_('طباعة'))
         return '-'
+
+    @admin.display(description=_('complete'))
+    def complete_button(self, obj):
+        if obj.state == Sale.STATE_PENDING:
+            url = reverse("admin:gold_travel_traditional_sale_changelist") + f"{obj.pk}/complete/"
+            return format_html('<a class="changelink" href="{url}">{txt}</a>', url=url, txt=_('إكمال'))
+        return '-'
+
+    def get_urls(self):
+        urls = super().get_urls()
+        my_urls = [
+            path("<int:pk>/complete/", self.admin_site.admin_view(self.complete_view)),
+        ]
+        return my_urls + urls
+
+    def complete_view(self, request, pk):
+        sale = Sale.objects.get(pk=pk)
+        if sale.state == Sale.STATE_PENDING:
+            sale.state = Sale.STATE_COMPLETE
+            sale.updated_by = request.user
+            sale.save()
+            self.message_user(request, _('Sale marked as complete.'))
+        return redirect(reverse("admin:gold_travel_traditional_sale_changelist"))
 
     @admin.action(description=_('Mark as Complete'))
     def mark_complete(self, request, queryset):
