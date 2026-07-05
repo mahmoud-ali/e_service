@@ -14,7 +14,7 @@ from django.forms.widgets import TextInput
 from django.contrib import admin
 
 from company_profile.models import LkpState
-from gold_travel_traditional.forms import AppMoveGoldTraditionalAddForm, AppMoveGoldTraditionalMeltForm, AppMoveGoldTraditionalRenewForm, AppMoveGoldTraditionalSaleForm, AppMoveGoldTraditionalStorageForm, GoldTravelTraditionalUserJihatAlaisdarForm, GoldTravelTraditionalUserJihatTarhilForm, GoldTravelTraditionalUserForm
+from gold_travel_traditional.forms import AppMoveGoldTraditionalAddForm, AppMoveGoldTraditionalArriveForm, AppMoveGoldTraditionalMeltForm, AppMoveGoldTraditionalRenewForm, AppMoveGoldTraditionalSaleForm, AppMoveGoldTraditionalStorageForm, GoldTravelTraditionalUserJihatAlaisdarForm, GoldTravelTraditionalUserJihatTarhilForm, GoldTravelTraditionalUserForm
 from gold_travel_traditional.models import AppMoveGoldTraditional, AppMoveGoldTraditionalDetail, GoldTravelTraditionalUser, GoldTravelTraditionalUserJihatAlaisdar, GoldTravelTraditionalUserJihatTarhil, LkpJihatAlaisdar, LkpJihatAltarhil, MeltBatch, Sale, Storage
 
 def get_user_state(request):
@@ -774,14 +774,33 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
         except:
              return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
 
-        if obj.state in [AppMoveGoldTraditional.STATE_NEW, AppMoveGoldTraditional.STATE_RENEW, AppMoveGoldTraditional.STATE_EXPIRED]:
-            obj.state = AppMoveGoldTraditional.STATE_ARRIVED
-            obj.updated_by = request.user
-            obj.save()
-            self.log_change(request, obj, _('state_arrived'))
-            self.message_user(request, _('application marked as arrived successfully!'))
-        
-        return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
+        if obj.state not in [AppMoveGoldTraditional.STATE_NEW, AppMoveGoldTraditional.STATE_RENEW, AppMoveGoldTraditional.STATE_EXPIRED]:
+            self.message_user(request, _('Record cannot be marked as arrived in its current state.'), level='error')
+            return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
+
+        if request.method == "POST":
+            my_form = AppMoveGoldTraditionalArriveForm(request.POST, request.FILES, instance=obj)
+            if my_form.is_valid():
+                if not request.FILES.get('arrival_attachement'):
+                    my_form.add_error('arrival_attachement', _('Attachment is required.'))
+                else:
+                    obj.state = AppMoveGoldTraditional.STATE_ARRIVED
+                    obj.updated_by = request.user
+                    my_form.save()
+                    self.log_change(request, obj, _('state_arrived'))
+                    self.message_user(request, _('application marked as arrived successfully!'))
+                    return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
+        else:
+            my_form = AppMoveGoldTraditionalArriveForm(instance=obj)
+
+        context = dict(
+            self.admin_site.each_context(request),
+            object=obj,
+            form=my_form,
+            opts=AppMoveGoldTraditional._meta,
+            title=_('توصيل'),
+        )
+        return TemplateResponse(request, "admin/gold_travel_traditional/appmovegoldtraditional/arrive_form.html", context)
     
     def renew_view(self, request, pk):
         obj = AppMoveGoldTraditional.objects.get(pk=pk)

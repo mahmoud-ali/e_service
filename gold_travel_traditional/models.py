@@ -161,6 +161,7 @@ class AppMoveGoldTraditional(LoggingModel):
     melt_batch = models.ForeignKey('MeltBatch', on_delete=models.SET_NULL, null=True, blank=True, related_name='records', verbose_name=_('دفعة الصهر'))
     sale = models.ForeignKey('Sale', on_delete=models.SET_NULL, null=True, blank=True, related_name='records', verbose_name=_('فاتورة البيع'))
     storage = models.ForeignKey('Storage', on_delete=models.SET_NULL, null=True, blank=True, related_name='records', verbose_name=_('شهادة تخزين'))
+    arrival_attachement = models.ImageField(_('مرفق الاستمارة'), help_text=_('ارفاق استمارة  الترحيل'), upload_to=attachement_path, null=True, blank=True)
 
     parent = models.OneToOneField('self', on_delete=models.PROTECT,related_name="child",verbose_name=_("parent"),null=True,blank=True)
 
@@ -209,6 +210,7 @@ class AppMoveGoldTraditional(LoggingModel):
     def save(self, *args, **kwargs):
         self._optimize_image('attachement_file')
         self._optimize_image('almustafid_identity_attachement')
+        self._optimize_image('arrival_attachement')
 
         if not self.code:
             import datetime

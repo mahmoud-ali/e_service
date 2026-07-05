@@ -252,6 +252,14 @@ class AppMoveGoldTraditionalStorageForm(forms.Form):
                 self.add_error('existing_storage', _('Please select a storage receipt.'))
         return cleaned
 
+class AppMoveGoldTraditionalArriveForm(forms.ModelForm):
+    class Meta:
+        model = AppMoveGoldTraditional
+        fields = ['arrival_attachement']
+        labels = {
+            'arrival_attachement': _('مرفق الاستمارة'),
+        }
+
 class AppMoveGoldTraditionalRenewForm(forms.ModelForm):
     jihat_alaisdar = forms.ModelChoiceField(queryset=LkpJihatAlaisdar.objects.none(), label=_("جهة الإصدار"))
     wijhat_altarhil = forms.ModelChoiceField(queryset=LkpJihatAltarhil.objects.none(), label=_("جهة الوصول"))
