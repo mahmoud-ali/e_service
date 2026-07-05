@@ -97,6 +97,45 @@ class AppMoveGoldTraditionalDetailInline(admin.TabularInline):
     model = AppMoveGoldTraditionalDetail
     min_num = 1
 
+class RelatedOnlyFieldListFilterNotEmpty(admin.RelatedOnlyFieldListFilter):
+    def choices(self, changelist):
+        add_facets = changelist.add_facets
+        facet_counts = self.get_facet_queryset(changelist)
+        yield {
+            "selected": self.lookup_val is None and not self.lookup_val_isnull,
+            "query_string": changelist.get_query_string(
+                remove=[self.lookup_kwarg, self.lookup_kwarg_isnull]
+            ),
+            "display": _("All"),
+        }
+        count = None
+        for pk_val, val in self.lookup_choices:
+            count = facet_counts[f"{pk_val}__c"]
+            if count == 0:
+                continue
+            if add_facets:
+                val = f"{val} ({count})"
+            yield {
+                "selected": self.lookup_val is not None
+                and str(pk_val) in self.lookup_val,
+                "query_string": changelist.get_query_string(
+                    {self.lookup_kwarg: pk_val}, [self.lookup_kwarg_isnull]
+                ),
+                "display": val,
+            }
+        empty_title = self.empty_value_display
+        if self.include_empty_choice:
+            if add_facets:
+                count = facet_counts["__c"]
+                empty_title = f"{empty_title} ({count})"
+            yield {
+                "selected": bool(self.lookup_val_isnull),
+                "query_string": changelist.get_query_string(
+                    {self.lookup_kwarg_isnull: "True"}, [self.lookup_kwarg]
+                ),
+                "display": empty_title,
+            }
+
 class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
     # model = AppMoveGoldTraditional
     form = AppMoveGoldTraditionalAddForm
@@ -155,7 +194,7 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
         return readonly_fields
     # readonly_fields = ["almushtari_name"]
     list_display = ["code","issue_date","total_gold_weight_display","show_actions","almustafid_name","jihat_alaisdar","wijhat_altarhil","source_state","renew_date","state",]
-    list_filter = [("state",admin.ChoicesFieldListFilter),("source_state",admin.RelatedFieldListFilter),("jihat_alaisdar",admin.RelatedFieldListFilter),("wijhat_altarhil",admin.RelatedFieldListFilter)]
+    list_filter = [("state",admin.ChoicesFieldListFilter),("source_state",RelatedOnlyFieldListFilterNotEmpty),("jihat_alaisdar",RelatedOnlyFieldListFilterNotEmpty),("wijhat_altarhil",RelatedOnlyFieldListFilterNotEmpty)]
     date_hierarchy = "issue_date"
     search_fields = ["code","almustafid_name","almustafid_phone","almushtari_name"]
     actions = ['export_as_csv']
