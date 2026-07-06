@@ -100,6 +100,7 @@ INSTALLED_APPS = [
     'taggit',
 
     # Local                
+    'api_v1',
     'accounts',
     'company_profile',    
     'check_cordinates',
