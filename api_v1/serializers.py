@@ -54,7 +54,7 @@ class GoldProductionDetailSerializer(serializers.ModelSerializer):
         fields = ['alloy_serial_no','alloy_weight','alloy_added_gold'] #'alloy_note',
 
 class GoldProductionMasterSerializer(serializers.ModelSerializer):
-    company = CompanyNameField(read_only=True)
+    company = CompanyNameField(source='license.company', read_only=True)
     state = serializers.SerializerMethodField()
 
     # alloy_list = serializers.JSONField()
@@ -84,7 +84,7 @@ class GoldShippingDetailSerializer(serializers.ModelSerializer):
         fields = ['alloy_serial_no','alloy_weight','alloy_added_gold'] 
 
 class GoldShippingMasterSerializer(serializers.ModelSerializer):
-    company = CompanyNameField(read_only=True)
+    company = CompanyNameField(source='license.company', read_only=True)
     state = serializers.SerializerMethodField()
 
     # alloy_list = serializers.JSONField()
