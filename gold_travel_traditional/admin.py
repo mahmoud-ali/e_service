@@ -1,5 +1,6 @@
 import codecs
 import csv
+from django.conf import settings
 from django.db import models
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect
@@ -140,6 +141,7 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
     # model = AppMoveGoldTraditional
     form = AppMoveGoldTraditionalAddForm
     inlines = [AppMoveGoldTraditionalDetailInline]
+    change_form_template = "admin/gold_travel_traditional/appmovegoldtraditional/change_form.html"
 
     fieldsets = [
         (
@@ -151,7 +153,7 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
         (
             _("almustafid data",),
             {
-                'fields': [("almustafid_name","almustafid_phone"), ("almustafid_identity_type", "almustafid_identity","almustafid_identity_attachement")]
+                'fields': [("almustafid_identity",), ("almustafid_name",), ("almustafid_identity_type","almustafid_phone"), ("almustafid_identity_attachement",)]
             },
         ),
         (
@@ -214,6 +216,21 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
         obj.source_state = get_user_state(request)
         if not obj.pk:
             obj.issue_date = timezone.now().date()
+
+        photo_data = request.POST.get('almustafid_photo_data', '')
+        print(f"DEBUG save_model: photo_data length = {len(photo_data)}")
+        if photo_data:
+            import base64
+            from django.core.files.base import ContentFile
+            fmt, imgstr = photo_data.split(';base64,') if ';base64,' in photo_data else ('', photo_data)
+            ext = fmt.split('/')[-1] if '/' in fmt else 'jpg'
+            filename = f'photo_{obj.code or "new"}.{ext}'
+            print(f"DEBUG save_model: saving photo as {filename}")
+            obj.almustafid_photo.save(
+                filename,
+                ContentFile(base64.b64decode(imgstr)),
+                save=False
+            )
 
         return super().save_model(request, obj, form, change)                
 
@@ -319,6 +336,7 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
             path("<int:pk>/sale/print/", self.admin_site.admin_view(self.print_sale_view)),
             path("<int:pk>/storage/", self.admin_site.admin_view(self.storage_view)),
             path("<int:pk>/storage/print/", self.admin_site.admin_view(self.print_storage_view)),
+            path("identity-lookup/", self.admin_site.admin_view(self.identity_lookup)),
         ]
         return my_urls + urls
 
@@ -669,6 +687,35 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
             'alloy_chunks': alloy_chunks,
         }
         return TemplateResponse(request, "gold_travel_traditional/gold_travel_traditional_storage.html", context)
+    def identity_lookup(self, request):
+        identity = request.POST.get('identity', '') or request.GET.get('identity', '')
+        print(f"DEBUG identity_lookup: identity={identity}")
+        if not identity:
+            from django.http import JsonResponse
+            return JsonResponse({'error': 'No identity provided'}, status=400)
+
+        import requests
+        try:
+            resp = requests.post(
+                'https://baldna.gov.sd/api/v1/validate/data',
+                data={'code': 'CIVIL_ROOT_SYSTEM', 'value': identity},
+                auth=(settings.BALDNA_API_USER, settings.BALDNA_API_PASS),
+                timeout=60
+            )
+            print(f"DEBUG API response: status={resp.status_code}, body={resp.text[:500]}")
+            resp.raise_for_status()
+            from django.http import JsonResponse
+            data = resp.json()
+            print(f"DEBUG API json: {data}")
+            return JsonResponse(data)
+        except Exception as e:
+            import traceback
+            traceback.print_exc()
+            from django.http import JsonResponse
+            return JsonResponse({'error': str(e)}, status=500)
+
+
+
 
     def cancel_view(self, request, pk):
         obj = AppMoveGoldTraditional.objects.get(pk=pk)

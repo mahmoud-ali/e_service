@@ -2,6 +2,7 @@ import io
 
 from django.db import models
 from django.conf import settings
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from PIL import Image
 
@@ -134,8 +135,8 @@ class AppMoveGoldTraditional(LoggingModel):
     }
 
     def attachement_path(self, filename):
-        code = self.code
-        date = self.created_at.date()
+        code = self.code or 'new'
+        date = (self.created_at or timezone.now()).date()
         return "company_{0}/travel_traditional/travel/{1}/{2}".format(code,date, filename)    
     
     code = models.CharField(_("code"),max_length=20, unique=True)
@@ -144,7 +145,7 @@ class AppMoveGoldTraditional(LoggingModel):
     almustafid_name = models.CharField(_("almustafid_name"),max_length=150)
     almustafid_phone = models.CharField(_("almustafid_phone"),max_length=30)
     almustafid_identity_type = models.IntegerField(_("نوع الإثبات"), choices=IDENTITY_CHOICES, default=IDENTITY_PASSPORT)
-    almustafid_identity = models.CharField(_("رقم الإثبات"),max_length=50)
+    almustafid_identity = models.CharField(_("الرقم الوطني"),max_length=50)
     almustafid_identity_attachement = models.ImageField(_("مرفق الإثبات"),upload_to=attachement_path)
     # almustafid_identity_issue_date = models.DateField(_("تاريخ إصدار الإثبات"))
     
@@ -162,6 +163,13 @@ class AppMoveGoldTraditional(LoggingModel):
     sale = models.ForeignKey('Sale', on_delete=models.SET_NULL, null=True, blank=True, related_name='records', verbose_name=_('فاتورة البيع'))
     storage = models.ForeignKey('Storage', on_delete=models.SET_NULL, null=True, blank=True, related_name='records', verbose_name=_('شهادة تخزين'))
     arrival_attachement = models.ImageField(_('مرفق الاستمارة'), help_text=_('ارفاق استمارة  الترحيل'), upload_to=attachement_path, null=True, blank=True)
+    almustafid_photo = models.ImageField(_('صورة المستفيد'), upload_to=attachement_path, null=True, blank=True)
+
+    @property
+    def almustafid_photo_tag(self):
+        if self.almustafid_photo:
+            return format_html('<img src="{}" style="max-width:100px; border-radius:4px;" />', self.almustafid_photo.url)
+        return ''
 
     parent = models.OneToOneField('self', on_delete=models.PROTECT,related_name="child",verbose_name=_("parent"),null=True,blank=True)
 

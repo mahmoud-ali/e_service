@@ -1,0 +1,108 @@
+{% extends "admin/change_form.html" %}
+{% load i18n %}
+
+{% block extrastyle %}
+{{ block.super }}
+<style>
+    #photo-container {
+        float: left;
+        margin: 0 15px 10px 0;
+        background: #fff;
+        border: 2px solid #417690;
+        border-radius: 6px;
+        padding: 5px;
+    }
+    #photo-container img {
+        display: block;
+        max-width: 110px;
+        max-height: 140px;
+        border-radius: 3px;
+    }
+    #photo-container .photo-label {
+        text-align: center;
+        font-size: 11px;
+        color: #417690;
+        margin-top: 3px;
+    }
+    #photo-container.empty {
+        display: none;
+    }
+</style>
+{% endblock %}
+
+{% block admin_change_form_document_ready %}
+{{ block.super }}
+<script>
+(function($) {
+    var identityField = $('#id_almustafid_identity');
+    var nameField = $('#id_almustafid_name');
+
+    var container = $('<div id="photo-container" class="empty"><img /></div>');
+    $('#content-main').prepend(container);
+
+    var showPhoto = function(src) {
+        if (src) {
+            container.find('img').attr('src', src);
+            container.removeClass('empty');
+        } else {
+            container.addClass('empty');
+        }
+    };
+
+    {% if original and original.almustafid_photo %}
+    showPhoto('{{ original.almustafid_photo.url }}');
+    {% endif %}
+
+    if (identityField.length && nameField.length) {
+        var photoDataField = $('<input type="hidden" name="almustafid_photo_data" id="id_almustafid_photo_data">');
+        $('#content-main form').append(photoDataField);
+
+        var btn = $('<button type="button" class="button" style="margin-right:5px;">{% translate "بحث" %}</button>');
+        btn.insertAfter(identityField);
+
+        btn.on('click', function(e) {
+            e.preventDefault();
+            var identity = identityField.val().trim();
+            if (!identity) {
+                alert('{% translate "Please enter an identity number." %}');
+                return;
+            }
+
+            btn.prop('disabled', true).text('{% translate "جاري البحث..." %}');
+
+            function getCookie(name) { var v = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)'); return v ? v[2] : null; }
+
+            $.ajax({
+                url: window.location.pathname.replace(/\/add\/.*$|\/\d+\/change\/.*$/, '/identity-lookup/'),
+                method: 'POST',
+                data: { identity: identity },
+                headers: {'X-CSRFToken': getCookie('csrftoken')},
+                success: function(data) {
+                    btn.prop('disabled', false).text('{% translate "بحث" %}');
+                    var displayName = data.full_name || data.name || '';
+                    if (displayName) {
+                        nameField.val(displayName);
+                    }
+                    var photoData = data.photo_base64 || data.photo || '';
+                    if (photoData) {
+                        var src = photoData;
+                        if (!src.startsWith('data:')) {
+                            src = 'data:image/jpeg;base64,' + src;
+                        }
+                        showPhoto(src);
+                        photoDataField.val(src);
+                    } else {
+                        showPhoto(null);
+                        photoDataField.val('');
+                    }
+                },
+                error: function(xhr, status, err) {
+                    btn.prop('disabled', false).text('{% translate "بحث" %}');
+                    alert('{% translate "Search failed. Please try again." %}');
+                }
+            });
+        });
+    }
+})(django.jQuery);
+</script>
+{% endblock %}
