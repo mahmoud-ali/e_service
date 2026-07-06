@@ -2,6 +2,7 @@ from rest_framework import serializers
 from gold_travel.models import AppMoveGold, AppMoveGoldDetails
 from production_control.models import GoldProductionForm, GoldProductionFormAlloy, GoldShippingForm, GoldShippingFormAlloy
 from gold_travel_traditional.models import AppMoveGoldTraditional, AppMoveGoldTraditionalDetail
+from .models import DeductionsView
 
 ########### Gold travel(ترحيل بغرض الصادر) ##############
 class OwnerNameField(serializers.RelatedField):
@@ -141,3 +142,16 @@ class GoldTravelTraditionalMasterSerializer(serializers.ModelSerializer):
 
     def get_state(self, obj):
         return {'id': obj.state, 'label': obj.get_state_display()}
+
+########### Deductions(المستخلصات) ##############
+class DeductionsListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DeductionsView
+
+        fields = ['id', ]
+
+class DeductionsMasterSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DeductionsView
+
+        fields = ['id', 'tdate', 'companyid', 'company_name', 'produced_gold', 'pure_gold', 'deduction_weight', 'net_weight']

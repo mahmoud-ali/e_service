@@ -200,7 +200,17 @@ DATABASES = {
         "OPTIONS": {
             # "pool": True,
         },
-    }    
+    },
+    # External database containing the deductions_view
+    "deductions": {
+        "ENGINE": "django.contrib.gis.db.backends.postgis",
+        "NAME": config('DB_NAME_ODOO'),
+        "USER": config('DB_USER_ODOO'),
+        "PASSWORD": config('DB_PASSWD_ODOO'),
+        "HOST": config('DB_HOST'),
+        "PORT": config('DB_PORT'),
+        "CONN_HEALTH_CHECKS": True,
+    },
 }
 
 if not DEBUG:
@@ -293,6 +303,8 @@ if DEBUG:
     
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
+
+DATABASE_ROUTERS = ['e_service.db_router.DeductionsRouter']
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
