@@ -3,6 +3,7 @@ import io
 from django.db import models
 from django.conf import settings
 from django.utils import timezone
+from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
 from PIL import Image
 
@@ -169,6 +170,13 @@ class AppMoveGoldTraditional(LoggingModel):
     def almustafid_photo_tag(self):
         if self.almustafid_photo:
             return format_html('<img src="{}" style="max-width:100px; border-radius:4px;" />', self.almustafid_photo.url)
+        return ''
+
+    @property
+    def almustafid_photo_base64(self):
+        if self.almustafid_photo:
+            import base64
+            return base64.b64encode(self.almustafid_photo.read()).decode()
         return ''
 
     parent = models.OneToOneField('self', on_delete=models.PROTECT,related_name="child",verbose_name=_("parent"),null=True,blank=True)

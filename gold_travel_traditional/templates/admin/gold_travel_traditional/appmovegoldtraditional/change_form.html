@@ -50,7 +50,7 @@
     };
 
     {% if original and original.almustafid_photo %}
-    showPhoto('{{ original.almustafid_photo.url }}');
+    showPhoto('data:image/jpeg;base64,{{ original.almustafid_photo_base64 }}');
     {% endif %}
 
     if (identityField.length && nameField.length) {
