@@ -137,8 +137,26 @@ class RelatedOnlyFieldListFilterNotEmpty(admin.RelatedOnlyFieldListFilter):
                 "display": empty_title,
             }
 
+
+class HasPhotoFilter(admin.SimpleListFilter):
+    title = _('صورة المستفيد')
+    parameter_name = 'has_photo'
+
+    def lookups(self, request, model_admin):
+        return [
+            ('yes', _('يوجد صورة')),
+            ('no', _('لا يوجد صورة')),
+        ]
+
+    def queryset(self, request, queryset):
+        if self.value() == 'yes':
+            return queryset.exclude(almustafid_photo='')
+        if self.value() == 'no':
+            return queryset.filter(almustafid_photo='')
+        return queryset
+
+
 class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
-    # model = AppMoveGoldTraditional
     form = AppMoveGoldTraditionalAddForm
     inlines = [AppMoveGoldTraditionalDetailInline]
     change_form_template = "admin/gold_travel_traditional/appmovegoldtraditional/change_form.html"
@@ -194,7 +212,7 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
         return readonly_fields
     # readonly_fields = ["almushtari_name"]
     list_display = ["code","issue_date","total_gold_weight_display","show_actions","almustafid_name","jihat_alaisdar","wijhat_altarhil","source_state","renew_date","state",]
-    list_filter = [("state",admin.ChoicesFieldListFilter),("source_state",RelatedOnlyFieldListFilterNotEmpty),("jihat_alaisdar",RelatedOnlyFieldListFilterNotEmpty),("wijhat_altarhil",RelatedOnlyFieldListFilterNotEmpty)]
+    list_filter = [("state",admin.ChoicesFieldListFilter),("source_state",RelatedOnlyFieldListFilterNotEmpty),("jihat_alaisdar",RelatedOnlyFieldListFilterNotEmpty),("wijhat_altarhil",RelatedOnlyFieldListFilterNotEmpty), HasPhotoFilter]
     date_hierarchy = "issue_date"
     search_fields = ["code","almustafid_name","almustafid_phone","almustafid_identity","almushtari_name"]
     actions = ['export_as_csv']
