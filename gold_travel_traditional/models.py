@@ -191,6 +191,10 @@ class AppMoveGoldTraditional(LoggingModel):
 
     def clean(self):
         super().clean()
+        # Convert Arabic digits to English
+        arabic_digits = str.maketrans('٠١٢٣٤٥٦٧٨٩', '0123456789')
+        self.almustafid_identity = self.almustafid_identity.translate(arabic_digits)
+        self.almustafid_phone = self.almustafid_phone.translate(arabic_digits)
         if self.pk:
             original = AppMoveGoldTraditional.objects.get(pk=self.pk)
             if original.state not in [self.STATE_NEW, self.STATE_ARRIVED]:
