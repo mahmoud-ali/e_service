@@ -149,10 +149,11 @@ class HasPhotoFilter(admin.SimpleListFilter):
         ]
 
     def queryset(self, request, queryset):
+        from django.db.models import Q
         if self.value() == 'yes':
-            return queryset.exclude(almustafid_photo='')
+            return queryset.exclude(Q(almustafid_photo__isnull=True) | Q(almustafid_photo=''))
         if self.value() == 'no':
-            return queryset.filter(almustafid_photo='')
+            return queryset.filter(Q(almustafid_photo__isnull=True) | Q(almustafid_photo=''))
         return queryset
 
 
