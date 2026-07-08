@@ -517,3 +517,14 @@ class Storage(LoggingModel):
         ordering = ["-id"]
         verbose_name = _('شهادة تخزين')
         verbose_name_plural = _('شهادات التخزين')
+
+class GoldTravelTraditionalState(models.Model):
+    state = models.OneToOneField(LkpState, on_delete=models.CASCADE, related_name='gold_travel_config', verbose_name=_('الولاية'))
+    expiry_days = models.IntegerField(_('مدة الصلاحية بالأيام'), default=3)
+
+    def __str__(self):
+        return f'{self.state.name} - {self.expiry_days} days'
+
+    class Meta:
+        verbose_name = _('إعدادات الولاية')
+        verbose_name_plural = _('إعدادات الولايات')
