@@ -235,6 +235,9 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
         obj.source_state = get_user_state(request)
         if not obj.pk:
             obj.issue_date = timezone.now().date()
+            # Set expiry_days from state config on creation
+            config = GoldTravelTraditionalState.objects.filter(state=obj.source_state).first()
+            obj.expiry_days = config.expiry_days if config else 3
 
         photo_data = request.POST.get('almustafid_photo_data', '')
         # print(f"DEBUG save_model: photo_data length = {len(photo_data)}")
@@ -802,9 +805,13 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
                 'half_offset': half
             })
 
+        # Fetch state expiry config
+        expiry_days = obj.expiry_days
+
         context = {
             'object': obj,
             'alloy_chunks': alloy_chunks,
+            'expiry_hours': expiry_days * 24,
             'has_astikhbarat': False, 
         }
         return TemplateResponse(request, "gold_travel_traditional/gold_travel_traditional.html", context)

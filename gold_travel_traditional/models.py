@@ -184,6 +184,7 @@ class AppMoveGoldTraditional(LoggingModel):
     state = models.IntegerField(_("record_state"), choices=STATE_CHOICES, default=STATE_NEW)
     attachement_file = models.ImageField(_("صورة الذهب المرحل"),upload_to=attachement_path)
     renew_date = models.DateField(_("renew_date"), null=True, blank=True, editable=False)
+    expiry_days = models.IntegerField(_('مدة الصلاحية بالأيام'), default=3)
     source_state = models.ForeignKey(LkpState, on_delete=models.PROTECT,verbose_name=_("state"))
 
     MAX_IMAGE_DIMENSION = 1200
