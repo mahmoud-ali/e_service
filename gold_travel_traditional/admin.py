@@ -16,7 +16,7 @@ from django.contrib import admin
 
 from company_profile.models import LkpState
 from gold_travel_traditional.forms import AppMoveGoldTraditionalAddForm, AppMoveGoldTraditionalArriveForm, AppMoveGoldTraditionalMeltForm, AppMoveGoldTraditionalRenewForm, AppMoveGoldTraditionalSaleForm, AppMoveGoldTraditionalStorageForm, GoldTravelTraditionalUserJihatAlaisdarForm, GoldTravelTraditionalUserJihatTarhilForm, GoldTravelTraditionalUserForm
-from gold_travel_traditional.models import AppMoveGoldTraditional, AppMoveGoldTraditionalDetail, GoldTravelTraditionalUser, GoldTravelTraditionalUserJihatAlaisdar, GoldTravelTraditionalUserJihatTarhil, LkpJihatAlaisdar, LkpJihatAltarhil, MeltBatch, Sale, Storage
+from gold_travel_traditional.models import AppMoveGoldTraditional, AppMoveGoldTraditionalDetail, GoldTravelTraditionalState, GoldTravelTraditionalUser, GoldTravelTraditionalUserJihatAlaisdar, GoldTravelTraditionalUserJihatTarhil, LkpJihatAlaisdar, LkpJihatAltarhil, MeltBatch, Sale, Storage
 
 def get_user_state(request):
     try:
@@ -237,14 +237,14 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
             obj.issue_date = timezone.now().date()
 
         photo_data = request.POST.get('almustafid_photo_data', '')
-        print(f"DEBUG save_model: photo_data length = {len(photo_data)}")
+        # print(f"DEBUG save_model: photo_data length = {len(photo_data)}")
         if photo_data:
             import base64
             from django.core.files.base import ContentFile
             fmt, imgstr = photo_data.split(';base64,') if ';base64,' in photo_data else ('', photo_data)
             ext = fmt.split('/')[-1] if '/' in fmt else 'jpg'
             filename = f'photo_{obj.code or "new"}.{ext}'
-            print(f"DEBUG save_model: saving photo as {filename}")
+            # print(f"DEBUG save_model: saving photo as {filename}")
             obj.almustafid_photo.save(
                 filename,
                 ContentFile(base64.b64decode(imgstr)),
@@ -708,7 +708,7 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
         return TemplateResponse(request, "gold_travel_traditional/gold_travel_traditional_storage.html", context)
     def identity_lookup(self, request):
         identity = request.POST.get('identity', '') or request.GET.get('identity', '')
-        print(f"DEBUG identity_lookup: identity={identity}")
+        # print(f"DEBUG identity_lookup: identity={identity}")
         if not identity:
             from django.http import JsonResponse
             return JsonResponse({'error': 'No identity provided'}, status=400)
@@ -721,11 +721,11 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
                 auth=(settings.BALDNA_API_USER, settings.BALDNA_API_PASS),
                 timeout=60
             )
-            print(f"DEBUG API response: status={resp.status_code}, body={resp.text[:500]}")
+            # print(f"DEBUG API response: status={resp.status_code}, body={resp.text[:500]}")
             resp.raise_for_status()
             from django.http import JsonResponse
             data = resp.json()
-            print(f"DEBUG API json: {data}")
+            # print(f"DEBUG API json: {data}")
             return JsonResponse(data)
         except Exception as e:
             import traceback
@@ -1400,3 +1400,9 @@ class StorageAdmin(LogAdminMixin, admin.ModelAdmin):
         self.message_user(request, _('Selected storage receipts marked as complete.'))
 
 admin.site.register(Storage, StorageAdmin)
+
+class GoldTravelTraditionalStateAdmin(admin.ModelAdmin):
+    list_display = ['state', 'expiry_days']
+    search_fields = ['state__name']
+
+admin.site.register(GoldTravelTraditionalState, GoldTravelTraditionalStateAdmin)
