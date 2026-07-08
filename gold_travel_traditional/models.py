@@ -197,7 +197,7 @@ class AppMoveGoldTraditional(LoggingModel):
         self.almustafid_phone = self.almustafid_phone.translate(arabic_digits)
         if self.pk:
             original = AppMoveGoldTraditional.objects.get(pk=self.pk)
-            if original.state not in [self.STATE_NEW, self.STATE_ARRIVED]:
+            if original.state not in [self.STATE_NEW, self.STATE_RENEW, self.STATE_EXPIRED, self.STATE_ARRIVED]:
                 from django.core.exceptions import ValidationError
                 raise ValidationError(_("Record cannot be modified in its current state."))
 
