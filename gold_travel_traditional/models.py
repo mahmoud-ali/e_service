@@ -30,6 +30,18 @@ class LkpJihatAltarhil(models.Model):
         verbose_name = _("جهة الوصول")
         verbose_name_plural = _("جهات الوصول")
 
+class LkpSaig(models.Model):
+    state = models.ForeignKey(LkpState, on_delete=models.PROTECT, verbose_name=_('state'))
+    name = models.CharField(_('name'), max_length=150)
+    code = models.CharField(_('code'), max_length=50, null=True, blank=True)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = _('صائغ')
+        verbose_name_plural = _('صائغ')
+
 class LkpJihatAlaisdar(models.Model):
     state = models.ForeignKey(LkpState, on_delete=models.PROTECT,verbose_name=_("state"))
     name = models.CharField(_("name"),max_length=100)
@@ -397,7 +409,9 @@ class Sale(LoggingModel):
 
     code = models.CharField(_('code'), max_length=20, unique=True)
     sale_date = models.DateField(_('تاريخ البيع'))
-    buyer = models.ForeignKey('gold_travel.LkpOwner', on_delete=models.PROTECT, verbose_name=_('المشتري'))
+    buyer_exporter = models.ForeignKey('gold_travel.LkpOwner', on_delete=models.PROTECT, null=True, blank=True, verbose_name=_('مصدر'))
+    buyer_saig = models.ForeignKey(LkpSaig, on_delete=models.PROTECT, null=True, blank=True, verbose_name=_('صائغ'))
+    buyer_type = models.CharField(_('نوع المشتري'), max_length=10, choices=[('exporter',_('مصدر')),('saig',_('صائغ'))], default='exporter')
     source_state = models.ForeignKey(LkpState, on_delete=models.PROTECT, verbose_name=_('state'))
     state = models.IntegerField(_('record_state'), choices=STATE_CHOICES, default=STATE_PENDING)
 
@@ -412,6 +426,13 @@ class Sale(LoggingModel):
         return sum(r.details.count() for r in self.records.all())
 
     @property
+
+    @property
+    def buyer_display(self):
+        if self.buyer_type == 'saig' and self.buyer_saig:
+            return str(self.buyer_saig)
+        return str(self.buyer_exporter) if self.buyer_exporter else ''
+
     def record_count(self):
         return self.records.count()
 
@@ -443,7 +464,7 @@ class Sale(LoggingModel):
             super().save(*args, **kwargs)
 
     def __str__(self):
-        return f'{self.code} - {self.buyer}'
+        return f'{self.code} - {self.buyer_display}'
 
     class Meta:
         ordering = ["-id"]

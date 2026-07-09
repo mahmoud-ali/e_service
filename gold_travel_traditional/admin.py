@@ -16,7 +16,7 @@ from django.contrib import admin
 
 from company_profile.models import LkpState
 from gold_travel_traditional.forms import AppMoveGoldTraditionalAddForm, AppMoveGoldTraditionalArriveForm, AppMoveGoldTraditionalMeltForm, AppMoveGoldTraditionalRenewForm, AppMoveGoldTraditionalSaleForm, AppMoveGoldTraditionalStorageForm, GoldTravelTraditionalUserJihatAlaisdarForm, GoldTravelTraditionalUserJihatTarhilForm, GoldTravelTraditionalUserForm
-from gold_travel_traditional.models import AppMoveGoldTraditional, AppMoveGoldTraditionalDetail, GoldTravelTraditionalState, GoldTravelTraditionalUser, GoldTravelTraditionalUserJihatAlaisdar, GoldTravelTraditionalUserJihatTarhil, LkpJihatAlaisdar, LkpJihatAltarhil, MeltBatch, Sale, Storage
+from gold_travel_traditional.models import AppMoveGoldTraditional, AppMoveGoldTraditionalDetail, GoldTravelTraditionalState, GoldTravelTraditionalUser, GoldTravelTraditionalUserJihatAlaisdar, GoldTravelTraditionalUserJihatTarhil, LkpJihatAlaisdar, LkpJihatAltarhil, LkpSaig, MeltBatch, Sale, Storage
 
 def get_user_state(request):
     try:
@@ -50,6 +50,13 @@ class LkpJihatAlaisdarAdmin(admin.ModelAdmin):
     search_fields = ["name"]
 
 admin.site.register(LkpJihatAlaisdar, LkpJihatAlaisdarAdmin)
+
+class LkpSaigAdmin(admin.ModelAdmin):
+    list_display = ["state", "name", "code"]
+    list_filter = ["state"]
+    search_fields = ["name", "code"]
+
+admin.site.register(LkpSaig, LkpSaigAdmin)
 
 class GoldTravelTraditionalUserJihatAlaisdarInline(admin.TabularInline):
     model = GoldTravelTraditionalUserJihatAlaisdar
@@ -508,21 +515,26 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
             if my_form.is_valid():
                 choice = my_form.cleaned_data['batch_choice']
                 if choice == 'new':
+                    buyer_type = my_form.cleaned_data['buyer_type']
+                    buyer_exporter = my_form.cleaned_data.get('buyer_exporter')
+                    buyer_saig = my_form.cleaned_data.get('buyer_saig')
                     sale = Sale.objects.create(
                         sale_date=my_form.cleaned_data['sale_date'],
-                        buyer=my_form.cleaned_data['buyer'],
+                        buyer_type=buyer_type,
+                        buyer_exporter=buyer_exporter,
+                        buyer_saig=buyer_saig,
                         source_state=obj.source_state,
                         created_by=request.user,
                         updated_by=request.user,
                     )
                     obj.sale = sale
-                    obj.almushtari_name = str(sale.buyer)
+                    obj.almushtari_name = sale.buyer_display
                     obj.save()
                     self.log_change(request, obj, _('sale_created'))
                 else:
                     sale = my_form.cleaned_data['existing_sale']
                     obj.sale = sale
-                    obj.almushtari_name = str(sale.buyer)
+                    obj.almushtari_name = sale.buyer_display
                     obj.save()
                     self.log_change(request, obj, _('sale_assigned'))
 
@@ -1213,15 +1225,15 @@ class SaleRecordsInline(admin.TabularInline):
 
 class SaleAdmin(LogAdminMixin, admin.ModelAdmin):
     inlines = [SaleRecordsInline]
-    list_display = ['code', 'sale_date', 'buyer', 'record_count', 'total_weight_display', 'state', 'print_button', 'complete_button']
+    list_display = ['code', 'sale_date', 'buyer_display', 'record_count', 'total_weight_display', 'state', 'print_button', 'complete_button']
     list_filter = ['sale_date', 'state']
-    search_fields = ['code', 'buyer__name']
+    search_fields = ['code', 'buyer_exporter__name', 'buyer_saig__name']
     readonly_fields = ['code']
     actions = ['mark_complete']
 
     fieldsets = [
         (None, {'fields': ['code', 'sale_date']}),
-        (_('sale_details'), {'fields': [('buyer',)]}),
+        (_('sale_details'), {'fields': [('buyer_type',), ('buyer_exporter', 'buyer_saig')]}),
         (None, {'fields': ['state']}),
     ]
 

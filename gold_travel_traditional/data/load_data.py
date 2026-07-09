@@ -24,6 +24,7 @@ from gold_travel_traditional.models import (
     GoldTravelTraditionalUserJihatTarhil,
     LkpJihatAlaisdar,
     LkpJihatAltarhil,
+    LkpSaig,
 )
 from company_profile.models import LkpState
 
@@ -300,6 +301,34 @@ def sync_user_first_names_all():
 
     print(f"Updated {updated} of {GoldTravelTraditionalUser.objects.count()} users")
 
+def load_saig_from_csv(file_path, state_id):
+    """Import saig (صائغ) records from CSV with 'name' column header."""
+    if not os.path.exists(file_path):
+        print(f"File not found: {file_path}")
+        return
+
+    try:
+        state = LkpState.objects.get(id=state_id)
+    except LkpState.DoesNotExist:
+        print(f"LkpState id={state_id} not found")
+        return
+
+    with open(file_path, mode='r', encoding='utf-8') as f:
+        reader = csv.DictReader(f)
+        rows = list(reader)
+
+    created = 0
+    for row in rows:
+        name = row.get('name', '').strip()
+        if not name:
+            continue
+        _, c = LkpSaig.objects.get_or_create(name=name, defaults={'state': state})
+        if c:
+            created += 1
+            print(f"  Created saig: {name}")
+
+    print(f"Imported {created} saig records (total in file: {len(rows)})")
+
 def reload_all_csvs():
     """Re-run load_users_from_csv for all _users.csv files."""
     data_dir = os.path.dirname(os.path.abspath(__file__))
@@ -327,11 +356,17 @@ if __name__ == "__main__":
         print("  --reload-all                 Re-run load_users_from_csv on all _users.csv files")
         print("  --sync-names                 Update User.first_name from GoldTravelTraditionalUser.name (CSV)")
         print("  --sync-names-all             Same, for all GoldTravelTraditionalUser profiles")
+        print("  --load-saig <state_id>       Import saig from CSV (one name per line)")
     else:
         if '--add-user-type-all' in sys.argv:
             add_user_type_to_all_csvs()
         elif '--add-user-type' in sys.argv:
             add_user_type_to_csv(sys.argv[1])
+        elif '--load-saig' in sys.argv:
+            idx = sys.argv.index('--load-saig')
+            sid = int(sys.argv[idx + 1]) if idx + 1 < len(sys.argv) else None
+            if sid:
+                load_saig_from_csv(sys.argv[1], sid)
         elif '--sync-names-all' in sys.argv:
             sync_user_first_names_all()
         elif '--sync-names' in sys.argv:

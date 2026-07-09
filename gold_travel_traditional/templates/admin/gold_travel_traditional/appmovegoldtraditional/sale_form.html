@@ -55,11 +55,27 @@
                         {{ form.sale_date.errors }}
                     </div>
                 </div>
-                <div class="form-row" id="row-buyer">
+
+                <div class="form-row" id="row-buyer-type">
                     <div>
-                        {{ form.buyer.label_tag }}
-                        {{ form.buyer }}
-                        {{ form.buyer.errors }}
+                        {{ form.buyer_type.label_tag }}
+                        {{ form.buyer_type }}
+                        {{ form.buyer_type.errors }}
+                    </div>
+                </div>
+
+                <div class="form-row" id="row-buyer-exporter">
+                    <div>
+                        {{ form.buyer_exporter.label_tag }}
+                        {{ form.buyer_exporter }}
+                        {{ form.buyer_exporter.errors }}
+                    </div>
+                </div>
+                <div class="form-row" id="row-buyer-saig" style="display:none;">
+                    <div>
+                        {{ form.buyer_saig.label_tag }}
+                        {{ form.buyer_saig }}
+                        {{ form.buyer_saig.errors }}
                     </div>
                 </div>
             </fieldset>
@@ -72,27 +88,41 @@
 
 <script>
 (function() {
-    var radios = document.querySelectorAll('input[name="batch_choice"]');
+    var batchRadios = document.querySelectorAll('input[name="batch_choice"]');
     var existingRow = document.getElementById('row-existing-sale');
-    var newFields = ['row-sale-date', 'row-buyer'];
+    var newFieldRows = ['row-sale-date', 'row-buyer-type', 'row-buyer-exporter', 'row-buyer-saig'];
 
-    function toggle() {
+    function toggleBatch() {
         var val = document.querySelector('input[name="batch_choice"]:checked').value;
         if (val === 'existing') {
             existingRow.style.display = '';
-            newFields.forEach(function(id) {
+            newFieldRows.forEach(function(id) {
                 document.getElementById(id).style.display = 'none';
             });
         } else {
             existingRow.style.display = 'none';
-            newFields.forEach(function(id) {
+            newFieldRows.forEach(function(id) {
                 document.getElementById(id).style.display = '';
             });
+            toggleBuyer();
         }
     }
 
-    radios.forEach(function(r) { r.addEventListener('change', toggle); });
-    toggle();
+    function toggleBuyer() {
+        var val = document.querySelector('input[name="buyer_type"]:checked');
+        if (val && val.value === 'saig') {
+            document.getElementById('row-buyer-exporter').style.display = 'none';
+            document.getElementById('row-buyer-saig').style.display = '';
+        } else {
+            document.getElementById('row-buyer-exporter').style.display = '';
+            document.getElementById('row-buyer-saig').style.display = 'none';
+        }
+    }
+
+    batchRadios.forEach(function(r) { r.addEventListener('change', toggleBatch); });
+    var buyerRadios = document.querySelectorAll('input[name="buyer_type"]');
+    buyerRadios.forEach(function(r) { r.addEventListener('change', toggleBuyer); });
+    toggleBatch();
 })();
 </script>
 {% endblock %}
