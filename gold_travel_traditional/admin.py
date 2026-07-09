@@ -512,6 +512,8 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
                 source_state=obj.source_state,
                 state=Sale.STATE_PENDING
             )
+            my_form.fields['buyer_saig'].queryset = LkpSaig.objects.filter(state=obj.source_state)
+            my_form.fields['buyer_exporter'].queryset = my_form.fields['buyer_exporter'].queryset.filter(state=obj.source_state)
             if my_form.is_valid():
                 choice = my_form.cleaned_data['batch_choice']
                 if choice == 'new':
@@ -555,6 +557,8 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
                 source_state=obj.source_state,
                 state=Sale.STATE_PENDING
             )
+            my_form.fields['buyer_saig'].queryset = LkpSaig.objects.filter(state=obj.source_state)
+            my_form.fields['buyer_exporter'].queryset = my_form.fields['buyer_exporter'].queryset.filter(state=obj.source_state)
 
         context = dict(
             self.admin_site.each_context(request),
