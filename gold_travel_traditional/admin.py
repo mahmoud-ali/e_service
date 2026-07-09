@@ -1095,6 +1095,14 @@ class MeltBatchAdmin(LogAdminMixin, admin.ModelAdmin):
     readonly_fields = ['code']
     actions = ['mark_complete', 'print_selected_batches']
 
+    def get_readonly_fields(self, request, obj=None):
+        readonly_fields = list(super().get_readonly_fields(request, obj))
+        if obj and obj.state == MeltBatch.STATE_COMPLETE:
+            readonly_fields = list(set(readonly_fields + [
+                'melt_date', 'melt_workshop', 'standardization_lab', 'state'
+            ]))
+        return readonly_fields
+
     fieldsets = [
         (None, {'fields': ['code', 'melt_date']}),
         (_('melt_details'), {'fields': [('melt_workshop', 'standardization_lab')]}),
@@ -1234,6 +1242,14 @@ class SaleAdmin(LogAdminMixin, admin.ModelAdmin):
     search_fields = ['code', 'buyer_exporter__name', 'buyer_saig__name']
     readonly_fields = ['code']
     actions = ['mark_complete']
+
+    def get_readonly_fields(self, request, obj=None):
+        readonly_fields = list(super().get_readonly_fields(request, obj))
+        if obj and obj.state == Sale.STATE_COMPLETE:
+            readonly_fields = list(set(readonly_fields + [
+                'sale_date', 'buyer_type', 'buyer_exporter', 'buyer_saig', 'state'
+            ]))
+        return readonly_fields
 
     fieldsets = [
         (None, {'fields': ['code', 'sale_date']}),
