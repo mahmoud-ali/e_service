@@ -1355,6 +1355,14 @@ class StorageAdmin(LogAdminMixin, admin.ModelAdmin):
     readonly_fields = ['code']
     actions = ['mark_complete']
 
+    def get_readonly_fields(self, request, obj=None):
+        readonly_fields = list(super().get_readonly_fields(request, obj))
+        if obj and obj.state == Storage.STATE_COMPLETE:
+            readonly_fields = list(set(readonly_fields + [
+                'storage_date', 'note', 'state'
+            ]))
+        return readonly_fields
+
     fieldsets = [
         (None, {'fields': ['code', 'storage_date']}),
         (None, {'fields': ['note']}),
