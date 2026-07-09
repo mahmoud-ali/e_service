@@ -425,7 +425,6 @@ class Sale(LoggingModel):
     def total_alloy_count(self):
         return sum(r.details.count() for r in self.records.all())
 
-    @property
 
     @property
     def buyer_display(self):
@@ -433,6 +432,7 @@ class Sale(LoggingModel):
             return str(self.buyer_saig)
         return str(self.buyer_exporter) if self.buyer_exporter else ''
 
+    @property
     def record_count(self):
         return self.records.count()
 

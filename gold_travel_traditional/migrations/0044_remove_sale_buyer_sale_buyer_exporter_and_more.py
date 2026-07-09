@@ -13,20 +13,6 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RemoveField(
-            model_name='sale',
-            name='buyer',
-        ),
-        migrations.AddField(
-            model_name='sale',
-            name='buyer_exporter',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, to='gold_travel.lkpowner', verbose_name='مصدر'),
-        ),
-        migrations.AddField(
-            model_name='sale',
-            name='buyer_type',
-            field=models.CharField(choices=[('exporter', 'مصدر'), ('saig', 'صائغ')], default='exporter', max_length=10, verbose_name='نوع المشتري'),
-        ),
         migrations.CreateModel(
             name='LkpSaig',
             fields=[
@@ -40,9 +26,19 @@ class Migration(migrations.Migration):
                 'verbose_name_plural': 'صائغ',
             },
         ),
+        migrations.RenameField(
+            model_name='sale',
+            old_name='buyer',
+            new_name='buyer_exporter',
+        ),
         migrations.AddField(
             model_name='sale',
             name='buyer_saig',
             field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, to='gold_travel_traditional.lkpsaig', verbose_name='صائغ'),
+        ),
+        migrations.AddField(
+            model_name='sale',
+            name='buyer_type',
+            field=models.CharField(choices=[('exporter', 'مصدر'), ('saig', 'صائغ')], default='exporter', max_length=10, verbose_name='نوع المشتري'),
         ),
     ]
