@@ -1,3 +1,49 @@
-{% extends "admin/change_form.html" %}
+{% extends "admin/base_site.html" %}
+{% load i18n admin_urls %}
 
-{% load i18n static admin_urls admin_modify %}
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+<a href="{% url 'admin:index' %}">{% translate 'Home' %}</a>
+&rsaquo; <a href="{% url 'admin:app_list' app_label=opts.app_label %}">{{ opts.app_config.verbose_name }}</a>
+&rsaquo; <a href="{% url opts|admin_urlname:'changelist' %}">{{ opts.verbose_name_plural|capfirst }}</a>
+&rsaquo; <a href="{% url opts|admin_urlname:'change' object.pk|admin_urlquote %}">{{ object|truncatewords:"18" }}</a>
+&rsaquo; {% translate 'renew_data' %}
+</div>
+{% endblock %}
+
+{% block content %}
+<div id="content-main">
+    <div style="background:#f8f8f8; padding:12px 15px; margin-bottom:20px; border:1px solid #eee; border-radius:4px;">
+        <strong>{{ object.almustafid_name }}</strong> —
+        <a href="{% url opts|admin_urlname:'change' object.pk|admin_urlquote %}">{{ object.code }}</a>
+        <span style="margin:0 10px;">|</span>
+        {{ object.wijhat_altarhil.name }}
+        <span style="margin:0 10px;">|</span>
+        {{ object.gold_weight_in_gram }} {% translate 'جرام' %}
+    </div>
+
+    <form method="post" novalidate>{% csrf_token %}
+        <div>
+            {% if form.errors %}
+            <p class="errornote">
+                {% blocktranslate count counter=form.errors|length %}Please correct the error below.{% plural %}Please correct the errors below.{% endblocktranslate %}
+            </p>
+            {{ form.non_field_errors }}
+            {% endif %}
+
+            <fieldset class="module aligned">
+                <div class="form-row">
+                    <div>
+                        {{ form.renew_date.label_tag }}
+                        {{ form.renew_date }}
+                        {{ form.renew_date.errors }}
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+        <div class="submit-row">
+            <input class="default" type="submit" value="{% translate 'Save' %}" name="_save">
+        </div>
+    </form>
+</div>
+{% endblock %}
