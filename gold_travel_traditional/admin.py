@@ -512,7 +512,7 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
                 source_state=obj.source_state,
                 state=Sale.STATE_PENDING
             )
-            my_form.fields['buyer_saig'].queryset = LkpSaig.objects.filter(state=obj.source_state)
+            my_form.fields['buyer_saig'].queryset = LkpSaig.objects.filter(state_id=obj.source_state_id)
             if my_form.is_valid():
                 choice = my_form.cleaned_data['batch_choice']
                 if choice == 'new':
@@ -556,7 +556,7 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
                 source_state=obj.source_state,
                 state=Sale.STATE_PENDING
             )
-            my_form.fields['buyer_saig'].queryset = LkpSaig.objects.filter(state=obj.source_state)
+            my_form.fields['buyer_saig'].queryset = LkpSaig.objects.filter(state_id=obj.source_state_id)
 
         context = dict(
             self.admin_site.each_context(request),
@@ -881,16 +881,14 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
 
         if request.method == "POST":
             my_form = AppMoveGoldTraditionalRenewForm(request.POST)
-            my_form.user = request.user
 
             if my_form.is_valid():
-                if obj and obj.state in [AppMoveGoldTraditional.STATE_EXPIRED]:
+                if obj.state == AppMoveGoldTraditional.STATE_EXPIRED:
                     obj.state = AppMoveGoldTraditional.STATE_RENEW
-                    obj.renew_date = timezone.now().date()
-
+                    obj.renew_date = my_form.cleaned_data['renew_date']
                     obj.save()
-                    self.log_change(request,obj,_('state_renew'))
-                    self.message_user(request,_('application changed successfully!'))
+                    self.log_change(request, obj, _('state_renew'))
+                    self.message_user(request, _('application changed successfully!'))
 
                 return HttpResponseRedirect(
                     reverse(
@@ -903,52 +901,16 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
                     )
                 )
         else:
-            # obj.code = ''
-            obj.renew_date = timezone.now().date()
-            my_form = AppMoveGoldTraditionalRenewForm(instance=obj)
-            my_form.user = request.user
-
-        fieldsets = [
-            (
-                None,
-                {
-                    'fields': [("code","renew_date")]
-                },
-            ),
-            (
-                _("almustafid data"),
-                {
-                    'fields': [("almustafid_name","almustafid_phone"), ("almustafid_identity_type", "almustafid_identity")]
-                },
-            ),
-            (
-                _("others"),
-                {
-                    'fields': [("jihat_alaisdar","wijhat_altarhil",)]
-                },
-            ),
-        ]
-        # fieldsets = [(None, {"fields": list(my_form.base_fields)})]
-        admin_form = admin.helpers.AdminForm(my_form, fieldsets, {})
+            my_form = AppMoveGoldTraditionalRenewForm(initial={'renew_date': timezone.now().date()})
 
         context = dict(
             self.admin_site.each_context(request),
-            original= obj,
-            adminform =admin_form, 
-            opts=self.opts,
+            object=obj,
+            form=my_form,
+            opts=AppMoveGoldTraditional._meta,
             title=_("renew_data"),
-            has_add_permission=False,
-            has_change_permission=True,
-            has_delete_permission=False,
-            has_view_permission=True,
-            has_editable_inline_admin_formsets=False,
-            add=False,
-            change= True,
-            save_as=False,
-            show_save=False,
         )
-        # return TemplateResponse(request, "admin/gold_travel_traditional/appmovegoldtraditional/renew_application.html", context)
-        return TemplateResponse(request, "admin/change_form.html", context)
+        return TemplateResponse(request, "admin/gold_travel_traditional/appmovegoldtraditional/renew_application.html", context)
 
     @admin.display(description=_('gold_weight_in_gram'))
     def total_gold_weight_display(self, obj):

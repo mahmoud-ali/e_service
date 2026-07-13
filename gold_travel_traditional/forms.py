@@ -274,52 +274,8 @@ class AppMoveGoldTraditionalArriveForm(forms.ModelForm):
             'arrival_attachement': _('مرفق الاستمارة'),
         }
 
-class AppMoveGoldTraditionalRenewForm(forms.ModelForm):
-    renew_date = forms.DateField(label=_("renew_date"), disabled=True, required=False)
-    jihat_alaisdar = forms.ModelChoiceField(queryset=LkpJihatAlaisdar.objects.none(), label=_("جهة الإصدار"))
-    wijhat_altarhil = forms.ModelChoiceField(queryset=LkpJihatAltarhil.objects.none(), label=_("جهة الوصول"))
-
-    user = None
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        if self.user and not self.user.is_superuser:
-            try:
-                gold_user = self.user.gold_travel_traditional
-                if gold_user.is_state_manager or gold_user.is_state_viewer:
-                    self.fields["jihat_alaisdar"].queryset = LkpJihatAlaisdar.objects.all()
-                    self.fields["wijhat_altarhil"].queryset = LkpJihatAltarhil.objects.all()
-                else:
-                    if gold_user.is_alaisdar_user:
-                        self.fields["jihat_alaisdar"].queryset = LkpJihatAlaisdar.objects.filter(
-                            id__in=gold_user.goldtraveltraditionaluserjihatalaisdar_set.values_list('jihat_alaisdar', flat=True)
-                        )
-                    else:
-                        self.fields["jihat_alaisdar"].queryset = LkpJihatAlaisdar.objects.none()
-                    
-                    if gold_user.is_tarhil_user:
-                        # BOTH: only can_arrive=False for issuing
-                        self.fields["wijhat_altarhil"].queryset = LkpJihatAltarhil.objects.filter(
-                            id__in=gold_user.goldtraveltraditionaluserjihattarhil_set.filter(can_arrive=False).values_list('wijhat_altarhil', flat=True)
-                        )
-                    else:
-                        # Pure alaisdar: show all destinations
-                        self.fields["wijhat_altarhil"].queryset = LkpJihatAltarhil.objects.filter(
-                            id__in=gold_user.goldtraveltraditionaluserjihattarhil_set.values_list('wijhat_altarhil', flat=True)
-                        )
-            except:
-                self.fields["jihat_alaisdar"].queryset = LkpJihatAlaisdar.objects.none()
-                self.fields["wijhat_altarhil"].queryset = LkpJihatAltarhil.objects.none()
-        else:
-            self.fields["jihat_alaisdar"].queryset = LkpJihatAlaisdar.objects.all()
-            self.fields["wijhat_altarhil"].queryset = LkpJihatAltarhil.objects.all()
-
-    class Meta:
-        model = AppMoveGoldTraditional    
-        fields = ["code","issue_date","almustafid_name","almustafid_phone","almustafid_identity_type","almustafid_identity","jihat_alaisdar","wijhat_altarhil",] 
-        # widgets = {
-        #     'issue_date': admin.widgets.AdminDateWidget(),
-        #     'jihat_alaisdar': forms.Select(),
-        #     'gold_weight_in_gram': forms.TextInput(),
-        # }
+class AppMoveGoldTraditionalRenewForm(forms.Form):
+    renew_date = forms.DateField(
+        label=_("renew_date"),
+        widget=admin.widgets.AdminDateWidget(attrs={'type': 'date'}),
+    )
