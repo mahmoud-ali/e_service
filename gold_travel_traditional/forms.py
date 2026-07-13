@@ -316,7 +316,7 @@ class AppMoveGoldTraditionalRenewForm(forms.ModelForm):
 
     class Meta:
         model = AppMoveGoldTraditional    
-        fields = ["code","issue_date","almustafid_name","almustafid_phone","almustafid_identity_type","almustafid_identity","jihat_alaisdar","wijhat_altarhil",] 
+        fields = ["code","renew_date","issue_date","almustafid_name","almustafid_phone","almustafid_identity_type","almustafid_identity","jihat_alaisdar","wijhat_altarhil",] 
         # widgets = {
         #     'issue_date': admin.widgets.AdminDateWidget(),
         #     'jihat_alaisdar': forms.Select(),
