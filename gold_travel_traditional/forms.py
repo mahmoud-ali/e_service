@@ -277,5 +277,5 @@ class AppMoveGoldTraditionalArriveForm(forms.ModelForm):
 class AppMoveGoldTraditionalRenewForm(forms.Form):
     renew_date = forms.DateField(
         label=_("renew_date"),
-        widget=admin.widgets.AdminDateWidget(attrs={'type': 'date'}),
+        widget=forms.DateInput(attrs={'type': 'date', 'class': 'vDateField'}),
     )
