@@ -988,7 +988,7 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
 
             # Action for Alaisdar users (Renew)
             if obj.state in [AppMoveGoldTraditional.STATE_EXPIRED]:
-                if is_alaisdar_user:
+                if is_alaisdar_user or is_manager or can_manage:
                     actions.append(f'<li><a class="changelink" href="{obj.pk}/renew">{_("state_renew")}</a></li>')                            
             
             # Action for Alaisdar users / State Manager (Print)
