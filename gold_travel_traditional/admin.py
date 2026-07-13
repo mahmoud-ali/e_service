@@ -909,6 +909,16 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
             form=my_form,
             opts=AppMoveGoldTraditional._meta,
             title=_("renew_data"),
+            add=False,
+            change=True,
+            is_popup=False,
+            save_as=False,
+            show_save=True,
+            has_add_permission=False,
+            has_change_permission=True,
+            has_delete_permission=False,
+            has_view_permission=True,
+            has_editable_inline_admin_formsets=False,
         )
         return TemplateResponse(request, "admin/gold_travel_traditional/appmovegoldtraditional/renew_application.html", context)
 
