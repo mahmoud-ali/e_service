@@ -368,6 +368,15 @@ class MeltBatch(LoggingModel):
             import datetime
             from django.db import transaction, IntegrityError
             prefix = "MB"
+            try:
+                # We expect created_by to be set before save or via current request
+                # However, since save() doesn't always have access to request, 
+                # we rely on source_state being set in admin's save_model
+                if self.source_state and self.source_state.code:
+                    prefix = f"MB-{self.source_state.code}"
+            except:
+                pass
+
             date_str = datetime.datetime.now().strftime("%Y%m")
             for attempt in range(5):
                 try:
@@ -441,6 +450,16 @@ class Sale(LoggingModel):
             import datetime
             from django.db import transaction, IntegrityError
             prefix = "S"
+
+            try:
+                # We expect created_by to be set before save or via current request
+                # However, since save() doesn't always have access to request, 
+                # we rely on source_state being set in admin's save_model
+                if self.source_state and self.source_state.code:
+                    prefix = f"S-{self.source_state.code}"
+            except:
+                pass
+
             date_str = datetime.datetime.now().strftime("%Y%m")
             for attempt in range(5):
                 try:
