@@ -985,7 +985,7 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
                 if obj.melt_batch:
                     if is_altarhil_user or can_manage:
                         actions.append(f'<li><a class="changelink" target="_blank" href="{obj.pk}/melt/print">{_("طباعة استمارة تسييح ومعاييرة")}</a></li>')
-                if not obj.sale and is_altarhil_user:
+                if not obj.sale and (is_altarhil_user or can_manage):
                     actions.append(f'<li><a class="changelink" href="{obj.pk}/sale">{_("بيع")}</a></li>')
                 if obj.sale and (is_altarhil_user or can_manage):
                     actions.append(f'<li><a class="changelink" target="_blank" href="{obj.pk}/sale/print">{_("طباعة استمارة بيع")}</a></li>')
