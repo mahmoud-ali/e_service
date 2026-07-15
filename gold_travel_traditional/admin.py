@@ -1172,13 +1172,21 @@ class MeltBatchAdmin(LogAdminMixin, admin.ModelAdmin):
     def total_weight_display(self, obj):
         return round(obj.total_weight, 2) if obj.total_weight else 0.0
 
+    def changelist_view(self, request, extra_context=None):
+        self.current_request = request
+        return super().changelist_view(request, extra_context=extra_context)
+
     @admin.display(description=_('print'))
     def print_button(self, obj):
+        if not self.has_change_permission(self.current_request, obj):
+            return '-'
         url = reverse("admin:gold_travel_traditional_meltbatch_print", args=[obj.pk])
         return format_html('<a class="changelink" target="_blank" href="{url}">{txt}</a>', url=url, txt=_('طباعة'))
 
     @admin.display(description=_('complete'))
     def complete_button(self, obj):
+        if not self.has_change_permission(self.current_request, obj):
+            return '-'
         if obj.state == MeltBatch.STATE_PENDING:
             url = reverse("admin:gold_travel_traditional_meltbatch_changelist") + f"{obj.pk}/complete/"
             return format_html('<a class="changelink" href="{url}">{txt}</a>', url=url, txt=_('إكمال'))
@@ -1340,8 +1348,14 @@ class SaleAdmin(LogAdminMixin, admin.ModelAdmin):
     def total_weight_display(self, obj):
         return round(obj.total_weight, 2) if obj.total_weight else 0.0
 
+    def changelist_view(self, request, extra_context=None):
+        self.current_request = request
+        return super().changelist_view(request, extra_context=extra_context)
+
     @admin.display(description=_('print'))
     def print_button(self, obj):
+        if not self.has_change_permission(self.current_request, obj):
+            return '-'
         record = obj.records.first()
         if record:
             url = reverse("admin:gold_travel_traditional_appmovegoldtraditional_changelist") + f"{record.pk}/sale/print/"
@@ -1350,6 +1364,8 @@ class SaleAdmin(LogAdminMixin, admin.ModelAdmin):
 
     @admin.display(description=_('complete'))
     def complete_button(self, obj):
+        if not self.has_change_permission(self.current_request, obj):
+            return '-'
         if obj.state == Sale.STATE_PENDING:
             url = reverse("admin:gold_travel_traditional_sale_changelist") + f"{obj.pk}/complete/"
             return format_html('<a class="changelink" href="{url}">{txt}</a>', url=url, txt=_('إكمال'))
@@ -1464,8 +1480,14 @@ class StorageAdmin(LogAdminMixin, admin.ModelAdmin):
     def expiry_date(self, obj):
         return obj.expiry_date
 
+    def changelist_view(self, request, extra_context=None):
+        self.current_request = request
+        return super().changelist_view(request, extra_context=extra_context)
+
     @admin.display(description=_('print'))
     def print_button(self, obj):
+        if not self.has_change_permission(self.current_request, obj):
+            return '-'
         record = obj.records.first()
         if record:
             url = reverse("admin:gold_travel_traditional_appmovegoldtraditional_changelist") + f"{record.pk}/storage/print/"
@@ -1474,6 +1496,8 @@ class StorageAdmin(LogAdminMixin, admin.ModelAdmin):
 
     @admin.display(description=_('complete'))
     def complete_button(self, obj):
+        if not self.has_change_permission(self.current_request, obj):
+            return '-'
         if obj.state == Storage.STATE_PENDING:
             url = reverse("admin:gold_travel_traditional_storage_changelist") + f"{obj.pk}/complete/"
             return format_html('<a class="changelink" href="{url}">{txt}</a>', url=url, txt=_('إكمال'))
