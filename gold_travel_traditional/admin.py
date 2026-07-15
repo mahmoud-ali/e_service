@@ -288,7 +288,10 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
                 filters |= models.Q(
                     wijhat_altarhil__in=gold_travel_traditional_user.goldtraveltraditionaluserjihattarhil_set.filter(can_arrive=True).values_list('wijhat_altarhil', flat=True),
                 )
-            qs = qs.filter(filters)
+            if filters:
+                qs = qs.filter(filters)
+            else:
+                qs = qs.none()
         except:
             qs = qs.none()
 
@@ -328,8 +331,6 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
                 return False
             except:
                 return False
-            
-            return True
         
         return False
 
@@ -347,8 +348,6 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
                 return False
             except:
                 return False
-            
-            return True
         
         return False
 
@@ -374,9 +373,10 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
 
         try:
             gold_user = request.user.gold_travel_traditional
-            if not gold_user.is_tarhil_user:
-                self.message_user(request, _('Only destination users can fill melt details.'), level='error')
-                return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
+            if not (request.user.is_superuser or request.user.groups.filter(name__in=("gold_travel_traditional_manager","gold_travel_traditional_manager_show")).exists()):
+                if not gold_user.is_tarhil_user:
+                    self.message_user(request, _('Only destination users can fill melt details.'), level='error')
+                    return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
         except:
             return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
 
@@ -387,7 +387,7 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
         if request.method == "POST":
             my_form = AppMoveGoldTraditionalMeltForm(request.POST)
             my_form.fields['existing_batch'].queryset = MeltBatch.objects.filter(
-                source_state=obj.source_state,
+                source_state=gold_user.state,
                 state=MeltBatch.STATE_PENDING
             )
             if my_form.is_valid():
@@ -397,7 +397,7 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
                         melt_date=my_form.cleaned_data['melt_date'],
                         melt_workshop=my_form.cleaned_data['melt_workshop'],
                         standardization_lab=my_form.cleaned_data['standardization_lab'],
-                        source_state=obj.source_state,
+                        source_state=gold_user.state,
                         created_by=request.user,
                         updated_by=request.user,
                     )
@@ -431,7 +431,7 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
             my_form = AppMoveGoldTraditionalMeltForm()
             # Filter existing batches by source_state and show only pending ones
             my_form.fields['existing_batch'].queryset = MeltBatch.objects.filter(
-                source_state=obj.source_state,
+                source_state=gold_user.state,
                 state=MeltBatch.STATE_PENDING
             )
 
@@ -446,6 +446,10 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
 
     def print_melt_view(self, request, pk):
         obj = AppMoveGoldTraditional.objects.get(pk=pk)
+        batch = obj.melt_batch
+        if not batch:
+            self.message_user(request, _('No melt batch found.'), level='error')
+            return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
 
         if not (request.user.is_superuser or request.user.groups.filter(name__in=("gold_travel_traditional_manager","gold_travel_traditional_manager_show")).exists()):
             try:
@@ -453,13 +457,11 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
                 if not (gold_user.is_tarhil_user or gold_user.is_state_manager):
                     self.message_user(request, _('Only destination users can print this form.'), level='error')
                     return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
+                if gold_user.is_state_manager and batch.source_state_id != gold_user.state_id:
+                    self.message_user(request, _('You can only print batches from your state.'), level='error')
+                    return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
             except:
                 return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
-
-        batch = obj.melt_batch
-        if not batch:
-            self.message_user(request, _('No melt batch found.'), level='error')
-            return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
 
         from itertools import zip_longest
 
@@ -496,9 +498,10 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
 
         try:
             gold_user = request.user.gold_travel_traditional
-            if not gold_user.is_tarhil_user:
-                self.message_user(request, _('Only destination users can create sales.'), level='error')
-                return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
+            if not (request.user.is_superuser or request.user.groups.filter(name__in=("gold_travel_traditional_manager","gold_travel_traditional_manager_show")).exists()):
+                if not gold_user.is_tarhil_user:
+                    self.message_user(request, _('Only destination users can create sales.'), level='error')
+                    return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
         except:
             return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
 
@@ -509,7 +512,7 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
         if request.method == "POST":
             my_form = AppMoveGoldTraditionalSaleForm(request.POST)
             my_form.fields['existing_sale'].queryset = Sale.objects.filter(
-                source_state=obj.source_state,
+                source_state=gold_user.state,
                 state=Sale.STATE_PENDING
             )
             my_form.fields['buyer_saig'].queryset = LkpSaig.objects.filter(state_id=obj.source_state_id)
@@ -524,7 +527,7 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
                         buyer_type=buyer_type,
                         buyer_exporter=buyer_exporter,
                         buyer_saig=buyer_saig,
-                        source_state=obj.source_state,
+                        source_state=gold_user.state,
                         created_by=request.user,
                         updated_by=request.user,
                     )
@@ -553,7 +556,7 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
         else:
             my_form = AppMoveGoldTraditionalSaleForm()
             my_form.fields['existing_sale'].queryset = Sale.objects.filter(
-                source_state=obj.source_state,
+                source_state=gold_user.state,
                 state=Sale.STATE_PENDING
             )
             my_form.fields['buyer_saig'].queryset = LkpSaig.objects.filter(state_id=obj.source_state_id)
@@ -569,6 +572,10 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
 
     def print_sale_view(self, request, pk):
         obj = AppMoveGoldTraditional.objects.get(pk=pk)
+        sale = obj.sale
+        if not sale:
+            self.message_user(request, _('No sale found.'), level='error')
+            return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
 
         if not (request.user.is_superuser or request.user.groups.filter(name__in=("gold_travel_traditional_manager","gold_travel_traditional_manager_show")).exists()):
             try:
@@ -576,13 +583,11 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
                 if not (gold_user.is_tarhil_user or gold_user.is_state_manager):
                     self.message_user(request, _('Only destination users can print this form.'), level='error')
                     return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
+                if gold_user.is_state_manager and sale.source_state_id != gold_user.state_id:
+                    self.message_user(request, _('You can only print sales from your state.'), level='error')
+                    return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
             except:
                 return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
-
-        sale = obj.sale
-        if not sale:
-            self.message_user(request, _('No sale found.'), level='error')
-            return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
 
         from itertools import zip_longest
 
@@ -617,9 +622,10 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
 
         try:
             gold_user = request.user.gold_travel_traditional
-            if not gold_user.is_tarhil_user:
-                self.message_user(request, _('Only destination users can create storage receipts.'), level='error')
-                return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
+            if not (request.user.is_superuser or request.user.groups.filter(name__in=("gold_travel_traditional_manager","gold_travel_traditional_manager_show")).exists()):
+                if not gold_user.is_tarhil_user:
+                    self.message_user(request, _('Only destination users can create storage receipts.'), level='error')
+                    return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
         except:
             return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
 
@@ -630,7 +636,7 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
         if request.method == "POST":
             my_form = AppMoveGoldTraditionalStorageForm(request.POST)
             my_form.fields['existing_storage'].queryset = Storage.objects.filter(
-                source_state=obj.source_state,
+                source_state=gold_user.state,
                 state=Storage.STATE_PENDING
             )
             if my_form.is_valid():
@@ -639,7 +645,7 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
                     storage = Storage.objects.create(
                         storage_date=my_form.cleaned_data['storage_date'],
                         note=my_form.cleaned_data.get('note', ''),
-                        source_state=obj.source_state,
+                        source_state=gold_user.state,
                         created_by=request.user,
                         updated_by=request.user,
                     )
@@ -666,7 +672,7 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
         else:
             my_form = AppMoveGoldTraditionalStorageForm()
             my_form.fields['existing_storage'].queryset = Storage.objects.filter(
-                source_state=obj.source_state,
+                source_state=gold_user.state,
                 state=Storage.STATE_PENDING
             )
 
@@ -681,6 +687,10 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
 
     def print_storage_view(self, request, pk):
         obj = AppMoveGoldTraditional.objects.get(pk=pk)
+        storage = obj.storage
+        if not storage:
+            self.message_user(request, _('No storage receipt found.'), level='error')
+            return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
 
         if not (request.user.is_superuser or request.user.groups.filter(name__in=("gold_travel_traditional_manager","gold_travel_traditional_manager_show")).exists()):
             try:
@@ -688,13 +698,11 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
                 if not (gold_user.is_tarhil_user or gold_user.is_state_manager):
                     self.message_user(request, _('Only destination users can print this form.'), level='error')
                     return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
+                if gold_user.is_state_manager and storage.source_state_id != gold_user.state_id:
+                    self.message_user(request, _('You can only print storage receipts from your state.'), level='error')
+                    return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
             except:
                 return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
-
-        storage = obj.storage
-        if not storage:
-            self.message_user(request, _('No storage receipt found.'), level='error')
-            return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
 
         from itertools import zip_longest
 
@@ -724,6 +732,13 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
         }
         return TemplateResponse(request, "gold_travel_traditional/gold_travel_traditional_storage.html", context)
     def identity_lookup(self, request):
+        if not (request.user.is_superuser or request.user.groups.filter(name__in=("gold_travel_traditional_manager","gold_travel_traditional_manager_show")).exists()):
+            try:
+                request.user.gold_travel_traditional
+            except:
+                from django.http import JsonResponse
+                return JsonResponse({'error': 'Unauthorized'}, status=403)
+
         identity = request.POST.get('identity', '') or request.GET.get('identity', '')
         # print(f"DEBUG identity_lookup: identity={identity}")
         if not identity:
@@ -758,16 +773,17 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
 
         try:
             gold_user = request.user.gold_travel_traditional
-            if gold_user.is_state_viewer:
-                self.message_user(request, _('Only state managers can cancel records.'), level='error')
-                return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
-            if gold_user.is_state_manager:
-                if obj.jihat_alaisdar.state_id != gold_user.state_id:
-                    self.message_user(request, _('You can only cancel records from your state.'), level='error')
+            if not (request.user.is_superuser or request.user.groups.filter(name__in=("gold_travel_traditional_manager","gold_travel_traditional_manager_show")).exists()):
+                if gold_user.is_state_viewer:
+                    self.message_user(request, _('Only state managers can cancel records.'), level='error')
                     return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
-            else:
-                self.message_user(request, _('Only state managers can cancel records.'), level='error')
-                return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
+                if gold_user.is_state_manager:
+                    if obj.jihat_alaisdar.state_id != gold_user.state_id:
+                        self.message_user(request, _('You can only cancel records from your state.'), level='error')
+                        return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
+                else:
+                    self.message_user(request, _('Only state managers can cancel records.'), level='error')
+                    return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
         except:
             return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
 
@@ -791,11 +807,16 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
                 if gold_user.is_state_viewer:
                     self.message_user(request, _('Only users from the issuing location can print this report.'), level='error')
                     return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
-                if not gold_user.is_alaisdar_user:
-                    self.message_user(request, _('Only users from the issuing location can print this report.'), level='error')
-                    return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
-                allowed_alaisdar = gold_user.goldtraveltraditionaluserjihatalaisdar_set.values_list('jihat_alaisdar', flat=True)
-                if obj.jihat_alaisdar_id not in allowed_alaisdar:
+                if gold_user.is_state_manager:
+                    if obj.jihat_alaisdar.state_id != gold_user.state_id:
+                        self.message_user(request, _('Only users from the issuing location can print this report.'), level='error')
+                        return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
+                elif gold_user.is_alaisdar_user:
+                    allowed_alaisdar = gold_user.goldtraveltraditionaluserjihatalaisdar_set.values_list('jihat_alaisdar', flat=True)
+                    if obj.jihat_alaisdar_id not in allowed_alaisdar:
+                        self.message_user(request, _('Only users from the issuing location can print this report.'), level='error')
+                        return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
+                else:
                     self.message_user(request, _('Only users from the issuing location can print this report.'), level='error')
                     return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
             except:
@@ -836,15 +857,16 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
         # Check if user has permission for this destination
         try:
             gold_user = request.user.gold_travel_traditional
-            if gold_user.is_state_viewer:
-                 self.message_user(request, _('Only users assigned to the destination location can mark this as arrived.'), level='error')
-                 return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
-            if not gold_user.is_tarhil_user:
-                 self.message_user(request, _('Only users assigned to the destination location can mark this as arrived.'), level='error')
-                 return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
-            if obj.wijhat_altarhil not in LkpJihatAltarhil.objects.filter(id__in=gold_user.goldtraveltraditionaluserjihattarhil_set.filter(can_arrive=True).values_list('wijhat_altarhil', flat=True)):
-                 self.message_user(request, _('Only users assigned to the destination location can mark this as arrived.'), level='error')
-                 return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
+            if not (request.user.is_superuser or request.user.groups.filter(name__in=("gold_travel_traditional_manager","gold_travel_traditional_manager_show")).exists()):
+                if gold_user.is_state_viewer:
+                     self.message_user(request, _('Only users assigned to the destination location can mark this as arrived.'), level='error')
+                     return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
+                if not gold_user.is_tarhil_user:
+                     self.message_user(request, _('Only users assigned to the destination location can mark this as arrived.'), level='error')
+                     return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
+                if not gold_user.goldtraveltraditionaluserjihattarhil_set.filter(wijhat_altarhil=obj.wijhat_altarhil, can_arrive=True).exists():
+                     self.message_user(request, _('Only users assigned to the destination location can mark this as arrived.'), level='error')
+                     return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
         except:
              return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
 
@@ -878,6 +900,26 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
     
     def renew_view(self, request, pk):
         obj = AppMoveGoldTraditional.objects.get(pk=pk)
+
+        if not (request.user.is_superuser or request.user.groups.filter(name__in=("gold_travel_traditional_manager","gold_travel_traditional_manager_show")).exists()):
+            try:
+                gold_user = request.user.gold_travel_traditional
+                if gold_user.is_state_viewer:
+                    self.message_user(request, _('Only state managers can renew records.'), level='error')
+                    return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
+                if gold_user.is_state_manager:
+                    if obj.jihat_alaisdar.state_id != gold_user.state_id:
+                        self.message_user(request, _('You can only renew records from your state.'), level='error')
+                        return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
+                elif gold_user.is_alaisdar_user:
+                    allowed = gold_user.goldtraveltraditionaluserjihatalaisdar_set.values_list('jihat_alaisdar', flat=True)
+                    if obj.jihat_alaisdar_id not in allowed:
+                        self.message_user(request, _('You can only renew records from your issuing location.'), level='error')
+                        return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
+                else:
+                    return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
+            except:
+                return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
 
         if request.method == "POST":
             my_form = AppMoveGoldTraditionalRenewForm(request.POST)
@@ -985,7 +1027,7 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
                 if obj.melt_batch:
                     if is_altarhil_user or can_manage:
                         actions.append(f'<li><a class="changelink" target="_blank" href="{obj.pk}/melt/print">{_("طباعة استمارة تسييح ومعاييرة")}</a></li>')
-                if not obj.sale and (is_altarhil_user or can_manage):
+                if not obj.sale and is_altarhil_user:
                     actions.append(f'<li><a class="changelink" href="{obj.pk}/sale">{_("بيع")}</a></li>')
                 if obj.sale and (is_altarhil_user or can_manage):
                     actions.append(f'<li><a class="changelink" target="_blank" href="{obj.pk}/sale/print">{_("طباعة استمارة بيع")}</a></li>')
@@ -1142,6 +1184,18 @@ class MeltBatchAdmin(LogAdminMixin, admin.ModelAdmin):
 
     def complete_view(self, request, pk):
         batch = MeltBatch.objects.get(pk=pk)
+        if not (request.user.is_superuser or request.user.groups.filter(name__in=("gold_travel_traditional_manager","gold_travel_traditional_manager_show")).exists()):
+            try:
+                gold_user = request.user.gold_travel_traditional
+                if gold_user.user_type not in [GoldTravelTraditionalUser.JIHAT_TARHIL, GoldTravelTraditionalUser.BOTH, GoldTravelTraditionalUser.STATE_MANAGER]:
+                    self.message_user(request, _('You do not have permission to complete batches.'), level='error')
+                    return redirect(reverse("admin:gold_travel_traditional_meltbatch_changelist"))
+                if gold_user.is_state_manager and batch.source_state_id != gold_user.state_id:
+                    self.message_user(request, _('You can only complete batches from your state.'), level='error')
+                    return redirect(reverse("admin:gold_travel_traditional_meltbatch_changelist"))
+            except:
+                self.message_user(request, _('You do not have permission to complete batches.'), level='error')
+                return redirect(reverse("admin:gold_travel_traditional_meltbatch_changelist"))
         if batch.state == MeltBatch.STATE_PENDING:
             batch.state = MeltBatch.STATE_COMPLETE
             batch.updated_by = request.user
@@ -1153,6 +1207,22 @@ class MeltBatchAdmin(LogAdminMixin, admin.ModelAdmin):
         from itertools import zip_longest
 
         batch = MeltBatch.objects.get(pk=pk)
+        if not (request.user.is_superuser or request.user.groups.filter(name__in=("gold_travel_traditional_manager","gold_travel_traditional_manager_show")).exists()):
+            try:
+                gold_user = request.user.gold_travel_traditional
+                if gold_user.is_state_viewer:
+                    self.message_user(request, _('You do not have permission to print batches.'), level='error')
+                    return redirect(reverse("admin:gold_travel_traditional_meltbatch_changelist"))
+                if not (gold_user.is_tarhil_user or gold_user.is_state_manager):
+                    self.message_user(request, _('You do not have permission to print batches.'), level='error')
+                    return redirect(reverse("admin:gold_travel_traditional_meltbatch_changelist"))
+                if gold_user.is_state_manager and batch.source_state_id != gold_user.state_id:
+                    self.message_user(request, _('You can only print batches from your state.'), level='error')
+                    return redirect(reverse("admin:gold_travel_traditional_meltbatch_changelist"))
+            except:
+                self.message_user(request, _('You do not have permission to print batches.'), level='error')
+                return redirect(reverse("admin:gold_travel_traditional_meltbatch_changelist"))
+
         records = batch.records.all()
 
         all_details = []
@@ -1292,6 +1362,18 @@ class SaleAdmin(LogAdminMixin, admin.ModelAdmin):
 
     def complete_view(self, request, pk):
         sale = Sale.objects.get(pk=pk)
+        if not (request.user.is_superuser or request.user.groups.filter(name__in=("gold_travel_traditional_manager","gold_travel_traditional_manager_show")).exists()):
+            try:
+                gold_user = request.user.gold_travel_traditional
+                if gold_user.user_type not in [GoldTravelTraditionalUser.JIHAT_TARHIL, GoldTravelTraditionalUser.BOTH, GoldTravelTraditionalUser.STATE_MANAGER]:
+                    self.message_user(request, _('You do not have permission to complete sales.'), level='error')
+                    return redirect(reverse("admin:gold_travel_traditional_sale_changelist"))
+                if gold_user.is_state_manager and sale.source_state_id != gold_user.state_id:
+                    self.message_user(request, _('You can only complete sales from your state.'), level='error')
+                    return redirect(reverse("admin:gold_travel_traditional_sale_changelist"))
+            except:
+                self.message_user(request, _('You do not have permission to complete sales.'), level='error')
+                return redirect(reverse("admin:gold_travel_traditional_sale_changelist"))
         if sale.state == Sale.STATE_PENDING:
             sale.state = Sale.STATE_COMPLETE
             sale.updated_by = request.user
@@ -1404,6 +1486,18 @@ class StorageAdmin(LogAdminMixin, admin.ModelAdmin):
 
     def complete_view(self, request, pk):
         storage = Storage.objects.get(pk=pk)
+        if not (request.user.is_superuser or request.user.groups.filter(name__in=("gold_travel_traditional_manager","gold_travel_traditional_manager_show")).exists()):
+            try:
+                gold_user = request.user.gold_travel_traditional
+                if gold_user.user_type not in [GoldTravelTraditionalUser.JIHAT_TARHIL, GoldTravelTraditionalUser.BOTH, GoldTravelTraditionalUser.STATE_MANAGER]:
+                    self.message_user(request, _('You do not have permission to complete storage receipts.'), level='error')
+                    return redirect(reverse("admin:gold_travel_traditional_storage_changelist"))
+                if gold_user.is_state_manager and storage.source_state_id != gold_user.state_id:
+                    self.message_user(request, _('You can only complete storage receipts from your state.'), level='error')
+                    return redirect(reverse("admin:gold_travel_traditional_storage_changelist"))
+            except:
+                self.message_user(request, _('You do not have permission to complete storage receipts.'), level='error')
+                return redirect(reverse("admin:gold_travel_traditional_storage_changelist"))
         if storage.state == Storage.STATE_PENDING:
             storage.state = Storage.STATE_COMPLETE
             storage.updated_by = request.user
