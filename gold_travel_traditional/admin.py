@@ -371,14 +371,18 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
     def melt_view(self, request, pk):
         obj = AppMoveGoldTraditional.objects.get(pk=pk)
 
+        gold_user = None
         try:
             gold_user = request.user.gold_travel_traditional
-            if not (request.user.is_superuser or request.user.groups.filter(name__in=("gold_travel_traditional_manager","gold_travel_traditional_manager_show")).exists()):
-                if not gold_user.is_tarhil_user:
-                    self.message_user(request, _('Only destination users can fill melt details.'), level='error')
-                    return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
         except:
-            return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
+            pass
+
+        if not (request.user.is_superuser or request.user.groups.filter(name__in=("gold_travel_traditional_manager","gold_travel_traditional_manager_show")).exists()):
+            if not gold_user or not gold_user.is_tarhil_user:
+                self.message_user(request, _('Only destination users can fill melt details.'), level='error')
+                return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
+
+        batch_source_state = gold_user.state if gold_user else obj.source_state
 
         if obj.state != AppMoveGoldTraditional.STATE_ARRIVED:
             self.message_user(request, _('Record must be in arrived state.'), level='error')
@@ -387,7 +391,7 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
         if request.method == "POST":
             my_form = AppMoveGoldTraditionalMeltForm(request.POST)
             my_form.fields['existing_batch'].queryset = MeltBatch.objects.filter(
-                source_state=gold_user.state,
+                source_state=batch_source_state,
                 state=MeltBatch.STATE_PENDING
             )
             if my_form.is_valid():
@@ -397,7 +401,7 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
                         melt_date=my_form.cleaned_data['melt_date'],
                         melt_workshop=my_form.cleaned_data['melt_workshop'],
                         standardization_lab=my_form.cleaned_data['standardization_lab'],
-                        source_state=gold_user.state,
+                        source_state=batch_source_state,
                         created_by=request.user,
                         updated_by=request.user,
                     )
@@ -431,7 +435,7 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
             my_form = AppMoveGoldTraditionalMeltForm()
             # Filter existing batches by source_state and show only pending ones
             my_form.fields['existing_batch'].queryset = MeltBatch.objects.filter(
-                source_state=gold_user.state,
+                source_state=batch_source_state,
                 state=MeltBatch.STATE_PENDING
             )
 
@@ -496,14 +500,18 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
     def sale_view(self, request, pk):
         obj = AppMoveGoldTraditional.objects.get(pk=pk)
 
+        gold_user = None
         try:
             gold_user = request.user.gold_travel_traditional
-            if not (request.user.is_superuser or request.user.groups.filter(name__in=("gold_travel_traditional_manager","gold_travel_traditional_manager_show")).exists()):
-                if not gold_user.is_tarhil_user:
-                    self.message_user(request, _('Only destination users can create sales.'), level='error')
-                    return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
         except:
-            return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
+            pass
+
+        if not (request.user.is_superuser or request.user.groups.filter(name__in=("gold_travel_traditional_manager","gold_travel_traditional_manager_show")).exists()):
+            if not gold_user or not gold_user.is_tarhil_user:
+                self.message_user(request, _('Only destination users can create sales.'), level='error')
+                return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
+
+        batch_source_state = gold_user.state if gold_user else obj.source_state
 
         if obj.state not in [AppMoveGoldTraditional.STATE_ARRIVED]:
             self.message_user(request, _('Record must be in arrived state.'), level='error')
@@ -512,7 +520,7 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
         if request.method == "POST":
             my_form = AppMoveGoldTraditionalSaleForm(request.POST)
             my_form.fields['existing_sale'].queryset = Sale.objects.filter(
-                source_state=gold_user.state,
+                source_state=batch_source_state,
                 state=Sale.STATE_PENDING
             )
             my_form.fields['buyer_saig'].queryset = LkpSaig.objects.filter(state_id=obj.source_state_id)
@@ -527,7 +535,7 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
                         buyer_type=buyer_type,
                         buyer_exporter=buyer_exporter,
                         buyer_saig=buyer_saig,
-                        source_state=gold_user.state,
+                        source_state=batch_source_state,
                         created_by=request.user,
                         updated_by=request.user,
                     )
@@ -556,7 +564,7 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
         else:
             my_form = AppMoveGoldTraditionalSaleForm()
             my_form.fields['existing_sale'].queryset = Sale.objects.filter(
-                source_state=gold_user.state,
+                source_state=batch_source_state,
                 state=Sale.STATE_PENDING
             )
             my_form.fields['buyer_saig'].queryset = LkpSaig.objects.filter(state_id=obj.source_state_id)
@@ -620,14 +628,18 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
     def storage_view(self, request, pk):
         obj = AppMoveGoldTraditional.objects.get(pk=pk)
 
+        gold_user = None
         try:
             gold_user = request.user.gold_travel_traditional
-            if not (request.user.is_superuser or request.user.groups.filter(name__in=("gold_travel_traditional_manager","gold_travel_traditional_manager_show")).exists()):
-                if not gold_user.is_tarhil_user:
-                    self.message_user(request, _('Only destination users can create storage receipts.'), level='error')
-                    return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
         except:
-            return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
+            pass
+
+        if not (request.user.is_superuser or request.user.groups.filter(name__in=("gold_travel_traditional_manager","gold_travel_traditional_manager_show")).exists()):
+            if not gold_user or not gold_user.is_tarhil_user:
+                self.message_user(request, _('Only destination users can create storage receipts.'), level='error')
+                return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
+
+        batch_source_state = gold_user.state if gold_user else obj.source_state
 
         if obj.state != AppMoveGoldTraditional.STATE_ARRIVED:
             self.message_user(request, _('Record must be in arrived state.'), level='error')
@@ -636,7 +648,7 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
         if request.method == "POST":
             my_form = AppMoveGoldTraditionalStorageForm(request.POST)
             my_form.fields['existing_storage'].queryset = Storage.objects.filter(
-                source_state=gold_user.state,
+                source_state=batch_source_state,
                 state=Storage.STATE_PENDING
             )
             if my_form.is_valid():
@@ -645,7 +657,7 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
                     storage = Storage.objects.create(
                         storage_date=my_form.cleaned_data['storage_date'],
                         note=my_form.cleaned_data.get('note', ''),
-                        source_state=gold_user.state,
+                        source_state=batch_source_state,
                         created_by=request.user,
                         updated_by=request.user,
                     )
@@ -672,7 +684,7 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
         else:
             my_form = AppMoveGoldTraditionalStorageForm()
             my_form.fields['existing_storage'].queryset = Storage.objects.filter(
-                source_state=gold_user.state,
+                source_state=batch_source_state,
                 state=Storage.STATE_PENDING
             )
 
@@ -771,9 +783,9 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
     def cancel_view(self, request, pk):
         obj = AppMoveGoldTraditional.objects.get(pk=pk)
 
-        try:
-            gold_user = request.user.gold_travel_traditional
-            if not (request.user.is_superuser or request.user.groups.filter(name__in=("gold_travel_traditional_manager","gold_travel_traditional_manager_show")).exists()):
+        if not (request.user.is_superuser or request.user.groups.filter(name__in=("gold_travel_traditional_manager","gold_travel_traditional_manager_show")).exists()):
+            try:
+                gold_user = request.user.gold_travel_traditional
                 if gold_user.is_state_viewer:
                     self.message_user(request, _('Only state managers can cancel records.'), level='error')
                     return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
@@ -784,8 +796,8 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
                 else:
                     self.message_user(request, _('Only state managers can cancel records.'), level='error')
                     return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
-        except:
-            return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
+            except:
+                return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
 
         if obj.state not in [AppMoveGoldTraditional.STATE_CANCLED] and not obj.sale and not obj.storage:
             obj.state = AppMoveGoldTraditional.STATE_CANCLED
@@ -855,9 +867,9 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
         obj = AppMoveGoldTraditional.objects.get(pk=pk)
         
         # Check if user has permission for this destination
-        try:
-            gold_user = request.user.gold_travel_traditional
-            if not (request.user.is_superuser or request.user.groups.filter(name__in=("gold_travel_traditional_manager","gold_travel_traditional_manager_show")).exists()):
+        if not (request.user.is_superuser or request.user.groups.filter(name__in=("gold_travel_traditional_manager","gold_travel_traditional_manager_show")).exists()):
+            try:
+                gold_user = request.user.gold_travel_traditional
                 if gold_user.is_state_viewer:
                      self.message_user(request, _('Only users assigned to the destination location can mark this as arrived.'), level='error')
                      return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
@@ -867,8 +879,8 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
                 if not gold_user.goldtraveltraditionaluserjihattarhil_set.filter(wijhat_altarhil=obj.wijhat_altarhil, can_arrive=True).exists():
                      self.message_user(request, _('Only users assigned to the destination location can mark this as arrived.'), level='error')
                      return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
-        except:
-             return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
+            except:
+                 return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
 
         if obj.state not in [AppMoveGoldTraditional.STATE_NEW, AppMoveGoldTraditional.STATE_RENEW, AppMoveGoldTraditional.STATE_EXPIRED]:
             self.message_user(request, _('Record cannot be marked as arrived in its current state.'), level='error')
