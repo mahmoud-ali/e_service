@@ -1,0 +1,39 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_urls %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+<a href="{% url 'admin:index' %}">{% translate 'Home' %}</a>
+&rsaquo; <a href="{% url 'admin:app_list' app_label=opts.app_label %}">{{ opts.app_config.verbose_name }}</a>
+&rsaquo; <a href="{% url opts|admin_urlname:'changelist' %}">{{ opts.verbose_name_plural|capfirst }}</a>
+&rsaquo; <a href="{% url opts|admin_urlname:'change' object.pk|admin_urlquote %}">{{ object|truncatewords:"18" }}</a>
+&rsaquo; {% translate 'تأكيد الإلغاء' %}
+</div>
+{% endblock %}
+
+{% block content %}
+<div id="content-main">
+    <div style="background:#fff3cd; padding:12px 15px; margin-bottom:20px; border:1px solid #ffc107; border-radius:4px;">
+        <strong>{% translate 'تحذير' %}:</strong>
+        {% translate 'هل أنت متأكد من إلغاء هذه المعاملة؟ لا يمكن التراجع عن هذا الإجراء.' %}
+    </div>
+
+    <div style="background:#f8f8f8; padding:12px 15px; margin-bottom:20px; border:1px solid #eee; border-radius:4px;">
+        <table>
+            <tr><td style="padding:4px 10px 4px 0;"><strong>{% translate 'الكود' %}:</strong></td><td>{{ object.code }}</td></tr>
+            <tr><td style="padding:4px 10px 4px 0;"><strong>{% translate 'المستفيد' %}:</strong></td><td>{{ object.almustafid_name }}</td></tr>
+            <tr><td style="padding:4px 10px 4px 0;"><strong>{% translate 'جهة الإصدار' %}:</strong></td><td>{{ object.jihat_alaisdar.name }}</td></tr>
+            <tr><td style="padding:4px 10px 4px 0;"><strong>{% translate 'جهة الوصول' %}:</strong></td><td>{{ object.wijhat_altarhil.name }}</td></tr>
+            <tr><td style="padding:4px 10px 4px 0;"><strong>{% translate 'الحالة' %}:</strong></td><td>{{ object.get_state_display }}</td></tr>
+            <tr><td style="padding:4px 10px 4px 0;"><strong>{% translate 'الوزن' %}:</strong></td><td>{{ object.gold_weight_in_gram|floatformat:2 }} {% translate 'جرام' %}</td></tr>
+        </table>
+    </div>
+
+    <form method="post" novalidate>{% csrf_token %}
+        <div class="submit-row">
+            <input class="default" type="submit" value="{% translate 'تأكيد الإلغاء' %}" name="_confirm">
+            <a href="{% url opts|admin_urlname:'changelist' %}" class="button" style="display:inline-block; padding:10px 15px; border-radius:4px; background:#79aec8; color:#fff; margin-right:10px;">{% translate 'تراجع' %}</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

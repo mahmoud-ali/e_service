@@ -799,14 +799,23 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
             except:
                 return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
 
-        if obj.state not in [AppMoveGoldTraditional.STATE_CANCLED] and not obj.sale and not obj.storage:
-            obj.state = AppMoveGoldTraditional.STATE_CANCLED
-            obj.updated_by = request.user
-            obj.save()
-            self.log_change(request, obj, _('state_cancled'))
-            self.message_user(request, _('application cancelled successfully!'))
-        
-        return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
+        if request.method == "POST":
+            if obj.state not in [AppMoveGoldTraditional.STATE_CANCLED] and not obj.sale and not obj.storage:
+                obj.state = AppMoveGoldTraditional.STATE_CANCLED
+                obj.updated_by = request.user
+                obj.save()
+                self.log_change(request, obj, _('state_cancled'))
+                self.message_user(request, _('application cancelled successfully!'))
+            
+            return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
+
+        context = dict(
+            self.admin_site.each_context(request),
+            object=obj,
+            opts=AppMoveGoldTraditional._meta,
+            title=_('تأكيد الإلغاء'),
+        )
+        return TemplateResponse(request, "admin/gold_travel_traditional/appmovegoldtraditional/cancel_confirm.html", context)
 
     def print_view(self, request, pk):
         from gold_travel_traditional.models import AppMoveGoldTraditional
