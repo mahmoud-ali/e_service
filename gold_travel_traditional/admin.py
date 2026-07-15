@@ -979,7 +979,7 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
     @admin.display(description=_('show_actions'))
     def show_actions(self, obj):
         request = self.current_request
-        is_manager = request.user.groups.filter(name__in=("gold_travel_traditional_manager","gold_travel_traditional_manager_show")).exists()
+        is_manager = request.user.is_superuser or request.user.groups.filter(name__in=("gold_travel_traditional_manager","gold_travel_traditional_manager_show")).exists()
 
         def get_allowed_actions(obj):
             actions = []
@@ -989,6 +989,7 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
             is_state_manager = False
             is_state_viewer = False
             can_manage = False
+            can_manage_dest = False
             try:
                 gold_user = request.user.gold_travel_traditional
                 if gold_user.is_state_viewer:
@@ -997,6 +998,7 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
                 is_altarhil_user = gold_user.is_tarhil_user
                 is_state_manager = gold_user.is_state_manager
                 can_manage = is_state_manager and obj.jihat_alaisdar.state_id == gold_user.state_id
+                can_manage_dest = is_state_manager and obj.wijhat_altarhil.state_id == gold_user.state_id
             except:
                 pass
 
@@ -1012,33 +1014,33 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
 
             # Action for Altarhil users (Arrived)
             if obj.state in [AppMoveGoldTraditional.STATE_NEW, AppMoveGoldTraditional.STATE_RENEW, AppMoveGoldTraditional.STATE_EXPIRED, ]:            
-                if is_altarhil_user:
+                if is_altarhil_user or is_manager:
                     try:
                         gold_user = request.user.gold_travel_traditional
-                        if gold_user.goldtraveltraditionaluserjihattarhil_set.filter(wijhat_altarhil=obj.wijhat_altarhil, can_arrive=True).exists():
+                        if is_manager or gold_user.goldtraveltraditionaluserjihattarhil_set.filter(wijhat_altarhil=obj.wijhat_altarhil, can_arrive=True).exists():
                             actions.append(f'<li><a class="changelink" href="{obj.pk}/arrived">{_("وصل")}</a></li>')
                     except:
                         pass
 
             # Action for Altarhil users (Melt) - only on ARRIVED records
             if obj.state == AppMoveGoldTraditional.STATE_ARRIVED:
-                if not obj.melt_batch and not obj.sale and not obj.storage and is_altarhil_user:
+                if not obj.melt_batch and not obj.sale and not obj.storage and (is_altarhil_user or is_manager):
                     actions.append(f'<li><a class="changelink" href="{obj.pk}/melt">{_("استمارة التسييح والمعايرة")}</a></li>')
                 if obj.melt_batch:
-                    if is_altarhil_user or can_manage:
+                    if is_altarhil_user or is_manager or can_manage_dest:
                         actions.append(f'<li><a class="changelink" target="_blank" href="{obj.pk}/melt/print">{_("طباعة استمارة تسييح ومعاييرة")}</a></li>')
-                if not obj.sale and is_altarhil_user:
+                if not obj.sale and (is_altarhil_user or is_manager):
                     actions.append(f'<li><a class="changelink" href="{obj.pk}/sale">{_("بيع")}</a></li>')
-                if obj.sale and (is_altarhil_user or can_manage):
+                if obj.sale and (is_altarhil_user or is_manager or can_manage_dest):
                     actions.append(f'<li><a class="changelink" target="_blank" href="{obj.pk}/sale/print">{_("طباعة استمارة بيع")}</a></li>')
-                if not obj.storage and is_altarhil_user:
+                if not obj.storage and (is_altarhil_user or is_manager):
                     actions.append(f'<li><a class="changelink" href="{obj.pk}/storage">{_("تخزين")}</a></li>')
-                if obj.storage and (is_altarhil_user or can_manage):
+                if obj.storage and (is_altarhil_user or is_manager or can_manage_dest):
                     actions.append(f'<li><a class="changelink" target="_blank" href="{obj.pk}/storage/print">{_("طباعة شهادة تخزين")}</a></li>')
 
             # Action for State Manager (Cancel)
             if obj.state != AppMoveGoldTraditional.STATE_CANCLED and not obj.sale and not obj.storage:
-                if can_manage:
+                if can_manage or is_manager:
                     actions.append(f'<li><a class="changelink" href="{obj.pk}/cancel">{_("إلغاء")}</a></li>')
 
             if not actions:
