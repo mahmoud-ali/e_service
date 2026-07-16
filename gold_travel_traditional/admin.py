@@ -339,6 +339,9 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
             if obj.state != AppMoveGoldTraditional.STATE_NEW:
                 return False
             
+            if request.user.is_superuser or request.user.groups.filter(name="gold_travel_traditional_manager").exists():
+                return True
+            
             try:
                 gold_user = request.user.gold_travel_traditional
                 if gold_user.is_state_viewer:
@@ -1183,6 +1186,13 @@ class MeltBatchAdmin(LogAdminMixin, admin.ModelAdmin):
         except:
             return False
 
+    def has_delete_permission(self, request, obj=None):
+        if obj is None:
+            return False
+        if obj.state == MeltBatch.STATE_COMPLETE:
+            return False
+        return super().has_delete_permission(request, obj)
+
     def get_urls(self):
         urls = super().get_urls()
         my_urls = [
@@ -1370,6 +1380,13 @@ class SaleAdmin(LogAdminMixin, admin.ModelAdmin):
         except:
             return False
 
+    def has_delete_permission(self, request, obj=None):
+        if obj is None:
+            return False
+        if obj.state == Sale.STATE_COMPLETE:
+            return False
+        return super().has_delete_permission(request, obj)
+
     @admin.display(description=_('total_weight'))
     def total_weight_display(self, obj):
         return round(obj.total_weight, 2) if obj.total_weight else 0.0
@@ -1503,6 +1520,13 @@ class StorageAdmin(LogAdminMixin, admin.ModelAdmin):
             return gold_user.user_type in [GoldTravelTraditionalUser.JIHAT_TARHIL, GoldTravelTraditionalUser.BOTH, GoldTravelTraditionalUser.STATE_MANAGER, GoldTravelTraditionalUser.STATE_VIEWER]
         except:
             return False
+
+    def has_delete_permission(self, request, obj=None):
+        if obj is None:
+            return False
+        if obj.state == Storage.STATE_COMPLETE:
+            return False
+        return super().has_delete_permission(request, obj)
 
     @admin.display(description=_('expiry_date'))
     def expiry_date(self, obj):
