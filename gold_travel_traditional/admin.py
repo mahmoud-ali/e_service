@@ -1125,7 +1125,9 @@ class MeltBatchRecordsInline(admin.TabularInline):
 class MeltBatchAdmin(LogAdminMixin, admin.ModelAdmin):
     inlines = [MeltBatchRecordsInline]
     list_display = ['code', 'melt_date', 'melt_workshop', 'standardization_lab', 'record_count', 'total_weight_display', 'state', 'print_button', 'complete_button']
-    list_filter = ['melt_date', 'state']
+    list_filter = ['state', ]
+    date_hierarchy = "melt_date"
+
     search_fields = ['code', 'melt_workshop', 'standardization_lab']
     readonly_fields = ['code']
     actions = ['mark_complete', 'print_selected_batches']
@@ -1309,7 +1311,9 @@ class SaleRecordsInline(admin.TabularInline):
 class SaleAdmin(LogAdminMixin, admin.ModelAdmin):
     inlines = [SaleRecordsInline]
     list_display = ['code', 'sale_date', 'buyer_display', 'record_count', 'total_weight_display', 'state', 'print_button', 'complete_button']
-    list_filter = ['sale_date', 'state']
+    list_filter = ['state','buyer_type', ('buyer_exporter',RelatedOnlyFieldListFilterNotEmpty), ('buyer_saig',RelatedOnlyFieldListFilterNotEmpty)]
+    date_hierarchy = "sale_date"
+
     search_fields = ['code', 'buyer_exporter__name', 'buyer_saig__name']
     readonly_fields = ['code']
     actions = ['mark_complete']
@@ -1441,7 +1445,9 @@ class StorageRecordsInline(admin.TabularInline):
 class StorageAdmin(LogAdminMixin, admin.ModelAdmin):
     inlines = [StorageRecordsInline]
     list_display = ['code', 'storage_date', 'expiry_date', 'note', 'record_count', 'total_weight', 'state', 'print_button', 'complete_button']
-    list_filter = ['storage_date', 'state']
+    list_filter = ['state',]
+    date_hierarchy = "storage_date"
+
     search_fields = ['code', 'note']
     readonly_fields = ['code']
     actions = ['mark_complete']
