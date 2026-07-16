@@ -56,6 +56,56 @@ class LkpSaigAdmin(admin.ModelAdmin):
     list_filter = ["state"]
     search_fields = ["name", "code"]
 
+    def _state_manager(self, request):
+        try:
+            gold_user = request.user.gold_travel_traditional
+            if gold_user.is_state_manager:
+                return gold_user
+        except:
+            pass
+        return None
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        if request.user.is_superuser or request.user.groups.filter(name__in=("gold_travel_traditional_manager","gold_travel_traditional_manager_show")).exists():
+            return qs
+        gold_user = self._state_manager(request)
+        if gold_user:
+            return qs.filter(state=gold_user.state)
+        return qs
+
+    def has_view_permission(self, request, obj=None):
+        if super().has_view_permission(request, obj):
+            return True
+        return self._state_manager(request) is not None
+
+    def has_add_permission(self, request):
+        if super().has_add_permission(request):
+            return True
+        return self._state_manager(request) is not None
+
+    def has_change_permission(self, request, obj=None):
+        if super().has_change_permission(request, obj):
+            return True
+        gold_user = self._state_manager(request)
+        if not gold_user:
+            return False
+        if obj:
+            return obj.state_id == gold_user.state_id
+        return True
+
+    def get_fields(self, request, obj=None):
+        fields = super().get_fields(request, obj)
+        if self._state_manager(request) and not request.user.is_superuser:
+            fields = [f for f in fields if f != 'state']
+        return fields
+
+    def save_model(self, request, obj, form, change):
+        gold_user = self._state_manager(request)
+        if gold_user and not request.user.is_superuser:
+            obj.state = gold_user.state
+        return super().save_model(request, obj, form, change)
+
 admin.site.register(LkpSaig, LkpSaigAdmin)
 
 class GoldTravelTraditionalUserJihatAlaisdarInline(admin.TabularInline):
