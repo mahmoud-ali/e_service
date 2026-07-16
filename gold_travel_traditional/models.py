@@ -423,6 +423,7 @@ class Sale(LoggingModel):
     buyer_type = models.CharField(_('نوع المشتري'), max_length=10, choices=[('exporter',_('مصدر')),('saig',_('صائغ'))], default='exporter')
     source_state = models.ForeignKey(LkpState, on_delete=models.PROTECT, verbose_name=_('state'))
     state = models.IntegerField(_('record_state'), choices=STATE_CHOICES, default=STATE_PENDING)
+    note = models.CharField(_('ملاحظات'), max_length=150, null=True, blank=True)
 
     @property
     def total_weight(self):

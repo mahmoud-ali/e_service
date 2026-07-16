@@ -29,6 +29,12 @@
             <th width="15%" class="active" style="border: none !important;">عدد القطع الكلي</th>
             <td style="border: none !important;">{{sale.total_alloy_count}}</td>
         </tr>
+        {% if sale.note %}
+        <tr style="border: none !important;">
+            <th width="15%" class="active" style="border: none !important;">ملاحظات</th>
+            <td colspan="3" style="border: none !important;">{{sale.note}}</td>
+        </tr>
+        {% endif %}
     </table>
 </div>
 

@@ -1310,11 +1310,11 @@ class SaleRecordsInline(admin.TabularInline):
 
 class SaleAdmin(LogAdminMixin, admin.ModelAdmin):
     inlines = [SaleRecordsInline]
-    list_display = ['code', 'sale_date', 'buyer_display', 'record_count', 'total_weight_display', 'state', 'print_button', 'complete_button']
+    list_display = ['code', 'sale_date', 'buyer_display', 'record_count', 'total_weight_display', 'note', 'state', 'print_button', 'complete_button']
     list_filter = ['state','buyer_type', ('buyer_exporter',RelatedOnlyFieldListFilterNotEmpty), ('buyer_saig',RelatedOnlyFieldListFilterNotEmpty)]
     date_hierarchy = "sale_date"
 
-    search_fields = ['code', 'buyer_exporter__name', 'buyer_saig__name']
+    search_fields = ['code', 'buyer_exporter__name', 'buyer_saig__name', 'note']
     readonly_fields = ['code']
     actions = ['mark_complete']
 
@@ -1322,13 +1322,14 @@ class SaleAdmin(LogAdminMixin, admin.ModelAdmin):
         readonly_fields = list(super().get_readonly_fields(request, obj))
         if obj and obj.state == Sale.STATE_COMPLETE:
             readonly_fields = list(set(readonly_fields + [
-                'sale_date', 'buyer_type', 'buyer_exporter', 'buyer_saig', 'state'
+                'sale_date', 'buyer_type', 'buyer_exporter', 'buyer_saig', 'note', 'state'
             ]))
         return readonly_fields
 
     fieldsets = [
         (None, {'fields': ['code', 'sale_date']}),
         (_('sale_details'), {'fields': [('buyer_type',), ('buyer_exporter', 'buyer_saig')]}),
+        (None, {'fields': ['note']}),
         (None, {'fields': ['state']}),
     ]
 
