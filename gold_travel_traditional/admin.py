@@ -16,7 +16,7 @@ from django.contrib import admin
 
 from company_profile.models import LkpState
 from gold_travel_traditional.forms import AppMoveGoldTraditionalAddForm, AppMoveGoldTraditionalArriveForm, AppMoveGoldTraditionalMeltForm, AppMoveGoldTraditionalRenewForm, AppMoveGoldTraditionalSaleForm, AppMoveGoldTraditionalStorageForm, GoldTravelTraditionalUserJihatAlaisdarForm, GoldTravelTraditionalUserJihatTarhilForm, GoldTravelTraditionalUserForm
-from gold_travel_traditional.models import AppMoveGoldTraditional, AppMoveGoldTraditionalDetail, GoldTravelTraditionalState, GoldTravelTraditionalUser, GoldTravelTraditionalUserJihatAlaisdar, GoldTravelTraditionalUserJihatTarhil, LkpJihatAlaisdar, LkpJihatAltarhil, LkpSaig, MeltBatch, Sale, Storage
+from gold_travel_traditional.models import AppMoveGoldTraditional, AppMoveGoldTraditionalDetail, GoldTravelTraditionalState, GoldTravelTraditionalUser, GoldTravelTraditionalUserJihatAlaisdar, GoldTravelTraditionalUserJihatTarhil, LkpJihatAlaisdar, LkpJihatAltarhil, LkpSaig, MeltBatch, MeltBatchDetail, Sale, Storage
 
 def get_user_state(request):
     try:
@@ -1299,8 +1299,32 @@ class MeltBatchRecordsInline(admin.TabularInline):
     def has_add_permission(self, request, obj):
         return False
 
+class MeltBatchDetailInline(admin.TabularInline):
+    model = MeltBatchDetail
+    fields = ['alloy_weight_gram', 'alloy_shape']
+
+    def _is_complete(self, obj):
+        return bool(obj and obj.state == MeltBatch.STATE_COMPLETE)
+
+    def get_extra(self, request, obj=None, **kwargs):
+        return 0 if self._is_complete(obj) else 1
+
+    def get_readonly_fields(self, request, obj=None):
+        if self._is_complete(obj):
+            return ['alloy_weight_gram', 'alloy_shape']
+        return []
+
+    def has_add_permission(self, request, obj=None):
+        return not self._is_complete(obj)
+
+    def has_change_permission(self, request, obj=None):
+        return True
+
+    def has_delete_permission(self, request, obj=None):
+        return not self._is_complete(obj)
+
 class MeltBatchAdmin(LogAdminMixin, admin.ModelAdmin):
-    inlines = [MeltBatchRecordsInline]
+    inlines = [MeltBatchRecordsInline, MeltBatchDetailInline]
     list_display = ['code', 'melt_date', 'melt_workshop', 'standardization_lab', 'record_count', 'total_weight_display', 'state', 'print_button', 'complete_button']
     list_filter = ['state', ]
     date_hierarchy = "melt_date"
@@ -1332,10 +1356,9 @@ class MeltBatchAdmin(LogAdminMixin, admin.ModelAdmin):
             return qs
         try:
             gold_user = request.user.gold_travel_traditional
-            if gold_user.is_state_manager or gold_user.is_state_viewer:
+            if gold_user.is_state_manager or gold_user.is_state_viewer or gold_user.user_type in [GoldTravelTraditionalUser.JIHAT_TARHIL, GoldTravelTraditionalUser.BOTH]:
                 return qs.filter(source_state=gold_user.state)
-            if gold_user.user_type in [GoldTravelTraditionalUser.JIHAT_TARHIL, GoldTravelTraditionalUser.BOTH]:
-                return qs.filter(source_state=gold_user.state, state=MeltBatch.STATE_PENDING)
+
             return qs.none()
         except:
             return qs.none()
@@ -1414,6 +1437,9 @@ class MeltBatchAdmin(LogAdminMixin, admin.ModelAdmin):
                 self.message_user(request, _('You do not have permission to complete batches.'), level='error')
                 return redirect(reverse("admin:gold_travel_traditional_meltbatch_changelist"))
         if batch.state == MeltBatch.STATE_PENDING:
+            if not batch.details.exists():
+                self.message_user(request, _('لا يمكن إكمال الاستمارة قبل إدخال تفاصيل السبائك الناتجة'), level='error')
+                return redirect(reverse("admin:gold_travel_traditional_meltbatch_changelist"))
             batch.state = MeltBatch.STATE_COMPLETE
             batch.updated_by = request.user
             batch.save()
@@ -1469,8 +1495,20 @@ class MeltBatchAdmin(LogAdminMixin, admin.ModelAdmin):
 
     @admin.action(description=_('مكتمل'))
     def mark_complete(self, request, queryset):
-        queryset.filter(state=MeltBatch.STATE_PENDING).update(state=MeltBatch.STATE_COMPLETE, updated_by=request.user)
-        self.message_user(request, _('Selected batches marked as complete.'))
+        completed = 0
+        skipped = 0
+        for batch in queryset.filter(state=MeltBatch.STATE_PENDING):
+            if not batch.details.exists():
+                skipped += 1
+                continue
+            batch.state = MeltBatch.STATE_COMPLETE
+            batch.updated_by = request.user
+            batch.save()
+            completed += 1
+        if completed:
+            self.message_user(request, _('Selected batches marked as complete.'))
+        if skipped:
+            self.message_user(request, _('تم تجاهل الاستمارات التي لا تحتوي على تفاصيل السبائك الناتجة'), level='warning')
 
     @admin.action(description=_('طباعة الاستمارات المحددة'))
     def print_selected_batches(self, request, queryset):

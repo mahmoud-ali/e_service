@@ -365,6 +365,12 @@ class MeltBatch(LoggingModel):
     def record_count(self):
         return self.records.count()
 
+    def clean(self):
+        super().clean()
+        if self.pk and self.state == self.STATE_COMPLETE and not self.details.exists():
+            from django.core.exceptions import ValidationError
+            raise ValidationError(_('لا يمكن إكمال الاستمارة قبل إدخال تفاصيل السبائك الناتجة'))
+
     def save(self, *args, **kwargs):
         if not self.code:
             import datetime
@@ -408,6 +414,28 @@ class MeltBatch(LoggingModel):
         ordering = ["-id"]
         verbose_name = _('استمارة تسييح ومعاييرة')
         verbose_name_plural = _('استمارات تسييح ومعاييرة')
+
+class MeltBatchDetail(models.Model):
+    SHAPE_CIRCULAR = 1
+    SHAPE_RECTANGULAR = 2
+    SHAPE_OTHER = 3
+
+    SHAPE_CHOICES = {
+        SHAPE_CIRCULAR: _('دائري'),
+        SHAPE_RECTANGULAR: _('مستطيل'),
+        SHAPE_OTHER: _('أخرى'),
+    }
+
+    master = models.ForeignKey(MeltBatch, on_delete=models.CASCADE, related_name="details", verbose_name=_("master"))
+    alloy_weight_gram = models.FloatField(_("وزن السبيكة بالجرام"))
+    alloy_shape = models.IntegerField(_("شكل السبيكة"), choices=SHAPE_CHOICES)
+
+    def __str__(self):
+        return f'{self.master} - {self.alloy_weight_gram}g'
+
+    class Meta:
+        verbose_name = _("تفاصيل السبيكة الناتجة")
+        verbose_name_plural = _("تفاصيل السبائك الناتجة")
 
 class Sale(LoggingModel):
     STATE_PENDING = 1
