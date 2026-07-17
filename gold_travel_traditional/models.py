@@ -584,6 +584,11 @@ class Storage(LoggingModel):
             import datetime
             from django.db import transaction, IntegrityError
             prefix = "TKh"
+            try:
+                if self.source_state and self.source_state.code:
+                    prefix = f"TKh-{self.source_state.code}"
+            except:
+                pass
             date_str = datetime.datetime.now().strftime("%Y%m")
             for attempt in range(5):
                 try:
