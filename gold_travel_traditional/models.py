@@ -350,6 +350,8 @@ class MeltBatch(LoggingModel):
     standardization_lab = models.CharField(_('مختبر المعايرة'), max_length=150)
     source_state = models.ForeignKey(LkpState, on_delete=models.PROTECT, verbose_name=_('state'))
     state = models.IntegerField(_('record_state'), choices=STATE_CHOICES, default=STATE_PENDING)
+    sale = models.ForeignKey('Sale', on_delete=models.SET_NULL, null=True, blank=True, related_name='melt_batches', verbose_name=_('فاتورة البيع'))
+    storage = models.ForeignKey('Storage', on_delete=models.SET_NULL, null=True, blank=True, related_name='melt_batches', verbose_name=_('شهادة تخزين'))
 
     @property
     def total_weight(self):
@@ -364,6 +366,16 @@ class MeltBatch(LoggingModel):
     @property
     def record_count(self):
         return self.records.count()
+
+    @property
+    def output_weight(self):
+        return self.details.aggregate(
+            total=models.Sum('alloy_weight_gram')
+        )['total'] or 0.0
+
+    @property
+    def output_alloy_count(self):
+        return self.details.count()
 
     def clean(self):
         super().clean()
@@ -457,13 +469,19 @@ class Sale(LoggingModel):
 
     @property
     def total_weight(self):
-        return self.records.aggregate(
+        regular = self.records.aggregate(
             total=models.Sum('details__alloy_weight_gram')
         )['total'] or 0.0
+        melt = self.melt_batches.aggregate(
+            total=models.Sum('details__alloy_weight_gram')
+        )['total'] or 0.0
+        return regular + melt
 
     @property
     def total_alloy_count(self):
-        return sum(r.details.count() for r in self.records.all())
+        regular = sum(r.details.count() for r in self.records.all())
+        melt = sum(b.details.count() for b in self.melt_batches.all())
+        return regular + melt
 
 
     @property
@@ -474,7 +492,7 @@ class Sale(LoggingModel):
 
     @property
     def record_count(self):
-        return self.records.count()
+        return self.records.count() + self.melt_batches.count()
 
     def save(self, *args, **kwargs):
         if not self.code:
@@ -543,17 +561,23 @@ class Storage(LoggingModel):
 
     @property
     def total_weight(self):
-        return self.records.aggregate(
+        regular = self.records.aggregate(
             total=models.Sum('details__alloy_weight_gram')
         )['total'] or 0.0
+        melt = self.melt_batches.aggregate(
+            total=models.Sum('details__alloy_weight_gram')
+        )['total'] or 0.0
+        return regular + melt
 
     @property
     def total_alloy_count(self):
-        return sum(r.details.count() for r in self.records.all())
+        regular = sum(r.details.count() for r in self.records.all())
+        melt = sum(b.details.count() for b in self.melt_batches.all())
+        return regular + melt
 
     @property
     def record_count(self):
-        return self.records.count()
+        return self.records.count() + self.melt_batches.count()
 
     def save(self, *args, **kwargs):
         if not self.code:

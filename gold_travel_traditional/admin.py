@@ -15,7 +15,7 @@ from django.forms.widgets import TextInput
 from django.contrib import admin
 
 from company_profile.models import LkpState
-from gold_travel_traditional.forms import AppMoveGoldTraditionalAddForm, AppMoveGoldTraditionalArriveForm, AppMoveGoldTraditionalMeltForm, AppMoveGoldTraditionalRenewForm, AppMoveGoldTraditionalSaleForm, AppMoveGoldTraditionalStorageForm, GoldTravelTraditionalUserJihatAlaisdarForm, GoldTravelTraditionalUserJihatTarhilForm, GoldTravelTraditionalUserForm
+from gold_travel_traditional.forms import AppMoveGoldTraditionalAddForm, AppMoveGoldTraditionalArriveForm, AppMoveGoldTraditionalMeltForm, AppMoveGoldTraditionalRenewForm, AppMoveGoldTraditionalSaleForm, AppMoveGoldTraditionalStorageForm, GoldTravelTraditionalUserJihatAlaisdarForm, GoldTravelTraditionalUserJihatTarhilForm, GoldTravelTraditionalUserForm, MeltBatchSaleForm, MeltBatchStorageForm
 from gold_travel_traditional.models import AppMoveGoldTraditional, AppMoveGoldTraditionalDetail, GoldTravelTraditionalState, GoldTravelTraditionalUser, GoldTravelTraditionalUserJihatAlaisdar, GoldTravelTraditionalUserJihatTarhil, LkpJihatAlaisdar, LkpJihatAltarhil, LkpSaig, MeltBatch, MeltBatchDetail, Sale, Storage
 
 def get_user_state(request):
@@ -1325,7 +1325,7 @@ class MeltBatchDetailInline(admin.TabularInline):
 
 class MeltBatchAdmin(LogAdminMixin, admin.ModelAdmin):
     inlines = [MeltBatchRecordsInline, MeltBatchDetailInline]
-    list_display = ['code', 'melt_date', 'melt_workshop', 'standardization_lab', 'record_count', 'total_weight_display', 'state', 'print_button', 'complete_button']
+    list_display = ['code', 'melt_date', 'melt_workshop', 'standardization_lab', 'record_count', 'total_weight_display', 'state', 'print_button', 'sale_button', 'storage_button', 'complete_button']
     list_filter = ['state', ]
     date_hierarchy = "melt_date"
 
@@ -1337,14 +1337,14 @@ class MeltBatchAdmin(LogAdminMixin, admin.ModelAdmin):
         readonly_fields = list(super().get_readonly_fields(request, obj))
         if obj and obj.state == MeltBatch.STATE_COMPLETE:
             readonly_fields = list(set(readonly_fields + [
-                'melt_date', 'melt_workshop', 'standardization_lab', 'state'
+                'melt_date', 'melt_workshop', 'standardization_lab', 'state', 'sale', 'storage'
             ]))
         return readonly_fields
 
     fieldsets = [
         (None, {'fields': ['code', 'melt_date']}),
         (_('melt_details'), {'fields': [('melt_workshop', 'standardization_lab')]}),
-        (None, {'fields': ['state']}),
+        (None, {'fields': ['state', 'sale', 'storage']}),
     ]
 
     def has_add_permission(self, request):
@@ -1395,6 +1395,10 @@ class MeltBatchAdmin(LogAdminMixin, admin.ModelAdmin):
         my_urls = [
             path("<int:pk>/batch-print/", self.admin_site.admin_view(self.batch_print_view), name="gold_travel_traditional_meltbatch_print"),
             path("<int:pk>/complete/", self.admin_site.admin_view(self.complete_view)),
+            path("<int:pk>/sale/", self.admin_site.admin_view(self.sale_view)),
+            path("<int:pk>/sale/print/", self.admin_site.admin_view(self.print_sale_view)),
+            path("<int:pk>/storage/", self.admin_site.admin_view(self.storage_view)),
+            path("<int:pk>/storage/print/", self.admin_site.admin_view(self.print_storage_view)),
         ]
         return my_urls + urls
 
@@ -1422,6 +1426,30 @@ class MeltBatchAdmin(LogAdminMixin, admin.ModelAdmin):
             return format_html('<a class="changelink" href="{url}">{txt}</a>', url=url, txt=_('إكمال'))
         return '-'
 
+    @admin.display(description=_('sale'))
+    def sale_button(self, obj):
+        if not self.has_view_permission(self.current_request, obj):
+            return '-'
+        if obj.state == MeltBatch.STATE_COMPLETE and not obj.sale:
+            url = reverse("admin:gold_travel_traditional_meltbatch_changelist") + f"{obj.pk}/sale/"
+            return format_html('<a class="changelink" href="{url}">{txt}</a>', url=url, txt=_('بيع'))
+        if obj.sale:
+            url = reverse("admin:gold_travel_traditional_meltbatch_changelist") + f"{obj.pk}/sale/print/"
+            return format_html('<a class="changelink" target="_blank" href="{url}">{txt}</a>', url=url, txt=obj.sale.code)
+        return '-'
+
+    @admin.display(description=_('storage'))
+    def storage_button(self, obj):
+        if not self.has_view_permission(self.current_request, obj):
+            return '-'
+        if obj.state == MeltBatch.STATE_COMPLETE and not obj.storage:
+            url = reverse("admin:gold_travel_traditional_meltbatch_changelist") + f"{obj.pk}/storage/"
+            return format_html('<a class="changelink" href="{url}">{txt}</a>', url=url, txt=_('تخزين'))
+        if obj.storage:
+            url = reverse("admin:gold_travel_traditional_meltbatch_changelist") + f"{obj.pk}/storage/print/"
+            return format_html('<a class="changelink" target="_blank" href="{url}">{txt}</a>', url=url, txt=obj.storage.code)
+        return '-'
+
     def complete_view(self, request, pk):
         batch = MeltBatch.objects.get(pk=pk)
         if not (request.user.is_superuser or request.user.groups.filter(name__in=("gold_travel_traditional_manager","gold_travel_traditional_manager_show")).exists()):
@@ -1445,6 +1473,285 @@ class MeltBatchAdmin(LogAdminMixin, admin.ModelAdmin):
             batch.save()
             self.message_user(request, _('Batch marked as complete.'))
         return redirect(reverse("admin:gold_travel_traditional_meltbatch_changelist"))
+
+    def sale_view(self, request, pk):
+        batch = MeltBatch.objects.get(pk=pk)
+
+        gold_user = None
+        try:
+            gold_user = request.user.gold_travel_traditional
+        except:
+            pass
+
+        if not (request.user.is_superuser or request.user.groups.filter(name__in=("gold_travel_traditional_manager","gold_travel_traditional_manager_show")).exists()):
+            if not gold_user or not gold_user.is_tarhil_user:
+                self.message_user(request, _('Only destination users can create sales.'), level='error')
+                return redirect("admin:gold_travel_traditional_meltbatch_changelist")
+
+        batch_source_state = gold_user.state if gold_user else batch.source_state
+
+        if batch.state != MeltBatch.STATE_COMPLETE:
+            self.message_user(request, _('Batch must be completed first.'), level='error')
+            return redirect("admin:gold_travel_traditional_meltbatch_changelist")
+
+        if request.method == "POST":
+            my_form = MeltBatchSaleForm(request.POST)
+            my_form.fields['existing_sale'].queryset = Sale.objects.filter(
+                source_state=batch_source_state,
+                state=Sale.STATE_PENDING
+            )
+            my_form.fields['buyer_saig'].queryset = LkpSaig.objects.filter(state_id=batch.source_state_id)
+            if my_form.is_valid():
+                choice = my_form.cleaned_data['batch_choice']
+                if choice == 'new':
+                    buyer_type = my_form.cleaned_data['buyer_type']
+                    buyer_exporter = my_form.cleaned_data.get('buyer_exporter')
+                    buyer_saig = my_form.cleaned_data.get('buyer_saig')
+                    sale = Sale.objects.create(
+                        sale_date=my_form.cleaned_data['sale_date'],
+                        buyer_type=buyer_type,
+                        buyer_exporter=buyer_exporter,
+                        buyer_saig=buyer_saig,
+                        source_state=batch_source_state,
+                        created_by=request.user,
+                        updated_by=request.user,
+                    )
+                    batch.sale = sale
+                    batch.save()
+                    self.log_change(request, batch, _('sale_created'))
+                else:
+                    sale = my_form.cleaned_data['existing_sale']
+                    batch.sale = sale
+                    batch.save()
+                    self.log_change(request, batch, _('sale_assigned'))
+
+                self.message_user(request, _('Sale saved successfully!'))
+                return HttpResponseRedirect(
+                    reverse(
+                        "%s:%s_%s_changelist"
+                        % (
+                            self.admin_site.name,
+                            batch._meta.app_label,
+                            batch._meta.model_name,
+                        )
+                    ) + f"{batch.pk}/sale/print/"
+                )
+        else:
+            my_form = MeltBatchSaleForm()
+            my_form.fields['existing_sale'].queryset = Sale.objects.filter(
+                source_state=batch_source_state,
+                state=Sale.STATE_PENDING
+            )
+            my_form.fields['buyer_saig'].queryset = LkpSaig.objects.filter(state_id=batch.source_state_id)
+
+        context = dict(
+            self.admin_site.each_context(request),
+            object=batch,
+            form=my_form,
+            opts=MeltBatch._meta,
+            title=_("sale_details"),
+        )
+        return TemplateResponse(request, "admin/gold_travel_traditional/appmovegoldtraditional/sale_form.html", context)
+
+    def print_sale_view(self, request, pk):
+        from itertools import zip_longest
+
+        batch = MeltBatch.objects.get(pk=pk)
+        sale = batch.sale
+        if not sale:
+            self.message_user(request, _('No sale found.'), level='error')
+            return redirect("admin:gold_travel_traditional_meltbatch_changelist")
+
+        if not (request.user.is_superuser or request.user.groups.filter(name__in=("gold_travel_traditional_manager","gold_travel_traditional_manager_show")).exists()):
+            try:
+                gold_user = request.user.gold_travel_traditional
+                if not (gold_user.is_tarhil_user or gold_user.is_state_manager):
+                    self.message_user(request, _('Only destination users can print this form.'), level='error')
+                    return redirect("admin:gold_travel_traditional_meltbatch_changelist")
+                if gold_user.is_state_manager and sale.source_state_id != gold_user.state_id:
+                    self.message_user(request, _('You can only print sales from your state.'), level='error')
+                    return redirect("admin:gold_travel_traditional_meltbatch_changelist")
+            except:
+                return redirect("admin:gold_travel_traditional_meltbatch_changelist")
+
+        # Combine all records' AppMoveGoldTraditionalDetail + all melt batches' MeltBatchDetail
+        all_details = []
+        for record in sale.records.all():
+            all_details.extend(record.details.all())
+        for mb in sale.melt_batches.all():
+            all_details.extend(mb.details.all())
+
+        chunk_size = 40
+        alloy_chunks = []
+        for i in range(0, len(all_details), chunk_size):
+            chunk = all_details[i:i + chunk_size]
+            half = (len(chunk) + 1) // 2
+            left_half = chunk[:half]
+            right_half = chunk[half:]
+            rows = list(zip_longest(left_half, right_half))
+            alloy_chunks.append({
+                'rows': rows,
+                'start_index': i + 1,
+                'half_offset': half
+            })
+
+        class _Row:
+            __slots__ = ('code', 'almustafid_name', 'jihat_alaisdar', 'gold_weight_in_gram', 'alloy_count')
+            def __init__(self, code, name, source_name, weight, count):
+                self.code = code
+                self.almustafid_name = name
+                self.jihat_alaisdar = type('_', (), {'name': source_name})
+                self.gold_weight_in_gram = weight
+                self.alloy_count = count
+
+        records = []
+        for r in sale.records.all():
+            records.append(_Row(r.code, r.almustafid_name, r.jihat_alaisdar.name, r.gold_weight_in_gram, r.alloy_count))
+        for mb in sale.melt_batches.all():
+            records.append(_Row(mb.code, mb.melt_workshop, mb.source_state.name if mb.source_state else '', mb.output_weight, mb.output_alloy_count))
+
+        context = {
+            'sale': sale,
+            'records': records,
+            'alloy_chunks': alloy_chunks,
+        }
+        return TemplateResponse(request, "gold_travel_traditional/gold_travel_traditional_sale.html", context)
+
+    def storage_view(self, request, pk):
+        batch = MeltBatch.objects.get(pk=pk)
+
+        gold_user = None
+        try:
+            gold_user = request.user.gold_travel_traditional
+        except:
+            pass
+
+        if not (request.user.is_superuser or request.user.groups.filter(name__in=("gold_travel_traditional_manager","gold_travel_traditional_manager_show")).exists()):
+            if not gold_user or not gold_user.is_tarhil_user:
+                self.message_user(request, _('Only destination users can create storage receipts.'), level='error')
+                return redirect("admin:gold_travel_traditional_meltbatch_changelist")
+
+        batch_source_state = gold_user.state if gold_user else batch.source_state
+
+        if batch.state != MeltBatch.STATE_COMPLETE:
+            self.message_user(request, _('Batch must be completed first.'), level='error')
+            return redirect("admin:gold_travel_traditional_meltbatch_changelist")
+
+        if request.method == "POST":
+            my_form = MeltBatchStorageForm(request.POST)
+            my_form.fields['existing_storage'].queryset = Storage.objects.filter(
+                source_state=batch_source_state,
+                state=Storage.STATE_PENDING
+            )
+            if my_form.is_valid():
+                choice = my_form.cleaned_data['batch_choice']
+                if choice == 'new':
+                    storage = Storage.objects.create(
+                        storage_date=my_form.cleaned_data['storage_date'],
+                        note=my_form.cleaned_data.get('note', ''),
+                        source_state=batch_source_state,
+                        created_by=request.user,
+                        updated_by=request.user,
+                    )
+                    batch.storage = storage
+                    batch.save()
+                    self.log_change(request, batch, _('storage_created'))
+                else:
+                    storage = my_form.cleaned_data['existing_storage']
+                    batch.storage = storage
+                    batch.save()
+                    self.log_change(request, batch, _('storage_assigned'))
+
+                self.message_user(request, _('Storage receipt saved successfully!'))
+                return HttpResponseRedirect(
+                    reverse(
+                        "%s:%s_%s_changelist"
+                        % (
+                            self.admin_site.name,
+                            batch._meta.app_label,
+                            batch._meta.model_name,
+                        )
+                    ) + f"{batch.pk}/storage/print/"
+                )
+        else:
+            my_form = MeltBatchStorageForm()
+            my_form.fields['existing_storage'].queryset = Storage.objects.filter(
+                source_state=batch_source_state,
+                state=Storage.STATE_PENDING
+            )
+
+        context = dict(
+            self.admin_site.each_context(request),
+            object=batch,
+            form=my_form,
+            opts=MeltBatch._meta,
+            title=_("تخزين"),
+        )
+        return TemplateResponse(request, "admin/gold_travel_traditional/appmovegoldtraditional/storage_form.html", context)
+
+    def print_storage_view(self, request, pk):
+        from itertools import zip_longest
+
+        batch = MeltBatch.objects.get(pk=pk)
+        storage = batch.storage
+        if not storage:
+            self.message_user(request, _('No storage receipt found.'), level='error')
+            return redirect("admin:gold_travel_traditional_meltbatch_changelist")
+
+        if not (request.user.is_superuser or request.user.groups.filter(name__in=("gold_travel_traditional_manager","gold_travel_traditional_manager_show")).exists()):
+            try:
+                gold_user = request.user.gold_travel_traditional
+                if not (gold_user.is_tarhil_user or gold_user.is_state_manager):
+                    self.message_user(request, _('Only destination users can print this form.'), level='error')
+                    return redirect("admin:gold_travel_traditional_meltbatch_changelist")
+                if gold_user.is_state_manager and storage.source_state_id != gold_user.state_id:
+                    self.message_user(request, _('You can only print storage receipts from your state.'), level='error')
+                    return redirect("admin:gold_travel_traditional_meltbatch_changelist")
+            except:
+                return redirect("admin:gold_travel_traditional_meltbatch_changelist")
+
+        # Combine all records' AppMoveGoldTraditionalDetail + all melt batches' MeltBatchDetail
+        all_details = []
+        for record in storage.records.all():
+            all_details.extend(record.details.all())
+        for mb in storage.melt_batches.all():
+            all_details.extend(mb.details.all())
+
+        chunk_size = 40
+        alloy_chunks = []
+        for i in range(0, len(all_details), chunk_size):
+            chunk = all_details[i:i + chunk_size]
+            half = (len(chunk) + 1) // 2
+            left_half = chunk[:half]
+            right_half = chunk[half:]
+            rows = list(zip_longest(left_half, right_half))
+            alloy_chunks.append({
+                'rows': rows,
+                'start_index': i + 1,
+                'half_offset': half
+            })
+
+        class _Row:
+            __slots__ = ('code', 'almustafid_name', 'jihat_alaisdar', 'gold_weight_in_gram', 'alloy_count')
+            def __init__(self, code, name, source_name, weight, count):
+                self.code = code
+                self.almustafid_name = name
+                self.jihat_alaisdar = type('_', (), {'name': source_name})
+                self.gold_weight_in_gram = weight
+                self.alloy_count = count
+
+        records = []
+        for r in storage.records.all():
+            records.append(_Row(r.code, r.almustafid_name, r.jihat_alaisdar.name, r.gold_weight_in_gram, r.alloy_count))
+        for mb in storage.melt_batches.all():
+            records.append(_Row(mb.code, mb.melt_workshop, mb.source_state.name if mb.source_state else '', mb.output_weight, mb.output_alloy_count))
+
+        context = {
+            'storage': storage,
+            'records': records,
+            'alloy_chunks': alloy_chunks,
+        }
+        return TemplateResponse(request, "gold_travel_traditional/gold_travel_traditional_storage.html", context)
 
     def batch_print_view(self, request, pk):
         from itertools import zip_longest
@@ -1530,8 +1837,26 @@ class SaleRecordsInline(admin.TabularInline):
     def has_add_permission(self, request, obj):
         return False
 
+class SaleMeltBatchesInline(admin.TabularInline):
+    model = MeltBatch
+    fields = ['code', 'melt_workshop', 'total_weight_display']
+    readonly_fields = ['code', 'melt_workshop', 'total_weight_display']
+    can_delete = False
+    extra = 0
+    max_num = 0
+
+    @admin.display(description=_('total_weight'))
+    def total_weight_display(self, obj):
+        return round(obj.total_weight, 2) if obj.total_weight else 0.0
+
+    def has_add_permission(self, request, obj):
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        return True
+
 class SaleAdmin(LogAdminMixin, admin.ModelAdmin):
-    inlines = [SaleRecordsInline]
+    inlines = [SaleRecordsInline, SaleMeltBatchesInline]
     list_display = ['code', 'sale_date', 'buyer_display', 'record_count', 'total_weight_display', 'note', 'state', 'print_button', 'complete_button']
     list_filter = ['state','buyer_type', ('buyer_exporter',RelatedOnlyFieldListFilterNotEmpty), ('buyer_saig',RelatedOnlyFieldListFilterNotEmpty)]
     date_hierarchy = "sale_date"
@@ -1672,8 +1997,26 @@ class StorageRecordsInline(admin.TabularInline):
     def has_add_permission(self, request, obj):
         return False
 
+class StorageMeltBatchesInline(admin.TabularInline):
+    model = MeltBatch
+    fields = ['code', 'melt_workshop', 'total_weight_display']
+    readonly_fields = ['code', 'melt_workshop', 'total_weight_display']
+    can_delete = False
+    extra = 0
+    max_num = 0
+
+    @admin.display(description=_('total_weight'))
+    def total_weight_display(self, obj):
+        return round(obj.total_weight, 2) if obj.total_weight else 0.0
+
+    def has_add_permission(self, request, obj):
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        return True
+
 class StorageAdmin(LogAdminMixin, admin.ModelAdmin):
-    inlines = [StorageRecordsInline]
+    inlines = [StorageRecordsInline, StorageMeltBatchesInline]
     list_display = ['code', 'storage_date', 'expiry_date', 'note', 'record_count', 'total_weight', 'state', 'print_button', 'complete_button']
     list_filter = ['state',]
     date_hierarchy = "storage_date"
