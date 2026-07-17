@@ -852,8 +852,12 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
             except:
                 return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
 
+        if obj.state != AppMoveGoldTraditional.STATE_NEW:
+            self.message_user(request, _('Only new records can be cancelled.'), level='error')
+            return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
+
         if request.method == "POST":
-            if obj.state not in [AppMoveGoldTraditional.STATE_CANCLED] and not obj.sale and not obj.storage:
+            if obj.state == AppMoveGoldTraditional.STATE_NEW:
                 obj.state = AppMoveGoldTraditional.STATE_CANCLED
                 obj.updated_by = request.user
                 obj.save()
@@ -927,20 +931,32 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
     
     def arrived_view(self, request, pk):
         obj = AppMoveGoldTraditional.objects.get(pk=pk)
-        
+
+        gold_user = None
+        try:
+            gold_user = request.user.gold_travel_traditional
+        except:
+            pass
+
         # Check if user has permission for this destination
         if not (request.user.is_superuser or request.user.groups.filter(name__in=("gold_travel_traditional_manager","gold_travel_traditional_manager_show")).exists()):
             try:
-                gold_user = request.user.gold_travel_traditional
+                if not gold_user:
+                    return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
                 if gold_user.is_state_viewer:
-                     self.message_user(request, _('Only users assigned to the destination location can mark this as arrived.'), level='error')
-                     return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
-                if not gold_user.is_tarhil_user:
-                     self.message_user(request, _('Only users assigned to the destination location can mark this as arrived.'), level='error')
-                     return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
-                if not gold_user.goldtraveltraditionaluserjihattarhil_set.filter(wijhat_altarhil=obj.wijhat_altarhil, can_arrive=True).exists():
-                     self.message_user(request, _('Only users assigned to the destination location can mark this as arrived.'), level='error')
-                     return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
+                    self.message_user(request, _('Only users assigned to the destination location can mark this as arrived.'), level='error')
+                    return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
+                elif gold_user.is_state_manager:
+                    if obj.wijhat_altarhil.state_id != gold_user.state_id:
+                        self.message_user(request, _('You can only mark records arriving in your state.'), level='error')
+                        return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
+                elif gold_user.is_tarhil_user:
+                    if not gold_user.goldtraveltraditionaluserjihattarhil_set.filter(wijhat_altarhil=obj.wijhat_altarhil, can_arrive=True).exists():
+                        self.message_user(request, _('Only users assigned to the destination location can mark this as arrived.'), level='error')
+                        return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
+                else:
+                    self.message_user(request, _('Only users assigned to the destination location can mark this as arrived.'), level='error')
+                    return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
             except:
                  return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
 
@@ -948,8 +964,11 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
             self.message_user(request, _('Record cannot be marked as arrived in its current state.'), level='error')
             return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
 
+        is_state_mgr = gold_user.is_state_manager if gold_user else False
         if request.method == "POST":
             my_form = AppMoveGoldTraditionalArriveForm(request.POST, request.FILES, instance=obj)
+            if is_state_mgr:
+                my_form.fields['arrival_note'].required = True
             if my_form.is_valid():
                 if not request.FILES.get('arrival_attachement'):
                     my_form.add_error('arrival_attachement', _('Attachment is required.'))
@@ -962,6 +981,8 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
                     return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
         else:
             my_form = AppMoveGoldTraditionalArriveForm(instance=obj)
+            if is_state_mgr:
+                my_form.fields['arrival_note'].required = True
 
         context = dict(
             self.admin_site.each_context(request),
@@ -1086,12 +1107,12 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
                 if is_alaisdar_user or is_manager or can_manage:
                     actions.append(f'<li><a class="changelink" target="_blank" href="{obj.pk}/print">{_("طباعة استمارة ترحيل")}</a></li>')
 
-            # Action for Altarhil users (Arrived)
+            # Action for Altarhil users / Destination State Manager (Arrived)
             if obj.state in [AppMoveGoldTraditional.STATE_NEW, AppMoveGoldTraditional.STATE_RENEW, AppMoveGoldTraditional.STATE_EXPIRED, ]:            
-                if is_altarhil_user or is_manager:
+                if is_altarhil_user or is_manager or can_manage_dest:
                     try:
                         gold_user = request.user.gold_travel_traditional
-                        if is_manager or gold_user.goldtraveltraditionaluserjihattarhil_set.filter(wijhat_altarhil=obj.wijhat_altarhil, can_arrive=True).exists():
+                        if is_manager or can_manage_dest or gold_user.goldtraveltraditionaluserjihattarhil_set.filter(wijhat_altarhil=obj.wijhat_altarhil, can_arrive=True).exists():
                             actions.append(f'<li><a class="changelink" href="{obj.pk}/arrived">{_("وصل")}</a></li>')
                     except:
                         pass
@@ -1112,8 +1133,8 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
                 if obj.storage and (is_altarhil_user or is_manager or can_manage_dest):
                     actions.append(f'<li><a class="changelink" target="_blank" href="{obj.pk}/storage/print">{_("طباعة شهادة تخزين")}</a></li>')
 
-            # Action for State Manager (Cancel)
-            if obj.state != AppMoveGoldTraditional.STATE_CANCLED and not obj.sale and not obj.storage:
+            # Action for State Manager (Cancel) - only on NEW records
+            if obj.state == AppMoveGoldTraditional.STATE_NEW:
                 if can_manage or is_manager:
                     actions.append(f'<li><a class="changelink" href="{obj.pk}/cancel">{_("إلغاء")}</a></li>')
 

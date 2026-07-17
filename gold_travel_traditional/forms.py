@@ -269,9 +269,13 @@ class AppMoveGoldTraditionalStorageForm(forms.Form):
 class AppMoveGoldTraditionalArriveForm(forms.ModelForm):
     class Meta:
         model = AppMoveGoldTraditional
-        fields = ['arrival_attachement']
+        fields = ['arrival_attachement', 'arrival_note']
         labels = {
             'arrival_attachement': _('مرفق الاستمارة'),
+            'arrival_note': _('ملاحظة التوصيل'),
+        }
+        widgets = {
+            'arrival_note': forms.TextInput(attrs={'class': 'vTextField'}),
         }
 
 class AppMoveGoldTraditionalRenewForm(forms.Form):

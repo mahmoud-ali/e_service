@@ -42,6 +42,16 @@
                         {{ form.arrival_attachement.errors }}
                     </div>
                 </div>
+                <div class="form-row{% if form.arrival_note.field.required %} required{% endif %}">
+                    <div>
+                        {{ form.arrival_note.label_tag }}
+                        {{ form.arrival_note }}
+                        {% if form.arrival_note.field.required %}
+                        <div class="help">{% translate 'الملاحظة إلزامية' %}</div>
+                        {% endif %}
+                        {{ form.arrival_note.errors }}
+                    </div>
+                </div>
             </fieldset>
         </div>
         <div class="submit-row">
