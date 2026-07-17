@@ -250,7 +250,8 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
                     {
                         'fields': [
                             ("renew_date", "parent"),
-                            ("arrival_attachement",),
+                            ("arrival_attachement", ),
+                            ("arrival_time", "arrival_note",),
                             ("melt_batch", "sale", "storage"),
                         ],
                         'classes': ['collapse'],
@@ -263,13 +264,13 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
         readonly_fields = super().get_readonly_fields(request, obj)
         if obj:
             readonly_fields = list(readonly_fields) + [
-                "renew_date", "parent", "arrival_attachement",
+                "renew_date", "parent", "arrival_attachement", "arrival_time", "arrival_note",
                 "melt_batch", "melt_date", "melt_workshop", "standardization_lab",
                 "sale", "almushtari_name", "storage"
             ]
         return readonly_fields
     # readonly_fields = ["almushtari_name"]
-    list_display = ["code","issue_date","total_gold_weight_display","show_actions","almustafid_name","jihat_alaisdar","wijhat_altarhil","source_state","renew_date","state",]
+    list_display = ["code","issue_date","total_gold_weight_display","show_actions","almustafid_name","jihat_alaisdar","wijhat_altarhil","source_state","renew_date","arrival_time","state",]
     list_filter = [("state",admin.ChoicesFieldListFilter),("source_state",RelatedOnlyFieldListFilterNotEmpty),("jihat_alaisdar",RelatedOnlyFieldListFilterNotEmpty),("wijhat_altarhil",RelatedOnlyFieldListFilterNotEmpty), HasPhotoFilter]
     date_hierarchy = "issue_date"
     search_fields = ["code","almustafid_name","almustafid_phone","almustafid_identity","almushtari_name"]
@@ -974,6 +975,7 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
                     my_form.add_error('arrival_attachement', _('Attachment is required.'))
                 else:
                     obj.state = AppMoveGoldTraditional.STATE_ARRIVED
+                    obj.arrival_time = timezone.now()
                     obj.updated_by = request.user
                     my_form.save()
                     self.log_change(request, obj, _('state_arrived'))

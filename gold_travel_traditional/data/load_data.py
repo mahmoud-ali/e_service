@@ -340,6 +340,16 @@ def reload_all_csvs():
             print(f"{'='*60}")
             load_users_from_csv(path)
 
+def backfill_arrival_time():
+    """Set arrival_time = updated_at for arrived records missing arrival_time."""
+    from django.db.models import F
+    qs = AppMoveGoldTraditional.objects.filter(
+        state=AppMoveGoldTraditional.STATE_ARRIVED,
+        arrival_time__isnull=True,
+    )
+    count = qs.update(arrival_time=F('updated_at'))
+    print(f"Backfilled arrival_time for {count} arrived records")
+
 def _parse_ids(raw):
     """Parse '1,2,3' into [1, 2, 3]."""
     return [int(x.strip()) for x in raw.split(',') if x.strip()]
@@ -357,6 +367,7 @@ if __name__ == "__main__":
         print("  --sync-names                 Update User.first_name from GoldTravelTraditionalUser.name (CSV)")
         print("  --sync-names-all             Same, for all GoldTravelTraditionalUser profiles")
         print("  --load-saig <state_id>       Import saig from CSV (one name per line)")
+        print("  --backfill-arrival-time      Set arrival_time = updated_at for arrived records missing it")
     else:
         if '--add-user-type-all' in sys.argv:
             add_user_type_to_all_csvs()
@@ -375,6 +386,8 @@ if __name__ == "__main__":
             reload_all_csvs()
         elif '--drop-moves' in sys.argv:
             drop_app_move_gold()
+        elif '--backfill-arrival-time' in sys.argv:
+            backfill_arrival_time()
         elif '--setup' in sys.argv:
             idx = sys.argv.index('--setup')
             ids = _parse_ids(sys.argv[idx + 1]) if idx + 1 < len(sys.argv) else None

@@ -177,6 +177,7 @@ class AppMoveGoldTraditional(LoggingModel):
     storage = models.ForeignKey('Storage', on_delete=models.SET_NULL, null=True, blank=True, related_name='records', verbose_name=_('شهادة تخزين'))
     arrival_attachement = models.ImageField(_('مرفق الاستمارة'), help_text=_('ارفاق استمارة  الترحيل'), upload_to=attachement_path, null=True, blank=True)
     arrival_note = models.CharField(_('ملاحظة التوصيل'), max_length=150, null=True, blank=True)
+    arrival_time = models.DateTimeField(_('وقت الوصول'), null=True, blank=True, editable=False)
     almustafid_photo = models.ImageField(_('صورة المستفيد'), upload_to=attachement_path, null=True, blank=True)
 
     @property
