@@ -728,10 +728,12 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
 
         from itertools import zip_longest
 
-        records = sale.records.all()
+        # Collect details from all sources
         all_details = []
-        for record in records:
+        for record in sale.records.all():
             all_details.extend(record.details.all())
+        for mb in sale.melt_batches.all():
+            all_details.extend(mb.details.all())
 
         chunk_size = 40
         alloy_chunks = []
@@ -746,6 +748,21 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
                 'start_index': i + 1,
                 'half_offset': half
             })
+
+        class _Row:
+            __slots__ = ('code', 'almustafid_name', 'jihat_alaisdar', 'gold_weight_in_gram', 'alloy_count')
+            def __init__(self, code, name, source_name, weight, count):
+                self.code = code
+                self.almustafid_name = name
+                self.jihat_alaisdar = type('_', (), {'name': source_name})
+                self.gold_weight_in_gram = weight
+                self.alloy_count = count
+
+        records = []
+        for r in sale.records.all():
+            records.append(_Row(r.code, r.almustafid_name, r.jihat_alaisdar.name, r.gold_weight_in_gram, r.alloy_count))
+        for mb in sale.melt_batches.all():
+            records.append(_Row(mb.code, mb.melt_workshop, mb.source_state.name if mb.source_state else '', mb.output_weight, mb.output_alloy_count))
 
         context = {
             'sale': sale,
@@ -847,10 +864,12 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
 
         from itertools import zip_longest
 
-        records = storage.records.all()
+        # Collect details from all sources
         all_details = []
-        for record in records:
+        for record in storage.records.all():
             all_details.extend(record.details.all())
+        for mb in storage.melt_batches.all():
+            all_details.extend(mb.details.all())
 
         chunk_size = 40
         alloy_chunks = []
@@ -865,6 +884,21 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
                 'start_index': i + 1,
                 'half_offset': half
             })
+
+        class _Row:
+            __slots__ = ('code', 'almustafid_name', 'jihat_alaisdar', 'gold_weight_in_gram', 'alloy_count')
+            def __init__(self, code, name, source_name, weight, count):
+                self.code = code
+                self.almustafid_name = name
+                self.jihat_alaisdar = type('_', (), {'name': source_name})
+                self.gold_weight_in_gram = weight
+                self.alloy_count = count
+
+        records = []
+        for r in storage.records.all():
+            records.append(_Row(r.code, r.almustafid_name, r.jihat_alaisdar.name, r.gold_weight_in_gram, r.alloy_count))
+        for mb in storage.melt_batches.all():
+            records.append(_Row(mb.code, mb.melt_workshop, mb.source_state.name if mb.source_state else '', mb.output_weight, mb.output_alloy_count))
 
         context = {
             'storage': storage,
