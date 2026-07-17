@@ -49,6 +49,59 @@ class LkpJihatAlaisdarAdmin(admin.ModelAdmin):
     list_filter = ["state"]
     search_fields = ["name"]
 
+    def _gold_user(self, request):
+        try:
+            return request.user.gold_travel_traditional
+        except:
+            return None
+
+    def _state_manager(self, request):
+        gold_user = self._gold_user(request)
+        if gold_user and gold_user.is_state_manager:
+            return gold_user
+        return None
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        if request.user.is_superuser or request.user.groups.filter(name__in=("gold_travel_traditional_manager","gold_travel_traditional_manager_show")).exists():
+            return qs
+        gold_user = self._gold_user(request)
+        if gold_user:
+            return qs.filter(state=gold_user.state)
+        return qs
+
+    def has_view_permission(self, request, obj=None):
+        if super().has_view_permission(request, obj):
+            return True
+        return self._gold_user(request) is not None
+
+    def has_add_permission(self, request):
+        if super().has_add_permission(request):
+            return True
+        return self._state_manager(request) is not None
+
+    def has_change_permission(self, request, obj=None):
+        if super().has_change_permission(request, obj):
+            return True
+        gold_user = self._state_manager(request)
+        if not gold_user:
+            return False
+        if obj:
+            return obj.state_id == gold_user.state_id
+        return True
+
+    def get_fields(self, request, obj=None):
+        fields = super().get_fields(request, obj)
+        if self._state_manager(request) and not request.user.is_superuser:
+            fields = [f for f in fields if f != 'state']
+        return fields
+
+    def save_model(self, request, obj, form, change):
+        gold_user = self._state_manager(request)
+        if gold_user and not request.user.is_superuser:
+            obj.state = gold_user.state
+        return super().save_model(request, obj, form, change)
+
 admin.site.register(LkpJihatAlaisdar, LkpJihatAlaisdarAdmin)
 
 class LkpSaigAdmin(admin.ModelAdmin):
@@ -312,7 +365,28 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
                 save=False
             )
 
-        return super().save_model(request, obj, form, change)                
+        result = super().save_model(request, obj, form, change)
+
+        if not change:
+            expired_count = AppMoveGoldTraditional.objects.filter(
+                almustafid_identity=obj.almustafid_identity,
+                state=AppMoveGoldTraditional.STATE_EXPIRED,
+            ).exclude(pk=obj.pk).count()
+            if expired_count:
+                from urllib.parse import quote
+                url = reverse("admin:gold_travel_traditional_appmovegoldtraditional_changelist") + f"?q={quote(obj.almustafid_identity)}&state__exact={AppMoveGoldTraditional.STATE_EXPIRED}"
+                self.message_user(
+                    request,
+                    format_html(
+                        '{msg} <a href="{url}" target="_blank">{txt}</a>',
+                        msg=_('تنبيه: يوجد %(count)d استمارة منتهية الصلاحية لهذا المستفيد.') % {'count': expired_count},
+                        url=url,
+                        txt=_('عرض الاستمارات المنتهية'),
+                    ),
+                    level='warning',
+                )
+
+        return result
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
@@ -419,6 +493,7 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
             path("<int:pk>/storage/", self.admin_site.admin_view(self.storage_view)),
             path("<int:pk>/storage/print/", self.admin_site.admin_view(self.print_storage_view)),
             path("identity-lookup/", self.admin_site.admin_view(self.identity_lookup)),
+            path("identity-expired-check/", self.admin_site.admin_view(self.identity_expired_check)),
         ]
         return my_urls + urls
 
@@ -797,6 +872,32 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
             'alloy_chunks': alloy_chunks,
         }
         return TemplateResponse(request, "gold_travel_traditional/gold_travel_traditional_storage.html", context)
+    def identity_expired_check(self, request):
+        from django.http import JsonResponse
+
+        if not (request.user.is_superuser or request.user.groups.filter(name__in=("gold_travel_traditional_manager","gold_travel_traditional_manager_show")).exists()):
+            try:
+                request.user.gold_travel_traditional
+            except:
+                return JsonResponse({'error': 'Unauthorized'}, status=403)
+
+        identity = request.POST.get('identity', '') or request.GET.get('identity', '')
+        if not identity:
+            return JsonResponse({'error': 'No identity provided'}, status=400)
+
+        # Normalize Arabic digits (matching model.clean)
+        arabic_digits = str.maketrans('٠١٢٣٤٥٦٧٨٩', '0123456789')
+        identity = identity.translate(arabic_digits)
+
+        qs = AppMoveGoldTraditional.objects.filter(
+            almustafid_identity=identity,
+            state=AppMoveGoldTraditional.STATE_EXPIRED,
+        )
+        return JsonResponse({
+            'expired_count': qs.count(),
+            'codes': list(qs.values_list('code', flat=True)[:10]),
+        })
+
     def identity_lookup(self, request):
         if not (request.user.is_superuser or request.user.groups.filter(name__in=("gold_travel_traditional_manager","gold_travel_traditional_manager_show")).exists()):
             try:

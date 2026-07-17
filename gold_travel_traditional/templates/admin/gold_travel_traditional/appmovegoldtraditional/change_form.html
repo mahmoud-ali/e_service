@@ -70,6 +70,27 @@
         var btn = $('<button type="button" class="button" style="margin-right:5px;">{% translate "بحث" %}</button>');
         btn.insertAfter(identityField);
 
+        function checkExpiredRecords(identity, getCookie) {
+            $.ajax({
+                url: window.location.pathname.replace(/\/add\/.*$|\/\d+\/change\/.*$/, '/identity-expired-check/'),
+                method: 'POST',
+                data: { identity: identity },
+                headers: {'X-CSRFToken': getCookie('csrftoken')},
+                success: function(data) {
+                    $('#expired-warning').remove();
+                    if (data.expired_count > 0) {
+                        var changelistUrl = window.location.pathname.replace(/add\/.*$|\d+\/change\/.*$/, '')
+                            + '?q=' + encodeURIComponent(identity) + '&state__exact=3';
+                        var warning = $('<div id="expired-warning" style="background:#fff3cd; border:1px solid #ffc107; border-radius:4px; padding:10px 12px; margin-top:8px;">'
+                            + '⚠️ {% translate "تنبيه: يوجد" %} ' + data.expired_count + ' {% translate "استمارة منتهية الصلاحية لهذا المستفيد." %} '
+                            + '<a href="' + changelistUrl + '" target="_blank">{% translate "عرض الاستمارات المنتهية" %}</a>'
+                            + '</div>');
+                        warning.insertAfter(identityField.parent());
+                    }
+                }
+            });
+        }
+
         btn.on('click', function(e) {
             e.preventDefault();
             var identity = identityField.val().trim();
@@ -81,6 +102,8 @@
             btn.prop('disabled', true).text('{% translate "جاري البحث..." %}');
 
             function getCookie(name) { var v = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)'); return v ? v[2] : null; }
+
+            checkExpiredRecords(identity, getCookie);
 
             $.ajax({
                 url: window.location.pathname.replace(/\/add\/.*$|\/\d+\/change\/.*$/, '/identity-lookup/'),
