@@ -627,11 +627,11 @@ class DailyReport(WorkFlowModel):
         user_groups = list(user.groups.values_list('name', flat=True))
 
         states = []
-        if 'tra_tahsil_department' in user_groups:
+        if 'tra_asoag_department' in user_groups:
             if self.state == self.STATE_DRAFT:
                 states.append((self.STATE_CONFIRMED1, self.STATE_CHOICES[self.STATE_CONFIRMED1]))
 
-        if 'tra_asoag_department' in user_groups:
+        if 'tra_tahsil_department' in user_groups:
             if self.state == self.STATE_CONFIRMED1:
                 states.append((self.STATE_CONFIRMED2, self.STATE_CHOICES[self.STATE_CONFIRMED2]))
                 states.append((self.STATE_DRAFT, self.STATE_CHOICES[self.STATE_DRAFT]))
