@@ -8,6 +8,7 @@ from django.contrib.gis.db import models as gis_models
 
 from company_profile.models import LkpLocality, LkpState
 from workflow.model_utils import LoggingModel, WorkFlowModel
+from gold_travel_traditional.models import LkpJihatAlaisdar
 
 MONTH_JAN = 1
 MONTH_FEB = 2
@@ -395,17 +396,9 @@ class RentedApartment(LoggingModel):
         verbose_name = _("عقار مستأجر")
         verbose_name_plural = _("عقارات مستأجرة")
 
-class LkpSoag(LoggingModelGis):
-    state = models.ForeignKey(LkpState, related_name="traditional_state", on_delete=models.PROTECT,verbose_name=_("state"))
-    locality = models.ForeignKey(LkpLocality, related_name="+", on_delete=models.PROTECT,verbose_name=_("Locality"))
-
-    name = models.CharField(_("الاسم"),max_length=100)
-    geom = gis_models.MultiPolygonField(srid=4326, blank=True, null=True)
-    
-    def __str__(self):
-        return self.name
-        
+class LkpSoag(LkpJihatAlaisdar):
     class Meta:
+        proxy = True
         verbose_name = _("سوق")
         verbose_name_plural = _("أسواق")
 

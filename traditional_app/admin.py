@@ -190,32 +190,11 @@ admin.site.register(LkpSaig, LkpSaigAdmin)
 #     exclude = ["geom","created_at","created_by","updated_at","updated_by"]
 #     min_num = 1
 
-class SougAdmin(LogMixin,StateControlMixin, LeafletGeoAdmin):
+class SougAdmin(LogMixin,StateControlMixin, admin.ModelAdmin):
     model = LkpSoag
-    list_display = ['name', 'state','locality']
+    list_display = ['name', 'state']
     search_fields = ('name',)
-    list_filter = ('state','locality')
-
-    # inlines = [LkpMojam3atTawa7inInline, LkpSaigInline,]
-
-    settings_overrides = {
-        # 'TILES': [
-        #     ('OpenStreetMap', 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        #         'attribution': '&copy; OpenStreetMap contributors',
-        #     }),
-        # ],
-        # 'MAP_TEMPLATE': 'leaflet/admin/map.html',  
-        'PLUGINS': {
-            'measure': {
-                'css': ['https://cdn.jsdelivr.net/npm/leaflet-measure@3.3.0/dist/leaflet-measure.css'],
-                'js': 'https://cdn.jsdelivr.net/npm/leaflet-measure@3.3.0/dist/leaflet-measure.min.js',
-                'auto-include': True,
-            },
-        }        
-    }
-
-    class Media:
-        js = ('admin/js/jquery.init.js',"traditional_app/js/lkp_state_change.js",)
+    list_filter = ('state',)
 
 admin.site.register(LkpSoag, SougAdmin)
 
@@ -691,49 +670,49 @@ daily_report_inline_classes = {
 
         },
     },
-    'DailyTahsilForm': {
-        'model': DailyTahsilForm,
-        'mixins': [admin.TabularInline],
-        'kwargs': {
-            'extra': 1,
-            'min_num': 0,
-        },
-        'groups': {
-            'tra_secruitry':{
-                'permissions': {
-                    DailyReport.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
-                    DailyReport.STATE_CONFIRMED1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    DailyReport.STATE_CONFIRMED2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    DailyReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                },
-            },
-            'tra_tahsil_department':{
-                'permissions': {
-                    DailyReport.STATE_DRAFT: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    DailyReport.STATE_CONFIRMED1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    DailyReport.STATE_CONFIRMED2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    DailyReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                },
-            },
-            'tra_asoag_department':{
-                'permissions': {
-                    DailyReport.STATE_DRAFT: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    DailyReport.STATE_CONFIRMED1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    DailyReport.STATE_CONFIRMED2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    DailyReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                },
-            },
-            'tra_state_manager':{
-                'permissions': {
-                    DailyReport.STATE_DRAFT: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    DailyReport.STATE_CONFIRMED1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    DailyReport.STATE_CONFIRMED2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                    DailyReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                },
-            },
+    # 'DailyTahsilForm': {
+    #     'model': DailyTahsilForm,
+    #     'mixins': [admin.TabularInline],
+    #     'kwargs': {
+    #         'extra': 1,
+    #         'min_num': 0,
+    #     },
+    #     'groups': {
+    #         'tra_secruitry':{
+    #             'permissions': {
+    #                 DailyReport.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
+    #                 DailyReport.STATE_CONFIRMED1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+    #                 DailyReport.STATE_CONFIRMED2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+    #                 DailyReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+    #             },
+    #         },
+    #         'tra_tahsil_department':{
+    #             'permissions': {
+    #                 DailyReport.STATE_DRAFT: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+    #                 DailyReport.STATE_CONFIRMED1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+    #                 DailyReport.STATE_CONFIRMED2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+    #                 DailyReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+    #             },
+    #         },
+    #         'tra_asoag_department':{
+    #             'permissions': {
+    #                 DailyReport.STATE_DRAFT: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+    #                 DailyReport.STATE_CONFIRMED1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+    #                 DailyReport.STATE_CONFIRMED2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+    #                 DailyReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+    #             },
+    #         },
+    #         'tra_state_manager':{
+    #             'permissions': {
+    #                 DailyReport.STATE_DRAFT: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+    #                 DailyReport.STATE_CONFIRMED1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+    #                 DailyReport.STATE_CONFIRMED2: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+    #                 DailyReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+    #             },
+    #         },
 
-        },
-    },
+    #     },
+    # },
     'DailyKartaMor7ala': {
         'model': DailyKartaMor7ala,
         'mixins': [admin.TabularInline],
