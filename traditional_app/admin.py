@@ -555,7 +555,7 @@ daily_report_main_class = {
                 DailyReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
             },
         },
-        'tra_tahsil_department':{
+        'tra_asoag_department':{
             'permissions': {
                 DailyReport.STATE_DRAFT: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 DailyReport.STATE_CONFIRMED1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -563,7 +563,7 @@ daily_report_main_class = {
                 DailyReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
             },
         },
-        'tra_asoag_department':{
+        'tra_tahsil_department':{
             'permissions': {
                 DailyReport.STATE_DRAFT: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 DailyReport.STATE_CONFIRMED1: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
