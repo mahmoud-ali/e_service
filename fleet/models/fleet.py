@@ -230,6 +230,23 @@ class Mission(LoggingModel):
     extended_planned_end_date = models.DateField(_("تاريخ الانتهاء المخطط بعد التمديد"), blank=True, null=True, editable=False)
     extended_actual_end_date = models.DateField(_("تاريخ الانتهاء الفعلي بعد التمديد"), blank=True, null=True, editable=False)
 
+    termination_date = models.DateField(_("تاريخ قطع المأمورية"), blank=True, null=True,
+        help_text=_("في حال قطع المأمورية قبل موعدها، يصبح هذا التاريخ هو تاريخ الانتهاء الفعلي وتُعتبر المأمورية منتهية"))
+
+    @property
+    def effective_actual_end_date(self):
+        """التاريخ الفعلي الحقيقي لانتهاء المأمورية مع مراعاة القطع والتمديد."""
+        if self.termination_date:
+            return self.termination_date
+        if self.is_extended and self.extended_actual_end_date:
+            return self.extended_actual_end_date
+        return self.actual_end_date
+
+    @property
+    def is_terminated(self):
+        """هل تم قطع المأمورية مبكراً؟"""
+        return bool(self.termination_date)
+
     def __str__(self) -> str:
         return f'{self.requested_by}({self.destination}) {self.planned_start_date} - {self.no_of_days}'
     
@@ -245,15 +262,24 @@ class Mission(LoggingModel):
         if self.is_extended and self.extension_days:
             new_actual_end = new_actual_end + timedelta(days=self.extension_days)
 
+        # التحقق من صحة تاريخ القطع إن وُجد
+        if self.termination_date:
+            if self.actual_start_date and self.termination_date < self.actual_start_date:
+                raise ValidationError({"termination_date": _("تاريخ القطع لا يمكن أن يكون قبل تاريخ البدء الفعلي")})
+            # عند القطع يصبح new_actual_end هو termination_date
+            new_actual_end = self.termination_date
+
+        # نستخدم termination_date كتاريخ نهاية فعلي إن وُجد (بدلاً من extended أو actual)
         overlapping = Mission.objects.annotate(
             other_actual_end=Coalesce(
+                F('termination_date'),
                 F('extended_actual_end_date'),
                 F('actual_end_date')
             )
         ).filter(
-            actual_start_date__isnull=False,            
-            actual_start_date__lte=new_actual_end,     
-            other_actual_end__gte=new_actual_start,   
+            actual_start_date__isnull=False,
+            actual_start_date__lte=new_actual_end,
+            other_actual_end__gte=new_actual_start,
         ).exclude(pk=self.pk)
 
         if self.driver:
@@ -324,8 +350,13 @@ class MissionVehicle(LoggingModel):
         if self.mission.is_extended and self.mission.extension_days:
             mission_actual_end = mission_actual_end + timedelta(days=self.mission.extension_days)
 
+        # إن كانت المأمورية مقطوعة فتاريخ نهايتها هو termination_date
+        if self.mission.termination_date:
+            mission_actual_end = self.mission.termination_date
+
         overlapping = Mission.objects.annotate(
             other_actual_end=Coalesce(
+                F('termination_date'),
                 F('extended_actual_end_date'),
                 F('actual_end_date')
             )
@@ -361,6 +392,20 @@ class MissionVehicle(LoggingModel):
     class Meta:
         verbose_name = _("مركبة المأمورية")
         verbose_name_plural = _("مركبات المأمورية")
+
+
+class MissionAttachment(models.Model):
+    mission = models.ForeignKey(Mission, on_delete=models.CASCADE, related_name='mission_attachments', verbose_name=_("المأمورية"))
+    file = models.FileField(_("الملف"), upload_to='mission_attachments/')
+    description = models.CharField(_("وصف الملف"), max_length=255, blank=True, null=True)
+    uploaded_at = models.DateTimeField(_("تاريخ الرفع"), auto_now_add=True)
+
+    def __str__(self) -> str:
+        return f'{self.mission} - {self.file.name}'
+
+    class Meta:
+        verbose_name = _("مرفق المأمورية")
+        verbose_name_plural = _("مرفقات المأمورية")
 
 
 

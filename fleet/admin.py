@@ -134,6 +134,14 @@ class TcDevicesAdmin(LogMixin):
     verbose_name= "قائمة اجهزة التتبع"
     
 
+class MissionAttachmentInline(admin.TabularInline):
+    model = models.MissionAttachment
+    fields = ('file', 'description')
+    extra = 1
+    verbose_name = "مرفق"
+    verbose_name_plural = "المرفقات"
+
+
 class MissionVehicleInline(admin.TabularInline):
     model = models.MissionVehicle
     fields = ('assignment',)
@@ -163,12 +171,17 @@ class MissionAdmin(LogMixin):
         ('تمديد المأمورية', {
             'fields': ('is_extended', 'extension_days', ('extended_planned_end_date', 'extended_actual_end_date'))
         }),
-        ('ملاحظات ومرفقات', {
-            'fields': ('notes', 'attachments')
+        ('قطع المأمورية', {
+            'fields': ('termination_date',),
+            'classes': ('collapse',),
+            'description': 'تحديد هذا التاريخ يقطع المأمورية ويجعلها منتهية اعتباراً من هذا التاريخ، ويصبح بإمكان السائق والمركبة الإسناد في مأمورية جديدة.',
+        }),
+        ('ملاحظات', {
+            'fields': ('notes',)
         }),
     )
-    list_display = ('requested_by', 'destination', 'no_of_vehicles', 'no_of_days', 'planned_start_date', 'effective_end_display', 'actual_start_date', 'actual_end_date_display', 'status_tag')
-    list_filter = ('planned_start_date', 'planned_end_date','actual_end_date','requested_by')
+    list_display = ('requested_by', 'destination', 'no_of_vehicles', 'no_of_days', 'planned_start_date', 'effective_end_display', 'actual_start_date', 'actual_end_date_display', 'termination_date', 'status_tag')
+    list_filter = ('planned_start_date', 'planned_end_date', 'actual_end_date', 'termination_date', 'requested_by')
     search_fields = ('destination', 'requested_by', 'missionvehicle__assignment__driver__name', 'missionvehicle__assignment__vehicle__license_plate')
     readonly_fields = ('planned_end_date','actual_end_date','extended_planned_end_date','extended_actual_end_date')
 
@@ -180,6 +193,8 @@ class MissionAdmin(LogMixin):
 
     @admin.display(description="تاريخ الانتهاء الفعلي", ordering='actual_end_date')
     def actual_end_date_display(self, obj):
+        if obj.termination_date:
+            return format_html('<b style="color:#c0392b;">{}</b> <span style="color:#c0392b;">(مقطوعة)</span>', obj.termination_date)
         if obj.actual_end_date:
             if obj.is_extended and obj.extended_actual_end_date:
                 return format_html('<b>{}</b> <span style="color:orange;">(ممدد)</span>', obj.extended_actual_end_date)
@@ -190,32 +205,35 @@ class MissionAdmin(LogMixin):
     def status_tag(self, obj):
         from django.utils import timezone
         today = timezone.now().date()
-        
-        # 1. Determine effective start date
+
         start_date = obj.actual_start_date
-        
-        # 2. Determine effective end date
-        if obj.is_extended:
-            end_date = obj.extended_actual_end_date
-        else:
-            end_date = obj.actual_end_date
-            
-        # 3. If start date is in the future or not set, it has not started yet
+
+        # إن لم تبدأ بعد
         if not start_date or start_date > today:
             return format_html('<span style="color: #0275d8; font-weight: bold;">لم تبدأ بعد</span>')
-            
-        # 4. If end date is in the past, it is completed
+
+        # إن كانت مقطوعة
+        if obj.termination_date:
+            return format_html(
+                '<span style="color: white; background-color: #c0392b; padding: 3px 10px; border-radius: 10px; font-weight: bold;">✂ مقطوعة {}</span>',
+                obj.termination_date
+            )
+
+        # تحديد تاريخ النهاية الفعلي
+        end_date = obj.effective_actual_end_date
+
+        # إن انتهت
         if end_date and end_date < today:
             return format_html('<span style="color: #777; font-weight: bold;">منتهية</span>')
-            
-        # 5. Within the date range (Active / Notifications)
+
+        # جارية مع تنبيهات
         if end_date:
             diff = (end_date - today).days
             if diff == 0:
                 return format_html('<span style="color: white; background-color: #d9534f; padding: 3px 10px; border-radius: 10px; font-weight: bold;">تنتهي اليوم</span>')
             elif 0 < diff <= 2:
                 return format_html('<span style="color: white; background-color: #f0ad4e; padding: 3px 10px; border-radius: 10px; font-weight: bold;">متبقي {} أيام</span>', diff)
-        
+
         return format_html('<span style="color: green; font-weight: bold;">جارية</span>')
 
     @admin.display(description="المركبات")
@@ -225,7 +243,7 @@ class MissionAdmin(LogMixin):
             vehicles.insert(0, str(obj.vehicle))
         return ", ".join(vehicles)
     # autocomplete_fields = ["vehicle","driver"]
-    inlines = [MissionVehicleInline]
+    inlines = [MissionVehicleInline, MissionAttachmentInline]
  
 class Media:
     js = ('fleet/js/mission_extension.js',)
