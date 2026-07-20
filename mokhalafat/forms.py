@@ -1,6 +1,13 @@
 from django import forms
+from django.conf import settings
+from django.contrib.auth import get_user_model
+from django.utils.translation import gettext_lazy as _
 
-from mokhalafat.models import AppMokhalafat, AppChemicalMaterialsViolation
+from mokhalafat.models import AppMokhalafat, AppChemicalMaterialsViolation, ChemicalViolationStateRepresentative
+
+UserModel = get_user_model()
+
+
 class AppMokhalafatAdminForm(forms.ModelForm):
     class Meta:
         model = AppMokhalafat
@@ -21,3 +28,14 @@ class AppChemicalMaterialsViolationForm(forms.ModelForm):
         }
 
 
+class ChemicalViolationStateRepresentativeForm(forms.ModelForm):
+    user = forms.ModelChoiceField(
+        queryset=UserModel.objects.filter(
+            groups__name='mokhalafat_kimyaeya_state'
+        ),
+        label=_("المستخدم")
+    )
+
+    class Meta:
+        model = ChemicalViolationStateRepresentative
+        fields = ["user", "name", "state"]

@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
+from company_profile.models import LkpState
 
 class LoggingModel(models.Model):
     created_at = models.DateTimeField(_("created_at"),auto_now_add=True,editable=False,)
@@ -53,15 +54,55 @@ class AppMokhalafatRecommendation(models.Model):
         return f"{self.name}"
 
 
+class ChemicalViolationStateRepresentative(models.Model):
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.PROTECT,
+        related_name="chemical_violation_representative",
+        verbose_name=_("المستخدم")
+    )
+    name = models.CharField(_("الاسم"), max_length=100)
+    state = models.ForeignKey(
+        LkpState,
+        on_delete=models.PROTECT,
+        verbose_name=_("الولاية")
+    )
+
+    def __str__(self):
+        return f'{self.name} ({self.state})'
+
+    class Meta:
+        verbose_name = _("ممثل ولاية - مخالفات كيميائية")
+        verbose_name_plural = _("ممثلو الولايات - مخالفات كيميائية")
+
+
 class AppChemicalMaterialsViolation(LoggingModel):
+
+    STATE_DRAFT = 1
+    STATE_SMRC = 2
+    STATE_APPROVED = 3
+    STATE_CANCELED = 8
+
+    STATE_CHOICES = {
+        STATE_DRAFT: _('state_draft'),
+        STATE_SMRC: _('state_smrc'),
+        STATE_APPROVED: _('state_approved'),
+        STATE_CANCELED: _('state_canceled'),
+    }
+
+    record_state = models.IntegerField(_("record_state"), choices=STATE_CHOICES, default=STATE_DRAFT)
+    source_state = models.ForeignKey(
+        LkpState,
+        on_delete=models.PROTECT,
+        related_name="chemical_violations",
+        verbose_name=_("ولاية المصدر"),
+        null=True,
+        blank=True
+    )
+
     # تفاصيل الواقعة / Incident Details
     date = models.DateField(_("التاريخ"))
     time = models.TimeField(_("الزمن"))
-    state = models.ForeignKey(
-        'company_profile.LkpState', 
-        on_delete=models.PROTECT, 
-        verbose_name=_("الولاية")
-    )
     city_or_village = models.CharField(_("المدينة أو القرية"), max_length=150)
     neighborhood = models.CharField(_("الحي"), max_length=150)
     house = models.CharField(_("المنزل"), max_length=150)

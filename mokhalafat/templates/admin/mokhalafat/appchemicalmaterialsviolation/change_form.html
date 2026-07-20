@@ -1,0 +1,25 @@
+{% extends "admin/change_form.html" %}
+{% load i18n %}
+
+{% block submit_buttons_bottom %}
+{{ block.super }}
+
+{% if show_confirm_btn or show_approve_btn %}
+<script>
+  (function ($) {
+    $(document).ready(function () {
+      var submitRow = $('.submit-row');
+      if (submitRow.length) {
+        {% if show_confirm_btn %}
+        submitRow.append('<input type="submit" value="{% translate "تأكيد الطلب وإرساله للمدير" %}" name="_confirm" style="background: #0288d1; color: #fff; font-weight: bold; margin-right: 5px;" onclick="return confirm(\'{% trans "هل تريد تأكيد الطلب وإرساله للمدير؟" %}\')">');
+        {% endif %}
+
+        {% if show_approve_btn %}
+        submitRow.append('<input type="submit" value="{% translate "إعتماد الطلب" %}" name="_approve" style="background: #2e7d32; color: #fff; font-weight: bold; margin-right: 5px;" onclick="return confirm(\'{% trans "هل تريد اعتماد هذا السجل؟" %}\')">');
+        {% endif %}
+      }
+    });
+  })(django.jQuery || jQuery);
+</script>
+{% endif %}
+{% endblock %}
