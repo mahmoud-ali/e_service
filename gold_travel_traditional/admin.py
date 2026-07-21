@@ -2227,7 +2227,7 @@ class StorageAdmin(LogAdminMixin, admin.ModelAdmin):
 
     search_fields = ['code', 'note']
     readonly_fields = ['code']
-    actions = ['mark_complete']
+    actions = ['mark_complete', 'export_as_csv']
 
     def get_readonly_fields(self, request, obj=None):
         readonly_fields = list(super().get_readonly_fields(request, obj))
@@ -2346,6 +2346,45 @@ class StorageAdmin(LogAdminMixin, admin.ModelAdmin):
     def mark_complete(self, request, queryset):
         queryset.filter(state=Storage.STATE_PENDING).update(state=Storage.STATE_COMPLETE, updated_by=request.user)
         self.message_user(request, _('Selected storage receipts marked as complete.'))
+
+    @admin.action(description=_('Export data'))
+    def export_as_csv(self, request, queryset):
+        response = HttpResponse(
+            content_type="text/csv",
+            headers={"Content-Disposition": f'attachment; filename="storage_form.csv"'},
+        )
+        header = [
+            "الكود", "تاريخ التخزين", "تاريخ الانتهاء",
+            "عدد الاستمارات", "عدد السبائك", "الوزن (جرام)",
+            "ملاحظات", "الولاية", "الحالة",
+            "تاريخ الإنشاء", "أنشئ بواسطة", "تاريخ التحديث", "حدث بواسطة"
+        ]
+
+        # BOM
+        response.write(codecs.BOM_UTF8)
+
+        writer = csv.writer(response)
+        writer.writerow(header)
+
+        for obj in queryset:
+            row = [
+                obj.code,
+                obj.storage_date,
+                obj.expiry_date,
+                obj.record_count,
+                obj.total_alloy_count,
+                round(obj.total_weight, 2),
+                obj.note,
+                str(obj.source_state) if obj.source_state else '',
+                obj.get_state_display(),
+                obj.created_at,
+                obj.created_by,
+                obj.updated_at,
+                obj.updated_by,
+            ]
+            writer.writerow(row)
+
+        return response
 
 admin.site.register(Storage, StorageAdmin)
 
