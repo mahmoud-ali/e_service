@@ -1983,7 +1983,7 @@ class SaleAdmin(LogAdminMixin, admin.ModelAdmin):
 
     search_fields = ['code', 'buyer_exporter__name', 'buyer_saig__name', 'note']
     readonly_fields = ['code']
-    actions = ['mark_complete']
+    actions = ['mark_complete', 'export_as_csv']
 
     def get_readonly_fields(self, request, obj=None):
         readonly_fields = list(super().get_readonly_fields(request, obj))
@@ -2103,6 +2103,46 @@ class SaleAdmin(LogAdminMixin, admin.ModelAdmin):
     def mark_complete(self, request, queryset):
         queryset.filter(state=Sale.STATE_PENDING).update(state=Sale.STATE_COMPLETE, updated_by=request.user)
         self.message_user(request, _('Selected sales marked as complete.'))
+
+    @admin.action(description=_('Export data'))
+    def export_as_csv(self, request, queryset):
+        response = HttpResponse(
+            content_type="text/csv",
+            headers={"Content-Disposition": f'attachment; filename="sale_form.csv"'},
+        )
+        header = [
+            _("code"), _("sale_date"), _("buyer_type"), _("buyer"),
+            _("record_count"), _("alloy_count"), _("total_weight"),
+            _("note"), _("source_state"), _("record_state"),
+            _("created_at"), _("created_by"), _("updated_at"), _("updated_by")
+        ]
+
+        # BOM
+        response.write(codecs.BOM_UTF8)
+
+        writer = csv.writer(response)
+        writer.writerow(header)
+
+        for obj in queryset:
+            row = [
+                obj.code,
+                obj.sale_date,
+                obj.get_buyer_type_display(),
+                obj.buyer_display,
+                obj.record_count,
+                obj.total_alloy_count,
+                round(obj.total_weight, 2),
+                obj.note,
+                str(obj.source_state) if obj.source_state else '',
+                obj.get_state_display(),
+                obj.created_at,
+                obj.created_by,
+                obj.updated_at,
+                obj.updated_by,
+            ]
+            writer.writerow(row)
+
+        return response
 
 admin.site.register(Sale, SaleAdmin)
 
