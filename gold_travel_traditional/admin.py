@@ -482,6 +482,7 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
     def get_urls(self):
         urls = super().get_urls()
         my_urls = [
+            path("dashboard/", self.admin_site.admin_view(self.dashboard_view)),
             path("<int:pk>/renew/", self.admin_site.admin_view(self.renew_view)),
             path("<int:pk>/arrived/", self.admin_site.admin_view(self.arrived_view)),
             path("<int:pk>/print/", self.admin_site.admin_view(self.print_view)),
@@ -496,6 +497,70 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
             path("identity-expired-check/", self.admin_site.admin_view(self.identity_expired_check)),
         ]
         return my_urls + urls
+
+    def dashboard_view(self, request):
+        from django.db.models import Sum, Count
+        from datetime import date, datetime
+
+        today = date.today()
+        first_of_month = today.replace(day=1)
+
+        # Parse date range from GET params, default to current month
+        date_from_str = request.GET.get('date_from', '')
+        date_to_str = request.GET.get('date_to', '')
+
+        try:
+            date_from = datetime.strptime(date_from_str, '%Y-%m-%d').date()
+        except (ValueError, TypeError):
+            date_from = first_of_month
+
+        try:
+            date_to = datetime.strptime(date_to_str, '%Y-%m-%d').date()
+        except (ValueError, TypeError):
+            date_to = today
+
+        # Base queryset respecting user permissions (same as get_queryset)
+        qs = self.get_queryset(request)
+
+        # Filter by date range
+        qs_range = qs.filter(issue_date__range=(date_from, date_to))
+
+        # --- Total gold weight in range ---
+        total_weight = qs_range.aggregate(
+            total=Sum('details__alloy_weight_gram')
+        )['total'] or 0.0
+
+        # --- Application count in range ---
+        total_count = qs_range.count()
+
+        # --- Top source states (jihat_alaisdar) ---
+        top_sources = qs_range.values(
+            'jihat_alaisdar__name', 'jihat_alaisdar__state__name'
+        ).annotate(
+            total_weight=Sum('details__alloy_weight_gram'),
+            record_count=Count('id')
+        ).order_by('-total_weight')[:10]
+
+        # --- Top destination states (wijhat_altarhil) ---
+        top_destinations = qs_range.values(
+            'wijhat_altarhil__name', 'wijhat_altarhil__state__name'
+        ).annotate(
+            total_weight=Sum('details__alloy_weight_gram'),
+            record_count=Count('id')
+        ).order_by('-total_weight')[:10]
+
+        context = dict(
+            self.admin_site.each_context(request),
+            title=_('Dashboard'),
+            total_weight=round(total_weight, 2),
+            total_count=total_count,
+            top_sources=top_sources,
+            top_destinations=top_destinations,
+            date_from=date_from.isoformat(),
+            date_to=date_to.isoformat(),
+            opts=AppMoveGoldTraditional._meta,
+        )
+        return TemplateResponse(request, "admin/gold_travel_traditional/appmovegoldtraditional/dashboard.html", context)
 
     def melt_view(self, request, pk):
         obj = AppMoveGoldTraditional.objects.get(pk=pk)
@@ -1271,7 +1336,7 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
                     actions.append(f'<li><a class="changelink" target="_blank" href="{obj.pk}/storage/print">{_("طباعة شهادة تخزين")}</a></li>')
 
             # Action for State Manager (Cancel) - only on NEW records
-            if obj.state == AppMoveGoldTraditional.STATE_NEW:
+            if obj.state in [AppMoveGoldTraditional.STATE_NEW, AppMoveGoldTraditional.STATE_RENEW, ]:
                 if can_manage or is_manager:
                     actions.append(f'<li><a class="changelink" href="{obj.pk}/cancel">{_("إلغاء")}</a></li>')
 
