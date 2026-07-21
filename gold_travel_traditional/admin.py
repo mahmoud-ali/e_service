@@ -1451,7 +1451,7 @@ class MeltBatchAdmin(LogAdminMixin, admin.ModelAdmin):
 
     search_fields = ['code', 'melt_workshop', 'standardization_lab']
     readonly_fields = ['code']
-    actions = ['mark_complete', 'print_selected_batches']
+    actions = ['mark_complete', 'print_selected_batches', 'export_as_csv']
 
     def get_readonly_fields(self, request, obj=None):
         readonly_fields = list(super().get_readonly_fields(request, obj))
@@ -1944,6 +1944,50 @@ class MeltBatchAdmin(LogAdminMixin, admin.ModelAdmin):
         if batch:
             return redirect(reverse("admin:gold_travel_traditional_meltbatch_print", args=[batch.pk]))
 
+    @admin.action(description=_('Export data'))
+    def export_as_csv(self, request, queryset):
+        response = HttpResponse(
+            content_type="text/csv",
+            headers={"Content-Disposition": f'attachment; filename="melt_batch_form.csv"'},
+        )
+        header = [
+            "الكود", "تاريخ الصهر", "ورشة الصهر", "مختبر المعايرة",
+            "عدد الاستمارات", "عدد السبائك (مدخل)", "الوزن (مدخل)",
+            "عدد السبائك (ناتج)", "الوزن (ناتج)",
+            "فاتورة البيع", "شهادة تخزين", "الولاية", "الحالة",
+            "تاريخ الإنشاء", "أنشئ بواسطة", "تاريخ التحديث", "حدث بواسطة"
+        ]
+
+        # BOM
+        response.write(codecs.BOM_UTF8)
+
+        writer = csv.writer(response)
+        writer.writerow(header)
+
+        for obj in queryset:
+            row = [
+                obj.code,
+                obj.melt_date,
+                obj.melt_workshop,
+                obj.standardization_lab,
+                obj.record_count,
+                obj.total_alloy_count,
+                round(obj.total_weight, 2),
+                obj.output_alloy_count,
+                round(obj.output_weight, 2),
+                str(obj.sale) if obj.sale else '',
+                str(obj.storage) if obj.storage else '',
+                str(obj.source_state) if obj.source_state else '',
+                obj.get_state_display(),
+                obj.created_at,
+                obj.created_by,
+                obj.updated_at,
+                obj.updated_by,
+            ]
+            writer.writerow(row)
+
+        return response
+
 admin.site.register(MeltBatch, MeltBatchAdmin)
 
 class SaleRecordsInline(admin.TabularInline):
@@ -2111,10 +2155,10 @@ class SaleAdmin(LogAdminMixin, admin.ModelAdmin):
             headers={"Content-Disposition": f'attachment; filename="sale_form.csv"'},
         )
         header = [
-            _("code"), _("sale_date"), _("buyer_type"), _("buyer"),
-            _("record_count"), _("alloy_count"), _("total_weight"),
-            _("note"), _("source_state"), _("record_state"),
-            _("created_at"), _("created_by"), _("updated_at"), _("updated_by")
+            "الكود", "تاريخ البيع", "نوع المشتري", "المشتري",
+            "عدد الاستمارات", "عدد السبائك", "الوزن (جرام)",
+            "ملاحظات", "الولاية", "الحالة",
+            "تاريخ الإنشاء", "أنشئ بواسطة", "تاريخ التحديث", "حدث بواسطة"
         ]
 
         # BOM
