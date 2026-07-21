@@ -519,8 +519,8 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
         except (ValueError, TypeError):
             date_to = today
 
-        # Base queryset respecting user permissions (same as get_queryset)
-        qs = self.get_queryset(request)
+        # Base queryset respecting user permissions, excluding canceled
+        qs = self.get_queryset(request).exclude(state=AppMoveGoldTraditional.STATE_CANCLED)
 
         # Filter by date range
         qs_range = qs.filter(issue_date__range=(date_from, date_to))
@@ -549,6 +549,26 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
             record_count=Count('id')
         ).order_by('-total_weight')[:10]
 
+        # --- Per-state breakdown ---
+        state_stats = []
+        state_colors = {
+            AppMoveGoldTraditional.STATE_NEW: '#417690',
+            AppMoveGoldTraditional.STATE_EXPIRED: '#ba2121',
+            AppMoveGoldTraditional.STATE_RENEW: '#e0a800',
+            AppMoveGoldTraditional.STATE_ARRIVED: '#2d8a4e',
+        }
+        for state_val, state_label in AppMoveGoldTraditional.STATE_CHOICES.items():
+            if state_val == AppMoveGoldTraditional.STATE_CANCLED:
+                continue
+            sub = qs_range.filter(state=state_val)
+            w = sub.aggregate(total=Sum('details__alloy_weight_gram'))['total'] or 0.0
+            state_stats.append({
+                'label': str(state_label),
+                'count': sub.count(),
+                'weight': round(w, 2),
+                'color': state_colors.get(state_val, '#666'),
+            })
+
         context = dict(
             self.admin_site.each_context(request),
             title=_('Dashboard'),
@@ -556,6 +576,7 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
             total_count=total_count,
             top_sources=top_sources,
             top_destinations=top_destinations,
+            state_stats=state_stats,
             date_from=date_from.isoformat(),
             date_to=date_to.isoformat(),
             opts=AppMoveGoldTraditional._meta,

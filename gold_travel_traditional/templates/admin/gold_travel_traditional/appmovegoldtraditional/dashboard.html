@@ -116,8 +116,34 @@
         color: #888;
         font-size: 12px;
     }
+    .status-cards {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 25px;
+    }
+    .status-card {
+        flex: 1;
+        border-radius: 6px;
+        padding: 15px;
+        text-align: center;
+        color: #fff;
+    }
+    .status-card .status-number {
+        font-size: 26px;
+        font-weight: bold;
+    }
+    .status-card .status-label {
+        font-size: 13px;
+        opacity: 0.9;
+        margin-top: 4px;
+    }
+    .status-card .status-weight {
+        font-size: 12px;
+        opacity: 0.8;
+        margin-top: 2px;
+    }
     @media (max-width: 768px) {
-        .tables-row, .summary-cards {
+        .tables-row, .summary-cards, .status-cards {
             flex-direction: column;
         }
     }
@@ -155,6 +181,16 @@
             <div class="card-number">{{ total_count|intcomma }}</div>
             <div class="card-label">{% translate 'إجمالي الطلبات' %}</div>
         </div>
+    </div>
+
+    <div class="status-cards">
+        {% for st in state_stats %}
+        <div class="status-card" style="background:{{ st.color }};">
+            <div class="status-number">{{ st.count|intcomma }}</div>
+            <div class="status-label">{{ st.label }}</div>
+            <div class="status-weight">{{ st.weight|floatformat:2|intcomma }} {% translate 'جرام' %}</div>
+        </div>
+        {% endfor %}
     </div>
 
     <div class="tables-row">
