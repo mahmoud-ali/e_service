@@ -184,6 +184,11 @@ When creating, editing, or refactoring code in this repository, AI agents **must
    - Do not remove `select_for_update()` in sequence generators.
    - Do not bypass state transition validation checks in model `clean()` methods.
 
+6. **Atomic & Subject-Focused Git Commits**:
+   - Split Git commits strictly **per subject/topic** (e.g., separate commits for model index updates, admin refactoring, documentation, and tests).
+   - Use imperative, subject-based conventional commit messages (`feat:`, `refactor:`, `perf:`, `docs:`, `test:`, `fix:`).
+   - Never bundle multiple unrelated changes into a single monolithic commit.
+
 ---
 
 ## 7. Useful Reference Snippets
