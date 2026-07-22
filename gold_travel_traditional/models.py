@@ -311,6 +311,10 @@ class AppMoveGoldTraditional(LoggingModel):
         verbose_name_plural = _("Move Gold Traditional")
         indexes = [
             models.Index(fields=["code","almustafid_phone"]),
+            models.Index(fields=["state", "issue_date"]),
+            models.Index(fields=["source_state", "state"]),
+            models.Index(fields=["jihat_alaisdar", "state"]),
+            models.Index(fields=["wijhat_altarhil", "state"]),
         ]
 
 class AppMoveGoldTraditionalDetail(models.Model):
@@ -426,6 +430,10 @@ class MeltBatch(LoggingModel):
         ordering = ["-id"]
         verbose_name = _('استمارة تسييح ومعاييرة')
         verbose_name_plural = _('استمارات تسييح ومعاييرة')
+        indexes = [
+            models.Index(fields=["source_state", "state"]),
+            models.Index(fields=["melt_date"]),
+        ]
 
 class MeltBatchDetail(models.Model):
     SHAPE_CIRCULAR = 1
@@ -538,6 +546,11 @@ class Sale(LoggingModel):
         ordering = ["-id"]
         verbose_name = _('استمارة بيع')
         verbose_name_plural = _('استمارات البيع')
+        indexes = [
+            models.Index(fields=["source_state", "state"]),
+            models.Index(fields=["sale_date"]),
+            models.Index(fields=["buyer_type"]),
+        ]
 
 class Storage(LoggingModel):
     STATE_PENDING = 1
@@ -618,6 +631,10 @@ class Storage(LoggingModel):
         ordering = ["-id"]
         verbose_name = _('شهادة تخزين')
         verbose_name_plural = _('شهادات التخزين')
+        indexes = [
+            models.Index(fields=["source_state", "state"]),
+            models.Index(fields=["storage_date"]),
+        ]
 
 class GoldTravelTraditionalState(models.Model):
     state = models.OneToOneField(LkpState, on_delete=models.CASCADE, related_name='gold_travel_config', verbose_name=_('الولاية'))
