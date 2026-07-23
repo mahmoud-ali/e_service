@@ -253,9 +253,9 @@ urlpatterns = [
     path('app_gold_production/<int:pk>/show/', AppGoldProductionReadonlyView.as_view(), name='app_gold_production_show'),    
     path('app_gold_production/add/', AppGoldProductionCreateView.as_view(), name='app_gold_production_add'),
 
-    # path('pa_request/', AppRequestListView.as_view(), name='pa_request_list'),
-    # path('pa_request/<int:type>/', AppRequestListView.as_view(), name='pa_request_list'),
-    # path('pa_request/<int:pk>/show/', AppRequestReadonlyView.as_view(), name='pa_request_show'),    
+    path('pa_request/', AppRequestListView.as_view(), name='pa_request_list'),
+    path('pa_request/<int:type>/', AppRequestListView.as_view(), name='pa_request_list'),
+    path('pa_request/<int:pk>/show/', AppRequestReadonlyView.as_view(), name='pa_request_show'),    
 
 
 ] #+ static( settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
