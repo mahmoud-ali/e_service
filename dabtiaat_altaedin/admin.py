@@ -10,7 +10,7 @@ from django.utils.html import format_html
 from django.db import models
 from django.forms.widgets import TextInput
 from dabtiaat_altaedin.forms import TblStateRepresentativeForm
-from dabtiaat_altaedin.models import AppDabtiaat, AppDabtiaatDetails, RevenueSettlement, SettlementType, TblStateRepresentative2
+from dabtiaat_altaedin.models import AppDabtiaat, AppDabtiaatDetails, RevenueSettlement, SettlementType, TblStateRepresentative2, DabtiaatSetting
 
 class LogAdminMixin:
     def get_queryset(self, request):
@@ -278,6 +278,45 @@ class AppDabtiaatAdmin(LogAdminMixin,admin.ModelAdmin):
         models.FloatField: {"widget": TextInput},
     }    
 
+    def get_list_display(self, request):
+        fields = ["date", "created_by_name", "updated_by_name", "gold_weight_in_gram", "gold_price"]
+        if DabtiaatSetting.is_active_setting('total_koli_pct'):
+            fields.append("koli_amount")
+        fields.extend(["state", "source_state"])
+
+        active_settings = DabtiaatSetting.objects.filter(is_active=True).exclude(key='total_koli_pct').order_by('id')
+        for setting in active_settings:
+            if setting.key:
+                fields.append(f"{setting.key}_amount")
+            else:
+                fields.append(f"setting_amount_{setting.id}")
+
+        return fields
+
+    def __getattr__(self, name):
+        if name.endswith("_amount") and not name.startswith("_"):
+            key = name[:-7]
+            setting = DabtiaatSetting.objects.filter(key=key).first()
+            if setting:
+                def display_func(obj):
+                    amt = obj.calculate_setting_amount(setting)
+                    return f'{round(amt):,}'
+                display_func.short_description = setting.name
+                return display_func
+        elif name.startswith("setting_amount_"):
+            try:
+                setting_id = int(name.replace("setting_amount_", ""))
+                setting = DabtiaatSetting.objects.filter(id=setting_id).first()
+                if setting:
+                    def display_func(obj):
+                        amt = obj.calculate_setting_amount(setting)
+                        return f'{round(amt):,}'
+                    display_func.short_description = setting.name
+                    return display_func
+            except ValueError:
+                pass
+        raise AttributeError(f"'{self.__class__.__name__}' object has no attribute '{name}'")
+
     def get_actions(self, request):
         actions = super().get_actions(request)
 
@@ -342,10 +381,14 @@ class AppDabtiaatAdmin(LogAdminMixin,admin.ModelAdmin):
             content_type="text/csv",
             headers={"Content-Disposition": f'attachment; filename="dabtiaat_form.csv"'},
         )
-        header = [
-                    _("date"),_('مجموع اوزان السبائك'),_('متوسط سعر الجرام'),_('koli_amount'),_("record_state"),_("source_state"),_( "al3wayid_aljalila_amount"),\
-                    _("alhafiz_amount"),_("alniyaba_amount"),_("smrc_amount"),_("state_amount"),_("police_amount"),_("amn_amount"),_("riasat_alquat_aldaabita_amount"),_("alquat_aldaabita_amount")
-        ]
+        header = [_("date"), _('مجموع اوزان السبائك'), _('متوسط سعر الجرام')]
+        if DabtiaatSetting.is_active_setting('total_koli_pct'):
+            header.append(_('koli_amount'))
+        header.extend([_("record_state"), _("source_state")])
+
+        active_settings = DabtiaatSetting.objects.filter(is_active=True).exclude(key='total_koli_pct').order_by('id')
+        for setting in active_settings:
+            header.append(setting.name)
 
         # BOM
         response.write(codecs.BOM_UTF8)
@@ -354,12 +397,14 @@ class AppDabtiaatAdmin(LogAdminMixin,admin.ModelAdmin):
         writer.writerow(header)
 
         for obj in queryset.order_by("source_state","-date"):
+            row = [obj.date, obj.sum_of_weight_in_gram, obj.avg_of_price]
+            if DabtiaatSetting.is_active_setting('total_koli_pct'):
+                row.append(obj.koli_amount)
+            row.extend([obj.get_state_display(), obj.source_state])
 
-            row = [
-                    obj.date,obj.sum_of_weight_in_gram,obj.avg_of_price,obj.koli_amount,obj.get_state_display(),obj.source_state,\
-                    obj.al3wayid_aljalila_amount,obj.alhafiz_amount,obj.alniyaba_amount,obj.smrc_amount,obj.state_amount,\
-                    obj.police_amount,obj.amn_amount,obj.riasat_alquat_aldaabita_amount,obj.alquat_aldaabita_amount
-            ]
+            for setting in active_settings:
+                row.append(obj.calculate_setting_amount(setting))
+
             writer.writerow(row)
 
         return response
@@ -496,3 +541,54 @@ class RevenueSettlementAdmin(LogAdminMixin,admin.ModelAdmin):
 
 admin.site.register(SettlementType)
 admin.site.register(RevenueSettlement, RevenueSettlementAdmin)
+
+class DabtiaatSettingAdmin(admin.ModelAdmin):
+    model = DabtiaatSetting
+    list_display = ["name", "key", "percentage", "calculation_base", "created_at", "is_active"]
+    list_editable = ["percentage", "is_active"]
+    list_filter = ["calculation_base", "is_active"]
+    search_fields = ["name", "key"]
+    readonly_fields = ["created_at", "reserved_keys_note"]
+
+    fieldsets = [
+        (_("معلومات البند"), {
+            "fields": ["name", "key", "percentage", "calculation_base", "is_active"]
+        }),
+        (_("معلومات النظام"), {
+            "fields": ["created_at", "reserved_keys_note"],
+            "classes": ["collapse"],
+        }),
+    ]
+
+    @admin.display(description=_(" البنود المحجوزة في النظام"))
+    def reserved_keys_note(self, obj):
+        from django.utils.html import format_html
+        keys = [
+            ("total_koli_pct",    _("نسبة الكلي الإجمالية (تتحكم في koli_amount مباشرة)")),
+            ("al3wayid_aljalila", _("العوائد الجليلة  — أساس: إجمالي القيمة")),
+            ("alhafiz",           _("الحافز           — أساس: إجمالي القيمة")),
+            ("alniyaba",          _("النيابة          — أساس: إجمالي القيمة")),
+            ("smrc",              _("SMRC             — أساس: مبلغ الحافز")),
+            ("state",             _("الولاية          — أساس: مبلغ الحافز")),
+            ("police",            _("الشرطة           — أساس: مبلغ الحافز")),
+            ("amn",               _("الأمن            — أساس: مبلغ الحافز")),
+            ("riasat_alquat_aldaabita", _("رئاسة القوات الضابطة — أساس: مبلغ الحافز")),
+            ("alquat_aldaabita",  _("القوات الضابطة   — أساس: مبلغ الحافز")),
+        ]
+        rows = "".join(
+            f"<tr><td style='padding:4px 10px;font-weight:bold;direction:ltr'>{k}</td>"
+            f"<td style='padding:4px 10px'>{label}</td></tr>"
+            for k, label in keys
+        )
+        return format_html(
+            "<table style='border-collapse:collapse;width:100%'>"
+            "<thead><tr>"
+            "<th style='text-align:left;padding:4px 10px;background:#f8f8f8'>{}</th>"
+            "<th style='text-align:right;padding:4px 10px;background:#f8f8f8'>{}</th>"
+            "</tr></thead><tbody>{}</tbody></table>",
+            _("المفتاح (key)"), _("الوصف"), format_html(rows),
+        )
+
+admin.site.register(DabtiaatSetting, DabtiaatSettingAdmin)
+
+
