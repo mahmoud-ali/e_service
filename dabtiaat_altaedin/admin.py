@@ -19,75 +19,48 @@ class LogAdminMixin:
         if request.user.is_superuser:
             return qs
 
-        try:
-            if request.user.groups.filter(name='dabtiaat_altaedin_manager').count() > 0:
-                qs = qs.filter(state__in=(AppDabtiaat.STATE_SMRC,AppDabtiaat.STATE_APPROVED,AppDabtiaat.STATE_CANCELED))
+        if request.user.groups.filter(name='dabtiaat_altaedin_manager').exists():
+            return qs.filter(state__in=(AppDabtiaat.STATE_SMRC, AppDabtiaat.STATE_APPROVED, AppDabtiaat.STATE_CANCELED))
 
-            elif request.user.groups.filter(name='dabtiaat_altaedin_state').count() > 0:
-                qs = qs.filter(source_state=request.user.state_representative2.state) #,state=AppDabtiaat.STATE_DRAFT
-                
-            return qs
-        except Exception as e:
-            print(e)
+        if request.user.groups.filter(name='dabtiaat_altaedin_state').exists():
+            if hasattr(request.user, 'state_representative2'):
+                return qs.filter(source_state=request.user.state_representative2.state)
 
         return qs.none()
 
     def save_model(self, request, obj, form, change):
-        try:
-            state_representative = request.user.state_representative2
-            obj.source_state = state_representative.state
+        if not hasattr(request.user, 'state_representative2'):
+            raise ValueError(_("User does not have a state representative record."))
 
-            if obj.pk:
-                obj.updated_by = request.user
-            else:
-                obj.created_by = obj.updated_by = request.user
-            super().save_model(request, obj, form, change)                
-        except:
-            pass
+        state_representative = request.user.state_representative2
+        obj.source_state = state_representative.state
+
+        if obj.pk:
+            obj.updated_by = request.user
+        else:
+            obj.created_by = obj.updated_by = request.user
+        super().save_model(request, obj, form, change)
 
     def has_add_permission(self, request):
-        # print(request.user.groups)
-
-        try:
-            if request.user.groups.filter(name='dabtiaat_altaedin_state').count() > 0:
-                return True
-                
-        except Exception as e:
-            print(e)
-        
-        return False
+        return (
+            request.user.groups.filter(name='dabtiaat_altaedin_state').exists()
+            and hasattr(request.user, 'state_representative2')
+        )
 
     def has_change_permission(self, request, obj=None):
-        try:
-            # if request.user.groups.filter(name='dabtiaat_altaedin_manager').count() > 0:
-            #     if obj and obj.state==AppDabtiaat.STATE_SMRC:
-            #         return True
-
-            if request.user.groups.filter(name='dabtiaat_altaedin_state').count() > 0:
-                if obj and obj.state==AppDabtiaat.STATE_DRAFT:
-                    return True
-                
-        except Exception as e:
-            print(e)
-
+        if (
+            request.user.groups.filter(name='dabtiaat_altaedin_state').exists()
+            and hasattr(request.user, 'state_representative2')
+        ):
+            if obj and obj.state == AppDabtiaat.STATE_DRAFT:
+                return True
         return False
 
     def has_delete_permission(self, request, obj=None):
-        try:
-            if request.user.groups.filter(name='dabtiaat_altaedin_state').count() > 0:
-                return True
-                
-        except Exception as e:
-            print(e)
-        
-        return False
-
-    # def save_model(self, request, obj, form, change):
-    #     if obj.pk:
-    #         obj.updated_by = request.user
-    #     else:
-    #         obj.created_by = obj.updated_by = request.user
-    #     super().save_model(request, obj, form, change)                
+        return (
+            request.user.groups.filter(name='dabtiaat_altaedin_state').exists()
+            and hasattr(request.user, 'state_representative2')
+        )
 
 class TblStateRepresentativeAdmin(admin.ModelAdmin):
     model = TblStateRepresentative2
