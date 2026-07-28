@@ -252,7 +252,7 @@ class AppDabtiaatAdmin(LogAdminMixin,admin.ModelAdmin):
     }    
 
     def get_list_display(self, request):
-        fields = ["date", "created_by_name", "updated_by_name", "gold_weight_in_gram", "gold_price"]
+        fields = ["date", "gold_weight_in_gram", "gold_price"]
         if DabtiaatSetting.is_active_setting('total_koli_pct'):
             fields.append("koli_amount")
         fields.extend(["state", "source_state"])
