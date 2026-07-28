@@ -24,6 +24,8 @@ from django.conf import settings
 
 urlpatterns = [
     path("__debug__/", include("debug_toolbar.urls")),
+    path('hijack/', include('hijack.urls')),
+
     path('api/v1/', include('api_v1.urls')), 
     path('api-traditional/', include('traditional_api.urls')), 
 
