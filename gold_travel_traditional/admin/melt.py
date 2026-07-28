@@ -107,7 +107,7 @@ class MeltBatchAdmin(LogAdminMixin, admin.ModelAdmin):
             return qs.none()
 
     def has_change_permission(self, request, obj=None):
-        if request.user.is_superuser or request.user.groups.filter(name__in=("gold_travel_traditional_manager","gold_travel_traditional_manager_show")).exists():
+        if request.user.is_superuser or request.user.groups.filter(name="gold_travel_traditional_manager").exists():
             return True
         if obj and obj.state == MeltBatch.STATE_COMPLETE:
             return False
@@ -195,7 +195,7 @@ class MeltBatchAdmin(LogAdminMixin, admin.ModelAdmin):
 
     def complete_view(self, request, pk):
         batch = MeltBatch.objects.get(pk=pk)
-        if not (request.user.is_superuser or request.user.groups.filter(name__in=("gold_travel_traditional_manager","gold_travel_traditional_manager_show")).exists()):
+        if not (request.user.is_superuser or request.user.groups.filter(name="gold_travel_traditional_manager").exists()):
             try:
                 gold_user = request.user.gold_travel_traditional
                 if gold_user.user_type not in [GoldTravelTraditionalUser.JIHAT_TARHIL, GoldTravelTraditionalUser.BOTH, GoldTravelTraditionalUser.STATE_MANAGER]:
@@ -226,7 +226,7 @@ class MeltBatchAdmin(LogAdminMixin, admin.ModelAdmin):
         except:
             pass
 
-        if not (request.user.is_superuser or request.user.groups.filter(name__in=("gold_travel_traditional_manager","gold_travel_traditional_manager_show")).exists()):
+        if not (request.user.is_superuser or request.user.groups.filter(name="gold_travel_traditional_manager").exists()):
             if not gold_user or not gold_user.is_tarhil_user:
                 self.message_user(request, _('Only destination users can create sales.'), level='error')
                 return redirect("admin:gold_travel_traditional_meltbatch_changelist")
@@ -369,7 +369,7 @@ class MeltBatchAdmin(LogAdminMixin, admin.ModelAdmin):
         except:
             pass
 
-        if not (request.user.is_superuser or request.user.groups.filter(name__in=("gold_travel_traditional_manager","gold_travel_traditional_manager_show")).exists()):
+        if not (request.user.is_superuser or request.user.groups.filter(name="gold_travel_traditional_manager").exists()):
             if not gold_user or not gold_user.is_tarhil_user:
                 self.message_user(request, _('Only destination users can create storage receipts.'), level='error')
                 return redirect("admin:gold_travel_traditional_meltbatch_changelist")

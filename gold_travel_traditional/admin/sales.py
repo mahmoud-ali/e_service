@@ -103,7 +103,7 @@ class SaleAdmin(LogAdminMixin, admin.ModelAdmin):
             return qs.none()
 
     def has_change_permission(self, request, obj=None):
-        if request.user.is_superuser or request.user.groups.filter(name__in=("gold_travel_traditional_manager","gold_travel_traditional_manager_show")).exists():
+        if request.user.is_superuser or request.user.groups.filter(name="gold_travel_traditional_manager").exists():
             return True
         if obj and obj.state == Sale.STATE_COMPLETE:
             return False
@@ -165,7 +165,7 @@ class SaleAdmin(LogAdminMixin, admin.ModelAdmin):
 
     def complete_view(self, request, pk):
         sale = Sale.objects.get(pk=pk)
-        if not (request.user.is_superuser or request.user.groups.filter(name__in=("gold_travel_traditional_manager","gold_travel_traditional_manager_show")).exists()):
+        if not (request.user.is_superuser or request.user.groups.filter(name="gold_travel_traditional_manager").exists()):
             try:
                 gold_user = request.user.gold_travel_traditional
                 if gold_user.user_type not in [GoldTravelTraditionalUser.JIHAT_TARHIL, GoldTravelTraditionalUser.BOTH, GoldTravelTraditionalUser.STATE_MANAGER]:

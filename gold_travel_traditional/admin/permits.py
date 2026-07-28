@@ -361,7 +361,7 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
         except:
             pass
 
-        if not (request.user.is_superuser or request.user.groups.filter(name__in=("gold_travel_traditional_manager","gold_travel_traditional_manager_show")).exists()):
+        if not (request.user.is_superuser or request.user.groups.filter(name="gold_travel_traditional_manager").exists()):
             if not gold_user or not gold_user.is_tarhil_user:
                 self.message_user(request, _('Only destination users can fill melt details.'), level='error')
                 return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
@@ -490,7 +490,7 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
         except:
             pass
 
-        if not (request.user.is_superuser or request.user.groups.filter(name__in=("gold_travel_traditional_manager","gold_travel_traditional_manager_show")).exists()):
+        if not (request.user.is_superuser or request.user.groups.filter(name="gold_travel_traditional_manager").exists()):
             if not gold_user or not gold_user.is_tarhil_user:
                 self.message_user(request, _('Only destination users can create sales.'), level='error')
                 return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
@@ -635,7 +635,7 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
         except:
             pass
 
-        if not (request.user.is_superuser or request.user.groups.filter(name__in=("gold_travel_traditional_manager","gold_travel_traditional_manager_show")).exists()):
+        if not (request.user.is_superuser or request.user.groups.filter(name="gold_travel_traditional_manager").exists()):
             if not gold_user or not gold_user.is_tarhil_user:
                 self.message_user(request, _('Only destination users can create storage receipts.'), level='error')
                 return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
@@ -827,7 +827,7 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
     def cancel_view(self, request, pk):
         obj = AppMoveGoldTraditional.objects.get(pk=pk)
 
-        if not (request.user.is_superuser or request.user.groups.filter(name__in=("gold_travel_traditional_manager","gold_travel_traditional_manager_show")).exists()):
+        if not (request.user.is_superuser or request.user.groups.filter(name="gold_travel_traditional_manager").exists()):
             try:
                 gold_user = request.user.gold_travel_traditional
                 if gold_user.is_state_viewer:
@@ -930,7 +930,7 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
             pass
 
         # Check if user has permission for this destination
-        if not (request.user.is_superuser or request.user.groups.filter(name__in=("gold_travel_traditional_manager","gold_travel_traditional_manager_show")).exists()):
+        if not (request.user.is_superuser or request.user.groups.filter(name="gold_travel_traditional_manager").exists()):
             try:
                 if not gold_user:
                     return redirect("admin:gold_travel_traditional_appmovegoldtraditional_changelist")
@@ -988,7 +988,7 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
     def renew_view(self, request, pk):
         obj = AppMoveGoldTraditional.objects.get(pk=pk)
 
-        if not (request.user.is_superuser or request.user.groups.filter(name__in=("gold_travel_traditional_manager","gold_travel_traditional_manager_show")).exists()):
+        if not (request.user.is_superuser or request.user.groups.filter(name="gold_travel_traditional_manager").exists()):
             try:
                 gold_user = request.user.gold_travel_traditional
                 if gold_user.is_state_viewer:
@@ -1066,7 +1066,7 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
     @admin.display(description=_('show_actions'))
     def show_actions(self, obj):
         request = self.current_request
-        is_manager = request.user.is_superuser or request.user.groups.filter(name__in=("gold_travel_traditional_manager","gold_travel_traditional_manager_show")).exists()
+        is_manager = request.user.is_superuser or request.user.groups.filter(name="gold_travel_traditional_manager").exists()
 
         def get_allowed_actions(obj):
             actions = []
