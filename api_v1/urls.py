@@ -18,5 +18,7 @@ urlpatterns = [
     path('gold_travel_traditional_retrieve/<int:pk>/', views.GoldTravelTraditionalDetailView.as_view()),
     path('deductions_list/<str:date>/', views.DeductionsListView.as_view()),
     path('deductions_retrieve/<int:pk>/', views.DeductionsDetailView.as_view()),
+    path('sale_list/<str:date>/', views.SaleListView.as_view()),
+    path('sale_retrieve/<int:pk>/', views.SaleDetailView.as_view()),
     path('invoice/tra/', include('form15_tra.api.urls')),
 ]
