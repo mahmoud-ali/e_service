@@ -102,7 +102,7 @@ class StateGoldPriceAdmin(LogMixin, ImportExportModelAdmin):
     list_filter = ('state', 'created_at')
     search_fields = ('state__name', 'price_per_gram_sdg')
     date_hierarchy = 'created_at'
-    autocomplete_fields = ('state',)
+    # autocomplete_fields = ('state',)
 
     def get_state_qs(self, request):
         """Return states the user is assigned to via PricesStateUser."""
