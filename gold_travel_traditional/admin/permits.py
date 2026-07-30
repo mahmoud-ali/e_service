@@ -916,7 +916,7 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
             'object': obj,
             'alloy_chunks': alloy_chunks,
             'expiry_hours': expiry_days * 24,
-            'has_astikhbarat': False, 
+            'has_astikhbarat': obj.source_state_id == 11, 
         }
         return TemplateResponse(request, "gold_travel_traditional/gold_travel_traditional.html", context)
     
