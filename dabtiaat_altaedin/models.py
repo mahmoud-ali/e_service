@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
+from django.core.exceptions import ValidationError
 
 from company_profile.models import LkpState
 
@@ -57,6 +58,8 @@ class TblStateRepresentative2(models.Model):
 
         verbose_name = _("state representative")
         verbose_name_plural = _("state representatives")
+
+from django.utils import timezone
 
 class AppDabtiaat(LoggingModel):
 
@@ -117,34 +120,44 @@ class AppDabtiaat(LoggingModel):
     def total_price(self):
         return self.sum_of_weight_multiply_price
 
-    @property
-    def al3wayid_aljalila_amount(self):
-        setting = DabtiaatSetting.objects.filter(key='al3wayid_aljalila').first()
+    def get_stored_or_live_amount(self, key):
+        if self.pk:
+            hist = self.calculation_histories.filter(setting_key=key).order_by('-id').first()
+            if hist is not None:
+                return hist.calculated_amount
+
+        setting = DabtiaatSetting.objects.filter(key=key).first()
         if setting:
             return self.calculate_setting_amount(setting)
-        pct = 10.0
-        return self.sum_of_weight_multiply_price * (pct / 100.0)
+
+        if key == 'total_koli_pct':
+            return self.koli_amount_live
+        elif key == 'al3wayid_aljalila':
+            return self.sum_of_weight_multiply_price * 0.10
+        elif key == 'alhafiz':
+            return self.sum_of_weight_multiply_price * 0.10
+        elif key == 'alniyaba':
+            return self.sum_of_weight_multiply_price * 0.02
+        elif key in ['smrc', 'state', 'police', 'amn', 'riasat_alquat_aldaabita']:
+            return self.alhafiz_amount * 0.10
+        elif key == 'alquat_aldaabita':
+            return self.alhafiz_amount * 0.50
+        return 0.0
+
+    @property
+    def al3wayid_aljalila_amount(self):
+        return self.get_stored_or_live_amount('al3wayid_aljalila')
 
     @property
     def alhafiz_amount(self):
-        setting = DabtiaatSetting.objects.filter(key='alhafiz').first()
-        if setting:
-            if not setting.is_active:
-                return 0.0
-            return self.sum_of_weight_multiply_price * (setting.percentage / 100.0)
-        pct = 10.0
-        return self.sum_of_weight_multiply_price * (pct / 100.0)
+        return self.get_stored_or_live_amount('alhafiz')
 
     @property
     def alniyaba_amount(self):
-        setting = DabtiaatSetting.objects.filter(key='alniyaba').first()
-        if setting:
-            return self.calculate_setting_amount(setting)
-        pct = 2.0
-        return self.sum_of_weight_multiply_price * (pct / 100.0)
+        return self.get_stored_or_live_amount('alniyaba')
 
     @property
-    def koli_amount(self):
+    def koli_amount_live(self):
         koli_setting = DabtiaatSetting.objects.filter(key='total_koli_pct').first()
         if koli_setting:
             if koli_setting.is_active:
@@ -159,54 +172,33 @@ class AppDabtiaat(LoggingModel):
                 total_pct = 22.0
         return self.sum_of_weight_multiply_price * (total_pct / 100.0)
 
+    @property
+    def koli_amount(self):
+        return self.get_stored_or_live_amount('total_koli_pct')
 
     @property
     def smrc_amount(self):
-        setting = DabtiaatSetting.objects.filter(key='smrc').first()
-        if setting:
-            return self.calculate_setting_amount(setting)
-        pct = 10.0
-        return self.alhafiz_amount * (pct / 100.0)
+        return self.get_stored_or_live_amount('smrc')
 
     @property
     def state_amount(self):
-        setting = DabtiaatSetting.objects.filter(key='state').first()
-        if setting:
-            return self.calculate_setting_amount(setting)
-        pct = 10.0
-        return self.alhafiz_amount * (pct / 100.0)
+        return self.get_stored_or_live_amount('state')
 
     @property
     def police_amount(self):
-        setting = DabtiaatSetting.objects.filter(key='police').first()
-        if setting:
-            return self.calculate_setting_amount(setting)
-        pct = 10.0
-        return self.alhafiz_amount * (pct / 100.0)
+        return self.get_stored_or_live_amount('police')
 
     @property
     def amn_amount(self):
-        setting = DabtiaatSetting.objects.filter(key='amn').first()
-        if setting:
-            return self.calculate_setting_amount(setting)
-        pct = 10.0
-        return self.alhafiz_amount * (pct / 100.0)
+        return self.get_stored_or_live_amount('amn')
 
     @property
     def riasat_alquat_aldaabita_amount(self):
-        setting = DabtiaatSetting.objects.filter(key='riasat_alquat_aldaabita').first()
-        if setting:
-            return self.calculate_setting_amount(setting)
-        pct = 10.0
-        return self.alhafiz_amount * (pct / 100.0)
+        return self.get_stored_or_live_amount('riasat_alquat_aldaabita')
 
     @property
     def alquat_aldaabita_amount(self):
-        setting = DabtiaatSetting.objects.filter(key='alquat_aldaabita').first()
-        if setting:
-            return self.calculate_setting_amount(setting)
-        pct = 50.0
-        return self.alhafiz_amount * (pct / 100.0)
+        return self.get_stored_or_live_amount('alquat_aldaabita')
 
     def calculate_setting_amount(self, setting):
         if isinstance(setting, str):
@@ -216,9 +208,64 @@ class AppDabtiaat(LoggingModel):
             return 0.0
         return setting.calculate_amount(self)
 
+    def snapshot_calculations(self, force_date=None):
+        if not self.pk:
+            return
+
+        calc_date = force_date or timezone.now()
+        weight = self.sum_of_weight_in_gram
+        total_val = self.sum_of_weight_multiply_price
+
+        self.calculation_histories.all().delete()
+
+        koli_setting = DabtiaatSetting.objects.filter(key='total_koli_pct').first()
+        if koli_setting:
+            koli_pct = koli_setting.percentage if koli_setting.is_active else 0.0
+            is_active_koli = koli_setting.is_active
+        else:
+            base_total_qs = DabtiaatSetting.objects.filter(calculation_base=DabtiaatSetting.BASE_TOTAL).exclude(key='total_koli_pct')
+            if base_total_qs.exists():
+                koli_pct = sum(s.percentage for s in base_total_qs if s.is_active)
+            else:
+                koli_pct = 22.0
+            is_active_koli = True
+
+        koli_amt = total_val * (koli_pct / 100.0)
+        AppDabtiaatCalculationHistory.objects.create(
+            app_dabtiaat=self,
+            calculation_date=calc_date,
+            total_gold_weight=weight,
+            total_gold_value=total_val,
+            setting_key='total_koli_pct',
+            setting_name=_('إجمالي الكلي'),
+            percentage=koli_pct,
+            calculation_base=DabtiaatSetting.BASE_TOTAL,
+            calculated_amount=koli_amt,
+            is_active=is_active_koli
+        )
+
+        settings_qs = DabtiaatSetting.objects.exclude(key='total_koli_pct').order_by('id')
+        if settings_qs.exists():
+            for setting in settings_qs:
+                amt = setting.calculate_amount(self)
+                AppDabtiaatCalculationHistory.objects.create(
+                    app_dabtiaat=self,
+                    calculation_date=calc_date,
+                    total_gold_weight=weight,
+                    total_gold_value=total_val,
+                    setting_key=setting.key,
+                    setting_name=setting.name,
+                    percentage=setting.percentage,
+                    calculation_base=setting.calculation_base,
+                    calculated_amount=amt,
+                    is_active=setting.is_active
+                )
+
     def __getattr__(self, name):
         if name.endswith("_amount") and not name.startswith("_"):
             key = name[:-7]
+            if self.pk and self.calculation_histories.filter(setting_key=key).exists():
+                return self.get_stored_or_live_amount(key)
             setting = DabtiaatSetting.objects.filter(key=key).first()
             if setting:
                 return self.calculate_setting_amount(setting)
@@ -231,6 +278,29 @@ class AppDabtiaat(LoggingModel):
         ordering = ["-date","-id"]
         verbose_name = _("dabtiaat app")
         verbose_name_plural = _("dabtiaat app")
+
+
+class AppDabtiaatCalculationHistory(models.Model):
+    app_dabtiaat = models.ForeignKey(AppDabtiaat, on_delete=models.CASCADE, related_name="calculation_histories", verbose_name=_("dabtiaat app"))
+    calculation_date = models.DateTimeField(_("تاريخ ووقت الحساب"), default=timezone.now)
+    total_gold_weight = models.FloatField(_("إجمالي وزن الذهب (جرام)"), default=0.0)
+    total_gold_value = models.FloatField(_("إجمالي قيمة الذهب"), default=0.0)
+
+    setting_key = models.CharField(_("مفتاح البند"), max_length=50, blank=True, null=True)
+    setting_name = models.CharField(_("اسم البند"), max_length=100)
+    percentage = models.FloatField(_("النسبة (%)"), default=0.0)
+    calculation_base = models.CharField(_("أساس الاحتساب"), max_length=20, default='TOTAL')
+    calculated_amount = models.FloatField(_("المبلغ المحسوب"), default=0.0)
+    is_active = models.BooleanField(_("مفعل وقت الحساب"), default=True)
+
+    class Meta:
+        verbose_name = _("سجل حساب الضبطية")
+        verbose_name_plural = _("سجلات حسابات الضبطيات")
+        ordering = ["-calculation_date", "id"]
+
+    def __str__(self):
+        return f"{self.setting_name}: {self.calculated_amount:.2f} ({self.percentage}%)"
+
 
 
 class DabtiaatSetting(models.Model):
@@ -260,7 +330,49 @@ class DabtiaatSetting(models.Model):
         else:
             return app_dabtiaat.sum_of_weight_multiply_price * (self.percentage / 100.0)
 
+    def clean(self):
+        super().clean()
+        if self.percentage < 0:
+            raise ValidationError(_("رسالة تجاوز: النسبة لا يمكن أن تكون أقل من 0%."))
+        if self.percentage > 100:
+            raise ValidationError(_("رسالة تجاوز: النسبة لا يمكن أن تتجاوز 100% من المبلغ الكلي."))
+
+        if self.calculation_base == self.BASE_HAFIZ:
+            hafiz_sub_qs = DabtiaatSetting.objects.filter(calculation_base=self.BASE_HAFIZ).exclude(pk=self.pk)
+            total_hafiz_sub_pct = sum(s.percentage for s in hafiz_sub_qs if s.is_active)
+            if self.is_active:
+                total_hafiz_sub_pct += self.percentage
+            if total_hafiz_sub_pct > 100.0:
+                raise ValidationError(_(f"رسالة تجاوز: إجمالي نسب البنود المقتطعة من الحافز ({total_hafiz_sub_pct:.1f}%) يتجاوز 100% من قيمة الحافز!"))
+
+        hafiz_setting = DabtiaatSetting.objects.filter(key='alhafiz').exclude(pk=self.pk).first()
+        if self.key == 'alhafiz':
+            hafiz_pct = self.percentage if self.is_active else 0.0
+        else:
+            hafiz_pct = hafiz_setting.percentage if (hafiz_setting and hafiz_setting.is_active) else 10.0
+
+        qs = DabtiaatSetting.objects.exclude(key='total_koli_pct').exclude(pk=self.pk)
+        total_effective_pct = 0.0
+
+        if self.is_active:
+            if self.calculation_base == self.BASE_HAFIZ:
+                total_effective_pct += self.percentage * (hafiz_pct / 100.0)
+            else:
+                total_effective_pct += self.percentage
+
+        for setting in qs:
+            if not setting.is_active:
+                continue
+            if setting.calculation_base == self.BASE_HAFIZ:
+                total_effective_pct += setting.percentage * (hafiz_pct / 100.0)
+            else:
+                total_effective_pct += setting.percentage
+
+        if total_effective_pct > 100.0:
+            raise ValidationError(_(f"رسالة تجاوز: إجمالي النسبة المقتطعة للبنود المفعّلة ({total_effective_pct:.1f}%) يتجاوز 100% من المبلغ الكلي!"))
+
     def save(self, *args, **kwargs):
+        self.full_clean()
         if not self.key:
             import re
             slug = re.sub(r'\W+', '_', self.name).strip('_')
@@ -302,6 +414,11 @@ class AppDabtiaatDetails(models.Model):
     gold_weight_in_gram = models.FloatField(_("gold_weight_in_gram"))
     gold_price = models.FloatField(_("gold_price"))
     gold_caliber = models.FloatField(_("gold_caliber"),null=True,blank=True,default=0)
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        if self.app_dabtiaat_id and self.app_dabtiaat:
+            self.app_dabtiaat.snapshot_calculations()
 
     class Meta:
         verbose_name = _("تفاصيل استمارة ضبطية")

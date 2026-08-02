@@ -10,7 +10,7 @@ from django.utils.html import format_html
 from django.db import models
 from django.forms.widgets import TextInput
 from dabtiaat_altaedin.forms import TblStateRepresentativeForm
-from dabtiaat_altaedin.models import AppDabtiaat, AppDabtiaatDetails, RevenueSettlement, SettlementType, TblStateRepresentative2, DabtiaatSetting
+from dabtiaat_altaedin.models import AppDabtiaat, AppDabtiaatDetails, RevenueSettlement, SettlementType, TblStateRepresentative2, DabtiaatSetting, AppDabtiaatCalculationHistory
 
 class LogAdminMixin:
     def get_queryset(self, request):
@@ -264,10 +264,26 @@ class AppDabtiaatDetailsInline(admin.StackedInline):
     min_num = 1
     extra = 0
 
+class AppDabtiaatCalculationHistoryInline(admin.TabularInline):
+    model = AppDabtiaatCalculationHistory
+    extra = 0
+    readonly_fields = ["setting_name", "percentage", "calculated_amount_formatted"]
+    fields = ["setting_name", "percentage", "calculated_amount_formatted"]
+    can_delete = False
+    verbose_name = _("سجل حساب البند")
+    verbose_name_plural = _("سجل الحسابات")
+
+    @admin.display(description=_("المبلغ المحسوب"))
+    def calculated_amount_formatted(self, obj):
+        return f"{round(obj.calculated_amount):,}" if obj and obj.calculated_amount is not None else "0"
+
+    def has_add_permission(self, request, obj=None):
+        return False
+
 
 class AppDabtiaatAdmin(LogAdminMixin,admin.ModelAdmin):
     model = AppDabtiaat
-    inlines = [AppDabtiaatDetailsInline]
+    inlines = [AppDabtiaatDetailsInline, AppDabtiaatCalculationHistoryInline]
     exclude = ["created_at","created_by","updated_at","updated_by","state","source_state"]
     list_display = ["date","created_by_name","updated_by_name","gold_weight_in_gram","gold_price","koli_amount","state","source_state","al3wayid_aljalila_amount","alhafiz_amount","alniyaba_amount","smrc_amount","state_amount","police_amount","amn_amount","riasat_alquat_aldaabita_amount","alquat_aldaabita_amount"]        
     list_filter = [("date",DateFieldListFilterWithLast30days),("state",ChoicesFieldListFilterNotEmpty),("source_state",RelatedOnlyFieldListFilterNotEmpty)]
@@ -276,7 +292,12 @@ class AppDabtiaatAdmin(LogAdminMixin,admin.ModelAdmin):
     extra = 1    
     formfield_overrides = {
         models.FloatField: {"widget": TextInput},
-    }    
+    }
+
+    def save_related(self, request, form, formsets, change):
+        super().save_related(request, form, formsets, change)
+        if form.instance and form.instance.pk:
+            form.instance.snapshot_calculations()
 
     def get_list_display(self, request):
         fields = ["date", "created_by_name", "updated_by_name", "gold_weight_in_gram", "gold_price"]
@@ -297,25 +318,26 @@ class AppDabtiaatAdmin(LogAdminMixin,admin.ModelAdmin):
         if name.endswith("_amount") and not name.startswith("_"):
             key = name[:-7]
             setting = DabtiaatSetting.objects.filter(key=key).first()
-            if setting:
-                def display_func(obj):
-                    amt = obj.calculate_setting_amount(setting)
-                    return f'{round(amt):,}'
-                display_func.short_description = setting.name
-                return display_func
+            label = setting.name if setting else key
+            def display_func(obj):
+                amt = getattr(obj, name, 0.0)
+                return f'{round(amt):,}'
+            display_func.short_description = label
+            return display_func
         elif name.startswith("setting_amount_"):
             try:
                 setting_id = int(name.replace("setting_amount_", ""))
                 setting = DabtiaatSetting.objects.filter(id=setting_id).first()
                 if setting:
                     def display_func(obj):
-                        amt = obj.calculate_setting_amount(setting)
+                        amt = obj.get_stored_or_live_amount(setting.key) if setting.key else setting.calculate_amount(obj)
                         return f'{round(amt):,}'
                     display_func.short_description = setting.name
                     return display_func
             except ValueError:
                 pass
         raise AttributeError(f"'{self.__class__.__name__}' object has no attribute '{name}'")
+
 
     def get_actions(self, request):
         actions = super().get_actions(request)
@@ -472,6 +494,24 @@ class AppDabtiaatAdmin(LogAdminMixin,admin.ModelAdmin):
         return f'{round(obj.alquat_aldaabita_amount):,}'
 
 admin.site.register(AppDabtiaat, AppDabtiaatAdmin)
+
+
+class AppDabtiaatCalculationHistoryAdmin(admin.ModelAdmin):
+    model = AppDabtiaatCalculationHistory
+    list_display = ["app_dabtiaat", "calculation_date", "setting_name", "setting_key", "percentage", "calculation_base", "calculated_amount_formatted", "is_active"]
+    list_filter = ["calculation_date", "setting_name", "calculation_base", "is_active"]
+    search_fields = ["setting_name", "setting_key", "app_dabtiaat__report_number"]
+    readonly_fields = ["app_dabtiaat", "calculation_date", "total_gold_weight", "total_gold_value", "setting_key", "setting_name", "percentage", "calculation_base", "calculated_amount", "is_active"]
+
+    @admin.display(description=_("المبلغ المحسوب"))
+    def calculated_amount_formatted(self, obj):
+        return f"{round(obj.calculated_amount):,}" if obj and obj.calculated_amount is not None else "0"
+
+    def has_add_permission(self, request):
+        return False
+
+admin.site.register(AppDabtiaatCalculationHistory, AppDabtiaatCalculationHistoryAdmin)
+
 
 
 class RevenueSettlementAdmin(LogAdminMixin,admin.ModelAdmin):

@@ -133,5 +133,68 @@ class AppDabtiaatCalculationTest(TestCase):
         display_func = getattr(admin_obj, expected_field)
         self.assertEqual(display_func(self.app), "200")
 
+    def test_calculation_history_immutability_on_setting_change(self):
+        # 1. Setup setting: al3wayid_aljalila = 10%
+        setting = DabtiaatSetting.objects.create(
+            name="العوائد الجليلة",
+            key="al3wayid_aljalila",
+            percentage=10.0,
+            calculation_base=DabtiaatSetting.BASE_TOTAL,
+            is_active=True
+        )
+
+        # Re-snapshot to record values with this setting
+        self.app.snapshot_calculations()
+
+        # Total value = 100 * 100 = 10000, 10% = 1000
+        self.assertEqual(self.app.al3wayid_aljalila_amount, 1000.0)
+        self.assertEqual(self.app.calculation_histories.count(), 2) # total_koli_pct + al3wayid_aljalila
+
+        # 2. Modify setting percentage from 10% to 25%
+        setting.percentage = 25.0
+        setting.save()
+
+        # 3. Assert that historical saved calculation STILL returns 1000.0 and did not change to 2500.0!
+        self.assertEqual(self.app.al3wayid_aljalila_amount, 1000.0)
+
+    def test_hafiz_sub_items_sum_equals_100_percent(self):
+        DabtiaatSetting.objects.create(name="الحافز", key="alhafiz", percentage=10.0, calculation_base=DabtiaatSetting.BASE_TOTAL)
+        DabtiaatSetting.objects.create(name="SMRC", key="smrc", percentage=10.0, calculation_base=DabtiaatSetting.BASE_HAFIZ)
+        DabtiaatSetting.objects.create(name="الولاية", key="state", percentage=10.0, calculation_base=DabtiaatSetting.BASE_HAFIZ)
+        DabtiaatSetting.objects.create(name="الشرطة", key="police", percentage=10.0, calculation_base=DabtiaatSetting.BASE_HAFIZ)
+        DabtiaatSetting.objects.create(name="الأمن", key="amn", percentage=10.0, calculation_base=DabtiaatSetting.BASE_HAFIZ)
+        DabtiaatSetting.objects.create(name="رئاسة القوات الضابطة", key="riasat_alquat_aldaabita", percentage=10.0, calculation_base=DabtiaatSetting.BASE_HAFIZ)
+        DabtiaatSetting.objects.create(name="القوات الضابطة", key="alquat_aldaabita", percentage=50.0, calculation_base=DabtiaatSetting.BASE_HAFIZ)
+
+        self.app.snapshot_calculations()
+
+        hafiz_amt = self.app.alhafiz_amount
+        self.assertEqual(hafiz_amt, 1000.0)
+
+        hafiz_sub_sum = (
+            self.app.smrc_amount +
+            self.app.state_amount +
+            self.app.police_amount +
+            self.app.amn_amount +
+            self.app.riasat_alquat_aldaabita_amount +
+            self.app.alquat_aldaabita_amount
+        )
+
+        self.assertEqual(hafiz_sub_sum, hafiz_amt)
+
+    def test_percentage_exceeding_100_percent_raises_validation_error(self):
+        from django.core.exceptions import ValidationError
+        with self.assertRaises(ValidationError):
+            DabtiaatSetting.objects.create(
+                name="بند مرتفع جداً",
+                key="band_high",
+                percentage=150.0,
+                calculation_base=DabtiaatSetting.BASE_TOTAL,
+                is_active=True
+            )
+
+
+
+
 
 
