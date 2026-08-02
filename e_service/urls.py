@@ -27,7 +27,7 @@ urlpatterns = [
     path('hijack/', include('hijack.urls')),
 
     path('api/v1/', include('api_v1.urls')), 
-    path('api-traditional/', include('traditional_api.urls')), 
+    # path('api-traditional/', include('traditional_api.urls')), 
 
     path('managers/', admin.site.urls),
     path('accounts/', include('accounts.urls')), 
