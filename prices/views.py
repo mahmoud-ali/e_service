@@ -4,7 +4,7 @@ from datetime import date, timedelta
 
 import requests
 from django.contrib import messages
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.db.models import Max as DMax
 from django.db.models import Avg, Min
 from django.http import JsonResponse
@@ -93,9 +93,32 @@ class PriceEntryView(LoginRequiredMixin, FormView):
 
 
 # ---------------------------------------------------------------------------
+# Mixin: restrict to users in any price group (or superuser)
+# ---------------------------------------------------------------------------
+PRICE_GROUPS = {'prices_main', 'prices_parallel_dollar', 'prices_state_gold', 'prices_viewer'}
+
+
+class PriceGroupRequiredMixin(UserPassesTestMixin):
+    """Allow access only to users in a price-related group (or superusers)."""
+
+    def test_func(self):
+        user = self.request.user
+        if not user.is_authenticated:
+            return False
+        if user.is_superuser:
+            return True
+        return user.groups.filter(name__in=PRICE_GROUPS).exists()
+
+    def handle_no_permission(self):
+        from django.shortcuts import redirect
+        messages.error(self.request, _('ليس لديك صلاحية للوصول إلى هذه الصفحة.'))
+        return redirect('prices:login')
+
+
+# ---------------------------------------------------------------------------
 # 2. تقرير ملخص — آخر الأسعار المسجلة لجميع العناصر
 # ---------------------------------------------------------------------------
-class PriceReportView(LoginRequiredMixin, TemplateView):
+class PriceReportView(LoginRequiredMixin, PriceGroupRequiredMixin, TemplateView):
     login_url = reverse_lazy('prices:login')
     template_name = 'prices/price_report.html'
 
@@ -130,7 +153,7 @@ class PriceReportView(LoginRequiredMixin, TemplateView):
 # ---------------------------------------------------------------------------
 # 3. سجل الأسعار — تاريخ لفترة زمنية محددة
 # ---------------------------------------------------------------------------
-class PriceHistoryView(LoginRequiredMixin, TemplateView):
+class PriceHistoryView(LoginRequiredMixin, PriceGroupRequiredMixin, TemplateView):
     login_url = reverse_lazy('prices:login')
     template_name = 'prices/price_history.html'
 
@@ -219,7 +242,7 @@ class PriceHistoryView(LoginRequiredMixin, TemplateView):
 # ---------------------------------------------------------------------------
 # 4. تقرير مقارنة — مقارنة أسعار الذهب المحلية (محولة للدولار) مع السعر العالمي
 # ---------------------------------------------------------------------------
-class PriceComparisonView(LoginRequiredMixin, TemplateView):
+class PriceComparisonView(LoginRequiredMixin, PriceGroupRequiredMixin, TemplateView):
     login_url = reverse_lazy('prices:login')
     template_name = 'prices/price_comparison.html'
 

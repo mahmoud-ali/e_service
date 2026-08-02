@@ -99,6 +99,8 @@ INSTALLED_APPS = [
     'auditlog',
     'taggit',
 
+    'hijack',
+    'hijack.contrib.admin',
     # Local                
     'api_v1',
     'accounts',
@@ -148,6 +150,7 @@ MIDDLEWARE = [
     'allauth.account.middleware.AccountMiddleware',
     'rollbar.contrib.django.middleware.RollbarNotifierMiddleware',
     'auditlog.middleware.AuditlogMiddleware',
+    'hijack.middleware.HijackUserMiddleware',
 
     # Debug
     'debug_toolbar.middleware.DebugToolbarMiddleware',

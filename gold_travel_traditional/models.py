@@ -148,9 +148,10 @@ class AppMoveGoldTraditional(LoggingModel):
     }
 
     def attachement_path(self, filename):
+        state_code = self.source_state.code if self.source_state else 'unknown'
         code = self.code or 'new'
         date = (self.created_at or timezone.now()).date()
-        return "company_{0}/travel_traditional/travel/{1}/{2}".format(code,date, filename)    
+        return "states/{0}/travel_traditional/travel/{1}/{2}/{3}".format(state_code,date,code, filename)    
     
     code = models.CharField(_("code"),max_length=20, unique=True)
     issue_date = models.DateField(_("issue_date"))

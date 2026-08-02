@@ -4,6 +4,8 @@ from django.utils.translation import gettext_lazy as _
 from import_export.admin import ImportExportModelAdmin
 from import_export import resources, fields
 
+from company_profile.models import LkpState
+
 from prices.models import (
     GlobalGoldPrice,
     BankSudanGoldPrice,
@@ -100,7 +102,25 @@ class StateGoldPriceAdmin(LogMixin, ImportExportModelAdmin):
     list_filter = ('state', 'created_at')
     search_fields = ('state__name', 'price_per_gram_sdg')
     date_hierarchy = 'created_at'
-    autocomplete_fields = ('state',)
+    # autocomplete_fields = ('state',)
+
+    def get_state_qs(self, request):
+        """Return states the user is assigned to via PricesStateUser."""
+        return LkpState.objects.filter(
+            pricesstateuser__user=request.user
+        ).distinct()
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        if request.user.is_superuser:
+            return qs
+        allowed_states = self.get_state_qs(request)
+        return qs.filter(state__in=allowed_states)
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == 'state' and not request.user.is_superuser:
+            kwargs['queryset'] = self.get_state_qs(request)
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
 
 @admin.register(DollarPrice)

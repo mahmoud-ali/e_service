@@ -119,6 +119,9 @@
                 المعدنية المحدودة</th>
             <th {% if has_astikhbarat %} width="23%" {% else %} width="30%" {% endif %}>ممثل أمن إقتصاديات المعادن</th>
             <th {% if has_astikhbarat %} width="23%" {% else %} width="30%" {% endif %}>ممثل شرطة تأمين التعدين</th>
+            {% if has_astikhbarat %}
+            <th width="24%">ممثل الإستخبارات العسكرية</th>
+            {% endif %}
 
         </tr>
         <tr>
@@ -126,6 +129,9 @@
             <td height="30px">&nbsp;</td>
             <td height="30px">&nbsp;</td>
             <td height="30px">&nbsp;</td>
+            {% if has_astikhbarat %}
+            <td height="30px">&nbsp;</td>
+            {% endif %}
 
         </tr>
         <tr>
@@ -133,6 +139,9 @@
             <td height="30px">&nbsp;</td>
             <td height="30px">&nbsp;</td>
             <td height="30px">&nbsp;</td>
+            {% if has_astikhbarat %}
+            <td height="30px">&nbsp;</td>
+            {% endif %}
 
         </tr>
         <tr>
