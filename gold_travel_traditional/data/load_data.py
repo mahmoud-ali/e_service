@@ -213,6 +213,53 @@ def assign_tarhil_to_alaisdar_users(file_path, wijhat_altarhil_ids):
 
     print(f"Assigned tarhil to {created} user-jihat pairs ({len(gt_users)} users x {len(wijhats)} wijhats)")
 
+def assign_tarhil_to_alaisdar_users_by_ids(jihat_alaisdar_ids, wijhat_altarhil_id):
+    """
+    For every GoldTravelTraditionalUser with user_type=JIHAT_ALAISDAR (1)
+    who has at least one of the given jihat_alaisdar IDs, assign the
+    specified wijhat_altarhil if not already assigned.
+
+    Args:
+        jihat_alaisdar_ids: list of LkpJihatAlaisdar IDs to match
+        wijhat_altarhil_id: single LkpJihatAltarhil ID to assign
+    """
+    if isinstance(jihat_alaisdar_ids, (int, str)):
+        jihat_alaisdar_ids = [int(jihat_alaisdar_ids)]
+
+    try:
+        wijhat = LkpJihatAltarhil.objects.get(id=wijhat_altarhil_id)
+    except LkpJihatAltarhil.DoesNotExist:
+        print(f"LkpJihatAltarhil id={wijhat_altarhil_id} not found")
+        return
+
+    # Users with user_type=1 (JIHAT_ALAISDAR) who have any of the given jihat_alaisdar IDs
+    master_ids = (
+        GoldTravelTraditionalUserJihatAlaisdar.objects
+        .filter(jihat_alaisdar_id__in=jihat_alaisdar_ids)
+        .values_list('master_id', flat=True)
+        .distinct()
+    )
+    gt_users = GoldTravelTraditionalUser.objects.filter(
+        id__in=master_ids,
+        user_type=GoldTravelTraditionalUser.JIHAT_ALAISDAR,
+    )
+
+    if not gt_users.exists():
+        print("No matching users found")
+        return
+
+    created = 0
+    for gt_user in gt_users:
+        _, c = GoldTravelTraditionalUserJihatTarhil.objects.get_or_create(
+            master=gt_user,
+            wijhat_altarhil=wijhat,
+        )
+        if c:
+            created += 1
+            print(f"  + {gt_user.user.username}: wijhat_altarhil '{wijhat.name}'")
+
+    print(f"Assigned tarhil to {created} users (out of {gt_users.count()} matched)")
+
 def drop_app_move_gold():
     """Delete all AppMoveGoldTraditional records (cascades to details)."""
     count, _ = AppMoveGoldTraditional.objects.all().delete()
@@ -368,6 +415,9 @@ if __name__ == "__main__":
         print("  --sync-names-all             Same, for all GoldTravelTraditionalUser profiles")
         print("  --load-saig <state_id>       Import saig from CSV (one name per line)")
         print("  --backfill-arrival-time      Set arrival_time = updated_at for arrived records missing it")
+        print("  --assign-tarhil-by-jihat <jihat_ids:wijhat_id>")
+        print("                                Assign wijhat_altarhil to user_type=1 users matching jihat IDs")
+        print("                                Example: --assign-tarhil-by-jihat 1,3,5:2")
     else:
         if '--add-user-type-all' in sys.argv:
             add_user_type_to_all_csvs()
@@ -386,6 +436,13 @@ if __name__ == "__main__":
             reload_all_csvs()
         elif '--drop-moves' in sys.argv:
             drop_app_move_gold()
+        elif '--assign-tarhil-by-jihat' in sys.argv:
+            idx = sys.argv.index('--assign-tarhil-by-jihat')
+            if idx + 1 < len(sys.argv):
+                parts = sys.argv[idx + 1].split(':')
+                jihat_ids = _parse_ids(parts[0])
+                wijhat_id = int(parts[1])
+                assign_tarhil_to_alaisdar_users_by_ids(jihat_ids, wijhat_id)
         elif '--backfill-arrival-time' in sys.argv:
             backfill_arrival_time()
         elif '--setup' in sys.argv:
