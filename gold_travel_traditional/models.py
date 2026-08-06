@@ -120,6 +120,19 @@ class GoldTravelTraditionalUserJihatTarhil(models.Model):
         verbose_name_plural = _("جهات الوصول المعتمدة للمستخدمين")
 
 
+class Route(models.Model):
+    jihat_alaisdar = models.ForeignKey(LkpJihatAlaisdar, on_delete=models.CASCADE, verbose_name=_("جهة الإصدار"))
+    wijhat_altarhil = models.ForeignKey(LkpJihatAltarhil, on_delete=models.CASCADE, verbose_name=_("جهة الوصول"))
+
+    def __str__(self):
+        return f"{self.jihat_alaisdar.name} → {self.wijhat_altarhil.name}"
+
+    class Meta:
+        unique_together = [('jihat_alaisdar', 'wijhat_altarhil')]
+        verbose_name = _("مسار الترحيل")
+        verbose_name_plural = _("مسارات الترحيل")
+
+
 class AppMoveGoldTraditional(LoggingModel):
     STATE_NEW = 1
     STATE_EXPIRED = 3

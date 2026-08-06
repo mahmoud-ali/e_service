@@ -7,5 +7,6 @@ class GoldTravelTraditionalConfig(AppConfig):
     verbose_name = _("Gold travel Traditional")
 
     def ready(self) -> None:
+        import gold_travel_traditional.signals  # noqa: F401
         return super().ready()
     

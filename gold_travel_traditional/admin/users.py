@@ -72,5 +72,10 @@ class GoldTravelTraditionalUserAdmin(LogAdminMixin,admin.ModelAdmin):
                     formset.form.allowed_state = obj.state
             yield formset,inline
 
+    def save_related(self, request, form, formsets, change):
+        super().save_related(request, form, formsets, change)
+        from gold_travel_traditional.signals import sync_user_destinations
+        sync_user_destinations(form.instance)
+
 admin.site.register(GoldTravelTraditionalUser, GoldTravelTraditionalUserAdmin)
 

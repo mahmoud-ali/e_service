@@ -20,6 +20,9 @@ from .sales import (
 from .storage import (
     StorageRecordsInline, StorageMeltBatchesInline, StorageAdmin
 )
+from .routes import (
+    RouteAdmin
+)
 
 __all__ = [
     'get_user_state', 'LogAdminMixin', 'RelatedOnlyFieldListFilterNotEmpty', 'HasPhotoFilter',
@@ -28,5 +31,6 @@ __all__ = [
     'GoldTravelTraditionalUserAdmin', 'AppMoveGoldTraditionalDetailInline', 'AppMoveGoldTraditionalAdmin',
     'MeltBatchRecordsInline', 'MeltBatchDetailInline', 'MeltBatchAdmin',
     'SaleRecordsInline', 'SaleMeltBatchesInline', 'SaleAdmin',
-    'StorageRecordsInline', 'StorageMeltBatchesInline', 'StorageAdmin'
+    'StorageRecordsInline', 'StorageMeltBatchesInline', 'StorageAdmin',
+    'RouteAdmin'
 ]
