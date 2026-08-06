@@ -25,6 +25,7 @@ from gold_travel_traditional.models import (
     LkpJihatAlaisdar,
     LkpJihatAltarhil,
     LkpSaig,
+    Route,
 )
 from company_profile.models import LkpState
 
@@ -397,9 +398,78 @@ def backfill_arrival_time():
     count = qs.update(arrival_time=F('updated_at'))
     print(f"Backfilled arrival_time for {count} arrived records")
 
+def populate_routes(routes_data=None, clear=False):
+    """
+    Create routes from (jihat_alaisdar_id, wijhat_altarhil_id) pairs
+    without firing the Route post_save/post_delete signals.
+
+    Args:
+        routes_data: list of (jihat_alaisdar_id, wijhat_altarhil_id) tuples.
+                     If None, derives pairs from existing AppMoveGoldTraditional records
+                     (all distinct jihat_alaisdar + wijhat_altarhil combinations).
+        clear: if True, delete all existing routes first
+
+    Returns:
+        (created, skipped) counts
+    """
+    from django.db.models.signals import post_save, post_delete
+    from gold_travel_traditional.models import Route
+    from gold_travel_traditional.signals import on_route_changed
+
+    if routes_data is None:
+        routes_data = (
+            AppMoveGoldTraditional.objects
+            .values_list('jihat_alaisdar_id', 'wijhat_altarhil_id')
+            .distinct()
+            .order_by()
+        )
+
+    # Disconnect signal handlers
+    post_save.disconnect(on_route_changed, sender=Route)
+    post_delete.disconnect(on_route_changed, sender=Route)
+
+    try:
+        if clear:
+            deleted, _ = Route.objects.all().delete()
+            print(f"  Cleared {deleted} existing routes")
+
+        created = 0
+        skipped = 0
+        for jihat_id, wijhat_id in routes_data:
+            _, c = Route.objects.get_or_create(
+                jihat_alaisdar_id=jihat_id,
+                wijhat_altarhil_id=wijhat_id,
+            )
+            if c:
+                created += 1
+            else:
+                skipped += 1
+
+        print(f"  Routes: {created} created, {skipped} already existed")
+        return created, skipped
+    finally:
+        # Always reconnect
+        post_save.connect(on_route_changed, sender=Route)
+        post_delete.connect(on_route_changed, sender=Route)
+
+
 def _parse_ids(raw):
     """Parse '1,2,3' into [1, 2, 3]."""
     return [int(x.strip()) for x in raw.split(',') if x.strip()]
+
+
+def _parse_route_pairs(raw):
+    """
+    Parse '1:5,1:6,2:5' into [(1,5), (1,6), (2,5)].
+    Each pair is jihat_id:wijhat_id. Multiple pairs separated by commas.
+    """
+    pairs = []
+    for chunk in raw.split(','):
+        chunk = chunk.strip()
+        if ':' in chunk:
+            a, b = chunk.split(':', 1)
+            pairs.append((int(a.strip()), int(b.strip())))
+    return pairs
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
@@ -418,6 +488,10 @@ if __name__ == "__main__":
         print("  --assign-tarhil-by-jihat <jihat_ids:wijhat_id>")
         print("                                Assign wijhat_altarhil to user_type=1 users matching jihat IDs")
         print("                                Example: --assign-tarhil-by-jihat 1,3,5:2")
+        print("  --populate-routes [pairs]     Create routes without signals. Without args: backfills from")
+        print("                                existing AppMoveGoldTraditional permit data.")
+        print("                                With args: e.g. --populate-routes 1:5,1:6,2:5")
+        print("  --populate-routes-sync [pairs]  Same, then run sync_all_issuer_users once")
     else:
         if '--add-user-type-all' in sys.argv:
             add_user_type_to_all_csvs()
@@ -443,6 +517,20 @@ if __name__ == "__main__":
                 jihat_ids = _parse_ids(parts[0])
                 wijhat_id = int(parts[1])
                 assign_tarhil_to_alaisdar_users_by_ids(jihat_ids, wijhat_id)
+        elif '--populate-routes' in sys.argv or '--populate-routes-sync' in sys.argv:
+            is_sync = '--populate-routes-sync' in sys.argv
+            flag = '--populate-routes-sync' if is_sync else '--populate-routes'
+            idx = sys.argv.index(flag)
+            has_pairs = idx + 1 < len(sys.argv) and ':' in sys.argv[idx + 1]
+            if has_pairs:
+                pairs = _parse_route_pairs(sys.argv[idx + 1])
+                populate_routes(pairs, clear=False)
+            else:
+                populate_routes(clear=False)
+            if is_sync:
+                from gold_travel_traditional.signals import sync_all_issuer_users
+                sync_all_issuer_users()
+                print("  Sync complete")
         elif '--backfill-arrival-time' in sys.argv:
             backfill_arrival_time()
         elif '--setup' in sys.argv:
