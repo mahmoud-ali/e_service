@@ -111,41 +111,65 @@
     </div>
     {% endif %}
 
-    {% if 'official_dollar_price' in form.fields or 'parallel_market_dollar_price' in form.fields %}
+    {% if 'official_dollar_buy_price' in form.fields or 'parallel_dollar_buy_price' in form.fields %}
     <!-- ===== قسم الدولار ===== -->
     <div class="panel panel-success">
       <div class="panel-heading">
         <h5 class="panel-title">{% trans "أسعار صرف الدولار" %}</h5>
       </div>
       <div class="panel-body">
+        {% if 'official_dollar_buy_price' in form.fields %}
         <div class="row">
-          {% if 'official_dollar_price' in form.fields %}
           <div class="col-md-6">
             <div class="form-group">
-              <label for="{{ form.official_dollar_price.id_for_label }}">
-                {{ form.official_dollar_price.label }}
+              <label for="{{ form.official_dollar_buy_price.id_for_label }}">
+                {{ form.official_dollar_buy_price.label }}
               </label>
-              {{ form.official_dollar_price }}
-              {% if form.official_dollar_price.errors %}
-                <span class="help-block text-danger">{{ form.official_dollar_price.errors }}</span>
+              {{ form.official_dollar_buy_price }}
+              {% if form.official_dollar_buy_price.errors %}
+                <span class="help-block text-danger">{{ form.official_dollar_buy_price.errors }}</span>
               {% endif %}
             </div>
           </div>
-          {% endif %}
-          {% if 'parallel_market_dollar_price' in form.fields %}
           <div class="col-md-6">
             <div class="form-group">
-              <label for="{{ form.parallel_market_dollar_price.id_for_label }}">
-                {{ form.parallel_market_dollar_price.label }}
+              <label for="{{ form.official_dollar_sell_price.id_for_label }}">
+                {{ form.official_dollar_sell_price.label }}
               </label>
-              {{ form.parallel_market_dollar_price }}
-              {% if form.parallel_market_dollar_price.errors %}
-                <span class="help-block text-danger">{{ form.parallel_market_dollar_price.errors }}</span>
+              {{ form.official_dollar_sell_price }}
+              {% if form.official_dollar_sell_price.errors %}
+                <span class="help-block text-danger">{{ form.official_dollar_sell_price.errors }}</span>
               {% endif %}
             </div>
           </div>
-          {% endif %}
         </div>
+        {% endif %}
+        {% if 'parallel_dollar_buy_price' in form.fields %}
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="{{ form.parallel_dollar_buy_price.id_for_label }}">
+                {{ form.parallel_dollar_buy_price.label }}
+              </label>
+              {{ form.parallel_dollar_buy_price }}
+              {% if form.parallel_dollar_buy_price.errors %}
+                <span class="help-block text-danger">{{ form.parallel_dollar_buy_price.errors }}</span>
+              {% endif %}
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="{{ form.parallel_dollar_sell_price.id_for_label }}">
+                {{ form.parallel_dollar_sell_price.label }}
+              </label>
+              {{ form.parallel_dollar_sell_price }}
+              {% if form.parallel_dollar_sell_price.errors %}
+                <span class="help-block text-danger">{{ form.parallel_dollar_sell_price.errors }}</span>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+        {% endif %}
       </div>
     </div>
     {% endif %}

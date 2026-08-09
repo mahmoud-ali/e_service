@@ -128,17 +128,17 @@ class PriceReportView(LoginRequiredMixin, PriceGroupRequiredMixin, TemplateView)
         # Last prices for each item
         ctx['last_global'] = GlobalGoldPrice.objects.filter(
             karat=GOLD_KARAT_24
-        ).order_by('-created_at').first()
+        ).order_by('-date', '-created_at').first()
         ctx['last_global_21k'] = GlobalGoldPrice.objects.filter(
             karat=GOLD_KARAT_21
-        ).order_by('-created_at').first()
-        ctx['last_bank_sudan'] = BankSudanGoldPrice.objects.order_by('-created_at').first()
+        ).order_by('-date', '-created_at').first()
+        ctx['last_bank_sudan'] = BankSudanGoldPrice.objects.order_by('-date', '-created_at').first()
         ctx['last_official'] = DollarPrice.objects.filter(
             rate_type=DOLLAR_OFFICIAL
-        ).order_by('-created_at').first()
+        ).order_by('-date', '-created_at').first()
         ctx['last_parallel'] = DollarPrice.objects.filter(
             rate_type=DOLLAR_PARALLEL
-        ).order_by('-created_at').first()
+        ).order_by('-date', '-created_at').first()
 
         # Latest state prices (most recent per state)
         ctx['last_state_prices'] = StateGoldPrice.objects.filter(
@@ -184,7 +184,7 @@ class PriceHistoryView(LoginRequiredMixin, PriceGroupRequiredMixin, TemplateView
         ctx['limits'] = limits
         ctx['next_limits'] = {k: v + 20 for k, v in limits.items()}
 
-        dt_filter = {'created_at__date__gte': start_date, 'created_at__date__lte': end_date}
+        dt_filter = {'date__gte': start_date, 'date__lte': end_date}
 
         # Querysets with limits
         base_global = GlobalGoldPrice.objects.filter(**dt_filter)
@@ -232,8 +232,10 @@ class PriceHistoryView(LoginRequiredMixin, PriceGroupRequiredMixin, TemplateView
         ctx['global_24k_stats'] = _stats(full_global_24k, 'price_per_gram_usd')
         ctx['global_21k_stats'] = _stats(full_global_21k, 'price_per_gram_usd')
         ctx['bank_sudan_stats'] = _stats(full_bank, 'price_per_gram_sdg')
-        ctx['official_stats'] = _stats(full_official, 'price_in_sdg')
-        ctx['parallel_stats'] = _stats(full_parallel, 'price_in_sdg')
+        ctx['official_stats'] = _stats(full_official, 'buy_price_in_sdg')
+        ctx['official_sell_stats'] = _stats(full_official, 'sell_price_in_sdg')
+        ctx['parallel_stats'] = _stats(full_parallel, 'buy_price_in_sdg')
+        ctx['parallel_sell_stats'] = _stats(full_parallel, 'sell_price_in_sdg')
         ctx['state_stats'] = _stats(full_state, 'price_per_gram_sdg')
 
         return ctx
@@ -252,28 +254,28 @@ class PriceComparisonView(LoginRequiredMixin, PriceGroupRequiredMixin, TemplateV
         # Latest parallel dollar rate (used for conversion)
         last_parallel = DollarPrice.objects.filter(
             rate_type=DOLLAR_PARALLEL
-        ).order_by('-created_at').first()
+        ).order_by('-date', '-created_at').first()
         last_official = DollarPrice.objects.filter(
             rate_type=DOLLAR_OFFICIAL
-        ).order_by('-created_at').first()
+        ).order_by('-date', '-created_at').first()
         ctx['last_parallel'] = last_parallel
         ctx['last_official'] = last_official
 
-        if last_parallel and last_parallel.price_in_sdg > 0:
-            rate = float(last_parallel.price_in_sdg)
+        if last_parallel and last_parallel.buy_price_in_sdg > 0:
+            rate = float(last_parallel.buy_price_in_sdg)
 
             # Global gold price
             last_global = GlobalGoldPrice.objects.filter(
                 karat=GOLD_KARAT_24
-            ).order_by('-created_at').first()
+            ).order_by('-date', '-created_at').first()
             last_global_21k = GlobalGoldPrice.objects.filter(
                 karat=GOLD_KARAT_21
-            ).order_by('-created_at').first()
+            ).order_by('-date', '-created_at').first()
             ctx['last_global'] = last_global
             ctx['last_global_21k'] = last_global_21k
 
             # Bank Sudan prices → USD
-            last_bank = BankSudanGoldPrice.objects.order_by('-created_at').first()
+            last_bank = BankSudanGoldPrice.objects.order_by('-date', '-created_at').first()
 
             rows = []
 
@@ -337,8 +339,8 @@ class PriceComparisonView(LoginRequiredMixin, PriceGroupRequiredMixin, TemplateV
         def _latest_per_date(queryset, value_attr):
             """Return dict of {date_iso: latest_value} for the queryset."""
             result = {}
-            for record in queryset.filter(created_at__date__gte=cutoff).order_by('created_at__date', '-created_at'):
-                d = record.created_at.date().isoformat()
+            for record in queryset.filter(date__gte=cutoff).order_by('date', '-created_at'):
+                d = record.date.isoformat()
                 if d not in result:
                     result[d] = float(getattr(record, value_attr))
             return result
@@ -349,18 +351,28 @@ class PriceComparisonView(LoginRequiredMixin, PriceGroupRequiredMixin, TemplateV
         )
         official_by_date = _latest_per_date(
             DollarPrice.objects.filter(rate_type=DOLLAR_OFFICIAL),
-            'price_in_sdg',
+            'buy_price_in_sdg',
+        )
+        official_sell_by_date = _latest_per_date(
+            DollarPrice.objects.filter(rate_type=DOLLAR_OFFICIAL),
+            'sell_price_in_sdg',
         )
         parallel_by_date = _latest_per_date(
             DollarPrice.objects.filter(rate_type=DOLLAR_PARALLEL),
-            'price_in_sdg',
+            'buy_price_in_sdg',
+        )
+        parallel_sell_by_date = _latest_per_date(
+            DollarPrice.objects.filter(rate_type=DOLLAR_PARALLEL),
+            'sell_price_in_sdg',
         )
 
         # Collect all dates across all datasets
         all_dates = sorted(set(
             list(bank_by_date.keys())
             + list(official_by_date.keys())
+            + list(official_sell_by_date.keys())
             + list(parallel_by_date.keys())
+            + list(parallel_sell_by_date.keys())
         ))
 
         ctx['timeseries_labels_json'] = json.dumps(all_dates)
@@ -370,8 +382,14 @@ class PriceComparisonView(LoginRequiredMixin, PriceGroupRequiredMixin, TemplateV
         ctx['timeseries_official_json'] = json.dumps([
             official_by_date.get(d) for d in all_dates
         ])
+        ctx['timeseries_official_sell_json'] = json.dumps([
+            official_sell_by_date.get(d) for d in all_dates
+        ])
         ctx['timeseries_parallel_json'] = json.dumps([
             parallel_by_date.get(d) for d in all_dates
+        ])
+        ctx['timeseries_parallel_sell_json'] = json.dumps([
+            parallel_sell_by_date.get(d) for d in all_dates
         ])
 
 

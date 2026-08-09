@@ -42,7 +42,7 @@ class GlobalGoldPriceResource(LogResourceMixin):
     class Meta:
         model = GlobalGoldPrice
         import_id_fields = []
-        fields = ('id', 'karat', 'price_per_gram_usd', 'price_per_ounce_usd', 'created_at')
+        fields = ('id', 'date', 'karat', 'price_per_gram_usd', 'price_per_ounce_usd', 'created_at')
         export_order = fields
 
 
@@ -50,7 +50,7 @@ class BankSudanGoldPriceResource(LogResourceMixin):
     class Meta:
         model = BankSudanGoldPrice
         import_id_fields = []
-        fields = ('id', 'price_per_gram_sdg', 'created_at')
+        fields = ('id', 'date', 'price_per_gram_sdg', 'created_at')
         export_order = fields
 
 
@@ -60,7 +60,7 @@ class StateGoldPriceResource(LogResourceMixin):
     class Meta:
         model = StateGoldPrice
         import_id_fields = []
-        fields = ('id', 'state', 'price_per_gram_sdg', 'comment', 'created_at')
+        fields = ('id', 'date', 'state', 'price_per_gram_sdg', 'comment', 'created_at')
         export_order = fields
 
     def dehydrate_state_name(self, obj):
@@ -71,7 +71,7 @@ class DollarPriceResource(LogResourceMixin):
     class Meta:
         model = DollarPrice
         import_id_fields = []
-        fields = ('id', 'rate_type', 'price_in_sdg', 'created_at')
+        fields = ('id', 'date', 'rate_type', 'buy_price_in_sdg', 'sell_price_in_sdg', 'created_at')
         export_order = fields
 
 
@@ -80,28 +80,28 @@ class DollarPriceResource(LogResourceMixin):
 @admin.register(GlobalGoldPrice)
 class GlobalGoldPriceAdmin(LogMixin, ImportExportModelAdmin):
     resource_class = GlobalGoldPriceResource
-    list_display = ('karat', 'price_per_gram_usd', 'price_per_ounce_usd', 'created_at', 'created_by')
-    list_filter = ('karat', 'created_at')
+    list_display = ('date', 'karat', 'price_per_gram_usd', 'price_per_ounce_usd', 'created_at', 'created_by')
+    list_filter = ('karat', 'date')
     search_fields = ('price_per_gram_usd',)
-    date_hierarchy = 'created_at'
+    date_hierarchy = 'date'
 
 
 @admin.register(BankSudanGoldPrice)
 class BankSudanGoldPriceAdmin(LogMixin, ImportExportModelAdmin):
     resource_class = BankSudanGoldPriceResource
-    list_display = ('price_per_gram_sdg', 'created_at', 'created_by')
-    list_filter = ('created_at',)
+    list_display = ('date', 'price_per_gram_sdg', 'created_at', 'created_by')
+    list_filter = ('date',)
     search_fields = ('price_per_gram_sdg',)
-    date_hierarchy = 'created_at'
+    date_hierarchy = 'date'
 
 
 @admin.register(StateGoldPrice)
 class StateGoldPriceAdmin(LogMixin, ImportExportModelAdmin):
     resource_class = StateGoldPriceResource
-    list_display = ('state', 'price_per_gram_sdg', 'comment', 'created_at', 'created_by')
-    list_filter = ('state', 'created_at')
+    list_display = ('date', 'state', 'price_per_gram_sdg', 'comment', 'created_at', 'created_by')
+    list_filter = ('state', 'date')
     search_fields = ('state__name', 'price_per_gram_sdg')
-    date_hierarchy = 'created_at'
+    date_hierarchy = 'date'
     # autocomplete_fields = ('state',)
 
     def get_state_qs(self, request):
@@ -126,10 +126,10 @@ class StateGoldPriceAdmin(LogMixin, ImportExportModelAdmin):
 @admin.register(DollarPrice)
 class DollarPriceAdmin(LogMixin, ImportExportModelAdmin):
     resource_class = DollarPriceResource
-    list_display = ('rate_type', 'price_in_sdg', 'created_at', 'created_by')
-    list_filter = ('rate_type', 'created_at')
-    search_fields = ('price_in_sdg',)
-    date_hierarchy = 'created_at'
+    list_display = ('date', 'rate_type', 'buy_price_in_sdg', 'sell_price_in_sdg', 'created_at', 'created_by')
+    list_filter = ('rate_type', 'date')
+    search_fields = ('buy_price_in_sdg', 'sell_price_in_sdg')
+    date_hierarchy = 'date'
 
 
 @admin.register(PricesStateUser)

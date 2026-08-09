@@ -56,15 +56,29 @@ class PriceEntryForm(forms.Form):
     )
 
     # --- أسعار الصرف ---
-    official_dollar_price = forms.DecimalField(
-        label=_('سعر الدولار الرسمي (جنيه)'),
+    official_dollar_buy_price = forms.DecimalField(
+        label=_('سعر شراء الدولار الرسمي (جنيه)'),
         max_digits=10, decimal_places=2,
         min_value=0,
         widget=forms.NumberInput(attrs={'step': '0.01', 'class': 'form-control'}),
     )
 
-    parallel_market_dollar_price = forms.DecimalField(
-        label=_('سعر الدولار بالسوق الموازي (جنيه)'),
+    official_dollar_sell_price = forms.DecimalField(
+        label=_('سعر بيع الدولار الرسمي (جنيه)'),
+        max_digits=10, decimal_places=2,
+        min_value=0,
+        widget=forms.NumberInput(attrs={'step': '0.01', 'class': 'form-control'}),
+    )
+
+    parallel_dollar_buy_price = forms.DecimalField(
+        label=_('سعر شراء الدولار بالسوق الموازي (جنيه)'),
+        max_digits=10, decimal_places=2,
+        min_value=0,
+        widget=forms.NumberInput(attrs={'step': '0.01', 'class': 'form-control'}),
+    )
+
+    parallel_dollar_sell_price = forms.DecimalField(
+        label=_('سعر بيع الدولار بالسوق الموازي (جنيه)'),
         max_digits=10, decimal_places=2,
         min_value=0,
         widget=forms.NumberInput(attrs={'step': '0.01', 'class': 'form-control'}),
@@ -127,15 +141,15 @@ class PriceEntryForm(forms.Form):
         show_parallel = 'prices_parallel_dollar' in user_groups
         show_state = 'prices_state_gold' in user_groups
 
-        # Main fields: global gold (both karats), bank sudan (both), official dollar
+        # Main fields: global gold (both karats), bank sudan, official dollar (buy & sell)
         main_fields = {
             'global_gold_24k', 'global_gold_24k_ounce', 'global_gold_21k',
             'bank_sudan_price',
-            'official_dollar_price',
+            'official_dollar_buy_price', 'official_dollar_sell_price',
         }
 
-        # Parallel dollar field
-        parallel_fields = {'parallel_market_dollar_price'}
+        # Parallel dollar fields (buy & sell)
+        parallel_fields = {'parallel_dollar_buy_price', 'parallel_dollar_sell_price'}
 
         # State gold field
         state_fields = {'state_gold_prices'}
@@ -155,30 +169,32 @@ class PriceEntryForm(forms.Form):
     def _prefill_last_prices(self):
         """تعبئة الحقول بآخر الأسعار المسجلة تلقائياً (المتطلب: آلية الإدخال الذكية)."""
         if 'global_gold_24k' in self.fields:
-            last = GlobalGoldPrice.objects.filter(karat=GOLD_KARAT_24).order_by('-created_at').first()
+            last = GlobalGoldPrice.objects.filter(karat=GOLD_KARAT_24).order_by('-date', '-created_at').first()
             if last:
                 self.fields['global_gold_24k'].initial = last.price_per_gram_usd
                 self.fields['global_gold_24k_ounce'].initial = last.price_per_ounce_usd
 
         if 'global_gold_21k' in self.fields:
-            last = GlobalGoldPrice.objects.filter(karat=GOLD_KARAT_21).order_by('-created_at').first()
+            last = GlobalGoldPrice.objects.filter(karat=GOLD_KARAT_21).order_by('-date', '-created_at').first()
             if last:
                 self.fields['global_gold_21k'].initial = last.price_per_gram_usd
 
         if 'bank_sudan_price' in self.fields:
-            last = BankSudanGoldPrice.objects.order_by('-created_at').first()
+            last = BankSudanGoldPrice.objects.order_by('-date', '-created_at').first()
             if last:
                 self.fields['bank_sudan_price'].initial = last.price_per_gram_sdg
 
-        if 'official_dollar_price' in self.fields:
-            last = DollarPrice.objects.filter(rate_type=DOLLAR_OFFICIAL).order_by('-created_at').first()
+        if 'official_dollar_buy_price' in self.fields:
+            last = DollarPrice.objects.filter(rate_type=DOLLAR_OFFICIAL).order_by('-date', '-created_at').first()
             if last:
-                self.fields['official_dollar_price'].initial = last.price_in_sdg
+                self.fields['official_dollar_buy_price'].initial = last.buy_price_in_sdg
+                self.fields['official_dollar_sell_price'].initial = last.sell_price_in_sdg
 
-        if 'parallel_market_dollar_price' in self.fields:
-            last = DollarPrice.objects.filter(rate_type=DOLLAR_PARALLEL).order_by('-created_at').first()
+        if 'parallel_dollar_buy_price' in self.fields:
+            last = DollarPrice.objects.filter(rate_type=DOLLAR_PARALLEL).order_by('-date', '-created_at').first()
             if last:
-                self.fields['parallel_market_dollar_price'].initial = last.price_in_sdg
+                self.fields['parallel_dollar_buy_price'].initial = last.buy_price_in_sdg
+                self.fields['parallel_dollar_sell_price'].initial = last.sell_price_in_sdg
 
     def save(self, user):
         """حفظ جميع الأسعار المدخلة في سجلات منفصلة (مسار تدقيق كامل)."""
@@ -217,19 +233,21 @@ class PriceEntryForm(forms.Form):
             )
 
         # الدولار الرسمي
-        if 'official_dollar_price' in data:
+        if 'official_dollar_buy_price' in data:
             DollarPrice.objects.create(
                 rate_type=DOLLAR_OFFICIAL,
-                price_in_sdg=data['official_dollar_price'],
+                buy_price_in_sdg=data['official_dollar_buy_price'],
+                sell_price_in_sdg=data['official_dollar_sell_price'],
                 created_by=user,
                 updated_by=user,
             )
 
         # الدولار الموازي
-        if 'parallel_market_dollar_price' in data:
+        if 'parallel_dollar_buy_price' in data:
             DollarPrice.objects.create(
                 rate_type=DOLLAR_PARALLEL,
-                price_in_sdg=data['parallel_market_dollar_price'],
+                buy_price_in_sdg=data['parallel_dollar_buy_price'],
+                sell_price_in_sdg=data['parallel_dollar_sell_price'],
                 created_by=user,
                 updated_by=user,
             )

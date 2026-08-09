@@ -25,7 +25,7 @@
           {% if last_global %}
             {{ last_global.price_per_gram_usd|floatformat:2 }} $
             <br><small class="text-muted">
-              {{ last_global.created_at|date:"Y-m-d H:i" }} — {{ last_global.created_by }}
+              {{ last_global.date|date:"Y-m-d" }} — {{ last_global.created_at|date:"H:i" }} — {{ last_global.created_by }}
             </small>
           {% else %}
             <span class="text-muted">—</span>
@@ -44,7 +44,7 @@
           {% if last_global_21k %}
             {{ last_global_21k.price_per_gram_usd|floatformat:2 }} $
             <br><small class="text-muted">
-              {{ last_global_21k.created_at|date:"Y-m-d H:i" }} — {{ last_global_21k.created_by }}
+              {{ last_global_21k.date|date:"Y-m-d" }} — {{ last_global_21k.created_at|date:"H:i" }} — {{ last_global_21k.created_by }}
             </small>
           {% else %}
             <span class="text-muted">—</span>
@@ -66,7 +66,7 @@
           {% if last_bank_sudan %}
             {{ last_bank_sudan.price_per_gram_sdg|floatformat:2 }} {% trans "جنيه" %}
             <br><small class="text-muted">
-              {{ last_bank_sudan.created_at|date:"Y-m-d H:i" }} — {{ last_bank_sudan.created_by }}
+              {{ last_bank_sudan.date|date:"Y-m-d" }} — {{ last_bank_sudan.created_at|date:"H:i" }} — {{ last_bank_sudan.created_by }}
             </small>
           {% else %}
             <span class="text-muted">—</span>
@@ -85,24 +85,38 @@
     <div class="panel-body">
       <div class="row">
         <div class="col-md-6">
-          <p><strong>{% trans "الدولار الرسمي:" %}</strong>
+          <p><strong>{% trans "الدولار الرسمي - شراء:" %}</strong>
           {% if last_official %}
-            {{ last_official.price_in_sdg|floatformat:2 }} {% trans "جنيه" %}
+            {{ last_official.buy_price_in_sdg|floatformat:2 }} {% trans "جنيه" %}
             <br><small class="text-muted">
-              {{ last_official.created_at|date:"Y-m-d H:i" }} — {{ last_official.created_by }}
+              {{ last_official.date|date:"Y-m-d" }} — {{ last_official.created_at|date:"H:i" }} — {{ last_official.created_by }}
             </small>
+          {% else %}
+            <span class="text-muted">—</span>
+          {% endif %}
+          </p>
+          <p><strong>{% trans "الدولار الرسمي - بيع:" %}</strong>
+          {% if last_official %}
+            {{ last_official.sell_price_in_sdg|floatformat:2 }} {% trans "جنيه" %}
           {% else %}
             <span class="text-muted">—</span>
           {% endif %}
           </p>
         </div>
         <div class="col-md-6">
-          <p><strong>{% trans "السوق الموازي:" %}</strong>
+          <p><strong>{% trans "السوق الموازي - شراء:" %}</strong>
           {% if last_parallel %}
-            {{ last_parallel.price_in_sdg|floatformat:2 }} {% trans "جنيه" %}
+            {{ last_parallel.buy_price_in_sdg|floatformat:2 }} {% trans "جنيه" %}
             <br><small class="text-muted">
-              {{ last_parallel.created_at|date:"Y-m-d H:i" }} — {{ last_parallel.created_by }}
+              {{ last_parallel.date|date:"Y-m-d" }} — {{ last_parallel.created_at|date:"H:i" }} — {{ last_parallel.created_by }}
             </small>
+          {% else %}
+            <span class="text-muted">—</span>
+          {% endif %}
+          </p>
+          <p><strong>{% trans "السوق الموازي - بيع:" %}</strong>
+          {% if last_parallel %}
+            {{ last_parallel.sell_price_in_sdg|floatformat:2 }} {% trans "جنيه" %}
           {% else %}
             <span class="text-muted">—</span>
           {% endif %}
@@ -132,7 +146,7 @@
               <p class="small text-muted"><strong>{% trans "ملاحظات:" %}</strong> {{ sp.comment }}</p>
               {% endif %}
               <p class="small text-muted" style="margin: 0;">
-                {{ sp.created_at|date:"Y-m-d H:i" }} — {{ sp.created_by }}
+                {{ sp.date|date:"Y-m-d" }} — {{ sp.created_at|date:"H:i" }} — {{ sp.created_by }}
               </p>
             </div>
           </div>

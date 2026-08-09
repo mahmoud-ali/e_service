@@ -56,8 +56,8 @@
         </div>
         <div class="panel-body text-center">
           {% if last_official %}
-            <h3 style="margin: 5px 0;">{{ last_official.price_in_sdg|floatformat:2 }} <small>{% trans "جنيه" %}</small></h3>
-            <small class="text-muted">{{ last_official.created_at|date:"Y-m-d H:i" }}</small>
+            <h3 style="margin: 5px 0;">{{ last_official.buy_price_in_sdg|floatformat:2 }} <small>{% trans "جنيه" %}</small></h3>
+            <small class="text-muted">{% trans "شراء" %} | {% trans "بيع" %} {{ last_official.sell_price_in_sdg|floatformat:2 }} — {{ last_official.date|date:"Y-m-d" }} — {{ last_official.created_at|date:"H:i" }}</small>
           {% else %}
             <span class="text-muted">{% trans "لا توجد بيانات" %}</span>
           {% endif %}
@@ -71,8 +71,8 @@
         </div>
         <div class="panel-body text-center">
           {% if last_parallel %}
-            <h3 style="margin: 5px 0;">{{ last_parallel.price_in_sdg|floatformat:2 }} <small>{% trans "جنيه" %}</small></h3>
-            <small class="text-muted">{{ last_parallel.created_at|date:"Y-m-d H:i" }}</small>
+            <h3 style="margin: 5px 0;">{{ last_parallel.buy_price_in_sdg|floatformat:2 }} <small>{% trans "جنيه" %}</small></h3>
+            <small class="text-muted">{% trans "شراء" %} | {% trans "بيع" %} {{ last_parallel.sell_price_in_sdg|floatformat:2 }} — {{ last_parallel.date|date:"Y-m-d" }} — {{ last_parallel.created_at|date:"H:i" }}</small>
           {% else %}
             <span class="text-muted">{% trans "لا توجد بيانات" %}</span>
           {% endif %}
@@ -180,7 +180,9 @@
   var tsLabels = {{ timeseries_labels_json|safe }};
   var tsBank = {{ timeseries_bank_json|safe }};
   var tsOfficial = {{ timeseries_official_json|safe }};
+  var tsOfficialSell = {{ timeseries_official_sell_json|safe }};
   var tsParallel = {{ timeseries_parallel_json|safe }};
+  var tsParallelSell = {{ timeseries_parallel_sell_json|safe }};
 
   // --- Time-Series: Gold (SDG) ---
   var ctxGold = document.getElementById('timeseriesGoldChart').getContext('2d');
@@ -220,20 +222,37 @@
       labels: tsLabels,
       datasets: [
         {
-          label: '{% trans "دولار رسمي" %}',
+          label: '{% trans "دولار رسمي - شراء" %}',
           data: tsOfficial,
           borderColor: 'rgba(255, 99, 132, 1)',
           backgroundColor: 'rgba(255, 99, 132, 0.1)',
+          tension: 0.3,
+          spanGaps: true
+        },
+        {
+          label: '{% trans "دولار رسمي - بيع" %}',
+          data: tsOfficialSell,
+          borderColor: 'rgba(255, 99, 132, 0.5)',
+          backgroundColor: 'rgba(255, 99, 132, 0.05)',
           tension: 0.3,
           borderDash: [5, 5],
           spanGaps: true
         },
         {
-          label: '{% trans "دولار سوق موازي" %}',
+          label: '{% trans "دولار سوق موازي - شراء" %}',
           data: tsParallel,
           borderColor: 'rgba(255, 159, 64, 1)',
           backgroundColor: 'rgba(255, 159, 64, 0.1)',
           tension: 0.3,
+          spanGaps: true
+        },
+        {
+          label: '{% trans "دولار سوق موازي - بيع" %}',
+          data: tsParallelSell,
+          borderColor: 'rgba(255, 159, 64, 0.5)',
+          backgroundColor: 'rgba(255, 159, 64, 0.05)',
+          tension: 0.3,
+          borderDash: [5, 5],
           spanGaps: true
         }
       ]
