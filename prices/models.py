@@ -1,3 +1,5 @@
+from datetime import date
+
 from django.db import models
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
@@ -32,6 +34,11 @@ OUNCE_TO_GRAM = 31.1034768
 
 class GlobalGoldPrice(LoggingModel):
     """سعر الذهب عالمياً (بالدولار للجرام)"""
+    date = models.DateField(
+        _('التاريخ'),
+        default=date.today,
+        db_index=True,
+    )
     karat = models.PositiveSmallIntegerField(
         _('العيار'),
         choices=GOLD_KARAT_CHOICES,
@@ -59,6 +66,11 @@ class GlobalGoldPrice(LoggingModel):
 
 class BankSudanGoldPrice(LoggingModel):
     """سعر شراء بنك السودان للجرام (بالجنيه السوداني)"""
+    date = models.DateField(
+        _('التاريخ'),
+        default=date.today,
+        db_index=True,
+    )
     price_per_gram_sdg = models.DecimalField(
         _('سعر الجرام بالجنيه'),
         max_digits=12, decimal_places=2,
@@ -75,6 +87,11 @@ class BankSudanGoldPrice(LoggingModel):
 
 class StateGoldPrice(LoggingModel):
     """سعر الذهب بالولاية (بالجنيه السوداني للجرام)"""
+    date = models.DateField(
+        _('التاريخ'),
+        default=date.today,
+        db_index=True,
+    )
     state = models.ForeignKey(
         LkpState,
         on_delete=models.PROTECT,
@@ -100,20 +117,30 @@ class StateGoldPrice(LoggingModel):
 
 
 class DollarPrice(LoggingModel):
-    """سعر صرف الدولار (بالجنيه السوداني)"""
+    """سعرا الشراء والبيع لصرف الدولار (بالجنيه السوداني)"""
+    date = models.DateField(
+        _('التاريخ'),
+        default=date.today,
+        db_index=True,
+    )
     rate_type = models.CharField(
         _('نوع السعر'),
         max_length=20,
         choices=DOLLAR_TYPE_CHOICES,
     )
-    price_in_sdg = models.DecimalField(
-        _('السعر بالجنيه'),
+    buy_price_in_sdg = models.DecimalField(
+        _('سعر الشراء بالجنيه'),
         max_digits=10, decimal_places=2,
+    )
+    sell_price_in_sdg = models.DecimalField(
+        _('سعر البيع بالجنيه'),
+        max_digits=10, decimal_places=2,
+        default=0,
     )
 
     def __str__(self):
         label = dict(DOLLAR_TYPE_CHOICES).get(self.rate_type, self.rate_type)
-        return f'{label} — {self.price_in_sdg} SDG — {self.created_at:%Y-%m-%d %H:%M}'
+        return f'{label} — شراء {self.buy_price_in_sdg} / بيع {self.sell_price_in_sdg} SDG — {self.created_at:%Y-%m-%d %H:%M}'
 
     class Meta:
         verbose_name = _('سعر صرف الدولار')
