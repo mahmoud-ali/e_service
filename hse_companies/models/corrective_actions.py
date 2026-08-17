@@ -37,6 +37,14 @@ class AppHSECorrectiveAction(LoggingModel):
         
     def get_absolute_url(self): 
         return reverse('hse_companies:app_hse_corrective_action_show',args=[str(self.id)])                
+
+    @property
+    def days_count(self):
+        if self.from_dt and self.to_dt:
+            delta = (self.to_dt - self.from_dt).days
+            return max(delta, 0)
+        return 0
+
     
     class Meta:
         ordering = ["-id"]

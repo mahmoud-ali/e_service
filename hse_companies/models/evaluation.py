@@ -25,6 +25,31 @@ class TblCompanyEvaluationSession(LoggingModel):
     def __str__(self):
         return f"{self.company} - {self.evaluation_date}"
 
+    def get_overall_score(self):
+        scores = []
+        if hasattr(self, 'environment') and self.environment:
+            score = self.environment.get_average_score()
+            if score > 0:
+                scores.append(score)
+        if hasattr(self, 'safety') and self.safety:
+            score = self.safety.get_average_score()
+            if score > 0:
+                scores.append(score)
+        if hasattr(self, 'general') and self.general:
+            score = self.general.get_average_score()
+            if score > 0:
+                scores.append(score)
+        if not scores:
+            return 0.0
+        return round(sum(scores) / len(scores), 2)
+
+    def get_overall_percentage(self):
+        overall_score = self.get_overall_score()
+        if overall_score == 0:
+            return 0.0
+        return round((overall_score / 3.0) * 100, 1)
+
+
 
 class TblCompanyEvaluationEnvironment(LoggingModel):
     session = models.OneToOneField(TblCompanyEvaluationSession, on_delete=models.CASCADE, related_name="environment", verbose_name="جلسة التقييم", null=True, blank=True)
@@ -68,6 +93,12 @@ class TblCompanyEvaluationEnvironment(LoggingModel):
         if not valid_scores:
             return 0.0
         return round(sum(valid_scores) / len(valid_scores), 2)
+
+    def get_percentage(self):
+        avg = self.get_average_score()
+        if avg == 0:
+            return 0.0
+        return round((avg / 3.0) * 100, 1)
 
 
 class TblCompanyEvaluationSafety(LoggingModel):
@@ -152,6 +183,12 @@ class TblCompanyEvaluationSafety(LoggingModel):
             return 0.0
         return round(sum(valid_scores) / len(valid_scores), 2)
 
+    def get_percentage(self, company_type=None):
+        avg = self.get_average_score(company_type=company_type)
+        if avg == 0:
+            return 0.0
+        return round((avg / 3.0) * 100, 1)
+
 
 class TblCompanyEvaluationGeneral(LoggingModel):
     session = models.OneToOneField(TblCompanyEvaluationSession, on_delete=models.CASCADE, related_name="general", verbose_name="جلسة التقييم", null=True, blank=True)
@@ -189,3 +226,9 @@ class TblCompanyEvaluationGeneral(LoggingModel):
         if not valid_scores:
             return 0.0
         return round(sum(valid_scores) / len(valid_scores), 2)
+
+    def get_percentage(self):
+        avg = self.get_average_score()
+        if avg == 0:
+            return 0.0
+        return round((avg / 3.0) * 100, 1)

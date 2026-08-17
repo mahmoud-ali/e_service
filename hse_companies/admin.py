@@ -1154,14 +1154,30 @@ class AppHSECorrectiveActionMixin:
             return obj.incident
         
         return ""
+
+    @admin.display(description=_('طباعة التقرير'))
+    def print_report_link(self, obj):
+        url = reverse('hse_companies:corrective_action_single_pdf', args=[obj.id])
+        return format_html('<a target="_blank" class="button" style="background-color:#1b4332; color:white; padding:3px 8px; border-radius:4px; font-weight:bold;" href="{url}">{title}</a>',
+            url=url,
+            title=_('طباعة PDF')
+        )
+
+    @admin.action(description=_("طباعة التقرير المجمع للإجراءات المحددة (PDF)"))
+    def print_selected_corrective_actions(self, request, queryset):
+        from django.http import HttpResponseRedirect
+        ids = ",".join(str(item.id) for item in queryset)
+        url = reverse('hse_companies:corrective_action_pdf') + f"?ids={ids}"
+        return HttpResponseRedirect(url)
     
 corrective_main_mixins = [AppHSECorrectiveActionMixin,LogMixin]
 corrective_main_class = {
     'model': AppHSECorrectiveAction,
     'mixins': [],
     'kwargs': {
-        'list_display': ( "belong_to","from_dt","to_dt","corrective_action_summary","state"),
+        'list_display': ( "belong_to","from_dt","to_dt","corrective_action_summary","state","print_report_link"),
         'list_filter': (CompanyFilter,"from_dt","to_dt",'state'),
+        'actions': ['print_selected_corrective_actions'],
         'fields': ("report", "incident","corrective_action", "from_dt","to_dt",),
         'readonly_fields':('report',),
         'save_as_continue': False,
@@ -2071,42 +2087,67 @@ class TblCompanyEvaluationGeneralInline(admin.StackedInline):
     max_num = 1
 
 class TblCompanyEvaluationSessionAdmin(AppHSEEvaluationSessionMixin, admin.ModelAdmin):
-    list_display = ('company', 'evaluation_date', 'state', 'locality', 'total_score_display')
+    list_display = ('company', 'evaluation_date', 'state', 'locality', 'env_score_display', 'safe_score_display', 'gen_score_display', 'total_score_display')
     list_filter = ('evaluation_date', 'state')
 
-    @admin.display(description=_("النتيجة الإجمالية"))
+    @admin.display(description=_("نسبة البيئة"))
+    def env_score_display(self, obj):
+        try:
+            if hasattr(obj, 'environment') and obj.environment:
+                pct = obj.environment.get_percentage()
+                if pct > 0:
+                    color = '#28a745' if pct > 70 else ('#ffc107' if pct >= 50 else '#dc3545')
+                    return format_html(
+                        '<span style="color:{color}; font-weight:bold; font-size:1.05em;">{pct}%</span>',
+                        color=color, pct=pct
+                    )
+        except Exception:
+            pass
+        return '-'
+
+    @admin.display(description=_("نسبة السلامة"))
+    def safe_score_display(self, obj):
+        try:
+            if hasattr(obj, 'safety') and obj.safety:
+                pct = obj.safety.get_percentage()
+                if pct > 0:
+                    color = '#28a745' if pct > 70 else ('#ffc107' if pct >= 50 else '#dc3545')
+                    return format_html(
+                        '<span style="color:{color}; font-weight:bold; font-size:1.05em;">{pct}%</span>',
+                        color=color, pct=pct
+                    )
+        except Exception:
+            pass
+        return '-'
+
+    @admin.display(description=_("نسبة المطلوبات العامة"))
+    def gen_score_display(self, obj):
+        try:
+            if hasattr(obj, 'general') and obj.general:
+                pct = obj.general.get_percentage()
+                if pct > 0:
+                    color = '#28a745' if pct > 70 else ('#ffc107' if pct >= 50 else '#dc3545')
+                    return format_html(
+                        '<span style="color:{color}; font-weight:bold; font-size:1.05em;">{pct}%</span>',
+                        color=color, pct=pct
+                    )
+        except Exception:
+            pass
+        return '-'
+
+    @admin.display(description=_("نسبة التقييم الكلية"))
     def total_score_display(self, obj):
-        scores = []
         try:
-            scores.append(obj.environment.get_average_score())
+            pct = obj.get_overall_percentage()
+            if pct > 0:
+                color = '#28a745' if pct > 70 else ('#ffc107' if pct >= 50 else '#dc3545')
+                return format_html(
+                    '<span style="color:{color}; font-weight:bold; font-size:1.05em;">{pct}%</span>',
+                    color=color, pct=pct
+                )
         except Exception:
             pass
-        try:
-            scores.append(obj.safety.get_average_score())
-        except Exception:
-            pass
-        try:
-            scores.append(obj.general.get_average_score())
-        except Exception:
-            pass
-
-        if not scores:
-            return '-'
-
-        avg = round(sum(scores) / len(scores), 2)
-        pct = round((avg - 1) / 2 * 100) if avg > 0 else 0
-
-        if pct > 70:
-            color = '#28a745'  # أخضر - ممتاز
-        elif pct >= 50:
-            color = '#ffc107'  # أصفر - متوسط
-        else:
-            color = '#dc3545'  # أحمر - ضعيف
-
-        return format_html(
-            '<span style="color:{color}; font-weight:bold; font-size:1.05em;">{pct}%</span>',
-            color=color, pct=pct
-        )
+        return '-'
     search_fields = ('company__name_ar', 'company__name_en')
     autocomplete_fields = ['company']
     inlines = [

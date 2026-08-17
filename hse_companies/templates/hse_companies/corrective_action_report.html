@@ -1,0 +1,441 @@
+{% load static %}
+{% load i18n %}
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تقرير الإجراءات التصحيحية - مطلوبات البيئة والسلامة</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Noto+Sans+Arabic:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-color: #1b4332;
+            --text-color: #1a1a1a;
+            --border-color: #d1d5db;
+            --bg-light: #f8fafc;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Cairo', 'Noto Sans Arabic', sans-serif;
+            color: var(--text-color);
+            background-color: #e2e8f0;
+            line-height: 1.8;
+            font-size: 14px;
+            direction: rtl;
+        }
+
+        /* Toolbar / Action buttons for web preview */
+        .no-print-toolbar {
+            background: #0f172a;
+            color: white;
+            padding: 12px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .no-print-toolbar h2 {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .btn-print {
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-print:hover {
+            background-color: #1d4ed8;
+        }
+
+        .btn-back {
+            background-color: #475569;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 14px;
+            cursor: pointer;
+            text-decoration: none;
+            margin-left: 10px;
+        }
+
+        .btn-back:hover {
+            background-color: #334155;
+        }
+
+        /* Main Page Container (A4 Printable Layout) */
+        .page-container {
+            width: 210mm;
+            min-height: 297mm;
+            padding: 20mm 20mm 25mm 20mm;
+            margin: 20px auto;
+            background: #ffffff;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        /* Header Layout */
+        .header-logo-container {
+            text-align: center;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #1b4332;
+            padding-bottom: 15px;
+        }
+
+        .header-logo-container img {
+            max-width: 100%;
+            height: auto;
+            max-height: 120px;
+            object-fit: contain;
+        }
+
+        /* Document Meta Information (Date & Letter Ref) */
+        .doc-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            font-weight: 700;
+            font-size: 15px;
+        }
+
+        .doc-meta .date-item {
+            color: #0f172a;
+        }
+
+        /* Recipient Section */
+        .recipient-section {
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+
+        .recipient-title {
+            font-weight: 700;
+            font-size: 17px;
+            color: #0f172a;
+        }
+
+        .greeting {
+            margin-top: 5px;
+            font-weight: 600;
+        }
+
+        /* Subject Section */
+        .subject-section {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .subject-title {
+            display: inline-block;
+            font-size: 18px;
+            font-weight: 800;
+            color: #1b4332;
+            border-bottom: 2px solid #1b4332;
+            padding-bottom: 4px;
+        }
+
+        /* Preamble Text */
+        .preamble-text {
+            font-size: 15px;
+            text-align: justify;
+            margin-bottom: 20px;
+            line-height: 2;
+        }
+
+        /* Table Styling */
+        .table-container {
+            margin: 20px 0;
+            overflow-x: auto;
+        }
+
+        table.actions-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+            background-color: #ffffff;
+        }
+
+        table.actions-table th, table.actions-table td {
+            border: 1px solid #000000;
+            padding: 10px 12px;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        table.actions-table th {
+            background-color: #f1f5f9;
+            color: #0f172a;
+            font-weight: 700;
+            font-size: 15px;
+        }
+
+        table.actions-table td.action-desc {
+            text-align: right;
+            line-height: 1.8;
+            font-weight: 600;
+        }
+
+        table.actions-table td.days-col {
+            font-weight: 700;
+            color: #0f172a;
+            direction: ltr;
+        }
+
+        /* Legal / Operational Mandatory Paragraph */
+        .mandatory-directive {
+            font-size: 14px;
+            font-weight: 700;
+            line-height: 2;
+            margin: 25px 0;
+            padding: 12px 16px;
+            background-color: #f8fafc;
+            border-right: 4px solid #1b4332;
+            border-top: 1px solid #e2e8f0;
+            border-bottom: 1px solid #e2e8f0;
+            border-left: 1px solid #e2e8f0;
+        }
+
+        /* Footer Grid: Copies & Signature */
+        .footer-grid {
+            margin-top: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        /* Copies Section */
+        .copies-section {
+            font-size: 13px;
+            color: #334155;
+        }
+
+        .copies-title {
+            font-weight: 700;
+            margin-bottom: 6px;
+            color: #0f172a;
+        }
+
+        .copies-list {
+            list-style: none;
+            padding-right: 10px;
+        }
+
+        .copies-list li {
+            position: relative;
+            margin-bottom: 4px;
+        }
+
+        .copies-list li::before {
+            content: "•";
+            margin-left: 6px;
+            color: #1b4332;
+            font-weight: bold;
+        }
+
+        /* Signature Section */
+        .signature-section {
+            text-align: center;
+            min-width: 250px;
+        }
+
+        .signature-closing {
+            font-weight: 700;
+            font-size: 15px;
+            margin-bottom: 25px;
+        }
+
+        .signatory-name {
+            font-size: 16px;
+            font-weight: 800;
+            color: #0f172a;
+        }
+
+        .signatory-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #334155;
+            margin-top: 4px;
+        }
+
+        /* Print Media Styles */
+        @media print {
+            .no-print-toolbar {
+                display: none !important;
+            }
+
+            body {
+                background: white !important;
+                color: black !important;
+                font-size: 13pt;
+            }
+
+            .page-container {
+                width: 100% !important;
+                min-height: auto !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                box-shadow: none !important;
+                border: none !important;
+            }
+
+            @page {
+                size: A4 portrait;
+                margin: 15mm 15mm 20mm 15mm;
+            }
+
+            table.actions-table th {
+                background-color: #f1f5f9 !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            .mandatory-directive {
+                background-color: #f8fafc !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Web Navigation Toolbar -->
+    <div class="no-print-toolbar">
+        <h2>معاينة تقرير الإجراءات التصحيحية (PDF)</h2>
+        <div>
+            <button onclick="window.print()" class="btn-print">
+                <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path>
+                </svg>
+                طباعة / تصدير PDF
+            </button>
+            <a href="javascript:history.back()" class="btn-back">رجوع</a>
+        </div>
+    </div>
+
+    <!-- Printable Page Content -->
+    <div class="page-container">
+        <div>
+            <!-- Header Image / Logo -->
+            <div class="header-logo-container">
+                <img src="{% static 'gold_travel/img/logo.png' %}" alt="الشركة السودانية للموارد المعدنية المحدودة">
+            </div>
+
+            <!-- Date Meta -->
+            <div class="doc-meta">
+                <div class="date-item">التاريخ: {{ report_date|date:"Y/m/d" }} م</div>
+                {% if report_ref %}
+                <div class="date-item">الرقم الإشاري: {{ report_ref }}</div>
+                {% endif %}
+            </div>
+
+            <!-- Recipient -->
+            <div class="recipient-section">
+                <div class="recipient-title">السيد \ مدير عام شركة {{ company.name_ar|default:company.name_en }}</div>
+                <div class="greeting">المحترم</div>
+                <div class="greeting">السلام عليكم ورحمة الله وبركاته،،،</div>
+            </div>
+
+            <!-- Subject -->
+            <div class="subject-section">
+                <div class="subject-title">الموضوع \ مطلوبات البيئة والسلامة</div>
+            </div>
+
+            <!-- Preamble -->
+            <div class="preamble-text">
+                بالإشارة للموضوع أعلاه، واستناداً إلى الدور الإشرافي والرقابي للإدارة العامة للبيئة والسلامة على أوضاع البيئة والسلامة بالشركات، والتي تمت بموقعكم بتاريخ 
+                {% if visit_date %}{{ visit_date|date:"Y/m/d" }} م{% else %}....................{% endif %}، عليه يستوجب تنفيذ الإجراءات التصحيحية التالية:
+            </div>
+
+            <!-- Corrective Actions Table -->
+            <div class="table-container">
+                <table class="actions-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 7%;">م</th>
+                            <th style="width: 53%;">الإجراء التصحيحي</th>
+                            <th style="width: 14%;">من</th>
+                            <th style="width: 14%;">إلى</th>
+                            <th style="width: 12%;">القيد الزمني</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for action in actions %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td class="action-desc">{{ action.corrective_action }}</td>
+                            <td>{{ action.from_dt|date:"Y/m/d" }}</td>
+                            <td>{{ action.to_dt|date:"Y/m/d" }}</td>
+                            <td class="days-col">{{ action.days_count }} يوم</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" style="text-align: center; padding: 20px;">لا توجد إجراءات تصحيحية مسجلة.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Mandatory Directive Paragraph -->
+            <div class="mandatory-directive">
+                على الشركة الالتزام بتنفيذ الإجراءات التصحيحية أعلاه وذلك بإعتماد المشرف الميداني للشركة السودانية، ويعتبر عدم الالتزام بالتنفيذ حسب القيد الزمني مخالفة حسب لائحة تنظيم استغلال المعادن.
+            </div>
+        </div>
+
+        <!-- Document Footer Grid -->
+        <div class="footer-grid">
+            <!-- Copies Sent To -->
+            <div class="copies-section">
+                <div class="copies-title">صورة لـ:</div>
+                <ul class="copies-list">
+                    <li>السيد \ المدير العام</li>
+                    <li>السيد \ مساعد المدير العام للشئون الفنية</li>
+                    <li>الإدارة العامة للرقابة والإشراف على شركات الإنتاج</li>
+                    <li>الملف</li>
+                </ul>
+            </div>
+
+            <!-- Signature -->
+            <div class="signature-section">
+                <div class="signature-closing">والله ولي التوفيق …</div>
+                <div class="signatory-name">د. محمد عبد الرحيم خليل صديق</div>
+                <div class="signatory-title">مدير الإدارة العامة للبيئة والسلامة</div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
