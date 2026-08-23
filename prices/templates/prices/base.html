@@ -19,6 +19,28 @@
       letter-spacing: 0;
     }
     .navbar-brand { font-family: 'Tajawal', sans-serif !important; font-weight: 700; }
+
+    @media (min-width: 992px) {
+        .row.equal-height {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .row.equal-height > [class*="col-"] {
+            display: flex;
+            margin-bottom: 20px;
+        }
+
+        .row.equal-height .panel {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .row.equal-height .panel-body {
+            flex: 1;
+        }
+    }    
   </style>
 
   {% bootstrap_css %}
