@@ -187,6 +187,7 @@ class KhatabatAdmin(MaktabTanfiziMixin,LogMixin,admin.ModelAdmin):
     exclude = ('maktab_tanfizi','created_by', 'updated_by')
     list_display = ('letter_number', 'subject','first_haraka','last_haraka',)
     list_display_links = ('letter_number', 'subject',)
+    list_filter = ('has_motab3at',)
     search_fields = ('letter_number', 'subject',)
     inlines = [HarkatKhatabatInboxInline,HarkatKhatabatOutboxInline,]
     fields =  ('letter_number','subject','has_motab3at','tags' )
