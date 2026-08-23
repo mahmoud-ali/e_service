@@ -2095,7 +2095,7 @@ class TblCompanyEvaluationSessionAdmin(AppHSEEvaluationSessionMixin, admin.Model
         try:
             if hasattr(obj, 'environment') and obj.environment:
                 pct = obj.environment.get_percentage()
-                if pct > 0:
+                if pct is not None:
                     color = '#28a745' if pct > 70 else ('#ffc107' if pct >= 50 else '#dc3545')
                     return format_html(
                         '<span style="color:{color}; font-weight:bold; font-size:1.05em;">{pct}%</span>',
@@ -2110,7 +2110,7 @@ class TblCompanyEvaluationSessionAdmin(AppHSEEvaluationSessionMixin, admin.Model
         try:
             if hasattr(obj, 'safety') and obj.safety:
                 pct = obj.safety.get_percentage()
-                if pct > 0:
+                if pct is not None:
                     color = '#28a745' if pct > 70 else ('#ffc107' if pct >= 50 else '#dc3545')
                     return format_html(
                         '<span style="color:{color}; font-weight:bold; font-size:1.05em;">{pct}%</span>',
@@ -2125,7 +2125,7 @@ class TblCompanyEvaluationSessionAdmin(AppHSEEvaluationSessionMixin, admin.Model
         try:
             if hasattr(obj, 'general') and obj.general:
                 pct = obj.general.get_percentage()
-                if pct > 0:
+                if pct is not None:
                     color = '#28a745' if pct > 70 else ('#ffc107' if pct >= 50 else '#dc3545')
                     return format_html(
                         '<span style="color:{color}; font-weight:bold; font-size:1.05em;">{pct}%</span>',
@@ -2139,7 +2139,7 @@ class TblCompanyEvaluationSessionAdmin(AppHSEEvaluationSessionMixin, admin.Model
     def total_score_display(self, obj):
         try:
             pct = obj.get_overall_percentage()
-            if pct > 0:
+            if pct is not None:
                 color = '#28a745' if pct > 70 else ('#ffc107' if pct >= 50 else '#dc3545')
                 return format_html(
                     '<span style="color:{color}; font-weight:bold; font-size:1.05em;">{pct}%</span>',

@@ -28,17 +28,11 @@ class TblCompanyEvaluationSession(LoggingModel):
     def get_overall_score(self):
         scores = []
         if hasattr(self, 'environment') and self.environment:
-            score = self.environment.get_average_score()
-            if score > 0:
-                scores.append(score)
+            scores.append(self.environment.get_average_score())
         if hasattr(self, 'safety') and self.safety:
-            score = self.safety.get_average_score()
-            if score > 0:
-                scores.append(score)
+            scores.append(self.safety.get_average_score())
         if hasattr(self, 'general') and self.general:
-            score = self.general.get_average_score()
-            if score > 0:
-                scores.append(score)
+            scores.append(self.general.get_average_score())
         if not scores:
             return 0.0
         return round(sum(scores) / len(scores), 2)
@@ -89,7 +83,7 @@ class TblCompanyEvaluationEnvironment(LoggingModel):
             self.env_basins_fencing,
             self.env_landfill,
         ]
-        valid_scores = [s for s in fields if s > 0]
+        valid_scores = [s or 0 for s in fields]
         if not valid_scores:
             return 0.0
         return round(sum(valid_scores) / len(valid_scores), 2)
@@ -178,7 +172,7 @@ class TblCompanyEvaluationSafety(LoggingModel):
             self.safe_firefighting_system,
             self.safe_health_unit,
         ]
-        valid_scores = [s for s in fields if s > 0]
+        valid_scores = [s or 0 for s in fields]
         if not valid_scores:
             return 0.0
         return round(sum(valid_scores) / len(valid_scores), 2)
@@ -222,7 +216,7 @@ class TblCompanyEvaluationGeneral(LoggingModel):
             self.gen_esia,
             self.gen_qualified_hse_officer,
         ]
-        valid_scores = [s for s in fields if s > 0]
+        valid_scores = [s or 0 for s in fields]
         if not valid_scores:
             return 0.0
         return round(sum(valid_scores) / len(valid_scores), 2)
