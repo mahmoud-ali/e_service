@@ -1,0 +1,86 @@
+{% extends "admin/change_form.html" %}
+{% load i18n %}
+
+{% block object-tools-items %}
+{% if original %}
+<li>
+    <a href="{{ generate_url }}"
+        onclick="return confirm('هل تريد توليد بنود الكشف من {{ generate_active_count }} موظف مفعل؟ سيتم إضافة/تحديث البنود تلقائياً.')"
+        style="background: linear-gradient(135deg, #f59e0b, #d97706);
+                  color: #fff;
+                  padding: 8px 18px;
+                  border-radius: 8px;
+                  font-weight: bold;
+                  font-size: 13px;
+                  text-decoration: none;
+                  display: inline-flex;
+                  align-items: center;
+                  gap: 6px;
+                  box-shadow: 0 2px 8px rgba(245,158,11,0.4);
+                  transition: opacity .2s;">
+        توليد الموظفين المفعلين ({{ generate_active_count }})
+    </a>
+</li>
+<li>
+    <a href="{{ export_csv_url }}" style="background: linear-gradient(135deg, #10b981, #059669);
+                  color: #fff;
+                  padding: 8px 18px;
+                  border-radius: 8px;
+                  font-weight: bold;
+                  font-size: 13px;
+                  text-decoration: none;
+                  display: inline-flex;
+                  align-items: center;
+                  gap: 6px;
+                  box-shadow: 0 2px 8px rgba(16,185,129,0.4);
+                  transition: opacity .2s;">
+        تصدير الكشف (CSV / إكسل)
+    </a>
+</li>
+<li>
+    <a href="{{ print_report_url }}" target="_blank" style="background: linear-gradient(135deg, #2563eb, #1d4ed8);
+                  color: #fff;
+                  padding: 8px 18px;
+                  border-radius: 8px;
+                  font-weight: bold;
+                  font-size: 13px;
+                  text-decoration: none;
+                  display: inline-flex;
+                  align-items: center;
+                  gap: 6px;
+                  box-shadow: 0 2px 8px rgba(37,99,235,0.4);
+                  transition: opacity .2s;">
+        طباعة تقرير الكشف
+    </a>
+</li>
+{% endif %}
+{{ block.super }}
+{% endblock %}
+
+{% block admin_change_form_document_ready %}
+{{ block.super }}
+<script>
+    (function () {
+        function updateGallonPrices() {
+            var pLiter = parseFloat(document.getElementById('id_petrol_price_per_liter')?.value || 0);
+            var dLiter = parseFloat(document.getElementById('id_diesel_price_per_liter')?.value || 0);
+
+            var pGallonElem = document.querySelector('.field-petrol_price_per_gallon_display .readonly');
+            var dGallonElem = document.querySelector('.field-diesel_price_per_gallon_display .readonly');
+
+            if (pGallonElem) {
+                var pGallon = (pLiter * 4.5).toFixed(2);
+                pGallonElem.innerHTML = `<strong style="color:#d97706; font-size:14px; background:#fef3c7; padding:2px 8px; border-radius:4px; display:inline-block;">${pGallon} جنيه</strong> <span style="color:#6b7280; font-size:11px;">(سعر اللتر: ${pLiter} × 4.5)</span>`;
+            }
+            if (dGallonElem) {
+                var dGallon = (dLiter * 4.5).toFixed(2);
+                dGallonElem.innerHTML = `<strong style="color:#059669; font-size:14px; background:#d1fae5; padding:2px 8px; border-radius:4px; display:inline-block;">${dGallon} جنيه</strong> <span style="color:#6b7280; font-size:11px;">(سعر اللتر: ${dLiter} × 4.5)</span>`;
+            }
+        }
+
+        document.getElementById('id_petrol_price_per_liter')?.addEventListener('input', updateGallonPrices);
+        document.getElementById('id_diesel_price_per_liter')?.addEventListener('input', updateGallonPrices);
+        updateGallonPrices();
+    })();
+</script>
+{% endblock %}

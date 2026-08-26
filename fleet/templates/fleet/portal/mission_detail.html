@@ -21,15 +21,19 @@
             <div>
                 <p class="mb-2">
                     <strong>المركبة:</strong>
+                    {% if mission.vehicle %}
                     <a href="{% url 'fleet:vehicle_detail' mission.vehicle.pk %}" class="link link-primary">
                         {{ mission.vehicle.license_plate }} - {{ mission.vehicle.model }}
                     </a>
+                    {% else %}-{% endif %}
                 </p>
                 <p class="mb-2">
                     <strong>السائق:</strong>
+                    {% if mission.driver %}
                     <a href="{% url 'fleet:driver_detail' mission.driver.pk %}" class="link link-primary">
                         {{ mission.driver.name }}
                     </a>
+                    {% else %}-{% endif %}
                 </p>
                 <p class="mb-2"><strong>الوجهة:</strong> {{ mission.destination }}</p>
                 <p class="mb-2"><strong>الجهة الطالبة:</strong> {{ mission.requested_by }}</p>

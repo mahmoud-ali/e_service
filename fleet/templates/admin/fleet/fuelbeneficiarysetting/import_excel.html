@@ -1,0 +1,68 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_urls static %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+    <a href="{% url 'admin:index' %}">{% translate 'Home' %}</a>
+    &rsaquo; <a href="{% url 'admin:app_list' app_label='fleet' %}">إدارة الأسطول والوقود</a>
+    &rsaquo; <a href="{% url 'admin:fleet_fuelbeneficiarysetting_changelist' %}">إعدادات مستفيدي الوقود</a>
+    &rsaquo; استيراد مستفيدي الوقود من ملف إكسل / CSV
+</div>
+{% endblock %}
+
+{% block content %}
+<div id="content-main"
+    style="max-width: 900px; margin: 20px auto; background: #ffffff; padding: 25px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
+    <h2 style="margin-top: 0; color: #1e293b; border-bottom: 2px solid #8b5cf6; padding-bottom: 10px;">
+        استيراد مستفيدي الوقود من ملف إكسل / CSV
+    </h2>
+
+    <p style="color: #475569; font-size: 14px; line-height: 1.6;">
+        قم برفع ملف Excel (<code>.xlsx</code>) أو ملف CSV يحتوي على قائمة مستفيدي الوقود. سيقوم النظام بإنشاء المستفيدين
+        الجدد وتحديث بيانات المستفيدين الحاليين تلقائياً.
+    </p>
+
+    <div
+        style="background: #f8fafc; border-right: 4px solid #3b82f6; padding: 15px; border-radius: 6px; margin: 20px 0;">
+        <h4 style="margin: 0 0 10px 0; color: #1e40af;"> الأعمدة المتوقعة في الملف (يمكن ترتيبها بأي نسق):</h4>
+        <ul style="margin: 0; padding-right: 20px; color: #334155; font-size: 13px; line-height: 1.8;">
+            <li><strong>اسم المستفيد / Beneficiary Name</strong> (إجباري في حال عدم وجود كود الموظف)</li>
+            <li><strong>كود الموظف / Employee Code / Code</strong> (ربط تلقائي مع الموارد البشرية)</li>
+            <li><strong>رقم بطاقة الوقود / Card Number</strong></li>
+            <li><strong>البريد الإلكتروني / Email</strong></li>
+            <li><strong>الإدارة / القسم / Department</strong></li>
+            <li><strong>الوظيفة / Job Title</strong></li>
+            <li><strong>حصة البنزين / Petrol Gallons / Petrol</strong> (بالجالون)</li>
+            <li><strong>حصة الجازولين / Diesel Gallons / Diesel</strong> (بالجالون)</li>
+            <li><strong>مفعل / Active</strong> (1/0 أو نعم/لا)</li>
+        </ul>
+    </div>
+
+    <form method="POST" enctype="multipart/form-data" style="margin-top: 25px;">
+        {% csrf_token %}
+
+        <div style="margin-bottom: 20px;">
+            <label for="import_file" style="display: block; font-weight: bold; margin-bottom: 8px; color: #0f172a;">
+                اختر ملف الإكسل أو CSV:
+            </label>
+            <input type="file" name="import_file" id="import_file" accept=".csv, .xlsx, .xls" required
+                style="padding: 10px; border: 2px dashed #cbd5e1; border-radius: 6px; width: 100%; max-width: 500px; background: #fff;">
+        </div>
+
+        <div style="margin-top: 30px; display: flex; gap: 10px;">
+            <button type="submit" class="button"
+                style="background: #8b5cf6; color: #ffffff; font-weight: bold; padding: 10px 24px; border: none; border-radius: 6px; cursor: pointer; font-size: 14px;">
+                بدء استيراد البيانات
+            </button>
+            <a href="{% url 'admin:fleet_fuelbeneficiarysetting_changelist' %}" class="button"
+                style="background: #64748b; color: #ffffff; font-weight: bold; padding: 10px 20px; border-radius: 6px; text-decoration: none; font-size: 14px;">
+                إلغاء والعودة
+            </a>
+            <a href="../export-csv/" class="button"
+                style="background: #10b981; color: #ffffff; font-weight: bold; padding: 10px 20px; border-radius: 6px; text-decoration: none; font-size: 14px; margin-right: auto;">
+                تحميل نموذج / تصدير المستفيدين الحاليين
+            </a>
+        </div>
+    </form>
+</div>
+{% endblock %}

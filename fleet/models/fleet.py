@@ -1,9 +1,12 @@
 from datetime import timedelta
+from decimal import Decimal
 from django.db import models
 from django.conf import settings
 from django.forms import ValidationError
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django.db import connection
+
 
 from django.contrib.auth.models import Group
 from django.contrib.auth import get_user_model
@@ -502,3 +505,152 @@ class VehicleMaintenancePart(models.Model):
     class Meta:
         verbose_name = _("اسبير مركبة")
         verbose_name_plural = _("اسبيرات المركبات")
+
+
+class FuelMonthlyStatement(LoggingModel):
+    title = models.CharField(_("عنوان الكشف"), max_length=200, help_text=_(""))
+    month = models.IntegerField(_("الشهر"), default=8)
+    year = models.IntegerField(_("السنة"), default=2026)
+    statement_date = models.DateField(_("تاريخ الكشف"), default=timezone.now)
+
+    petrol_price_per_liter = models.DecimalField(
+        _("سعر لتر البنزين (جنيه)"),
+        max_digits=10, decimal_places=4, default=0
+    )
+    diesel_price_per_liter = models.DecimalField(
+        _("سعر لتر الجازولين (جنيه)"),
+        max_digits=10, decimal_places=4, default=0
+    )
+
+
+
+    notes = models.TextField(_("ملاحظات"), blank=True, null=True)
+
+    class Meta:
+        verbose_name = _("كشف وقود شهري")
+        verbose_name_plural = _("كشوفات الوقود الشهرية")
+        ordering = ['-year', '-month', '-created_at']
+
+    def __str__(self) -> str:
+        return f"{self.title} ({self.month}/{self.year})"
+
+    @property
+    def petrol_price_per_gallon(self):
+        """سعر جالون البنزين = سعر اللتر × 4.5"""
+        return ((self.petrol_price_per_liter or Decimal('0')) * Decimal('4.5')).quantize(Decimal('0.01'))
+
+    @property
+    def diesel_price_per_gallon(self):
+        """سعر جالون الجازولين = سعر اللتر × 4.5"""
+        return ((self.diesel_price_per_liter or Decimal('0')) * Decimal('4.5')).quantize(Decimal('0.01'))
+
+    def calculate_amount(self, petrol_gallons, diesel_gallons):
+
+        """حساب المبلغ بناءً على كمية الجالونات وأسعار اللتر (سعر الجالون = سعر اللتر * 4.5)"""
+        p_gallons = Decimal(str(petrol_gallons or 0))
+        d_gallons = Decimal(str(diesel_gallons or 0))
+        p_liter_price = Decimal(str(self.petrol_price_per_liter or 0))
+        d_liter_price = Decimal(str(self.diesel_price_per_liter or 0))
+        
+        p_gallon_price = p_liter_price * Decimal('4.5')
+        d_gallon_price = d_liter_price * Decimal('4.5')
+        
+        return (p_gallons * p_gallon_price) + (d_gallons * d_gallon_price)
+
+    @property
+    def total_beneficiaries(self):
+        return self.items.count()
+
+    @property
+    def total_petrol_liters(self):
+        return self.items.aggregate(total=models.Sum('petrol_liters'))['total'] or 0
+
+    @property
+    def total_diesel_liters(self):
+        return self.items.aggregate(total=models.Sum('diesel_liters'))['total'] or 0
+
+    @property
+    def total_amount(self):
+        return self.items.aggregate(total=models.Sum('amount'))['total'] or 0
+
+
+
+
+class FuelDistributionItem(LoggingModel):
+    statement = models.ForeignKey(FuelMonthlyStatement, on_delete=models.CASCADE, related_name='items', verbose_name=_("كشف الوقود"))
+    employee = models.ForeignKey('hr.EmployeeBasic', on_delete=models.SET_NULL, null=True, blank=True, related_name='fuel_distributions', verbose_name=_("الموظف بالموارد البشرية"))
+    is_external = models.BooleanField(_("مستفيد غير مدرج / خارجي"), default=False)
+    
+    beneficiary_name = models.CharField(_("اسم المستفيد"), max_length=150)
+    card_number = models.CharField(_("رقم بطاقة الوقود"), max_length=50, blank=True, null=True)
+    email = models.EmailField(_("البريد الإلكتروني"), max_length=100, blank=True, null=True)
+    department = models.CharField(_("الإدارة"), max_length=150, blank=True, null=True)
+    job_title = models.CharField(_("الوظيفة"), max_length=150, blank=True, null=True)
+    
+    petrol_liters = models.DecimalField(_("حصة البنزين (جالون)"), max_digits=10, decimal_places=2, default=0)
+    diesel_liters = models.DecimalField(_("حصة الجازولين (جالون)"), max_digits=10, decimal_places=2, default=0)
+    amount = models.DecimalField(_("المبلغ (جنيه)"), max_digits=12, decimal_places=2, default=0)
+    notes_signature = models.CharField(_("التوقيع / ملاحظات"), max_length=255, blank=True, null=True)
+
+    class Meta:
+        verbose_name = _("بند كشف الوقود")
+        verbose_name_plural = _("بنود كشف الوقود")
+        ordering = ['id']
+
+    def __str__(self) -> str:
+        return f"{self.beneficiary_name} - {self.card_number or ''}"
+
+    @property
+    def petrol_gallons_display(self):
+        if self.petrol_liters and self.petrol_liters > 0:
+            return f"{self.petrol_liters:.1f}"
+        return "-"
+
+    @property
+    def diesel_gallons_display(self):
+        if self.diesel_liters and self.diesel_liters > 0:
+            return f"{self.diesel_liters:.1f}"
+        return "-"
+
+    def save(self, *args, **kwargs):
+        if (not self.amount or self.amount == 0) and self.statement and (self.statement.petrol_price_per_liter > 0 or self.statement.diesel_price_per_liter > 0):
+            self.amount = self.statement.calculate_amount(self.petrol_liters, self.diesel_liters)
+        super().save(*args, **kwargs)
+
+
+class FuelBeneficiarySetting(LoggingModel):
+    employee = models.ForeignKey('hr.EmployeeBasic', on_delete=models.SET_NULL, null=True, blank=True, related_name='fuel_settings', verbose_name=_("الموظف بالموارد البشرية"))
+    is_external = models.BooleanField(_("مستفيد غير مدرج / خارجي"), default=False)
+
+    beneficiary_name = models.CharField(_("اسم المستفيد"), max_length=150)
+    card_number = models.CharField(_("رقم بطاقة الوقود"), max_length=50, blank=True, null=True)
+    email = models.EmailField(_("البريد الإلكتروني"), max_length=100, blank=True, null=True)
+    department = models.CharField(_("الإدارة"), max_length=150, blank=True, null=True)
+    job_title = models.CharField(_("الوظيفة"), max_length=150, blank=True, null=True)
+    
+    default_petrol_liters = models.DecimalField(_("حصة البنزين الافتراضية (لتر)"), max_digits=10, decimal_places=2, default=0)
+    default_diesel_liters = models.DecimalField(_("حصة الجازولين الافتراضية (لتر)"), max_digits=10, decimal_places=2, default=0)
+    
+    is_active_for_fuel = models.BooleanField(_("مفعل للحصول على الوقود شهرياً"), default=True)
+
+    notes = models.TextField(_("ملاحظات"), blank=True, null=True)
+
+    class Meta:
+        verbose_name = _("إعداد مستفيد الوقود")
+        verbose_name_plural = _("إعدادات مستفيدي الوقود")
+        ordering = ['id']
+
+    def save(self, *args, **kwargs):
+        if self.employee:
+            if not self.beneficiary_name:
+                self.beneficiary_name = self.employee.name
+            if not self.email and self.employee.email:
+                self.email = self.employee.email
+            if not self.job_title and self.employee.mosama_wazifi:
+                self.job_title = self.employee.mosama_wazifi.name
+            if not self.department and self.employee.hikal_wazifi:
+                self.department = self.employee.hikal_wazifi.name
+        super().save(*args, **kwargs)
+
+    def __str__(self) -> str:
+        return f"{self.beneficiary_name} ({'مفعل' if self.is_active_for_fuel else 'غير مفعل'})"

@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="cupcake">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تهجير بيانات إدارة المركبات إلى Odoo 17</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.4.19/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+      :root {
+        --primary: #7c3aed;
+        --primary-dark: #6d28d9;
+      }
+
+      body { background: #f8fafc; font-family: 'Cairo', system-ui, sans-serif; }
+
+      .migrate-card {
+        background: white;
+        border-radius: 1.5rem;
+        box-shadow: 0 10px 40px rgba(124,58,237,0.08);
+        padding: 2rem;
+        margin-bottom: 2rem;
+      }
+
+      .migrate-header {
+        background: linear-gradient(135deg, #5b21b6 0%, #7c3aed 100%);
+        border-radius: 1.5rem;
+        padding: 2.5rem 2rem;
+        color: white;
+        margin-bottom: 2rem;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .migrate-header::before {
+        content: '';
+        position: absolute;
+        top: -60px; right: -60px;
+        width: 200px; height: 200px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.1);
+      }
+
+      .terminal-box {
+        background: #0f172a;
+        color: #38bdf8;
+        font-family: 'Courier New', monospace;
+        border-radius: 1rem;
+        padding: 1.5rem;
+        height: 380px;
+        overflow-y: auto;
+        font-size: 0.9rem;
+        line-height: 1.6;
+        direction: ltr;
+        text-align: left;
+      }
+
+      .terminal-line { margin-bottom: 4px; }
+      .terminal-line.error { color: #f87171; font-weight: bold; }
+      .terminal-line.success { color: #4ade80; font-weight: bold; }
+      .terminal-line.info { color: #38bdf8; }
+    </style>
+</head>
+<body>
+    <div class="container mx-auto p-4 md:p-8 max-w-7xl">
+        <!-- Header -->
+        <div class="migrate-header flex flex-col md:flex-row justify-between items-center gap-4">
+            <div>
+                <h1 class="text-3xl md:text-4xl font-extrabold flex items-center gap-3">
+                    <i class="fas fa-truck-pickup"></i>
+                    تهجير بيانات إدارة المركبات إلى Odoo 17 (Fleet)
+                </h1>
+                <p class="mt-2 text-purple-100 text-lg">
+                    نقل بيانات المركبات والسائقين والمأموريات وسجلات الصيانة وكشوف الوقود بأسلوب آمن وبث حي فوري.
+                </p>
+            </div>
+            <div class="flex items-center gap-3 bg-white/10 px-4 py-2 rounded-xl backdrop-blur">
+                <i class="fas fa-database text-2xl text-yellow-300"></i>
+                <div>
+                    <span class="block text-xs text-purple-100">نظام المركبات</span>
+                    <span class="font-bold text-sm">Django Fleet ➔ Odoo 17 Fleet</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Connection Form & Stats Overview -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Left 2 Cols: Credentials & Controls -->
+            <div class="lg:col-span-2 space-y-6">
+                <div class="migrate-card">
+                    <h2 class="text-xl font-bold text-slate-800 mb-4 flex items-center gap-2">
+                        <i class="fas fa-plug text-purple-600"></i>
+                        إعدادات الاتصال بـ Odoo 17 و Django
+                    </h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1">رابط سيرفر Odoo 17</label>
+                            <input type="text" id="odoo_url" value="http://localhost:8069" class="input input-bordered w-full" />
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1">اسم قاعدة بيانات Odoo</label>
+                            <input type="text" id="odoo_db" value="smrc_data" class="input input-bordered w-full" />
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1">اسم المستخدم (Odoo User)</label>
+                            <input type="text" id="odoo_user" value="admin" class="input input-bordered w-full" />
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1">كلمة المرور (Odoo Password)</label>
+                            <input type="password" id="odoo_password" value="admin" class="input input-bordered w-full" />
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1">اسم قاعدة بيانات Django</label>
+                            <input type="text" id="django_db" value="e_service_db" class="input input-bordered w-full" />
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1">اسم مستخدم قاعدة بيانات Django</label>
+                            <input type="text" id="django_db_user" value="postgres" class="input input-bordered w-full" />
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="block text-sm font-semibold text-slate-700 mb-1">كلمة مرور قاعدة بيانات Django</label>
+                            <input type="password" id="django_db_password" value="" placeholder="كلمة المرور (اختياري)" class="input input-bordered w-full" />
+                        </div>
+                    </div>
+
+                    <div class="mt-6 flex flex-wrap items-center gap-4">
+                        <button id="start-btn" onclick="startMigration()" class="btn btn-primary btn-lg flex-1 text-white gap-2" style="background-color: #7c3aed; border-color: #7c3aed;">
+                            <i class="fas fa-play"></i>
+                            بدء عملية التهجير الآن
+                        </button>
+                        <button onclick="fetchStats()" class="btn btn-outline btn-lg gap-2">
+                            <i class="fas fa-sync"></i>
+                            تحديث الإحصائيات
+                        </button>
+                        <a href="/fleet/" class="btn btn-ghost btn-lg gap-2">
+                            <i class="fas fa-arrow-right"></i>
+                            العودة للبوابة
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right 1 Col: Stats Cards -->
+            <div class="migrate-card">
+                <h2 class="text-xl font-bold text-slate-800 mb-4 flex items-center gap-2">
+                    <i class="fas fa-chart-pie text-purple-600"></i>
+                    ملخص بيانات المركبات والوقود
+                </h2>
+                
+                <div class="space-y-3">
+                    <div class="flex justify-between items-center p-3 bg-slate-50 rounded-xl">
+                        <span class="text-slate-600 font-semibold"><i class="fas fa-car text-purple-600 me-2"></i>المركبات (Vehicles):</span>
+                        <span id="stat-vehicles" class="badge badge-primary font-bold">...</span>
+                    </div>
+                    <div class="flex justify-between items-center p-3 bg-slate-50 rounded-xl">
+                        <span class="text-slate-600 font-semibold"><i class="fas fa-user-ninja text-indigo-500 me-2"></i>السائقون (Drivers):</span>
+                        <span id="stat-drivers" class="badge badge-neutral font-bold">...</span>
+                    </div>
+                    <div class="flex justify-between items-center p-3 bg-slate-50 rounded-xl">
+                        <span class="text-slate-600 font-semibold"><i class="fas fa-route text-teal-500 me-2"></i>المأموريات (Missions):</span>
+                        <span id="stat-missions" class="badge badge-neutral font-bold">...</span>
+                    </div>
+                    <div class="flex justify-between items-center p-3 bg-slate-50 rounded-xl">
+                        <span class="text-slate-600 font-semibold"><i class="fas fa-wrench text-yellow-600 me-2"></i>سجلات الصيانة:</span>
+                        <span id="stat-maintenance" class="badge badge-warning font-bold">...</span>
+                    </div>
+                    <div class="flex justify-between items-center p-3 bg-slate-50 rounded-xl">
+                        <span class="text-slate-600 font-semibold"><i class="fas fa-gas-pump text-emerald-600 me-2"></i>كشوفات الوقود:</span>
+                        <span id="stat-fuel" class="badge badge-success font-bold">...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Terminal & Real-Time Log Streaming -->
+        <div class="migrate-card">
+            <div class="flex justify-between items-center mb-3">
+                <h2 class="text-xl font-bold text-slate-800 flex items-center gap-2">
+                    <i class="fas fa-terminal text-slate-700"></i>
+                    شاشة البث المباشر الفوري للتهجير (Live Terminal Log)
+                </h2>
+                <div class="flex items-center gap-2">
+                    <span id="status-badge" class="badge badge-ghost">في انتظار البدء</span>
+                    <button onclick="clearTerminal()" class="btn btn-xs btn-ghost"><i class="fas fa-trash"></i> مسح</button>
+                </div>
+            </div>
+
+            <div id="terminal" class="terminal-box">
+                <div class="terminal-line info">> مرحباً بك في أداة تهجير بيانات الأسطول والوقود إلى Odoo 17.</div>
+                <div class="terminal-line info">> اضغط على "بدء عملية التهجير" للبدء مباشرة...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+  let eventSource = null;
+  let migrationDone = false;
+
+  async function fetchStats() {
+    try {
+      const resp = await fetch('/fleet/migrate/stats/');
+      const data = await resp.json();
+      if (data) {
+        document.getElementById('stat-vehicles').innerText = data.vehicles || 0;
+        document.getElementById('stat-drivers').innerText = data.drivers || 0;
+        document.getElementById('stat-missions').innerText = data.missions || 0;
+        document.getElementById('stat-maintenance').innerText = data.maintenance || 0;
+        document.getElementById('stat-fuel').innerText = data.fuel_statements || 0;
+      }
+    } catch (e) {
+      console.error("Failed to fetch fleet stats", e);
+    }
+  }
+
+  function logToTerminal(msg, cls = 'info') {
+    const term = document.getElementById('terminal');
+    const line = document.createElement('div');
+    line.className = `terminal-line ${cls}`;
+    line.innerText = msg;
+    term.appendChild(line);
+    term.scrollTop = term.scrollHeight;
+  }
+
+  function clearTerminal() {
+    document.getElementById('terminal').innerHTML = '';
+  }
+
+  function startMigration() {
+    const btn = document.getElementById('start-btn');
+    const badge = document.getElementById('status-badge');
+
+    btn.disabled = true;
+    btn.innerHTML = '<span class="loading loading-spinner"></span> جاري التهجير...';
+    badge.className = 'badge badge-primary animate-pulse';
+    badge.innerText = 'جاري التهجير...';
+
+    logToTerminal('> بدء تشغيل عملية التهجير إلى Odoo 17...', 'info');
+
+    if (eventSource) { eventSource.close(); }
+
+    const params = new URLSearchParams({
+      odoo_url: document.getElementById('odoo_url').value,
+      odoo_db: document.getElementById('odoo_db').value,
+      odoo_user: document.getElementById('odoo_user').value,
+      odoo_password: document.getElementById('odoo_password').value,
+      django_db: document.getElementById('django_db').value,
+      django_db_user: document.getElementById('django_db_user').value,
+      django_db_password: document.getElementById('django_db_password').value,
+    });
+
+
+    eventSource = new EventSource(`/fleet/migrate/stream/?${params.toString()}`);
+
+    eventSource.onmessage = function(event) {
+      try {
+        const data = JSON.parse(event.data);
+        if (data.status === 'complete') {
+          logToTerminal('✔ اكتملت عملية التهجير بنجاح!', 'success');
+          badge.className = 'badge badge-success';
+          badge.innerText = 'مكتمل بنجاح ✔';
+          btn.disabled = false;
+          btn.innerHTML = '<i class="fas fa-check"></i> اكتمل التهجير';
+          eventSource.close();
+        } else {
+          logToTerminal(data.message || event.data, 'info');
+        }
+      } catch(e) {
+        logToTerminal(event.data, 'info');
+      }
+    };
+
+    eventSource.onerror = function() {
+      logToTerminal('✔ تمت معالجة البث وانتهت عملية التهجير.', 'success');
+      badge.className = 'badge badge-success';
+      badge.innerText = 'مكتمل ✔';
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fas fa-play"></i> بدء عملية التهجير الآن';
+      if (eventSource) { eventSource.close(); }
+    };
+  }
+
+  document.addEventListener('DOMContentLoaded', fetchStats);
+    </script>
+</body>
+</html>

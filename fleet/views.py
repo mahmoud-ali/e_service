@@ -25,17 +25,19 @@ def portal_home(request):
     return render(request, 'fleet/portal/home.html', context)
 
 
+# ─── Vehicles ──────────────────────────────────────────────────────────────────
+
 @login_required
 def vehicle_list(request):
     """List all vehicles"""
     vehicles = models.Vehicle.objects.select_related(
         'model__make', 'fuel_type', 'status'
     ).all()
-    
+
     status_filter = request.GET.get('status')
     if status_filter:
         vehicles = vehicles.filter(status__id=status_filter)
-    
+
     search = request.GET.get('search')
     if search:
         vehicles = vehicles.filter(
@@ -43,7 +45,7 @@ def vehicle_list(request):
             Q(model__name__icontains=search) |
             Q(model__make__name__icontains=search)
         )
-    
+
     context = {
         'vehicles': vehicles,
         'statuses': models.VehicleStatus.objects.all(),
@@ -52,7 +54,6 @@ def vehicle_list(request):
     }
     return render(request, 'fleet/portal/vehicle_list.html', context)
 
-
 @login_required
 def vehicle_detail(request, pk):
     """Vehicle detail page"""
@@ -60,28 +61,28 @@ def vehicle_detail(request, pk):
         models.Vehicle.objects.select_related('model__make', 'fuel_type', 'status'),
         pk=pk
     )
-    
+
     certificates = models.VehicleCertificate.objects.filter(
         vehicle=vehicle
     ).select_related('cert_type')
-    
+
     assignments = models.VehicleAssignment.objects.filter(
         vehicle=vehicle
     ).order_by('-start_date')
-    
+
     drivers = models.VehicleDriver.objects.filter(
         vehicle=vehicle
     ).select_related('driver').order_by('-start_date')
-    
+
     maintenance_records = models.VehicleMaintenance.objects.filter(
         vehicle=vehicle
     ).select_related('service_type', 'service_provider').order_by('-service_date')
-    
+
     try:
         gps_device = models.VehicleGPSDevice.objects.get(vehicle=vehicle)
     except models.VehicleGPSDevice.DoesNotExist:
         gps_device = None
-    
+
     context = {
         'vehicle': vehicle,
         'certificates': certificates,
@@ -92,12 +93,11 @@ def vehicle_detail(request, pk):
     }
     return render(request, 'fleet/portal/vehicle_detail.html', context)
 
-
 @login_required
 def driver_list(request):
     """List all drivers"""
     drivers = models.Driver.objects.select_related('license_type').all()
-    
+
     search = request.GET.get('search')
     if search:
         drivers = drivers.filter(
@@ -105,7 +105,6 @@ def driver_list(request):
             Q(license_no__icontains=search) |
             Q(phone__icontains=search)
         )
-    
     context = {
         'drivers': drivers,
         'search': search or '',
@@ -120,15 +119,12 @@ def driver_detail(request, pk):
         models.Driver.objects.select_related('license_type'),
         pk=pk
     )
-    
     vehicle_assignments = models.VehicleDriver.objects.filter(
         driver=driver
     ).select_related('vehicle__model__make').order_by('-start_date')
-    
     missions = models.Mission.objects.filter(
         driver=driver
     ).select_related('vehicle').order_by('-planned_start_date')
-    
     context = {
         'driver': driver,
         'vehicle_assignments': vehicle_assignments,
@@ -137,19 +133,21 @@ def driver_detail(request, pk):
     return render(request, 'fleet/portal/driver_detail.html', context)
 
 
+# ─── Missions ──────────────────────────────────────────────────────────────────
+
 @login_required
 def mission_list(request):
     """List all missions"""
     missions = models.Mission.objects.select_related(
         'vehicle__model__make', 'driver'
     ).all().order_by('-planned_start_date')
-    
+
     status_filter = request.GET.get('status')
     if status_filter == 'active':
         missions = missions.filter(actual_end_date__isnull=True)
     elif status_filter == 'completed':
         missions = missions.filter(actual_end_date__isnull=False)
-    
+
     search = request.GET.get('search')
     if search:
         missions = missions.filter(
@@ -158,7 +156,7 @@ def mission_list(request):
             Q(vehicle__license_plate__icontains=search) |
             Q(driver__name__icontains=search)
         )
-    
+
     context = {
         'missions': missions,
         'search': search or '',
@@ -174,12 +172,19 @@ def mission_detail(request, pk):
         models.Mission.objects.select_related('vehicle__model__make', 'driver'),
         pk=pk
     )
-    
+    mission_vehicles = models.MissionVehicle.objects.filter(mission=mission).select_related(
+        'assignment__vehicle__model__make', 'assignment__driver'
+    )
+    attachments = models.MissionAttachment.objects.filter(mission=mission)
     context = {
         'mission': mission,
+        'mission_vehicles': mission_vehicles,
+        'attachments': attachments,
     }
     return render(request, 'fleet/portal/mission_detail.html', context)
 
+
+# ─── Maintenance ────────────────────────────────────────────────────────────────
 
 @login_required
 def maintenance_list(request):
@@ -187,7 +192,7 @@ def maintenance_list(request):
     maintenance_records = models.VehicleMaintenance.objects.select_related(
         'vehicle__model__make', 'service_type', 'service_provider'
     ).all().order_by('-service_date')
-    
+
     filter_type = request.GET.get('filter')
     if filter_type == 'upcoming':
         maintenance_records = maintenance_records.filter(
@@ -198,7 +203,7 @@ def maintenance_list(request):
             next_service_due__lt=date.today(),
             next_service_due__isnull=False
         )
-    
+
     search = request.GET.get('search')
     if search:
         maintenance_records = maintenance_records.filter(
@@ -206,7 +211,7 @@ def maintenance_list(request):
             Q(service_type__name__icontains=search) |
             Q(service_provider__name__icontains=search)
         )
-    
+
     context = {
         'maintenance_records': maintenance_records,
         'search': search or '',
@@ -224,11 +229,11 @@ def maintenance_detail(request, pk):
         ),
         pk=pk
     )
-    
+
     parts = models.VehicleMaintenancePart.objects.filter(
         maintenance=maintenance
     )
-    
+
     context = {
         'maintenance': maintenance,
         'parts': parts,

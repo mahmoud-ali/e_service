@@ -59,18 +59,26 @@
                         <th></th>
                     </tr>
                 </thead>
-                <tbody>
+                 <tbody>
                     {% for mission in missions %}
                     <tr>
                         <td>
+                            {% if mission.vehicle %}
                             <a href="{% url 'fleet:vehicle_detail' mission.vehicle.pk %}" class="link link-primary">
                                 {{ mission.vehicle.license_plate }}
                             </a>
+                            {% else %}
+                            <span class="text-gray-400">-</span>
+                            {% endif %}
                         </td>
                         <td>
+                            {% if mission.driver %}
                             <a href="{% url 'fleet:driver_detail' mission.driver.pk %}" class="link link-primary">
                                 {{ mission.driver.name }}
                             </a>
+                            {% else %}
+                            <span class="text-gray-400">-</span>
+                            {% endif %}
                         </td>
                         <td>{{ mission.destination }}</td>
                         <td>{{ mission.requested_by }}</td>
@@ -91,6 +99,7 @@
                     </tr>
                     {% endfor %}
                 </tbody>
+
             </table>
         </div>
         {% else %}
