@@ -425,7 +425,7 @@ class AppMoveAdmin(LogAdminMixin,admin.ModelAdmin):
     @admin.action(description=_('state_canceled'))
     def cancel_app(self, request, queryset):
         for obj in queryset:
-            if obj.state >= AppMoveGold.STATE_SMRC and obj.state < AppMoveGold.STATE_SSMO:
+            if obj.state >= AppMoveGold.STATE_SMRC and obj.state <= AppMoveGold.STATE_SSMO:
                 obj.state = AppMoveGold.STATE_CANCELED
                 obj.save()
                 self.log_change(request,obj,_('state_canceled'))
