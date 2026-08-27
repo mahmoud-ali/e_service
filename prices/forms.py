@@ -1,3 +1,5 @@
+from datetime import date
+
 from django import forms
 from django.utils.translation import gettext_lazy as _
 
@@ -199,60 +201,94 @@ class PriceEntryForm(forms.Form):
     def save(self, user):
         """حفظ جميع الأسعار المدخلة في سجلات منفصلة (مسار تدقيق كامل)."""
         data = self.cleaned_data
+        today = date.today()
+
+        def _same_as_latest(qs_filter, **price_fields):
+            """True if the latest record for qs_filter holds the same actual
+            price fields (audit/log fields are never compared)."""
+            latest = qs_filter.order_by('-created_at').first()
+            if latest is None:
+                return False
+            return all(
+                getattr(latest, field) == value
+                for field, value in price_fields.items()
+            )
 
         # الذهب العالمي - عيار 24
         if 'global_gold_24k' in data:
-            ounce_price = data.get('global_gold_24k_ounce')
-            if ounce_price is None:
-                ounce_price = round(float(data['global_gold_24k']) * OUNCE_TO_GRAM, 2)
-            GlobalGoldPrice.objects.create(
-                karat=GOLD_KARAT_24,
+            if not _same_as_latest(
+                GlobalGoldPrice.objects.filter(karat=GOLD_KARAT_24, date=today),
                 price_per_gram_usd=data['global_gold_24k'],
-                price_per_ounce_usd=ounce_price,
-                created_by=user,
-                updated_by=user,
-            )
+            ):
+                ounce_price = data.get('global_gold_24k_ounce')
+                if ounce_price is None:
+                    ounce_price = round(float(data['global_gold_24k']) * OUNCE_TO_GRAM, 2)
+                GlobalGoldPrice.objects.create(
+                    karat=GOLD_KARAT_24,
+                    price_per_gram_usd=data['global_gold_24k'],
+                    price_per_ounce_usd=ounce_price,
+                    created_by=user,
+                    updated_by=user,
+                )
 
-            # الذهب العالمي - عيار 21
+            # الذهب العالمي - عيار 21 (مقارنة مستقلة)
             price_21k = data.get('global_gold_21k')
             if price_21k is None:
                 price_21k = round(float(data['global_gold_24k']) * KARAT_21_FACTOR, 2)
-            GlobalGoldPrice.objects.create(
-                karat=GOLD_KARAT_21,
+            if not _same_as_latest(
+                GlobalGoldPrice.objects.filter(karat=GOLD_KARAT_21, date=today),
                 price_per_gram_usd=price_21k,
-                created_by=user,
-                updated_by=user,
-            )
+            ):
+                GlobalGoldPrice.objects.create(
+                    karat=GOLD_KARAT_21,
+                    price_per_gram_usd=price_21k,
+                    created_by=user,
+                    updated_by=user,
+                )
 
         # بنك السودان
         if 'bank_sudan_price' in data:
-            BankSudanGoldPrice.objects.create(
+            if not _same_as_latest(
+                BankSudanGoldPrice.objects.filter(date=today),
                 price_per_gram_sdg=data['bank_sudan_price'],
-                created_by=user,
-                updated_by=user,
-            )
+            ):
+                BankSudanGoldPrice.objects.create(
+                    price_per_gram_sdg=data['bank_sudan_price'],
+                    created_by=user,
+                    updated_by=user,
+                )
 
         # الدولار الرسمي
         if 'official_dollar_buy_price' in data:
-            DollarPrice.objects.create(
-                rate_type=DOLLAR_OFFICIAL,
+            if not _same_as_latest(
+                DollarPrice.objects.filter(rate_type=DOLLAR_OFFICIAL, date=today),
                 buy_price_in_sdg=data['official_dollar_buy_price'],
                 sell_price_in_sdg=data['official_dollar_sell_price'],
-                created_by=user,
-                updated_by=user,
-            )
+            ):
+                DollarPrice.objects.create(
+                    rate_type=DOLLAR_OFFICIAL,
+                    buy_price_in_sdg=data['official_dollar_buy_price'],
+                    sell_price_in_sdg=data['official_dollar_sell_price'],
+                    created_by=user,
+                    updated_by=user,
+                )
 
         # الدولار الموازي
         if 'parallel_dollar_buy_price' in data:
-            DollarPrice.objects.create(
-                rate_type=DOLLAR_PARALLEL,
+            if not _same_as_latest(
+                DollarPrice.objects.filter(rate_type=DOLLAR_PARALLEL, date=today),
                 buy_price_in_sdg=data['parallel_dollar_buy_price'],
                 sell_price_in_sdg=data['parallel_dollar_sell_price'],
-                created_by=user,
-                updated_by=user,
-            )
+            ):
+                DollarPrice.objects.create(
+                    rate_type=DOLLAR_PARALLEL,
+                    buy_price_in_sdg=data['parallel_dollar_buy_price'],
+                    sell_price_in_sdg=data['parallel_dollar_sell_price'],
+                    created_by=user,
+                    updated_by=user,
+                )
 
-        # أسعار الولايات
+        # أسعار الولايات (المقارنة تشمل السعر والملاحظات — أي تغيير يسجّل)
         if 'state_gold_prices' in data:
             import json
             state_prices_json = data.get('state_gold_prices', '')
@@ -263,10 +299,15 @@ class PriceEntryForm(forms.Form):
                     price = entry.get('price')
                     comment = entry.get('comment', '')
                     if state_id and price is not None:
-                        StateGoldPrice.objects.create(
-                            state_id=state_id,
+                        if not _same_as_latest(
+                            StateGoldPrice.objects.filter(state_id=state_id, date=today),
                             price_per_gram_sdg=price,
                             comment=comment,
-                            created_by=user,
-                            updated_by=user,
-                        )
+                        ):
+                            StateGoldPrice.objects.create(
+                                state_id=state_id,
+                                price_per_gram_sdg=price,
+                                comment=comment,
+                                created_by=user,
+                                updated_by=user,
+                            )
