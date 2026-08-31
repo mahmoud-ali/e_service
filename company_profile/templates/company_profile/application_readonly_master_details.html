@@ -18,6 +18,13 @@
 </div>
 {% endif %}
 
+{% if object.security_comment %}
+<div class="alert alert-info alert-dismissable">
+    <h3>{% translate "تعليق أفراد الأمن" %}</h3>
+    <p>{{object.security_comment}}</p>
+</div>
+{% endif %}
+
 <form  method="post">
 {% csrf_token %}
     {% bootstrap_form form %}

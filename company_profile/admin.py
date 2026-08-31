@@ -116,12 +116,12 @@ class WorkflowAdminMixin:
         filter = []
         company_types = []
 
-        if request.user.groups.filter(name__in=["pro_company_application_accept","hse_accept","hse_read_only"]).exists():
-            filter += ["submitted","review_accept"]
+        if request.user.groups.filter(name__in=["pro_company_application_accept","hse_accept","hse_read_only","security_officer"]).exists():
+            filter += ["submitted","review_accept","security_reviewed"]
         if request.user.groups.filter(name__in=["pro_company_application_approve","hse_approve","hse_read_only"]).exists():
             filter += ["accepted","approved","rejected"]
         if request.user.groups.filter(name__in=["pro_company_application_show","hse_read_only"]).exists():
-            filter += ["submitted","review_accept","accepted","approved","rejected"]
+            filter += ["submitted","review_accept","accepted","approved","rejected","security_reviewed"]
 
         if self.model == AppFuelPermission:
             if request.user.groups.filter(name__in=["fuel_permission"]).exists():
@@ -161,7 +161,8 @@ class WorkflowAdminMixin:
                     pass
 
         qs = qs.filter(state__in=filter)
-        qs = qs.filter(company__company_type__in=company_types)
+        if company_types:
+            qs = qs.filter(company__company_type__in=company_types)
 
         return qs
 
@@ -793,6 +794,41 @@ class AppForignerMovementAdmin(WorkflowAdminMixin,admin.ModelAdmin):
     list_display = ["company","period_from","period_to", "nationality", "created_at", "created_by","updated_at", "updated_by"]        
     list_filter = ["company__company_type","state",]
     view_on_site = False
+
+    def get_fields(self, request, obj=None):
+        fields = list(super().get_fields(request, obj))
+        user_groups = list(request.user.groups.values_list('name', flat=True))
+        is_security = 'security_officer' in user_groups
+
+        if not request.user.is_superuser:
+            if obj and obj.state == 'submitted' and not is_security:
+                if 'security_comment' in fields:
+                    fields.remove('security_comment')
+            elif not obj and not is_security:
+                if 'security_comment' in fields:
+                    fields.remove('security_comment')
+        return fields
+
+    def has_add_permission(self, request, obj=None):
+        user_groups = list(request.user.groups.values_list('name', flat=True))
+        if 'security_officer' in user_groups and not request.user.is_superuser:
+            return False
+        return super().has_add_permission(request, obj)
+
+    def get_readonly_fields(self, request, obj=None):
+        readonly = list(super().get_readonly_fields(request, obj) or [])
+        user_groups = list(request.user.groups.values_list('name', flat=True))
+        is_security = 'security_officer' in user_groups and not request.user.is_superuser
+
+        if is_security and obj:
+            fields = [f.name for f in obj._meta.fields]
+            for f in fields:
+                if f != 'security_comment' and f not in readonly:
+                    readonly.append(f)
+        elif not is_security and obj and obj.state != 'submitted':
+            if 'security_comment' not in readonly:
+                readonly.append('security_comment')
+        return readonly
     
 admin.site.register(AppForignerMovement, AppForignerMovementAdmin)
 

@@ -408,7 +408,8 @@ class AppForignerMovement(WorkflowModel):
     passport_copy_file = models.FileField(_("passport_copy_file"),upload_to=company_applications_path)    
     cv_file = models.FileField(_("cv_file"),upload_to=company_applications_path)    
     experiance_certificates_file = models.FileField(_("experiance_certificates_file"),upload_to=company_applications_path)    
-    
+    security_comment = models.TextField(_("تعليق أفراد الأمن"), max_length=500, blank=True, null=True)
+
     def __str__(self):
         return _("Forigner movement") +" ("+str(self.id)+")"
         
@@ -419,7 +420,73 @@ class AppForignerMovement(WorkflowModel):
         ordering = ["-id"]
         verbose_name = _("Application: Forigner movement ")
         verbose_name_plural = _("Application: Forigner movement")
-    
+
+    SECURITY_REVIEWED = "security_reviewed"
+
+    def get_next_states(self, user):
+        """
+        security_officer: SUBMITTED -> SECURITY_REVIEWED ("موافقة الأمن") / REJECTED ("رفض أمني")
+        pro_company_application_accept: SECURITY_REVIEWED -> ACCEPTED ("إضافة التوصية")
+        pro_company_application_approve: ACCEPTED -> APPROVED / REJECTED / REVIEW_ACCEPTANCE
+        """
+        from .workflow import SUBMITTED, ACCEPTED, APPROVED, REJECTED, REVIEW_ACCEPTANCE, STATE_CHOICES
+        user_groups = list(user.groups.values_list('name', flat=True))
+        states = []
+
+        STATE_CHOICES_EXT = dict(STATE_CHOICES)
+        STATE_CHOICES_EXT[self.SECURITY_REVIEWED] = _("موافقة الأمن")
+
+        if 'security_officer' in user_groups:
+            if self.state == SUBMITTED:
+                states.append((self.SECURITY_REVIEWED, STATE_CHOICES_EXT[self.SECURITY_REVIEWED]))
+                states.append((REJECTED, _("رفض أمني")))
+
+        if 'pro_company_application_accept' in user_groups:
+            if self.state == self.SECURITY_REVIEWED or self.state == REVIEW_ACCEPTANCE:
+                states.append((ACCEPTED, STATE_CHOICES[ACCEPTED]))
+
+        if 'pro_company_application_approve' in user_groups:
+            if self.state == ACCEPTED:
+                states.append((APPROVED, STATE_CHOICES[APPROVED]))
+                states.append((REJECTED, STATE_CHOICES[REJECTED]))
+                states.append((REVIEW_ACCEPTANCE, STATE_CHOICES[REVIEW_ACCEPTANCE]))
+
+        # deduplicate while preserving order
+        seen = set()
+        unique = []
+        for s in states:
+            if s[0] not in seen:
+                seen.add(s[0])
+                unique.append(s)
+        return unique
+
+    def can_transition_to_next_state(self, user, state, obj=None):
+        from .workflow import REJECTED
+        from django.forms import ValidationError
+        if state[0] in map(lambda x: x[0], self.get_next_states(user)):
+            user_groups = list(user.groups.values_list('name', flat=True))
+            if 'security_officer' in user_groups and state[0] == REJECTED:
+                if not self.security_comment or not self.security_comment.strip():
+                    raise ValidationError(_("الرجاء كتابة تعليق أفراد الأمن قبل اتخاذ القرار"))
+                return True
+            return super().can_transition_to_next_state(user, state, obj)
+        return False
+
+    def transition_to_next_state(self, user, state):
+        from .workflow import REJECTED
+        if self.can_transition_to_next_state(user, state, obj=self):
+            if state[0] in (self.SECURITY_REVIEWED, REJECTED):
+                if not self.security_comment or not self.security_comment.strip():
+                    raise Exception(_("الرجاء كتابة تعليق أفراد الأمن قبل اتخاذ القرار"))
+                if state[0] == REJECTED and not self.reject_comments:
+                    self.reject_comments = self.security_comment
+            self.state = state[0]
+            self.updated_by = user
+            self.save()
+        else:
+            raise Exception(f"User {user.username} cannot transition to state {state} from state {self.state}")
+        return self
+
 class AppBorrowMaterial(WorkflowModel):
     company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,related_name="borrow_to",verbose_name=_("company"))    
     company_from  = models.ForeignKey(TblCompanyProduction,null=True,blank=True, on_delete=models.PROTECT,related_name="borrow_from",verbose_name=_("company_borrow_from"))    

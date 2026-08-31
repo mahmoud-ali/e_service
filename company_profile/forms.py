@@ -52,7 +52,7 @@ class AppForignerMovementAdminForm(WorkflowFormMixin,ModelForm):
     company = forms.ModelChoiceField(queryset=TblCompanyProduction.objects.all(), disabled=True, label=_("company"))
     class Meta:
         model = AppForignerMovement
-        fields = ["company","route_from","route_to","period_from","period_to","address_in_sudan","nationality","passport_no","passport_expiry_date","recommendation_comments","reject_comments","official_letter_file","passport_copy_file","cv_file","experiance_certificates_file"] 
+        fields = ["company","route_from","route_to","period_from","period_to","address_in_sudan","nationality","passport_no","passport_expiry_date","recommendation_comments","reject_comments","security_comment","official_letter_file","passport_copy_file","cv_file","experiance_certificates_file"] 
         
 class AppForignerMovementForm(AppForignerMovementAdminForm):
     company = None
