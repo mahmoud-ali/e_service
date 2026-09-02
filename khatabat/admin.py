@@ -341,7 +341,7 @@ class HarkatKhatabatAdmin(admin.ModelAdmin):
     model = HarkatKhatabat
     list_display = ('subject', 'letter_number', 'movement_type', 'date', 'procedure', 'delivery_date', 'source_entity','forwarded_to_list')    
     search_fields = ('letter__letter_number', 'letter__subject','note')
-    list_filter = ('movement_type','date', 'procedure', 'delivery_date', 'source_entity', 'forwarded_to')
+    list_filter = ('movement_type','date', 'procedure', 'delivery_date', ('source_entity',admin.RelatedOnlyFieldListFilter), ('forwarded_to',admin.RelatedOnlyFieldListFilter))
     actions = [print_html_table]
     date_hierarchy = "date"
 
