@@ -1,0 +1,41 @@
+{% extends "admin/base.html" %}
+{% load i18n admin_urls %}
+
+{% block title %}{{ title }} | {{ site_title|default:_('Django site admin') }}{% endblock %}
+
+{% block bodyclass %}{{ block.super }} app-{{ opts.app_label }} model-{{ opts.model_name }} disable-confirmation{% endblock %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+<a href="{% url 'admin:index' %}">{% translate 'Home' %}</a>
+&rsaquo; <a href="{% url 'admin:app_list' app_label=opts.app_label %}">{{ opts.app_config.verbose_name }}</a>
+&rsaquo; <a href="{% url opts|admin_urlname:'changelist' %}">{{ opts.verbose_name_plural|capfirst }}</a>
+&rsaquo; {% translate 'Disable' %}
+</div>
+{% endblock %}
+
+{% block content %}
+{% if to_disable_count %}
+    <p>
+        {% blocktranslate count counter=to_disable_count trimmed %}
+            Are you sure you want to disable {{ counter }} selected user?
+        {% plural %}
+            Are you sure you want to disable {{ counter }} selected users?
+        {% endblocktranslate %}
+    </p>
+    <p>{% translate 'Disabled users can no longer log in. Superusers and already-inactive accounts are skipped.' %}</p>
+{% else %}
+    <p>{% translate 'None of the selected users can be disabled: every selected user is a superuser or already inactive.' %}</p>
+{% endif %}
+<form action="" method="post">
+    {% csrf_token %}
+    {% for pk in selected_pks %}<input type="hidden" name="{{ action_checkbox_name }}" value="{{ pk }}">{% endfor %}
+    {% if select_across %}<input type="hidden" name="select_across" value="1">{% endif %}
+    <input type="hidden" name="action" value="disable_users">
+    <input type="hidden" name="index" value="0">
+    <div class="submit-row">
+        <input type="submit" name="apply" value="{% translate 'Yes, disable' %}" class="default">
+        <input type="submit" name="cancel" value="{% translate 'No, go back' %}">
+    </div>
+</form>
+{% endblock %}
