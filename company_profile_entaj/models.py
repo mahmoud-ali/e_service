@@ -90,13 +90,8 @@ class ForeignerRecord(WorkFlowModel):
 
         states = []
 
-        if 'security_officer' in user_groups:
-            if self.state == self.STATE_DRAFT:
-                states.append((self.STATE_SECURITY_REVIEWED, self.STATE_CHOICES[self.STATE_SECURITY_REVIEWED]))
-                states.append((self.STATE_REJECTED, self.STATE_CHOICES[self.STATE_REJECTED]))
-
         if 'entaj_section_head' in user_groups:
-            if self.state == self.STATE_SECURITY_REVIEWED:
+            if self.state == self.STATE_DRAFT:
                 states.append((self.STATE_CONFIRMED, self.STATE_CHOICES[self.STATE_CONFIRMED]))
 
         if 'entaj_department_head' in user_groups:
@@ -110,7 +105,6 @@ class ForeignerRecord(WorkFlowModel):
         """
         Check if the given user can transition to the specified state.
         """
-        user_groups = list(user.groups.values_list('name', flat=True))
         if state[0] in map(lambda x: x[0], self.get_next_states(user)):
             return True
 
@@ -121,9 +115,6 @@ class ForeignerRecord(WorkFlowModel):
         Transitions the workflow to the given state, after checking user permissions.
         """
         if self.can_transition_to_next_state(user, state):
-            if state[0] in (self.STATE_SECURITY_REVIEWED, self.STATE_REJECTED):
-                if not self.security_comment or not self.security_comment.strip():
-                    raise Exception(_("الرجاء كتابة تعليق أفراد الأمن قبل اتخاذ القرار"))
             self.state = state[0]
             self.updated_by = user
             self.save()
@@ -156,8 +147,6 @@ class ForeignerPermissionType(models.Model):
         return f"{self.get_name_display()}"
 
 class ForeignerPermission(WorkFlowModel):
-    STATE_DRAFT = 1
-    STATE_CONFIRMED = 2
     STATE_DRAFT = 1
     STATE_CONFIRMED = 2
     STATE_APPROVED = 3
@@ -198,13 +187,8 @@ class ForeignerPermission(WorkFlowModel):
 
         states = []
 
-        if 'security_officer' in user_groups:
-            if self.state == self.STATE_DRAFT:
-                states.append((self.STATE_SECURITY_REVIEWED, self.STATE_CHOICES[self.STATE_SECURITY_REVIEWED]))
-                states.append((self.STATE_REJECTED, self.STATE_CHOICES[self.STATE_REJECTED]))
-
         if 'entaj_section_head' in user_groups:
-            if self.state == self.STATE_SECURITY_REVIEWED:
+            if self.state == self.STATE_DRAFT:
                 states.append((self.STATE_CONFIRMED, self.STATE_CHOICES[self.STATE_CONFIRMED]))
 
         if 'entaj_department_head' in user_groups:
@@ -218,7 +202,6 @@ class ForeignerPermission(WorkFlowModel):
         """
         Check if the given user can transition to the specified state.
         """
-        user_groups = list(user.groups.values_list('name', flat=True))
         if state[0] in map(lambda x: x[0], self.get_next_states(user)):
             return True
 
@@ -229,9 +212,6 @@ class ForeignerPermission(WorkFlowModel):
         Transitions the workflow to the given state, after checking user permissions.
         """
         if self.can_transition_to_next_state(user, state):
-            if state[0] in (self.STATE_SECURITY_REVIEWED, self.STATE_REJECTED):
-                if not self.security_comment or not self.security_comment.strip():
-                    raise Exception(_("الرجاء كتابة تعليق أفراد الأمن قبل اتخاذ القرار"))
             self.state = state[0]
             self.updated_by = user
             self.save()
@@ -244,15 +224,11 @@ class ForeignerProcedure(WorkFlowModel):
     STATE_DRAFT = 1
     STATE_CONFIRMED = 2
     STATE_APPROVED = 3
-    STATE_SECURITY_REVIEWED = 4
-    STATE_REJECTED = 5
 
     STATE_CHOICES = {
         STATE_DRAFT: _("draft"),
-        STATE_SECURITY_REVIEWED: _("موافقة الأمن"),
         STATE_CONFIRMED: _("تأكيد الطلب"),
         STATE_APPROVED: _("اعتماد الطلب"),
-        STATE_REJECTED: _("رفض أمني"),
     }
 
     company  = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))    
@@ -261,7 +237,6 @@ class ForeignerProcedure(WorkFlowModel):
     procedure_to = models.DateField(_("procedure_to"), help_text="Ex: 2025-12-31")
     procedure_cause = models.TextField(_("procedure_cause"),max_length=1000)
     state = models.IntegerField(_("record_state"), choices=STATE_CHOICES.items(), default=STATE_DRAFT)
-    security_comment = models.TextField(_("تعليق أفراد الأمن"), max_length=500, blank=True, null=True)
 
     def __str__(self):
         return _("Foreigner Procedure") +" ("+str(self.id)+")"
@@ -275,19 +250,12 @@ class ForeignerProcedure(WorkFlowModel):
         verbose_name_plural = _("Application: Foreigner procedure")
     
     def get_next_states(self, user):
-        """
-        Determine the next possible states based on the current state and user's role.
-        """
         user_groups = list(user.groups.values_list('name', flat=True))
 
         states = []
 
-        if 'security_officer' in user_groups:
-            if self.state == self.STATE_DRAFT:
-                states.append((self.STATE_SECURITY_REVIEWED, self.STATE_CHOICES[self.STATE_SECURITY_REVIEWED]))
-                states.append((self.STATE_REJECTED, self.STATE_CHOICES[self.STATE_REJECTED]))
         if 'entaj_section_head' in user_groups:
-            if self.state == self.STATE_SECURITY_REVIEWED:
+            if self.state == self.STATE_DRAFT:
                 states.append((self.STATE_CONFIRMED, self.STATE_CHOICES[self.STATE_CONFIRMED]))
 
         if 'entaj_department_head' in user_groups:
@@ -298,23 +266,13 @@ class ForeignerProcedure(WorkFlowModel):
         return states
 
     def can_transition_to_next_state(self, user, state):
-        """
-        Check if the given user can transition to the specified state.
-        """
-        user_groups = list(user.groups.values_list('name', flat=True))
         if state[0] in map(lambda x: x[0], self.get_next_states(user)):
             return True
 
         return False
 
     def transition_to_next_state(self, user, state):
-        """
-        Transitions the workflow to the given state, after checking user permissions.
-        """
         if self.can_transition_to_next_state(user, state):
-            if state[0] in (self.STATE_SECURITY_REVIEWED, self.STATE_REJECTED):
-                if not self.security_comment or not self.security_comment.strip():
-                    raise Exception(_("الرجاء كتابة تعليق أفراد الأمن قبل اتخاذ القرار"))
             self.state = state[0]
             self.updated_by = user
             self.save()

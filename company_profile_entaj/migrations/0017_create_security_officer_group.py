@@ -8,10 +8,9 @@ def create_security_officer_group(apps, schema_editor):
     group, _ = Group.objects.get_or_create(name='security_officer')
 
     target_models = [
-        ('company_profile_entaj', 'foreignerrecord'),
         ('company_profile_entaj', 'foreignerpermission'),
-        ('company_profile_entaj', 'foreignerprocedure'),
         ('company_profile', 'appforignermovement'),
+        ('company_profile', 'appforeignerprocedure'),
     ]
 
     perms_to_add = []

@@ -1021,7 +1021,39 @@ class AppForeignerProcedureAdmin(WorkflowAdminMixin,admin.ModelAdmin):
     list_display = ["company","procedure_type","procedure_from","procedure_to", "created_at", "created_by","updated_at", "updated_by"]        
     list_filter = ["company__company_type","state",]
     view_on_site = False
-    
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        user_groups = list(request.user.groups.values_list('name', flat=True))
+        if 'security_officer' in user_groups and not request.user.is_superuser:
+            qs = qs.exclude(procedure_type__name__icontains='مبدئي')
+        return qs
+
+    def has_change_permission(self, request, obj=None):
+        user_groups = list(request.user.groups.values_list('name', flat=True))
+        if 'security_officer' in user_groups and not request.user.is_superuser:
+            if obj and obj.procedure_type and 'مبدئي' in obj.procedure_type.name:
+                return False
+        return super().has_change_permission(request, obj)
+
+    def get_readonly_fields(self, request, obj=None):
+        readonly = list(super().get_readonly_fields(request, obj) or [])
+        user_groups = list(request.user.groups.values_list('name', flat=True))
+        is_security = 'security_officer' in user_groups and not request.user.is_superuser
+        if is_security and obj:
+            fields = [f.name for f in obj._meta.fields]
+            for f in fields:
+                if obj.state == 'submitted':
+                    if f != 'security_comment' and f not in readonly:
+                        readonly.append(f)
+                else:
+                    if f not in readonly:
+                        readonly.append(f)
+        elif not is_security and obj and obj.state != 'submitted':
+            if 'security_comment' not in readonly:
+                readonly.append('security_comment')
+        return readonly
+
 admin.site.register(AppForeignerProcedure, AppForeignerProcedureAdmin)
 
 class AppAifaaJomrkiDetailInline(admin.TabularInline):

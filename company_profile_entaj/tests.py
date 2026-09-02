@@ -33,7 +33,7 @@ class EntajSecurityCommentBaseTest(TestCase):
         )
 
 
-class ForeignerRecordSecurityTest(EntajSecurityCommentBaseTest):
+class ForeignerRecordWorkflowTest(EntajSecurityCommentBaseTest):
 
     def setUp(self):
         super().setUp()
@@ -48,57 +48,46 @@ class ForeignerRecordSecurityTest(EntajSecurityCommentBaseTest):
             updated_by=self.user_section
         )
 
-    def test_section_head_transition_fails_without_security_comment(self):
-        """section_head يجب ان يفشل في التأكيد اذا لم يضف مسئول الأمن تعليقاً"""
-        self.record.security_comment = ""
+    def test_security_officer_has_no_next_states_on_foreigner_record(self):
+        """مسئول الأمن يجب ألا يملك أي صلاحية انتقال على سجل الأجنبي"""
+        next_states = self.record.get_next_states(self.user_security)
+        self.assertEqual(next_states, [])
+
+    def test_section_head_can_confirm_foreigner_record_from_draft(self):
+        """رئيس القسم يجب أن يتمكن من تأكيد سجل الأجنبي مباشرة من المسودة"""
+        next_states = self.record.get_next_states(self.user_section)
+        self.assertIn((ForeignerRecord.STATE_CONFIRMED, ForeignerRecord.STATE_CHOICES[ForeignerRecord.STATE_CONFIRMED]), next_states)
         target_state = (ForeignerRecord.STATE_CONFIRMED, ForeignerRecord.STATE_CHOICES[ForeignerRecord.STATE_CONFIRMED])
-        with self.assertRaises(ValidationError) as ctx:
-            self.record.can_transition_to_next_state(self.user_section, target_state)
-        self.assertIn("الرجاء كتابة تعليق أفراد الأمن قبل الموافقة", str(ctx.exception))
-
-    def test_security_officer_transition_fails_without_security_comment(self):
-        """security_officer يجب ان يفشل في التأكيد اذا لم يكتب تعليقه"""
-        self.record.security_comment = ""
-        target_state = (ForeignerRecord.STATE_CONFIRMED, ForeignerRecord.STATE_CHOICES[ForeignerRecord.STATE_CONFIRMED])
-        with self.assertRaises(ValidationError) as ctx:
-            self.record.can_transition_to_next_state(self.user_security, target_state)
-        self.assertIn("الرجاء كتابة تعليق أفراد الأمن قبل الموافقة", str(ctx.exception))
-
-    def test_transition_succeeds_with_security_comment(self):
-        """يجب ان ينجح الانتقال عند وجود تعليق الأمن"""
-        self.record.security_comment = "لا مانع أمنياً"
-        target_state = (ForeignerRecord.STATE_CONFIRMED, ForeignerRecord.STATE_CHOICES[ForeignerRecord.STATE_CONFIRMED])
-        result = self.record.can_transition_to_next_state(self.user_security, target_state)
-        self.assertTrue(result)
+        self.assertTrue(self.record.can_transition_to_next_state(self.user_section, target_state))
 
 
-class ForeignerProcedureSecurityTest(EntajSecurityCommentBaseTest):
+class ForeignerProcedureWorkflowTest(EntajSecurityCommentBaseTest):
 
     def setUp(self):
         super().setUp()
-        self.proc_type = LkpForeignerProcedureType.objects.create(name="نوع تجريبي")
+        self.proc_type = LkpForeignerProcedureType.objects.create(name="إجراء تجريبي")
+
         self.procedure = ForeignerProcedure.objects.create(
             company_id=self.company.pk,
             procedure_type=self.proc_type,
             procedure_from="2026-01-01",
             procedure_to="2026-12-31",
-            procedure_cause="سبب تجريبي",
+            procedure_cause="طلب تجريبي",
             state=ForeignerProcedure.STATE_DRAFT,
             created_by=self.user_section,
             updated_by=self.user_section
         )
 
-    def test_transition_fails_without_security_comment(self):
-        """يجب ان يفشل الانتقال اذا كان security_comment فارغاً"""
-        self.procedure.security_comment = ""
-        target_state = (ForeignerProcedure.STATE_CONFIRMED, ForeignerProcedure.STATE_CHOICES[ForeignerProcedure.STATE_CONFIRMED])
-        with self.assertRaises(ValidationError) as ctx:
-            self.procedure.can_transition_to_next_state(self.user_section, target_state)
-        self.assertIn("الرجاء كتابة تعليق أفراد الأمن قبل الموافقة", str(ctx.exception))
+    def test_security_officer_has_no_next_states(self):
+        """مسئول الأمن لا يملك صلاحية على إجراءات الإنتاج الداخلي"""
+        sec_next_states = self.procedure.get_next_states(self.user_security)
+        self.assertEqual(sec_next_states, [])
 
-    def test_transition_succeeds_with_security_comment(self):
-        """يجب ان ينجح الانتقال عند وجود تعليق الأمن"""
-        self.procedure.security_comment = "لا مانع أمنياً"
+    def test_section_head_can_confirm_from_draft(self):
+        """رئيس القسم يؤكد الطلب مباشرة من المسودة"""
+        section_next_states = self.procedure.get_next_states(self.user_section)
+        self.assertIn((ForeignerProcedure.STATE_CONFIRMED, ForeignerProcedure.STATE_CHOICES[ForeignerProcedure.STATE_CONFIRMED]), section_next_states)
+
         target_state = (ForeignerProcedure.STATE_CONFIRMED, ForeignerProcedure.STATE_CHOICES[ForeignerProcedure.STATE_CONFIRMED])
-        result = self.procedure.can_transition_to_next_state(self.user_security, target_state)
-        self.assertTrue(result)
+        self.assertTrue(self.procedure.can_transition_to_next_state(self.user_section, target_state))
+

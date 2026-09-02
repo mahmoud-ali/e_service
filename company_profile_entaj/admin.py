@@ -82,58 +82,13 @@ class ForeignerPermissionTypeAdmin(admin.ModelAdmin):
 
 ######################## Foreigner Record ############################
 
-class ForeignerRecordSecurityMixin:
-    """Controls visibility of security_comment field based on user group and state."""
-    def has_add_permission(self, request):
-        user_groups = list(request.user.groups.values_list('name', flat=True))
-        if 'security_officer' in user_groups and not request.user.is_superuser:
-            return False
-        return super().has_add_permission(request)
-
-    def has_delete_permission(self, request, obj=None):
-        user_groups = list(request.user.groups.values_list('name', flat=True))
-        if 'security_officer' in user_groups and not request.user.is_superuser:
-            return False
-        return super().has_delete_permission(request, obj)
-    def get_fields(self, request, obj=None):
-        fields = list(super().get_fields(request, obj))
-        user_groups = list(request.user.groups.values_list('name', flat=True))
-        is_security = 'security_officer' in user_groups
-
-        # أخفِ security_comment فقط في حالة DRAFT وليس مسئول أمن
-        if not request.user.is_superuser:
-            if obj and obj.state == obj.STATE_DRAFT and not is_security:
-                if 'security_comment' in fields:
-                    fields.remove('security_comment')
-            elif not obj and not is_security:
-                if 'security_comment' in fields:
-                    fields.remove('security_comment')
-        return fields
-
-    def get_readonly_fields(self, request, obj=None):
-        readonly = list(super().get_readonly_fields(request, obj) or [])
-        user_groups = list(request.user.groups.values_list('name', flat=True))
-        is_security = 'security_officer' in user_groups and not request.user.is_superuser
-
-        if is_security and obj:
-            # مسئول الأمن: يعدّل security_comment فقط، باقي الحقول للقراءة
-            fields = [f.name for f in obj._meta.fields]
-            for f in fields:
-                if f != 'security_comment' and f not in readonly:
-                    readonly.append(f)
-        elif not is_security and obj and obj.state != obj.STATE_DRAFT:
-            # بعد موافقة الأمن: security_comment للجميع للقراءة فقط
-            if 'security_comment' not in readonly:
-                readonly.append('security_comment')
-        return readonly
-
-foreigner_record_main_mixins = [ForeignerRecordSecurityMixin, LogAdminMixin]
+foreigner_record_main_mixins = [LogAdminMixin]
 foreigner_record_main_class = {
     'model': ForeignerRecord,
     'mixins': [],
     # 'static_inlines': [],
     'kwargs': {
-        'fields': ('company', 'name', 'position', 'department', 'salary', 'employment_type','cv', 'security_comment'),
+        'fields': ('company', 'name', 'position', 'department', 'salary', 'employment_type','cv'),
         'list_display': ('company', 'name', 'position', 'department', 'salary', 'state'),
         'list_filter': ('state', 'employment_type', 'position', 'department'),
         'search_fields': ('name', 'company__name_en','company__name_ar', 'position', 'department'),
@@ -142,19 +97,9 @@ foreigner_record_main_class = {
         'readonly_fields': ["company"],
     },
     'groups': {
-        'security_officer':{
-            'permissions': {
-                ForeignerRecord.STATE_DRAFT: {'add': 0, 'change': 1, 'delete': 0, 'view': 1},
-                ForeignerRecord.STATE_SECURITY_REVIEWED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                ForeignerRecord.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                ForeignerRecord.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                ForeignerRecord.STATE_REJECTED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-            },
-        },
         'entaj_section_head':{
             'permissions': {
                 ForeignerRecord.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
-                ForeignerRecord.STATE_SECURITY_REVIEWED: {'add': 0, 'change': 1, 'delete': 0, 'view': 1},
                 ForeignerRecord.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 ForeignerRecord.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 ForeignerRecord.STATE_REJECTED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -162,7 +107,6 @@ foreigner_record_main_class = {
         },
         'entaj_department_head':{
             'permissions': {
-                ForeignerRecord.STATE_SECURITY_REVIEWED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 ForeignerRecord.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 ForeignerRecord.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 ForeignerRecord.STATE_REJECTED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -184,24 +128,14 @@ foreigner_record_inline_classes = {
             'entaj_section_head':{
                 'permissions': {
                 ForeignerRecord.STATE_DRAFT: {'add': 0, 'change': 1, 'delete': 1, 'view': 1},
-                # ForeignerRecord.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                # ForeignerRecord.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
             'entaj_department_head':{
                 'permissions': {
-                # ForeignerRecord.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
                 ForeignerRecord.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 ForeignerRecord.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
-            # 'entaj_gm':{
-            #     'permissions': {
-            #     ForeignerRecord.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
-            #     ForeignerRecord.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-            #     ForeignerRecord.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-            #     },
-            # },
         },
     },
 }
@@ -212,51 +146,11 @@ admin.site.register(foreigner_record_admin.model,foreigner_record_admin)
 
 ######################## Foreigner Permissions ############################
 class ForeignerPermissionMixin:
-    def has_add_permission(self, request):
-        user_groups = list(request.user.groups.values_list('name', flat=True))
-        if 'security_officer' in user_groups and not request.user.is_superuser:
-            return False
-        return super().has_add_permission(request)
-
-    def has_delete_permission(self, request, obj=None):
-        user_groups = list(request.user.groups.values_list('name', flat=True))
-        if 'security_officer' in user_groups and not request.user.is_superuser:
-            return False
-        return super().has_delete_permission(request, obj)
     def get_readonly_fields(self,request, obj=None):
         readonly = list(super().get_readonly_fields(request, obj) or [])
         if obj:
             readonly.append('foreigner_record')
-
-        user_groups = list(request.user.groups.values_list('name', flat=True))
-        is_security = 'security_officer' in user_groups and not request.user.is_superuser
-        if is_security and obj:
-            # مسئول الأمن: يعدّل security_comment فقط
-            fields = [f.name for f in obj._meta.fields]
-            for f in fields:
-                if f != 'security_comment' and f not in readonly:
-                    readonly.append(f)
-        elif not is_security and obj and obj.state != obj.STATE_DRAFT:
-            # بعد موافقة الأمن: security_comment للجميع للقراءة فقط
-            if 'security_comment' not in readonly:
-                readonly.append('security_comment')
-
         return readonly
-
-    def get_fields(self, request, obj=None):
-        fields = list(super().get_fields(request, obj))
-        user_groups = list(request.user.groups.values_list('name', flat=True))
-        is_security = 'security_officer' in user_groups
-
-        # أخفِ security_comment فقط في حالة DRAFT وليس مسئول أمن
-        if not request.user.is_superuser:
-            if obj and obj.state == obj.STATE_DRAFT and not is_security:
-                if 'security_comment' in fields:
-                    fields.remove('security_comment')
-            elif not obj and not is_security:
-                if 'security_comment' in fields:
-                    fields.remove('security_comment')
-        return fields
     
     @admin.display(description='الشركة')
     def company_fk(self, obj):
@@ -268,7 +162,7 @@ foreigner_permission_main_class = {
     'mixins': [],
     # 'static_inlines': [],
     'kwargs': {
-        'fields': ('company_fk','foreigner_record', 'permission_type', 'type_id', 'validity_due_date','attachment', 'security_comment'),
+        'fields': ('company_fk','foreigner_record', 'permission_type', 'type_id', 'validity_due_date','attachment'),
         'list_display': ('company_fk','foreigner_record', 'permission_type', 'type_id', 'validity_due_date', 'state'),
         'list_filter': ('permission_type', 'state','validity_due_date',),
         'search_fields': ('foreigner_record__company__name_ar','foreigner_record__company__name_en','foreigner_record__name', 'type_id'),
@@ -280,17 +174,14 @@ foreigner_permission_main_class = {
     'groups': {
         'security_officer':{
             'permissions': {
-                ForeignerPermission.STATE_DRAFT: {'add': 0, 'change': 1, 'delete': 0, 'view': 1},
-                ForeignerPermission.STATE_SECURITY_REVIEWED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                ForeignerPermission.STATE_DRAFT: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 ForeignerPermission.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 ForeignerPermission.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                ForeignerPermission.STATE_REJECTED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
             },
         },
         'entaj_section_head':{
             'permissions': {
                 ForeignerPermission.STATE_DRAFT: {'add': 0, 'change': 1, 'delete': 1, 'view': 1},
-                ForeignerPermission.STATE_SECURITY_REVIEWED: {'add': 0, 'change': 1, 'delete': 0, 'view': 1},
                 ForeignerPermission.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 ForeignerPermission.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 ForeignerPermission.STATE_REJECTED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -298,7 +189,6 @@ foreigner_permission_main_class = {
         },
         'entaj_department_head':{
             'permissions': {
-                ForeignerPermission.STATE_SECURITY_REVIEWED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 ForeignerPermission.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 ForeignerPermission.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 ForeignerPermission.STATE_REJECTED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
@@ -335,17 +225,6 @@ class ForeignerProcedurePermanentForm(forms.ModelForm):
         widgets = {}
 
 class ForeignerProcedureMixin:
-    def has_add_permission(self, request):
-        user_groups = list(request.user.groups.values_list('name', flat=True))
-        if 'security_officer' in user_groups and not request.user.is_superuser:
-            return False
-        return super().has_add_permission(request)
-
-    def has_delete_permission(self, request, obj=None):
-        user_groups = list(request.user.groups.values_list('name', flat=True))
-        if 'security_officer' in user_groups and not request.user.is_superuser:
-            return False
-        return super().has_delete_permission(request, obj)
     def get_formsets_with_inlines(self, request, obj=None):
         for inline in self.get_inline_instances(request, obj):
             formset = inline.get_formset(request, obj)
@@ -358,35 +237,10 @@ class ForeignerProcedureMixin:
             yield formset,inline
 
     def get_fields(self, request, obj=None):
-        fields = list(super().get_fields(request, obj))
-        user_groups = list(request.user.groups.values_list('name', flat=True))
-        is_security = 'security_officer' in user_groups
-
-        # أخفِ security_comment فقط في حالة DRAFT وليس مسئول أمن
-        if not request.user.is_superuser:
-            if obj and obj.state == obj.STATE_DRAFT and not is_security:
-                if 'security_comment' in fields:
-                    fields.remove('security_comment')
-            elif not obj and not is_security:
-                if 'security_comment' in fields:
-                    fields.remove('security_comment')
-        return fields
+        return list(super().get_fields(request, obj))
 
     def get_readonly_fields(self, request, obj=None):
-        readonly = list(super().get_readonly_fields(request, obj) or [])
-        user_groups = list(request.user.groups.values_list('name', flat=True))
-        is_security = 'security_officer' in user_groups and not request.user.is_superuser
-        if is_security and obj:
-            # مسئول الأمن: يعدّل security_comment فقط
-            fields = [f.name for f in obj._meta.fields]
-            for f in fields:
-                if f != 'security_comment' and f not in readonly:
-                    readonly.append(f)
-        elif not is_security and obj and obj.state != obj.STATE_DRAFT:
-            # بعد موافقة الأمن: security_comment للجميع للقراءة فقط
-            if 'security_comment' not in readonly:
-                readonly.append('security_comment')
-        return readonly
+        return list(super().get_readonly_fields(request, obj) or [])
 
 foreigner_procedure_main_mixins = [ForeignerProcedureMixin, LogAdminMixin]
 foreigner_procedure_main_class = {
@@ -394,7 +248,7 @@ foreigner_procedure_main_class = {
     'mixins': [],
     # 'static_inlines': [],
     'kwargs': {
-        'fields': ('company', 'procedure_type', 'procedure_from', 'procedure_to','procedure_cause', 'security_comment'),
+        'fields': ('company', 'procedure_type', 'procedure_from', 'procedure_to','procedure_cause'),
         'list_display': ('company', 'procedure_type', 'procedure_from', 'procedure_to', 'state'),
         'list_filter': ('procedure_type', 'state'),
         'search_fields': ('company__company_name_en', 'procedure_type__name'),
@@ -404,30 +258,17 @@ foreigner_procedure_main_class = {
         'readonly_fields': ["company"],
     },
     'groups': {
-        'security_officer':{
-            'permissions': {
-                ForeignerProcedure.STATE_DRAFT: {'add': 0, 'change': 1, 'delete': 0, 'view': 1},
-                ForeignerProcedure.STATE_SECURITY_REVIEWED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                ForeignerProcedure.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                ForeignerProcedure.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                ForeignerProcedure.STATE_REJECTED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-            },
-        },
         'entaj_section_head':{
             'permissions': {
                 ForeignerProcedure.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
-                ForeignerProcedure.STATE_SECURITY_REVIEWED: {'add': 0, 'change': 1, 'delete': 0, 'view': 1},
                 ForeignerProcedure.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 ForeignerProcedure.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                ForeignerProcedure.STATE_REJECTED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
             },
         },
         'entaj_department_head':{
             'permissions': {
-                ForeignerProcedure.STATE_SECURITY_REVIEWED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                ForeignerProcedure.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                ForeignerProcedure.STATE_CONFIRMED: {'add': 0, 'change': 1, 'delete': 0, 'view': 1},
                 ForeignerProcedure.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                ForeignerProcedure.STATE_REJECTED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
             },
         },
     },
@@ -447,24 +288,14 @@ foreigner_procedure_inline_classes = {
             'entaj_section_head':{
                 'permissions': {
                 ForeignerProcedure.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
-                # ForeignerProcedure.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                # ForeignerProcedure.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
             'entaj_department_head':{
                 'permissions': {
-                # ForeignerProcedure.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
                 ForeignerProcedure.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 ForeignerProcedure.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
-            # 'entaj_gm':{
-            #     'permissions': {
-            #     ForeignerProcedure.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
-            #     ForeignerProcedure.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-            #     ForeignerProcedure.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-            #     },
-            # },
         },
     },
     'ForeignerProcedureVisitor': {
@@ -479,24 +310,14 @@ foreigner_procedure_inline_classes = {
             'entaj_section_head':{
                 'permissions': {
                 ForeignerProcedure.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
-                # ForeignerProcedure.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-                # ForeignerProcedure.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
             'entaj_department_head':{
                 'permissions': {
-                # ForeignerProcedure.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
                 ForeignerProcedure.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 ForeignerProcedure.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 },
             },
-            # 'entaj_gm':{
-            #     'permissions': {
-            #     ForeignerProcedure.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
-            #     ForeignerProcedure.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-            #     ForeignerProcedure.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
-            #     },
-            # },
         },
     },
 }

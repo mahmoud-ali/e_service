@@ -950,6 +950,76 @@ class AppForeignerProcedure(WorkflowModel):
     experience_certificates_file = models.FileField(_("experience_certificates_file"),upload_to=company_applications_path)
     eqama_file = models.FileField(_("eqama_file"),upload_to=company_applications_path,blank=True)
     dawa_file = models.FileField(_("dawa_file"),upload_to=company_applications_path,blank=True)
+    security_comment = models.TextField(_("security_comment"), max_length=1000, blank=True, null=True)
+
+    SECURITY_REVIEWED = "security_reviewed"
+
+    def is_initial_work_permit(self):
+        return self.procedure_type and 'مبدئي' in self.procedure_type.name
+
+    def get_next_states(self, user):
+        from .workflow import SUBMITTED, ACCEPTED, APPROVED, REJECTED, REVIEW_ACCEPTANCE, STATE_CHOICES
+        user_groups = list(user.groups.values_list('name', flat=True))
+        states = []
+
+        STATE_CHOICES_EXT = dict(STATE_CHOICES)
+        STATE_CHOICES_EXT[self.SECURITY_REVIEWED] = _("موافقة الأمن")
+
+        is_initial = self.is_initial_work_permit()
+
+        if 'security_officer' in user_groups and not is_initial:
+            if self.state == SUBMITTED:
+                states.append((self.SECURITY_REVIEWED, STATE_CHOICES_EXT[self.SECURITY_REVIEWED]))
+                states.append((REJECTED, _("رفض أمني")))
+
+        if 'pro_company_application_accept' in user_groups:
+            if is_initial:
+                if self.state == SUBMITTED or self.state == REVIEW_ACCEPTANCE:
+                    states.append((ACCEPTED, STATE_CHOICES[ACCEPTED]))
+            else:
+                if self.state == self.SECURITY_REVIEWED or self.state == REVIEW_ACCEPTANCE:
+                    states.append((ACCEPTED, STATE_CHOICES[ACCEPTED]))
+
+        if 'pro_company_application_approve' in user_groups:
+            if self.state == ACCEPTED:
+                states.append((APPROVED, STATE_CHOICES[APPROVED]))
+                states.append((REJECTED, STATE_CHOICES[REJECTED]))
+                states.append((REVIEW_ACCEPTANCE, STATE_CHOICES[REVIEW_ACCEPTANCE]))
+
+        seen = set()
+        unique = []
+        for s in states:
+            if s[0] not in seen:
+                seen.add(s[0])
+                unique.append(s)
+        return unique
+
+    def can_transition_to_next_state(self, user, state, obj=None):
+        from .workflow import REJECTED
+        from django.forms import ValidationError
+        if state[0] in map(lambda x: x[0], self.get_next_states(user)):
+            user_groups = list(user.groups.values_list('name', flat=True))
+            if 'security_officer' in user_groups:
+                if not self.security_comment or not self.security_comment.strip():
+                    raise ValidationError(_("الرجاء كتابة تعليق أفراد الأمن قبل اتخاذ القرار"))
+                return True
+            return super().can_transition_to_next_state(user, state, obj)
+        return False
+
+    def transition_to_next_state(self, user, state):
+        from .workflow import REJECTED
+        if self.can_transition_to_next_state(user, state, obj=self):
+            if state[0] in (self.SECURITY_REVIEWED, REJECTED):
+                if not self.security_comment or not self.security_comment.strip():
+                    raise Exception(_("الرجاء كتابة تعليق أفراد الأمن قبل اتخاذ القرار"))
+                if state[0] == REJECTED and not self.reject_comments:
+                    self.reject_comments = self.security_comment
+            self.state = state[0]
+            self.updated_by = user
+            self.save()
+        else:
+            raise Exception(f"User {user.username} cannot transition to state {state} from state {self.state}")
+        return self
 
     def __str__(self):
         return _("Foreigner Procedure") +" ("+str(self.id)+")"

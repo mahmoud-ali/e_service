@@ -351,14 +351,14 @@ class AppForeignerProcedureAdminForm(WorkflowFormMixin,ModelForm):
     company = forms.ModelChoiceField(queryset=TblCompanyProduction.objects.all(), disabled=True, label=_("company"))
     class Meta:
         model = AppForeignerProcedure
-        fields = ["company","procedure_type","procedure_from","procedure_to","procedure_cause","recommendation_comments","reject_comments", "official_letter_file","passport_file","cv_file","experience_certificates_file","eqama_file","dawa_file"] 
+        fields = ["company","procedure_type","procedure_from","procedure_to","procedure_cause","security_comment","recommendation_comments","reject_comments", "official_letter_file","passport_file","cv_file","experience_certificates_file","eqama_file","dawa_file"] 
         
 class AppForeignerProcedureForm(AppForeignerProcedureAdminForm):
     layout = ["procedure_type",["procedure_from","procedure_to"],"procedure_cause",["official_letter_file","passport_file","cv_file"],["experience_certificates_file","eqama_file","dawa_file"]]
     company = None
     class Meta:
         model = AppForeignerProcedure
-        exclude = ["company","state","recommendation_comments","reject_comments"]
+        exclude = ["company","state","recommendation_comments","reject_comments","security_comment"]
         widgets = {
             "procedure_from":DatePickerInput(),
             "procedure_to":DatePickerInput(),
