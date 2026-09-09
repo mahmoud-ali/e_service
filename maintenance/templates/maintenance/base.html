@@ -24,7 +24,7 @@
 
         .sidebar {
             background: linear-gradient(160deg, #1e3a5f 0%, #0f2847 50%, #091c36 100%);
-            min-height: 100vh;
+            height: 100vh;
             width: 260px;
             transition: width 0.3s ease;
             position: fixed;
@@ -32,6 +32,20 @@
             right: 0;
             z-index: 40;
             box-shadow: -4px 0 20px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+        }
+
+        .sidebar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
         }
 
         .main-content {
@@ -206,28 +220,42 @@
             }
         }
 
-        /* Print Formatting Styles */
         @media print {
-            .sidebar, .topbar, .toast-container, .no-print, nav, button:not(.print-visible), form button, .btn:not(.print-visible), footer, .drawer-toggle, .alert-dismissible {
+
+            .sidebar,
+            .topbar,
+            .toast-container,
+            .no-print,
+            nav,
+            button:not(.print-visible),
+            form button,
+            .btn:not(.print-visible),
+            footer,
+            .drawer-toggle,
+            .alert-dismissible {
                 display: none !important;
             }
+
             body {
                 background: white !important;
                 color: black !important;
                 font-family: 'Cairo', sans-serif !important;
             }
+
             .main-content {
                 margin-right: 0 !important;
                 padding: 10px !important;
                 background: white !important;
                 min-height: auto !important;
             }
+
             .print-only-header {
                 display: block !important;
                 border-bottom: 2px solid #1e3a5f !important;
                 padding-bottom: 12px !important;
                 margin-bottom: 20px !important;
             }
+
             .print-only-footer {
                 display: block !important;
                 border-top: 1px solid #cbd5e1 !important;
@@ -237,7 +265,10 @@
                 font-size: 9pt !important;
                 color: #64748b !important;
             }
-            .card, .form-card, .stat-card {
+
+            .card,
+            .form-card,
+            .stat-card {
                 border: 1px solid #cbd5e1 !important;
                 box-shadow: none !important;
                 break-inside: avoid !important;
@@ -245,35 +276,46 @@
                 background: white !important;
                 margin-bottom: 15px !important;
             }
-            .bg-gradient-to-l, .bg-indigo-700, .bg-indigo-900 {
+
+            .bg-gradient-to-l,
+            .bg-indigo-700,
+            .bg-indigo-900 {
                 background: #1e3a5f !important;
                 color: white !important;
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
             }
+
             table {
                 width: 100% !important;
                 border-collapse: collapse !important;
             }
-            th, td {
+
+            th,
+            td {
                 border: 1px solid #cbd5e1 !important;
                 padding: 6px 10px !important;
             }
+
             th {
                 background-color: #f1f5f9 !important;
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
             }
+
             .badge {
                 border: 1px solid #94a3b8 !important;
                 color: black !important;
             }
+
             @page {
                 size: A4 portrait;
                 margin: 12mm;
             }
         }
-        .print-only-header, .print-only-footer {
+
+        .print-only-header,
+        .print-only-footer {
             display: none;
         }
     </style>
@@ -283,8 +325,7 @@
 <body class="bg-base-200">
 
     <aside class="sidebar" id="sidebar">
-        <div class="flex items-center gap-3 px-4 py-5 border-b border-white/10">
-            {% load static %}
+        <div class="flex items-center gap-3 px-4 py-5 border-b border-white/10 shrink-0">
             <img src="{% static 'img/smrc_logo.png' %}" alt="SMRC" class="w-9 h-9 rounded-lg"
                 onerror="this.style.display='none'">
             <div>
@@ -293,7 +334,7 @@
             </div>
         </div>
 
-        <div class="px-4 py-3 border-b border-white/10">
+        <div class="px-4 py-3 border-b border-white/10 shrink-0">
             <div class="flex items-center gap-2">
                 <div
                     class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white text-sm font-bold">
@@ -309,7 +350,7 @@
             </div>
         </div>
 
-        <nav class="py-3">
+        <nav class="py-3 flex-grow">
             <div class="px-4 py-1 text-blue-300 text-xs font-semibold uppercase tracking-wider mb-1">القائمة الرئيسية
             </div>
 
@@ -371,12 +412,6 @@
                 class="sidebar-link {% block nav_all_req %}{% endblock %}">
                 <span class="icon">📄</span> جميع الطلبات
             </a>
-            <a href="{% url 'maintenance:dashboard' %}" class="sidebar-link">
-                <span class="icon">➕</span> تقديم ومتابعة طلبات الصيانة
-            </a>
-            <a href="/managers/" class="sidebar-link" target="_blank">
-                <span class="icon">⚙️</span> لوحة Django الإدارية
-            </a>
             {% endif %}
 
             {% if request.user.is_staff %}
@@ -388,7 +423,7 @@
             {% endif %}
         </nav>
 
-        <div class="absolute bottom-0 right-0 left-0 p-4 border-t border-white/10">
+        <div class="p-4 border-t border-white/10 shrink-0 mt-auto">
             <form method="post" action="{% url 'account_logout' %}">
                 {% csrf_token %}
                 <button type="submit"
@@ -425,7 +460,6 @@
             </div>
         </header>
 
-        <!-- Printable Header -->
         <div class="print-only-header">
             <div class="flex justify-between items-center border-b pb-3 text-black">
                 <div>
@@ -455,7 +489,6 @@
             {% block content %}{% endblock %}
         </main>
 
-        <!-- Printable Footer -->
         <div class="print-only-footer">
             <div>تقرير صيانة مطبوع إلكترونياً من نظام SMRC — لا يتطلب ختم أو توقيع إلا للنماذج المعتمدة مستندياً.</div>
         </div>
@@ -467,7 +500,7 @@
             const sb = document.getElementById('sidebar');
             const mc = document.querySelector('.main-content');
             if (sb.style.display === 'none') {
-                sb.style.display = 'block';
+                sb.style.display = 'flex';
                 mc.style.marginRight = '260px';
             } else {
                 sb.style.display = 'none';
