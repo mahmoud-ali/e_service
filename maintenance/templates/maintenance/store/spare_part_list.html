@@ -1,0 +1,115 @@
+{% extends "maintenance/base.html" %}
+{% block title %}دليل قطع الغيار{% endblock %}
+{% block page_title %}دليل قطع الغيار{% endblock %}
+{% block breadcrumb %}الرئيسية / المخزن / دليل القطع{% endblock %}
+{% block nav_parts %}active{% endblock %}
+
+{% block content %}
+<!-- Header + Actions -->
+<div class="flex flex-wrap items-center justify-between gap-3 mb-5">
+    <h2 class="font-bold text-xl text-gray-800">قطع الغيار المسجلة</h2>
+    <a href="{% url 'maintenance:spare_part_create' %}" class="btn btn-primary gap-2">
+        <span>+</span> إضافة قطعة
+    </a>
+</div>
+
+<!-- Filters -->
+<div class="form-card p-4 mb-5 flex flex-wrap gap-3 items-center">
+    <form method="get" class="flex flex-wrap gap-3 items-center w-full">
+        <input type="text" name="search" value="{{ search }}"
+               placeholder="بحث بالاسم أو الكود..."
+               class="input input-bordered input-sm flex-1 min-w-[200px]">
+        <select name="unit" class="select select-bordered select-sm">
+            <option value="">كل الوحدات</option>
+            {% for u in units %}
+            <option value="{{ u.code }}" {% if unit_filter == u.code %}selected{% endif %}>
+                {{ u.icon }} {{ u.name }}
+            </option>
+            {% endfor %}
+        </select>
+        <label class="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" name="low_only" value="1" class="checkbox checkbox-sm checkbox-warning"
+                   {% if low_only %}checked{% endif %}>
+            <span class="text-sm text-gray-600">منخفض فقط</span>
+        </label>
+        <button type="submit" class="btn btn-sm btn-primary">بحث</button>
+        <a href="{% url 'maintenance:spare_part_list' %}" class="btn btn-sm btn-ghost">إعادة تعيين</a>
+    </form>
+</div>
+
+<!-- Parts Table -->
+{% if parts %}
+<div class="form-card overflow-hidden">
+    <div class="overflow-x-auto">
+        <table class="table data-table w-full">
+            <thead>
+                <tr>
+                    <th>كود SKU</th>
+                    <th>اسم القطعة</th>
+                    <th>الوحدة</th>
+                    <th>الرصيد</th>
+                    <th>حد الأمان</th>
+                    <th>الوحدة</th>
+                    <th>الحالة</th>
+                    <th>إجراءات</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for part in parts %}
+                <tr class="{% if part.is_low_stock %}bg-red-50/40{% endif %}">
+                    <td><code class="bg-gray-100 px-2 py-0.5 rounded text-xs font-mono">{{ part.sku }}</code></td>
+                    <td>
+                        <div class="font-semibold text-gray-800">{{ part.name }}</div>
+                        {% if part.description %}
+                        <div class="text-xs text-gray-400 truncate max-w-[150px]">{{ part.description }}</div>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <span class="text-sm">{{ part.unit.icon }} {{ part.unit.name }}</span>
+                    </td>
+                    <td>
+                        <div class="font-bold text-lg {% if part.quantity_in_stock == 0 %}text-red-600{% elif part.is_low_stock %}text-yellow-600{% else %}text-green-600{% endif %}">
+                            {{ part.quantity_in_stock }}
+                        </div>
+                    </td>
+                    <td class="text-gray-500 text-sm">{{ part.reorder_point }}</td>
+                    <td class="text-gray-500 text-sm">{{ part.unit_of_measure }}</td>
+                    <td>
+                        <span class="badge badge-sm {{ part.stock_status_class }}">
+                            {% if part.quantity_in_stock == 0 %}نفاد{% elif part.is_low_stock %}منخفض{% else %}كافٍ{% endif %}
+                        </span>
+                    </td>
+                    <td>
+                        <a href="{% url 'maintenance:spare_part_update' part.pk %}"
+                           class="btn btn-xs btn-ghost">تعديل</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Pagination -->
+{% if is_paginated %}
+<div class="flex justify-center mt-5">
+    <div class="join">
+        {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}&search={{ search }}&unit={{ unit_filter }}" class="join-item btn btn-sm">«</a>
+        {% endif %}
+        <button class="join-item btn btn-sm btn-active">{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</button>
+        {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}&search={{ search }}&unit={{ unit_filter }}" class="join-item btn btn-sm">»</a>
+        {% endif %}
+    </div>
+</div>
+{% endif %}
+
+{% else %}
+<div class="form-card p-12 text-center">
+    <div class="text-5xl mb-4">📦</div>
+    <h3 class="font-bold text-gray-600 text-lg mb-2">لا توجد قطع مسجلة</h3>
+    <a href="{% url 'maintenance:spare_part_create' %}" class="btn btn-primary mt-2">إضافة أول قطعة</a>
+</div>
+{% endif %}
+{% endblock %}

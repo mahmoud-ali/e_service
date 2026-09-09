@@ -1,0 +1,62 @@
+{% extends "maintenance/base.html" %}
+{% block title %}مركز الإشعارات{% endblock %}
+{% block page_title %}الإشعارات والإنذارات{% endblock %}
+{% block breadcrumb %}الرئيسية / الإشعارات{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto space-y-6">
+    <div class="flex justify-between items-center border-b pb-4">
+        <h2 class="text-2xl font-bold text-gray-800">
+            <i class="fa-solid fa-bell text-primary ml-2"></i> سجل الإشعارات
+        </h2>
+        <button onclick="markAllRead()" class="btn btn-outline btn-sm btn-primary">
+            <i class="fa-solid fa-check-double ml-1"></i> تحديد الكل كمقروء
+        </button>
+    </div>
+
+    <div class="space-y-3">
+        {% for notif in notifications %}
+        <div class="card bg-base-100 shadow-sm border border-base-200 p-4 transition-all hover:shadow-md {% if not notif.is_read %}border-l-4 border-l-primary bg-primary/5{% endif %}">
+            <div class="flex justify-between items-start gap-4">
+                <div class="flex items-start gap-3">
+                    <div class="text-xl mt-1 text-primary">
+                        <i class="fa-solid fa-circle-info"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-gray-800 text-sm mb-1">{{ notif.title }}</h4>
+                        <p class="text-xs text-gray-600 leading-relaxed">{{ notif.message }}</p>
+                        {% if notif.related_request %}
+                        <a href="{% url 'maintenance:request_detail' notif.related_request.pk %}" class="inline-block mt-2 text-xs text-primary underline font-mono">
+                            الانتقال للطلب {{ notif.related_request.request_number }}
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+                <span class="text-xs text-gray-400 whitespace-nowrap">{{ notif.created_at|date:"Y/m/d H:i" }}</span>
+            </div>
+        </div>
+        {% empty %}
+        <div class="text-center py-12 text-gray-400">
+            <i class="fa-regular fa-bell-slash text-4xl mb-3 block"></i>
+            لا توجد إشعارات حالياً.
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+function markAllRead() {
+    fetch("{% url 'maintenance:notifications_list' %}", {
+        method: "POST",
+        headers: {
+            "X-CSRFToken": "{{ csrf_token }}",
+            "Content-Type": "application/json"
+        }
+    }).then(res => res.json()).then(data => {
+        if(data.status === 'ok') {
+            window.location.reload();
+        }
+    });
+}
+</script>
+{% endblock %}

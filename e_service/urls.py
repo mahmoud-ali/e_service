@@ -46,6 +46,7 @@ urlpatterns = [
     path('fleet/', include('fleet.urls')), 
     path('sandog/', include('sandog.urls')), 
     path('needs/', include('needs_request.urls')),
+    path('maintenance/', include('maintenance.urls')),
     
     # path('help/', include('help_request.urls')), 
     path('', include('hr_bot.urls')), 

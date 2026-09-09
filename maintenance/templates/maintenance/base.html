@@ -1,0 +1,490 @@
+{% load static %}
+{% load maintenance_tags %}
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="cupcake">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}نظام إدارة الصيانة — SMRC{% endblock %}</title>
+    <meta name="description"
+        content="نظام إدارة طلبات الصيانة وقطع الغيار — الشركة السودانية للموارد المعدنية المحدودة">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.2/dist/full.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <style>
+        * {
+            font-family: 'Cairo', sans-serif !important;
+        }
+
+        .sidebar {
+            background: linear-gradient(160deg, #1e3a5f 0%, #0f2847 50%, #091c36 100%);
+            min-height: 100vh;
+            width: 260px;
+            transition: width 0.3s ease;
+            position: fixed;
+            top: 0;
+            right: 0;
+            z-index: 40;
+            box-shadow: -4px 0 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .main-content {
+            margin-right: 260px;
+            min-height: 100vh;
+            background: #f0f4f8;
+        }
+
+        .topbar {
+            background: white;
+            border-bottom: 1px solid #e2e8f0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            position: sticky;
+            top: 0;
+            z-index: 30;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            border: 1px solid #f1f5f9;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 16px;
+            border-radius: 10px;
+            color: rgba(255, 255, 255, 0.75);
+            transition: all 0.2s ease;
+            font-size: 0.9rem;
+            margin: 2px 8px;
+        }
+
+        .sidebar-link:hover,
+        .sidebar-link.active {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+        }
+
+        .sidebar-link .icon {
+            font-size: 1.1rem;
+            width: 24px;
+            text-align: center;
+        }
+
+        .status-pending {
+            background: #fef3c7;
+            color: #92400e;
+            border: 1px solid #fde68a;
+        }
+
+        .status-in_progress {
+            background: #dbeafe;
+            color: #1e40af;
+            border: 1px solid #bfdbfe;
+        }
+
+        .status-completed {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+        }
+
+        .status-cancelled {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+
+        .data-table th {
+            background: #f8fafc;
+            color: #475569;
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .data-table tr:hover td {
+            background: #f8faff;
+        }
+
+        .form-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+            border: 1px solid #f1f5f9;
+        }
+
+        .notif-badge {
+            position: absolute;
+            top: -4px;
+            left: -4px;
+            background: #ef4444;
+            color: white;
+            border-radius: 999px;
+            font-size: 10px;
+            min-width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 4px;
+        }
+
+        .priority-low {
+            background: #f0fdf4;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+        }
+
+        .priority-medium {
+            background: #fffbeb;
+            color: #92400e;
+            border: 1px solid #fde68a;
+        }
+
+        .priority-high {
+            background: #fff7ed;
+            color: #c2410c;
+            border: 1px solid #fed7aa;
+        }
+
+        .priority-urgent {
+            background: #fef2f2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-slide-in {
+            animation: slideIn 0.3s ease;
+        }
+
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                display: none;
+            }
+
+            .main-content {
+                margin-right: 0;
+            }
+        }
+
+        /* Print Formatting Styles */
+        @media print {
+            .sidebar, .topbar, .toast-container, .no-print, nav, button:not(.print-visible), form button, .btn:not(.print-visible), footer, .drawer-toggle, .alert-dismissible {
+                display: none !important;
+            }
+            body {
+                background: white !important;
+                color: black !important;
+                font-family: 'Cairo', sans-serif !important;
+            }
+            .main-content {
+                margin-right: 0 !important;
+                padding: 10px !important;
+                background: white !important;
+                min-height: auto !important;
+            }
+            .print-only-header {
+                display: block !important;
+                border-bottom: 2px solid #1e3a5f !important;
+                padding-bottom: 12px !important;
+                margin-bottom: 20px !important;
+            }
+            .print-only-footer {
+                display: block !important;
+                border-top: 1px solid #cbd5e1 !important;
+                padding-top: 10px !important;
+                margin-top: 30px !important;
+                text-align: center !important;
+                font-size: 9pt !important;
+                color: #64748b !important;
+            }
+            .card, .form-card, .stat-card {
+                border: 1px solid #cbd5e1 !important;
+                box-shadow: none !important;
+                break-inside: avoid !important;
+                page-break-inside: avoid !important;
+                background: white !important;
+                margin-bottom: 15px !important;
+            }
+            .bg-gradient-to-l, .bg-indigo-700, .bg-indigo-900 {
+                background: #1e3a5f !important;
+                color: white !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            table {
+                width: 100% !important;
+                border-collapse: collapse !important;
+            }
+            th, td {
+                border: 1px solid #cbd5e1 !important;
+                padding: 6px 10px !important;
+            }
+            th {
+                background-color: #f1f5f9 !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            .badge {
+                border: 1px solid #94a3b8 !important;
+                color: black !important;
+            }
+            @page {
+                size: A4 portrait;
+                margin: 12mm;
+            }
+        }
+        .print-only-header, .print-only-footer {
+            display: none;
+        }
+    </style>
+    {% block extra_head %}{% endblock %}
+</head>
+
+<body class="bg-base-200">
+
+    <aside class="sidebar" id="sidebar">
+        <div class="flex items-center gap-3 px-4 py-5 border-b border-white/10">
+            {% load static %}
+            <img src="{% static 'img/smrc_logo.png' %}" alt="SMRC" class="w-9 h-9 rounded-lg"
+                onerror="this.style.display='none'">
+            <div>
+                <div class="text-white font-bold text-sm leading-tight">نظام الصيانة</div>
+                <div class="text-blue-200 text-xs">SMRC — إدارة الشؤون الإدارية</div>
+            </div>
+        </div>
+
+        <div class="px-4 py-3 border-b border-white/10">
+            <div class="flex items-center gap-2">
+                <div
+                    class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white text-sm font-bold">
+                    {{ request.user.email|first|upper }}
+                </div>
+                <div>
+                    <div class="text-white text-xs font-medium truncate max-w-[160px]">{{ request.user|user_display_name }}</div>
+                    <div class="text-blue-300 text-xs">
+                        {% if request.user.is_superuser %}مشرف النظام
+                        {% else %}{{ request.user.groups.first.name|default:"مستخدم" }}{% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <nav class="py-3">
+            <div class="px-4 py-1 text-blue-300 text-xs font-semibold uppercase tracking-wider mb-1">القائمة الرئيسية
+            </div>
+
+            <a href="{% url 'maintenance:dashboard' %}" class="sidebar-link {% block nav_dashboard %}{% endblock %}">
+                <span class="icon">🏠</span> لوحة التحكم
+            </a>
+
+            <a href="{% url 'maintenance:new_request' %}"
+                class="sidebar-link {% block nav_new_request %}{% endblock %}">
+                <span class="icon">➕</span> طلب صيانة جديد
+            </a>
+            <a href="{% url 'maintenance:my_requests' %}"
+                class="sidebar-link {% block nav_my_requests %}{% endblock %}">
+                <span class="icon">📋</span> طلباتي
+            </a>
+
+            {% if request.user|has_any_group:"maintenance_elec,maintenance_air_cond,maintenance_mech,maintenance_const,maintenance_admin" %}
+            <div class="px-4 py-1 text-blue-300 text-xs font-semibold uppercase tracking-wider mt-3 mb-1">الفريق التقني
+            </div>
+            <a href="{% url 'maintenance:technician_request_list' %}"
+                class="sidebar-link {% block nav_tech %}{% endblock %}">
+                <span class="icon">🔧</span> طلبات الوحدة
+            </a>
+            {% endif %}
+
+            {% if request.user|has_any_group:"maintenance_store,maintenance_admin" %}
+            <div class="px-4 py-1 text-blue-300 text-xs font-semibold uppercase tracking-wider mt-3 mb-1">المخزن</div>
+            <a href="{% url 'maintenance:store_dashboard' %}" class="sidebar-link {% block nav_store %}{% endblock %}">
+                <span class="icon">📦</span> لوحة المخزن
+            </a>
+            <a href="{% url 'maintenance:spare_part_list' %}" class="sidebar-link {% block nav_parts %}{% endblock %}">
+                <span class="icon">⚙️</span> قطع الغيار
+            </a>
+            <a href="{% url 'maintenance:stock_movement_list' %}"
+                class="sidebar-link {% block nav_movements %}{% endblock %}">
+                <span class="icon">↕️</span> حركة المخزون
+            </a>
+            <a href="{% url 'maintenance:low_stock_alerts' %}"
+                class="sidebar-link {% block nav_alerts %}{% endblock %}">
+                <span class="icon">🚨</span> تنبيهات المخزون
+            </a>
+            {% endif %}
+
+            {% if request.user|has_any_group:"maintenance_safety,maintenance_admin" %}
+            <div class="px-4 py-1 text-blue-300 text-xs font-semibold uppercase tracking-wider mt-3 mb-1">السلامة
+                المهنية</div>
+            <a href="{% url 'maintenance:safety_dashboard' %}"
+                class="sidebar-link {% block nav_safety %}{% endblock %}">
+                <span class="icon">🛡️</span> تصاريح السلامة
+            </a>
+            {% endif %}
+
+            {% if request.user|has_group:"maintenance_admin" %}
+            <div class="px-4 py-1 text-blue-300 text-xs font-semibold uppercase tracking-wider mt-3 mb-1">الإدارة</div>
+            <a href="{% url 'maintenance:admin_dashboard' %}" class="sidebar-link {% block nav_admin %}{% endblock %}">
+                <span class="icon">📊</span> لوحة المدير
+            </a>
+            <a href="{% url 'maintenance:admin_all_requests' %}"
+                class="sidebar-link {% block nav_all_req %}{% endblock %}">
+                <span class="icon">📄</span> جميع الطلبات
+            </a>
+            <a href="{% url 'maintenance:dashboard' %}" class="sidebar-link">
+                <span class="icon">➕</span> تقديم ومتابعة طلبات الصيانة
+            </a>
+            <a href="/managers/" class="sidebar-link" target="_blank">
+                <span class="icon">⚙️</span> لوحة Django الإدارية
+            </a>
+            {% endif %}
+
+            {% if request.user.is_staff %}
+            <div class="px-4 py-1 text-blue-300 text-xs font-semibold uppercase tracking-wider mt-3 mb-1">الإعدادات
+            </div>
+            <a href="{% url 'admin:index' %}" class="sidebar-link" target="_blank">
+                <span class="icon">⚙️</span> لوحة الإدارة
+            </a>
+            {% endif %}
+        </nav>
+
+        <div class="absolute bottom-0 right-0 left-0 p-4 border-t border-white/10">
+            <form method="post" action="{% url 'account_logout' %}">
+                {% csrf_token %}
+                <button type="submit"
+                    class="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-red-300 hover:bg-red-900/30 hover:text-red-200 transition-colors text-sm">
+                    <span>🚪</span> تسجيل الخروج
+                </button>
+            </form>
+        </div>
+    </aside>
+
+    <div class="main-content">
+
+        <header class="topbar px-6 py-3 flex items-center justify-between no-print">
+            <div class="flex items-center gap-3">
+                <button class="btn btn-ghost btn-sm" onclick="toggleSidebar()" title="القائمة">☰</button>
+                <div>
+                    <h1 class="font-bold text-gray-800 text-base leading-tight">{% block page_title %}نظام الصيانة{% endblock %}</h1>
+                    <div class="text-xs text-gray-400">{% block breadcrumb %}الشركة السودانية للموارد المعدنية المحدودة{% endblock %}</div>
+                </div>
+            </div>
+            <div class="flex items-center gap-3">
+
+                <div class="relative">
+                    <a href="{% url 'maintenance:notifications_list' %}" class="btn btn-ghost btn-sm relative">
+                        🔔
+                        {% if unread_count %}
+                        <span class="notif-badge">{{ unread_count }}</span>
+                        {% endif %}
+                    </a>
+                </div>
+                <a href="{% url 'maintenance:new_request' %}" class="btn btn-primary btn-sm gap-1">
+                    <span>+</span> طلب صيانة
+                </a>
+            </div>
+        </header>
+
+        <!-- Printable Header -->
+        <div class="print-only-header">
+            <div class="flex justify-between items-center border-b pb-3 text-black">
+                <div>
+                    <h1 class="text-xl font-bold text-slate-900">الشركة السودانية للموارد المعدنية المحدودة</h1>
+                    <h2 class="text-sm font-semibold text-slate-700">إدارة الإمدادات والخدمات — قسم الصيانة الدورية والطارئة</h2>
+                </div>
+                <div class="text-left text-xs text-slate-600">
+                    <div>تاريخ الطباعة: {% now "Y/m/d H:i" %}</div>
+                    <div>نظام إدارة الصيانة الإلكتروني</div>
+                </div>
+            </div>
+        </div>
+
+        {% if messages %}
+        <div class="toast-container no-print" id="toast-container">
+            {% for message in messages %}
+            <div
+                class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'error' %}alert-error{% elif message.tags == 'warning' %}alert-warning{% else %}alert-info{% endif %} animate-slide-in shadow-lg max-w-sm">
+                <span>{{ message }}</span>
+                <button onclick="this.parentElement.remove()" class="btn btn-ghost btn-xs">✕</button>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <main class="p-6">
+            {% block content %}{% endblock %}
+        </main>
+
+        <!-- Printable Footer -->
+        <div class="print-only-footer">
+            <div>تقرير صيانة مطبوع إلكترونياً من نظام SMRC — لا يتطلب ختم أو توقيع إلا للنماذج المعتمدة مستندياً.</div>
+        </div>
+
+    </div>
+
+    <script>
+        function toggleSidebar() {
+            const sb = document.getElementById('sidebar');
+            const mc = document.querySelector('.main-content');
+            if (sb.style.display === 'none') {
+                sb.style.display = 'block';
+                mc.style.marginRight = '260px';
+            } else {
+                sb.style.display = 'none';
+                mc.style.marginRight = '0';
+            }
+        }
+
+        setTimeout(() => {
+            document.querySelectorAll('#toast-container .alert').forEach(el => {
+                el.style.opacity = '0';
+                el.style.transition = 'opacity 0.5s';
+                setTimeout(() => el.remove(), 500);
+            });
+        }, 5000);
+    </script>
+
+    {% block extra_js %}{% endblock %}
+</body>
+
+</html>

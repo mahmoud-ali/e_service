@@ -1,0 +1,58 @@
+{% extends "maintenance/base.html" %}
+{% block title %}تنبيهات المخزون المنخفض{% endblock %}
+{% block page_title %}تنبيهات المخزون المنخفض{% endblock %}
+{% block nav_alerts %}active{% endblock %}
+
+{% block content %}
+<div class="flex justify-between items-center mb-5">
+    <h2 class="font-bold text-xl text-gray-800">تنبيهات الحد الأدنى للمخزون</h2>
+    <span class="badge badge-error badge-lg">{{ alerts|length }} تنبيه غير معالج</span>
+</div>
+
+{% if alerts %}
+<div class="space-y-3">
+    {% for alert in alerts %}
+    <div class="form-card p-4 border-r-4 border-red-400">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-red-100 rounded-xl flex items-center justify-center text-xl">⚠️</div>
+                <div>
+                    <div class="font-bold text-gray-800">{{ alert.spare_part.name }}</div>
+                    <div class="text-xs text-gray-500">
+                        كود: <code class="bg-gray-100 px-1 rounded">{{ alert.spare_part.sku }}</code>
+                        &nbsp;|&nbsp; {{ alert.spare_part.unit.icon }} {{ alert.spare_part.unit.name }}
+                    </div>
+                </div>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="text-center">
+                    <div class="text-2xl font-bold text-red-600">{{ alert.quantity_at_alert }}</div>
+                    <div class="text-xs text-gray-400">الرصيد وقت التنبيه</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-2xl font-bold text-gray-400">{{ alert.spare_part.reorder_point }}</div>
+                    <div class="text-xs text-gray-400">حد الأمان</div>
+                </div>
+                <div class="flex flex-col gap-2">
+                    <a href="{% url 'maintenance:spare_part_update' alert.spare_part.pk %}"
+                       class="btn btn-xs btn-outline btn-primary">تعديل القطعة</a>
+                    <form method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="alert_id" value="{{ alert.pk }}">
+                        <button type="submit" class="btn btn-xs btn-success w-full">✅ تمت المعالجة</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="text-xs text-gray-300 mt-2">تاريخ التنبيه: {{ alert.created_at|date:"Y/m/d H:i" }}</div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="form-card p-12 text-center">
+    <div class="text-5xl mb-4">✅</div>
+    <h3 class="font-bold text-gray-600 text-lg">جميع المخزونات في مستوياتها الآمنة</h3>
+    <p class="text-gray-400 text-sm mt-2">لا توجد تنبيهات معلقة.</p>
+</div>
+{% endif %}
+{% endblock %}

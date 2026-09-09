@@ -1,0 +1,179 @@
+{% extends "maintenance/base.html" %}
+{% block title %}استمارة تصريح السلامة — طلب {{ req.request_number }}{% endblock %}
+{% block page_title %}استمارة تصريح السلامة والصحة المهنية (Permit to Work){% endblock %}
+{% block breadcrumb %}الرئيسية / السلامة المهنية / تصريح طلب {{ req.request_number }}{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto space-y-6">
+
+    <div class="card bg-base-100 shadow border border-base-200">
+        <div class="card-body p-6">
+            <div class="flex flex-wrap justify-between items-center border-b pb-4 gap-4">
+                <div>
+                    <h2 class="text-xl font-bold text-primary flex items-center gap-2">
+                        <i class="fa-solid fa-shield-halved text-warning"></i>
+                        تصريح السلامة للطلب: {{ req.request_number }}
+                    </h2>
+                    <p class="text-xs text-gray-500 mt-1">تاريخ الطلب: {{ req.created_at|date:"Y/m/d H:i" }} | القسم: {{
+                        req.general_dept }} / {{ req.department }}</p>
+                </div>
+                <div>
+                    <span class="badge badge-warning badge-lg gap-2">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                        يتطلب تصريح سلامة مهنية
+                    </span>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4 text-sm bg-base-200/50 p-4 rounded-xl">
+                <div><span class="text-gray-500">طبيعة العطل:</span> <strong>{{ req.fault_category.name }}</strong>
+                </div>
+                <div><span class="text-gray-500">الموقع بالضبط:</span> <strong>{{ req.location }}</strong></div>
+                <div class="md:col-span-2"><span class="text-gray-500">وصف المشكلة:</span>
+                    <p class="font-medium mt-1">{{ req.fault_description|default:"لا يوجد وصف إضافي" }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <form method="post" class="space-y-6">
+        {% csrf_token %}
+
+        <div class="card bg-base-100 shadow border border-base-200">
+            <div class="card-body p-6 space-y-6">
+
+                <h3 class="text-lg font-bold text-gray-800 border-b pb-2 flex items-center gap-2">
+                    <i class="fa-solid fa-clipboard-check text-info"></i>
+                    بيانات استمارة تصريح العمل الخطر
+                </h3>
+
+                <div>
+                    <label class="label font-bold text-gray-700">1. وصف العمل المخطط تنفيذه بالضبط *</label>
+                    {{ form.work_description }}
+                    {% if form.work_description.errors %}<div class="text-error text-xs mt-1">{{
+                        form.work_description.errors }}</div>{% endif %}
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="label font-bold text-gray-700">2. زمن بداية العمل المخطط *</label>
+                        {{ form.start_time }}
+                        {% if form.start_time.errors %}<div class="text-error text-xs mt-1">{{ form.start_time.errors }}
+                        </div>{% endif %}
+                    </div>
+                    <div>
+                        <label class="label font-bold text-gray-700">3. زمن انتهاء العمل المتوقع *</label>
+                        {{ form.end_time }}
+                        {% if form.end_time.errors %}<div class="text-error text-xs mt-1">{{ form.end_time.errors }}
+                        </div>{% endif %}
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="label font-bold text-gray-700">5 & 6. اسم الشخص المسؤول عن العمل *</label>
+                        {{ form.responsible_person_name }}
+                        {% if form.responsible_person_name.errors %}<div class="text-error text-xs mt-1">{{
+                            form.responsible_person_name.errors }}</div>{% endif %}
+                    </div>
+                    <div>
+                        <label class="label font-bold text-gray-700">الوظيفة *</label>
+                        {{ form.responsible_person_job }}
+                        {% if form.responsible_person_job.errors %}<div class="text-error text-xs mt-1">{{
+                            form.responsible_person_job.errors }}</div>{% endif %}
+                    </div>
+                </div>
+
+                <div class="bg-base-200/40 p-4 rounded-xl border border-base-300">
+                    <label class="label font-bold text-gray-800 text-base mb-2">
+                        <i class="fa-solid fa-users text-primary ml-1"></i> الفنيون المكلفون / المشاركون بالعمل
+                    </label>
+                    <p class="text-xs text-gray-500 mb-3">يمكنك اختيار أكثر من فني للمشاركة في تنفيذ هذه المهمة:</p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                        {% for choice in form.assigned_technicians %}
+                        <label class="flex items-center gap-2 cursor-pointer p-2.5 bg-base-100 rounded-lg border hover:border-primary transition">
+                            {{ choice.tag }}
+                            <span class="text-xs font-semibold text-gray-800">{{ choice.choice_label }}</span>
+                        </label>
+                        {% empty %}
+                        <p class="text-xs text-gray-400 col-span-3">لا يوجد فنيين مسجلين في هذه الوحدة حالياً.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+
+
+                <div class="bg-base-200/40 p-4 rounded-xl border border-base-300">
+                    <label class="label font-bold text-gray-800 text-base mb-2">7. الأنشطة الخطرة المرتبطة
+                        بالمهمة</label>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                        {% for choice in form.hazardous_activities %}
+                        <label
+                            class="flex items-center gap-2 cursor-pointer p-2 bg-base-100 rounded-lg border hover:border-primary transition">
+                            {{ choice.tag }}
+                            <span class="text-xs font-semibold">{{ choice.choice_label }}</span>
+                        </label>
+                        {% endfor %}
+                    </div>
+                    <div class="mt-3">
+                        {{ form.hazardous_activities_other }}
+                    </div>
+                </div>
+
+                <div>
+                    <label class="label font-bold text-gray-700">8. طرق ومجالات التحكم والوقاية الموجودة بالموقع</label>
+                    {{ form.control_measures }}
+                    {% if form.control_measures.errors %}<div class="text-error text-xs mt-1">{{
+                        form.control_measures.errors }}</div>{% endif %}
+                </div>
+
+                <div class="bg-base-200/40 p-4 rounded-xl border border-base-300">
+                    <label class="label font-bold text-gray-800 text-base mb-2">9. تجهيزات المكان وإجراءات
+                        الطوارئ</label>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                        {% for choice in form.site_preparations %}
+                        <label
+                            class="flex items-center gap-2 cursor-pointer p-2 bg-base-100 rounded-lg border hover:border-primary transition">
+                            {{ choice.tag }}
+                            <span class="text-xs font-semibold">{{ choice.choice_label }}</span>
+                        </label>
+                        {% endfor %}
+                    </div>
+                    <div class="mt-3">
+                        {{ form.site_preparations_other }}
+                    </div>
+                </div>
+
+                <div class="bg-base-200/40 p-4 rounded-xl border border-base-300">
+                    <label class="label font-bold text-gray-800 text-base mb-2">10. مهمات ومعدات الحماية الشخصية
+                        المطلوبة (PPE)</label>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                        {% for choice in form.ppe_equipment %}
+                        <label
+                            class="flex items-center gap-2 cursor-pointer p-2 bg-base-100 rounded-lg border hover:border-primary transition">
+                            {{ choice.tag }}
+                            <span class="text-xs font-semibold">{{ choice.choice_label }}</span>
+                        </label>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="alert alert-info text-xs mt-4">
+                    <i class="fa-solid fa-circle-info"></i>
+                    ملاحظة: بعد إرسال هذه الفورمة سيتلقاها قسم السلامة الداخلية لتحديد <strong>"مدة التصريح"</strong>
+                    والموافقة عليها ليظهر لك زر بدء العمل.
+                </div>
+
+                <div class="flex justify-end gap-3 pt-4 border-t">
+                    <a href="{% url 'maintenance:technician_request_detail' req.pk %}" class="btn btn-ghost">إلغاء</a>
+                    <button type="submit" class="btn btn-primary px-8">
+                        <i class="fa-solid fa-paper-plane ml-1"></i>
+                        حفظ وإرسال إلى قسم السلامة
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </form>
+
+</div>
+{% endblock %}

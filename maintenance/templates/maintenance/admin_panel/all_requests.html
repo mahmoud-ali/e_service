@@ -1,0 +1,156 @@
+{% extends "maintenance/base.html" %}
+{% load maintenance_tags %}
+{% block title %}سجل جميع طلبات الصيانة{% endblock %}
+{% block page_title %}إدارة وجميع طلبات الصيانة{% endblock %}
+{% block breadcrumb %}الرئيسية / الإدارة العليا / جميع الطلبات{% endblock %}
+{% block nav_admin_requests %}active{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+
+    <!-- Header Section -->
+    <div class="flex flex-wrap justify-between items-center gap-4">
+        <div>
+            <h2 class="text-2xl font-extrabold text-gray-800 flex items-center gap-2">
+                <i class="fa-solid fa-list-check text-indigo-600"></i>
+                سجل طلبات الصيانة الشامل
+            </h2>
+            <p class="text-xs text-gray-500 mt-1">عرض ومتابعة وإدارة جميع الطلبات في النظام</p>
+        </div>
+    </div>
+
+    <!-- Filter Form Card -->
+    <div class="card bg-base-100 shadow-md border border-base-200 p-4 no-print">
+        <form method="get" class="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-5 gap-3">
+            <div>
+                <label class="label text-xs font-bold text-gray-700">بحث</label>
+                <input type="text" name="q" value="{{ request.GET.q }}" placeholder="رقم الطلب، مقدم الطلب..."
+                    class="input input-bordered input-sm w-full focus:input-primary">
+            </div>
+            <div>
+                <label class="label text-xs font-bold text-gray-700">الوحدة التخصصية</label>
+                <select name="unit" class="select select-bordered select-sm w-full focus:select-primary">
+                    <option value="">جميع الوحدات</option>
+                    {% for u in units %}
+                    <option value="{{ u.id }}" {% if request.GET.unit == u.id|stringformat:"i" %}selected{% endif %}>{{ u.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
+                <label class="label text-xs font-bold text-gray-700">حالة الطلب</label>
+                <select name="status" class="select select-bordered select-sm w-full focus:select-primary">
+                    <option value="">جميع الحالات</option>
+                    <option value="pending" {% if request.GET.status == 'pending' %}selected{% endif %}>⏳ قيد الانتظار</option>
+                    <option value="pending_safety" {% if request.GET.status == 'pending_safety' %}selected{% endif %}>🛡️ بانتظار تصريح السلامة</option>
+                    <option value="in_progress" {% if request.GET.status == 'in_progress' %}selected{% endif %}>🔧 جاري التنفيذ</option>
+                    <option value="completed" {% if request.GET.status == 'completed' %}selected{% endif %}>✅ مكتمل</option>
+                    <option value="cancelled" {% if request.GET.status == 'cancelled' %}selected{% endif %}>❌ ملغى</option>
+                </select>
+            </div>
+            <div>
+                <label class="label text-xs font-bold text-gray-700">الأولوية</label>
+                <select name="priority" class="select select-bordered select-sm w-full focus:select-primary">
+                    <option value="">جميع الأولويات</option>
+                    <option value="low" {% if request.GET.priority == 'low' %}selected{% endif %}>🟢 منخفضة</option>
+                    <option value="medium" {% if request.GET.priority == 'medium' %}selected{% endif %}>🔵 متوسطة</option>
+                    <option value="high" {% if request.GET.priority == 'high' %}selected{% endif %}>🟠 عالية</option>
+                    <option value="urgent" {% if request.GET.priority == 'urgent' %}selected{% endif %}>🔴 عاجل / طارئ</option>
+                </select>
+            </div>
+            <div class="flex items-end gap-2">
+                <button type="submit" class="btn btn-indigo btn-sm flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-bold gap-1">
+                    <i class="fa-solid fa-filter"></i> تصفية
+                </button>
+                <a href="{% url 'maintenance:admin_all_requests' %}" class="btn btn-outline btn-error btn-sm font-semibold">
+                    <i class="fa-solid fa-rotate-left"></i> إلغاء
+                </a>
+            </div>
+        </form>
+    </div>
+
+    <!-- Data Table Card -->
+    <div class="card bg-base-100 shadow border border-base-200 overflow-x-auto">
+        <table class="table table-zebra w-full text-right">
+            <thead class="bg-indigo-900 text-white">
+                <tr>
+                    <th class="py-3 px-4 text-xs font-bold">رقم الطلب</th>
+                    <th class="py-3 px-4 text-xs font-bold">مقدم الطلب</th>
+                    <th class="py-3 px-4 text-xs font-bold">الإدارة / القسم</th>
+                    <th class="py-3 px-4 text-xs font-bold">الوحدة التخصصية</th>
+                    <th class="py-3 px-4 text-xs font-bold">الفني المكلف</th>
+                    <th class="py-3 px-4 text-xs font-bold">الحالة</th>
+                    <th class="py-3 px-4 text-xs font-bold">الأولوية</th>
+                    <th class="py-3 px-4 text-xs font-bold">تاريخ الطلب</th>
+                    <th class="py-3 px-4 text-xs font-bold no-print">إجراءات الإدارة</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for req in object_list %}
+                <tr class="hover:bg-indigo-50/40 transition-colors">
+                    <td class="font-bold font-mono text-xs text-indigo-700">{{ req.request_number }}</td>
+                    <td class="font-bold text-gray-800">
+                        {% if req.requester %}{{ req.requester|user_display_name }}{% else %}{{ req.employee_name }}{% endif %}
+                    </td>
+                    <td class="text-xs text-gray-600">{{ req.department|default:req.general_dept }}</td>
+                    <td>
+                        {% if req.assigned_unit %}
+                        <span class="badge badge-info badge-outline font-semibold text-xs py-1 px-2.5">
+                            {{ req.assigned_unit.icon }} {{ req.assigned_unit.name }}
+                        </span>
+                        {% else %}
+                        <span class="badge badge-warning badge-sm font-bold">غير محدد</span>
+                        {% endif %}
+                    </td>
+                    <td class="text-xs font-semibold text-gray-700">
+                        {% if req.assigned_technician %}
+                        <span class="text-emerald-700"><i class="fa-solid fa-user-gear ml-1"></i> {{ req.assigned_technician|user_display_name }}</span>
+                        {% else %}
+                        <span class="text-amber-600 italic">غير مكلف</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if req.status == 'pending' %}
+                            <span class="badge badge-warning text-amber-900 badge-sm font-bold gap-1 py-1 px-2"><i class="fa-solid fa-clock"></i> قيد الانتظار</span>
+                        {% elif req.status == 'pending_safety' %}
+                            <span class="badge badge-secondary badge-sm font-bold gap-1 py-1 px-2"><i class="fa-solid fa-shield-halved"></i> بانتظار السلامة</span>
+                        {% elif req.status == 'in_progress' %}
+                            <span class="badge badge-info text-white badge-sm font-bold gap-1 py-1 px-2"><i class="fa-solid fa-screwdriver-wrench"></i> جاري التنفيذ</span>
+                        {% elif req.status == 'completed' %}
+                            <span class="badge badge-success text-white badge-sm font-bold gap-1 py-1 px-2"><i class="fa-solid fa-circle-check"></i> مكتمل</span>
+                        {% elif req.status == 'cancelled' %}
+                            <span class="badge badge-error text-white badge-sm font-bold gap-1 py-1 px-2"><i class="fa-solid fa-circle-xmark"></i> ملغى</span>
+                        {% else %}
+                            <span class="badge badge-neutral badge-sm">{{ req.get_status_display }}</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if req.priority == 'urgent' %}
+                            <span class="badge badge-error text-white badge-sm font-extrabold gap-1 py-1 px-2 shadow-sm animate-pulse"><i class="fa-solid fa-triangle-exclamation"></i> عاجل</span>
+                        {% elif req.priority == 'high' %}
+                            <span class="badge badge-warning text-amber-950 badge-sm font-bold py-1 px-2">عالية</span>
+                        {% elif req.priority == 'medium' %}
+                            <span class="badge badge-info badge-outline badge-sm font-medium py-1 px-2">متوسطة</span>
+                        {% else %}
+                            <span class="badge badge-ghost badge-sm text-gray-500 py-1 px-2">منخفضة</span>
+                        {% endif %}
+                    </td>
+                    <td class="text-xs text-gray-500 font-mono" dir="ltr">{{ req.created_at|date:"Y/m/d H:i" }}</td>
+                    <td class="no-print">
+                        <a href="{% url 'maintenance:admin_request_detail' req.pk %}" class="btn btn-indigo btn-xs bg-indigo-600 hover:bg-indigo-700 text-white border-0 gap-1 font-bold shadow-sm">
+                            <i class="fa-solid fa-sliders"></i> إدارة والتحكم
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="9" class="text-center py-10 text-gray-500 font-bold">
+                        <i class="fa-solid fa-folder-open text-3xl text-gray-300 block mb-2"></i>
+                        لا توجد طلبات مطابقة لشروط البحث.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

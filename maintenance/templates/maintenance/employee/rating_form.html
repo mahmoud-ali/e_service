@@ -1,0 +1,56 @@
+{% extends "maintenance/base.html" %}
+{% block title %}تقييم الخدمة — الطلب {{ req.request_number }}{% endblock %}
+{% block page_title %}تقييم جودة الخدمة{% endblock %}
+{% block breadcrumb %}الرئيسية / طلباتي / تقييم{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto card bg-base-100 shadow-xl border border-base-200">
+    <div class="card-body">
+        <h2 class="card-title text-2xl font-bold text-primary mb-2">
+            <i class="fa-solid fa-star text-warning ml-2"></i> تقييم خدمة الصيانة
+        </h2>
+        <p class="text-gray-500 mb-6 text-sm">
+            يرجى تقييم مستوى الخدمة المقدمة للطلب رقم <strong class="text-accent">{{ req.request_number }}</strong> لمساعدتنا في تحسين جودة الصيانة.
+        </p>
+
+        {% if form.non_field_errors %}
+        <div class="alert alert-error mb-4 text-xs font-semibold">
+            {{ form.non_field_errors.0 }}
+        </div>
+        {% endif %}
+
+        <form method="post" class="space-y-6">
+            {% csrf_token %}
+
+            <div>
+                <label class="label font-semibold">مستوى التقييم (من 1 إلى 5 نجمات) <span class="text-error">*</span></label>
+                {% if form.rating.errors %}
+                <p class="text-error text-xs mb-2">{{ form.rating.errors.0 }}</p>
+                {% endif %}
+                <div class="rating rating-lg gap-2">
+                    <input type="radio" name="rating" value="1" class="mask mask-star-2 bg-orange-400" {% if form.rating.value == 1 or form.rating.value == '1' %}checked{% endif %} />
+                    <input type="radio" name="rating" value="2" class="mask mask-star-2 bg-orange-400" {% if form.rating.value == 2 or form.rating.value == '2' %}checked{% endif %} />
+                    <input type="radio" name="rating" value="3" class="mask mask-star-2 bg-orange-400" {% if form.rating.value == 3 or form.rating.value == '3' %}checked{% endif %} />
+                    <input type="radio" name="rating" value="4" class="mask mask-star-2 bg-orange-400" {% if form.rating.value == 4 or form.rating.value == '4' %}checked{% endif %} />
+                    <input type="radio" name="rating" value="5" class="mask mask-star-2 bg-orange-400" {% if not form.rating.value or form.rating.value == 5 or form.rating.value == '5' %}checked{% endif %} />
+                </div>
+            </div>
+
+            <div>
+                <label class="label font-semibold">ملاحظات أو تعليقات على الخدمة (اختياري)</label>
+                {{ form.comment }}
+                {% if form.comment.errors %}
+                <p class="text-error text-xs mt-1">{{ form.comment.errors.0 }}</p>
+                {% endif %}
+            </div>
+
+            <div class="flex gap-3 pt-4">
+                <button type="submit" class="btn btn-primary flex-1">
+                    <i class="fa-solid fa-paper-plane ml-2"></i> إرسال التقييم
+                </button>
+                <a href="{% url 'maintenance:request_detail' req.pk %}" class="btn btn-ghost">إلغاء</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,72 @@
+{% extends "maintenance/base.html" %}
+{% block title %}{% if object %}تعديل قطعة{% else %}إضافة قطعة غيار{% endif %}{% endblock %}
+{% block page_title %}{% if object %}تعديل: {{ object.name }}{% else %}إضافة قطعة غيار جديدة{% endif %}{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto">
+    <div class="form-card p-0 overflow-hidden">
+        <div class="bg-gradient-to-l from-purple-600 to-purple-800 px-6 py-4 text-white">
+            <div class="flex items-center gap-3">
+                <div class="text-3xl">🔩</div>
+                <div>
+                    <h2 class="text-lg font-bold">{% if object %}تعديل بيانات القطعة{% else %}إضافة قطعة غيار جديدة{% endif %}</h2>
+                    <p class="text-purple-100 text-xs">دليل قطع الغيار — وحدة المخزن</p>
+                </div>
+            </div>
+        </div>
+        <form method="post" class="p-6 space-y-4">
+            {% csrf_token %}
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="label"><span class="label-text font-semibold text-gray-600">كود القطعة (SKU) <span class="text-error">*</span></span></label>
+                    {{ form.sku }}
+                </div>
+                <div>
+                    <label class="label"><span class="label-text font-semibold text-gray-600">اسم القطعة <span class="text-error">*</span></span></label>
+                    {{ form.name }}
+                </div>
+                <div>
+                    <label class="label"><span class="label-text font-semibold text-gray-600">الوحدة المختصة <span class="text-error">*</span></span></label>
+                    {{ form.unit }}
+                </div>
+                <div>
+                    <label class="label"><span class="label-text font-semibold text-gray-600">وحدة القياس</span></label>
+                    {{ form.unit_of_measure }}
+                </div>
+                <div>
+                    <label class="label"><span class="label-text font-semibold text-gray-600">الرصيد الحالي</span></label>
+                    {{ form.quantity_in_stock }}
+                </div>
+                <div>
+                    <label class="label">
+                        <span class="label-text font-semibold text-gray-600">حد الأمان (Reorder Point)</span>
+                    </label>
+                    {{ form.reorder_point }}
+                    <p class="text-xs text-gray-400 mt-1">يُرسل تنبيه عند الوصول لهذا الرقم أو أقل</p>
+                </div>
+            </div>
+            <div>
+                <label class="label"><span class="label-text font-semibold text-gray-600">وصف القطعة</span></label>
+                {{ form.description }}
+            </div>
+            <div class="flex items-center gap-2">
+                {{ form.is_active }}
+                <label class="label-text text-gray-600">القطعة فعّالة (متاحة للاستهلاك)</label>
+            </div>
+
+            {% if form.errors %}
+            <div class="alert alert-error">
+                {% for field in form %}{% for error in field.errors %}
+                <span>{{ error }}</span>
+                {% endfor %}{% endfor %}
+            </div>
+            {% endif %}
+
+            <div class="flex justify-end gap-3 pt-2">
+                <a href="{% url 'maintenance:spare_part_list' %}" class="btn btn-ghost">إلغاء</a>
+                <button type="submit" class="btn btn-primary">💾 حفظ</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

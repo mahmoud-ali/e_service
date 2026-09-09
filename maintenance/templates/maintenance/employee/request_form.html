@@ -1,0 +1,246 @@
+{% extends "maintenance/base.html" %}
+{% load static %}
+
+{% block title %}تقديم طلب صيانة جديد{% endblock %}
+{% block page_title %}طلب صيانة جديد{% endblock %}
+{% block breadcrumb %}الرئيسية / طلبات الصيانة / جديد{% endblock %}
+{% block nav_new_request %}active{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto">
+    <div class="form-card p-0 overflow-hidden">
+        <!-- Header -->
+        <div class="bg-gradient-to-l from-blue-600 to-blue-800 px-6 py-5 text-white">
+            <div class="flex items-center gap-3">
+                <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center text-2xl">🔧</div>
+                <div>
+                    <h2 class="text-xl font-bold">استمارة طلب صيانة</h2>
+                    <p class="text-blue-100 text-sm">الشركة السودانية للموارد المعدنية — إدارة الشؤون الإدارية</p>
+                </div>
+            </div>
+        </div>
+
+        <form method="post" id="requestForm" class="p-6 space-y-6">
+            {% csrf_token %}
+
+            <!-- القسم 1: بيانات مقدم الطلب -->
+            <div>
+                <h3 class="font-bold text-gray-700 text-base mb-3 flex items-center gap-2">
+                    <span class="w-7 h-7 bg-blue-100 text-blue-700 rounded-full flex items-center justify-center text-sm font-bold">١</span>
+                    بيانات مقدم الطلب
+                </h3>
+
+                {% if form.employee_in_structure %}
+                <div class="alert alert-info py-2 px-3 text-xs font-semibold rounded-xl mb-4 flex items-center gap-2 bg-blue-50 text-blue-800 border border-blue-200">
+                    <i class="fa-solid fa-user-check text-blue-600 text-sm"></i>
+                    <span>تم التعرف على حسابك كموظف في الهيكل الإداري — البيانات الأساسية مثبتة ومقفلة للقراءة فقط.</span>
+                </div>
+                {% else %}
+                <div class="alert alert-warning py-2 px-3 text-xs font-semibold rounded-xl mb-4 flex items-center gap-2 bg-amber-50 text-amber-800 border border-amber-200">
+                    <i class="fa-solid fa-pen-to-square text-amber-600 text-sm"></i>
+                    <span>لم يتم العثور على سجل وظيفي مرتبك بحسابك — يمكنك كتابة اسمك والإدارة والقسم يدوياً.</span>
+                </div>
+                {% endif %}
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="label"><span class="label-text font-semibold text-gray-600">اسم الموظف <span class="text-error">*</span></span></label>
+                        {{ form.employee_name }}
+                        {% if form.employee_name.errors %}
+                        <p class="text-error text-xs mt-1">{{ form.employee_name.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <label class="label"><span class="label-text font-semibold text-gray-600">الإدارة العامة <span class="text-error">*</span></span></label>
+                        {{ form.general_dept }}
+                        {% if form.general_dept.errors %}
+                        <p class="text-error text-xs mt-1">{{ form.general_dept.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <label class="label"><span class="label-text font-semibold text-gray-600">القسم <span class="text-error">*</span></span></label>
+                        {{ form.department }}
+                        {% if form.department.errors %}
+                        <p class="text-error text-xs mt-1">{{ form.department.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <label class="label"><span class="label-text font-semibold text-gray-600">موقع العطل بالضبط <span class="text-error">*</span></span></label>
+                        {{ form.location }}
+                        {% if form.location.errors %}
+                        <p class="text-error text-xs mt-1">{{ form.location.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="divider my-2"></div>
+
+            <!-- القسم 2: تحديد العطل -->
+            <div>
+                <h3 class="font-bold text-gray-700 text-base mb-4 flex items-center gap-2">
+                    <span class="w-7 h-7 bg-orange-100 text-orange-700 rounded-full flex items-center justify-center text-sm font-bold">٢</span>
+                    تحديد الوحدة ونوع العطل
+                </h3>
+
+                <!-- اختيار الوحدة أولاً (ديناميكي) -->
+                <div class="mb-4">
+                    <label class="label"><span class="label-text font-semibold text-gray-600">اختر الوحدة التخصصية <span class="text-error">*</span></span></label>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3" id="unitSelector">
+                        {% for unit in units %}
+                        <label class="cursor-pointer">
+                            <input type="radio" name="unit_code" value="{{ unit.code }}"
+                                   class="hidden unit-radio" onchange="loadFaultCategories('{{ unit.code }}')">
+                            <div class="unit-card border-2 border-gray-200 rounded-xl p-3 text-center transition-all hover:border-blue-400 hover:bg-blue-50">
+                                <div class="text-2xl mb-1">{{ unit.icon }}</div>
+                                <div class="font-semibold text-gray-700 text-sm">{{ unit.name }}</div>
+                                <div class="text-gray-400 text-xs mt-1">[{{ unit.code }}]</div>
+                            </div>
+                        </label>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- تصنيف العطل (يُحدَّث ديناميكياً) -->
+                <div id="faultCategorySection" class="hidden">
+                    <label class="label"><span class="label-text font-semibold text-gray-600">نوع العطل <span class="text-error">*</span></span></label>
+                    <div id="faultCategoryContainer" class="space-y-1 max-h-60 overflow-y-auto border border-gray-200 rounded-xl p-3 bg-gray-50">
+                        <!-- يتم ملؤها بواسطة JS -->
+                    </div>
+                    <!-- الحقل الخفي المرتبط بالـ Form -->
+                    <select name="fault_category" id="id_fault_category" class="hidden">
+                        {% for cat in form.fault_category.field.queryset %}
+                        <option value="{{ cat.pk }}">{{ cat }}</option>
+                        {% endfor %}
+                    </select>
+                    {% if form.fault_category.errors %}
+                    <p class="text-error text-xs mt-1">{{ form.fault_category.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <!-- وصف إضافي -->
+                <div class="mt-4">
+                    <label class="label"><span class="label-text font-semibold text-gray-600">وصف إضافي للمشكلة</span></label>
+                    {{ form.fault_description }}
+                </div>
+
+                <!-- الأولوية -->
+                <div class="mt-4 max-w-xs">
+                    <label class="label"><span class="label-text font-semibold text-gray-600">أولوية الطلب</span></label>
+                    {{ form.priority }}
+                </div>
+            </div>
+
+            <div class="divider my-2"></div>
+
+            {% if form.requires_safety_permit %}
+            <!-- القسم 3: تصريح السلامة — يظهر لمدير الصيانة فقط -->
+            <div class="border-2 border-orange-300 rounded-2xl p-5 bg-orange-50/60">
+                <h3 class="font-bold text-orange-700 text-base mb-3 flex items-center gap-2">
+                    <span class="w-7 h-7 bg-orange-100 text-orange-700 rounded-full flex items-center justify-center text-sm font-bold">٣</span>
+                    <i class="fa-solid fa-shield-halved"></i>
+                    الأعمال الخطرة والسلامة المهنية
+                    <span class="badge badge-warning badge-sm font-bold">مدير الصيانة فقط</span>
+                </h3>
+                <div class="bg-white rounded-xl border border-orange-200 p-4">
+                    <label class="flex items-start gap-3 cursor-pointer group">
+                        {{ form.requires_safety_permit }}
+                        <div>
+                            <div class="font-bold text-gray-800 group-hover:text-orange-700 transition-colors">
+                                هذا الطلب يتطلب استمارة تصريح السلامة والصحة المهنية
+                            </div>
+                            <div class="text-xs text-gray-500 mt-1">
+                                عند التفعيل: سيُوجَّه الطلب إلى وحدة الأعمال الخطرة ويُطلب من الفني تعبئة استمارة تصريح السلامة قبل البدء بأي عمل.
+                            </div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <div class="divider my-2"></div>
+            {% endif %}
+
+            <!-- زر الإرسال -->
+            <div class="flex justify-end gap-3">
+                <a href="{% url 'maintenance:my_requests' %}" class="btn btn-ghost">إلغاء</a>
+                <button type="submit" class="btn btn-primary gap-2" id="submitBtn">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+                    </svg>
+                    تقديم طلب الصيانة
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const faultData = {}; // سيُملأ عند اختيار الوحدة
+
+async function loadFaultCategories(unitCode) {
+    // تلوين الكارد المحدد
+    document.querySelectorAll('.unit-card').forEach(c => {
+        c.classList.remove('border-blue-500', 'bg-blue-50', 'text-blue-700');
+        c.classList.add('border-gray-200');
+    });
+    const selectedLabel = document.querySelector(`input[value="${unitCode}"]`);
+    if (selectedLabel) {
+        selectedLabel.parentElement.querySelector('.unit-card').classList.add('border-blue-500', 'bg-blue-50');
+    }
+
+    // جلب التصنيفات
+    const response = await fetch(`{% url 'maintenance:ajax_fault_categories' %}?unit_code=${unitCode}`);
+    const data = await response.json();
+
+    const container = document.getElementById('faultCategoryContainer');
+    container.innerHTML = '';
+
+    // تجميع حسب التصنيف الفرعي
+    const grouped = {};
+    data.categories.forEach(cat => {
+        const sub = cat.sub_category || 'عام';
+        if (!grouped[sub]) grouped[sub] = [];
+        grouped[sub].push(cat);
+    });
+
+    for (const [sub, cats] of Object.entries(grouped)) {
+        const subHeader = document.createElement('div');
+        subHeader.className = 'text-xs font-bold text-gray-500 uppercase mt-2 mb-1 px-1';
+        subHeader.textContent = sub;
+        container.appendChild(subHeader);
+
+        cats.forEach(cat => {
+            const label = document.createElement('label');
+            label.className = 'flex items-center gap-2 p-2 rounded-lg cursor-pointer hover:bg-blue-50 transition-colors';
+            label.innerHTML = `
+                <input type="radio" name="fault_cat_visual" value="${cat.id}" class="radio radio-primary radio-sm">
+                <span class="text-gray-700 text-sm">${cat.name}</span>
+            `;
+            label.querySelector('input').addEventListener('change', () => {
+                document.getElementById('id_fault_category').value = cat.id;
+            });
+            container.appendChild(label);
+        });
+    }
+
+    document.getElementById('faultCategorySection').classList.remove('hidden');
+}
+
+// التحقق من تعبئة حقل الوحدة والعطل قبل الإرسال
+document.getElementById('requestForm').addEventListener('submit', function(e) {
+    const unitSelected = document.querySelector('.unit-radio:checked');
+    const faultSelected = document.getElementById('id_fault_category').value;
+    if (!unitSelected) {
+        e.preventDefault();
+        alert('يرجى اختيار الوحدة التخصصية أولاً.');
+        return;
+    }
+    if (!faultSelected) {
+        e.preventDefault();
+        alert('يرجى اختيار نوع العطل.');
+    }
+});
+</script>
+{% endblock %}

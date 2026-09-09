@@ -1,0 +1,49 @@
+{% extends "maintenance/base.html" %}
+{% block title %}تسجيل حركة مخزون{% endblock %}
+{% block page_title %}تسجيل حركة مخزون{% endblock %}
+{% block nav_movements %}active{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto">
+    <div class="form-card p-0 overflow-hidden">
+        <div class="bg-gradient-to-l from-green-600 to-green-800 px-6 py-4 text-white">
+            <div class="flex items-center gap-3">
+                <div class="text-3xl">↕️</div>
+                <div>
+                    <h2 class="text-lg font-bold">تسجيل حركة مخزون</h2>
+                    <p class="text-green-100 text-xs">وارد / صادر / تعديل جرد</p>
+                </div>
+            </div>
+        </div>
+        <form method="post" class="p-6 space-y-4">
+            {% csrf_token %}
+            <div>
+                <label class="label"><span class="label-text font-semibold text-gray-600">القطعة <span class="text-error">*</span></span></label>
+                {{ form.spare_part }}
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="label"><span class="label-text font-semibold text-gray-600">نوع الحركة <span class="text-error">*</span></span></label>
+                    {{ form.movement_type }}
+                </div>
+                <div>
+                    <label class="label"><span class="label-text font-semibold text-gray-600">الكمية <span class="text-error">*</span></span></label>
+                    {{ form.quantity }}
+                </div>
+            </div>
+            <div>
+                <label class="label"><span class="label-text font-semibold text-gray-600">طلب الصيانة المرتبط (إن وجد)</span></label>
+                {{ form.maintenance_request }}
+            </div>
+            <div>
+                <label class="label"><span class="label-text font-semibold text-gray-600">ملاحظات</span></label>
+                {{ form.notes }}
+            </div>
+            <div class="flex justify-end gap-3">
+                <a href="{% url 'maintenance:store_dashboard' %}" class="btn btn-ghost">إلغاء</a>
+                <button type="submit" class="btn btn-success">💾 تسجيل الحركة</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

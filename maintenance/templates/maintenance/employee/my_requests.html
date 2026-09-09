@@ -1,0 +1,106 @@
+{% extends "maintenance/base.html" %}
+{% block title %}طلباتي — نظام الصيانة{% endblock %}
+{% block page_title %}طلباتي{% endblock %}
+{% block breadcrumb %}الرئيسية / طلباتي{% endblock %}
+{% block nav_my_requests %}active{% endblock %}
+
+{% block content %}
+<!-- Header + Actions -->
+<div class="flex flex-wrap items-center justify-between gap-3 mb-6">
+    <div>
+        <h2 class="font-bold text-xl text-gray-800">طلبات الصيانة المقدمة</h2>
+        <p class="text-gray-500 text-sm">متابعة حالة طلباتك</p>
+    </div>
+    <a href="{% url 'maintenance:new_request' %}" class="btn btn-primary gap-2">
+        <span>+</span> طلب جديد
+    </a>
+</div>
+
+<!-- Filters -->
+<div class="form-card p-4 mb-5 flex flex-wrap gap-3 items-center">
+    <form method="get" class="flex flex-wrap gap-3 items-center w-full">
+        <input type="text" name="search" value="{{ request.GET.search }}"
+               placeholder="بحث بالرقم أو الاسم..."
+               class="input input-bordered input-sm flex-1 min-w-[200px]">
+        <select name="status" class="select select-bordered select-sm">
+            <option value="">كل الحالات</option>
+            {% for val, label in status_choices %}
+            <option value="{{ val }}" {% if request.GET.status == val %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit" class="btn btn-sm btn-primary">بحث</button>
+        <a href="{% url 'maintenance:my_requests' %}" class="btn btn-sm btn-ghost">إعادة تعيين</a>
+    </form>
+</div>
+
+<!-- Requests List -->
+{% if requests %}
+<div class="space-y-3">
+    {% for req in requests %}
+    <div class="form-card p-4 hover:shadow-md transition-shadow">
+        <div class="flex flex-wrap items-start justify-between gap-3">
+            <div class="flex items-start gap-3">
+                <!-- Status Icon -->
+                <div class="w-12 h-12 rounded-xl flex items-center justify-center text-xl flex-shrink-0
+                    {% if req.status == 'pending' %}bg-yellow-100
+                    {% elif req.status == 'in_progress' %}bg-blue-100
+                    {% elif req.status == 'completed' %}bg-green-100
+                    {% else %}bg-red-100{% endif %}">
+                    {% if req.status == 'pending' %}⏳
+                    {% elif req.status == 'in_progress' %}🔄
+                    {% elif req.status == 'completed' %}✅
+                    {% else %}❌{% endif %}
+                </div>
+                <div>
+                    <div class="flex items-center gap-2 flex-wrap">
+                        <span class="font-bold text-gray-800">{{ req.request_number }}</span>
+                        <span class="badge badge-sm status-{{ req.status }}">{{ req.get_status_display }}</span>
+                        <span class="badge badge-sm priority-{{ req.priority }}">{{ req.get_priority_display }}</span>
+                    </div>
+                    <div class="text-sm text-gray-600 mt-0.5">{{ req.fault_category }}</div>
+                    <div class="text-xs text-gray-400 mt-1">
+                        📍 {{ req.location }} &nbsp;|&nbsp; 🏢 {{ req.department }}
+                    </div>
+                </div>
+            </div>
+            <div class="text-left flex flex-col items-end gap-2">
+                <div class="text-xs text-gray-400">{{ req.created_at|date:"Y/m/d — H:i" }}</div>
+                <div class="flex gap-2">
+                    <a href="{% url 'maintenance:request_detail' req.pk %}"
+                       class="btn btn-xs btn-outline btn-primary">عرض التفاصيل</a>
+                    {% if req.status == 'completed' and not req.rating %}
+                    <a href="{% url 'maintenance:rate_service' req.pk %}"
+                       class="btn btn-xs btn-warning">تقييم الخدمة ⭐</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- Pagination -->
+{% if is_paginated %}
+<div class="flex justify-center mt-6">
+    <div class="join">
+        {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}&{{ request.GET.urlencode }}" class="join-item btn btn-sm">«</a>
+        {% endif %}
+        <button class="join-item btn btn-sm btn-active">{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</button>
+        {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}&{{ request.GET.urlencode }}" class="join-item btn btn-sm">»</a>
+        {% endif %}
+    </div>
+</div>
+{% endif %}
+
+{% else %}
+<!-- Empty State -->
+<div class="form-card p-12 text-center">
+    <div class="text-5xl mb-4">🔍</div>
+    <h3 class="font-bold text-gray-600 text-lg mb-2">لا توجد طلبات بعد</h3>
+    <p class="text-gray-400 text-sm mb-4">لم تقدم أي طلب صيانة حتى الآن.</p>
+    <a href="{% url 'maintenance:new_request' %}" class="btn btn-primary">تقديم أول طلب</a>
+</div>
+{% endif %}
+{% endblock %}

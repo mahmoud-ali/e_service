@@ -1,0 +1,216 @@
+{% extends "maintenance/base.html" %}
+{% load maintenance_tags %}
+{% block title %}طلب {{ req.request_number }} — تفاصيل{% endblock %}
+{% block page_title %}تفاصيل طلب الصيانة{% endblock %}
+{% block breadcrumb %}الرئيسية / طلباتي / {{ req.request_number }}{% endblock %}
+
+
+{% block content %}
+<div class="max-w-4xl mx-auto space-y-5">
+
+    <!-- Header Card -->
+    <div class="form-card overflow-hidden">
+        <div
+            class="bg-gradient-to-l from-slate-700 to-slate-900 px-6 py-4 text-white flex flex-wrap justify-between items-start gap-3">
+            <div>
+                <div class="text-slate-300 text-xs mb-1">رقم الطلب</div>
+                <div class="text-2xl font-bold">{{ req.request_number }}</div>
+                <div class="text-slate-300 text-sm mt-1">{{ req.fault_category }}</div>
+            </div>
+            <div class="flex flex-col items-end gap-2">
+                <span class="badge badge-lg status-{{ req.status }} font-semibold">{{ req.get_status_display }}</span>
+                <span class="badge badge-sm priority-{{ req.priority }}">{{ req.get_priority_display }}</span>
+                <div class="text-xs text-slate-300">{{ req.created_at|date:"Y/m/d H:i" }}</div>
+            </div>
+        </div>
+
+        <!-- Progress Steps -->
+        <div class="px-6 py-4 bg-slate-50 border-b">
+            <div class="flex items-center justify-between text-center">
+                {% with statuses=req.STATUS_CHOICES %}
+                <div class="flex-1 flex flex-col items-center">
+                    <div
+                        class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold
+                        {% if req.status in 'pending,in_progress,completed' %}bg-blue-500 text-white{% else %}bg-gray-200 text-gray-500{% endif %}">
+                        ١</div>
+                    <div class="text-xs mt-1 text-gray-600">قيد الانتظار</div>
+                </div>
+                <div
+                    class="flex-1 h-1 {% if req.status in 'in_progress,completed' %}bg-blue-400{% else %}bg-gray-200{% endif %} mx-1 mt-3">
+                </div>
+                <div class="flex-1 flex flex-col items-center">
+                    <div
+                        class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold
+                        {% if req.status in 'in_progress,completed' %}bg-blue-500 text-white{% else %}bg-gray-200 text-gray-500{% endif %}">
+                        ٢</div>
+                    <div class="text-xs mt-1 text-gray-600">جاري التنفيذ</div>
+                </div>
+                <div
+                    class="flex-1 h-1 {% if req.status == 'completed' %}bg-green-400{% else %}bg-gray-200{% endif %} mx-1 mt-3">
+                </div>
+                <div class="flex-1 flex flex-col items-center">
+                    <div
+                        class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold
+                        {% if req.status == 'completed' %}bg-green-500 text-white{% else %}bg-gray-200 text-gray-500{% endif %}">
+                        ٣</div>
+                    <div class="text-xs mt-1 text-gray-600">مكتمل</div>
+                </div>
+                {% endwith %}
+            </div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+        <div class="form-card p-5">
+            <h3 class="font-bold text-gray-700 mb-4 flex items-center gap-2">
+                <span class="text-blue-500">👤</span> بيانات مقدم الطلب
+            </h3>
+            <dl class="space-y-3">
+                <div class="flex justify-between text-sm">
+                    <dt class="text-gray-500">اسم الموظف</dt>
+                    <dd class="font-semibold text-gray-800">{{ req.employee_name }}</dd>
+                </div>
+                <div class="flex justify-between text-sm">
+                    <dt class="text-gray-500">الإدارة العامة</dt>
+                    <dd class="font-semibold text-gray-800">{{ req.general_dept }}</dd>
+                </div>
+                <div class="flex justify-between text-sm">
+                    <dt class="text-gray-500">القسم</dt>
+                    <dd class="font-semibold text-gray-800">{{ req.department }}</dd>
+                </div>
+                <div class="flex justify-between text-sm">
+                    <dt class="text-gray-500">موقع العطل</dt>
+                    <dd class="font-semibold text-gray-800">{{ req.location }}</dd>
+                </div>
+            </dl>
+        </div>
+
+
+        <div class="form-card p-5">
+            <h3 class="font-bold text-gray-700 mb-4 flex items-center gap-2">
+                <span class="text-orange-500">⚙️</span> تفاصيل العطل
+            </h3>
+            <dl class="space-y-3">
+                <div class="flex justify-between text-sm">
+                    <dt class="text-gray-500">الوحدة المختصة</dt>
+                    <dd class="font-semibold text-gray-800">
+                        {% if req.assigned_unit %}{{ req.assigned_unit.icon }} {{ req.assigned_unit.name }}
+                        {% else %}<span class="text-gray-400">لم يُحدد بعد</span>{% endif %}
+                    </dd>
+                </div>
+                <div class="flex justify-between text-sm">
+                    <dt class="text-gray-500">نوع العطل</dt>
+                    <dd class="font-semibold text-gray-800">{{ req.fault_category.name }}</dd>
+                </div>
+                <div class="flex justify-between text-sm">
+                    <dt class="text-gray-500">الفني المعين</dt>
+                    <dd class="font-semibold text-gray-800">
+                        {% if req.assigned_technician %}{{ req.assigned_technician|user_display_name }}
+                        {% else %}<span class="text-gray-400">لم يُعيَّن بعد</span>{% endif %}
+                    </dd>
+                </div>
+
+                {% if req.fault_description %}
+                <div class="text-sm">
+                    <dt class="text-gray-500 mb-1">وصف إضافي</dt>
+                    <dd class="bg-gray-50 rounded-lg p-2 text-gray-700">{{ req.fault_description }}</dd>
+                </div>
+                {% endif %}
+            </dl>
+        </div>
+    </div>
+
+
+    {% if spare_parts %}
+    <div class="form-card p-5">
+        <h3 class="font-bold text-gray-700 mb-4 flex items-center gap-2">
+            <span class="text-purple-500">🔩</span> قطع الغيار المستهلكة
+        </h3>
+        <div class="overflow-x-auto">
+            <table class="table table-sm data-table w-full">
+                <thead>
+                    <tr>
+                        <th>القطعة</th>
+                        <th>كود SKU</th>
+                        <th>الكمية</th>
+                        <th>التاريخ</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for mov in spare_parts %}
+                    <tr>
+                        <td class="font-medium">{{ mov.spare_part.name }}</td>
+                        <td><code class="bg-gray-100 px-1 rounded text-xs">{{ mov.spare_part.sku }}</code></td>
+                        <td>{{ mov.quantity }} {{ mov.spare_part.unit_of_measure }}</td>
+                        <td class="text-gray-400 text-xs">{{ mov.created_at|date:"Y/m/d" }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% endif %}
+
+
+    {% if req.completion_report %}
+    <div class="form-card p-5 border-2 border-green-200">
+        <h3 class="font-bold text-gray-700 mb-4 flex items-center gap-2">
+            <span class="text-green-600">📝</span> تقرير الإنجاز
+        </h3>
+        <div class="space-y-3 text-sm">
+            <div>
+                <div class="text-gray-500 mb-1 font-medium">العمل المنجز:</div>
+                <div class="bg-green-50 rounded-lg p-3 text-gray-700">{{ req.completion_report.work_done }}</div>
+            </div>
+            {% if req.completion_report.root_cause %}
+            <div>
+                <div class="text-gray-500 mb-1 font-medium">السبب الجذري:</div>
+                <div class="bg-gray-50 rounded-lg p-3 text-gray-700">{{ req.completion_report.root_cause }}</div>
+            </div>
+            {% endif %}
+            {% if req.completion_report.recommendations %}
+            <div>
+                <div class="text-gray-500 mb-1 font-medium">التوصيات:</div>
+                <div class="bg-blue-50 rounded-lg p-3 text-gray-700">{{ req.completion_report.recommendations }}</div>
+            </div>
+            {% endif %}
+            <div class="text-xs text-gray-400">الفني: {{ req.completion_report.technician|user_display_name }} — {{
+                req.completion_report.completed_at|date:"Y/m/d H:i" }}</div>
+        </div>
+    </div>
+    {% endif %}
+
+
+    {% if req.rating %}
+    <div class="form-card p-5 border-2 border-yellow-200">
+        <h3 class="font-bold text-gray-700 mb-3 flex items-center gap-2">
+            <span class="text-yellow-500">⭐</span> تقييمك للخدمة
+        </h3>
+        <div class="flex items-center gap-2">
+            <div class="text-2xl">{{ req.rating.rating }}★</div>
+            {% if req.rating.comment %}
+            <p class="text-gray-600 text-sm">{{ req.rating.comment }}</p>
+            {% endif %}
+        </div>
+    </div>
+    {% elif can_rate %}
+    <div class="form-card p-5 bg-yellow-50 border-2 border-yellow-200">
+        <div class="flex justify-between items-center">
+            <div>
+                <h3 class="font-bold text-gray-700">كيف تقيّم الخدمة؟</h3>
+                <p class="text-sm text-gray-500">رأيك يهمنا لتحسين الخدمة</p>
+            </div>
+            <a href="{% url 'maintenance:rate_service' req.pk %}" class="btn btn-warning gap-1">
+                ⭐ تقييم الخدمة
+            </a>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Back Button -->
+    <div class="flex gap-3">
+        <a href="{% url 'maintenance:my_requests' %}" class="btn btn-ghost">← العودة للقائمة</a>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,141 @@
+{% extends "maintenance/base.html" %}
+{% load maintenance_tags %}
+{% block title %}اعتماد تصريح السلامة — طلب {{ req.request_number }}{% endblock %}
+{% block page_title %}مراجعة واعتماد تصريح السلامة والصحة المهنية{% endblock %}
+{% block breadcrumb %}الرئيسية / السلامة المهنية / اعتماد تصريح {{ req.request_number }}{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto space-y-6">
+
+    <!-- Header Card -->
+    <div class="card bg-base-100 shadow border border-base-200">
+        <div class="card-body p-6">
+            <div class="flex flex-wrap justify-between items-center border-b pb-4 gap-4">
+                <div>
+                    <h2 class="text-xl font-bold text-primary flex items-center gap-2">
+                        <i class="fa-solid fa-shield-halved text-warning"></i>
+                        اعتماد تصريح الطلب: {{ req.request_number }}
+                    </h2>
+                    <p class="text-xs text-gray-500 mt-1">تاريخ الطلب: {{ req.created_at|date:"Y/m/d H:i" }} | القسم: {{ req.general_dept }} / {{ req.department }}</p>
+                </div>
+                <div>
+                    <span class="badge badge-secondary badge-lg gap-2">
+                        {{ permit.get_status_display }}
+                    </span>
+                </div>
+            </div>
+
+            <div class="space-y-4 mt-4 text-sm">
+                <div class="bg-base-200/50 p-4 rounded-xl space-y-2">
+                    <div><strong class="text-gray-700">1. وصف العمل:</strong> {{ permit.work_description }}</div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-2 pt-2">
+                        <div><strong class="text-gray-700">2. بداية العمل:</strong> {{ permit.start_time|date:"Y/m/d H:i" }}</div>
+                        <div><strong class="text-gray-700">3. انتهاء العمل:</strong> {{ permit.end_time|date:"Y/m/d H:i" }}</div>
+                    </div>
+                </div>
+
+                <div class="border p-4 rounded-xl bg-base-200/50">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <div><strong class="text-gray-700">5. المسؤول عن التنفيذ:</strong> {{ permit.responsible_person|user_display_name|default:permit.responsible_person_name }}</div>
+                        <div><strong class="text-gray-700">6. الوظيفة:</strong> {{ permit.responsible_person_job }}</div>
+                    </div>
+                    {% if permit.assigned_technicians.all %}
+                    <div class="mt-3 pt-3 border-t">
+                        <strong class="text-gray-700 block mb-1 font-bold"><i class="fa-solid fa-users text-primary ml-1"></i> الفنيون المشاركون بالمهمة:</strong>
+                        <div class="flex flex-wrap gap-2">
+                            {% for tech in permit.assigned_technicians.all %}
+                            <span class="badge badge-primary badge-outline text-xs gap-1 py-2 px-3 font-semibold">
+                                <i class="fa-solid fa-user-gear"></i> {{ tech|user_display_name }}
+                            </span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+
+{% with HAZARD_LABELS='{"welding":"أعمال لحام وقص ومعادن","fumes":"أبخرة وغازات مواد كيميائية","heights":"العمل في أماكن مرتفعة (سقالات / سلالم)","construction":"أعمال بناء جديد وتكسير وصيانة هيكلية","lifting":"رفع يدوي وأحمال ثقيلة","other":"أخرى"}' SITE_LABELS='{"extinguisher":"طفاية حريق متوفرة وجاهزة","ventilation":"وسائل تهوية مناسبة","exits":"مخارج طوارئ واضحة وغير مسدودة","electrical_isolation":"عزل وتأمين التيار الكهربائي / مصادر الطاقة","communication":"وسائل اتصال طوارئ متوفرة","flammable":"إبعاد وشحن المواد القابلة للإشتعال","other":"تجهيزات أخرى"}' PPE_LABELS='{"shoes":"حذاء السلامة (Safety Shoes)","helmet":"خوذة الرأس (Safety Helmet)","mask":"الكمامة / واقي التنفس","overall":"الأبرول / بدلة العمل","ear_protection":"واقي الأذن (Ear Muffs/Plugs)","glasses":"نظارات السلامة / الواقي الشفاف","gloves":"القفازات / الجوانتي (Safety Gloves)"}' %}
+                <div class="border p-4 rounded-xl">
+                    <h4 class="font-bold text-error mb-2">7. الأنشطة الخطرة المسجلة:</h4>
+                    <div class="flex flex-wrap gap-2">
+                        {% for act in permit.hazardous_activities %}
+                        <span class="badge badge-error badge-outline">{{ act|translate_choice:HAZARD_LABELS }}</span>
+                        {% empty %}
+                        <span class="text-gray-400 text-xs">لم تحدد أنشطة خطرة</span>
+                        {% endfor %}
+                        {% if permit.hazardous_activities_other %}
+                        <span class="badge badge-neutral">{{ permit.hazardous_activities_other }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="border p-4 rounded-xl">
+                    <h4 class="font-bold text-gray-700 mb-1">8. طرق التحكم والوقاية الموجودة:</h4>
+                    <p class="text-gray-600">{{ permit.control_measures|default:"غير مدخلة" }}</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="border p-4 rounded-xl">
+                        <h4 class="font-bold text-info mb-2">9. تجهيزات المكان:</h4>
+                        <div class="flex flex-wrap gap-1">
+                            {% for prep in permit.site_preparations %}
+                            <span class="badge badge-info badge-outline text-xs">{{ prep|translate_choice:SITE_LABELS }}</span>
+                            {% empty %}
+                            <span class="text-gray-400 text-xs">لا يوجد</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="border p-4 rounded-xl">
+                        <h4 class="font-bold text-success mb-2">10. مهمات الوقاية PPE:</h4>
+                        <div class="flex flex-wrap gap-1">
+                            {% for ppe in permit.ppe_equipment %}
+                            <span class="badge badge-success badge-outline text-xs">{{ ppe|translate_choice:PPE_LABELS }}</span>
+                            {% empty %}
+                            <span class="text-gray-400 text-xs">لا يوجد</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+{% endwith %}
+            </div>
+        </div>
+    </div>
+
+    <form method="post" class="card bg-base-100 shadow border border-warning/40">
+        {% csrf_token %}
+        <div class="card-body p-6 space-y-4">
+            <h3 class="text-lg font-bold text-warning flex items-center gap-2 border-b pb-2">
+                <i class="fa-solid fa-user-shield"></i>
+                صلاحيات واعتماد قسم السلامة الداخلية
+            </h3>
+
+            <div>
+                <label class="label font-bold text-gray-800">4. مدة التصريح الصادرة من قسم السلامة *</label>
+                {{ form.permit_duration }}
+                <p class="text-xs text-gray-500 mt-1">من صلاحيات قسم السلامة إدخال قيمة هذا الحقل حكراً (مثال: 4 ساعات /
+                    حتى نهاية الدوام / يومان)</p>
+                {% if form.permit_duration.errors %}<div class="text-error text-xs mt-1">{{ form.permit_duration.errors
+                    }}</div>{% endif %}
+            </div>
+
+            <div>
+                <label class="label font-bold text-gray-700">توصيات وملاحظات قسم السلامة</label>
+                {{ form.safety_notes }}
+            </div>
+
+            <div>
+                <label class="label font-bold text-gray-800">القرار النهائي لـ قسم السلامة *</label>
+                {{ form.decision }}
+            </div>
+
+            <div class="flex justify-end gap-3 pt-4 border-t">
+                <a href="{% url 'maintenance:safety_dashboard' %}" class="btn btn-ghost">إلغاء</a>
+                <button type="submit" class="btn btn-warning text-white px-8">
+                    <i class="fa-solid fa-check-double ml-1"></i>
+                    حفظ القرار وإبلاغ الفني
+                </button>
+            </div>
+        </div>
+    </form>
+
+</div>
+{% endblock %}

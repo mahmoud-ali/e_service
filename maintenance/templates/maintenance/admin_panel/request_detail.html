@@ -1,0 +1,371 @@
+{% extends "maintenance/base.html" %}
+{% load maintenance_tags %}
+{% block title %}إدارة الطلب {{ req.request_number }}{% endblock %}
+{% block page_title %}الإشراف والتحكم بالطلب {{ req.request_number }}{% endblock %}
+{% block breadcrumb %}الرئيسية / الإدارة / طلب {{ req.request_number }}{% endblock %}
+
+{% block content %}
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+    <!-- العمود الرئيسي -->
+    <div class="lg:col-span-2 space-y-5">
+
+        <!-- بطاقة معلومات الطلب -->
+        <div class="card bg-base-100 shadow border border-base-200 overflow-hidden">
+            <div class="bg-gradient-to-l from-indigo-700 to-indigo-900 px-6 py-4 text-white flex flex-wrap justify-between items-start gap-3">
+                <div>
+                    <div class="text-indigo-300 text-xs mb-1">رقم الطلب</div>
+                    <div class="text-2xl font-bold font-mono">{{ req.request_number }}</div>
+                    <div class="text-indigo-200 text-sm mt-1">{{ req.fault_category }}</div>
+                </div>
+                <div class="flex flex-col items-end gap-2">
+                    {% if req.status == 'pending' %}
+                        <span class="badge badge-warning badge-lg font-semibold">⏳ قيد الانتظار</span>
+                    {% elif req.status == 'pending_safety' %}
+                        <span class="badge badge-secondary badge-lg font-semibold">🛡 بانتظار تصريح السلامة</span>
+                    {% elif req.status == 'in_progress' %}
+                        <span class="badge badge-info badge-lg font-semibold">🔧 جاري التنفيذ</span>
+                    {% elif req.status == 'completed' %}
+                        <span class="badge badge-success badge-lg font-semibold">✅ مكتمل ومغلق</span>
+                    {% elif req.status == 'cancelled' %}
+                        <span class="badge badge-error badge-lg font-semibold">❌ ملغى</span>
+                    {% else %}
+                        <span class="badge badge-neutral badge-lg font-semibold">{{ req.get_status_display }}</span>
+                    {% endif %}
+                    <span class="badge badge-sm priority-{{ req.priority }}">{{ req.get_priority_display }}</span>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-4 py-3 border-b text-sm">
+                    <div>
+                        <div class="text-xs text-gray-400 mb-0.5">مقدم الطلب</div>
+                        <div class="font-semibold text-gray-800">
+                            {% if req.requester %}{{ req.requester|user_display_name }}{% else %}{{ req.employee_name }}{% endif %}
+                        </div>
+                    </div>
+                    <div>
+                        <div class="text-xs text-gray-400 mb-0.5">الإدارة العامة</div>
+                        <div class="font-semibold text-gray-800">{{ req.general_dept|default:"—" }}</div>
+                    </div>
+                    <div>
+                        <div class="text-xs text-gray-400 mb-0.5">القسم</div>
+                        <div class="font-semibold text-gray-800">{{ req.department|default:"—" }}</div>
+                    </div>
+                    <div>
+                        <div class="text-xs text-gray-400 mb-0.5">موقع العطل</div>
+                        <div class="font-semibold text-gray-800">{{ req.location }}</div>
+                    </div>
+                    <div>
+                        <div class="text-xs text-gray-400 mb-0.5">الوحدة التخصصية</div>
+                        <div class="font-semibold text-primary">{{ req.assigned_unit.name|default:"غير محدد" }}</div>
+                    </div>
+                    <div>
+                        <div class="text-xs text-gray-400 mb-0.5">الفني المكلف</div>
+                        <div class="font-semibold text-secondary">
+                            {% if req.assigned_technician %}{{ req.assigned_technician|user_display_name }}{% else %}—{% endif %}
+                        </div>
+                    </div>
+                    <div>
+                        <div class="text-xs text-gray-400 mb-0.5">تاريخ الطلب</div>
+                        <div class="font-semibold text-gray-700">{{ req.created_at|date:"Y/m/d H:i" }}</div>
+                    </div>
+                    <div class="col-span-2">
+                        <div class="text-xs text-gray-400 mb-0.5">السلامة المهنية</div>
+                        {% if req.requires_safety_permit %}
+                            <span class="badge badge-warning text-xs font-bold gap-1">
+                                <i class="fa-solid fa-shield-halved"></i>
+                                يتطلب تصريح سلامة —
+                                {% if req.safety_permit %}{{ req.safety_permit.get_status_display }}{% else %}لم يُعبَّأ بعد{% endif %}
+                            </span>
+                        {% else %}
+                            <span class="text-gray-400 text-xs">لا يتطلب تصريح سلامة</span>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="mt-3">
+                    <h4 class="font-bold text-gray-700 text-sm mb-2">📋 وصف العطل / طبيعة المشكلة:</h4>
+                    <div class="p-4 bg-base-200 rounded-xl text-sm leading-relaxed whitespace-pre-line text-gray-700 min-h-[60px]">
+                        {{ req.fault_description|default:"لم يُقدَّم وصف إضافي." }}
+                    </div>
+                </div>
+
+                {% if req.admin_notes %}
+                <div class="mt-3 p-3 bg-amber-50 border border-amber-200 rounded-xl text-sm">
+                    <div class="text-xs font-bold text-amber-700 mb-1"><i class="fa-solid fa-note-sticky"></i> ملاحظات المدير (تظهر للفني):</div>
+                    <div class="text-gray-700 whitespace-pre-line">{{ req.admin_notes }}</div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- تصريح السلامة -->
+        {% if req.requires_safety_permit %}
+        <div class="card bg-base-100 shadow border-2 border-warning/40">
+            <div class="card-body p-4 space-y-3">
+                <div class="flex flex-wrap justify-between items-center border-b pb-2 gap-2">
+                    <h3 class="font-bold text-gray-800 flex items-center gap-2">
+                        <i class="fa-solid fa-shield-halved text-warning text-lg"></i>
+                        تصريح السلامة والصحة المهنية
+                    </h3>
+                    {% if req.safety_permit %}
+                        <span class="badge badge-warning text-xs font-bold">{{ req.safety_permit.get_status_display }}</span>
+                    {% else %}
+                        <span class="badge badge-outline badge-error text-xs">لم تُعبَّأ الاستمارة بعد</span>
+                    {% endif %}
+                </div>
+
+                {% if req.safety_permit %}
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+                    <div class="bg-amber-50 border border-amber-200 rounded-xl p-3">
+                        <div class="text-gray-400 font-medium mb-1"><i class="fa-solid fa-clock text-amber-500"></i> مدة التصريح:</div>
+                        <div class="font-bold text-gray-800 text-sm">
+                            {% if req.safety_permit.permit_duration %}
+                                <span class="text-amber-700">{{ req.safety_permit.permit_duration }}</span>
+                            {% else %}
+                                <span class="text-amber-500 italic">بانتظار تحديدها من السلامة</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="bg-blue-50 border border-blue-200 rounded-xl p-3">
+                        <div class="text-gray-400 font-medium mb-1"><i class="fa-solid fa-user-shield text-blue-500"></i> المسؤول عن العمل:</div>
+                        <div class="font-bold text-gray-800 text-sm">
+                            {{ req.safety_permit.responsible_person|user_display_name|default:req.safety_permit.responsible_person_name }}
+                            {% if req.safety_permit.responsible_person_job %}
+                                <span class="text-gray-400 font-normal text-xs">({{ req.safety_permit.responsible_person_job }})</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-3">
+                        <div class="text-gray-400 font-medium mb-1"><i class="fa-solid fa-calendar-days text-emerald-500"></i> مواعيد التخطيط:</div>
+                        <div class="font-bold text-gray-800 text-sm" dir="ltr">
+                            {{ req.safety_permit.start_time|date:"Y/m/d H:i" }} ➔ {{ req.safety_permit.end_time|date:"H:i" }}
+                        </div>
+                    </div>
+                </div>
+
+                {% if req.safety_permit.assigned_technicians.all %}
+                <div class="p-3 bg-indigo-50/60 border border-indigo-200/60 rounded-xl text-xs">
+                    <div class="font-bold text-indigo-900 mb-1.5 flex items-center gap-1.5">
+                        <i class="fa-solid fa-users text-indigo-600"></i>
+                        الفنيون المشاركون في استمارة السلامة:
+                    </div>
+                    <div class="flex flex-wrap gap-1.5">
+                        {% for tech in req.safety_permit.assigned_technicians.all %}
+                        <span class="badge badge-primary badge-outline font-semibold gap-1 py-2 px-3">
+                            <i class="fa-solid fa-user-gear text-xs"></i> {{ tech|user_display_name }}
+                        </span>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                {% if req.safety_permit.safety_notes %}
+                <div class="alert alert-warning text-xs py-2 px-3 rounded-xl flex items-start gap-2">
+                    <i class="fa-solid fa-triangle-exclamation text-amber-600 mt-0.5"></i>
+                    <div>
+                        <strong class="font-bold text-amber-900">توصيات قسم السلامة:</strong>
+                        <p class="text-amber-800 mt-0.5 leading-relaxed">{{ req.safety_permit.safety_notes }}</p>
+                    </div>
+                </div>
+                {% endif %}
+
+                {% else %}
+                <div class="alert alert-warning text-xs p-3">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                    هذا الطلب يتطلب تصريح سلامة مهنية — يجب على الفني تعبئة الاستمارة قبل البدء بالعمل.
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- قطع الغيار المستهلكة -->
+        {% if spare_parts %}
+        <div class="card bg-base-100 shadow border border-base-200">
+            <div class="card-body">
+                <h3 class="card-title text-base font-bold border-b pb-2">
+                    <i class="fa-solid fa-boxes-stacked text-accent ml-2"></i> قطع الغيار المستهلكة
+                </h3>
+                <div class="overflow-x-auto mt-2">
+                    <table class="table table-sm w-full text-right">
+                        <thead>
+                            <tr>
+                                <th>كود القطعة (SKU)</th>
+                                <th>الاسم</th>
+                                <th>الكمية المصروفة</th>
+                                <th>التاريخ</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for sp in spare_parts %}
+                            <tr>
+                                <td class="font-mono text-xs"><code class="bg-gray-100 px-1 rounded">{{ sp.spare_part.sku }}</code></td>
+                                <td class="font-medium">{{ sp.spare_part.name }}</td>
+                                <td class="font-bold font-mono text-error">-{{ sp.quantity }} {{ sp.spare_part.unit_of_measure }}</td>
+                                <td class="text-xs text-gray-400">{{ sp.created_at|date:"Y/m/d H:i" }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- تقرير الإنجاز -->
+        {% if req.completion_report %}
+        <div class="card bg-success/10 border border-success/30 shadow">
+            <div class="card-body">
+                <h3 class="card-title text-success font-bold">
+                    <i class="fa-solid fa-circle-check ml-2"></i> تقرير إنجاز المهمة (من الفني)
+                </h3>
+                <div class="text-sm space-y-3 mt-2">
+                    <div>
+                        <strong class="text-gray-700">الإجراءات المتخذة:</strong>
+                        <p class="mt-1 text-gray-600 leading-relaxed whitespace-pre-line">{{ req.completion_report.work_done }}</p>
+                    </div>
+                    {% if req.completion_report.root_cause %}
+                    <div>
+                        <strong class="text-gray-700">السبب الجذري:</strong>
+                        <p class="mt-1 text-gray-600">{{ req.completion_report.root_cause }}</p>
+                    </div>
+                    {% endif %}
+                    {% if req.completion_report.recommendations %}
+                    <div>
+                        <strong class="text-gray-700">التوصيات:</strong>
+                        <p class="mt-1 text-gray-600">{{ req.completion_report.recommendations }}</p>
+                    </div>
+                    {% endif %}
+                    <div class="text-xs text-gray-500 pt-2 border-t border-success/20">
+                        تاريخ الإنهاء: {{ req.completion_report.completed_at|date:"Y/m/d H:i" }}
+                        {% if req.assigned_technician %}| بواسطة: {{ req.assigned_technician.get_full_name|default:req.assigned_technician.username }}{% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+    </div><!-- /العمود الرئيسي -->
+
+
+    <!-- الشريط الجانبي -->
+    <div class="space-y-5">
+
+        <!-- توجيه وتكليف الفني -->
+        {% if req.status != 'completed' and req.status != 'cancelled' %}
+        <div class="card bg-base-100 shadow border border-base-200">
+            <div class="card-body">
+                <h3 class="card-title text-base font-bold text-gray-800 border-b pb-2">
+                    <i class="fa-solid fa-user-gear text-primary ml-2"></i> توجيه وتكليف الفني
+                </h3>
+                <form method="post" action="{% url 'maintenance:admin_assign_technician' req.pk %}" class="space-y-3 mt-2">
+                    {% csrf_token %}
+                    <div>
+                        <label class="label text-xs font-semibold">اختر الفني المكلف</label>
+                        <select name="technician_id" class="select select-bordered select-sm w-full">
+                            <option value="">-- بدون تكليف (أو سحب التكليف) --</option>
+                            {% for tech in technicians %}
+                            <option value="{{ tech.id }}" {% if req.assigned_technician == tech %}selected{% endif %}>
+                                {{ tech.get_full_name|default:tech.username }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-sm w-full">
+                        <i class="fa-solid fa-user-check ml-1"></i> حفظ التكليف
+                    </button>
+                </form>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- تعديل الأولوية وملاحظات الإدارة -->
+        {% if req.status != 'completed' and req.status != 'cancelled' %}
+        <div class="card bg-base-100 shadow border border-base-200">
+            <div class="card-body">
+                <h3 class="card-title text-base font-bold text-gray-800 border-b pb-2">
+                    <i class="fa-solid fa-pen-to-square text-secondary ml-2"></i> الأولوية وملاحظات الإدارة
+                </h3>
+                <form method="post" class="space-y-3 mt-2">
+                    {% csrf_token %}
+                    <div>
+                        <label class="label text-xs font-semibold">مستوى الأولوية</label>
+                        {{ admin_notes_form.priority }}
+                    </div>
+                    <div>
+                        <label class="label text-xs font-semibold">ملاحظات توجيهية (تظهر للفني)</label>
+                        {{ admin_notes_form.admin_notes }}
+                    </div>
+                    <button type="submit" class="btn btn-secondary btn-sm w-full">
+                        <i class="fa-solid fa-save ml-1"></i> حفظ الملاحظات
+                    </button>
+                </form>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- إجراءات المدير -->
+        <div class="card bg-base-100 shadow border border-base-200">
+            <div class="card-body">
+                <h3 class="card-title text-base font-bold text-gray-800 border-b pb-2">
+                    <i class="fa-solid fa-sliders text-warning ml-2"></i> إجراءات المدير
+                </h3>
+                <div class="space-y-2 mt-2">
+                    {% if req.status != 'cancelled' and req.status != 'completed' %}
+                    <form method="post" onsubmit="return confirm('هل تريد إلغاء هذا الطلب؟')">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="cancel">
+                        <button type="submit" class="btn btn-error btn-sm w-full gap-2">
+                            <i class="fa-solid fa-ban"></i> إلغاء الطلب
+                        </button>
+                    </form>
+                    {% endif %}
+
+                    {% if req.status == 'cancelled' %}
+                    <form method="post" onsubmit="return confirm('هل تريد إعادة فتح هذا الطلب؟')">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="reopen">
+                        <button type="submit" class="btn btn-info btn-sm w-full gap-2">
+                            <i class="fa-solid fa-rotate-left"></i> إعادة فتح الطلب
+                        </button>
+                    </form>
+                    {% endif %}
+
+                    {% if req.requires_safety_permit and req.safety_permit and req.safety_permit.status == 'pending_safety' %}
+                    <a href="{% url 'maintenance:safety_permit_approve' req.pk %}" class="btn btn-warning btn-sm w-full gap-2">
+                        <i class="fa-solid fa-shield-halved"></i> اعتماد تصريح السلامة
+                    </a>
+                    {% endif %}
+
+                    <a href="{% url 'maintenance:admin_all_requests' %}" class="btn btn-ghost btn-sm w-full gap-2">
+                        <i class="fa-solid fa-arrow-right"></i> العودة للقائمة
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- ملخص الحالة -->
+        <div class="card bg-base-100 shadow border border-base-200">
+            <div class="card-body p-4">
+                <h3 class="text-sm font-bold text-gray-700 border-b pb-2 mb-3">
+                    <i class="fa-solid fa-circle-info text-info ml-1"></i> مسار الطلب
+                </h3>
+                <ul class="steps steps-vertical text-xs w-full">
+                    <li class="step step-primary">تم تقديم الطلب</li>
+                    {% if req.requires_safety_permit %}
+                    <li class="step {% if req.safety_permit and req.safety_permit.status == 'approved' or req.status == 'in_progress' or req.status == 'completed' %}step-primary{% elif req.status == 'pending_safety' %}step-warning{% endif %}">
+                        تصريح السلامة
+                    </li>
+                    {% endif %}
+                    <li class="step {% if req.status == 'in_progress' or req.status == 'completed' %}step-primary{% endif %}">جاري التنفيذ</li>
+                    <li class="step {% if req.status == 'completed' %}step-primary{% endif %}">مكتمل</li>
+                </ul>
+            </div>
+        </div>
+
+    </div><!-- /الشريط الجانبي -->
+
+</div>
+{% endblock %}

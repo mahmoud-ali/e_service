@@ -1,6 +1,25 @@
 {% load i18n %}
 {% load notifications %}
 {% if app_list %}
+  <div class="app-maintenance module">
+    <table>
+      <caption>
+        <a href="/maintenance/" class="section" title="نظام طلبات الصيانة">نظام طلبات الصيانة</a>
+      </caption>
+      <tr class="model-maintenancerequest">
+        <th scope="row">
+          <a href="/maintenance/">تقديم ومتابعة طلبات الصيانة</a>
+        </th>
+        {% if show_changelinks %}
+          <td><a href="/maintenance/new/" class="addlink">{% translate 'Add' %}</a></td>
+          <td><a href="/maintenance/" class="viewlink">{% translate 'View' %}</a></td>
+        {% else %}
+          <td><a href="/maintenance/new/" class="addlink">{% translate 'Add' %}</a></td>
+          <td></td>
+        {% endif %}
+      </tr>
+    </table>
+  </div>
   {% for app in app_list %}
     <div class="app-{{ app.app_label }} module{% if app.app_url in request.path|urlencode %} current-app{% endif %}">
       <table>

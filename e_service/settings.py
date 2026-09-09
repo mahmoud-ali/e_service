@@ -97,6 +97,7 @@ INSTALLED_APPS = [
     'hr_employee_survey',
     # Debug
     # 'debug_toolbar',
+    'maintenance',
 ]
 
 MIDDLEWARE = [

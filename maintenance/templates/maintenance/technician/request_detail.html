@@ -1,0 +1,369 @@
+{% extends "maintenance/base.html" %}
+{% load maintenance_tags %}
+{% block title %}تفاصيل الطلب {{ req.request_number }} — الفني{% endblock %}
+{% block page_title %}معالجة طلب الصيانة{% endblock %}
+{% block breadcrumb %}الرئيسية / طلبات الوحدة / {{ req.request_number }}{% endblock %}
+{% block nav_tech %}active{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto space-y-5">
+
+    <div class="form-card overflow-hidden">
+        <div
+            class="bg-gradient-to-l from-indigo-700 to-indigo-900 px-6 py-4 text-white flex flex-wrap justify-between items-start gap-3">
+            <div>
+                <div class="text-indigo-300 text-xs mb-1">رقم الطلب</div>
+                <div class="text-2xl font-bold">{{ req.request_number }}</div>
+                <div class="text-indigo-200 text-sm mt-1">{{ req.fault_category }}</div>
+            </div>
+            <div class="flex flex-col items-end gap-2">
+                <span class="badge badge-lg status-{{ req.status }} font-semibold">{{ req.get_status_display }}</span>
+                <span class="badge badge-sm priority-{{ req.priority }}">{{ req.get_priority_display }}</span>
+            </div>
+        </div>
+
+        <div class="p-5 grid grid-cols-2 md:grid-cols-4 gap-4 bg-indigo-50/30">
+            <div class="text-center">
+                <div class="text-xs text-gray-400 mb-1">الموظف</div>
+                <div class="font-semibold text-gray-800 text-sm">{{ req.requester|user_display_name }}</div>
+            </div>
+            <div class="text-center">
+                <div class="text-xs text-gray-400 mb-1">القسم</div>
+                <div class="font-semibold text-gray-800 text-sm">{{ req.department }}</div>
+            </div>
+            <div class="text-center">
+                <div class="text-xs text-gray-400 mb-1">الإدارة العامة</div>
+                <div class="font-semibold text-gray-800 text-sm">{{ req.general_dept }}</div>
+            </div>
+            <div class="text-center">
+                <div class="text-xs text-gray-400 mb-1">موقع العطل</div>
+                <div class="font-semibold text-gray-800 text-sm">{{ req.location }}</div>
+            </div>
+        </div>
+    </div>
+
+    {% if req.requires_safety_permit %}
+    <div class="card bg-base-100 shadow border border-warning/50">
+        <div class="card-body p-4 space-y-3">
+            <div class="flex flex-wrap justify-between items-center gap-2 border-b pb-2">
+                <h3 class="font-bold text-gray-800 flex items-center gap-2">
+                    <i class="fa-solid fa-shield-halved text-warning"></i>
+                    تصريح السلامة والصحة المهنية (قسم السلامة الداخلية)
+                </h3>
+                {% if req.safety_permit %}
+                <span class="badge badge-warning text-xs">{{ req.safety_permit.get_status_display }}</span>
+                {% else %}
+                <span class="badge badge-outline badge-error text-xs">لم تُعَبَّأ الفورمة بعد</span>
+                {% endif %}
+            </div>
+
+            {% if req.safety_permit %}
+            <div class="bg-base-200/60 p-4 rounded-xl border border-base-300 space-y-3 text-xs">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="flex items-center gap-2 bg-base-100 p-2.5 rounded-lg border border-base-200 shadow-sm">
+                        <i class="fa-solid fa-clock text-amber-500 text-base"></i>
+                        <div>
+                            <div class="text-gray-400 font-medium">مدة التصريح:</div>
+                            <div class="font-bold text-gray-800 text-sm">
+                                {% if req.safety_permit.permit_duration %}
+                                <span class="text-amber-700 font-extrabold">{{ req.safety_permit.permit_duration }}</span>
+                                {% else %}
+                                <span class="text-amber-600 italic">بانتظار تحديدها من السلامة</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-2 bg-base-100 p-2.5 rounded-lg border border-base-200 shadow-sm">
+                        <i class="fa-solid fa-user-shield text-blue-500 text-base"></i>
+                        <div>
+                            <div class="text-gray-400 font-medium">المسؤول عن العمل:</div>
+                            <div class="font-bold text-gray-800 text-sm">
+                                {% if req.safety_permit.responsible_person_name %}
+                                    {{ req.safety_permit.responsible_person_name }}
+                                {% elif req.safety_permit.responsible_person %}
+                                    {{ req.safety_permit.responsible_person|user_display_name }}
+                                {% else %}—{% endif %}
+                                {% if req.safety_permit.responsible_person_job %}
+                                <span class="text-gray-400 font-normal">({{ req.safety_permit.responsible_person_job }})</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-2 bg-base-100 p-2.5 rounded-lg border border-base-200 shadow-sm">
+                        <i class="fa-solid fa-calendar-days text-emerald-500 text-base"></i>
+                        <div>
+                            <div class="text-gray-400 font-medium">مواعيد التخطيط:</div>
+                            <div class="font-bold text-gray-800 text-sm" dir="ltr">
+                                {{ req.safety_permit.start_time|date:"Y/m/d H:i" }} ➔ {{ req.safety_permit.end_time|date:"H:i" }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {% if req.safety_permit.assigned_technicians.all %}
+                <div class="p-3 bg-indigo-50/60 border border-indigo-200/60 rounded-xl text-xs">
+                    <div class="font-bold text-indigo-900 mb-1.5 flex items-center gap-1.5">
+                        <i class="fa-solid fa-users text-indigo-600"></i>
+                        الفنيون المشاركون في استمارة السلامة:
+                    </div>
+                    <div class="flex flex-wrap gap-1.5">
+                        {% for tech in req.safety_permit.assigned_technicians.all %}
+                        <span class="badge badge-primary badge-outline font-semibold gap-1 py-2 px-3">
+                            <i class="fa-solid fa-user-gear text-xs"></i> {{ tech|user_display_name }}
+                        </span>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                {% if req.safety_permit.safety_notes %}
+                <div
+                    class="alert alert-warning text-xs py-2 px-3 rounded-lg border border-warning/40 shadow-sm flex items-start gap-2">
+                    <i class="fa-solid fa-triangle-exclamation text-amber-600 mt-0.5"></i>
+                    <div>
+                        <strong class="font-bold text-amber-900">توصيات واشتراطات قسم السلامة:</strong>
+                        <p class="text-amber-800 font-medium mt-0.5 leading-relaxed">{{ req.safety_permit.safety_notes }}</p>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+            {% else %}
+            <div class="alert alert-warning text-xs p-3">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                هذا البلاغ يندرج ضمن الأعمال الخطرة والمشروطة بموافقة قسم السلامة الداخلية. يجب تعبئة الاستمارة أولاً.
+            </div>
+            {% endif %}
+
+            <div class="flex flex-wrap gap-2 pt-2">
+                {% if not req.safety_permit or req.safety_permit.status == 'rejected' %}
+                <a href="{% url 'maintenance:safety_permit_form' req.pk %}" class="btn btn-warning btn-sm gap-2">
+                    <i class="fa-solid fa-pen"></i> تعبئة فورمة تصريح السلامة
+                </a>
+                {% elif req.safety_permit.status == 'pending_safety' %}
+                <a href="{% url 'maintenance:safety_permit_form' req.pk %}" class="btn btn-ghost btn-sm gap-2">
+                    <i class="fa-solid fa-eye"></i> تعديل/معاينة فورمة السلامة
+                </a>
+                {% if request.user|has_any_group:"maintenance_safety,maintenance_admin" %}
+                <a href="{% url 'maintenance:safety_permit_approve' req.pk %}"
+                    class="btn btn-warning btn-sm text-white gap-2">
+                    <i class="fa-solid fa-check"></i> اعتماد موافقة السلامة
+                </a>
+                {% endif %}
+                {% elif req.safety_permit.status == 'approved' %}
+                <div class="text-success font-semibold text-xs flex items-center gap-1">
+                    <i class="fa-solid fa-circle-check"></i> تصريح السلامة معتمد
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="form-card p-4">
+        <h3 class="font-bold text-gray-700 mb-3">⚡ الإجراءات</h3>
+        <div class="flex flex-wrap gap-2">
+            {% if req.status == 'pending' or req.status == 'pending_safety' %}
+            {% if request.user|has_group:"maintenance_safety" and not request.user|has_any_group:"maintenance_elec,maintenance_air_cond,maintenance_mech,maintenance_const,maintenance_admin" %}
+            <div class="alert alert-info text-xs">
+                <i class="fa-solid fa-circle-info"></i>
+                بصفتك موظف السلامة الداخلية، صلاحيتك تنحصر في اعتماد/تحديد مدة تصريح السلامة وإغلاق الطلب، وبدء العمل هو
+                مسؤولية الفني المكلف.
+            </div>
+            {% else %}
+            {% if req.requires_safety_permit %}
+            {% if req.safety_permit and req.safety_permit.status == 'approved' %}
+            <form method="post">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="start">
+                <button type="submit" class="btn btn-info gap-2">▶️ بدء العمل (تم اعتماد السلامة)</button>
+            </form>
+            {% else %}
+            <button disabled class="btn btn-disabled gap-2">
+                🔒 بدء العمل (يتطلب اعتماد تصريح السلامة أولاً)
+            </button>
+            {% endif %}
+            {% else %}
+            <form method="post">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="start">
+                <button type="submit" class="btn btn-info gap-2">▶️ بدء العمل</button>
+            </form>
+            {% endif %}
+            {% endif %}
+            {% endif %}
+
+            {% if req.status == 'in_progress' and not req.completion_report %}
+            {% if not request.user|has_group:"maintenance_safety" or request.user|has_group:"maintenance_admin" %}
+            <button onclick="document.getElementById('completeModal').showModal()" class="btn btn-success gap-2">
+                ✅ رفع تقرير الإنجاز وإكمال المهمة
+            </button>
+            {% endif %}
+            {% endif %}
+
+            {% if req.completion_report and req.requires_safety_permit and req.status != 'completed' %}
+            {% if request.user|has_any_group:"maintenance_safety,maintenance_admin" %}
+            <form method="post" action="{% url 'maintenance:safety_permit_close' req.pk %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-success text-white gap-2"
+                    onclick="return confirm('هل أنت تأكد من إغلاق تصريح السلامة والطلب نهائياً؟')">
+                    🔒 إغلاق الطلب (قسم السلامة)
+                </button>
+            </form>
+            {% else %}
+            <div class="alert alert-warning text-xs py-2.5 px-4 font-bold flex items-center gap-2 rounded-xl border border-warning/40 shadow-sm">
+                <i class="fa-solid fa-clock-rotate-left text-amber-600 text-base"></i>
+                تم رفع تقرير الإنجاز بنجاح — الطلب بانتظار الإغلاق النهائي من قسم السلامة والصحة المهنية
+            </div>
+            {% endif %}
+            {% endif %}
+
+            {% if request.user|has_group:"maintenance_admin" and req.status in 'pending,pending_safety,in_progress' %}
+            <button type="button" onclick="document.getElementById('switchUnitModal').showModal()"
+                class="btn btn-warning gap-2">
+                🔄 تبديل الوحدة
+            </button>
+            {% endif %}
+
+            <a href="{% url 'maintenance:technician_request_list' %}" class="btn btn-ghost">← رجوع</a>
+        </div>
+    </div>
+
+    {% if not request.user|has_group:"maintenance_safety" or request.user|has_group:"maintenance_admin" %}
+    {% if req.status == 'in_progress' or spare_parts %}
+    <div class="form-card p-5">
+        <h3 class="font-bold text-gray-700 mb-4 flex items-center gap-2">
+            <span class="text-purple-500">🔩</span> استهلاك قطع الغيار
+        </h3>
+
+        {% if req.status == 'in_progress' and not req.completion_report %}
+        <form method="post" class="flex flex-wrap gap-3 items-end mb-4">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="add_part">
+            <div class="flex-1 min-w-[200px]">
+                <label class="label label-text text-xs">القطعة</label>
+                {{ part_form.spare_part }}
+            </div>
+            <div class="w-28">
+                <label class="label label-text text-xs">الكمية</label>
+                {{ part_form.quantity }}
+            </div>
+            <button type="submit" class="btn btn-sm btn-secondary">➕ إضافة</button>
+        </form>
+        {% endif %}
+
+        {% if spare_parts %}
+        <div class="overflow-x-auto">
+            <table class="table table-sm data-table w-full">
+                <thead>
+                    <tr>
+                        <th>القطعة</th>
+                        <th>SKU</th>
+                        <th>الكمية</th>
+                        <th>التاريخ</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for mov in spare_parts %}
+                    <tr>
+                        <td class="font-medium">{{ mov.spare_part.name }}</td>
+                        <td><code class="bg-gray-100 px-1 rounded text-xs">{{ mov.spare_part.sku }}</code></td>
+                        <td>{{ mov.quantity }} {{ mov.spare_part.unit_of_measure }}</td>
+                        <td class="text-xs text-gray-400">{{ mov.created_at|date:"H:i" }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="text-center py-6 text-gray-400 text-sm bg-gray-50 rounded-xl">
+            لم يتم استهلاك أي قطعة غيار حتى الآن
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
+    {% endif %}
+
+    {% if req.completion_report %}
+    <div class="form-card p-5 border-2 border-green-200">
+        <h3 class="font-bold text-green-700 mb-3">✅ تقرير الإنجاز (مكتمل)</h3>
+        <div class="text-sm text-gray-700 space-y-2">
+            <div><strong>العمل المنجز:</strong> {{ req.completion_report.work_done }}</div>
+            {% if req.completion_report.root_cause %}
+            <div><strong>السبب الجذري:</strong> {{ req.completion_report.root_cause }}</div>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+
+</div>
+
+<dialog id="completeModal" class="modal">
+    <div class="modal-box max-w-lg" dir="rtl">
+        <h3 class="font-bold text-lg mb-4">📝 تقرير إنجاز المهمة</h3>
+        <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="complete">
+
+            <div class="space-y-4">
+                <div>
+                    <label class="label"><span class="label-text font-semibold">العمل المنجز <span
+                                class="text-error">*</span></span></label>
+                    {{ report_form.work_done }}
+                </div>
+                <div>
+                    <label class="label"><span class="label-text font-semibold">السبب الجذري للعطل</span></label>
+                    {{ report_form.root_cause }}
+                </div>
+                <div>
+                    <label class="label"><span class="label-text font-semibold">التوصيات</span></label>
+                    {{ report_form.recommendations }}
+                </div>
+            </div>
+
+            <div class="modal-action">
+                <button type="button" class="btn btn-ghost"
+                    onclick="document.getElementById('completeModal').close()">إلغاء</button>
+                <button type="submit" class="btn btn-success">✅ إغلاق وحفظ التقرير</button>
+            </div>
+        </form>
+    </div>
+    <form method="dialog" class="modal-backdrop"><button>إغلاق</button></form>
+</dialog>
+
+{% if request.user|has_group:"maintenance_admin" %}
+<dialog id="switchUnitModal" class="modal">
+    <div class="modal-box max-w-md" dir="rtl">
+        <h3 class="font-bold text-lg mb-4 flex items-center gap-2 text-warning">
+            <span>🔄</span> تبديل الوحدة المختصة
+        </h3>
+        <p class="text-xs text-gray-500 mb-4">اختر وحدة الصيانة الجديدة لنقل هذا الطلب إليها.</p>
+        <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="switch_unit">
+            <div class="space-y-4">
+                <div>
+                    <label class="label"><span class="label-text font-semibold">الوحدة الجديدة <span
+                                class="text-error">*</span></span></label>
+                    <select name="new_unit_id" class="select select-bordered w-full" required>
+                        <option value="" disabled selected>-- اختر الوحدة --</option>
+                        {% for u in units %}
+                        <option value="{{ u.id }}" {% if req.assigned_unit_id == u.id %}disabled{% endif %}>
+                            {{ u.icon }} {{ u.name }} {% if req.assigned_unit_id == u.id %}(الوحدة الحالية){% endif %}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="modal-action mt-6">
+                <button type="button" class="btn btn-ghost"
+                    onclick="document.getElementById('switchUnitModal').close()">إلغاء</button>
+                <button type="submit" class="btn btn-warning">🔄 تأكيد التبديل</button>
+            </div>
+        </form>
+    </div>
+    <form method="dialog" class="modal-backdrop"><button>إغلاق</button></form>
+</dialog>
+{% endif %}
+{% endblock %}

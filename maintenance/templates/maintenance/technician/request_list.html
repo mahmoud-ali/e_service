@@ -1,0 +1,115 @@
+{% extends "maintenance/base.html" %}
+{% block title %}طلبات وحدتي{% endblock %}
+{% block page_title %}طلبات الوحدة التخصصية{% endblock %}
+{% block breadcrumb %}الرئيسية / طلبات الوحدة{% endblock %}
+{% block nav_tech %}active{% endblock %}
+
+{% block content %}
+<div class="flex flex-wrap items-center justify-between gap-3 mb-6">
+    <div class="flex items-center gap-3">
+        {% if unit %}
+        <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center text-2xl">{{ unit.icon }}</div>
+        <div>
+            <h2 class="font-bold text-xl text-gray-800">{{ unit.name }}</h2>
+            <p class="text-gray-500 text-sm">الطلبات المحالة لوحدتك</p>
+        </div>
+        {% else %}
+        <h2 class="font-bold text-xl text-gray-800">جميع الطلبات</h2>
+        {% endif %}
+    </div>
+    <div class="flex gap-2">
+        <div class="badge badge-lg badge-warning gap-1">⏳ {{ requests|length }} طلب</div>
+    </div>
+</div>
+
+<!-- Filters -->
+<div class="form-card p-4 mb-5">
+    <form method="get" class="flex flex-wrap gap-3 items-center">
+        <input type="text" name="search" value="{{ request.GET.search }}" placeholder="بحث بالرقم أو الاسم أو القسم..."
+            class="input input-bordered input-sm flex-1 min-w-[200px]">
+        <select name="status" class="select select-bordered select-sm">
+            <option value="">كل الحالات</option>
+            {% for val, label in status_choices %}
+            <option value="{{ val }}" {% if request.GET.status == val %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit" class="btn btn-sm btn-primary">بحث</button>
+        <a href="{% url 'maintenance:technician_request_list' %}" class="btn btn-sm btn-ghost">إعادة تعيين</a>
+    </form>
+</div>
+
+<!-- Requests Table -->
+{% if requests %}
+<div class="form-card overflow-hidden">
+    <div class="overflow-x-auto">
+        <table class="table data-table w-full">
+            <thead>
+                <tr>
+                    <th>رقم الطلب</th>
+                    <th>الموظف / القسم</th>
+                    <th>نوع العطل</th>
+                    <th>الموقع</th>
+                    <th>الحالة</th>
+                    <th>الأولوية</th>
+                    <th>التاريخ</th>
+                    <th>إجراءات</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for req in requests %}
+                <tr class="{% if req.status == 'pending' %}bg-yellow-50/30{% endif %}">
+                    <td>
+                        <div class="font-bold text-blue-700">{{ req.request_number }}</div>
+                    </td>
+                    <td>
+                        <div class="font-semibold text-gray-800">{{ req.employee_name }}</div>
+                        <div class="text-xs text-gray-400">{{ req.department }}</div>
+                    </td>
+                    <td>
+                        <div class="text-sm text-gray-700">{{ req.fault_category.name }}</div>
+                        <div class="text-xs text-gray-400">{{ req.fault_category.sub_category }}</div>
+                    </td>
+                    <td class="text-sm text-gray-600">{{ req.location|truncatechars:30 }}</td>
+                    <td>
+                        <span class="badge badge-sm status-{{ req.status }}">{{ req.get_status_display }}</span>
+                    </td>
+                    <td>
+                        <span class="badge badge-sm priority-{{ req.priority }}">{{ req.get_priority_display }}</span>
+                    </td>
+                    <td class="text-xs text-gray-400">{{ req.created_at|date:"Y/m/d" }}</td>
+                    <td>
+                        <a href="{% url 'maintenance:technician_request_detail' req.pk %}"
+                            class="btn btn-xs btn-outline btn-primary">فتح</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Pagination -->
+{% if is_paginated %}
+<div class="flex justify-center mt-5">
+    <div class="join">
+        {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}&{{ request.GET.urlencode }}"
+            class="join-item btn btn-sm">«</a>
+        {% endif %}
+        <button class="join-item btn btn-sm btn-active">{{ page_obj.number }} / {{ page_obj.paginator.num_pages
+            }}</button>
+        {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}&{{ request.GET.urlencode }}" class="join-item btn btn-sm">»</a>
+        {% endif %}
+    </div>
+</div>
+{% endif %}
+
+{% else %}
+<div class="form-card p-12 text-center">
+    <div class="text-5xl mb-4">🎉</div>
+    <h3 class="font-bold text-gray-600 text-lg mb-2">لا توجد طلبات في الوقت الحالي</h3>
+    <p class="text-gray-400 text-sm">ستظهر هنا الطلبات المحالة لوحدتك.</p>
+</div>
+{% endif %}
+{% endblock %}

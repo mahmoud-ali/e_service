@@ -1,0 +1,145 @@
+{% extends "maintenance/base.html" %}
+{% block title %}لوحة تصاريح السلامة المهنية — SMRC{% endblock %}
+{% block page_title %}إدارة تصاريح السلامة والصحة المهنية (قسم السلامة الداخلية){% endblock %}
+{% block breadcrumb %}الرئيسية / السلامة المهنية / لوحة التحكم{% endblock %}
+{% block nav_safety %}active{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+
+    <!-- Header Stats -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="stat-card p-5 flex items-center justify-between border-r-4 border-r-warning">
+            <div>
+                <div class="text-xs text-gray-500 font-semibold">تصاريح بانتظار الاعتماد</div>
+                <div class="text-3xl font-bold text-warning font-mono mt-1">{{ pending_count }}</div>
+            </div>
+            <div class="w-12 h-12 rounded-full bg-warning/10 text-warning flex items-center justify-center text-xl">
+                <i class="fa-solid fa-clock"></i>
+            </div>
+        </div>
+
+        <div class="stat-card p-5 flex items-center justify-between border-r-4 border-r-info">
+            <div>
+                <div class="text-xs text-gray-500 font-semibold">تصاريح نشطة ومعتمدة</div>
+                <div class="text-3xl font-bold text-info font-mono mt-1">{{ approved_count }}</div>
+            </div>
+            <div class="w-12 h-12 rounded-full bg-info/10 text-info flex items-center justify-center text-xl">
+                <i class="fa-solid fa-shield-check"></i>
+            </div>
+        </div>
+
+        <div class="stat-card p-5 flex items-center justify-between border-r-4 border-r-success">
+            <div>
+                <div class="text-xs text-gray-500 font-semibold">تصاريح مغلقة بنجاح</div>
+                <div class="text-3xl font-bold text-success font-mono mt-1">{{ closed_count }}</div>
+            </div>
+            <div class="w-12 h-12 rounded-full bg-success/10 text-success flex items-center justify-center text-xl">
+                <i class="fa-solid fa-circle-check"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Table Card -->
+    <div class="card bg-base-100 shadow border border-base-200">
+        <div class="card-body p-6">
+            <h3 class="text-lg font-bold text-gray-800 border-b pb-3 flex items-center gap-2">
+                <i class="fa-solid fa-list-check text-primary"></i>
+                سجل تصاريح السلامة المهنية
+            </h3>
+
+            <div class="overflow-x-auto">
+                <table class="table table-zebra w-full text-right">
+                    <thead>
+                        <tr>
+                            <th>رقم الطلب</th>
+                            <th>العطل / الموقع</th>
+                            <th>المسؤول والتنفيذ</th>
+                            <th>مدة التصريح</th>
+                            <th>حالة التصريح</th>
+                            <th>حالة الطلب</th>
+                            <th>الإجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for permit in permits %}
+                        <tr>
+                            <td class="font-mono font-bold text-primary text-xs">
+                                {{ permit.request.request_number }}
+                            </td>
+                            <td>
+                                <div class="font-bold text-sm">{{ permit.request.fault_category.name }}</div>
+                                <div class="text-xs text-gray-500">{{ permit.request.location }}</div>
+                            </td>
+                            <td>
+                                <div class="text-xs font-semibold">{{ permit.responsible_person_name }}</div>
+                                <div class="text-xs text-gray-400">{{ permit.responsible_person_job }}</div>
+                            </td>
+                            <td class="font-mono text-xs">
+                                {{ permit.permit_duration|default:"لم تُحدد بعد" }}
+                            </td>
+                            <td>
+                                {% if permit.status == 'pending_safety' %}
+                                    <span class="badge badge-warning text-xs">بانتظار موافقة السلامة</span>
+                                {% elif permit.status == 'approved' %}
+                                    <span class="badge badge-info text-xs">معتمد من السلامة</span>
+                                {% elif permit.status == 'closed' %}
+                                    <span class="badge badge-success text-xs">مغلق</span>
+                                {% elif permit.status == 'rejected' %}
+                                    <span class="badge badge-error text-xs">مرفوض</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <span class="badge {{ permit.request.get_status_badge_class }} text-xs">
+                                    {{ permit.request.get_status_display }}
+                                </span>
+                            </td>
+                            <td>
+                                <div class="flex items-center gap-2">
+                                    {% if permit.status == 'pending_safety' %}
+                                        <a href="{% url 'maintenance:safety_permit_approve' permit.request.pk %}" class="btn btn-warning btn-xs text-white">
+                                            <i class="fa-solid fa-pen-to-square"></i> مراجعة واعتماد
+                                        </a>
+                                    {% elif permit.request.completion_report and permit.status != 'closed' %}
+                                        <form method="post" action="{% url 'maintenance:safety_permit_close' permit.request.pk %}">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-success btn-xs text-white" onclick="return confirm('هل أنت تأكد من إغلاق تصريح السلامة والطلب نهائياً؟')">
+                                                <i class="fa-solid fa-lock"></i> إغلاق الطلب
+                                            </button>
+                                        </form>
+                                    {% else %}
+                                        <a href="{% url 'maintenance:technician_request_detail' permit.request.pk %}" class="btn btn-ghost btn-xs">
+                                            معاينة
+                                        </a>
+                                    {% endif %}
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="7" class="text-center py-8 text-gray-500">لا توجد تصاريح سلامة مسجلة حتى الآن.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            {% if is_paginated %}
+            <div class="flex justify-center mt-6">
+                <div class="join">
+                    {% if page_obj.has_previous %}
+                        <a href="?page={{ page_obj.previous_page_number }}" class="join-item btn btn-sm">«</a>
+                    {% endif %}
+                    <button class="join-item btn btn-sm btn-active">صفحة {{ page_obj.number }} من {{ page_obj.paginator.num_pages }}</button>
+                    {% if page_obj.has_next %}
+                        <a href="?page={{ page_obj.next_page_number }}" class="join-item btn btn-sm">»</a>
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
+
+        </div>
+    </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,98 @@
+{% extends "maintenance/base.html" %}
+{% block title %}سجل حرَكات المخزون{% endblock %}
+{% block page_title %}سجل حرَكات المخزون{% endblock %}
+{% block breadcrumb %}الرئيسية / المخزن / حركات المخزون{% endblock %}
+{% block nav_movements %}active{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <div class="flex flex-wrap justify-between items-center gap-4">
+        <h2 class="text-2xl font-bold text-gray-800">حركات الوارد والمستصرَف</h2>
+        <a href="{% url 'maintenance:stock_movement_create' %}" class="btn btn-primary btn-sm">
+            <i class="fa-solid fa-plus ml-1"></i> إضافة حركة جديدة
+        </a>
+    </div>
+
+    <div class="card bg-base-100 shadow border border-base-200 p-4">
+        <form method="get" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div>
+                <label class="label text-xs font-semibold">بحث عن قطعة</label>
+                <input type="text" name="search" value="{{ search_query }}" placeholder="اسم القطعة أو الكود..."
+                    class="input input-bordered input-sm w-full">
+            </div>
+            <div>
+                <label class="label text-xs font-semibold">نوع الحركة</label>
+                <select name="type" class="select select-bordered select-sm w-full">
+                    <option value="">جميع الأنواع</option>
+                    <option value="in" {% if movement_type == 'in' %}selected{% endif %}>إضافة (وارد)</option>
+                    <option value="out" {% if movement_type == 'out' %}selected{% endif %}>سحب (مستهلك)</option>
+                    <option value="adjust" {% if movement_type == 'adjust' %}selected{% endif %}>تعديل رصيد</option>
+                </select>
+            </div>
+            <div class="flex items-end gap-2 md:col-span-2">
+                <button type="submit" class="btn btn-neutral btn-sm"><i class="fa-solid fa-filter ml-1"></i>
+                    تصفية</button>
+                <a href="{% url 'maintenance:stock_movement_list' %}" class="btn btn-ghost btn-sm">إلغاء</a>
+            </div>
+        </form>
+    </div>
+
+    <div class="card bg-base-100 shadow border border-base-200 overflow-x-auto">
+        <table class="table table-zebra w-full">
+            <thead>
+                <tr>
+                    <th>تاريخ الحركة</th>
+                    <th>قطع الغيار</th>
+                    <th>نوع الحركة</th>
+                    <th>الكمية</th>
+                    <th>الطلب المرتبط</th>
+                    <th>بواسطة</th>
+                    <th>ملاحظات</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for mov in movements %}
+                <tr>
+                    <td class="text-xs">{{ mov.created_at|date:"Y/m/d H:i" }}</td>
+                    <td>
+                        <span class="font-bold text-accent">{{ mov.spare_part.name }}</span>
+                        <div class="text-xs text-gray-400">{{ mov.spare_part.sku }}</div>
+                    </td>
+                    <td>
+                        {% if mov.movement_type == 'in' %}
+                        <span class="badge badge-success badge-outline gap-1"><i class="fa-solid fa-arrow-down"></i>
+                            وارد</span>
+                        {% elif mov.movement_type == 'out' %}
+                        <span class="badge badge-error badge-outline gap-1"><i class="fa-solid fa-arrow-up"></i>
+                            صادر</span>
+                        {% else %}
+                        <span class="badge badge-warning badge-outline">تعديل</span>
+                        {% endif %}
+                    </td>
+                    <td class="font-bold font-mono text-base">
+    {% if mov.movement_type == 'in' %}+{% else %}-{% endif %}{{ mov.quantity }} الكمية
+    <br>
+    بواسطة {{ mov.performed_by.get_full_name|default:mov.performed_by.username }}
+</td>
+                    <td>
+                        {% if mov.maintenance_request %}
+                        <a href="{% url 'maintenance:technician_request_detail' mov.maintenance_request.pk %}" class="link link-primary font-mono text-xs">
+                            {{ mov.maintenance_request.request_number }}
+                        </a>
+                        {% else %}
+                        <span class="text-gray-400">-</span>
+                        {% endif %}
+                    </td>
+                    <td class="text-xs">-</td>
+                    <td class="text-xs max-w-xs truncate">{{ mov.notes|default:"-" }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="text-center py-8 text-gray-500">لا توجد حركات مخزون مسجلة.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
