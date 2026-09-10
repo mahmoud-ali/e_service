@@ -4,17 +4,17 @@
   <div class="app-maintenance module">
     <table>
       <caption>
-        <a href="/maintenance/" class="section" title="نظام طلبات الصيانة">نظام طلبات الصيانة</a>
+        <a href="{% url 'maintenance:dashboard' %}" class="section" title="نظام طلبات الصيانة">نظام طلبات الصيانة</a>
       </caption>
       <tr class="model-maintenancerequest">
         <th scope="row">
-          <a href="/maintenance/">تقديم ومتابعة طلبات الصيانة</a>
+          <a href="{% url 'maintenance:dashboard' %}">تقديم ومتابعة طلبات الصيانة</a>
         </th>
         {% if show_changelinks %}
-          <td><a href="/maintenance/new/" class="addlink">{% translate 'Add' %}</a></td>
-          <td><a href="/maintenance/" class="viewlink">{% translate 'View' %}</a></td>
+          <td><a href="{% url 'maintenance:new_request' %}" class="addlink">{% translate 'Add' %}</a></td>
+          <td><a href="{% url 'maintenance:dashboard' %}" class="viewlink">{% translate 'View' %}</a></td>
         {% else %}
-          <td><a href="/maintenance/new/" class="addlink">{% translate 'Add' %}</a></td>
+          <td><a href="{% url 'maintenance:new_request' %}" class="addlink">{% translate 'Add' %}</a></td>
           <td></td>
         {% endif %}
       </tr>
