@@ -15,20 +15,30 @@
             <div class="bg-gradient-to-l from-indigo-700 to-indigo-900 px-6 py-4 text-white flex flex-wrap justify-between items-start gap-3">
                 <div>
                     <div class="text-indigo-300 text-xs mb-1">رقم الطلب</div>
-                    <div class="text-2xl font-bold font-mono">{{ req.request_number }}</div>
+                    <div class="text-2xl font-bold font-mono flex items-center gap-3">
+                        <span>{{ req.request_number }}</span>
+                        <a href="{% url 'maintenance:admin_print_report' %}?q={{ req.request_number }}" target="_blank"
+                           class="btn btn-xs btn-ghost text-indigo-100 border border-indigo-400/40 hover:bg-white/20 gap-1 font-normal no-print">
+                            <i class="fa-solid fa-print"></i> طباعة / PDF
+                        </a>
+                    </div>
                     <div class="text-indigo-200 text-sm mt-1">{{ req.fault_category }}</div>
                 </div>
                 <div class="flex flex-col items-end gap-2">
                     {% if req.status == 'pending' %}
                         <span class="badge badge-warning badge-lg font-semibold">⏳ قيد الانتظار</span>
+                    {% elif req.status == 'received' %}
+                        <span class="badge badge-info badge-lg font-semibold">📥 تم الاستلام</span>
                     {% elif req.status == 'pending_safety' %}
                         <span class="badge badge-secondary badge-lg font-semibold">🛡 بانتظار تصريح السلامة</span>
                     {% elif req.status == 'in_progress' %}
-                        <span class="badge badge-info badge-lg font-semibold">🔧 جاري التنفيذ</span>
+                        <span class="badge badge-primary badge-lg font-semibold">🔧 قيد التنفيذ</span>
                     {% elif req.status == 'completed' %}
                         <span class="badge badge-success badge-lg font-semibold">✅ مكتمل ومغلق</span>
+                    {% elif req.status == 'rejected' %}
+                        <span class="badge badge-error badge-lg font-semibold">❌ مرفوض / اعتذار</span>
                     {% elif req.status == 'cancelled' %}
-                        <span class="badge badge-error badge-lg font-semibold">❌ ملغى</span>
+                        <span class="badge badge-error badge-lg font-semibold">🚫 ملغى</span>
                     {% else %}
                         <span class="badge badge-neutral badge-lg font-semibold">{{ req.get_status_display }}</span>
                     {% endif %}
@@ -37,6 +47,42 @@
             </div>
 
             <div class="card-body">
+                {% if req.rejection_reason %}
+                <div class="mb-4 p-4 bg-red-50 border-2 border-red-200 rounded-xl">
+                    <div class="font-bold text-red-900 text-sm flex items-center gap-2 mb-1">
+                        <i class="fa-solid fa-circle-xmark text-red-600"></i>
+                        سبب الاعتذار / رفض الطلب:
+                    </div>
+                    <div class="text-red-800 text-xs font-medium whitespace-pre-line">{{ req.rejection_reason }}</div>
+                </div>
+                {% endif %}
+
+                {% if req.delay_reason %}
+                <div class="mb-4 p-4 bg-amber-50 border-2 border-amber-200 rounded-xl">
+                    <div class="font-bold text-amber-900 text-sm flex items-center gap-2 mb-1">
+                        <i class="fa-solid fa-clock-rotate-left text-amber-600"></i>
+                        سبب تأخير الطلب المسجل:
+                    </div>
+                    <div class="text-amber-800 text-xs font-medium whitespace-pre-line">{{ req.delay_reason }}</div>
+                </div>
+                {% endif %}
+
+                {% if req.assigned_technical_technicians.all %}
+                <div class="mb-4 p-4 bg-blue-50 border border-blue-200 rounded-xl">
+                    <div class="font-bold text-blue-900 text-xs mb-2 flex items-center gap-1.5">
+                        <i class="fa-solid fa-users-gear text-blue-600"></i>
+                        الفنيون التقنيون المكلفون بالمهمة:
+                    </div>
+                    <div class="flex flex-wrap gap-2">
+                        {% for tech in req.assigned_technical_technicians.all %}
+                        <span class="badge badge-primary gap-1 py-2 px-3 text-xs">
+                            <i class="fa-solid fa-user-gear"></i> {{ tech.name }} {% if tech.unit %}({{ tech.unit.name }}){% endif %} - {{ tech.phone }}
+                        </span>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
                 <div class="grid grid-cols-2 md:grid-cols-3 gap-4 py-3 border-b text-sm">
                     <div>
                         <div class="text-xs text-gray-400 mb-0.5">مقدم الطلب</div>
@@ -254,7 +300,7 @@
     <div class="space-y-5">
 
         <!-- توجيه وتكليف الفني -->
-        {% if req.status != 'completed' and req.status != 'cancelled' %}
+        {% if req.status != 'completed' and req.status != 'cancelled' and req.status != 'rejected' %}
         <div class="card bg-base-100 shadow border border-base-200">
             <div class="card-body">
                 <h3 class="card-title text-base font-bold text-gray-800 border-b pb-2">
@@ -282,7 +328,7 @@
         {% endif %}
 
         <!-- تعديل الأولوية وملاحظات الإدارة -->
-        {% if req.status != 'completed' and req.status != 'cancelled' %}
+        {% if req.status != 'completed' and req.status != 'cancelled' and req.status != 'rejected' %}
         <div class="card bg-base-100 shadow border border-base-200">
             <div class="card-body">
                 <h3 class="card-title text-base font-bold text-gray-800 border-b pb-2">
@@ -306,24 +352,63 @@
         </div>
         {% endif %}
 
-        <!-- إجراءات المدير -->
+        <!-- إجراءات التحكم والربط مع التنفيذ لمدير الصيانة -->
         <div class="card bg-base-100 shadow border border-base-200">
             <div class="card-body">
                 <h3 class="card-title text-base font-bold text-gray-800 border-b pb-2">
-                    <i class="fa-solid fa-sliders text-warning ml-2"></i> إجراءات المدير
+                    <i class="fa-solid fa-sliders text-warning ml-2"></i> إجراءات وتنفيذ المدير
                 </h3>
                 <div class="space-y-2 mt-2">
-                    {% if req.status != 'cancelled' and req.status != 'completed' %}
-                    <form method="post" onsubmit="return confirm('هل تريد إلغاء هذا الطلب؟')">
+
+                    {% if req.status == 'pending' %}
+                    <form method="post">
                         {% csrf_token %}
-                        <input type="hidden" name="action" value="cancel">
-                        <button type="submit" class="btn btn-error btn-sm w-full gap-2">
-                            <i class="fa-solid fa-ban"></i> إلغاء الطلب
+                        <input type="hidden" name="action" value="receive">
+                        <button type="submit" class="btn btn-info btn-sm w-full text-white gap-2">
+                            <i class="fa-solid fa-inbox"></i> وضع الحالة: تم الاستلام
                         </button>
                     </form>
                     {% endif %}
 
-                    {% if req.status == 'cancelled' %}
+                    {% if req.status == 'pending' or req.status == 'received' %}
+                    <form method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="start">
+                        <button type="submit" class="btn btn-primary btn-sm w-full gap-2">
+                            <i class="fa-solid fa-play"></i> بدء التنفيذ
+                        </button>
+                    </form>
+                    {% endif %}
+
+                    {% if req.status == 'in_progress' %}
+                    <form method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="complete">
+                        <button type="submit" class="btn btn-success btn-sm w-full text-white gap-2"
+                                onclick="return confirm('هل أنت متأكد من إغلاق الطلب وتحديده كـ مكتمل؟')">
+                            <i class="fa-solid fa-circle-check"></i> إكتمال وإغلاق الطلب
+                        </button>
+                    </form>
+                    {% endif %}
+
+                    {% if req.status != 'rejected' and req.status != 'completed' and req.status != 'cancelled' %}
+                    <button type="button" onclick="document.getElementById('rejectModal').showModal()"
+                            class="btn btn-error btn-outline btn-sm w-full gap-2">
+                        <i class="fa-solid fa-circle-xmark"></i> رفض / الاعتذار عن الطلب
+                    </button>
+                    {% endif %}
+
+                    {% if req.status != 'cancelled' and req.status != 'completed' %}
+                    <form method="post" onsubmit="return confirm('هل تريد إلغاء هذا الطلب؟')">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="cancel">
+                        <button type="submit" class="btn btn-ghost btn-xs text-red-600 w-full gap-1">
+                            <i class="fa-solid fa-ban"></i> إلغاء الطلب نهائياً
+                        </button>
+                    </form>
+                    {% endif %}
+
+                    {% if req.status == 'cancelled' or req.status == 'rejected' %}
                     <form method="post" onsubmit="return confirm('هل تريد إعادة فتح هذا الطلب؟')">
                         {% csrf_token %}
                         <input type="hidden" name="action" value="reopen">
@@ -346,21 +431,24 @@
             </div>
         </div>
 
-        <!-- ملخص الحالة -->
+        <!-- مسار الطلب -->
         <div class="card bg-base-100 shadow border border-base-200">
             <div class="card-body p-4">
                 <h3 class="text-sm font-bold text-gray-700 border-b pb-2 mb-3">
-                    <i class="fa-solid fa-circle-info text-info ml-1"></i> مسار الطلب
+                    <i class="fa-solid fa-circle-info text-info ml-1"></i> مسار مرحلة الطلب
                 </h3>
                 <ul class="steps steps-vertical text-xs w-full">
                     <li class="step step-primary">تم تقديم الطلب</li>
+                    <li class="step {% if req.status == 'received' or req.status == 'in_progress' or req.status == 'completed' %}step-primary{% endif %}">تم الاستلام</li>
                     {% if req.requires_safety_permit %}
                     <li class="step {% if req.safety_permit and req.safety_permit.status == 'approved' or req.status == 'in_progress' or req.status == 'completed' %}step-primary{% elif req.status == 'pending_safety' %}step-warning{% endif %}">
                         تصريح السلامة
                     </li>
                     {% endif %}
-                    <li class="step {% if req.status == 'in_progress' or req.status == 'completed' %}step-primary{% endif %}">جاري التنفيذ</li>
-                    <li class="step {% if req.status == 'completed' %}step-primary{% endif %}">مكتمل</li>
+                    <li class="step {% if req.status == 'in_progress' or req.status == 'completed' %}step-primary{% endif %}">قيد التنفيذ</li>
+                    <li class="step {% if req.status == 'completed' %}step-primary{% elif req.status == 'rejected' %}step-error{% endif %}">
+                        {% if req.status == 'rejected' %}مرفوض{% else %}اكتمال{% endif %}
+                    </li>
                 </ul>
             </div>
         </div>
@@ -368,4 +456,27 @@
     </div><!-- /الشريط الجانبي -->
 
 </div>
+
+<!-- Modal: Manager Rejection / Apology -->
+<dialog id="rejectModal" class="modal">
+    <div class="modal-box max-w-md" dir="rtl">
+        <h3 class="font-bold text-lg mb-2 flex items-center gap-2 text-error">
+            <i class="fa-solid fa-circle-xmark"></i> رفض والاعتذار عن طلب الصيانة
+        </h3>
+        <p class="text-xs text-gray-500 mb-4">يرجى كتابة سبب الاعتذار أو عدم إمكانية تنفيذ الطلب (سيتم إرسال إشعار للموظف مقدم الطلب):</p>
+        <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="reject">
+            <div>
+                <textarea name="rejection_reason" rows="4" class="textarea textarea-bordered w-full text-sm"
+                          placeholder="مثال: يتعذر تنفيذ الطلب حالياً لعدم توفر قطع غيار مطابقة / المشكلة ليست ضمن اختصاص قسم الصيانة..." required></textarea>
+            </div>
+            <div class="modal-action mt-4">
+                <button type="button" class="btn btn-ghost" onclick="document.getElementById('rejectModal').close()">إلغاء</button>
+                <button type="submit" class="btn btn-error text-white">تأكيد الرفض والاعتذار</button>
+            </div>
+        </form>
+    </div>
+    <form method="dialog" class="modal-backdrop"><button>إغلاق</button></form>
+</dialog>
 {% endblock %}

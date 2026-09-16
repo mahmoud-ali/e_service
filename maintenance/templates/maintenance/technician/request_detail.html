@@ -161,43 +161,96 @@
     </div>
     {% endif %}
 
+    <!-- Delay reason & assigned technical technicians bar -->
+    {% if req.delay_reason or req.assigned_technical_technicians.all %}
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {% if req.delay_reason %}
+        <div class="card bg-amber-50 border border-amber-200 p-4 rounded-xl text-xs">
+            <div class="font-bold text-amber-900 mb-1 flex items-center justify-between">
+                <span class="flex items-center gap-1.5"><i class="fa-solid fa-clock-rotate-left text-amber-600"></i> سبب التأخير المسجل:</span>
+                <button onclick="document.getElementById('delayModal').showModal()" class="text-amber-700 underline text-xs">تعديل</button>
+            </div>
+            <p class="text-amber-800 font-medium leading-relaxed">{{ req.delay_reason }}</p>
+        </div>
+        {% endif %}
+
+        {% if req.assigned_technical_technicians.all %}
+        <div class="card bg-blue-50 border border-blue-200 p-4 rounded-xl text-xs">
+            <div class="font-bold text-blue-900 mb-2 flex items-center justify-between">
+                <span class="flex items-center gap-1.5"><i class="fa-solid fa-users-gear text-blue-600"></i> الفنيون التقنيون المشاركون:</span>
+                <button onclick="document.getElementById('techSelectionModal').showModal()" class="text-blue-700 underline text-xs">تعديل</button>
+            </div>
+            <div class="flex flex-wrap gap-2">
+                {% for tech in req.assigned_technical_technicians.all %}
+                <span class="badge badge-primary gap-1 py-2 px-3 text-xs">
+                    <i class="fa-solid fa-user-gear"></i> {{ tech.name }} {% if tech.unit %}({{ tech.unit.name }}){% endif %} - {{ tech.phone }}
+                </span>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
+
     <div class="form-card p-4">
-        <h3 class="font-bold text-gray-700 mb-3">⚡ الإجراءات</h3>
+        <div class="flex flex-wrap justify-between items-center gap-2 mb-3">
+            <h3 class="font-bold text-gray-700">⚡ الإجراءات وتعديل الحالة</h3>
+            <!-- Priority Update Form -->
+            <form method="post" class="flex items-center gap-2">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="update_priority">
+                <span class="text-xs font-semibold text-gray-500">الأولوية:</span>
+                <select name="priority" class="select select-bordered select-xs" onchange="this.form.submit()">
+                    {% for code, name in req.PRIORITY_CHOICES %}
+                    <option value="{{ code }}" {% if req.priority == code %}selected{% endif %}>{{ name }}</option>
+                    {% endfor %}
+                </select>
+            </form>
+        </div>
+
         <div class="flex flex-wrap gap-2">
-            {% if req.status == 'pending' or req.status == 'pending_safety' %}
+            <!-- step 1: Receive request (تم الاستلام) -->
+            {% if req.status == 'pending' %}
+            <form method="post">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="receive">
+                <button type="submit" class="btn btn-info gap-2 text-white">
+                    <i class="fa-solid fa-inbox"></i> تم الاستلام
+                </button>
+            </form>
+            {% endif %}
+
+            <!-- step 2: Execute request (تنفيد / بدء التنفيذ) with Modal for Technical Technicians -->
+            {% if req.status == 'pending' or req.status == 'received' or req.status == 'pending_safety' %}
             {% if request.user|has_group:"maintenance_safety" and not request.user|has_any_group:"maintenance_elec,maintenance_air_cond,maintenance_mech,maintenance_const,maintenance_admin" %}
             <div class="alert alert-info text-xs">
                 <i class="fa-solid fa-circle-info"></i>
-                بصفتك موظف السلامة الداخلية، صلاحيتك تنحصر في اعتماد/تحديد مدة تصريح السلامة وإغلاق الطلب، وبدء العمل هو
-                مسؤولية الفني المكلف.
+                بصفتك موظف السلامة الداخلية، صلاحيتك تنحصر في اعتماد/تحديد مدة تصريح السلامة وإغلاق الطلب، وبدء العمل هو مسؤولية الفني المكلف.
             </div>
             {% else %}
-            {% if req.requires_safety_permit %}
-            {% if req.safety_permit and req.safety_permit.status == 'approved' %}
-            <form method="post">
-                {% csrf_token %}
-                <input type="hidden" name="action" value="start">
-                <button type="submit" class="btn btn-info gap-2">▶️ بدء العمل (تم اعتماد السلامة)</button>
-            </form>
-            {% else %}
+            {% if req.requires_safety_permit and req.safety_permit.status != 'approved' %}
             <button disabled class="btn btn-disabled gap-2">
                 🔒 بدء العمل (يتطلب اعتماد تصريح السلامة أولاً)
             </button>
-            {% endif %}
             {% else %}
-            <form method="post">
-                {% csrf_token %}
-                <input type="hidden" name="action" value="start">
-                <button type="submit" class="btn btn-info gap-2">▶️ بدء العمل</button>
-            </form>
+            <button onclick="document.getElementById('techSelectionModal').showModal()" class="btn btn-primary gap-2 text-white">
+                <i class="fa-solid fa-play"></i> بدء التنفيذ والتكليف
+            </button>
             {% endif %}
             {% endif %}
             {% endif %}
 
+            <!-- Delay Reason modal trigger -->
+            {% if req.status == 'in_progress' or req.status == 'received' %}
+            <button onclick="document.getElementById('delayModal').showModal()" class="btn btn-warning btn-outline gap-2">
+                <i class="fa-solid fa-clock-rotate-left"></i> تسجیل/تحديث سبب التأخير
+            </button>
+            {% endif %}
+
             {% if req.status == 'in_progress' and not req.completion_report %}
             {% if not request.user|has_group:"maintenance_safety" or request.user|has_group:"maintenance_admin" %}
-            <button onclick="document.getElementById('completeModal').showModal()" class="btn btn-success gap-2">
-                ✅ رفع تقرير الإنجاز وإكمال المهمة
+            <button onclick="document.getElementById('completeModal').showModal()" class="btn btn-success gap-2 text-white">
+                <i class="fa-solid fa-circle-check"></i> رفع تقرير الإنجاز وإكمال المهمة
             </button>
             {% endif %}
             {% endif %}
@@ -219,7 +272,7 @@
             {% endif %}
             {% endif %}
 
-            {% if request.user|has_group:"maintenance_admin" and req.status in 'pending,pending_safety,in_progress' %}
+            {% if request.user|has_group:"maintenance_admin" and req.status in 'pending,received,pending_safety,in_progress' %}
             <button type="button" onclick="document.getElementById('switchUnitModal').showModal()"
                 class="btn btn-warning gap-2">
                 🔄 تبديل الوحدة
@@ -332,38 +385,128 @@
     <form method="dialog" class="modal-backdrop"><button>إغلاق</button></form>
 </dialog>
 
-{% if request.user|has_group:"maintenance_admin" %}
-<dialog id="switchUnitModal" class="modal">
+<!-- Modal: Delay Reason -->
+<dialog id="delayModal" class="modal">
     <div class="modal-box max-w-md" dir="rtl">
-        <h3 class="font-bold text-lg mb-4 flex items-center gap-2 text-warning">
-            <span>🔄</span> تبديل الوحدة المختصة
+        <h3 class="font-bold text-lg mb-2 flex items-center gap-2 text-amber-700">
+            <i class="fa-solid fa-clock-rotate-left"></i> سبب التأخير للطلب
         </h3>
-        <p class="text-xs text-gray-500 mb-4">اختر وحدة الصيانة الجديدة لنقل هذا الطلب إليها.</p>
+        <p class="text-xs text-gray-500 mb-4">في حال وجود تأخير في تنفيذ الطلب (مثلاً لانتظار توريد قطاع غيار أو استكمال موافقات)، يرجى توضيح السبب أدناه:</p>
         <form method="post">
             {% csrf_token %}
-            <input type="hidden" name="action" value="switch_unit">
-            <div class="space-y-4">
-                <div>
-                    <label class="label"><span class="label-text font-semibold">الوحدة الجديدة <span
-                                class="text-error">*</span></span></label>
-                    <select name="new_unit_id" class="select select-bordered w-full" required>
-                        <option value="" disabled selected>-- اختر الوحدة --</option>
-                        {% for u in units %}
-                        <option value="{{ u.id }}" {% if req.assigned_unit_id == u.id %}disabled{% endif %}>
-                            {{ u.icon }} {{ u.name }} {% if req.assigned_unit_id == u.id %}(الوحدة الحالية){% endif %}
-                        </option>
-                        {% endfor %}
-                    </select>
-                </div>
+            <input type="hidden" name="action" value="update_delay">
+            <div>
+                <textarea name="delay_reason" rows="4" class="textarea textarea-bordered w-full text-sm"
+                          placeholder="اكتب سبب التأخير بالتفصيل..." required>{{ req.delay_reason }}</textarea>
             </div>
-            <div class="modal-action mt-6">
-                <button type="button" class="btn btn-ghost"
-                    onclick="document.getElementById('switchUnitModal').close()">إلغاء</button>
-                <button type="submit" class="btn btn-warning">🔄 تأكيد التبديل</button>
+            <div class="modal-action mt-4">
+                <button type="button" class="btn btn-ghost" onclick="document.getElementById('delayModal').close()">إلغاء</button>
+                <button type="submit" class="btn btn-warning text-white">حفظ سبب التأخير</button>
             </div>
         </form>
     </div>
     <form method="dialog" class="modal-backdrop"><button>إغلاق</button></form>
 </dialog>
-{% endif %}
+
+<!-- Modal: Technical Technicians Selection -->
+<dialog id="techSelectionModal" class="modal">
+    <div class="modal-box max-w-lg" dir="rtl">
+        <div class="flex justify-between items-center mb-3">
+            <h3 class="font-bold text-lg text-gray-800 flex items-center gap-2">
+                <i class="fa-solid fa-users-gear text-blue-600"></i>
+                اختيار الفنيين التقنيين المشاركين
+            </h3>
+            <a href="{% url 'maintenance:technical_technician_list' %}" target="_blank" class="text-xs text-blue-600 hover:underline flex items-center gap-1">
+                <i class="fa-solid fa-arrow-up-right-from-square"></i> إدارة دليل الفنيين
+            </a>
+        </div>
+        <p class="text-xs text-gray-500 mb-4">حدد الفنيين التقنيين المكلفين بالعمل على هذا الطلب قبل الانتقال لمرحلة المخزن والتنفيذ:</p>
+
+        <form method="post" id="techSelectionForm">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="{% if req.status == 'in_progress' %}assign_technical_technicians{% else %}start{% endif %}">
+
+            <div class="space-y-2 max-h-60 overflow-y-auto border border-gray-200 rounded-xl p-3 bg-gray-50 mb-4">
+                {% for tech in all_technical_technicians %}
+                <label class="flex items-center justify-between p-2 rounded-lg bg-white border border-gray-100 cursor-pointer hover:bg-blue-50 transition-colors">
+                    <div class="flex items-center gap-3">
+                        <input type="checkbox" name="technical_technicians" value="{{ tech.id }}"
+                               class="checkbox checkbox-primary checkbox-sm"
+                               {% if tech in req.assigned_technical_technicians.all %}checked{% endif %}>
+                        <div>
+                            <div class="font-semibold text-gray-800 text-sm flex items-center gap-2">
+                                <span>{{ tech.name }}</span>
+                                {% if tech.unit %}
+                                <span class="badge badge-outline badge-xs text-[10px] text-blue-700 bg-blue-50 border-blue-200">{{ tech.unit.name }}</span>
+                                {% endif %}
+                            </div>
+                            {% if tech.specialty %}
+                            <div class="text-gray-400 text-xs">{{ tech.specialty }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <span class="font-mono text-xs text-gray-600 dir-ltr"><i class="fa-solid fa-phone text-blue-500"></i> {{ tech.phone }}</span>
+                </label>
+                {% empty %}
+                <div class="text-center py-6 text-gray-400 text-xs">
+                    لا يوجد فنيون تقنيون مسجلون في السجل حالياً.
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Quick Add Option -->
+            <div class="bg-blue-50/60 p-3 rounded-xl border border-blue-200 mb-4 text-xs">
+                <div class="font-bold text-blue-900 mb-2 flex items-center gap-1">
+                    <i class="fa-solid fa-user-plus text-blue-600"></i>
+                    إضافة فني تقني سريع (غير موجود بالقائمة):
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <input type="text" id="quickTechName" placeholder="الاسم" class="input input-bordered input-xs">
+                    <input type="text" id="quickTechPhone" placeholder="رقم الهاتف" class="input input-bordered input-xs dir-ltr text-right">
+                </div>
+                <button type="button" onclick="quickAddTech()" class="btn btn-xs btn-outline btn-primary mt-2 w-full">إضافة وتحديد للقائمة</button>
+            </div>
+
+            <div class="modal-action">
+                <button type="button" class="btn btn-ghost" onclick="document.getElementById('techSelectionModal').close()">إلغاء</button>
+                <button type="submit" class="btn btn-primary text-white gap-2">
+                    <i class="fa-solid fa-play"></i>
+                    {% if req.status == 'in_progress' %}حفظ والتحديث{% else %}تأكيد وبدء التنفيذ{% endif %}
+                </button>
+            </div>
+        </form>
+    </div>
+    <form method="dialog" class="modal-backdrop"><button>إغلاق</button></form>
+</dialog>
+
+<script>
+async function quickAddTech() {
+    const name = document.getElementById('quickTechName').value.trim();
+    const phone = document.getElementById('quickTechPhone').value.trim();
+    if (!name || !phone) {
+        alert('يرجى كتابة الاسم ورقم الهاتف.');
+        return;
+    }
+    const formData = new FormData();
+    formData.append('name', name);
+    formData.append('phone', phone);
+    formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+
+    try {
+        const res = await fetch('{% url "maintenance:ajax_add_technical_technician" %}', {
+            method: 'POST',
+            body: formData
+        });
+        const data = await res.json();
+        if (data.status === 'ok') {
+            alert(`تمت إضافة ${data.name} بنجاح!`);
+            location.reload();
+        } else {
+            alert(data.message || 'حدث خطأ أثناء الإضافة');
+        }
+    } catch(err) {
+        console.error(err);
+    }
+}
+</script>
 {% endblock %}

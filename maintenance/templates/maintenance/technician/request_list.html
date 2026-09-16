@@ -1,4 +1,5 @@
 {% extends "maintenance/base.html" %}
+{% load maintenance_tags %}
 {% block title %}طلبات وحدتي{% endblock %}
 {% block page_title %}طلبات الوحدة التخصصية{% endblock %}
 {% block breadcrumb %}الرئيسية / طلبات الوحدة{% endblock %}
@@ -93,13 +94,12 @@
 <div class="flex justify-center mt-5">
     <div class="join">
         {% if page_obj.has_previous %}
-        <a href="?page={{ page_obj.previous_page_number }}&{{ request.GET.urlencode }}"
+        <a href="?{% url_replace request 'page' page_obj.previous_page_number %}"
             class="join-item btn btn-sm">«</a>
         {% endif %}
-        <button class="join-item btn btn-sm btn-active">{{ page_obj.number }} / {{ page_obj.paginator.num_pages
-            }}</button>
+        <button class="join-item btn btn-sm btn-active">{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</button>
         {% if page_obj.has_next %}
-        <a href="?page={{ page_obj.next_page_number }}&{{ request.GET.urlencode }}" class="join-item btn btn-sm">»</a>
+        <a href="?{% url_replace request 'page' page_obj.next_page_number %}" class="join-item btn btn-sm">»</a>
         {% endif %}
     </div>
 </div>

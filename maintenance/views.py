@@ -12,12 +12,12 @@ from django.utils import timezone
 from maintenance.models import (
     MaintenanceRequest, MaintenanceUnit, FaultCategory,
     CompletionReport, ServiceRating, SparePart, StockMovement,
-    LowStockAlert, Notification, SafetyPermit
+    LowStockAlert, Notification, SafetyPermit, Floor, Apartment, TechnicalTechnician
 )
 from maintenance.forms import (
     EmployeeRequestForm, CompletionReportForm, ServiceRatingForm,
     SparePartForm, StockMovementForm, RequestFilterForm, SparePartUsageForm,
-    SafetyPermitForm, SafetyPermitApprovalForm
+    SafetyPermitForm, SafetyPermitApprovalForm, TechnicalTechnicianForm
 )
 
 
@@ -281,19 +281,28 @@ class TechnicianRequestDetailView(LoginRequiredMixin, View):
         part_form     = SparePartUsageForm()
         spare_parts   = req.spare_parts_used.select_related('spare_part').all()
         units         = MaintenanceUnit.objects.all()
+        tech_list     = TechnicalTechnician.objects.filter(is_active=True).order_by('name')
         return render(request, self.template_name, {
-            'req':         req,
-            'report_form': report_form,
-            'part_form':   part_form,
-            'spare_parts': spare_parts,
-            'units':       units,
+            'req':                        req,
+            'report_form':                report_form,
+            'part_form':                  part_form,
+            'spare_parts':                spare_parts,
+            'units':                      units,
+            'all_technical_technicians': tech_list,
         })
 
     def post(self, request, pk):
         req    = self._get_request(request, pk)
         action = request.POST.get('action')
 
-        if action == 'start':
+        if action == 'receive':
+            req.status = 'received'
+            if not req.assigned_technician:
+                req.assigned_technician = request.user
+            req.save()
+            messages.success(request, _('تمت استلام الطلب وتغيير حالته إلى (تم الاستلام).'))
+
+        elif action == 'start':
             role = get_user_role(request.user)
             if role == 'safety' and not (request.user.is_superuser or request.user.groups.filter(name='maintenance_admin').exists()):
                 messages.error(request, _('عذراً، موظف السلامة يملك صلاحية اعتماد وإغلاق التصريح فقط، وليس من صلاحياته بدء العمل الفني على الطلب.'))
@@ -305,10 +314,35 @@ class TechnicianRequestDetailView(LoginRequiredMixin, View):
                     messages.error(request, _('عذراً، يتطلب هذا البلاغ تصريح سلامة مهنية معتمد من قسم السلامة الداخلية قبل بدء العمل.'))
                     return redirect('maintenance:technician_request_detail', pk=pk)
 
+            # Handle assigned technical technicians if passed in execution modal
+            tech_ids = request.POST.getlist('technical_technicians')
+            if tech_ids:
+                req.assigned_technical_technicians.set(tech_ids)
+
             req.status              = 'in_progress'
-            req.assigned_technician = request.user
+            if not req.assigned_technician:
+                req.assigned_technician = request.user
             req.save()
-            messages.success(request, _('تم بدء العمل على الطلب.'))
+            messages.success(request, _('تم بدء العمل وتغيير حالة الطلب إلى (قيد التنفيذ).'))
+
+        elif action == 'assign_technical_technicians':
+            tech_ids = request.POST.getlist('technical_technicians')
+            req.assigned_technical_technicians.set(tech_ids)
+            req.save()
+            messages.success(request, _('تم تحديث قائمة الفنيين التقنيين المشاركين بنجاح.'))
+
+        elif action == 'update_delay':
+            delay_reason = request.POST.get('delay_reason', '').strip()
+            req.delay_reason = delay_reason
+            req.save()
+            messages.success(request, _('تم حفظ سبب التأخير للطلب.'))
+
+        elif action == 'update_priority':
+            new_priority = request.POST.get('priority', '')
+            if new_priority in dict(MaintenanceRequest.PRIORITY_CHOICES):
+                req.priority = new_priority
+                req.save()
+                messages.success(request, _('تم تحديث أولوية الطلب بنجاح.'))
 
         elif action == 'add_part':
             role = get_user_role(request.user)
@@ -369,7 +403,7 @@ class TechnicianRequestDetailView(LoginRequiredMixin, View):
                     messages.success(request, _('تم إغلاق الطلب ورفع تقرير الإنجاز.'))
             else:
                 messages.error(request, _('يرجى ملء تقرير الإنجاز بشكل صحيح.'))
-                return redirect('maintenance:technician_request_detail', pk=pk)
+                return redirect('technician_request_detail', pk=pk)
 
         elif action == 'switch_unit':
             role = get_user_role(request.user)
@@ -766,6 +800,7 @@ class AdminRequestDetailView(LoginRequiredMixin, GroupRequiredMixin, DetailView)
             ).order_by('first_name', 'last_name')
         else:
             ctx['technicians'] = User.objects.none()
+        ctx['all_technical_technicians'] = TechnicalTechnician.objects.filter(is_active=True).order_by('name')
         ctx['admin_notes_form'] = AdminNotesForm(instance=req)
         return ctx
 
@@ -773,15 +808,66 @@ class AdminRequestDetailView(LoginRequiredMixin, GroupRequiredMixin, DetailView)
         req    = get_object_or_404(MaintenanceRequest, pk=pk)
         action = request.POST.get('action')
 
-        if action == 'cancel':
-            if req.status not in ['completed', 'cancelled']:
+        if action == 'reject':
+            rejection_reason = request.POST.get('rejection_reason', '').strip()
+            req.status = 'rejected'
+            req.rejection_reason = rejection_reason
+            req.save()
+            Notification.objects.create(
+                recipient=req.requester,
+                notification_type=Notification.TYPE_REQUEST_UPDATED,
+                title=_('الاعتذار عن طلب الصيانة'),
+                message=f'اعتذر مدير الصيانة عن تنفيذ الطلب {req.request_number}. السبب: {rejection_reason or "غير محدد"}',
+                related_request=req
+            )
+            messages.warning(request, _(f'تم رفض/الاعتذار عن الطلب {req.request_number}.'))
+            return redirect('maintenance:admin_request_detail', pk=pk)
+
+        elif action == 'receive':
+            req.status = 'received'
+            req.save()
+            messages.success(request, _('تمت تحديث حالة الطلب إلى (تم الاستلام).'))
+            return redirect('maintenance:admin_request_detail', pk=pk)
+
+        elif action == 'start':
+            req.status = 'in_progress'
+            tech_ids = request.POST.getlist('technical_technicians')
+            if tech_ids:
+                req.assigned_technical_technicians.set(tech_ids)
+            req.save()
+            messages.success(request, _('تمت تحديث حالة الطلب إلى (قيد التنفيذ).'))
+            return redirect('maintenance:admin_request_detail', pk=pk)
+
+        elif action == 'complete':
+            req.status = 'completed'
+            req.completed_at = timezone.now()
+            req.save()
+            messages.success(request, _('تم إغلاق الطلب وتحديد حالته كـ مكتمل.'))
+            return redirect('maintenance:admin_request_detail', pk=pk)
+
+        elif action == 'assign_technical_technicians':
+            tech_ids = request.POST.getlist('technical_technicians')
+            req.assigned_technical_technicians.set(tech_ids)
+            req.save()
+            messages.success(request, _('تم تحديث الفنيين التقنيين المكلفين.'))
+            return redirect('maintenance:admin_request_detail', pk=pk)
+
+        elif action == 'update_delay':
+            delay_reason = request.POST.get('delay_reason', '').strip()
+            req.delay_reason = delay_reason
+            req.save()
+            messages.success(request, _('تم حفظ سبب التأخير.'))
+            return redirect('maintenance:admin_request_detail', pk=pk)
+
+        elif action == 'cancel':
+            if req.status not in ['completed', 'cancelled', 'rejected']:
                 req.status = 'cancelled'
                 req.save()
                 messages.warning(request, _(f'تم إلغاء الطلب {req.request_number}.'))
             return redirect('maintenance:admin_request_detail', pk=pk)
 
         elif action == 'reopen':
-            if req.status == 'cancelled':
+            if req.status in ['cancelled', 'rejected']:
                 req.status = 'pending'
                 req.save()
                 messages.success(request, _(f'تم إعادة فتح الطلب {req.request_number}.'))
@@ -833,6 +919,95 @@ def get_fault_categories(request):
                 for c in qs
             ]
     return JsonResponse({'categories': categories})
+
+
+@login_required
+def get_apartments(request):
+    floor_id = request.GET.get('floor_id', '')
+    apartments = []
+    if floor_id:
+        qs = Apartment.objects.filter(floor_id=floor_id).order_by('name')
+        apartments = [{'id': a.id, 'name': a.name} for a in qs]
+    return JsonResponse({'apartments': apartments})
+
+
+class TechnicalTechnicianListView(LoginRequiredMixin, ListView):
+    model               = TechnicalTechnician
+    template_name       = 'maintenance/technical_technicians/list.html'
+    context_object_name = 'techs'
+    paginate_by         = 20
+
+    def get_queryset(self):
+        qs = TechnicalTechnician.objects.select_related('unit').all()
+        search = self.request.GET.get('search', '')
+        if search:
+            qs = qs.filter(Q(name__icontains=search) | Q(phone__icontains=search) | Q(specialty__icontains=search))
+        unit_code = self.request.GET.get('unit', '')
+        if unit_code:
+            qs = qs.filter(unit__code=unit_code)
+        return qs.order_by('-is_active', 'unit', 'name')
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx['units'] = MaintenanceUnit.objects.all()
+        ctx['unit_filter'] = self.request.GET.get('unit', '')
+        return ctx
+
+    def post(self, request):
+        role = get_user_role(request.user)
+        if role not in ['admin', 'technician'] and not request.user.is_superuser:
+            messages.error(request, _('غير مصرح لك بإضافة أو تعديل الفنيين التقنيين.'))
+            return redirect('maintenance:technical_technician_list')
+
+        tech_id   = request.POST.get('tech_id')
+        name      = request.POST.get('name', '').strip()
+        phone     = request.POST.get('phone', '').strip()
+        unit_id   = request.POST.get('unit_id')
+        specialty = request.POST.get('specialty', '').strip()
+        is_active = request.POST.get('is_active') == 'on' or request.POST.get('is_active') == 'true'
+
+        if not name or not phone:
+            messages.error(request, _('يرجى كتابة اسم الفني ورقم الهاتف بشكل صحيح.'))
+            return redirect('maintenance:technical_technician_list')
+
+        unit_obj = MaintenanceUnit.objects.filter(pk=unit_id).first() if unit_id else None
+
+        if tech_id:
+            tech = get_object_or_404(TechnicalTechnician, pk=tech_id)
+            tech.name      = name
+            tech.phone     = phone
+            tech.unit      = unit_obj
+            tech.specialty = specialty
+            tech.is_active = is_active
+            tech.save()
+            messages.success(request, _(f'تم تحديث بيانات الفني التقني: {tech.name}'))
+        else:
+            tech = TechnicalTechnician.objects.create(
+                name=name, phone=phone, unit=unit_obj, specialty=specialty, is_active=is_active
+            )
+            messages.success(request, _(f'تمت إضافة الفني التقني: {tech.name} بنجاح.'))
+
+        return redirect('maintenance:technical_technician_list')
+
+
+@login_required
+def ajax_add_technical_technician(request):
+    if request.method == 'POST':
+        name = request.POST.get('name', '').strip()
+        phone = request.POST.get('phone', '').strip()
+        unit_id = request.POST.get('unit_id')
+        specialty = request.POST.get('specialty', '').strip()
+
+        unit_obj = MaintenanceUnit.objects.filter(pk=unit_id).first() if unit_id else None
+
+        if name and phone:
+            tech = TechnicalTechnician.objects.create(
+                name=name, phone=phone, unit=unit_obj, specialty=specialty, is_active=True
+            )
+            unit_name = tech.unit.name if tech.unit else ''
+            return JsonResponse({'status': 'ok', 'id': tech.id, 'name': tech.name, 'phone': tech.phone, 'unit': unit_name})
+        return JsonResponse({'status': 'error', 'message': _('الاسم ورقم الهاتف مطلوبان')}, status=400)
+    return JsonResponse({'status': 'error'}, status=405)
 
 
 @login_required

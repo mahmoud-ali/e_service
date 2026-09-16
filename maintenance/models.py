@@ -55,19 +55,68 @@ class FaultCategory(models.Model):
     def __str__(self):
         return f"{self.unit.name} — {self.name}"
 
+class Floor(models.Model):
+    name  = models.CharField(_('اسم الطابق'), max_length=100)
+    order = models.PositiveIntegerField(_('الترتيب'), default=0)
+
+    class Meta:
+        verbose_name        = _('الطابق')
+        verbose_name_plural = _('الطوابق')
+        ordering            = ['order', 'name']
+
+    def __str__(self):
+        return self.name
+
+
+class Apartment(models.Model):
+    floor = models.ForeignKey(Floor, on_delete=models.CASCADE, related_name='apartments', verbose_name=_('الطابق'))
+    name  = models.CharField(_('اسم/رقم الشقة'), max_length=100)
+
+    class Meta:
+        verbose_name        = _('الشقة')
+        verbose_name_plural = _('الشقق')
+        ordering            = ['floor', 'name']
+
+    def __str__(self):
+        return f"{self.floor.name} — {self.name}"
+
+
+class TechnicalTechnician(models.Model):
+    name      = models.CharField(_('اسم الفني التقني'), max_length=150)
+    phone     = models.CharField(_('رقم الهاتف'), max_length=30)
+    unit      = models.ForeignKey(MaintenanceUnit, on_delete=models.SET_NULL, null=True, blank=True,
+                                  related_name='technical_technicians', verbose_name=_('الوحدة المختصة'))
+    specialty = models.CharField(_('التخصص/الملاحظات'), max_length=150, blank=True)
+    is_active = models.BooleanField(_('نشط'), default=True)
+    created_at = models.DateTimeField(_('تاريخ الإضافة'), auto_now_add=True)
+
+    class Meta:
+        verbose_name        = _('فني تقني')
+        verbose_name_plural = _('الفنيون التقنيون')
+        ordering            = ['unit', 'name']
+
+    def __str__(self):
+        unit_str = f" [{self.unit.name}]" if self.unit else ""
+        return f"{self.name} ({self.phone}){unit_str}"
+
+
 class MaintenanceRequest(models.Model):
     STATUS_PENDING        = 'pending'
+    STATUS_RECEIVED       = 'received'
     STATUS_PENDING_SAFETY = 'pending_safety'
     STATUS_IN_PROGRESS    = 'in_progress'
     STATUS_COMPLETED      = 'completed'
     STATUS_CANCELLED      = 'cancelled'
+    STATUS_REJECTED       = 'rejected'
 
     STATUS_CHOICES = [
         (STATUS_PENDING,        _('قيد الانتظار')),
+        (STATUS_RECEIVED,       _('تم الاستلام')),
         (STATUS_PENDING_SAFETY, _('بانتظار تصريح السلامة')),
-        (STATUS_IN_PROGRESS,    _('جاري التنفيذ')),
+        (STATUS_IN_PROGRESS,    _('قيد التنفيذ')),
         (STATUS_COMPLETED,      _('مكتمل')),
         (STATUS_CANCELLED,      _('ملغى')),
+        (STATUS_REJECTED,       _('مرفوض')),
     ]
 
     PRIORITY_LOW    = 'low'
@@ -97,11 +146,16 @@ class MaintenanceRequest(models.Model):
     employee_name       = models.CharField(_('اسم الموظف'), max_length=150)
     general_dept        = models.CharField(_('الإدارة العامة'), max_length=150)
     department          = models.CharField(_('القسم'), max_length=150)
+
+    floor               = models.ForeignKey(Floor, on_delete=models.SET_NULL, null=True, blank=True,
+                                            related_name='requests', verbose_name=_('الطابق'))
+    apartment           = models.ForeignKey(Apartment, on_delete=models.SET_NULL, null=True, blank=True,
+                                            related_name='requests', verbose_name=_('الشقة'))
     location            = models.CharField(_('موقع العطل بالضبط'), max_length=250)
 
     fault_category      = models.ForeignKey(FaultCategory, on_delete=models.PROTECT,
                                             related_name='requests', verbose_name=_('نوع العطل'))
-    fault_description   = models.TextField(_('وصف إضافي للمشكلة'), blank=True)
+    fault_description   = models.TextField(_('وصف إضافي للمشكلة'), blank=False)
 
     assigned_unit       = models.ForeignKey(MaintenanceUnit, on_delete=models.PROTECT,
                                             related_name='assigned_requests',
@@ -110,6 +164,10 @@ class MaintenanceRequest(models.Model):
                                             null=True, blank=True, related_name='assigned_requests',
                                             verbose_name=_('الفني المختص'))
 
+    assigned_technical_technicians = models.ManyToManyField(TechnicalTechnician, blank=True,
+                                                             related_name='requests',
+                                                             verbose_name=_('الفنيون التقنيون المشاركون'))
+
     requires_safety_permit = models.BooleanField(_('يتطلب تصريح سلامة مهنية'), default=False)
 
     status              = models.CharField(_('حالة الطلب'), max_length=20,
@@ -117,6 +175,8 @@ class MaintenanceRequest(models.Model):
     priority            = models.CharField(_('الأولوية'), max_length=10,
                                            choices=PRIORITY_CHOICES, default=PRIORITY_MEDIUM)
 
+    delay_reason        = models.TextField(_('سبب التأخير'), blank=True)
+    rejection_reason    = models.TextField(_('سبب الرفض/الاعتذار'), blank=True)
     admin_notes         = models.TextField(_('ملاحظات المدير'), blank=True)
 
     created_at          = models.DateTimeField(_('تاريخ الإنشاء'), auto_now_add=True)
@@ -161,10 +221,12 @@ class MaintenanceRequest(models.Model):
     def get_status_badge_class(self):
         mapping = {
             self.STATUS_PENDING:        'badge-warning',
+            self.STATUS_RECEIVED:       'badge-info',
             self.STATUS_PENDING_SAFETY: 'badge-secondary',
-            self.STATUS_IN_PROGRESS:    'badge-info',
+            self.STATUS_IN_PROGRESS:    'badge-primary',
             self.STATUS_COMPLETED:      'badge-success',
             self.STATUS_CANCELLED:      'badge-error',
+            self.STATUS_REJECTED:       'badge-error',
         }
         return mapping.get(self.status, 'badge-ghost')
 

@@ -2,7 +2,7 @@ from django import forms
 from django.utils.translation import gettext_lazy as _
 from maintenance.models import (
     MaintenanceRequest, CompletionReport, ServiceRating,
-    SparePart, StockMovement, FaultCategory
+    SparePart, StockMovement, FaultCategory, Floor, Apartment, TechnicalTechnician
 )
 
 
@@ -56,7 +56,8 @@ class MaintenanceRequestForm(forms.ModelForm):
     class Meta:
         model  = MaintenanceRequest
         fields = [
-            'employee_name', 'general_dept', 'department', 'location',
+            'employee_name', 'general_dept', 'department',
+            'floor', 'apartment', 'location',
             'fault_category', 'fault_description', 'priority',
             'requires_safety_permit',
         ]
@@ -73,9 +74,17 @@ class MaintenanceRequestForm(forms.ModelForm):
                 'class': 'input input-bordered w-full',
                 'placeholder': _('مثال: قسم الحسابات')
             }),
+            'floor':            forms.Select(attrs={
+                'class': 'select select-bordered w-full',
+                'id': 'id_floor',
+            }),
+            'apartment':        forms.Select(attrs={
+                'class': 'select select-bordered w-full',
+                'id': 'id_apartment',
+            }),
             'location':         forms.TextInput(attrs={
                 'class': 'input input-bordered w-full',
-                'placeholder': _('مثال: الدور الثاني — مكتب رقم 215')
+                'placeholder': _('ملاحظات إضافية على الموقع (اختياري)')
             }),
             'fault_category':   forms.Select(attrs={
                 'class': 'select select-bordered w-full',
@@ -84,7 +93,7 @@ class MaintenanceRequestForm(forms.ModelForm):
             'fault_description': forms.Textarea(attrs={
                 'class': 'textarea textarea-bordered w-full',
                 'rows': 3,
-                'placeholder': _('وصف إضافي للمشكلة (اختياري)')
+                'placeholder': _('وصف إضافي للمشكلة (مطلوب)')
             }),
             'priority':         forms.Select(attrs={
                 'class': 'select select-bordered w-full',
@@ -99,10 +108,34 @@ class MaintenanceRequestForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
 
         is_admin = False
+        is_tech  = False
         if self.user:
-            is_admin = self.user.is_superuser or self.user.groups.filter(name='maintenance_admin').exists()
+            groups = list(self.user.groups.values_list('name', flat=True))
+            is_admin = self.user.is_superuser or 'maintenance_admin' in groups
+            is_tech  = any(g in groups for g in [
+                'maintenance_elec', 'maintenance_air_cond', 'maintenance_mech', 'maintenance_const'
+            ])
 
         self.is_admin = is_admin
+
+        # Require fault description
+        self.fields['fault_description'].required = True
+
+        # Dropdowns for Floor and Apartment
+        self.fields['floor'].queryset = Floor.objects.all().order_by('order', 'name')
+        self.fields['floor'].required = False
+        self.fields['apartment'].required = False
+
+        if 'floor' in self.data:
+            try:
+                floor_id = int(self.data.get('floor'))
+                self.fields['apartment'].queryset = Apartment.objects.filter(floor_id=floor_id).order_by('name')
+            except (ValueError, TypeError):
+                self.fields['apartment'].queryset = Apartment.objects.none()
+        elif self.instance and self.instance.pk and self.instance.floor:
+            self.fields['apartment'].queryset = self.instance.floor.apartments.order_by('name')
+        else:
+            self.fields['apartment'].queryset = Apartment.objects.none()
 
         fault_cats = FaultCategory.objects.filter(is_active=True).select_related('unit')
         if not is_admin:
@@ -116,6 +149,10 @@ class MaintenanceRequestForm(forms.ModelForm):
         # Hide the requires_safety_permit field from non-admin users
         if not is_admin:
             self.fields.pop('requires_safety_permit', None)
+
+        # Hide Priority from regular requesters (non-admin and non-technician)
+        if not (is_admin or is_tech):
+            self.fields.pop('priority', None)
 
         self.employee_in_structure = False
         self.employee_obj = None
@@ -160,14 +197,42 @@ class MaintenanceRequestForm(forms.ModelForm):
                 instance.department = emp_data['department']
             instance.employee = self.employee_obj
 
+        # Construct location string automatically from floor and apartment if available
+        loc_parts = []
+        if instance.floor:
+            loc_parts.append(instance.floor.name)
+        if instance.apartment:
+            loc_parts.append(instance.apartment.name)
+        
+        extra_loc = instance.location.strip() if instance.location else ''
+        if loc_parts:
+            computed_loc = " — ".join(loc_parts)
+            if extra_loc and extra_loc != computed_loc:
+                computed_loc += f" ({extra_loc})"
+            instance.location = computed_loc
+        elif not extra_loc:
+            instance.location = "غير محدد"
+
         if commit:
             instance.save()
         return instance
 
 
 class EmployeeRequestForm(MaintenanceRequestForm):
-
     pass
+
+
+class TechnicalTechnicianForm(forms.ModelForm):
+    class Meta:
+        model  = TechnicalTechnician
+        fields = ['name', 'phone', 'unit', 'specialty', 'is_active']
+        widgets = {
+            'name':      forms.TextInput(attrs={'class': 'input input-bordered w-full', 'placeholder': _('اسم الفني التقني')}),
+            'phone':     forms.TextInput(attrs={'class': 'input input-bordered w-full', 'placeholder': _('رقم الهاتف')}),
+            'unit':      forms.Select(attrs={'class': 'select select-bordered w-full'}),
+            'specialty': forms.TextInput(attrs={'class': 'input input-bordered w-full', 'placeholder': _('التخصص أو الملاحظات (اختياري)')}),
+            'is_active': forms.CheckboxInput(attrs={'class': 'checkbox checkbox-primary'}),
+        }
 
 
 class CompletionReportForm(forms.ModelForm):

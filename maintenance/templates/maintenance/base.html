@@ -374,6 +374,10 @@
                 class="sidebar-link {% block nav_tech %}{% endblock %}">
                 <span class="icon">🔧</span> طلبات الوحدة
             </a>
+            <a href="{% url 'maintenance:technical_technician_list' %}"
+                class="sidebar-link {% block nav_tech_dir %}{% endblock %}">
+                <span class="icon">👥</span> دليل الفنيين التقنيين
+            </a>
             {% endif %}
 
             {% if request.user|has_any_group:"maintenance_store,maintenance_admin" %}

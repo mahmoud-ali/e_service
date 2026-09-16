@@ -70,7 +70,6 @@ class MaintenanceSystemTests(TestCase):
         self.assertEqual(len(req.request_number), 12) # MR-2026-0001
 
     def test_workflow_transitions(self):
-
         req = MaintenanceRequest.objects.create(
             requester=self.employee,
             employee_name='أحمد علي',
@@ -83,7 +82,12 @@ class MaintenanceSystemTests(TestCase):
         )
         self.assertEqual(req.status, MaintenanceRequest.STATUS_PENDING)
 
-        # Assign technician
+        # Receive request
+        req.status = MaintenanceRequest.STATUS_RECEIVED
+        req.save()
+        self.assertEqual(req.status, MaintenanceRequest.STATUS_RECEIVED)
+
+        # Assign technician and start in_progress
         req.assigned_technician = self.technician
         req.status = MaintenanceRequest.STATUS_IN_PROGRESS
         req.save()
@@ -102,6 +106,46 @@ class MaintenanceSystemTests(TestCase):
             work_done='تم تبديل القاطع واختبار الأحمال'
         )
         self.assertIsNotNone(req.completion_report)
+
+    def test_floor_apartment_and_technical_technicians(self):
+        from maintenance.models import Floor, Apartment, TechnicalTechnician
+
+        floor = Floor.objects.create(name='الطابق الرابع', order=4)
+        apt = Apartment.objects.create(floor=floor, name='شقة 402')
+        tech_tech = TechnicalTechnician.objects.create(name='الفني حسام', phone='0911111111')
+
+        req = MaintenanceRequest.objects.create(
+            requester=self.employee,
+            employee_name='أحمد علي',
+            general_dept='الشؤون الإدارية',
+            department='الموارد البشرية',
+            floor=floor,
+            apartment=apt,
+            fault_category=self.fault_cat,
+            fault_description='انقطاع تكييف بالشقة'
+        )
+        req.assigned_technical_technicians.add(tech_tech)
+
+        self.assertEqual(req.floor, floor)
+        self.assertEqual(req.apartment, apt)
+        self.assertIn(tech_tech, req.assigned_technical_technicians.all())
+
+    def test_manager_rejection(self):
+        req = MaintenanceRequest.objects.create(
+            requester=self.employee,
+            employee_name='أحمد علي',
+            general_dept='الشؤون الإدارية',
+            department='الموارد البشرية',
+            assigned_unit=self.elec_unit,
+            fault_category=self.fault_cat,
+            fault_description='طلب غير ملائم'
+        )
+        req.status = MaintenanceRequest.STATUS_REJECTED
+        req.rejection_reason = 'خارج اختصاص إدارة الصيانة'
+        req.save()
+
+        self.assertEqual(req.status, MaintenanceRequest.STATUS_REJECTED)
+        self.assertEqual(req.rejection_reason, 'خارج اختصاص إدارة الصيانة')
 
     def test_stock_movement_and_low_stock_signal(self):
         StockMovement.objects.create(

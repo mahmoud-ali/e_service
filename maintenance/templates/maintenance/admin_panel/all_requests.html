@@ -17,6 +17,12 @@
             </h2>
             <p class="text-xs text-gray-500 mt-1">عرض ومتابعة وإدارة جميع الطلبات في النظام</p>
         </div>
+        <div class="flex items-center gap-2 no-print">
+            <a href="{% url 'maintenance:admin_print_report' %}?{{ request.GET.urlencode }}" target="_blank"
+               class="btn btn-indigo btn-sm bg-indigo-600 hover:bg-indigo-700 text-white font-bold gap-2 shadow-sm">
+                <i class="fa-solid fa-print"></i> طباعة / تقرير PDF
+            </a>
+        </div>
     </div>
 
     <!-- Filter Form Card -->

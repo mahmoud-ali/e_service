@@ -84,3 +84,11 @@ def translate_choice(key, labels_json):
         return labels.get(str(key), key)
     except (ValueError, TypeError):
         return key
+
+
+@register.simple_tag
+def url_replace(request, field, value):
+    """يستبدل أو يضيف عنصر في عناصر الاستعلام (Query Parameters) دون تكرار مفتاح الصفحة."""
+    dict_ = request.GET.copy()
+    dict_[field] = value
+    return dict_.urlencode()

@@ -1,0 +1,202 @@
+{% extends "maintenance/base.html" %}
+{% load static %}
+
+{% block title %}سجل الفنيين التقنيين{% endblock %}
+{% block page_title %}دليل وسجل الفنيين التقنيين{% endblock %}
+{% block breadcrumb %}الرئيسية / الصيانة / الفنيون التقنيون{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- Header bar -->
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
+        <div>
+            <h2 class="text-xl font-bold text-gray-800 flex items-center gap-2">
+                <i class="fa-solid fa-users-gear text-blue-600"></i>
+                أسماء وسجل الفنيين التقنيين
+            </h2>
+            <p class="text-gray-500 text-xs mt-1">إضافة وتحديث بيانات الفنيين التقنيين وأرقام هواتفهم لاستدعائهم وتكليفهم عند تنفيذ الطلبات</p>
+        </div>
+        <button onclick="openTechModal()" class="btn btn-primary gap-2 text-white">
+            <i class="fa-solid fa-user-plus"></i>
+            إضافة فني تقني جديد
+        </button>
+    </div>
+
+    <!-- Search & Filter -->
+    <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
+        <form method="get" class="flex flex-wrap gap-3 items-center">
+            <div class="relative flex-1 min-w-[240px]">
+                <input type="text" name="search" value="{{ request.GET.search }}"
+                       placeholder="بحث بالاسم، رقم الهاتف، أو التخصص..."
+                       class="input input-bordered w-full pl-10">
+                <i class="fa-solid fa-magnifying-glass absolute left-3 top-3.5 text-gray-400"></i>
+            </div>
+            <select name="unit" class="select select-bordered min-w-[180px]">
+                <option value="">جميع الوحدات</option>
+                {% for u in units %}
+                <option value="{{ u.code }}" {% if unit_filter == u.code %}selected{% endif %}>{{ u.name }}</option>
+                {% endfor %}
+            </select>
+            <button type="submit" class="btn btn-primary">بحث</button>
+            {% if request.GET.search or unit_filter %}
+            <a href="{% url 'maintenance:technical_technician_list' %}" class="btn btn-ghost text-gray-500">إلغاء البحث</a>
+            {% endif %}
+        </form>
+    </div>
+
+    <!-- Table -->
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="table w-full">
+                <thead class="bg-gray-50 text-gray-700">
+                    <tr>
+                        <th class="w-12">#</th>
+                        <th>اسم الفني التقني</th>
+                        <th>رقم الهاتف</th>
+                        <th>الوحدة المختصة</th>
+                        <th>التخصص / الملاحظات</th>
+                        <th>الحالة</th>
+                        <th>تاريخ الإضافة</th>
+                        <th class="text-center">الإجراءات</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100">
+                    {% for tech in techs %}
+                    <tr class="hover:bg-gray-50/80 transition-colors">
+                        <td class="font-bold text-gray-400 text-sm">{{ forloop.counter }}</td>
+                        <td class="font-bold text-gray-800">
+                            <div class="flex items-center gap-3">
+                                <div class="w-9 h-9 rounded-full bg-blue-100 text-blue-700 font-bold flex items-center justify-center text-sm">
+                                    {{ tech.name|slice:":1" }}
+                                </div>
+                                <span>{{ tech.name }}</span>
+                            </div>
+                        </td>
+                        <td class="font-mono text-sm text-gray-700">
+                            <a href="tel:{{ tech.phone }}" class="text-blue-600 hover:underline flex items-center gap-1">
+                                <i class="fa-solid fa-phone text-xs"></i>
+                                {{ tech.phone }}
+                            </a>
+                        </td>
+                        <td>
+                            {% if tech.unit %}
+                            <span class="badge badge-outline badge-primary text-xs">{{ tech.unit.name }}</span>
+                            {% else %}
+                            <span class="badge badge-ghost text-gray-400 text-xs">عام</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-gray-600 text-sm">{{ tech.specialty|default:"غير محدد" }}</td>
+                        <td>
+                            {% if tech.is_active %}
+                            <span class="badge badge-success gap-1 text-xs">
+                                <i class="fa-solid fa-circle-check"></i> نشط
+                            </span>
+                            {% else %}
+                            <span class="badge badge-ghost text-gray-400 text-xs">غير نشط</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-gray-400 text-xs">{{ tech.created_at|date:"Y/m/d" }}</td>
+                        <td class="text-center">
+                            <button onclick="editTech('{{ tech.id }}', '{{ tech.name|escapejs }}', '{{ tech.phone|escapejs }}', '{{ tech.specialty|escapejs }}', '{{ tech.unit.id|default:'' }}', {{ tech.is_active|yesno:'true,false' }})"
+                                    class="btn btn-sm btn-ghost text-blue-600 gap-1">
+                                <i class="fa-solid fa-pen-to-square"></i> تعديل
+                            </button>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="8" class="text-center py-12 text-gray-400">
+                            <i class="fa-solid fa-user-slash text-4xl mb-3"></i>
+                            <p class="font-semibold text-gray-600">لا يوجد فنيون تقنيون مسجلون حالياً</p>
+                            <p class="text-xs text-gray-400 mt-1">قم بإضافة الفنيين التقنيين لتسهيل اختيارهم عند بدء تنفيذ طلبات الصيانة</p>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Add / Edit Tech -->
+<dialog id="techModal" class="modal">
+    <div class="modal-box rounded-2xl max-w-md">
+        <h3 class="font-bold text-lg text-gray-800 mb-4 flex items-center gap-2" id="modalTitle">
+            <i class="fa-solid fa-user-gear text-blue-600"></i>
+            إضافة فني تقني جديد
+        </h3>
+
+        <form method="post" action="{% url 'maintenance:technical_technician_list' %}" class="space-y-4">
+            {% csrf_token %}
+            <input type="hidden" name="tech_id" id="modalTechId" value="">
+
+            <div>
+                <label class="label"><span class="label-text font-semibold text-gray-700">اسم الفني التقني <span class="text-error">*</span></span></label>
+                <input type="text" name="name" id="modalName" required placeholder="مثال: المهندس محمد أحمد" class="input input-bordered w-full">
+            </div>
+
+            <div>
+                <label class="label"><span class="label-text font-semibold text-gray-700">رقم الهاتف <span class="text-error">*</span></span></label>
+                <input type="text" name="phone" id="modalPhone" required placeholder="مثال: 0912345678" class="input input-bordered w-full dir-ltr text-right">
+            </div>
+
+            <div>
+                <label class="label"><span class="label-text font-semibold text-gray-700">الوحدة المختصة</span></label>
+                <select name="unit_id" id="modalUnitId" class="select select-bordered w-full">
+                    <option value="">-- عام (جميع الوحدات) --</option>
+                    {% for u in units %}
+                    <option value="{{ u.id }}">{{ u.name }} ({{ u.code }})</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div>
+                <label class="label"><span class="label-text font-semibold text-gray-700">التخصص / ملاحظات</span></label>
+                <input type="text" name="specialty" id="modalSpecialty" placeholder="مثال: تكييف مركزي / كهرباء ضغط عالي" class="input input-bordered w-full">
+            </div>
+
+            <div class="form-control">
+                <label class="label cursor-pointer justify-start gap-3">
+                    <input type="checkbox" name="is_active" id="modalIsActive" class="checkbox checkbox-primary" checked>
+                    <span class="label-text font-semibold text-gray-700">الفني نشط ومتاح للتكليف</span>
+                </label>
+            </div>
+
+            <div class="modal-action">
+                <button type="button" onclick="document.getElementById('techModal').close()" class="btn btn-ghost">إلغاء</button>
+                <button type="submit" class="btn btn-primary text-white gap-2">
+                    <i class="fa-solid fa-floppy-disk"></i>
+                    حفظ البيانات
+                </button>
+            </div>
+        </form>
+    </div>
+    <form method="dialog" class="modal-backdrop"><button>إغلاق</button></form>
+</dialog>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function openTechModal() {
+    document.getElementById('modalTitle').innerHTML = '<i class="fa-solid fa-user-plus text-blue-600"></i> إضافة فني تقني جديد';
+    document.getElementById('modalTechId').value = '';
+    document.getElementById('modalName').value = '';
+    document.getElementById('modalPhone').value = '';
+    document.getElementById('modalUnitId').value = '';
+    document.getElementById('modalSpecialty').value = '';
+    document.getElementById('modalIsActive').checked = true;
+    document.getElementById('techModal').showModal();
+}
+
+function editTech(id, name, phone, specialty, unitId, isActive) {
+    document.getElementById('modalTitle').innerHTML = '<i class="fa-solid fa-user-pen text-blue-600"></i> تعديل بيانات الفني التقني';
+    document.getElementById('modalTechId').value = id;
+    document.getElementById('modalName').value = name;
+    document.getElementById('modalPhone').value = phone;
+    document.getElementById('modalUnitId').value = unitId || '';
+    document.getElementById('modalSpecialty').value = specialty;
+    document.getElementById('modalIsActive').checked = isActive;
+    document.getElementById('techModal').showModal();
+}
+</script>
+{% endblock %}

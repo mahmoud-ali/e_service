@@ -3,8 +3,35 @@ from django.utils.translation import gettext_lazy as _
 from maintenance.models import (
     MaintenanceUnit, FaultCategory, MaintenanceRequest,
     CompletionReport, ServiceRating, SparePart, StockMovement,
-    LowStockAlert, Notification
+    LowStockAlert, Notification, Floor, Apartment, TechnicalTechnician
 )
+
+
+class ApartmentInline(admin.TabularInline):
+    model = Apartment
+    extra = 1
+
+
+@admin.register(Floor)
+class FloorAdmin(admin.ModelAdmin):
+    list_display  = ['name', 'order']
+    list_editable = ['order']
+    inlines       = [ApartmentInline]
+
+
+@admin.register(Apartment)
+class ApartmentAdmin(admin.ModelAdmin):
+    list_display = ['floor', 'name']
+    list_filter  = ['floor']
+    search_fields = ['name']
+
+
+@admin.register(TechnicalTechnician)
+class TechnicalTechnicianAdmin(admin.ModelAdmin):
+    list_display  = ['name', 'phone', 'unit', 'specialty', 'is_active', 'created_at']
+    list_filter   = ['unit', 'is_active']
+    search_fields = ['name', 'phone', 'specialty']
+    list_editable = ['is_active']
 
 
 @admin.register(MaintenanceUnit)
@@ -46,21 +73,22 @@ class ServiceRatingInline(admin.TabularInline):
 @admin.register(MaintenanceRequest)
 class MaintenanceRequestAdmin(admin.ModelAdmin):
     list_display   = ['request_number', 'employee_name', 'general_dept', 'department',
-                      'fault_category', 'assigned_unit', 'status', 'priority', 'created_at']
-    list_filter    = ['status', 'priority', 'assigned_unit', 'fault_category__unit']
-    search_fields  = ['request_number', 'employee_name', 'department', 'general_dept']
+                      'floor', 'apartment', 'fault_category', 'assigned_unit', 'status', 'priority', 'created_at']
+    list_filter    = ['status', 'priority', 'assigned_unit', 'fault_category__unit', 'floor']
+    search_fields  = ['request_number', 'employee_name', 'department', 'general_dept', 'location']
     readonly_fields = ['request_number', 'created_at', 'updated_at', 'assigned_unit']
     ordering       = ['-created_at']
     inlines        = [CompletionReportInline, ServiceRatingInline]
+    filter_horizontal = ['assigned_technical_technicians']
     fieldsets      = (
         (_('بيانات الطلب'), {
-            'fields': ('request_number', 'requester', 'employee_name', 'general_dept', 'department', 'location')
+            'fields': ('request_number', 'requester', 'employee_name', 'general_dept', 'department', 'floor', 'apartment', 'location')
         }),
         (_('تفاصيل العطل'), {
             'fields': ('fault_category', 'fault_description', 'priority')
         }),
-        (_('التعيين والحالة'), {
-            'fields': ('assigned_unit', 'assigned_technician', 'status', 'admin_notes')
+        (_('التعيين والتنفيذ'), {
+            'fields': ('assigned_unit', 'assigned_technician', 'assigned_technical_technicians', 'status', 'delay_reason', 'rejection_reason', 'admin_notes')
         }),
         (_('التواريخ'), {
             'fields': ('created_at', 'updated_at', 'completed_at'),

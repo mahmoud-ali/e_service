@@ -1,4 +1,5 @@
 {% extends "maintenance/base.html" %}
+{% load maintenance_tags %}
 {% block title %}طلباتي — نظام الصيانة{% endblock %}
 {% block page_title %}طلباتي{% endblock %}
 {% block breadcrumb %}الرئيسية / طلباتي{% endblock %}
@@ -43,13 +44,17 @@
                 <!-- Status Icon -->
                 <div class="w-12 h-12 rounded-xl flex items-center justify-center text-xl flex-shrink-0
                     {% if req.status == 'pending' %}bg-yellow-100
+                    {% elif req.status == 'received' %}bg-sky-100
                     {% elif req.status == 'in_progress' %}bg-blue-100
                     {% elif req.status == 'completed' %}bg-green-100
-                    {% else %}bg-red-100{% endif %}">
+                    {% elif req.status == 'rejected' %}bg-red-100
+                    {% else %}bg-gray-100{% endif %}">
                     {% if req.status == 'pending' %}⏳
-                    {% elif req.status == 'in_progress' %}🔄
+                    {% elif req.status == 'received' %}📥
+                    {% elif req.status == 'in_progress' %}🔧
                     {% elif req.status == 'completed' %}✅
-                    {% else %}❌{% endif %}
+                    {% elif req.status == 'rejected' %}❌
+                    {% else %}🚫{% endif %}
                 </div>
                 <div>
                     <div class="flex items-center gap-2 flex-wrap">
@@ -84,11 +89,11 @@
 <div class="flex justify-center mt-6">
     <div class="join">
         {% if page_obj.has_previous %}
-        <a href="?page={{ page_obj.previous_page_number }}&{{ request.GET.urlencode }}" class="join-item btn btn-sm">«</a>
+        <a href="?{% url_replace request 'page' page_obj.previous_page_number %}" class="join-item btn btn-sm">«</a>
         {% endif %}
         <button class="join-item btn btn-sm btn-active">{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</button>
         {% if page_obj.has_next %}
-        <a href="?page={{ page_obj.next_page_number }}&{{ request.GET.urlencode }}" class="join-item btn btn-sm">»</a>
+        <a href="?{% url_replace request 'page' page_obj.next_page_number %}" class="join-item btn btn-sm">»</a>
         {% endif %}
     </div>
 </div>

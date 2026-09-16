@@ -33,7 +33,11 @@ urlpatterns = [
     path('safety/request/<int:request_pk>/approve/',  views.SafetyPermitApproveView.as_view(),        name='safety_permit_approve'),
     path('safety/request/<int:request_pk>/close/',    views.SafetyPermitCloseView.as_view(),          name='safety_permit_close'),
 
+    path('technical-technicians/',            views.TechnicalTechnicianListView.as_view(), name='technical_technician_list'),
+
     path('ajax/fault-categories/',            views.get_fault_categories,        name='ajax_fault_categories'),
+    path('ajax/apartments/',                  views.get_apartments,              name='ajax_get_apartments'),
+    path('ajax/technical-technicians/add/',   views.ajax_add_technical_technician, name='ajax_add_technical_technician'),
     path('ajax/notifications/',               views.notifications_list,           name='notifications_list'),
     path('ajax/notifications/<int:pk>/read/', views.mark_notification_read,      name='mark_notification_read'),
 ]
