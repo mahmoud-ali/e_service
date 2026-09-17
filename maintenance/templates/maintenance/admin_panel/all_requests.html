@@ -38,7 +38,7 @@
                 <select name="unit" class="select select-bordered select-sm w-full focus:select-primary">
                     <option value="">جميع الوحدات</option>
                     {% for u in units %}
-                    <option value="{{ u.id }}" {% if request.GET.unit == u.id|stringformat:"i" %}selected{% endif %}>{{ u.name }}</option>
+                    <option value="{{ u.id }}" {% if request.GET.unit == u.id|stringformat:"i" or request.GET.unit == u.code %}selected{% endif %}>{{ u.name }}</option>
                     {% endfor %}
                 </select>
             </div>

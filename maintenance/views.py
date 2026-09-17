@@ -678,25 +678,29 @@ class AdminAllRequestsView(LoginRequiredMixin, GroupRequiredMixin, ListView):
             'fault_category__unit', 'assigned_unit',
             'assigned_technician', 'requester'
         )
-        filter_form = RequestFilterForm(self.request.GET)
-        if filter_form.is_valid():
-            status = filter_form.cleaned_data.get('status')
-            search = filter_form.cleaned_data.get('search')
-            unit   = filter_form.cleaned_data.get('unit')
-            priority = filter_form.cleaned_data.get('priority')
-            if status:
-                qs = qs.filter(status=status)
-            if search:
-                qs = qs.filter(
-                    Q(request_number__icontains=search) |
-                    Q(employee_name__icontains=search) |
-                    Q(department__icontains=search) |
-                    Q(general_dept__icontains=search)
-                )
-            if unit:
-                qs = qs.filter(assigned_unit__code=unit)
-            if priority:
-                qs = qs.filter(priority=priority)
+        status   = self.request.GET.get('status', '').strip()
+        search   = (self.request.GET.get('q', '') or self.request.GET.get('search', '')).strip()
+        unit     = self.request.GET.get('unit', '').strip()
+        priority = self.request.GET.get('priority', '').strip()
+
+        if status:
+            qs = qs.filter(status=status)
+        if search:
+            qs = qs.filter(
+                Q(request_number__icontains=search) |
+                Q(employee_name__icontains=search) |
+                Q(department__icontains=search) |
+                Q(general_dept__icontains=search) |
+                Q(location__icontains=search)
+            )
+        if unit:
+            if unit.isdigit():
+                qs = qs.filter(Q(assigned_unit__id=int(unit)) | Q(fault_category__unit__id=int(unit)))
+            else:
+                qs = qs.filter(Q(assigned_unit__code=unit) | Q(fault_category__unit__code=unit))
+        if priority:
+            qs = qs.filter(priority=priority)
+
         return qs.order_by('-created_at')
 
     def get_context_data(self, **kwargs):
@@ -715,11 +719,10 @@ class AdminPrintReportView(LoginRequiredMixin, GroupRequiredMixin, View):
             'fault_category__unit', 'assigned_unit',
             'assigned_technician', 'requester'
         )
-        # Apply same filters as AdminAllRequestsView
-        status   = request.GET.get('status', '')
-        search   = request.GET.get('q', '') or request.GET.get('search', '')
-        unit     = request.GET.get('unit', '')
-        priority = request.GET.get('priority', '')
+        status   = request.GET.get('status', '').strip()
+        search   = (request.GET.get('q', '') or request.GET.get('search', '')).strip()
+        unit     = request.GET.get('unit', '').strip()
+        priority = request.GET.get('priority', '').strip()
 
         if status:
             qs = qs.filter(status=status)
@@ -728,10 +731,14 @@ class AdminPrintReportView(LoginRequiredMixin, GroupRequiredMixin, View):
                 Q(request_number__icontains=search) |
                 Q(employee_name__icontains=search) |
                 Q(department__icontains=search) |
-                Q(general_dept__icontains=search)
+                Q(general_dept__icontains=search) |
+                Q(location__icontains=search)
             )
         if unit:
-            qs = qs.filter(assigned_unit__id=unit)
+            if unit.isdigit():
+                qs = qs.filter(Q(assigned_unit__id=int(unit)) | Q(fault_category__unit__id=int(unit)))
+            else:
+                qs = qs.filter(Q(assigned_unit__code=unit) | Q(fault_category__unit__code=unit))
         if priority:
             qs = qs.filter(priority=priority)
 
