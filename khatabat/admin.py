@@ -5,6 +5,7 @@ from django.utils.html import format_html
 
 from django.contrib import admin
 from django.contrib.auth import get_user_model
+from django.db.models import Prefetch
 
 from django.http import HttpResponse
 from django.template.loader import render_to_string
@@ -215,32 +216,41 @@ class KhatabatAdmin(MaktabTanfiziMixin,LogMixin,admin.ModelAdmin):
 
         qs = qs.filter(maktab_tanfizi__in=maktib_list)
 
-        if request.user.maktab_tanfizi_follow_up.exists():
-            qs = qs | qs.filter(has_motab3at=True)
+        return qs.prefetch_related(
+            Prefetch(
+                "harkatkhatabat_set",
+                queryset=HarkatKhatabat.objects.order_by("pk"),
+            )
+        )
 
-        return qs
+    def _haraka_link(self, haraka_obj):
+        if haraka_obj is None:
+            return '-'
+
+        url = reverse("admin:khatabat_harkatkhatabat_change", args=[haraka_obj.pk])
+        return format_html('<a href="{}">{}</a>', url, haraka_obj.get_movement_type_display())
+
+    def _first_last_haraka(self, obj):
+        """Return the (first, last) haraka, using the prefetched cache when available."""
+        cached = getattr(obj, "_prefetched_objects_cache", None)
+        if cached is not None:
+            harakat = cached.get("harkatkhatabat_set")
+            if harakat is not None:
+                return (harakat[0], harakat[-1]) if harakat else (None, None)
+
+        # Fallback for objects fetched outside the list-view queryset.
+        qs = obj.harkatkhatabat_set.order_by("pk")
+        return qs.first(), qs.last()
 
     @admin.display(description='الحركة الابتدائية')
     def first_haraka(self, obj):
-        if obj.harkatkhatabat_set.exists():
-            haraka_obj = obj.harkatkhatabat_set.first()
-            if haraka_obj.id:
-                url = reverse("admin:khatabat_harkatkhatabat_change", args=[haraka_obj.id])
-                return format_html('<a href="{}">{}</a>', url, haraka_obj.get_movement_type_display())            
-            
-        
-        return '-'
+        first, _ = self._first_last_haraka(obj)
+        return self._haraka_link(first)
 
     @admin.display(description='الحركة الاخيرة')
     def last_haraka(self, obj):
-        if obj.harkatkhatabat_set.exists():
-            haraka_obj = obj.harkatkhatabat_set.last()
-            if haraka_obj.id:
-                url = reverse("admin:khatabat_harkatkhatabat_change", args=[haraka_obj.id])
-                return format_html('<a href="{}">{}</a>', url, haraka_obj.get_movement_type_display())            
-            
-        
-        return '-'
+        _, last = self._first_last_haraka(obj)
+        return self._haraka_link(last)
 
     def get_readonly_fields(self, request, obj=None):
         readonly = []
@@ -380,10 +390,7 @@ class HarkatKhatabatAdmin(admin.ModelAdmin):
 
         qs = qs.filter(letter__maktab_tanfizi__in=makatib_list)
 
-        if request.user.maktab_tanfizi_follow_up.exists():
-            qs = qs | qs.filter(letter__has_motab3at=True)
-
-        return qs
+        return qs.select_related("letter", "source_entity").prefetch_related("forwarded_to")
 
     def has_add_permission(self, request):
         return False
@@ -427,10 +434,8 @@ class Motab3atKhatabatAdmin(admin.ModelAdmin):
             qs = qs.none()
 
         qs = qs.filter(letter__maktab_tanfizi__in=makatib_list)
-        if request.user.maktab_tanfizi_follow_up.exists():
-            qs = qs | qs.filter(letter__has_motab3at=True)
 
-        return qs
+        return qs.select_related("letter")
 
     def has_add_permission(self, request):
         return False
