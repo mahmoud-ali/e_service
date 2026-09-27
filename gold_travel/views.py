@@ -39,7 +39,7 @@ class GoldTravelCert(LoginRequiredMixin,UserPermissionMixin,TemplateView):
         for r in TblStateRepresentative.objects.filter(state=obj.source_state):
             state_repr[f"{r.authority}"]= r.name
 
-        alloy_chunks = self._partition(obj.appmovegolddetails_set.all())
+        alloy_chunks = self._partition(obj.appmovegolddetails_set.order_by('id'))
 
         self.extra_context = {
             'object': obj,
