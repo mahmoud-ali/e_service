@@ -236,7 +236,7 @@ class KhatabatAdmin(MaktabTanfiziMixin,LogMixin,admin.ModelAdmin):
         if cached is not None:
             harakat = cached.get("harkatkhatabat_set")
             if harakat is not None:
-                return (harakat[0], harakat[-1]) if harakat else (None, None)
+                return (harakat.first(), harakat.last()) if harakat else (None, None)
 
         # Fallback for objects fetched outside the list-view queryset.
         qs = obj.harkatkhatabat_set.order_by("pk")
