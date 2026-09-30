@@ -1,0 +1,61 @@
+{% extends "admin/change_form.html" %}
+{% load i18n %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+<a href="{% url 'admin:index' %}">{% translate 'Home' %}</a>
+&rsaquo; <a href="{% url 'admin:app_list' app_label=opts.app_label %}">{{ opts.app_config.verbose_name }}</a>
+&rsaquo; <a href="{% url opts|admin_urlname:'changelist' %}">{{ opts.verbose_name_plural }}</a>
+&rsaquo; {% blocktranslate %}Import details from CSV{% endblocktranslate %}
+</div>
+{% endblock %}
+
+{% block content %}
+<h1>{% translate 'Import details from CSV' %}</h1>
+
+<div style="background:#f8f8f8; border:1px solid #ddd; border-radius:4px; padding:12px 16px; margin-bottom:20px; direction:ltr; text-align:left;">
+    <strong>{% translate 'Expected CSV format:' %}</strong><br>
+    <code>id,weight,shape type</code><br>
+    <code>INGOT-001,250.5,{% translate 'rectangular' %}</code><br>
+    <code>INGOT-002,180.0,{% translate 'circular' %}</code><br>
+    <br>
+    <strong>{% translate 'Shape type values:' %}</strong>
+    <ul style="margin:4px 0 0 16px;">
+        <li><code>{% translate 'rectangular' %}</code> {% translate 'or' %} <code>{% translate 'rectangular' %}</code> {% translate 'or' %} <code>1</code> — {% translate 'مستطيل' %}</li>
+        <li><code>{% translate 'circular' %}</code> {% translate 'or' %} <code>{% translate 'circular' %}</code> {% translate 'or' %} <code>2</code> — {% translate 'دائري' %}</li>
+    </ul>
+    <p style="margin:8px 0 0 0; color:#888; font-size:11px;">
+        {% translate 'Save your CSV with UTF-8 encoding (BOM recommended for Excel compatibility).' %}
+    </p>
+</div>
+
+<p>{% blocktranslate count count=objects|length %}Selected application:{% plural %}Selected applications:{% endblocktranslate %} {{ objects|length }}</p>
+<ul>
+    {% for obj in objects %}
+    <li>{{ obj.code }} — {{ obj.owner_name }} — {{ obj.date }}</li>
+    {% endfor %}
+</ul>
+
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form._selected_action }}
+
+    <fieldset class="module aligned">
+        {% for field in form.visible_fields %}
+        <div class="form-row">
+            {{ field.errors }}
+            <label for="{{ field.id_for_label }}" class="required">{{ field.label }}:</label>
+            {{ field }}
+            {% if field.help_text %}
+            <div class="help">{{ field.help_text }}</div>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </fieldset>
+
+    <div class="submit-row">
+        <input type="submit" class="default" name="apply" value="{% translate 'Import' %}">
+        <a href="{% url opts|admin_urlname:'changelist' %}" class="button cancel-link">{% translate 'Cancel' %}</a>
+    </div>
+</form>
+{% endblock %}

@@ -1,6 +1,7 @@
 import datetime
 import codecs
 import csv
+from django.shortcuts import render
 from django.http import HttpRequest, HttpResponse
 from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
@@ -9,7 +10,7 @@ from django.utils import timezone
 from django.utils.html import format_html
 from django.db import models
 from django.forms.widgets import TextInput
-from gold_travel.forms import TblStateRepresentativeForm
+from gold_travel.forms import TblStateRepresentativeForm, ImportDetailsCSVForm
 from gold_travel.models import AppMoveGoldExportGold, AppMoveGoldExportSilver, AppMoveGoldREExportGold, AppPrepareGold, LkpOwner, LkpStateDetails, TblStateRepresentative,AppMoveGold, AppMoveGoldDetails
 from sswg.models import TransferRelocationFormData
 
@@ -303,7 +304,7 @@ class AppMoveAdmin(LogAdminMixin,admin.ModelAdmin):
     ]
     list_filter = [("date",DateFieldListFilterWithLast30days),("state",ChoicesFieldListFilterNotEmpty),("source_state",RelatedOnlyFieldListFilterNotEmpty),("owner_name_lst",RelatedOnlyFieldListFilterNotEmpty)]
     search_fields = ["code","owner_name_lst__name","owner_address","repr_name","repr_phone","repr_identity"]
-    actions = ['confirm_app','arrived_to_ssmo_app','waived_app','cancel_app','return_to_draft','export_as_csv']
+    actions = ['confirm_app','arrived_to_ssmo_app','waived_app','cancel_app','return_to_draft','export_as_csv','import_details_from_csv']
     autocomplete_fields = ["owner_name_lst"]
     date_hierarchy = "date"
     list_display = ["code","date","owner_name_lst","gold_weight_in_gram","gold_alloy_count","state_str","source_state","repr_name"]
@@ -374,6 +375,8 @@ class AppMoveAdmin(LogAdminMixin,admin.ModelAdmin):
             if authority!=TblStateRepresentative.AUTHORITY_SMRC:
                 if "confirm_app" in actions:
                     del actions['confirm_app']
+                if "import_details_from_csv" in actions:
+                    del actions['import_details_from_csv']
 
             if authority!=TblStateRepresentative.AUTHORITY_SMRC_NAFIZA:
                 if "arrived_to_ssmo_app" in actions:
@@ -467,6 +470,71 @@ class AppMoveAdmin(LogAdminMixin,admin.ModelAdmin):
             writer.writerow(row)
 
         return response
+
+    @admin.action(description=_('Import details from CSV'))
+    def import_details_from_csv(self, request, queryset):
+        from gold_travel.models import AppMoveGoldDetails
+
+        opts = self.model._meta
+
+        if 'apply' in request.POST:
+            form = ImportDetailsCSVForm(request.POST, request.FILES)
+            if form.is_valid():
+                # Constraint 1: Only one model allowed
+                if queryset.count() != 1:
+                    self.message_user(
+                        request,
+                        _('You must select exactly one form to import details.'),
+                        level='ERROR',
+                    )
+                    return
+
+                obj = queryset.first()
+
+                # Constraint 2: Only draft state allowed
+                if obj.state != AppMoveGold.STATE_DRAFT:
+                    self.message_user(
+                        request,
+                        _('You can only import details to forms in draft state. "%(code)s" is in state: %(state)s')
+                        % {'code': obj.code, 'state': obj.get_state_display()},
+                        level='ERROR',
+                    )
+                    return
+
+                rows = form.cleaned_data['csv_file']
+                replace = form.cleaned_data.get('replace_existing', False)
+
+                total_created = 0
+                if replace:
+                    deleted_count, _ = AppMoveGoldDetails.objects.filter(master=obj).delete()
+                for row in rows:
+                    AppMoveGoldDetails.objects.create(
+                        master=obj,
+                        alloy_id=row['alloy_id'],
+                        alloy_weight_in_gram=row['alloy_weight_in_gram'],
+                        alloy_shape=row['alloy_shape'],
+                    )
+                    total_created += 1
+
+                self.message_user(
+                    request,
+                    _('Successfully imported %(count)d detail(s) into "%(code)s".') % {'count': total_created, 'code': obj.code},
+                    level='SUCCESS',
+                )
+                return
+        else:
+            # Build initial form with selected IDs
+            ids = ','.join(str(obj.pk) for obj in queryset)
+            form = ImportDetailsCSVForm(initial={'_selected_action': ids})
+
+        context = {
+            'opts': opts,
+            'form': form,
+            'objects': queryset,
+            'action': 'import_details_from_csv',
+            'media': self.media,
+        }
+        return render(request, 'admin/gold_travel/appmovegold/import_details_csv.html', context)
 
     @admin.display(description=_('owner_name'))
     def owner_name(self, obj):
