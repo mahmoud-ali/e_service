@@ -30,8 +30,8 @@ class ImportDetailsCSVForm(forms.Form):
     )
 
     SHAPE_MAP = {
-        'مستطيل': 1, 'rectangular': 1, '1': 1,
-        'دائري': 2, 'circular': 2, '2': 2,
+        'مستطيل': 1, 'مستطيلة': 1, 'rectangular': 1, '1': 1,
+        'دائري': 2, 'دائرى': 2, 'circular': 2, '2': 2,
     }
 
     def clean_csv_file(self):
