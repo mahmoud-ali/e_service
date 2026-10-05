@@ -243,7 +243,7 @@ class MeltBatchAdmin(LogAdminMixin, admin.ModelAdmin):
                 source_state=batch_source_state,
                 state=Sale.STATE_PENDING
             )
-            my_form.fields['buyer_saig'].queryset = LkpSaig.objects.filter(state_id=batch.source_state_id)
+            my_form.fields['buyer_saig'].queryset = LkpSaig.objects.filter(state=batch_source_state)
             if my_form.is_valid():
                 choice = my_form.cleaned_data['batch_choice']
                 if choice == 'new':
@@ -285,7 +285,7 @@ class MeltBatchAdmin(LogAdminMixin, admin.ModelAdmin):
                 source_state=batch_source_state,
                 state=Sale.STATE_PENDING
             )
-            my_form.fields['buyer_saig'].queryset = LkpSaig.objects.filter(state_id=batch.source_state_id)
+            my_form.fields['buyer_saig'].queryset = LkpSaig.objects.filter(state=batch_source_state)
 
         context = dict(
             self.admin_site.each_context(request),
