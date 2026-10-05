@@ -795,6 +795,15 @@ class AppForignerMovementAdmin(WorkflowAdminMixin,admin.ModelAdmin):
     list_filter = ["company__company_type","state",]
     view_on_site = False
 
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        user_groups = list(request.user.groups.values_list('name', flat=True))
+        is_security = 'security_officer' in user_groups
+
+        if not request.user.is_superuser and not is_security:
+            qs = qs.exclude(state='submitted')
+        return qs
+
     def get_fields(self, request, obj=None):
         fields = list(super().get_fields(request, obj))
         user_groups = list(request.user.groups.values_list('name', flat=True))
@@ -815,6 +824,14 @@ class AppForignerMovementAdmin(WorkflowAdminMixin,admin.ModelAdmin):
             return False
         return super().has_add_permission(request, obj)
 
+    def has_change_permission(self, request, obj=None):
+        user_groups = list(request.user.groups.values_list('name', flat=True))
+        is_security = 'security_officer' in user_groups
+        if not request.user.is_superuser and not is_security:
+            if obj and obj.state == 'submitted':
+                return False
+        return super().has_change_permission(request, obj)
+
     def get_readonly_fields(self, request, obj=None):
         readonly = list(super().get_readonly_fields(request, obj) or [])
         user_groups = list(request.user.groups.values_list('name', flat=True))
@@ -823,9 +840,13 @@ class AppForignerMovementAdmin(WorkflowAdminMixin,admin.ModelAdmin):
         if is_security and obj:
             fields = [f.name for f in obj._meta.fields]
             for f in fields:
-                if f != 'security_comment' and f not in readonly:
-                    readonly.append(f)
-        elif not is_security and obj and obj.state != 'submitted':
+                if obj.state == 'submitted':
+                    if f != 'security_comment' and f not in readonly:
+                        readonly.append(f)
+                else:
+                    if f not in readonly:
+                        readonly.append(f)
+        elif not is_security and obj:
             if 'security_comment' not in readonly:
                 readonly.append('security_comment')
         return readonly
