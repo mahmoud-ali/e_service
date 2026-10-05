@@ -175,13 +175,14 @@ foreigner_permission_main_class = {
         'security_officer':{
             'permissions': {
                 ForeignerPermission.STATE_DRAFT: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                ForeignerPermission.STATE_SECURITY_REVIEWED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 ForeignerPermission.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 ForeignerPermission.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
             },
         },
         'entaj_section_head':{
             'permissions': {
-                ForeignerPermission.STATE_DRAFT: {'add': 0, 'change': 1, 'delete': 1, 'view': 1},
+                ForeignerPermission.STATE_SECURITY_REVIEWED: {'add': 0, 'change': 1, 'delete': 0, 'view': 1},
                 ForeignerPermission.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 ForeignerPermission.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
                 ForeignerPermission.STATE_REJECTED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
