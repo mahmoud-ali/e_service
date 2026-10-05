@@ -21,7 +21,7 @@ class ImportDetailsCSVForm(forms.Form):
         label=_("CSV file"),
         help_text=_("CSV file with columns: id, weight, shape type. Shape type: مستطيل/rectangular/1 or دائري/circular/2")
     )
-    _selected_action = forms.CharField(widget=forms.HiddenInput)
+    selected_action = forms.CharField(widget=forms.HiddenInput)
     replace_existing = forms.BooleanField(
         label=_("Replace existing details"),
         required=False,

@@ -525,7 +525,7 @@ class AppMoveAdmin(LogAdminMixin,admin.ModelAdmin):
         else:
             # Build initial form with selected IDs
             ids = ','.join(str(obj.pk) for obj in queryset)
-            form = ImportDetailsCSVForm(initial={'_selected_action': ids})
+            form = ImportDetailsCSVForm(initial={'selected_action': ids})
 
         context = {
             'opts': opts,

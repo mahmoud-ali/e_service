@@ -39,7 +39,7 @@
 
 <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
-    {{ form._selected_action }}
+    {{ form.selected_action }}
 
     <fieldset class="module aligned">
         {% for field in form.visible_fields %}
