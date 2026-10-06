@@ -1046,15 +1046,25 @@ class AppForeignerProcedureAdmin(WorkflowAdminMixin,admin.ModelAdmin):
     def get_queryset(self, request):
         qs = super().get_queryset(request)
         user_groups = list(request.user.groups.values_list('name', flat=True))
-        if 'security_officer' in user_groups and not request.user.is_superuser:
-            qs = qs.exclude(procedure_type__name__icontains='مبدئي')
+        is_security = 'security_officer' in user_groups
+
+        if not request.user.is_superuser:
+            if is_security:
+                qs = qs.exclude(procedure_type__name__icontains='مبدئي')
+            else:
+                qs = qs.exclude(models.Q(state='submitted') & ~models.Q(procedure_type__name__icontains='مبدئي'))
         return qs
 
     def has_change_permission(self, request, obj=None):
         user_groups = list(request.user.groups.values_list('name', flat=True))
-        if 'security_officer' in user_groups and not request.user.is_superuser:
-            if obj and obj.procedure_type and 'مبدئي' in obj.procedure_type.name:
-                return False
+        is_security = 'security_officer' in user_groups
+        if not request.user.is_superuser:
+            if is_security:
+                if obj and obj.procedure_type and 'مبدئي' in obj.procedure_type.name:
+                    return False
+            else:
+                if obj and obj.state == 'submitted' and obj.procedure_type and 'مبدئي' not in obj.procedure_type.name:
+                    return False
         return super().has_change_permission(request, obj)
 
     def get_readonly_fields(self, request, obj=None):
@@ -1070,7 +1080,7 @@ class AppForeignerProcedureAdmin(WorkflowAdminMixin,admin.ModelAdmin):
                 else:
                     if f not in readonly:
                         readonly.append(f)
-        elif not is_security and obj and obj.state != 'submitted':
+        elif not is_security and obj:
             if 'security_comment' not in readonly:
                 readonly.append('security_comment')
         return readonly
