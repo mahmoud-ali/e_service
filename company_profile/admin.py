@@ -804,6 +804,19 @@ class AppForignerMovementAdmin(WorkflowAdminMixin,admin.ModelAdmin):
             qs = qs.exclude(state='submitted')
         return qs
 
+    def get_exclude(self, request, obj=None):
+        fields = list(super().get_exclude(request, obj) or [])
+        user_groups = list(request.user.groups.values_list('name', flat=True))
+        is_security = 'security_officer' in user_groups
+
+        if not request.user.is_superuser:
+            if is_security:
+                fields += ['recommendation_comments', 'reject_comments']
+            elif obj and obj.state in ['submitted', 'security_reviewed', 'review_acceptance']:
+                if 'reject_comments' not in fields:
+                    fields.append('reject_comments')
+        return fields
+
     def get_fields(self, request, obj=None):
         fields = list(super().get_fields(request, obj))
         user_groups = list(request.user.groups.values_list('name', flat=True))
@@ -849,6 +862,14 @@ class AppForignerMovementAdmin(WorkflowAdminMixin,admin.ModelAdmin):
         elif not is_security and obj:
             if 'security_comment' not in readonly:
                 readonly.append('security_comment')
+            
+            if not request.user.is_superuser:
+                app_fields = ['company', 'route_from', 'route_to', 'period_from', 'period_to', 
+                              'address_in_sudan', 'nationality', 'passport_no', 'passport_expiry_date',
+                              'official_letter_file', 'passport_copy_file', 'cv_file', 'experiance_certificates_file']
+                for f in app_fields:
+                    if f not in readonly and hasattr(obj, f):
+                        readonly.append(f)
         return readonly
     
 admin.site.register(AppForignerMovement, AppForignerMovementAdmin)
