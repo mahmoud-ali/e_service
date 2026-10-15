@@ -70,6 +70,9 @@ class SaleAdmin(LogAdminMixin, admin.ModelAdmin):
     readonly_fields = ['code']
     actions = ['mark_complete', 'export_as_csv']
 
+    class Media:
+        js = ["gold_travel_traditional/js/sale_admin.js"]
+
     def get_readonly_fields(self, request, obj=None):
         readonly_fields = list(super().get_readonly_fields(request, obj))
         if obj and obj.state == Sale.STATE_COMPLETE:
@@ -80,7 +83,7 @@ class SaleAdmin(LogAdminMixin, admin.ModelAdmin):
 
     fieldsets = [
         (None, {'fields': ['code', 'sale_date']}),
-        (_('sale_details'), {'fields': [('buyer_type',), ('buyer_exporter', 'buyer_saig')]}),
+        (_('بيانات المشتري'), {'fields': ['buyer_type', 'buyer_exporter', 'buyer_saig']}),
         (None, {'fields': ['note']}),
         (None, {'fields': ['state']}),
     ]
