@@ -249,18 +249,42 @@ class AppMoveGoldTraditionalStorageForm(forms.Form):
         required=True,
         widget=forms.DateInput(attrs={'type': 'date', 'class': 'vDateField'})
     )
+    buyer_type = forms.ChoiceField(
+        label=_('نوع المشتري'),
+        choices=[('exporter', _('مصدر')), ('saig', _('صائغ'))],
+        initial='exporter',
+        widget=forms.RadioSelect()
+    )
+    buyer_exporter = forms.ModelChoiceField(
+        queryset=None,
+        label=_('المشتري (مصدر)'),
+        required=False
+    )
+    buyer_saig = forms.ModelChoiceField(
+        queryset=None,
+        label=_('المشتري (صائغ)'),
+        required=False
+    )
     note = forms.CharField(label=_('ملاحظات'), max_length=150, required=False)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        from gold_travel.models import LkpOwner
+        self.fields['buyer_exporter'].queryset = LkpOwner.objects.filter(state=LkpOwner.STATE_ACTIVE)
+        self.fields['buyer_saig'].queryset = LkpSaig.objects.all()
         self.fields['storage_date'].required = False
 
     def clean(self):
         cleaned = super().clean()
         choice = cleaned.get('batch_choice')
+        buyer_type = cleaned.get('buyer_type')
         if choice == 'new':
             if not cleaned.get('storage_date'):
                 self.add_error('storage_date', _('This field is required.'))
+            if buyer_type == 'exporter' and not cleaned.get('buyer_exporter'):
+                self.add_error('buyer_exporter', _('This field is required.'))
+            if buyer_type == 'saig' and not cleaned.get('buyer_saig'):
+                self.add_error('buyer_saig', _('This field is required.'))
         elif choice == 'existing':
             if not cleaned.get('existing_storage'):
                 self.add_error('existing_storage', _('Please select a storage receipt.'))
@@ -360,18 +384,42 @@ class MeltBatchStorageForm(forms.Form):
         required=True,
         widget=forms.DateInput(attrs={'type': 'date', 'class': 'vDateField'})
     )
+    buyer_type = forms.ChoiceField(
+        label=_('نوع المشتري'),
+        choices=[('exporter', _('مصدر')), ('saig', _('صائغ'))],
+        initial='exporter',
+        widget=forms.RadioSelect()
+    )
+    buyer_exporter = forms.ModelChoiceField(
+        queryset=None,
+        label=_('المشتري (مصدر)'),
+        required=False
+    )
+    buyer_saig = forms.ModelChoiceField(
+        queryset=None,
+        label=_('المشتري (صائغ)'),
+        required=False
+    )
     note = forms.CharField(label=_('ملاحظات'), max_length=150, required=False)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        from gold_travel.models import LkpOwner
+        self.fields['buyer_exporter'].queryset = LkpOwner.objects.filter(state=LkpOwner.STATE_ACTIVE)
+        self.fields['buyer_saig'].queryset = LkpSaig.objects.all()
         self.fields['storage_date'].required = False
 
     def clean(self):
         cleaned = super().clean()
         choice = cleaned.get('batch_choice')
+        buyer_type = cleaned.get('buyer_type')
         if choice == 'new':
             if not cleaned.get('storage_date'):
                 self.add_error('storage_date', _('This field is required.'))
+            if buyer_type == 'exporter' and not cleaned.get('buyer_exporter'):
+                self.add_error('buyer_exporter', _('This field is required.'))
+            if buyer_type == 'saig' and not cleaned.get('buyer_saig'):
+                self.add_error('buyer_saig', _('This field is required.'))
         elif choice == 'existing':
             if not cleaned.get('existing_storage'):
                 self.add_error('existing_storage', _('Please select a storage receipt.'))

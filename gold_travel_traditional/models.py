@@ -577,9 +577,18 @@ class Storage(LoggingModel):
 
     code = models.CharField(_('code'), max_length=20, unique=True)
     storage_date = models.DateField(_('تاريخ التخزين'))
+    buyer_exporter = models.ForeignKey('gold_travel.LkpOwner', on_delete=models.PROTECT, null=True, blank=True, verbose_name=_('مصدر'))
+    buyer_saig = models.ForeignKey(LkpSaig, on_delete=models.PROTECT, null=True, blank=True, verbose_name=_('صائغ'))
+    buyer_type = models.CharField(_('نوع المشتري'), max_length=10, choices=[('exporter',_('مصدر')),('saig',_('صائغ'))], default='exporter')
     source_state = models.ForeignKey(LkpState, on_delete=models.PROTECT, verbose_name=_('state'))
     state = models.IntegerField(_('record_state'), choices=STATE_CHOICES, default=STATE_PENDING)
     note = models.CharField(_('ملاحظات'), max_length=150, null=True, blank=True)
+
+    @property
+    def buyer_display(self):
+        if self.buyer_type == 'saig' and self.buyer_saig:
+            return str(self.buyer_saig)
+        return str(self.buyer_exporter) if self.buyer_exporter else ''
 
     @property
     def expiry_date(self):
@@ -648,6 +657,7 @@ class Storage(LoggingModel):
         indexes = [
             models.Index(fields=["source_state", "state"]),
             models.Index(fields=["storage_date"]),
+            models.Index(fields=["buyer_type"]),
         ]
 
 class GoldTravelTraditionalState(models.Model):

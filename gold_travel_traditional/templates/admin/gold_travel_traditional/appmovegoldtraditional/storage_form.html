@@ -55,6 +55,29 @@
                         {{ form.storage_date.errors }}
                     </div>
                 </div>
+
+                <div class="form-row" id="row-buyer-type">
+                    <div>
+                        {{ form.buyer_type.label_tag }}
+                        {{ form.buyer_type }}
+                        {{ form.buyer_type.errors }}
+                    </div>
+                </div>
+                <div class="form-row" id="row-buyer-exporter">
+                    <div>
+                        {{ form.buyer_exporter.label_tag }}
+                        {{ form.buyer_exporter }}
+                        {{ form.buyer_exporter.errors }}
+                    </div>
+                </div>
+                <div class="form-row" id="row-buyer-saig" style="display:none;">
+                    <div>
+                        {{ form.buyer_saig.label_tag }}
+                        {{ form.buyer_saig }}
+                        {{ form.buyer_saig.errors }}
+                    </div>
+                </div>
+
                 <div class="form-row" id="row-note">
                     <div>
                         {{ form.note.label_tag }}
@@ -74,7 +97,7 @@
 (function() {
     var radios = document.querySelectorAll('input[name="batch_choice"]');
     var existingRow = document.getElementById('row-existing-storage');
-    var newFields = ['row-storage-date', 'row-note'];
+    var newFields = ['row-storage-date', 'row-buyer-type', 'row-buyer-exporter', 'row-buyer-saig', 'row-note'];
 
     function toggle() {
         var val = document.querySelector('input[name="batch_choice"]:checked').value;
@@ -88,10 +111,24 @@
             newFields.forEach(function(id) {
                 document.getElementById(id).style.display = '';
             });
+            toggleBuyer();
+        }
+    }
+
+    function toggleBuyer() {
+        var val = document.querySelector('input[name="buyer_type"]:checked');
+        if (val && val.value === 'saig') {
+            document.getElementById('row-buyer-exporter').style.display = 'none';
+            document.getElementById('row-buyer-saig').style.display = '';
+        } else {
+            document.getElementById('row-buyer-exporter').style.display = '';
+            document.getElementById('row-buyer-saig').style.display = 'none';
         }
     }
 
     radios.forEach(function(r) { r.addEventListener('change', toggle); });
+    var buyerRadios = document.querySelectorAll('input[name="buyer_type"]');
+    buyerRadios.forEach(function(r) { r.addEventListener('change', toggleBuyer); });
     toggle();
 })();
 </script>

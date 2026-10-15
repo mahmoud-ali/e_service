@@ -24,6 +24,12 @@
             <td style="border: none !important;">{{storage.expiry_date|date:"Y/m/d"}}م</td>
         </tr>
         <tr style="border: none !important;">
+            <th width="15%" class="active" style="border: none !important;">المشتري</th>
+            <td style="border: none !important; border-bottom: 1px solid #000 !important;">{{storage.buyer_display}}</td>
+            <th width="15%" class="active" style="border: none !important;">نوع المشتري</th>
+            <td style="border: none !important; border-bottom: 1px solid #000 !important;">{{storage.get_buyer_type_display}}</td>
+        </tr>
+        <tr style="border: none !important;">
             <th width="15%" class="active" style="border: none !important;">وزن الذهب الكلي</th>
             <td style="border: none !important;">{{storage.total_weight|intcomma}} جرام</td>
             <th width="15%" class="active" style="border: none !important;">عدد القطع الكلي</th>

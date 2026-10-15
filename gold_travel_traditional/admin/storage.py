@@ -62,24 +62,28 @@ class StorageMeltBatchesInline(admin.TabularInline):
 
 class StorageAdmin(LogAdminMixin, admin.ModelAdmin):
     inlines = [StorageRecordsInline, StorageMeltBatchesInline]
-    list_display = ['code', 'storage_date', 'expiry_date', 'note', 'record_count', 'total_weight', 'state', 'print_button', 'complete_button']
-    list_filter = ['state',]
+    list_display = ['code', 'storage_date', 'expiry_date', 'buyer_display', 'note', 'record_count', 'total_weight', 'state', 'print_button', 'complete_button']
+    list_filter = ['state', 'buyer_type', ('buyer_exporter', RelatedOnlyFieldListFilterNotEmpty), ('buyer_saig', RelatedOnlyFieldListFilterNotEmpty)]
     date_hierarchy = "storage_date"
 
-    search_fields = ['code', 'note']
+    search_fields = ['code', 'note', 'buyer_exporter__name', 'buyer_saig__name']
     readonly_fields = ['code']
     actions = ['mark_complete', 'export_as_csv']
+
+    class Media:
+        js = ["gold_travel_traditional/js/sale_admin.js"]
 
     def get_readonly_fields(self, request, obj=None):
         readonly_fields = list(super().get_readonly_fields(request, obj))
         if obj and obj.state == Storage.STATE_COMPLETE:
             readonly_fields = list(set(readonly_fields + [
-                'storage_date', 'note', 'state'
+                'storage_date', 'buyer_type', 'buyer_exporter', 'buyer_saig', 'note', 'state'
             ]))
         return readonly_fields
 
     fieldsets = [
         (None, {'fields': ['code', 'storage_date']}),
+        (_('بيانات المشتري'), {'fields': ['buyer_type', 'buyer_exporter', 'buyer_saig']}),
         (None, {'fields': ['note']}),
         (None, {'fields': ['state']}),
     ]
@@ -195,7 +199,7 @@ class StorageAdmin(LogAdminMixin, admin.ModelAdmin):
             headers={"Content-Disposition": f'attachment; filename="storage_form.csv"'},
         )
         header = [
-            "الكود", "تاريخ التخزين", "تاريخ الانتهاء",
+            "الكود", "تاريخ التخزين", "تاريخ الانتهاء", "نوع المشتري", "المشتري",
             "عدد الاستمارات", "عدد السبائك", "الوزن (جرام)",
             "ملاحظات", "الولاية", "الحالة",
             "تاريخ الإنشاء", "أنشئ بواسطة", "تاريخ التحديث", "حدث بواسطة"
@@ -212,6 +216,8 @@ class StorageAdmin(LogAdminMixin, admin.ModelAdmin):
                 obj.code,
                 obj.storage_date,
                 obj.expiry_date,
+                obj.get_buyer_type_display(),
+                obj.buyer_display,
                 obj.record_count,
                 obj.total_alloy_count,
                 round(obj.total_weight, 2),

@@ -386,11 +386,15 @@ class MeltBatchAdmin(LogAdminMixin, admin.ModelAdmin):
                 source_state=batch_source_state,
                 state=Storage.STATE_PENDING
             )
+            my_form.fields['buyer_saig'].queryset = LkpSaig.objects.filter(state=batch_source_state)
             if my_form.is_valid():
                 choice = my_form.cleaned_data['batch_choice']
                 if choice == 'new':
                     storage = Storage.objects.create(
                         storage_date=my_form.cleaned_data['storage_date'],
+                        buyer_type=my_form.cleaned_data['buyer_type'],
+                        buyer_exporter=my_form.cleaned_data.get('buyer_exporter'),
+                        buyer_saig=my_form.cleaned_data.get('buyer_saig'),
                         note=my_form.cleaned_data.get('note', ''),
                         source_state=batch_source_state,
                         created_by=request.user,
@@ -422,6 +426,7 @@ class MeltBatchAdmin(LogAdminMixin, admin.ModelAdmin):
                 source_state=batch_source_state,
                 state=Storage.STATE_PENDING
             )
+            my_form.fields['buyer_saig'].queryset = LkpSaig.objects.filter(state=batch_source_state)
 
         context = dict(
             self.admin_site.each_context(request),
