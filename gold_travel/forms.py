@@ -3,7 +3,12 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
 
-from gold_travel.models import TblStateRepresentative
+from dal import autocomplete
+
+from company_profile.models import TblCompanyProduction
+from production_control.models import GoldProductionFormAlloy
+
+from gold_travel.models import AppGoldStorageCompanies, AppGoldStorageCompaniesDetails, TblStateRepresentative
 
 UserModel = get_user_model()
 
@@ -109,3 +114,68 @@ class ImportDetailsCSVForm(forms.Form):
             raise
         except Exception as e:
             raise forms.ValidationError(_("Could not read CSV file: %(err)s") % {'err': str(e)}) 
+
+class CompanyByTypeAutocomplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        if not self.request.user.is_authenticated:
+            return TblCompanyProduction.objects.none()
+
+        qs = TblCompanyProduction.objects.all()
+
+        company_type = self.forwarded.get('company_type', None)
+        if company_type:
+            qs = qs.filter(company_type=company_type)
+
+        if self.q:
+            qs = qs.filter(name_ar__icontains=self.q) | qs.filter(name_en__icontains=self.q)
+
+        return qs
+
+class AppGoldStorageCompaniesForm(forms.ModelForm):
+    company = forms.ModelChoiceField(
+        queryset=TblCompanyProduction.objects.all(),
+        label=_("company"),
+        widget=autocomplete.ModelSelect2(url='admin:lkp_company_by_type', forward=['company_type'])
+    )
+
+    class Meta:
+        model = AppGoldStorageCompanies
+        fields = "__all__"
+
+class AlloySelectWidget(forms.Select):
+    weight_map = {}
+
+    def create_option(self, name, value, label, selected, index, subindex=None, attrs=None):
+        option = super().create_option(name, value, label, selected, index, subindex=subindex, attrs=attrs)
+        if value:
+            option['attrs']['data-weight'] = self.weight_map.get(str(value), '')
+        return option
+
+class AppGoldStorageCompaniesDetailsForm(forms.ModelForm):
+    alloy_serial_no = forms.ModelChoiceField(
+        queryset=GoldProductionFormAlloy.objects.none(),
+        label=_("alloy_serial_no"),
+        widget=AlloySelectWidget(),
+    )
+    company_id = None
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        company_id = self.company_id
+        if self.data is not None:
+            posted_company = self.data.get('company') or None
+            company_id = posted_company or company_id
+
+        qs = GoldProductionFormAlloy.objects.select_related('master').all()
+        if company_id:
+            qs = qs.filter(master__company_id=company_id)
+        else:
+            qs = qs.none()
+
+        self.fields["alloy_serial_no"].queryset = qs
+        self.fields["alloy_serial_no"].widget.weight_map = {str(obj.pk): obj.alloy_weight for obj in qs}
+
+    class Meta:
+        model = AppGoldStorageCompaniesDetails
+        fields = ["alloy_serial_no","net_weight","karat"]

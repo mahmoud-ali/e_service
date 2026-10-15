@@ -1,0 +1,138 @@
+{% extends 'gold_travel/report_base.html' %}
+{% load i18n %}
+{% load bootstrap3 %}
+{% load auth_extras %}
+{% load static  %}
+{% load humanize %}
+{% block content %}
+  <div style="text-align:left">{{object.code}}</div>
+  <center>
+    <h3 style="font-weight: bold !important;text-decoration: underline !important;">
+    إستمارة تخزين ذهب شركات
+    {%if object.state == 1 %}
+        &nbsp;(مسودة)
+    {%endif%}
+    </h3>
+  </center>
+
+  <br/>
+
+  <div class="table-responsive">
+    <table class="table table-bordered">
+        <tr>
+            <th width="15%" class="active">التاريخ</th>
+            <td colspan="3">{{object.date|date:"Y/m/d"}}م</td>
+        </tr>
+        <tr>
+            <th width="15%" class="active">اسم الشركة</th>
+            <td>{{object.company.name_ar}}</td>
+            <th width="15%" class="active">العنوان</th>
+            <td>{{object.company.address}}</td>
+        </tr>
+        <tr>
+            <th width="15%" class="active">اسم الناقل</th>
+            <td>{{object.repr_name}}</td>
+            <th width="15%" class="active">العنوان ورقم الهاتف</th>
+            <td>{{object.repr_address}} - {{object.repr_phone}}</td>
+        </tr>
+        <tr>
+            <th width="15%" class="active">إثبات الهوية</th>
+            <td>{{object.get_repr_identity_type_display}} {{object.repr_identity}}</td>
+            <th width="15%" class="active">الإصدار</th>
+            <td>{{object.repr_identity_issue_date|date:"Y/m/d"}}م</td>
+        </tr>
+        <tr>
+            <th width="15%" class="active">الوزن الخام</th>
+            <td>{{object.total_raw_weight|intcomma}} جرام</td>
+            <th width="15%" class="active">الوزن الصافي</th>
+            <td>{{object.total_net_weight|intcomma}} جرام</td>
+        </tr>
+        <tr>
+            <th width="15%" class="active">عدد السبائك</th>
+            <td colspan="3">{{object.gold_alloy_count}}</td>
+        </tr>
+    </table>
+</div>
+
+  <h4 style="text-align:center">وزن السبائك بالتفاصيل</h4>
+
+  {% for chunk in alloy_chunks%}
+
+  {% if forloop.counter > 1 %}
+      <div style="page-break-after: always;"></div>
+      <br/>
+      <image src="{% static 'gold_travel/img/logo.png'%}" class="center"/>
+      <br/>
+  {%endif%}
+
+  <div class="table-responsive">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th class="active">رقم السبيكة</th>
+                <th class="active">الوزن الخام بالجرام</th>
+                <th class="active">الوزن الصافي بالجرام</th>
+                <th class="active">العيار</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for obj in chunk%}
+            <tr>
+                <td>{{obj.alloy_serial_no.alloy_serial_no}}</td>
+                <td>{{obj.alloy_serial_no.alloy_weight|intcomma}}</td>
+                <td>{{obj.net_weight|intcomma}}</td>
+                <td>{{obj.karat}}</td>
+            </tr>
+            {% endfor %}
+
+            {% if forloop.last %}
+            <tr>
+                <th class="active">المجموع الكلي</th>
+                <th class="active">{{object.total_raw_weight|intcomma}}</th>
+                <th class="active">{{object.total_net_weight|intcomma}}</th>
+                <th class="active">&nbsp;</th>
+            </tr>
+            {% endif %}
+        </tbody>
+    </table>
+  </div>
+
+  {% endfor %}
+
+  <h4>الإعتماد:</h4>
+  <div class="table-responsive">
+    <table class="table table-bordered">
+        <tr class="active">
+            <th width="25%">&nbsp;</th>
+            <th width="25%">ممثل الشركة السودانية للموارد المعدنية المحدودة</th>
+            <th width="25%">ممثل أمن وإقتصاديات المعادن</th>
+            <th width="25%">ممثل شرطة التعدين</th>
+        </tr>
+        <tr>
+            <th height="30px" class="active">الإسم</th>
+            <td height="30px">&nbsp;</td>
+            <td height="30px">&nbsp;</td>
+            <td height="30px">&nbsp;</td>
+        </tr>
+        <tr>
+            <th height="30px" class="active">التوقيع</th>
+            <td height="30px">&nbsp;</td>
+            <td height="30px">&nbsp;</td>
+            <td height="30px">&nbsp;</td>
+        </tr>
+        <tr>
+            <th height="80px" class="active">الختم</th>
+            <td height="80px">&nbsp;</td>
+            <td height="80px">&nbsp;</td>
+            <td height="80px">&nbsp;</td>
+        </tr>
+
+    </table>
+  </div>
+    <p>تنبيهات هامة:</p>
+    <ol>
+        <li>أي تعديل أو كشط يلغي الإستمارة.</li>
+        <li>كل الاوزان بالجرام.</li>
+    </ol>
+
+{% endblock content %}

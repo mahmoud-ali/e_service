@@ -2,7 +2,8 @@ from django.db import models
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 
-from company_profile.models import LkpState
+from company_profile.models import LkpState, TblCompany, TblCompanyProduction
+from production_control.models import GoldProductionFormAlloy
 
 class LoggingModel(models.Model):
     """
@@ -24,6 +25,7 @@ class LkpStateDetails(models.Model):
     next_serial_no = models.IntegerField(_("export_next_serial_no"))
     reexport_next_serial_no = models.IntegerField(_("reexport_next_serial_no"), default=1)
     silver_next_serial_no = models.IntegerField(_("silver_next_serial_no"), default=1)
+    storage_next_serial_no = models.IntegerField(_("storage_next_serial_no"), default=1)
     has_2lestikhbarat_2l3askria = models.BooleanField(_("has_2lestikhbarat_2l3askria"))
     
     class Meta:
@@ -286,3 +288,72 @@ class AppPrepareGold(LoggingModel):
     class Meta:
         verbose_name = _("prepare gold")
         verbose_name_plural = _("prepare gold")
+
+class AppGoldStorageCompanies(LoggingModel):
+    STATE_DRAFT = 1
+    STATE_SMRC = 2
+    STATE_CHOICES = {
+        STATE_DRAFT: _('state_draft'),
+        STATE_SMRC: _('state_smrc'),
+    }
+
+    def attachement_path(self, filename):
+        return "company_{0}/storage/{1}/{2}".format(self.company.name_ar, self.created_at.date(), filename)
+
+    code = models.CharField(_("code"),max_length=20, default='')
+    date = models.DateField(_("date"))
+    company_type = models.CharField(_("company_type"),max_length=15, choices=TblCompany.COMPANY_TYPE_CHOICES)
+    company = models.ForeignKey(TblCompanyProduction, on_delete=models.PROTECT,verbose_name=_("company"))
+    repr_name = models.CharField(_("repr_name"),max_length=100)
+    repr_address = models.CharField(_("repr_address"),max_length=150)
+    repr_phone = models.CharField(_("repr_phone"),max_length=30)
+    repr_identity_type = models.IntegerField(_("repr_identity_type"), choices=AppMoveGold.IDENTITY_CHOICES, default=AppMoveGold.IDENTITY_PASSPORT)
+    repr_identity = models.CharField(_("repr_identity"),max_length=50)
+    repr_identity_issue_date = models.DateField(_("repr_identity_issue_date"))
+    state = models.IntegerField(_("record_state"), choices=STATE_CHOICES, default=STATE_DRAFT)
+    attachement_file = models.FileField(_("attachement_file"),upload_to=attachement_path,null=True,blank=True)
+    source_state = models.ForeignKey(LkpState, on_delete=models.PROTECT,verbose_name=_("state"))
+
+    @property
+    def owner_name(self):
+        return self.company.name_ar
+
+    @property
+    def owner_address(self):
+        return self.company.address
+
+    @property
+    def total_raw_weight(self):
+        return round(self.details.aggregate(s=models.Sum("alloy_serial_no__alloy_weight"))['s'] or 0, 2)
+
+    @property
+    def total_net_weight(self):
+        return round(self.details.aggregate(s=models.Sum("net_weight"))['s'] or 0, 2)
+
+    @property
+    def gold_alloy_count(self):
+        return self.details.count()
+
+    def __str__(self):
+        return f'{self.company.name_ar} ({self.code})'
+
+    class Meta:
+        ordering = ["-date","-id"]
+        verbose_name = _("تخزين ذهب شركات")
+        verbose_name_plural = _("تخزين ذهب شركات")
+        indexes = [
+            models.Index(fields=["code"]),
+        ]
+
+class AppGoldStorageCompaniesDetails(models.Model):
+    master  = models.ForeignKey(AppGoldStorageCompanies, on_delete=models.PROTECT, related_name="details")
+    alloy_serial_no = models.ForeignKey(GoldProductionFormAlloy, on_delete=models.PROTECT,verbose_name=_("alloy_serial_no"))
+    net_weight = models.FloatField(_("الوزن الصافي"))
+    karat = models.PositiveSmallIntegerField(_("العيار"))
+
+    def __str__(self):
+        return f"{_('alloy_serial_no')} {self.alloy_serial_no.alloy_serial_no}"
+
+    class Meta:
+        verbose_name = _("alloy detail")
+        verbose_name_plural = _("alloy details")

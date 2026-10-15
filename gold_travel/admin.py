@@ -5,13 +5,13 @@ from django.shortcuts import render
 from django.http import HttpRequest, HttpResponse
 from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
-from django.urls import reverse
+from django.urls import path, reverse
 from django.utils import timezone
 from django.utils.html import format_html
 from django.db import models
 from django.forms.widgets import TextInput
-from gold_travel.forms import TblStateRepresentativeForm, ImportDetailsCSVForm
-from gold_travel.models import AppMoveGoldExportGold, AppMoveGoldExportSilver, AppMoveGoldREExportGold, AppPrepareGold, LkpOwner, LkpStateDetails, TblStateRepresentative,AppMoveGold, AppMoveGoldDetails
+from gold_travel.forms import TblStateRepresentativeForm, ImportDetailsCSVForm, CompanyByTypeAutocomplete, AppGoldStorageCompaniesForm, AppGoldStorageCompaniesDetailsForm
+from gold_travel.models import AppMoveGoldExportGold, AppMoveGoldExportSilver, AppMoveGoldREExportGold, AppPrepareGold, LkpOwner, LkpStateDetails, TblStateRepresentative,AppMoveGold, AppMoveGoldDetails, AppGoldStorageCompanies, AppGoldStorageCompaniesDetails
 from sswg.models import TransferRelocationFormData
 
 class LogAdminMixin:
@@ -56,7 +56,7 @@ class LogAdminMixin:
 
 class LkpStateDetailsAdmin(admin.ModelAdmin):
     model = LkpStateDetails
-    list_display = ["state","code","next_serial_no","reexport_next_serial_no","silver_next_serial_no","has_2lestikhbarat_2l3askria"]
+    list_display = ["state","code","next_serial_no","reexport_next_serial_no","silver_next_serial_no","storage_next_serial_no","has_2lestikhbarat_2l3askria"]
     list_filter = ["state","has_2lestikhbarat_2l3askria"]
 
 admin.site.register(LkpStateDetails, LkpStateDetailsAdmin)
@@ -770,3 +770,187 @@ class AppPrepareGoldAdmin(LogAdminMixin,admin.ModelAdmin):
                 self.message_user(request,_('application changed successfully!'))
 
 admin.site.register(AppPrepareGold, AppPrepareGoldAdmin)
+
+class AppGoldStorageCompaniesDetailInline(admin.TabularInline):
+    model = AppGoldStorageCompaniesDetails
+    form = AppGoldStorageCompaniesDetailsForm
+    extra = 1
+    formfield_overrides = {
+        models.FloatField: {"widget": TextInput},
+    }
+
+    class Media:
+        js = ("admin/js/jquery.init.js","gold_travel/js/storage_company_alloy.js",)
+
+class AppGoldStorageCompaniesAdmin(LogAdminMixin,admin.ModelAdmin):
+    inlines = [AppGoldStorageCompaniesDetailInline]
+    form = AppGoldStorageCompaniesForm
+
+    fieldsets = [
+        (
+            None,
+            {
+                'fields': ["date"]
+            },
+        ),
+        (
+            _("owner data"),
+            {
+                'fields': ["company_type","company"]
+            },
+        ),
+        (
+            _("representative data"),
+            {
+                'fields': [("repr_name","repr_phone"),"repr_address",("repr_identity_type","repr_identity","repr_identity_issue_date")]
+            },
+        ),
+        (
+            _("attachments"),
+            {
+                'fields': ["attachement_file"]
+            },
+        ),
+    ]
+    list_filter = [("date",DateFieldListFilterWithLast30days),("state",ChoicesFieldListFilterNotEmpty),("source_state",RelatedOnlyFieldListFilterNotEmpty),("company",RelatedOnlyFieldListFilterNotEmpty)]
+    search_fields = ["code","company__name_ar","repr_name","repr_phone","repr_identity"]
+    actions = ['confirm_app','return_to_draft']
+    date_hierarchy = "date"
+    list_display = ["code","date","company","total_raw_weight","total_net_weight","gold_alloy_count","state_str","source_state","repr_name"]
+
+    view_on_site = False
+
+    def get_list_display(self,request):
+        list_display = list(self.list_display)
+        try:
+            authority = request.user.state_representative.authority
+            if authority == TblStateRepresentative.AUTHORITY_SMRC:
+                return list_display + ["show_certificate_link"]
+        except:
+            pass
+
+        return list_display
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        qs = qs.prefetch_related('source_state').prefetch_related(models.Prefetch("details"))
+
+        if request.user.is_superuser or request.user.groups.filter(name__in=["gold_travel_manager","gold_travel_show"]).exists():
+            return qs
+
+        try:
+            state_representative = request.user.state_representative
+            qs = qs.filter(source_state=state_representative.state)
+        except:
+            qs = qs.none()
+
+        return qs
+
+    def get_formsets_with_inlines(self, request, obj=None):
+        for inline in self.get_inline_instances(request, obj):
+            formset = inline.get_formset(request, obj)
+            if inline.model == AppGoldStorageCompaniesDetails:
+                formset.form.company_id = obj.company_id if obj else None
+            yield formset, inline
+
+    def get_actions(self, request):
+        actions = super().get_actions(request)
+
+        if request.user.groups.filter(name='gold_travel_manager').count() == 0:
+            if "return_to_draft" in actions:
+                del actions['return_to_draft']
+
+        try:
+            authority = request.user.state_representative.authority
+            if authority!=TblStateRepresentative.AUTHORITY_SMRC:
+                if "confirm_app" in actions:
+                    del actions['confirm_app']
+        except:
+            if "confirm_app" in actions:
+                del actions['confirm_app']
+
+        return actions
+
+    @admin.action(description=_('Confirm application'))
+    def confirm_app(self, request, queryset):
+        try:
+            authority = request.user.state_representative.authority
+            if authority == TblStateRepresentative.AUTHORITY_SMRC:
+                change_flag = False
+                for obj in queryset:
+                    if obj.state == AppGoldStorageCompanies.STATE_DRAFT:
+                        obj.state = AppGoldStorageCompanies.STATE_SMRC
+                        obj.save()
+                        self.log_change(request,obj,_('state_smrc'))
+                        change_flag = True
+
+                if change_flag:
+                    self.message_user(request,_('application confirmed successfully!'))
+        except:
+            pass
+
+    @admin.action(description=_('return_to_draft'))
+    def return_to_draft(self, request, queryset):
+        for obj in queryset:
+            if obj.state == AppGoldStorageCompanies.STATE_SMRC:
+                obj.state = AppGoldStorageCompanies.STATE_DRAFT
+                obj.save()
+                self.log_change(request,obj,_('return_to_draft'))
+                self.message_user(request,_('application changed successfully!'))
+
+    def save_model(self, request, obj, form, change):
+        try:
+            state_representative = request.user.state_representative
+            obj.source_state = state_representative.state
+            if not obj.code:
+                serial_no = state_representative.state.state_gold_travel.storage_next_serial_no
+                state_code = state_representative.state.state_gold_travel.code
+                obj.code = f"{state_code}/ST/{serial_no:03d}"
+                state_representative.state.state_gold_travel.storage_next_serial_no = serial_no+1
+                state_representative.state.state_gold_travel.save()
+        except Exception as e:
+            pass
+
+        if obj.pk:
+            obj.updated_by = request.user
+        else:
+            obj.created_by = obj.updated_by = request.user
+        super().save_model(request, obj, form, change)
+
+    @admin.display(description=_('total_raw_weight'))
+    def total_raw_weight(self, obj):
+        return f'{obj.total_raw_weight:,}'
+
+    @admin.display(description=_('total_net_weight'))
+    def total_net_weight(self, obj):
+        return f'{obj.total_net_weight:,}'
+
+    @admin.display(description=_('gold_alloy_count'))
+    def gold_alloy_count(self, obj):
+        return obj.gold_alloy_count
+
+    @admin.display(description=_('Show certificate'))
+    def show_certificate_link(self, obj):
+        if obj.state != AppGoldStorageCompanies.STATE_SMRC:
+            return '-'
+
+        url = reverse('gold_travel:gold_storage_companies_cert')
+        return format_html('<a target="_blank" class="viewlink" href="{url}?id={id}">'+_('Show certificate')+'</a>',
+                    url=url,id=obj.id
+                )
+
+    @admin.display(description=_('record_state'))
+    def state_str(self, obj):
+        if obj.state == AppGoldStorageCompanies.STATE_SMRC:
+            return format_html(f'<span style="color:green">{obj.get_state_display()}</span>')
+
+        return obj.get_state_display()
+
+    def get_urls(self):
+        urls = super().get_urls()
+        my_urls = [
+            path("company_list/", CompanyByTypeAutocomplete.as_view(),name="lkp_company_by_type"),
+        ]
+        return my_urls + urls
+
+admin.site.register(AppGoldStorageCompanies, AppGoldStorageCompaniesAdmin)
