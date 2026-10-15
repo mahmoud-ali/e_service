@@ -58,7 +58,7 @@ class AppForignerMovementForm(AppForignerMovementAdminForm):
     company = None
     class Meta:
         model = AppForignerMovement        
-        exclude = ["company","state","recommendation_comments","reject_comments"]
+        exclude = ["company","state","recommendation_comments","reject_comments","security_comment"]
         widgets = {
             "period_from":DatePickerInput(),
             "period_to":DatePickerInput(),

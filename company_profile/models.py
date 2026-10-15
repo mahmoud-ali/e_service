@@ -689,8 +689,8 @@ class AppTnazolShraka(WorkflowModel):
 class AppTajeelTnazol(WorkflowModel):
     TNAZOL_TYPE_FIRST = "first"
     TNAZOL_TYPE_SECOND = "second"
-    TNAZOL_TYPE_THIRD = "second"
-    TNAZOL_TYPE_FOURTH = "second"
+    TNAZOL_TYPE_THIRD = "third"
+    TNAZOL_TYPE_FOURTH = "fourth"
 
     TNAZOL_TYPE_CHOICES = {
         TNAZOL_TYPE_FIRST: _("first"),
