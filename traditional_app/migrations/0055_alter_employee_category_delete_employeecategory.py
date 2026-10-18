@@ -3,6 +3,43 @@
 from django.db import migrations, models
 
 
+def map_old_categories_to_new(apps, schema_editor):
+    """
+    يحول فئات الموظفين القديمة إلى القيم الجديدة:
+      - مكتبيين  → 2 (مكتبيين)
+      - ميدانيين وغيرها → 1 (ميدانيين)
+    يعمل هذا الكود بعد تحويل الحقل إلى IntegerField وقبل حذف جدول EmployeeCategory،
+    لذا لا يزال بإمكاننا الاستعلام عن جدول EmployeeCategory للحصول على الاسم.
+    """
+    Employee = apps.get_model('traditional_app', 'Employee')
+    EmployeeCategory = apps.get_model('traditional_app', 'EmployeeCategory')
+
+    # بناء خريطة: id الفئة القديمة → القيمة الجديدة
+    category_mapping = {}
+    for cat in EmployeeCategory.objects.all():
+        name = cat.name.strip()
+        if 'مكتب' in name:
+            category_mapping[cat.id] = 2   # مكتبيين
+        else:
+            # ميدانيين وأي فئات أخرى → فنيين
+            category_mapping[cat.id] = 1   # ميدانيين
+
+    # تحديث الموظفين دفعة واحدة لكل قيمة
+    for old_id, new_value in category_mapping.items():
+        Employee.objects.filter(category=old_id).update(category=new_value)
+
+    # الموظفون ذوو القيم غير المعروفة → null
+    known_ids = list(category_mapping.keys())
+    Employee.objects.exclude(category__in=known_ids).exclude(
+        category__isnull=True
+    ).update(category=None)
+
+
+def reverse_map(apps, schema_editor):
+    """لا يمكن عكس هذه العملية بدقة (للـ rollback فقط)."""
+    pass
+
+
 class Migration(migrations.Migration):
 
     dependencies = [
@@ -13,8 +50,9 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='employee',
             name='category',
-            field=models.IntegerField(blank=True, choices=[(1, 'فنيين'), (2, 'مكتبيين')], null=True, verbose_name='فئة الموظف'),
+            field=models.IntegerField(blank=True, choices=[(1, 'ميدانيين'), (2, 'مكتبيين')], null=True, verbose_name='فئة الموظف'),
         ),
+        migrations.RunPython(map_old_categories_to_new, reverse_code=reverse_map),
         migrations.DeleteModel(
             name='EmployeeCategory',
         ),

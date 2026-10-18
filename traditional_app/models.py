@@ -67,10 +67,10 @@ class TraditionalAppUser(LoggingModel):
         verbose_name = _("مستخدم نظام التعدين التقليدي")
         verbose_name_plural = _("مستخدمي نظام التعدين التقليدي")
 
-EMPLOYEE_CATEGORY_TECHNICAL = 1
+EMPLOYEE_CATEGORY_FIELD = 1
 EMPLOYEE_CATEGORY_CLERICAL = 2
 EMPLOYEE_CATEGORY_CHOICES = {
-    EMPLOYEE_CATEGORY_TECHNICAL: _("فنيين"),
+    EMPLOYEE_CATEGORY_FIELD: _("ميدانيين"),
     EMPLOYEE_CATEGORY_CLERICAL: _("مكتبيين"),
 }
 
