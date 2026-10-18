@@ -1,0 +1,128 @@
+{% extends "admin/change_form.html" %}
+{% load i18n %}
+
+{% block admin_change_form_document_ready %}
+{{ block.super }}
+<script>
+    (function ($) {
+
+        function getCookie(name) {
+            var v = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
+            return v ? v[2] : null;
+        }
+
+        function baldnaLookup(endpoint, postData, btn, btnLabel, resultDiv, errorMsg, nameKeys) {
+            var url = window.location.pathname.replace(/\/add\/.*$|\/\d+\/change\/.*$/, endpoint);
+
+            btn.prop('disabled', true).text('{% translate "جاري التحقق..." %}');
+            resultDiv.html('');
+
+            $.ajax({
+                url: url,
+                method: 'POST',
+                data: postData,
+                headers: { 'X-CSRFToken': getCookie('csrftoken') },
+                success: function (data) {
+                    btn.prop('disabled', false).text(btnLabel);
+
+                    if (data.error) {
+                        resultDiv.html(
+                            '<div style="background:#f8d7da;border:1px solid #f5c6cb;border-radius:4px;padding:8px 12px;color:#721c24;">❌ ' + data.error + '</div>'
+                        );
+                        return;
+                    }
+
+                    var entityName = '';
+                    $.each(nameKeys, function (i, k) {
+                        if (!entityName && data[k]) entityName = data[k];
+                    });
+                    var status = data.status || data.state || '';
+
+                    var info = '';
+                    if (entityName) info += '<strong>{% translate "الاسم" %}:</strong> ' + entityName + '<br>';
+                    if (status) info += '<strong>{% translate "الحالة" %}:</strong> ' + status + '<br>';
+
+                    var skipKeys = nameKeys.concat(['status', 'state']);
+                    $.each(data, function (k, v) {
+                        if (skipKeys.indexOf(k) === -1 && v && typeof v !== 'object') {
+                            info += '<strong>' + k + ':</strong> ' + v + '<br>';
+                        }
+                    });
+
+                    if (!info) {
+                        info = '{% translate "تم التحقق بنجاح — لا توجد بيانات إضافية." %}';
+                    }
+
+                    resultDiv.html(
+                        '<div style="background:#d4edda;border:1px solid #c3e6cb;border-radius:4px;padding:8px 12px;color:#155724;">✅ ' + info + '</div>'
+                    );
+                },
+                error: function (xhr) {
+                    btn.prop('disabled', false).text(btnLabel);
+                    var msg = errorMsg;
+                    try { var d = JSON.parse(xhr.responseText); if (d.error) msg = d.error; } catch (ex) { }
+                    resultDiv.html(
+                        '<div style="background:#fff3cd;border:1px solid #ffc107;border-radius:4px;padding:8px 12px;color:#856404;">⚠️ ' + msg + '</div>'
+                    );
+                }
+            });
+        }
+
+
+
+        function setupLookupBtn(fieldId, btnLabel, endpoint, paramName, errorMsg, nameKeys) {
+            var field = $(fieldId);
+            if (!field.length) return;
+
+            var btn = $('<button type="button" class="button" style="margin-right:5px;">' + btnLabel + '</button>');
+            btn.insertAfter(field);
+
+            var resultDiv = $('<div style="margin-top:6px;"></div>');
+            resultDiv.insertAfter(btn);
+
+            btn.on('click', function (e) {
+                e.preventDefault();
+                var val = field.val().trim();
+                if (!val) {
+                    alert(btnLabel.replace('{% translate "تحقق من" %}', '') + ' {% translate "مطلوب." %}');
+                    return;
+                }
+                var postData = {};
+                postData[paramName] = val;
+                baldnaLookup(endpoint, postData, btn, btnLabel, resultDiv, errorMsg, nameKeys);
+            });
+        }
+
+
+        setupLookupBtn(
+            '#id_commercial_register_no',
+            '{% translate "تحقق من المسجل التجاري" %}',
+            '/commercial-register-lookup/',
+            'register_no',
+            '{% translate "خدمة المسجل التجاري غير متاحة حالياً. تحقق يدوياً." %}',
+            ['name', 'company_name', 'trade_name']
+        );
+
+
+        setupLookupBtn(
+            '#id_tax_number',
+            '{% translate "تحقق من الرقم الضريبي" %}',
+            '/tax-lookup/',
+            'tax_no',
+            '{% translate "خدمة ديوان الضرائب غير متاحة حالياً. تحقق يدوياً." %}',
+            ['name', 'company_name', 'taxpayer_name']
+        );
+
+
+        setupLookupBtn(
+            '#id_zakat_file_no',
+            '{% translate "تحقق من الملف الزكوي" %}',
+            '/zakat-lookup/',
+            'zakat_no',
+            '{% translate "خدمة ديوان الزكاة غير متاحة حالياً. تحقق يدوياً." %}',
+            ['name', 'company_name', 'taxpayer_name']
+        );
+
+    })(django.jQuery);
+</script>
+{% endblock %}

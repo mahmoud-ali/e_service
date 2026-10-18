@@ -219,6 +219,9 @@ class TblCompany(LoggingModel):
     rep_name = models.CharField(_("Representative name"),max_length=200)
     rep_phone = models.CharField(_("Representative phone"),max_length=50)
     email = models.EmailField(_("Official email"),max_length=100,blank=True,null=True,default='')
+    commercial_register_no = models.CharField(_("رقم المسجل التجاري"),max_length=100,blank=True,null=True,default='')
+    tax_number = models.CharField(_("الرقم الضريبي"),max_length=100,blank=True,null=True,default='')
+    zakat_file_no = models.CharField(_("رقم الملف الزكوي"),max_length=100,blank=True,null=True,default='')
     
     class Meta:
         abstract = True    
