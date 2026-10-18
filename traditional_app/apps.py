@@ -8,21 +8,20 @@ def setup_hr_groups(sender, **kwargs):
     from traditional_app.models import (
         Employee, EmployeeJobData, EmployeeStatus, EmployeeBankAccount,
         EmployeeLeave, EmployeePenalty, EmployeeDocument, AcademicQualification,
-        PayrollMaster, PayrollDetail, EmployeeCategory
+        PayrollMaster, PayrollDetail
     )
 
     # Models only for central HR (including salaries)
     central_hr_models = [
         Employee, EmployeeJobData, EmployeeStatus, EmployeeBankAccount,
         EmployeeLeave, EmployeePenalty, EmployeeDocument, AcademicQualification,
-        PayrollMaster, PayrollDetail, EmployeeCategory
+        PayrollMaster, PayrollDetail
     ]
     
     # Models for state HR (excluding salaries)
     state_hr_models = [
         Employee, EmployeeJobData, EmployeeStatus, EmployeeBankAccount,
-        EmployeeLeave, EmployeePenalty, EmployeeDocument, AcademicQualification,
-        EmployeeCategory
+        EmployeeLeave, EmployeePenalty, EmployeeDocument, AcademicQualification
     ]
     
     groups_config = {

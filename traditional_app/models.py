@@ -67,15 +67,12 @@ class TraditionalAppUser(LoggingModel):
         verbose_name = _("مستخدم نظام التعدين التقليدي")
         verbose_name_plural = _("مستخدمي نظام التعدين التقليدي")
 
-class EmployeeCategory(models.Model):
-    name = models.CharField(_("name"),max_length=100)
-
-    def __str__(self):
-        return self.name
-
-    class Meta:
-        verbose_name = _("فئة الموظف")
-        verbose_name_plural = _("فئات الموظفين")
+EMPLOYEE_CATEGORY_TECHNICAL = 1
+EMPLOYEE_CATEGORY_CLERICAL = 2
+EMPLOYEE_CATEGORY_CHOICES = {
+    EMPLOYEE_CATEGORY_TECHNICAL: _("فنيين"),
+    EMPLOYEE_CATEGORY_CLERICAL: _("مكتبيين"),
+}
 
 class Employee(LoggingModel):
 
@@ -93,7 +90,7 @@ class Employee(LoggingModel):
     gender = models.IntegerField(_("الجنس"), choices=GENDER_CHOICES, null=True, blank=True)
     phone = models.CharField(_("التلفون"), max_length=30, null=True, blank=True)
     email = models.EmailField(_("البريد الإلكتروني"), null=True, blank=True)
-    category = models.ForeignKey(EmployeeCategory, on_delete=models.PROTECT, verbose_name=_("فئة الموظف"))
+    category = models.IntegerField(_("فئة الموظف"), choices=EMPLOYEE_CATEGORY_CHOICES, null=True, blank=True)
     id_attachment = models.FileField(_("مرفق إثبات الهوية"), upload_to="traditional/employee/id_attachments/", null=True, blank=True)
     birth_certificate_attachment = models.FileField(_("مرفق شهادة الميلاد"), upload_to="traditional/employee/birth_certificates/", null=True, blank=True)
 
