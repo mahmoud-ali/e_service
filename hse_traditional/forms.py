@@ -60,17 +60,45 @@ class MonthlyPerformanceReportForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        state = None
+        user_state = None
 
         try:
-            state = self.request.user.hse_tra_state.state
+            user_state = self.request.user.hse_tra_state.state
         except:
             pass
 
-        if state:
-            self.fields['soag'].queryset = LkpSoag.objects.filter(state=state)
+        if user_state:
+            self.fields['soag'].queryset = LkpSoag.objects.filter(state=user_state)
+            if not self.instance.pk:
+                self.fields['source_state'].initial = user_state
+
+    def clean(self):
+        cleaned_data = super().clean()
+
+        source_state = cleaned_data.get('source_state')
+        user_state = None
+
+        try:
+            user_state = self.request.user.hse_tra_state.state
+        except Exception:
+            pass
+
+        if not user_state and not source_state:
+            raise forms.ValidationError(
+                _("لم يتم اسناد الولاية لمدخل البيانات، يرجى التواصل مع مسؤول النظام لإعداد الولاية الخاصة بك.")
+            )
+
+        soag = cleaned_data.get('soag')
+        effective_state = user_state or source_state
+        if soag and effective_state and hasattr(soag, 'state') and soag.state:
+            if soag.state != effective_state:
+                raise forms.ValidationError(
+                    _("السوق المختار لا ينتمي إلى الولاية المحددة، يرجى اختيار سوق من ولايتك.")
+                )
+
+        return cleaned_data
 
     class Meta:
         model = MonthlyPerformanceReport
-        fields = ['year', 'month', 'soag', 'main_activities',
+        fields = ['year', 'month', 'source_state', 'soag', 'main_activities',
                   'karta_relocated_ton', 'karta_stacked_ton', 'karta_processed_ton']

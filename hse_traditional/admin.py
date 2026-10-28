@@ -996,14 +996,14 @@ admin.site.register(NotifiedUser,NotifiedUserAdmin)
 
 class MonthlyPerformanceLogMixin:
     def save_model(self, request, obj, form, change):
-        try:
-            if not obj.pk:
-                obj.created_by = request.user
+        if not obj.pk:
+            obj.created_by = request.user
+            try:
                 obj.source_state = request.user.hse_tra_state.state
-            obj.updated_by = request.user
-            super().save_model(request, obj, form, change)
-        except:
-            pass
+            except Exception:
+                pass
+        obj.updated_by = request.user
+        super().save_model(request, obj, form, change)
 
     def save_formset(self, request, form, formset, change):       
         for f in formset.forms:
@@ -1028,10 +1028,28 @@ class MonthlyPerformanceLogMixin:
             pass
         return qs
 
+    def get_exclude(self, request, obj=None):
+        return ('state',)
+
+    def get_readonly_fields(self, request, obj=None):
+        readonly = list(super().get_readonly_fields(request, obj) or [])
+        has_state = False
+        try:
+            _ = request.user.hse_tra_state.state
+            has_state = True
+        except Exception:
+            pass
+
+        if has_state and 'source_state' not in readonly:
+            readonly.append('source_state')
+
+        return readonly
+
     def get_form(self, request, obj=None, **kwargs):
         MonthlyPerformanceReportForm.request = request
         kwargs['form'] = MonthlyPerformanceReportForm
         return super().get_form(request, obj, **kwargs)
+
 
 
 def _perf_inline_can_edit(request, obj):
