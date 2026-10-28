@@ -672,6 +672,119 @@ class HseTraditionalInitialIncidentReport(LoggingModel):
 
         return self
 
+
+
+from traditional_app.models import LkpSoag
+
+class MonthlyPerformanceReport(LoggingModel):
+
+    STATE_DRAFT = 1
+    STATE_CONFIRMED = 2
+    STATE_APPROVED = 3
+
+    STATE_CHOICES = {
+        STATE_DRAFT: _("draft"),
+        STATE_CONFIRMED: _("confirmed"),
+        STATE_APPROVED: _("approved"),
+    }
+
+    year = models.IntegerField(_("السنة"))
+    month = models.IntegerField(_("الشهر"), choices=MONTH_CHOICES.items())
+    source_state = models.ForeignKey(LkpState, on_delete=models.PROTECT, verbose_name=_("الولاية"))
+    soag = models.ForeignKey(LkpSoag, on_delete=models.PROTECT, verbose_name=_("السوق"))
+    state = models.IntegerField(_("حالة السجل"), choices=STATE_CHOICES.items(), default=STATE_DRAFT)
+    main_activities = models.TextField(_("أهم الأنشطة بالقسم"), blank=True, null=True)
+    karta_relocated_ton = models.FloatField(_("كمية الكرتة المرحلة إلى الشركات خلال الشهر (طن)"), default=0)
+    karta_stacked_ton = models.FloatField(_("كمية الكرتة المكدسة حالياً خلال الشهر (طن)"), default=0)
+    karta_processed_ton = models.FloatField(_("كمية الكرتة المعالجة بالخلاطات خلال الشهر (طن)"), default=0)
+
+    class Meta:
+        verbose_name = _("تقرير الأداء الشهري")
+        verbose_name_plural = _("تقارير الأداء الشهري")
+        unique_together = [('year', 'month', 'source_state', 'soag')]
+
+    def __str__(self):
+        return f"{MONTH_CHOICES[self.month]}/{self.year} - {self.soag.name}"
+
+    def get_next_states(self, user):
+        user_groups = list(user.groups.values_list('name', flat=True))
+        states = []
+        if 'hse_tra_state_employee' in user_groups:
+            if self.state == self.STATE_DRAFT:
+                states.append((self.STATE_CONFIRMED, self.STATE_CHOICES[self.STATE_CONFIRMED]))
+        if 'hse_tra_manager' in user_groups:
+            if self.state == self.STATE_CONFIRMED:
+                states.append((self.STATE_APPROVED, self.STATE_CHOICES[self.STATE_APPROVED]))
+                states.append((self.STATE_DRAFT, self.STATE_CHOICES[self.STATE_DRAFT]))
+        return states
+
+    def can_transition_to_next_state(self, user, state):
+        if state[0] in map(lambda x: x[0], self.get_next_states(user)):
+            return True
+        return False
+
+    def transition_to_next_state(self, user, state):
+        if self.can_transition_to_next_state(user, state):
+            self.state = state[0]
+            self.updated_by = user
+            self.save()
+        else:
+            raise Exception(f"User {user.username} cannot transition to state {state} from state {self.state}")
+        return self
+
+
+class MonthlyPerformanceHseRequirements(models.Model):
+    report = models.ForeignKey(MonthlyPerformanceReport, on_delete=models.PROTECT, related_name="hse_requirements")
+    market_fencing = models.IntegerField(_("تسوير الأسواق (1-10)"), default=0)
+    karta_relocation = models.IntegerField(_("ترحيل الكرتة (1-10)"), default=0)
+    mine_safety = models.IntegerField(_("سلامة المناجم (1-10)"), default=0)
+    clinics = models.IntegerField(_("العيادات (1-10)"), default=0)
+    first_aid = models.IntegerField(_("الإسعاف (1-10)"), default=0)
+    mercury_handling = models.IntegerField(_("التعامل السليم مع الزئبق (1-10)"), default=0)
+    notes = models.TextField(_("ملاحظات"), blank=True, null=True)
+
+    class Meta:
+        verbose_name = _("اشتراطات البيئة والسلامة والصحة المهنية")
+        verbose_name_plural = _("اشتراطات البيئة والسلامة والصحة المهنية")
+
+    def total_percent(self):
+        total = self.market_fencing + self.karta_relocation + self.mine_safety + self.clinics + self.first_aid + self.mercury_handling
+        return round((total / 60) * 100, 1)
+
+
+class MonthlyPerformanceAdminControl(models.Model):
+    report = models.ForeignKey(MonthlyPerformanceReport, on_delete=models.PROTECT, related_name="admin_controls")
+    inspection_missions_executed = models.IntegerField(_("المأموريات التفتيشية المنفذة"), default=0)
+    awareness_meetings_executed = models.IntegerField(_("اللقاءات الإرشادية وحملات الاصحاح المنفذة"), default=0)
+    reports_submitted_executed = models.IntegerField(_("تسليم التقارير المنفذ"), default=0)
+
+    class Meta:
+        verbose_name = _("الرقابة الإدارية على البيئة والسلامة")
+        verbose_name_plural = _("الرقابة الإدارية على البيئة والسلامة")
+
+
+
+class MonthlyPerformanceMission(models.Model):
+    report = models.ForeignKey(MonthlyPerformanceReport, on_delete=models.PROTECT, related_name="missions")
+    entity = models.CharField(_("الجهة"), max_length=255)
+    outputs = models.TextField(_("المخرجات"))
+
+    class Meta:
+        verbose_name = _("مامورية / زيارة / اجتماع")
+        verbose_name_plural = _("ماموريات وزيارات واجتماعات")
+
+
+class MonthlyPerformanceObstacle(models.Model):
+    report = models.ForeignKey(MonthlyPerformanceReport, on_delete=models.PROTECT, related_name="obstacles")
+    obstacle = models.TextField(_("المعوقات"))
+    proposed_solution = models.TextField(_("الحلول المقترحة"))
+
+    class Meta:
+        verbose_name = _("معوق الأداء")
+        verbose_name_plural = _("معوقات الأداء")
+
+
+
 from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 

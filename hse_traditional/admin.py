@@ -1,8 +1,8 @@
 from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
 
-from hse_traditional.forms import HseTraditionalCorrectiveActionForm, TblStateRepresentativeForm
-from hse_traditional.models import Achievement, ArrangementOfMarkets, EnvironmentalInspection, EnvironmentalRequirements, HseTraditionalAccident, HseTraditionalAccidentDamage, HseTraditionalAccidentInjury, HseTraditionalAccidentManagerComment, HseTraditionalAccidentWho, HseTraditionalAccidentWhy, HseTraditionalCorrectiveAction, HseTraditionalCorrectiveActionFinalDecision, HseTraditionalCorrectiveActionReccomendation, HseTraditionalNearMiss, HseTraditionalNearMissWho, HseTraditionalNearMissWhy, HseTraditionalReport, ImmediateAction, NotifiedUser, QuickEmergencyTeam, TblStateRepresentative, TrainingAwareness, WasteManagement, HseTraditionalInitialIncidentReport
+from hse_traditional.forms import HseTraditionalCorrectiveActionForm, MonthlyPerformanceReportForm, TblStateRepresentativeForm
+from hse_traditional.models import Achievement, ArrangementOfMarkets, EnvironmentalInspection, EnvironmentalRequirements, HseTraditionalAccident, HseTraditionalAccidentDamage, HseTraditionalAccidentInjury, HseTraditionalAccidentManagerComment, HseTraditionalAccidentWho, HseTraditionalAccidentWhy, HseTraditionalCorrectiveAction, HseTraditionalCorrectiveActionFinalDecision, HseTraditionalCorrectiveActionReccomendation, HseTraditionalNearMiss, HseTraditionalNearMissWho, HseTraditionalNearMissWhy, HseTraditionalReport, ImmediateAction, NotifiedUser, QuickEmergencyTeam, TblStateRepresentative, TrainingAwareness, WasteManagement, HseTraditionalInitialIncidentReport, MonthlyPerformanceReport, MonthlyPerformanceHseRequirements, MonthlyPerformanceAdminControl, MonthlyPerformanceMission, MonthlyPerformanceObstacle
 from workflow.admin_utils import create_main_form
 
 class LogMixin:
@@ -992,3 +992,191 @@ class NotifiedUserAdmin(admin.ModelAdmin):
     list_display = ["name", ]
 
 admin.site.register(NotifiedUser,NotifiedUserAdmin)
+
+
+class MonthlyPerformanceLogMixin:
+    def save_model(self, request, obj, form, change):
+        try:
+            if not obj.pk:
+                obj.created_by = request.user
+                obj.source_state = request.user.hse_tra_state.state
+            obj.updated_by = request.user
+            super().save_model(request, obj, form, change)
+        except:
+            pass
+
+    def save_formset(self, request, form, formset, change):       
+        for f in formset.forms:
+            if f.cleaned_data.get('DELETE', False):
+                if f.instance.pk:
+                    f.instance.delete()
+        instances = formset.save(commit=False)
+        for instance in instances:
+            instance.save()
+        formset.save_m2m()
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        if request.user.is_superuser:
+            return qs
+        if request.user.groups.filter(name='hse_read_only').exists():
+            return qs
+        try:
+            source_state = request.user.hse_tra_state.state
+            qs = qs.filter(source_state=source_state)
+        except:
+            pass
+        return qs
+
+    def get_form(self, request, obj=None, **kwargs):
+        MonthlyPerformanceReportForm.request = request
+        kwargs['form'] = MonthlyPerformanceReportForm
+        return super().get_form(request, obj, **kwargs)
+
+
+def _perf_inline_can_edit(request, obj):
+    if request.user.is_superuser:
+        return True
+    if obj is None:
+        return request.user.groups.filter(name='hse_tra_state_employee').exists()
+    return (
+        obj.state == MonthlyPerformanceReport.STATE_DRAFT
+        and request.user.groups.filter(name='hse_tra_state_employee').exists()
+    )
+
+
+class MonthlyPerformanceHseRequirementsInline(admin.StackedInline):
+    model = MonthlyPerformanceHseRequirements
+    extra = 0
+    min_num = 1
+    max_num = 1
+    verbose_name = _("جدول الموقف الكلي لاشتراطات البيئة والسلامة والصحة المهنية")
+    verbose_name_plural = _("جدول الموقف الكلي لاشتراطات البيئة والسلامة والصحة المهنية")
+
+    def has_add_permission(self, request, obj=None):
+        return _perf_inline_can_edit(request, obj)
+
+    def has_change_permission(self, request, obj=None):
+        return _perf_inline_can_edit(request, obj)
+
+    def has_delete_permission(self, request, obj=None):
+        return _perf_inline_can_edit(request, obj)
+
+    def has_view_permission(self, request, obj=None):
+        return True
+
+
+class MonthlyPerformanceAdminControlInline(admin.StackedInline):
+    model = MonthlyPerformanceAdminControl
+    extra = 0
+    min_num = 1
+    max_num = 1
+    verbose_name = _("جدول الرقابة الإدارية على البيئة والسلامة والصحة المهنية")
+    verbose_name_plural = _("جدول الرقابة الإدارية على البيئة والسلامة والصحة المهنية")
+
+    def has_add_permission(self, request, obj=None):
+        return _perf_inline_can_edit(request, obj)
+
+    def has_change_permission(self, request, obj=None):
+        return _perf_inline_can_edit(request, obj)
+
+    def has_delete_permission(self, request, obj=None):
+        return _perf_inline_can_edit(request, obj)
+
+    def has_view_permission(self, request, obj=None):
+        return True
+
+
+class MonthlyPerformanceMissionInline(admin.StackedInline):
+    model = MonthlyPerformanceMission
+    extra = 1
+    min_num = 0
+    verbose_name = _("مامورية / زيارة / اجتماع مع أصحاب المصلحة")
+    verbose_name_plural = _("ماموريات وزيارات واجتماعات مع أصحاب المصلحة")
+
+    def has_add_permission(self, request, obj=None):
+        return _perf_inline_can_edit(request, obj)
+
+    def has_change_permission(self, request, obj=None):
+        return _perf_inline_can_edit(request, obj)
+
+    def has_delete_permission(self, request, obj=None):
+        return _perf_inline_can_edit(request, obj)
+
+    def has_view_permission(self, request, obj=None):
+        return True
+
+
+class MonthlyPerformanceObstacleInline(admin.StackedInline):
+    model = MonthlyPerformanceObstacle
+    extra = 1
+    min_num = 0
+    verbose_name = _("معوق الأداء")
+    verbose_name_plural = _("معوقات الأداء خلال فترة التقرير")
+
+    def has_add_permission(self, request, obj=None):
+        return _perf_inline_can_edit(request, obj)
+
+    def has_change_permission(self, request, obj=None):
+        return _perf_inline_can_edit(request, obj)
+
+    def has_delete_permission(self, request, obj=None):
+        return _perf_inline_can_edit(request, obj)
+
+    def has_view_permission(self, request, obj=None):
+        return True
+
+
+perf_report_main_mixins = [MonthlyPerformanceLogMixin]
+perf_report_main_class = {
+    'model': MonthlyPerformanceReport,
+    'mixins': [],
+    'kwargs': {
+        'list_display': ('year', 'month', 'source_state', 'soag', 'state'),
+        'list_filter': ('year', 'month', 'source_state', 'state'),
+        'exclude': ('state', 'source_state'),
+        'save_as_continue': False,
+    },
+    'static_inlines': [
+        MonthlyPerformanceHseRequirementsInline,
+        MonthlyPerformanceAdminControlInline,
+        MonthlyPerformanceMissionInline,
+        MonthlyPerformanceObstacleInline,
+    ],
+    'groups': {
+        'hse_tra_state_employee': {
+            'permissions': {
+                MonthlyPerformanceReport.STATE_DRAFT: {'add': 1, 'change': 1, 'delete': 1, 'view': 1},
+                MonthlyPerformanceReport.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                MonthlyPerformanceReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+            },
+        },
+        'hse_tra_manager': {
+            'permissions': {
+                MonthlyPerformanceReport.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                MonthlyPerformanceReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+            },
+        },
+        'hse_tra_gm': {
+            'permissions': {
+                MonthlyPerformanceReport.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                MonthlyPerformanceReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+            },
+        },
+        'hse_read_only': {
+            'permissions': {
+                MonthlyPerformanceReport.STATE_CONFIRMED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+                MonthlyPerformanceReport.STATE_APPROVED: {'add': 0, 'change': 0, 'delete': 0, 'view': 1},
+            },
+        },
+    },
+}
+
+
+perf_model_admin, perf_inlines = create_main_form(perf_report_main_class, {}, perf_report_main_mixins)
+admin.site.register(perf_model_admin.model, perf_model_admin)
+
+
+
+
+

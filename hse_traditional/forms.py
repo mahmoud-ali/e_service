@@ -2,7 +2,12 @@ from django import forms
 from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
 
-from hse_traditional.models import HseTraditionalAccident, HseTraditionalCorrectiveAction, HseTraditionalNearMiss, HseTraditionalReport, TblStateRepresentative
+from hse_traditional.models import (
+    HseTraditionalAccident, HseTraditionalCorrectiveAction,
+    HseTraditionalNearMiss, HseTraditionalReport, TblStateRepresentative,
+    MonthlyPerformanceReport,
+)
+from traditional_app.models import LkpSoag
 
 UserModel = get_user_model()
 
@@ -45,3 +50,27 @@ class HseTraditionalCorrectiveActionForm(forms.ModelForm):
         widgets = {
             'when': forms.DateInput(attrs={'type': 'date'}),
         }
+
+
+class MonthlyPerformanceReportForm(forms.ModelForm):
+    soag = forms.ModelChoiceField(
+        queryset=LkpSoag.objects.all(),
+        label=_("السوق"),
+    )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        state = None
+
+        try:
+            state = self.request.user.hse_tra_state.state
+        except:
+            pass
+
+        if state:
+            self.fields['soag'].queryset = LkpSoag.objects.filter(state=state)
+
+    class Meta:
+        model = MonthlyPerformanceReport
+        fields = ['year', 'month', 'soag', 'main_activities',
+                  'karta_relocated_ton', 'karta_stacked_ton', 'karta_processed_ton']

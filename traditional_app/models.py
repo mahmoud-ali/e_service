@@ -134,10 +134,8 @@ class EmployeeJobData(LoggingModel):
     ASSOCIATION_SECONDMENT_COMPANY = 5
 
     ASSOCIATION_CHOICES = {
-        ASSOCIATION_STRUCTURE: _('الهيكل'),
         ASSOCIATION_CONTRACT: _('تعاقد'),
         ASSOCIATION_SECONDMENT: _('الحاق'),
-        ASSOCIATION_SECURITY_FORCES: _('قوات امنية'),
         ASSOCIATION_SECONDMENT_COMPANY: _('ملحق علي الرئاسة'),
     }
 
