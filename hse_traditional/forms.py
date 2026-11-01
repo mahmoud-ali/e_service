@@ -69,8 +69,10 @@ class MonthlyPerformanceReportForm(forms.ModelForm):
 
         if user_state:
             self.fields['soag'].queryset = LkpSoag.objects.filter(state=user_state)
-            if not self.instance.pk:
-                self.fields['source_state'].initial = user_state
+            if 'source_state' in self.fields:
+                self.fields['source_state'].disabled = True
+                if not self.instance.pk:
+                    self.fields['source_state'].initial = user_state
 
     def clean(self):
         cleaned_data = super().clean()

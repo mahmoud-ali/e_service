@@ -63,10 +63,17 @@ admin.site.register(LkpStateDetails, LkpStateDetailsAdmin)
 
 class LkpOwnerAdmin(admin.ModelAdmin):
     model = LkpOwner
-    fields = ("name","owner_name","owner_telephone","authorized_person_name","authorized_person_phone","address","attachment","state")
-    list_display = ["name","owner_name","owner_telephone","authorized_person_name","authorized_person_phone","address","state"]
+    change_form_template = "admin/gold_travel/lkpowner/change_form.html"
+    fieldsets = [
+        (None, {"fields": ["name", "state"]}),
+        (_("معلومات الإدارة"), {"fields": [("owner_name", "owner_telephone"), ("authorized_person_name", "authorized_person_phone"), "address"]}),
+        (_("بيانات التسجيل والضريبة"), {"fields": [("commercial_register_no", "tax_number", "zakat_file_no")]}),
+        (_("المرفقات"), {"fields": ["attachment"]}),
+    ]
+    list_display = ["name", "owner_name", "owner_telephone", "authorized_person_name", "authorized_person_phone", "address", "state"]
     # list_filter = ["name"]
-    search_fields = ["name"]
+    search_fields = ["name", "commercial_register_no", "tax_number", "zakat_file_no"]
+
     def get_queryset(self, request):
         qs = super().get_queryset(request)
 
@@ -75,6 +82,84 @@ class LkpOwnerAdmin(admin.ModelAdmin):
 
         return qs
 
+    def get_urls(self):
+        from django.urls import path
+        urls = super().get_urls()
+        my_urls = [
+            path("commercial-register-lookup/", self.admin_site.admin_view(self.commercial_register_lookup), name="gold_travel_lkpowner_commercial_register_lookup"),
+            path("tax-lookup/", self.admin_site.admin_view(self.tax_lookup), name="gold_travel_lkpowner_tax_lookup"),
+            path("zakat-lookup/", self.admin_site.admin_view(self.zakat_lookup), name="gold_travel_lkpowner_zakat_lookup"),
+        ]
+        return my_urls + urls
+
+    def commercial_register_lookup(self, request):
+        from django.http import JsonResponse
+        from django.conf import settings
+        import requests as http_requests
+
+        register_no = request.POST.get('register_no', '') or request.GET.get('register_no', '')
+        if not register_no:
+            return JsonResponse({'error': 'No register number provided'}, status=400)
+
+        try:
+            resp = http_requests.post(
+                'https://baldna.gov.sd/api/v1/validate/data',
+                data={'code': 'COMMERCIAL_REGISTRAR_SYSTEM', 'value': register_no},
+                auth=(settings.BALDNA_API_USER, settings.BALDNA_API_PASS),
+                timeout=60
+            )
+            resp.raise_for_status()
+            return JsonResponse(resp.json())
+        except Exception as e:
+            import traceback
+            traceback.print_exc()
+            return JsonResponse({'error': str(e)}, status=500)
+
+    def tax_lookup(self, request):
+        from django.http import JsonResponse
+        from django.conf import settings
+        import requests as http_requests
+
+        tax_no = request.POST.get('tax_no', '') or request.GET.get('tax_no', '')
+        if not tax_no:
+            return JsonResponse({'error': 'No tax number provided'}, status=400)
+
+        try:
+            resp = http_requests.post(
+                'https://baldna.gov.sd/api/v1/validate/data',
+                data={'code': 'TAX_SYSTEM', 'value': tax_no},
+                auth=(settings.BALDNA_API_USER, settings.BALDNA_API_PASS),
+                timeout=60
+            )
+            resp.raise_for_status()
+            return JsonResponse(resp.json())
+        except Exception as e:
+            import traceback
+            traceback.print_exc()
+            return JsonResponse({'error': str(e)}, status=500)
+
+    def zakat_lookup(self, request):
+        from django.http import JsonResponse
+        from django.conf import settings
+        import requests as http_requests
+
+        zakat_no = request.POST.get('zakat_no', '') or request.GET.get('zakat_no', '')
+        if not zakat_no:
+            return JsonResponse({'error': 'No zakat file number provided'}, status=400)
+
+        try:
+            resp = http_requests.post(
+                'https://baldna.gov.sd/api/v1/validate/data',
+                data={'code': 'ZAKAT_SYSTEM', 'value': zakat_no},
+                auth=(settings.BALDNA_API_USER, settings.BALDNA_API_PASS),
+                timeout=60
+            )
+            resp.raise_for_status()
+            return JsonResponse(resp.json())
+        except Exception as e:
+            import traceback
+            traceback.print_exc()
+            return JsonResponse({'error': str(e)}, status=500)
 
     @admin.action(description="تصدير البيانات")
     def export_to_csv(self, request, queryset):

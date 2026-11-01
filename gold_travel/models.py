@@ -83,6 +83,9 @@ class LkpOwner(models.Model):
     authorized_person_name = models.CharField(_("اسم المفوض"),max_length=100,null=True,blank=True)
     authorized_person_phone = models.CharField(_("هاتف المفوض"),max_length=30,null=True,blank=True)
     address = models.TextField(_("العنوان"),max_length=200,null=True,blank=True)
+    commercial_register_no = models.CharField(_("رقم المسجل التجاري"),max_length=100,blank=True,null=True,default='')
+    tax_number = models.CharField(_("الرقم الضريبي"),max_length=100,blank=True,null=True,default='')
+    zakat_file_no = models.CharField(_("رقم الملف الزكوي"),max_length=100,blank=True,null=True,default='')
     attachment = models.FileField(_("المرفقات"),upload_to=attachement_path,null=True,blank=True)
 
     def __str__(self):
