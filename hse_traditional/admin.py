@@ -1031,19 +1031,7 @@ class MonthlyPerformanceLogMixin:
     def get_exclude(self, request, obj=None):
         return ('state',)
 
-    def get_readonly_fields(self, request, obj=None):
-        readonly = list(super().get_readonly_fields(request, obj) or [])
-        has_state = False
-        try:
-            _ = request.user.hse_tra_state.state
-            has_state = True
-        except Exception:
-            pass
 
-        if has_state and 'source_state' not in readonly:
-            readonly.append('source_state')
-
-        return readonly
 
     def get_form(self, request, obj=None, **kwargs):
         MonthlyPerformanceReportForm.request = request
