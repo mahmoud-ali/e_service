@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from gold_travel.models import AppMoveGold, AppMoveGoldDetails, LkpOwner
 from production_control.models import GoldProductionForm, GoldProductionFormAlloy, GoldShippingForm, GoldShippingFormAlloy
-from gold_travel_traditional.models import AppMoveGoldTraditional, AppMoveGoldTraditionalDetail, Sale, LkpSaig
+from gold_travel_traditional.models import AppMoveGoldTraditional, AppMoveGoldTraditionalDetail, Sale, Storage, LkpSaig
 from .models import DeductionsView
 
 ########### Gold travel(ترحيل بغرض الصادر) ##############
@@ -184,6 +184,53 @@ class SaleMasterSerializer(serializers.ModelSerializer):
         model = Sale
 
         fields = ['id', 'code', 'sale_date', 'buyer_type', 'buyer_exporter', 'buyer_saig', 'source_state', 'state', 'note', 'alloy_list']
+
+    def get_state(self, obj):
+        return {'id': obj.state, 'label': obj.get_state_display()}
+
+    def get_alloy_list(self, obj):
+        alloys = []
+        # Alloys from AppMoveGoldTraditional records
+        for record in obj.records.all():
+            for detail in record.details.all():
+                alloys.append({
+                    'alloy_weight_gram': detail.alloy_weight_gram,
+                    'alloy_shape': detail.get_alloy_shape_display(),
+                    'source': record.code,
+                    'source_type': 'traditional',
+                })
+        # Alloys from MeltBatch records
+        for batch in obj.melt_batches.all():
+            for detail in batch.details.all():
+                alloys.append({
+                    'alloy_weight_gram': detail.alloy_weight_gram,
+                    'alloy_shape': detail.get_alloy_shape_display(),
+                    'source': batch.code,
+                    'source_type': 'melt',
+                })
+        return alloys
+
+########### Storage(شهادات التخزين) ##############
+class StorageListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Storage
+
+        fields = ['id', ]
+
+class StorageMasterSerializer(serializers.ModelSerializer):
+    buyer_exporter = BuyerExporterNameField(read_only=True)
+    buyer_saig = BuyerSaigNameField(read_only=True)
+    buyer_type = serializers.CharField(source='get_buyer_type_display', read_only=True)
+    source_state = SourceStateNameField(read_only=True)
+    state = serializers.SerializerMethodField()
+    expiry_date = serializers.DateField(read_only=True)
+
+    alloy_list = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Storage
+
+        fields = ['id', 'code', 'storage_date', 'expiry_date', 'buyer_type', 'buyer_exporter', 'buyer_saig', 'source_state', 'state', 'note', 'alloy_list']
 
     def get_state(self, obj):
         return {'id': obj.state, 'label': obj.get_state_display()}

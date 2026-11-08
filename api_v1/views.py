@@ -10,10 +10,10 @@ from auditlog.signals import accessed
 
 from gold_travel.models import AppMoveGold, AppMoveGoldDetails
 from production_control.models import GoldProductionForm, GoldShippingForm
-from gold_travel_traditional.models import AppMoveGoldTraditional, Sale
+from gold_travel_traditional.models import AppMoveGoldTraditional, Sale, Storage
 from .models import DeductionsView
 
-from  .serializers import GoldProductionListSerializer, GoldProductionMasterSerializer,GoldProductionDetailSerializer, GoldShippingListSerializer, GoldShippingMasterSerializer,GoldShippingDetailSerializer, GoldTravelListSerializer, GoldTravelMasterSerializer, GoldTravelDetailSerializer, GoldTravelTraditionalListSerializer, GoldTravelTraditionalMasterSerializer, GoldTravelTraditionalDetailSerializer, DeductionsListSerializer, DeductionsMasterSerializer, SaleListSerializer, SaleMasterSerializer
+from  .serializers import GoldProductionListSerializer, GoldProductionMasterSerializer,GoldProductionDetailSerializer, GoldShippingListSerializer, GoldShippingMasterSerializer,GoldShippingDetailSerializer, GoldTravelListSerializer, GoldTravelMasterSerializer, GoldTravelDetailSerializer, GoldTravelTraditionalListSerializer, GoldTravelTraditionalMasterSerializer, GoldTravelTraditionalDetailSerializer, DeductionsListSerializer, DeductionsMasterSerializer, SaleListSerializer, SaleMasterSerializer, StorageListSerializer, StorageMasterSerializer
 
 class IsInGroup(permissions.BasePermission):
     """
@@ -291,6 +291,53 @@ class SaleListView(generics.ListAPIView):
 class SaleDetailView(generics.RetrieveAPIView):
     queryset = Sale.objects.all()
     serializer_class = SaleMasterSerializer
+    permission_classes = [permissions.IsAuthenticated, IsInGroup,]
+
+    required_groups = ['baldna_gold_travel']
+
+    def retrieve(self, request, pk):
+        queryset = self.get_queryset()
+
+        try:
+            obj = get_object_or_404(queryset, pk=pk)
+        except Http404:
+            raise NotFound(detail=f"No request found with request_number: {pk}.")
+
+        serializer = self.serializer_class(instance=obj)
+
+        result = serializer.data
+
+        # Log access
+        accessed.send(obj.__class__, instance=obj)
+
+        return Response(result)
+
+########### Storage(شهادات التخزين) ##############
+class StorageListView(generics.ListAPIView):
+    queryset = Storage.objects.all()
+    serializer_class = StorageListSerializer
+    permission_classes = [permissions.IsAuthenticated, IsInGroup,]
+
+    required_groups = ['baldna_gold_travel']
+
+    def list(self, request, date):
+        try:
+            date_obj = datetime.strptime(date, '%Y-%m-%d').date()
+        except ValueError:
+            return HttpResponse("Invalid date format. Use YYYY-MM-DD.")
+
+        queryset = self.get_queryset().filter(created_at__date=date_obj)
+        serializer = self.serializer_class(queryset, many=True)
+
+        result = [item['id'] for item in serializer.data]
+
+        return Response({
+            'app_list': result
+        })
+
+class StorageDetailView(generics.RetrieveAPIView):
+    queryset = Storage.objects.all()
+    serializer_class = StorageMasterSerializer
     permission_classes = [permissions.IsAuthenticated, IsInGroup,]
 
     required_groups = ['baldna_gold_travel']
