@@ -62,7 +62,7 @@ class SaleMeltBatchesInline(admin.TabularInline):
 
 class SaleAdmin(LogAdminMixin, admin.ModelAdmin):
     inlines = [SaleRecordsInline, SaleMeltBatchesInline]
-    list_display = ['code', 'sale_date', 'buyer_display', 'record_count', 'total_weight_display', 'note', 'state', 'print_button', 'complete_button']
+    list_display = ['code', 'sale_date', 'buyer_display', 'record_count', 'total_weight_display', 'note', 'state', 'print_button', 'cancel_button', 'complete_button']
     list_filter = ['state','buyer_type', ('buyer_exporter',RelatedOnlyFieldListFilterNotEmpty), ('buyer_saig',RelatedOnlyFieldListFilterNotEmpty)]
     date_hierarchy = "sale_date"
 
