@@ -47,7 +47,7 @@ class MeltBatchDetailInline(admin.TabularInline):
     fields = ['alloy_weight_gram', 'alloy_shape']
 
     def _is_complete(self, obj):
-        return bool(obj and obj.state == MeltBatch.STATE_COMPLETE)
+        return bool(obj and obj.state in [MeltBatch.STATE_COMPLETE, MeltBatch.STATE_CANCLED])
 
     def get_extra(self, request, obj=None, **kwargs):
         return 0 if self._is_complete(obj) else 1
@@ -68,7 +68,7 @@ class MeltBatchDetailInline(admin.TabularInline):
 
 class MeltBatchAdmin(LogAdminMixin, admin.ModelAdmin):
     inlines = [MeltBatchRecordsInline, MeltBatchDetailInline]
-    list_display = ['code', 'melt_date', 'melt_workshop', 'standardization_lab', 'record_count', 'total_weight_display', 'state', 'print_button', 'sale_button', 'storage_button', 'complete_button']
+    list_display = ['code', 'melt_date', 'melt_workshop', 'standardization_lab', 'record_count', 'total_weight_display', 'state', 'print_button', 'cancel_button', 'sale_button', 'storage_button', 'complete_button']
     list_filter = ['state', ]
     date_hierarchy = "melt_date"
 
@@ -78,7 +78,7 @@ class MeltBatchAdmin(LogAdminMixin, admin.ModelAdmin):
 
     def get_readonly_fields(self, request, obj=None):
         readonly_fields = list(super().get_readonly_fields(request, obj))
-        if obj and obj.state == MeltBatch.STATE_COMPLETE:
+        if obj and obj.state in [MeltBatch.STATE_COMPLETE, MeltBatch.STATE_CANCLED]:
             readonly_fields = list(set(readonly_fields + [
                 'melt_date', 'melt_workshop', 'standardization_lab', 'state', 'sale', 'storage'
             ]))
@@ -109,7 +109,7 @@ class MeltBatchAdmin(LogAdminMixin, admin.ModelAdmin):
     def has_change_permission(self, request, obj=None):
         if request.user.is_superuser or request.user.groups.filter(name="gold_travel_traditional_manager").exists():
             return True
-        if obj and obj.state == MeltBatch.STATE_COMPLETE:
+        if obj and obj.state in [MeltBatch.STATE_COMPLETE, MeltBatch.STATE_CANCLED]:
             return False
         try:
             gold_user = request.user.gold_travel_traditional
@@ -129,7 +129,7 @@ class MeltBatchAdmin(LogAdminMixin, admin.ModelAdmin):
     def has_delete_permission(self, request, obj=None):
         if obj is None:
             return False
-        if obj.state == MeltBatch.STATE_COMPLETE:
+        if obj.state in [MeltBatch.STATE_COMPLETE, MeltBatch.STATE_CANCLED]:
             return False
         return super().has_delete_permission(request, obj)
 
@@ -138,6 +138,7 @@ class MeltBatchAdmin(LogAdminMixin, admin.ModelAdmin):
         my_urls = [
             path("<int:pk>/batch-print/", self.admin_site.admin_view(self.batch_print_view), name="gold_travel_traditional_meltbatch_print"),
             path("<int:pk>/complete/", self.admin_site.admin_view(self.complete_view)),
+            path("<int:pk>/cancel/", self.admin_site.admin_view(self.cancel_view)),
             path("<int:pk>/sale/", self.admin_site.admin_view(self.sale_view)),
             path("<int:pk>/sale/print/", self.admin_site.admin_view(self.print_sale_view)),
             path("<int:pk>/storage/", self.admin_site.admin_view(self.storage_view)),
@@ -159,6 +160,15 @@ class MeltBatchAdmin(LogAdminMixin, admin.ModelAdmin):
             return '-'
         url = reverse("admin:gold_travel_traditional_meltbatch_print", args=[obj.pk])
         return format_html('<a class="changelink" target="_blank" href="{url}">{txt}</a>', url=url, txt=_('طباعة'))
+
+    @admin.display(description=_('cancel'))
+    def cancel_button(self, obj):
+        if not self.has_change_permission(self.current_request, obj):
+            return '-'
+        if obj.state == MeltBatch.STATE_PENDING:
+            url = reverse("admin:gold_travel_traditional_meltbatch_changelist") + f"{obj.pk}/cancel/"
+            return format_html('<a class="changelink" href="{url}">{txt}</a>', url=url, txt=_('إلغاء'))
+        return '-'
 
     @admin.display(description=_('complete'))
     def complete_button(self, obj):
@@ -192,6 +202,42 @@ class MeltBatchAdmin(LogAdminMixin, admin.ModelAdmin):
             url = reverse("admin:gold_travel_traditional_meltbatch_changelist") + f"{obj.pk}/storage/print/"
             return format_html('<a class="changelink" target="_blank" href="{url}">{txt}</a>', url=url, txt=obj.storage.code)
         return '-'
+
+    def cancel_view(self, request, pk):
+        obj = MeltBatch.objects.get(pk=pk)
+
+        if not (request.user.is_superuser or request.user.groups.filter(name="gold_travel_traditional_manager").exists()):
+            try:
+                gold_user = request.user.gold_travel_traditional
+                if gold_user.user_type not in [GoldTravelTraditionalUser.JIHAT_TARHIL, GoldTravelTraditionalUser.BOTH, GoldTravelTraditionalUser.STATE_MANAGER]:
+                    self.message_user(request, _('You do not have permission to cancel batches.'), level='error')
+                    return redirect(reverse("admin:gold_travel_traditional_meltbatch_changelist"))
+                if gold_user.is_state_manager and obj.source_state_id != gold_user.state_id:
+                    self.message_user(request, _('You can only cancel batches from your state.'), level='error')
+                    return redirect(reverse("admin:gold_travel_traditional_meltbatch_changelist"))
+            except:
+                self.message_user(request, _('You do not have permission to cancel batches.'), level='error')
+                return redirect(reverse("admin:gold_travel_traditional_meltbatch_changelist"))
+
+        if obj.state != MeltBatch.STATE_PENDING:
+            self.message_user(request, _('Only pending batches can be cancelled.'), level='error')
+            return redirect(reverse("admin:gold_travel_traditional_meltbatch_changelist"))
+
+        if request.method == "POST":
+            obj.state = MeltBatch.STATE_CANCLED
+            obj.updated_by = request.user
+            obj.save()
+            self.log_change(request, obj, _('state_cancled'))
+            self.message_user(request, _('Batch cancelled successfully!'))
+            return redirect(reverse("admin:gold_travel_traditional_meltbatch_changelist"))
+
+        context = dict(
+            self.admin_site.each_context(request),
+            object=obj,
+            opts=MeltBatch._meta,
+            title=_('تأكيد الإلغاء'),
+        )
+        return TemplateResponse(request, "admin/gold_travel_traditional/cancel_confirm.html", context)
 
     def complete_view(self, request, pk):
         batch = MeltBatch.objects.get(pk=pk)

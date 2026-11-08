@@ -72,9 +72,11 @@ stateDiagram-v2
 - `STATE_ARRIVED` (6): Verified arrival at target destination point (*جهة الوصول*).
 
 ### 3.2 Secondary Operation States
-- **MeltBatch (`MeltBatch`)**: `STATE_PENDING` (1) → `STATE_COMPLETE` (2)
-- **Sale (`Sale`)**: `STATE_PENDING` (1) → `STATE_COMPLETE` (2)
-- **Storage (`Storage`)**: `STATE_PENDING` (1) → `STATE_COMPLETE` (2)
+- **MeltBatch (`MeltBatch`)**: `STATE_PENDING` (1) → `STATE_COMPLETE` (2) or `STATE_CANCLED` (3)
+- **Sale (`Sale`)**: `STATE_PENDING` (1) → `STATE_COMPLETE` (2) or `STATE_CANCLED` (3)
+- **Storage (`Storage`)**: `STATE_PENDING` (1) → `STATE_COMPLETE` (2) or `STATE_CANCLED` (3)
+
+Only user types `JIHAT_TARHIL` (2), `BOTH` (3), and `STATE_MANAGER` (4) may cancel a pending record. A cancelled record is locked against further modification.
 
 ---
 

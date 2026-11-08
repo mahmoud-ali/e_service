@@ -356,10 +356,12 @@ class AppMoveGoldTraditionalDetail(models.Model):
 class MeltBatch(LoggingModel):
     STATE_PENDING = 1
     STATE_COMPLETE = 2
+    STATE_CANCLED = 3
 
     STATE_CHOICES = {
         STATE_PENDING: _('قيد الصهر'),
         STATE_COMPLETE: _('مكتمل'),
+        STATE_CANCLED: _('ملغي'),
     }
 
     code = models.CharField(_('code'), max_length=20, unique=True)
@@ -397,6 +399,11 @@ class MeltBatch(LoggingModel):
 
     def clean(self):
         super().clean()
+        if self.pk:
+            from django.core.exceptions import ValidationError
+            original = MeltBatch.objects.get(pk=self.pk)
+            if original.state in [self.STATE_COMPLETE, self.STATE_CANCLED]:
+                raise ValidationError(_('لا يمكن تعديل الاستمارة في حالتها الحالية'))
         if self.pk and self.state == self.STATE_COMPLETE and not self.details.exists():
             from django.core.exceptions import ValidationError
             raise ValidationError(_('لا يمكن إكمال الاستمارة قبل إدخال تفاصيل السبائك الناتجة'))
@@ -474,10 +481,12 @@ class MeltBatchDetail(models.Model):
 class Sale(LoggingModel):
     STATE_PENDING = 1
     STATE_COMPLETE = 2
+    STATE_CANCLED = 3
 
     STATE_CHOICES = {
         STATE_PENDING: _('قيد البيع'),
         STATE_COMPLETE: _('مكتمل'),
+        STATE_CANCLED: _('ملغي'),
     }
 
     code = models.CharField(_('code'), max_length=20, unique=True)
@@ -515,6 +524,14 @@ class Sale(LoggingModel):
     @property
     def record_count(self):
         return self.records.count() + self.melt_batches.count()
+
+    def clean(self):
+        super().clean()
+        if self.pk:
+            from django.core.exceptions import ValidationError
+            original = Sale.objects.get(pk=self.pk)
+            if original.state in [self.STATE_COMPLETE, self.STATE_CANCLED]:
+                raise ValidationError(_('لا يمكن تعديل الاستمارة في حالتها الحالية'))
 
     def save(self, *args, **kwargs):
         if not self.code:
@@ -569,10 +586,12 @@ class Sale(LoggingModel):
 class Storage(LoggingModel):
     STATE_PENDING = 1
     STATE_COMPLETE = 2
+    STATE_CANCLED = 3
 
     STATE_CHOICES = {
         STATE_PENDING: _('قيد التخزين'),
         STATE_COMPLETE: _('مكتمل'),
+        STATE_CANCLED: _('ملغي'),
     }
 
     code = models.CharField(_('code'), max_length=20, unique=True)
@@ -614,6 +633,14 @@ class Storage(LoggingModel):
     @property
     def record_count(self):
         return self.records.count() + self.melt_batches.count()
+
+    def clean(self):
+        super().clean()
+        if self.pk:
+            from django.core.exceptions import ValidationError
+            original = Storage.objects.get(pk=self.pk)
+            if original.state in [self.STATE_COMPLETE, self.STATE_CANCLED]:
+                raise ValidationError(_('لا يمكن تعديل الاستمارة في حالتها الحالية'))
 
     def save(self, *args, **kwargs):
         if not self.code:

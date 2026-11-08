@@ -62,7 +62,7 @@ class StorageMeltBatchesInline(admin.TabularInline):
 
 class StorageAdmin(LogAdminMixin, admin.ModelAdmin):
     inlines = [StorageRecordsInline, StorageMeltBatchesInline]
-    list_display = ['code', 'storage_date', 'expiry_date', 'buyer_display', 'note', 'record_count', 'total_weight', 'state', 'print_button', 'complete_button']
+    list_display = ['code', 'storage_date', 'expiry_date', 'buyer_display', 'note', 'record_count', 'total_weight', 'state', 'print_button', 'cancel_button', 'complete_button']
     list_filter = ['state', 'buyer_type', ('buyer_exporter', RelatedOnlyFieldListFilterNotEmpty), ('buyer_saig', RelatedOnlyFieldListFilterNotEmpty)]
     date_hierarchy = "storage_date"
 
@@ -75,7 +75,7 @@ class StorageAdmin(LogAdminMixin, admin.ModelAdmin):
 
     def get_readonly_fields(self, request, obj=None):
         readonly_fields = list(super().get_readonly_fields(request, obj))
-        if obj and obj.state == Storage.STATE_COMPLETE:
+        if obj and obj.state in [Storage.STATE_COMPLETE, Storage.STATE_CANCLED]:
             readonly_fields = list(set(readonly_fields + [
                 'storage_date', 'buyer_type', 'buyer_exporter', 'buyer_saig', 'note', 'state'
             ]))
@@ -108,7 +108,7 @@ class StorageAdmin(LogAdminMixin, admin.ModelAdmin):
     def has_change_permission(self, request, obj=None):
         if request.user.is_superuser or request.user.groups.filter(name="gold_travel_traditional_manager").exists():
             return True
-        if obj and obj.state == Storage.STATE_COMPLETE:
+        if obj and obj.state in [Storage.STATE_COMPLETE, Storage.STATE_CANCLED]:
             return False
         try:
             gold_user = request.user.gold_travel_traditional
@@ -128,7 +128,7 @@ class StorageAdmin(LogAdminMixin, admin.ModelAdmin):
     def has_delete_permission(self, request, obj=None):
         if obj is None:
             return False
-        if obj.state == Storage.STATE_COMPLETE:
+        if obj.state in [Storage.STATE_COMPLETE, Storage.STATE_CANCLED]:
             return False
         return super().has_delete_permission(request, obj)
 
@@ -150,6 +150,15 @@ class StorageAdmin(LogAdminMixin, admin.ModelAdmin):
             return format_html('<a class="changelink" target="_blank" href="{url}">{txt}</a>', url=url, txt=_('طباعة'))
         return '-'
 
+    @admin.display(description=_('cancel'))
+    def cancel_button(self, obj):
+        if not self.has_change_permission(self.current_request, obj):
+            return '-'
+        if obj.state == Storage.STATE_PENDING:
+            url = reverse("admin:gold_travel_traditional_storage_changelist") + f"{obj.pk}/cancel/"
+            return format_html('<a class="changelink" href="{url}">{txt}</a>', url=url, txt=_('إلغاء'))
+        return '-'
+
     @admin.display(description=_('complete'))
     def complete_button(self, obj):
         if not self.has_change_permission(self.current_request, obj):
@@ -163,8 +172,45 @@ class StorageAdmin(LogAdminMixin, admin.ModelAdmin):
         urls = super().get_urls()
         my_urls = [
             path("<int:pk>/complete/", self.admin_site.admin_view(self.complete_view)),
+            path("<int:pk>/cancel/", self.admin_site.admin_view(self.cancel_view)),
         ]
         return my_urls + urls
+
+    def cancel_view(self, request, pk):
+        obj = Storage.objects.get(pk=pk)
+
+        if not (request.user.is_superuser or request.user.groups.filter(name="gold_travel_traditional_manager").exists()):
+            try:
+                gold_user = request.user.gold_travel_traditional
+                if gold_user.user_type not in [GoldTravelTraditionalUser.JIHAT_TARHIL, GoldTravelTraditionalUser.BOTH, GoldTravelTraditionalUser.STATE_MANAGER]:
+                    self.message_user(request, _('You do not have permission to cancel storage receipts.'), level='error')
+                    return redirect(reverse("admin:gold_travel_traditional_storage_changelist"))
+                if gold_user.is_state_manager and obj.source_state_id != gold_user.state_id:
+                    self.message_user(request, _('You can only cancel storage receipts from your state.'), level='error')
+                    return redirect(reverse("admin:gold_travel_traditional_storage_changelist"))
+            except:
+                self.message_user(request, _('You do not have permission to cancel storage receipts.'), level='error')
+                return redirect(reverse("admin:gold_travel_traditional_storage_changelist"))
+
+        if obj.state != Storage.STATE_PENDING:
+            self.message_user(request, _('Only pending storage receipts can be cancelled.'), level='error')
+            return redirect(reverse("admin:gold_travel_traditional_storage_changelist"))
+
+        if request.method == "POST":
+            obj.state = Storage.STATE_CANCLED
+            obj.updated_by = request.user
+            obj.save()
+            self.log_change(request, obj, _('state_cancled'))
+            self.message_user(request, _('Storage receipt cancelled successfully!'))
+            return redirect(reverse("admin:gold_travel_traditional_storage_changelist"))
+
+        context = dict(
+            self.admin_site.each_context(request),
+            object=obj,
+            opts=Storage._meta,
+            title=_('تأكيد الإلغاء'),
+        )
+        return TemplateResponse(request, "admin/gold_travel_traditional/cancel_confirm.html", context)
 
     def complete_view(self, request, pk):
         storage = Storage.objects.get(pk=pk)
