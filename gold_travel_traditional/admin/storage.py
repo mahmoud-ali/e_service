@@ -63,7 +63,7 @@ class StorageMeltBatchesInline(admin.TabularInline):
 class StorageAdmin(LogAdminMixin, admin.ModelAdmin):
     inlines = [StorageRecordsInline, StorageMeltBatchesInline]
     list_display = ['code', 'storage_date', 'expiry_date', 'buyer_display', 'note', 'record_count', 'total_weight', 'state', 'print_button', 'cancel_button', 'complete_button']
-    list_filter = ['state', 'buyer_type', ('buyer_exporter', RelatedOnlyFieldListFilterNotEmpty), ('buyer_saig', RelatedOnlyFieldListFilterNotEmpty)]
+    list_filter = ['state', ('source_state', RelatedOnlyFieldListFilterNotEmpty), 'buyer_type', ('buyer_exporter', RelatedOnlyFieldListFilterNotEmpty), ('buyer_saig', RelatedOnlyFieldListFilterNotEmpty)]
     date_hierarchy = "storage_date"
 
     search_fields = ['code', 'note', 'buyer_exporter__name', 'buyer_saig__name']

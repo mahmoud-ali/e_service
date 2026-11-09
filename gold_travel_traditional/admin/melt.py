@@ -69,7 +69,7 @@ class MeltBatchDetailInline(admin.TabularInline):
 class MeltBatchAdmin(LogAdminMixin, admin.ModelAdmin):
     inlines = [MeltBatchRecordsInline, MeltBatchDetailInline]
     list_display = ['code', 'melt_date', 'melt_workshop', 'standardization_lab', 'record_count', 'total_weight_display', 'state', 'print_button', 'cancel_button', 'sale_button', 'storage_button', 'complete_button']
-    list_filter = ['state', ]
+    list_filter = ['state', ('source_state', RelatedOnlyFieldListFilterNotEmpty)]
     date_hierarchy = "melt_date"
 
     search_fields = ['code', 'melt_workshop', 'standardization_lab']
