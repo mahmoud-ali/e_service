@@ -53,6 +53,22 @@ class LkpJihatAlaisdar(models.Model):
         verbose_name = _("jihat_alaisdar")
         verbose_name_plural = _("jihat_alaisdar")
 
+class LkpWorkshop(models.Model):
+    state = models.ForeignKey(LkpState, on_delete=models.PROTECT, verbose_name=_('state'))
+    name = models.CharField(_('ورشة الصهر'), max_length=150)
+    locality = models.CharField(_('مكان الورشة'), max_length=150)
+    owner_name = models.CharField(_('اسم صاحب الورشة'), max_length=150)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = _('ورشة صهر')
+        verbose_name_plural = _('ورش الصهر')
+        indexes = [
+            models.Index(fields=['state']),
+        ]
+
 class GoldTravelTraditionalUser(LoggingModel):
     JIHAT_ALAISDAR = 1
     JIHAT_TARHIL = 2
@@ -506,7 +522,7 @@ class MeltProduce(LoggingModel):
     almustafid_identity_type = models.IntegerField(_('نوع الإثبات'), choices=AppMoveGoldTraditional.IDENTITY_CHOICES, default=AppMoveGoldTraditional.IDENTITY_PASSPORT)
     almustafid_identity = models.CharField(_('الرقم الوطني'), max_length=50)
     almustafid_identity_attachement = models.ImageField(_('مرفق الإثبات'), upload_to=attachement_path)
-    melt_workshop = models.CharField(_('ورشة الصهر'), max_length=150)
+    melt_workshop = models.ForeignKey('LkpWorkshop', on_delete=models.PROTECT, verbose_name=_('ورشة الصهر'))
     source_state = models.ForeignKey(LkpState, on_delete=models.PROTECT, verbose_name=_('state'))
     state = models.IntegerField(_('record_state'), choices=STATE_CHOICES, default=STATE_PENDING)
 
