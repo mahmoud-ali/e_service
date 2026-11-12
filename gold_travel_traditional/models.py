@@ -187,6 +187,7 @@ class AppMoveGoldTraditional(LoggingModel):
     standardization_lab = models.CharField(_("مختبر المعايرة"), max_length=150, null=True, blank=True)
     melt_date = models.DateField(_("تاريخ الصهر"), null=True, blank=True)
     melt_batch = models.ForeignKey('MeltBatch', on_delete=models.SET_NULL, null=True, blank=True, related_name='records', verbose_name=_('استمارة تسييح ومعايرة'))
+    melt_produce = models.ForeignKey('MeltProduce', on_delete=models.SET_NULL, null=True, blank=True, unique=True, related_name='produced_records', verbose_name=_('إفادة محضر التسييح والصهر'))
     sale = models.ForeignKey('Sale', on_delete=models.SET_NULL, null=True, blank=True, related_name='records', verbose_name=_('فاتورة البيع'))
     storage = models.ForeignKey('Storage', on_delete=models.SET_NULL, null=True, blank=True, related_name='records', verbose_name=_('شهادة تخزين'))
     arrival_attachement = models.ImageField(_('مرفق الاستمارة'), help_text=_('ارفاق استمارة  الترحيل'), upload_to=attachement_path, null=True, blank=True)
@@ -229,6 +230,9 @@ class AppMoveGoldTraditional(LoggingModel):
             if original.state not in [self.STATE_NEW, self.STATE_RENEW, self.STATE_EXPIRED, self.STATE_ARRIVED]:
                 from django.core.exceptions import ValidationError
                 raise ValidationError(_("Record cannot be modified in its current state."))
+            if original.melt_produce_id and original.melt_produce_id != self.melt_produce_id:
+                from django.core.exceptions import ValidationError
+                raise ValidationError(_('لا يمكن تغيير إفادة محضر التسييح والصهر المرتبطة'))
 
     def _optimize_image(self, image_field):
         """Resize and compress an uploaded image to reduce file size."""
@@ -468,6 +472,161 @@ class MeltBatchDetail(models.Model):
     }
 
     master = models.ForeignKey(MeltBatch, on_delete=models.CASCADE, related_name="details", verbose_name=_("master"))
+    alloy_weight_gram = models.FloatField(_("وزن السبيكة بالجرام"))
+    alloy_shape = models.IntegerField(_("شكل السبيكة"), choices=SHAPE_CHOICES)
+
+    def __str__(self):
+        return f'{self.master} - {self.alloy_weight_gram}g'
+
+    class Meta:
+        verbose_name = _("تفاصيل السبيكة الناتجة")
+        verbose_name_plural = _("تفاصيل السبائك الناتجة")
+
+class MeltProduce(LoggingModel):
+    STATE_PENDING = 1
+    STATE_COMPLETE = 2
+    STATE_CANCLED = 3
+
+    STATE_CHOICES = {
+        STATE_PENDING: _('قيد الصهر'),
+        STATE_COMPLETE: _('مكتمل'),
+        STATE_CANCLED: _('ملغي'),
+    }
+
+    def attachement_path(self, filename):
+        state_code = self.source_state.code if self.source_state else 'unknown'
+        code = self.code or 'new'
+        date = (self.created_at or timezone.now()).date()
+        return "states/{0}/travel_traditional/melt_produce/{1}/{2}/{3}".format(state_code, date, code, filename)
+
+    code = models.CharField(_('code'), max_length=20, unique=True)
+    issue_date = models.DateField(_('تاريخ الاصدار'))
+    almustafid_name = models.CharField(_('اسم المستفيد'), max_length=150)
+    almustafid_phone = models.CharField(_('تلفون المستفيد'), max_length=30)
+    almustafid_identity_type = models.IntegerField(_('نوع الإثبات'), choices=AppMoveGoldTraditional.IDENTITY_CHOICES, default=AppMoveGoldTraditional.IDENTITY_PASSPORT)
+    almustafid_identity = models.CharField(_('الرقم الوطني'), max_length=50)
+    almustafid_identity_attachement = models.ImageField(_('مرفق الإثبات'), upload_to=attachement_path)
+    melt_workshop = models.CharField(_('ورشة الصهر'), max_length=150)
+    source_state = models.ForeignKey(LkpState, on_delete=models.PROTECT, verbose_name=_('state'))
+    state = models.IntegerField(_('record_state'), choices=STATE_CHOICES, default=STATE_PENDING)
+
+    MAX_IMAGE_DIMENSION = 1200
+    JPEG_QUALITY = 85
+
+    @property
+    def total_weight(self):
+        return self.details.aggregate(total=models.Sum('alloy_weight_gram'))['total'] or 0.0
+
+    @property
+    def alloy_count(self):
+        return self.details.count()
+
+    @property
+    def produced_record(self):
+        return self.produced_records.first()
+
+    @property
+    def soug_name(self):
+        try:
+            gold_user = self.created_by.gold_travel_traditional
+            first = gold_user.goldtraveltraditionaluserjihatalaisdar_set.select_related('jihat_alaisdar').first()
+            return first.jihat_alaisdar.name if first else ''
+        except Exception:
+            return ''
+
+    def clean(self):
+        super().clean()
+        arabic_digits = str.maketrans('٠١٢٣٤٥٦٧٨٩', '0123456789')
+        self.almustafid_identity = self.almustafid_identity.translate(arabic_digits)
+        self.almustafid_phone = self.almustafid_phone.translate(arabic_digits)
+        if self.pk:
+            from django.core.exceptions import ValidationError
+            original = MeltProduce.objects.get(pk=self.pk)
+            if original.state in [self.STATE_COMPLETE, self.STATE_CANCLED]:
+                raise ValidationError(_('لا يمكن تعديل الاستمارة في حالتها الحالية'))
+            if self.state == self.STATE_COMPLETE and not self.details.exists():
+                raise ValidationError(_('لا يمكن إكمال الاستمارة قبل إدخال تفاصيل السبائك الناتجة'))
+
+    def _optimize_image(self, image_field):
+        img_file = getattr(self, image_field)
+        if not img_file:
+            return
+
+        img = Image.open(img_file)
+        if img.mode in ('RGBA', 'P'):
+            img = img.convert('RGB')
+
+        w, h = img.size
+        if w > self.MAX_IMAGE_DIMENSION or h > self.MAX_IMAGE_DIMENSION:
+            img.thumbnail((self.MAX_IMAGE_DIMENSION, self.MAX_IMAGE_DIMENSION), Image.LANCZOS)
+
+        output = io.BytesIO()
+        img.save(output, format='JPEG', quality=self.JPEG_QUALITY, optimize=True)
+        output.seek(0)
+
+        img_file.file = output
+        img_file.name = img_file.name.rsplit('.', 1)[0] + '.jpg'
+
+    def save(self, *args, **kwargs):
+        self._optimize_image('almustafid_identity_attachement')
+
+        if not self.code:
+            import datetime
+            from django.db import transaction, IntegrityError
+
+            prefix = "MP"
+            try:
+                if self.source_state and self.source_state.code:
+                    prefix = f"MP-{self.source_state.code}"
+            except:
+                pass
+
+            date_str = datetime.datetime.now().strftime("%Y%m")
+            for attempt in range(5):
+                try:
+                    with transaction.atomic():
+                        last = MeltProduce.objects.select_for_update().filter(
+                            code__startswith=f"{prefix}-{date_str}-"
+                        ).order_by('code').last()
+                        if last:
+                            new_num = int(last.code.split('-')[-1]) + 1
+                        else:
+                            new_num = 1
+                        new_num += attempt
+                        self.code = f"{prefix}-{date_str}-{new_num:04d}"
+                        super().save(*args, **kwargs)
+                        return
+                except IntegrityError:
+                    if attempt == 4:
+                        raise
+                    continue
+        else:
+            super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f'{self.code} - {self.almustafid_name}'
+
+    class Meta:
+        ordering = ["-id"]
+        verbose_name = _('إفادة محضر التسييح والصهر')
+        verbose_name_plural = _('إفادات محضر التسييح والصهر')
+        indexes = [
+            models.Index(fields=["source_state", "state"]),
+            models.Index(fields=["issue_date"]),
+        ]
+
+class MeltProduceDetail(models.Model):
+    SHAPE_CIRCULAR = 1
+    SHAPE_RECTANGULAR = 2
+    SHAPE_OTHER = 3
+
+    SHAPE_CHOICES = {
+        SHAPE_CIRCULAR: _('دائري'),
+        SHAPE_RECTANGULAR: _('مستطيل'),
+        SHAPE_OTHER: _('أخرى'),
+    }
+
+    master = models.ForeignKey(MeltProduce, on_delete=models.CASCADE, related_name="details", verbose_name=_("master"))
     alloy_weight_gram = models.FloatField(_("وزن السبيكة بالجرام"))
     alloy_shape = models.IntegerField(_("شكل السبيكة"), choices=SHAPE_CHOICES)
 
