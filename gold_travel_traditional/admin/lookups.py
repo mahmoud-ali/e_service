@@ -26,7 +26,7 @@ from gold_travel_traditional.models import (
     AppMoveGoldTraditional, AppMoveGoldTraditionalDetail,
     GoldTravelTraditionalState, GoldTravelTraditionalUser,
     GoldTravelTraditionalUserJihatAlaisdar, GoldTravelTraditionalUserJihatTarhil,
-    LkpJihatAlaisdar, LkpJihatAltarhil, LkpSaig, MeltBatch, MeltBatchDetail, Sale, Storage
+    LkpJihatAlaisdar, LkpJihatAltarhil, LkpSaig, LkpWorkshop, MeltBatch, MeltBatchDetail, Sale, Storage
 )
 
 from .base import LogAdminMixin, get_user_state, RelatedOnlyFieldListFilterNotEmpty, HasPhotoFilter
@@ -99,6 +99,71 @@ class LkpJihatAlaisdarAdmin(admin.ModelAdmin):
         return super().save_model(request, obj, form, change)
 
 admin.site.register(LkpJihatAlaisdar, LkpJihatAlaisdarAdmin)
+
+class LkpWorkshopAdmin(admin.ModelAdmin):
+    model = LkpWorkshop
+    list_display = ["name", "locality", "owner_name", "state"]
+    list_filter = ["state"]
+    search_fields = ["name", "owner_name", "locality"]
+
+    def _gold_user(self, request):
+        try:
+            return request.user.gold_travel_traditional
+        except:
+            return None
+
+    def _can_manage(self, request):
+        gold_user = self._gold_user(request)
+        if not gold_user:
+            return False
+        return gold_user.user_type in [
+            GoldTravelTraditionalUser.JIHAT_ALAISDAR,
+            GoldTravelTraditionalUser.BOTH,
+            GoldTravelTraditionalUser.STATE_MANAGER,
+        ]
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        if request.user.is_superuser or request.user.groups.filter(name__in=("gold_travel_traditional_manager","gold_travel_traditional_manager_show")).exists():
+            return qs
+        gold_user = self._gold_user(request)
+        if gold_user:
+            return qs.filter(state=gold_user.state)
+        return qs
+
+    def has_view_permission(self, request, obj=None):
+        if super().has_view_permission(request, obj):
+            return True
+        return self._gold_user(request) is not None
+
+    def has_add_permission(self, request):
+        if super().has_add_permission(request):
+            return True
+        return self._can_manage(request)
+
+    def has_change_permission(self, request, obj=None):
+        if super().has_change_permission(request, obj):
+            return True
+        if not self._can_manage(request):
+            return False
+        if obj:
+            gold_user = self._gold_user(request)
+            return obj.state_id == gold_user.state_id
+        return True
+
+    def get_fields(self, request, obj=None):
+        fields = super().get_fields(request, obj)
+        if get_user_state(request) and not request.user.is_superuser:
+            fields = [f for f in fields if f != 'state']
+        return fields
+
+    def save_model(self, request, obj, form, change):
+        state = get_user_state(request)
+        if state and not request.user.is_superuser:
+            obj.state = state
+        return super().save_model(request, obj, form, change)
+
+admin.site.register(LkpWorkshop, LkpWorkshopAdmin)
 
 class LkpSaigAdmin(admin.ModelAdmin):
     list_display = ["state", "name", "code"]

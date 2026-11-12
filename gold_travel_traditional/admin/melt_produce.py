@@ -62,8 +62,8 @@ class MeltProduceAdmin(LogAdminMixin, admin.ModelAdmin):
     ]
     list_filter = ['state', ('source_state', RelatedOnlyFieldListFilterNotEmpty)]
     date_hierarchy = "issue_date"
-    search_fields = ['code', 'almustafid_name', 'almustafid_phone', 'almustafid_identity', 'melt_workshop']
-    readonly_fields = ['code', 'state', 'produced_record_display']
+    search_fields = ['code', 'almustafid_name', 'almustafid_phone', 'almustafid_identity', 'melt_workshop__name', 'melt_workshop__owner_name', 'melt_workshop__locality']
+    readonly_fields = ['code', 'state', 'produced_record_display', 'melt_workshop_location_display', 'melt_workshop_owner_display']
     actions = ['export_as_csv']
 
     fieldsets = [
@@ -74,7 +74,7 @@ class MeltProduceAdmin(LogAdminMixin, admin.ModelAdmin):
             ('almustafid_identity_type', 'almustafid_phone'),
             ('almustafid_identity_attachement',),
         ]}),
-        (_('تفاصيل الصهر'), {'fields': ['melt_workshop']}),
+        (_('تفاصيل الصهر'), {'fields': [('melt_workshop', 'melt_workshop_location_display', 'melt_workshop_owner_display')]}),
         (None, {'fields': ['state', 'produced_record_display']}),
     ]
 
@@ -139,6 +139,12 @@ class MeltProduceAdmin(LogAdminMixin, admin.ModelAdmin):
             obj.source_state = get_user_state(request)
         super().save_model(request, obj, form, change)
 
+    def get_form(self, request, obj=None, **kwargs):
+        my_form = self.form
+        my_form.user = request.user
+        kwargs['form'] = my_form
+        return super().get_form(request, obj, **kwargs)
+
     def get_urls(self):
         urls = super().get_urls()
         my_urls = [
@@ -165,6 +171,18 @@ class MeltProduceAdmin(LogAdminMixin, admin.ModelAdmin):
             return format_html('<a href="{url}">{code}</a>', url=url, code=record.code)
         return '-'
 
+    @admin.display(description=_('مكان الورشة'))
+    def melt_workshop_location_display(self, obj):
+        if obj.melt_workshop_id:
+            return obj.melt_workshop.locality
+        return '-'
+
+    @admin.display(description=_('اسم صاحب الورشة'))
+    def melt_workshop_owner_display(self, obj):
+        if obj.melt_workshop_id:
+            return obj.melt_workshop.owner_name
+        return '-'
+
     def changelist_view(self, request, extra_context=None):
         self.current_request = request
         return super().changelist_view(request, extra_context=extra_context)
@@ -178,9 +196,9 @@ class MeltProduceAdmin(LogAdminMixin, admin.ModelAdmin):
 
     @admin.display(description=_('إنتاج استمارة ترحيل'))
     def produce_button(self, obj):
-        if not self.has_change_permission(self.current_request, obj):
+        if not self._can_manage(self.current_request, obj):
             return '-'
-        if obj.state == MeltProduce.STATE_PENDING and not obj.produced_record:
+        if obj.state in [MeltProduce.STATE_PENDING, MeltProduce.STATE_COMPLETE] and not obj.produced_record:
             url = reverse("admin:gold_travel_traditional_meltproduce_produce", args=[obj.pk])
             return format_html('<a class="changelink" href="{url}">{txt}</a>', url=url, txt=_('إنتاج استمارة ترحيل'))
         return '-'
@@ -223,8 +241,8 @@ class MeltProduceAdmin(LogAdminMixin, admin.ModelAdmin):
             self.message_user(request, _('You do not have permission to produce permits.'), level='error')
             return redirect(reverse("admin:gold_travel_traditional_meltproduce_changelist"))
 
-        if melt.state != MeltProduce.STATE_PENDING:
-            self.message_user(request, _('Only pending melt forms can produce permits.'), level='error')
+        if melt.state not in [MeltProduce.STATE_PENDING, MeltProduce.STATE_COMPLETE]:
+            self.message_user(request, _('Only pending or completed melt forms can produce permits.'), level='error')
             return redirect(reverse("admin:gold_travel_traditional_meltproduce_changelist"))
 
         if melt.produced_record:
@@ -245,7 +263,7 @@ class MeltProduceAdmin(LogAdminMixin, admin.ModelAdmin):
                 permit.almustafid_phone = melt.almustafid_phone
                 permit.almustafid_identity_type = melt.almustafid_identity_type
                 permit.almustafid_identity = melt.almustafid_identity
-                permit.melt_workshop = melt.melt_workshop
+                permit.melt_workshop = melt.melt_workshop.name if melt.melt_workshop else ''
                 permit.melt_produce = melt
                 permit.state = AppMoveGoldTraditional.STATE_NEW
                 permit.created_by = request.user
@@ -384,7 +402,7 @@ class MeltProduceAdmin(LogAdminMixin, admin.ModelAdmin):
         )
         header = [
             "الكود", "تاريخ الاصدار", "اسم المستفيد", "نوع الإثبات", "الرقم الوطني",
-            "تلفون المستفيد", "ورشة الصهر", "عدد السبائك", "الوزن (جرام)",
+            "تلفون المستفيد", "ورشة الصهر", "مكان الورشة", "اسم صاحب الورشة", "عدد السبائك", "الوزن (جرام)",
             "استمارة الترحيل", "الولاية", "الحالة",
             "تاريخ الإنشاء", "أنشئ بواسطة", "تاريخ التحديث", "حدث بواسطة"
         ]
@@ -403,7 +421,9 @@ class MeltProduceAdmin(LogAdminMixin, admin.ModelAdmin):
                 obj.get_almustafid_identity_type_display(),
                 obj.almustafid_identity,
                 obj.almustafid_phone,
-                obj.melt_workshop,
+                obj.melt_workshop.name if obj.melt_workshop else '',
+                obj.melt_workshop.locality if obj.melt_workshop else '',
+                obj.melt_workshop.owner_name if obj.melt_workshop else '',
                 obj.alloy_count,
                 round(obj.total_weight, 2),
                 record.code if record else '',

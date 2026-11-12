@@ -5,7 +5,7 @@ from django.contrib.auth import get_user_model
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
-from gold_travel_traditional.models import AppMoveGoldTraditional, GoldTravelTraditionalUser, GoldTravelTraditionalUserJihatAlaisdar, GoldTravelTraditionalUserJihatTarhil, LkpJihatAlaisdar, LkpJihatAltarhil, LkpSaig, MeltBatch, MeltProduce, Sale, Storage
+from gold_travel_traditional.models import AppMoveGoldTraditional, GoldTravelTraditionalUser, GoldTravelTraditionalUserJihatAlaisdar, GoldTravelTraditionalUserJihatTarhil, LkpJihatAlaisdar, LkpJihatAltarhil, LkpSaig, LkpWorkshop, MeltBatch, MeltProduce, Sale, Storage
 
 UserModel = get_user_model()
 
@@ -431,10 +431,23 @@ class MeltProduceForm(forms.ModelForm):
         widget=forms.DateInput(attrs={'type': 'date', 'class': 'vDateField'}),
     )
 
+    user = None
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         if not self.instance.pk:
             self.fields['issue_date'].initial = timezone.now().date()
+
+        if self.user and (self.user.is_superuser or self.user.groups.filter(name="gold_travel_traditional_manager").exists()):
+            self.fields['melt_workshop'].queryset = LkpWorkshop.objects.all()
+        elif self.user:
+            try:
+                gold_user = self.user.gold_travel_traditional
+                self.fields['melt_workshop'].queryset = LkpWorkshop.objects.filter(state=gold_user.state)
+            except:
+                self.fields['melt_workshop'].queryset = LkpWorkshop.objects.none()
+        else:
+            self.fields['melt_workshop'].queryset = LkpWorkshop.objects.all()
 
     class Meta:
         model = MeltProduce

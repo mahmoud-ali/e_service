@@ -2,7 +2,7 @@ from .base import (
     get_user_state, LogAdminMixin, RelatedOnlyFieldListFilterNotEmpty, HasPhotoFilter
 )
 from .lookups import (
-    LkpJihatAltarhilAdmin, LkpJihatAlaisdarAdmin, LkpSaigAdmin, GoldTravelTraditionalStateAdmin
+    LkpJihatAltarhilAdmin, LkpJihatAlaisdarAdmin, LkpSaigAdmin, LkpWorkshopAdmin, GoldTravelTraditionalStateAdmin
 )
 from .users import (
     GoldTravelTraditionalUserJihatAlaisdarInline, GoldTravelTraditionalUserJihatTarhilInline,
@@ -29,7 +29,7 @@ from .routes import (
 
 __all__ = [
     'get_user_state', 'LogAdminMixin', 'RelatedOnlyFieldListFilterNotEmpty', 'HasPhotoFilter',
-    'LkpJihatAltarhilAdmin', 'LkpJihatAlaisdarAdmin', 'LkpSaigAdmin', 'GoldTravelTraditionalStateAdmin',
+    'LkpJihatAltarhilAdmin', 'LkpJihatAlaisdarAdmin', 'LkpSaigAdmin', 'LkpWorkshopAdmin', 'GoldTravelTraditionalStateAdmin',
     'GoldTravelTraditionalUserJihatAlaisdarInline', 'GoldTravelTraditionalUserJihatTarhilInline',
     'GoldTravelTraditionalUserAdmin', 'AppMoveGoldTraditionalDetailInline', 'AppMoveGoldTraditionalAdmin',
     'MeltBatchRecordsInline', 'MeltBatchDetailInline', 'MeltBatchAdmin',
