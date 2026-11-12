@@ -56,6 +56,7 @@ class MeltProduceTest(TestCase):
         cls.user3 = UserModel.objects.create_user(username="both", password="pass", email="both@example.com")
         cls.user4 = UserModel.objects.create_user(username="manager", password="pass", email="manager@example.com")
         cls.user5 = UserModel.objects.create_user(username="viewer", password="pass", email="viewer@example.com")
+        cls.superuser = UserModel.objects.create_superuser(username="admin", password="pass", email="admin@example.com")
 
         cls.gold_user1 = GoldTravelTraditionalUser.objects.create(
             user=cls.user1, name="Issuer", state=cls.state,
@@ -192,6 +193,19 @@ class MeltProduceTest(TestCase):
         req.user = self.user1
 
         self.assertFalse(model_admin.has_change_permission(req, melt))
+
+    def test_change_form_renders_completed_melt(self):
+        melt = self._create_melt(details=[(10.0, MeltProduceDetail.SHAPE_CIRCULAR)])
+        melt.state = MeltProduce.STATE_COMPLETE
+        melt.save()
+
+        model_admin = MeltProduceAdmin(MeltProduce, admin.site)
+        req = RequestFactory().get('/')
+        req.user = self.superuser
+        req._messages = BaseStorage(req)
+
+        response = model_admin.changeform_view(req, str(melt.pk))
+        self.assertEqual(response.status_code, 200)
 
     def test_produce_view_creates_permit_and_completes(self):
         melt = self._create_melt(details=[
