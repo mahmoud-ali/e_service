@@ -22,6 +22,7 @@ from gold_travel_traditional.models import (
     GoldTravelTraditionalUserJihatTarhil,
     LkpJihatAlaisdar,
     LkpJihatAltarhil,
+    LkpWorkshop,
     MeltProduce,
     MeltProduceDetail,
 )
@@ -46,6 +47,9 @@ class MeltProduceTest(TestCase):
         cls.state = LkpState.objects.create(name="Khartoum", code="KRT", x=1.0, y=1.0)
         cls.jihat_alaisdar = LkpJihatAlaisdar.objects.create(state=cls.state, name="Issuing point")
         cls.wijhat_altarhil = LkpJihatAltarhil.objects.create(state=cls.state, name="Destination point")
+        cls.workshop = LkpWorkshop.objects.create(
+            state=cls.state, name="ورشة صهر", locality="مكان الورشة", owner_name="صاحب الورشة",
+        )
 
         cls.user1 = UserModel.objects.create_user(username="issuer", password="pass", email="issuer@example.com")
         cls.user2 = UserModel.objects.create_user(username="tarhil", password="pass", email="tarhil@example.com")
@@ -94,7 +98,7 @@ class MeltProduceTest(TestCase):
             almustafid_identity_type=AppMoveGoldTraditional.IDENTITY_NATIONAL_ID,
             almustafid_identity="12345678901",
             almustafid_identity_attachement=_image_file(),
-            melt_workshop="ورشة صهر",
+            melt_workshop=self.workshop,
             source_state=self.state,
             created_by=self.user1,
             updated_by=self.user1,
@@ -141,7 +145,7 @@ class MeltProduceTest(TestCase):
         melt = self._create_melt(details=[(10.0, MeltProduceDetail.SHAPE_CIRCULAR)])
         melt.state = MeltProduce.STATE_COMPLETE
         melt.save()
-        melt.melt_workshop = "ورشة أخرى"
+        melt.almustafid_name = "اسم آخر"
         with self.assertRaises(ValidationError):
             melt.clean()
 
@@ -158,7 +162,7 @@ class MeltProduceTest(TestCase):
             'almustafid_phone': '0912345678',
             'almustafid_identity_type': AppMoveGoldTraditional.IDENTITY_NATIONAL_ID,
             'almustafid_identity': '12345',
-            'melt_workshop': 'ورشة',
+            'melt_workshop': self.workshop.pk,
         })
         self.assertFalse(form.is_valid())
         self.assertIn('almustafid_identity', form.errors)
@@ -177,6 +181,17 @@ class MeltProduceTest(TestCase):
         for user in (self.user2, self.user4, self.user5):
             req.user = user
             self.assertFalse(model_admin.has_add_permission(req))
+
+    def test_has_change_permission_blocks_completed_melt(self):
+        melt = self._create_melt(details=[(10.0, MeltProduceDetail.SHAPE_CIRCULAR)])
+        melt.state = MeltProduce.STATE_COMPLETE
+        melt.save()
+
+        model_admin = MeltProduceAdmin(MeltProduce, admin.site)
+        req = RequestFactory().get('/')
+        req.user = self.user1
+
+        self.assertFalse(model_admin.has_change_permission(req, melt))
 
     def test_produce_view_creates_permit_and_completes(self):
         melt = self._create_melt(details=[
@@ -206,7 +221,7 @@ class MeltProduceTest(TestCase):
         self.assertEqual(permit.almustafid_name, melt.almustafid_name)
         self.assertEqual(permit.almustafid_phone, melt.almustafid_phone)
         self.assertEqual(permit.almustafid_identity, melt.almustafid_identity)
-        self.assertEqual(permit.melt_workshop, melt.melt_workshop)
+        self.assertEqual(permit.melt_workshop, melt.melt_workshop.name)
         self.assertEqual(permit.melt_produce_id, melt.pk)
         self.assertEqual(
             list(permit.details.values_list('alloy_weight_gram', flat=True)),
