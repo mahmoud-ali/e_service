@@ -1,0 +1,64 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_urls %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+<a href="{% url 'admin:index' %}">{% translate 'Home' %}</a>
+&rsaquo; <a href="{% url 'admin:app_list' app_label=opts.app_label %}">{{ opts.app_config.verbose_name }}</a>
+&rsaquo; <a href="{% url opts|admin_urlname:'changelist' %}">{{ opts.verbose_name_plural|capfirst }}</a>
+&rsaquo; <a href="{% url opts|admin_urlname:'change' object.pk|admin_urlquote %}">{{ object|truncatewords:"18" }}</a>
+&rsaquo; {% translate 'إنتاج استمارة ترحيل' %}
+</div>
+{% endblock %}
+
+{% block content %}
+<div id="content-main">
+    <div style="background:#f8f8f8; padding:12px 15px; margin-bottom:20px; border:1px solid #eee; border-radius:4px;">
+        <strong>{{ object.code }}</strong>
+        <span style="margin:0 10px;">|</span>
+        {{ object.almustafid_name }}
+        <span style="margin:0 10px;">|</span>
+        {{ object.melt_workshop }}
+        <span style="margin:0 10px;">|</span>
+        {{ object.total_weight|floatformat:2 }} {% translate 'جرام' %}
+    </div>
+
+    <form method="post" enctype="multipart/form-data" novalidate>{% csrf_token %}
+        <div>
+            {% if form.errors %}
+            <p class="errornote">
+                {% blocktranslate count counter=form.errors|length %}Please correct the error below.{% plural %}Please correct the errors below.{% endblocktranslate %}
+            </p>
+            {{ form.non_field_errors }}
+            {% endif %}
+
+            <fieldset class="module aligned">
+                <div class="form-row">
+                    <div>
+                        {{ form.jihat_alaisdar.label_tag }}
+                        {{ form.jihat_alaisdar }}
+                        {{ form.jihat_alaisdar.errors }}
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div>
+                        {{ form.wijhat_altarhil.label_tag }}
+                        {{ form.wijhat_altarhil }}
+                        {{ form.wijhat_altarhil.errors }}
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div>
+                        {{ form.attachement_file.label_tag }}
+                        {{ form.attachement_file }}
+                        {{ form.attachement_file.errors }}
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+        <div class="submit-row">
+            <input class="default" type="submit" value="{% translate 'Save' %}" name="_save">
+        </div>
+    </form>
+</div>
+{% endblock %}

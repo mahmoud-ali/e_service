@@ -5,7 +5,7 @@ from django.contrib.auth import get_user_model
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
-from gold_travel_traditional.models import AppMoveGoldTraditional, GoldTravelTraditionalUser, GoldTravelTraditionalUserJihatAlaisdar, GoldTravelTraditionalUserJihatTarhil, LkpJihatAlaisdar, LkpJihatAltarhil, LkpSaig, MeltBatch, Sale, Storage
+from gold_travel_traditional.models import AppMoveGoldTraditional, GoldTravelTraditionalUser, GoldTravelTraditionalUserJihatAlaisdar, GoldTravelTraditionalUserJihatTarhil, LkpJihatAlaisdar, LkpJihatAltarhil, LkpSaig, MeltBatch, MeltProduce, Sale, Storage
 
 UserModel = get_user_model()
 
@@ -424,3 +424,110 @@ class MeltBatchStorageForm(forms.Form):
             if not cleaned.get('existing_storage'):
                 self.add_error('existing_storage', _('Please select a storage receipt.'))
         return cleaned
+
+class MeltProduceForm(forms.ModelForm):
+    issue_date = forms.DateField(
+        label=_('تاريخ الاصدار'),
+        widget=forms.DateInput(attrs={'type': 'date', 'class': 'vDateField'}),
+    )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if not self.instance.pk:
+            self.fields['issue_date'].initial = timezone.now().date()
+
+    class Meta:
+        model = MeltProduce
+        fields = [
+            'issue_date', 'almustafid_name', 'almustafid_phone',
+            'almustafid_identity_type', 'almustafid_identity',
+            'almustafid_identity_attachement', 'melt_workshop',
+        ]
+
+    def clean_almustafid_identity(self):
+        from django.core.exceptions import ValidationError
+        identity = self.cleaned_data.get('almustafid_identity', '')
+        arabic_digits = str.maketrans('٠١٢٣٤٥٦٧٨٩', '0123456789')
+        identity = identity.translate(arabic_digits)
+        if len(identity) != 11 or not identity.isdigit():
+            raise ValidationError(_('الرقم الوطني يجب أن يكون 11 رقماً'))
+        return identity
+
+    def clean_almustafid_phone(self):
+        phone = self.cleaned_data.get('almustafid_phone', '')
+        arabic_digits = str.maketrans('٠١٢٣٤٥٦٧٨٩', '0123456789')
+        return phone.translate(arabic_digits)
+
+    def clean_almustafid_identity_attachement(self):
+        from django.core.exceptions import ValidationError
+        file = self.cleaned_data.get('almustafid_identity_attachement')
+        if file:
+            ext = file.name.rsplit('.', 1)[-1].lower() if '.' in file.name else ''
+            if ext not in ('jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp'):
+                raise ValidationError(_('يجب رفع صورة بصيغة JPG, PNG, GIF, WEBP أو BMP فقط'))
+            from PIL import Image
+            try:
+                img = Image.open(file)
+                img.verify()
+                file.seek(0)
+            except Exception:
+                raise ValidationError(_('الملف المرفوع ليس صورة صالحة'))
+        return file
+
+class MeltProduceProduceForm(forms.ModelForm):
+    jihat_alaisdar = forms.ModelChoiceField(queryset=LkpJihatAlaisdar.objects.none(), label=_("جهة الإصدار"))
+    wijhat_altarhil = forms.ModelChoiceField(queryset=LkpJihatAltarhil.objects.none(), label=_("جهة الوصول"))
+    user = None
+
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user', None)
+        super().__init__(*args, **kwargs)
+
+        if self.user:
+            try:
+                gold_user = self.user.gold_travel_traditional
+                if gold_user.is_state_manager or gold_user.is_state_viewer:
+                    self.fields["jihat_alaisdar"].queryset = LkpJihatAlaisdar.objects.all()
+                    self.fields["wijhat_altarhil"].queryset = LkpJihatAltarhil.objects.all()
+                else:
+                    if gold_user.is_alaisdar_user:
+                        self.fields["jihat_alaisdar"].queryset = LkpJihatAlaisdar.objects.filter(
+                            id__in=gold_user.goldtraveltraditionaluserjihatalaisdar_set.values_list('jihat_alaisdar', flat=True)
+                        )
+                    else:
+                        self.fields["jihat_alaisdar"].queryset = LkpJihatAlaisdar.objects.none()
+
+                    if gold_user.is_tarhil_user:
+                        self.fields["wijhat_altarhil"].queryset = LkpJihatAltarhil.objects.filter(
+                            id__in=gold_user.goldtraveltraditionaluserjihattarhil_set.filter(can_arrive=False).values_list('wijhat_altarhil', flat=True)
+                        )
+                    else:
+                        self.fields["wijhat_altarhil"].queryset = LkpJihatAltarhil.objects.filter(
+                            id__in=gold_user.goldtraveltraditionaluserjihattarhil_set.values_list('wijhat_altarhil', flat=True)
+                        )
+            except:
+                self.fields["jihat_alaisdar"].queryset = LkpJihatAlaisdar.objects.none()
+                self.fields["wijhat_altarhil"].queryset = LkpJihatAltarhil.objects.none()
+        else:
+            self.fields["jihat_alaisdar"].queryset = LkpJihatAlaisdar.objects.all()
+            self.fields["wijhat_altarhil"].queryset = LkpJihatAltarhil.objects.all()
+
+    class Meta:
+        model = AppMoveGoldTraditional
+        fields = ['jihat_alaisdar', 'wijhat_altarhil', 'attachement_file']
+
+    def clean_attachement_file(self):
+        from django.core.exceptions import ValidationError
+        file = self.cleaned_data.get('attachement_file')
+        if file:
+            ext = file.name.rsplit('.', 1)[-1].lower() if '.' in file.name else ''
+            if ext not in ('jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp'):
+                raise ValidationError(_('يجب رفع صورة بصيغة JPG, PNG, GIF, WEBP أو BMP فقط'))
+            from PIL import Image
+            try:
+                img = Image.open(file)
+                img.verify()
+                file.seek(0)
+            except Exception:
+                raise ValidationError(_('الملف المرفوع ليس صورة صالحة'))
+        return file

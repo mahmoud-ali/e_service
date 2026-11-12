@@ -74,7 +74,7 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
                             ("renew_date", "parent"),
                             ("arrival_attachement", ),
                             ("arrival_time", "arrival_note",),
-                            ("melt_batch", "sale", "storage"),
+                            ("melt_batch", "melt_produce", "sale", "storage"),
                         ],
                         'classes': ['collapse'],
                     },
@@ -88,7 +88,7 @@ class AppMoveGoldTraditionalAdmin(LogAdminMixin,admin.ModelAdmin):
             readonly_fields = list(readonly_fields) + [
                 "renew_date", "parent", "arrival_attachement", "arrival_time", "arrival_note",
                 "melt_batch", "melt_date", "melt_workshop", "standardization_lab",
-                "sale", "almushtari_name", "storage"
+                "melt_produce", "sale", "almushtari_name", "storage"
             ]
         return readonly_fields
     # readonly_fields = ["almushtari_name"]

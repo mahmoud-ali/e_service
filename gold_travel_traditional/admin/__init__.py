@@ -14,6 +14,9 @@ from .permits import (
 from .melt import (
     MeltBatchRecordsInline, MeltBatchDetailInline, MeltBatchAdmin
 )
+from .melt_produce import (
+    MeltProduceDetailInline, MeltProduceAdmin
+)
 from .sales import (
     SaleRecordsInline, SaleMeltBatchesInline, SaleAdmin
 )
@@ -30,6 +33,7 @@ __all__ = [
     'GoldTravelTraditionalUserJihatAlaisdarInline', 'GoldTravelTraditionalUserJihatTarhilInline',
     'GoldTravelTraditionalUserAdmin', 'AppMoveGoldTraditionalDetailInline', 'AppMoveGoldTraditionalAdmin',
     'MeltBatchRecordsInline', 'MeltBatchDetailInline', 'MeltBatchAdmin',
+    'MeltProduceDetailInline', 'MeltProduceAdmin',
     'SaleRecordsInline', 'SaleMeltBatchesInline', 'SaleAdmin',
     'StorageRecordsInline', 'StorageMeltBatchesInline', 'StorageAdmin',
     'RouteAdmin'
