@@ -145,6 +145,21 @@ class MeltProduceAdmin(LogAdminMixin, admin.ModelAdmin):
         kwargs['form'] = my_form
         return super().get_form(request, obj, **kwargs)
 
+    def _action_buttons_context(self, request, obj):
+        if not obj:
+            return {}
+        can_manage = self._can_manage(request, obj)
+        return {
+            'meltproduce_show_print': self.has_view_permission(request, obj),
+            'meltproduce_show_produce': can_manage and obj.state in [MeltProduce.STATE_PENDING, MeltProduce.STATE_COMPLETE] and not obj.produced_record,
+            'meltproduce_show_complete': self.has_change_permission(request, obj) and obj.state == MeltProduce.STATE_PENDING,
+            'meltproduce_show_cancel': self.has_change_permission(request, obj) and obj.state == MeltProduce.STATE_PENDING,
+        }
+
+    def render_change_form(self, request, context, add=False, change=False, form_url='', obj=None):
+        context.update(self._action_buttons_context(request, obj))
+        return super().render_change_form(request, context, add, change, form_url, obj)
+
     def get_urls(self):
         urls = super().get_urls()
         my_urls = [

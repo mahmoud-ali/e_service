@@ -1,0 +1,25 @@
+{% extends "admin/change_form_object_tools.html" %}
+{% load i18n %}
+{% block object-tools-items %}
+{{ block.super }}
+{% if meltproduce_show_print %}
+<li>
+    <a href="{% url 'admin:gold_travel_traditional_meltproduce_print' original.pk %}" target="_blank">{% translate 'طباعة' %}</a>
+</li>
+{% endif %}
+{% if meltproduce_show_produce %}
+<li>
+    <a href="{% url 'admin:gold_travel_traditional_meltproduce_produce' original.pk %}">{% translate 'إنتاج استمارة ترحيل' %}</a>
+</li>
+{% endif %}
+{% if meltproduce_show_complete %}
+<li>
+    <a href="{% url 'admin:gold_travel_traditional_meltproduce_complete' original.pk %}">{% translate 'إكمال' %}</a>
+</li>
+{% endif %}
+{% if meltproduce_show_cancel %}
+<li>
+    <a href="{% url 'admin:gold_travel_traditional_meltproduce_cancel' original.pk %}">{% translate 'إلغاء' %}</a>
+</li>
+{% endif %}
+{% endblock %}
