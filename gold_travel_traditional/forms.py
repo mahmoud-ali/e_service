@@ -438,6 +438,9 @@ class MeltProduceForm(forms.ModelForm):
         if not self.instance.pk:
             self.fields['issue_date'].initial = timezone.now().date()
 
+        if 'melt_workshop' not in self.fields:
+            return
+
         if self.user and (self.user.is_superuser or self.user.groups.filter(name="gold_travel_traditional_manager").exists()):
             self.fields['melt_workshop'].queryset = LkpWorkshop.objects.all()
         elif self.user:
