@@ -76,7 +76,7 @@
                             </span>
                         </td>
                         <td>{{ employee.job_data.job_title|default:"-" }}</td>
-                        <td>{{ employee.category.name }}</td>
+                        <td>{{ employee.get_category_display }}</td>
                         <td>
                             <a href="{% url 'traditional_app:portal_employee_detail' employee.id %}" class="btn btn-sm btn-ghost">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">

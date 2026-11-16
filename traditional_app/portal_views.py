@@ -158,7 +158,7 @@ class EmployeesListView(LoginRequiredMixin, PortalUserMixin, ListView):
     
     def get_queryset(self):
         user_state = self.request.user.traditional_app_user.state
-        queryset = Employee.objects.filter(state=user_state).select_related('category')
+        queryset = Employee.objects.filter(state=user_state).select_related('job_data')
         
         # Apply filters
         name = self.request.GET.get('name')
@@ -186,7 +186,7 @@ class EmployeeDetailView(LoginRequiredMixin, PortalUserMixin, DetailView):
     
     def get_queryset(self):
         user_state = self.request.user.traditional_app_user.state
-        return Employee.objects.filter(state=user_state).select_related('category').select_related('job_data')
+        return Employee.objects.filter(state=user_state).select_related('job_data')
 
 
 class PayrollListView(LoginRequiredMixin, PortalUserMixin, ListView):

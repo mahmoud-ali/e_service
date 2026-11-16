@@ -338,6 +338,11 @@ class EmployeeAdmin(LogMixin, StateControlMixin, admin.ModelAdmin):
             'البريد الإلكتروني',
             'الولاية',
             'فئة الموظف',
+            'المسمى الوظيفي',
+            'المؤهل الأكاديمي',
+            'التخصص',
+            'الجامعة',
+            'تاريخ التخرج',
             'البنك',
             'كود البنك',
             'نوع الحساب',
@@ -347,7 +352,9 @@ class EmployeeAdmin(LogMixin, StateControlMixin, admin.ModelAdmin):
         ]
         writer.writerow(header)
         
-        queryset = queryset.select_related('state', 'category').prefetch_related('bank_accounts', 'statuses')
+        queryset = queryset.select_related('state', 'job_data').prefetch_related(
+            'bank_accounts', 'statuses', 'academic_qualifications'
+        )
         
         for employee in queryset:
             bank_account = employee.bank_accounts.first()
@@ -360,6 +367,31 @@ class EmployeeAdmin(LogMixin, StateControlMixin, admin.ModelAdmin):
             status = status_obj.get_status_display() if status_obj else ''
             status_date = status_obj.status_date if status_obj else ''
             
+            job_title = ''
+            try:
+                if hasattr(employee, 'job_data') and employee.job_data:
+                    job_title = employee.job_data.job_title or ''
+            except Exception:
+                job_title = ''
+            
+            quals = list(employee.academic_qualifications.all())
+            if len(quals) == 1:
+                q = quals[0]
+                qual_degrees = q.get_qualification_display() if q.qualification else ''
+                qual_specs = q.specialization or ''
+                qual_unis = q.university or ''
+                qual_grad_dates = str(q.graduation_date) if q.graduation_date else ''
+            elif len(quals) > 1:
+                qual_degrees = " | ".join([q.get_qualification_display() if q.qualification else '-' for q in quals])
+                qual_specs = " | ".join([q.specialization or '-' for q in quals])
+                qual_unis = " | ".join([q.university or '-' for q in quals])
+                qual_grad_dates = " | ".join([str(q.graduation_date) if q.graduation_date else '-' for q in quals])
+            else:
+                qual_degrees = ''
+                qual_specs = ''
+                qual_unis = ''
+                qual_grad_dates = ''
+            
             row = [
                 employee.employee_code or '',
                 employee.name,
@@ -368,7 +400,12 @@ class EmployeeAdmin(LogMixin, StateControlMixin, admin.ModelAdmin):
                 employee.phone or '',
                 employee.email or '',
                 employee.state.name if employee.state else '',
-                employee.category.name if employee.category else '',
+                employee.get_category_display() if employee.category else '',
+                job_title,
+                qual_degrees,
+                qual_specs,
+                qual_unis,
+                qual_grad_dates,
                 bank_name,
                 bank_code,
                 account_type,
