@@ -13,6 +13,17 @@ class CompanyNameField(serializers.RelatedField):
     def to_representation(self, value):
         return value.name_ar
 
+class RelatedAttrField(serializers.Field):
+    """Read-only value of `attr` on a nullable related instance (None stays None)."""
+
+    def __init__(self, attr, **kwargs):
+        self.attr = attr
+        kwargs.setdefault('read_only', True)
+        super().__init__(**kwargs)
+
+    def to_representation(self, value):
+        return getattr(value, self.attr)
+
 class GoldTravelListSerializer(serializers.ModelSerializer):
     class Meta:
         model = AppMoveGold
@@ -182,6 +193,9 @@ class SaleListSerializer(serializers.ModelSerializer):
 
 class SaleMasterSerializer(serializers.ModelSerializer):
     buyer_exporter = BuyerExporterNameField(read_only=True)
+    commercial_register_no = RelatedAttrField('commercial_register_no', source='buyer_exporter')
+    tax_number = RelatedAttrField('tax_number', source='buyer_exporter')
+    zakat_file_no = RelatedAttrField('zakat_file_no', source='buyer_exporter')
     buyer_saig = BuyerSaigNameField(read_only=True)
     buyer_type = serializers.CharField(source='get_buyer_type_display', read_only=True)
     source_state = SourceStateNameField(read_only=True)
@@ -192,7 +206,7 @@ class SaleMasterSerializer(serializers.ModelSerializer):
     class Meta:
         model = Sale
 
-        fields = ['id', 'code', 'sale_date', 'buyer_type', 'buyer_exporter', 'buyer_saig', 'source_state', 'state', 'note', 'alloy_list']
+        fields = ['id', 'code', 'sale_date', 'buyer_type', 'buyer_exporter', 'commercial_register_no', 'tax_number', 'zakat_file_no', 'buyer_saig', 'source_state', 'state', 'note', 'alloy_list']
 
     def get_state(self, obj):
         return {'id': obj.state, 'label': obj.get_state_display()}
@@ -228,6 +242,9 @@ class StorageListSerializer(serializers.ModelSerializer):
 
 class StorageMasterSerializer(serializers.ModelSerializer):
     buyer_exporter = BuyerExporterNameField(read_only=True)
+    commercial_register_no = RelatedAttrField('commercial_register_no', source='buyer_exporter')
+    tax_number = RelatedAttrField('tax_number', source='buyer_exporter')
+    zakat_file_no = RelatedAttrField('zakat_file_no', source='buyer_exporter')
     buyer_saig = BuyerSaigNameField(read_only=True)
     buyer_type = serializers.CharField(source='get_buyer_type_display', read_only=True)
     source_state = SourceStateNameField(read_only=True)
@@ -239,7 +256,7 @@ class StorageMasterSerializer(serializers.ModelSerializer):
     class Meta:
         model = Storage
 
-        fields = ['id', 'code', 'storage_date', 'expiry_date', 'buyer_type', 'buyer_exporter', 'buyer_saig', 'source_state', 'state', 'note', 'alloy_list']
+        fields = ['id', 'code', 'storage_date', 'expiry_date', 'buyer_type', 'buyer_exporter', 'commercial_register_no', 'tax_number', 'zakat_file_no', 'buyer_saig', 'source_state', 'state', 'note', 'alloy_list']
 
     def get_state(self, obj):
         return {'id': obj.state, 'label': obj.get_state_display()}

@@ -12,6 +12,8 @@ from .serializers import (
     GoldProductionMasterSerializer,
     GoldShippingMasterSerializer,
     GoldTravelMasterSerializer,
+    SaleMasterSerializer,
+    StorageMasterSerializer,
 )
 
 
@@ -331,3 +333,79 @@ class CompanyRegistrationFieldsSerializerTests(TestCase):
             self.assertIsNone(data['commercial_register_no'])
             self.assertIsNone(data['tax_number'])
             self.assertIsNone(data['zakat_file_no'])
+
+    def _empty_manager(self):
+        return SimpleNamespace(all=lambda: [])
+
+    def _sale(self, exporter):
+        return SimpleNamespace(
+            id=1,
+            code='S-1',
+            sale_date=date(2025, 10, 1),
+            buyer_type='exporter',
+            get_buyer_type_display=lambda: 'exporter',
+            buyer_exporter=exporter,
+            buyer_saig=None,
+            source_state=SimpleNamespace(name='الخرطوم'),
+            state=1,
+            get_state_display=lambda: 'pending',
+            note='',
+            records=self._empty_manager(),
+            melt_batches=self._empty_manager(),
+        )
+
+    def _storage(self, exporter):
+        return SimpleNamespace(
+            id=1,
+            code='ST-1',
+            storage_date=date(2025, 10, 1),
+            expiry_date=date(2025, 10, 31),
+            buyer_type='exporter',
+            get_buyer_type_display=lambda: 'exporter',
+            buyer_exporter=exporter,
+            buyer_saig=None,
+            source_state=SimpleNamespace(name='الخرطوم'),
+            state=1,
+            get_state_display=lambda: 'pending',
+            note='',
+            records=self._empty_manager(),
+            melt_batches=self._empty_manager(),
+        )
+
+    def test_sale_master_has_registration_fields(self):
+        data = SaleMasterSerializer(self._sale(self._company())).data
+
+        self.assertEqual(data['commercial_register_no'], 'CR-123')
+        self.assertEqual(data['tax_number'], 'TAX-456')
+        self.assertEqual(data['zakat_file_no'], 'ZK-789')
+        self.assertEqual(data['buyer_exporter'], 'شركة الاختبار')
+
+    def test_storage_master_has_registration_fields(self):
+        data = StorageMasterSerializer(self._storage(self._company())).data
+
+        self.assertEqual(data['commercial_register_no'], 'CR-123')
+        self.assertEqual(data['tax_number'], 'TAX-456')
+        self.assertEqual(data['zakat_file_no'], 'ZK-789')
+        self.assertEqual(data['buyer_exporter'], 'شركة الاختبار')
+
+    def test_sale_master_without_exporter_keeps_null_keys(self):
+        data = SaleMasterSerializer(self._sale(None)).data
+
+        self.assertIsNone(data['buyer_exporter'])
+        self.assertIn('commercial_register_no', data)
+        self.assertIn('tax_number', data)
+        self.assertIn('zakat_file_no', data)
+        self.assertIsNone(data['commercial_register_no'])
+        self.assertIsNone(data['tax_number'])
+        self.assertIsNone(data['zakat_file_no'])
+
+    def test_storage_master_without_exporter_keeps_null_keys(self):
+        data = StorageMasterSerializer(self._storage(None)).data
+
+        self.assertIsNone(data['buyer_exporter'])
+        self.assertIn('commercial_register_no', data)
+        self.assertIn('tax_number', data)
+        self.assertIn('zakat_file_no', data)
+        self.assertIsNone(data['commercial_register_no'])
+        self.assertIsNone(data['tax_number'])
+        self.assertIsNone(data['zakat_file_no'])

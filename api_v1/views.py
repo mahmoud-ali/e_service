@@ -289,7 +289,7 @@ class SaleListView(generics.ListAPIView):
         })
 
 class SaleDetailView(generics.RetrieveAPIView):
-    queryset = Sale.objects.all()
+    queryset = Sale.objects.all().select_related('buyer_exporter')
     serializer_class = SaleMasterSerializer
     permission_classes = [permissions.IsAuthenticated, IsInGroup,]
 
@@ -336,7 +336,7 @@ class StorageListView(generics.ListAPIView):
         })
 
 class StorageDetailView(generics.RetrieveAPIView):
-    queryset = Storage.objects.all()
+    queryset = Storage.objects.all().select_related('buyer_exporter')
     serializer_class = StorageMasterSerializer
     permission_classes = [permissions.IsAuthenticated, IsInGroup,]
 
