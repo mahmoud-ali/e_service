@@ -50,7 +50,7 @@ class GoldTravelListView(generics.ListAPIView):
         })
 
 class GoldTravelDetailView(generics.RetrieveAPIView):
-    queryset = AppMoveGold.objects.filter(form_type=AppMoveGold.FORM_TYPE_GOLD_EXPORT)
+    queryset = AppMoveGold.objects.filter(form_type=AppMoveGold.FORM_TYPE_GOLD_EXPORT).select_related('owner_name_lst')
     serializer_class = GoldTravelMasterSerializer
     permission_classes = [permissions.IsAuthenticated, IsInGroup,]
 
@@ -100,7 +100,7 @@ class GoldProductionListView(generics.ListAPIView):
         })
 
 class GoldProductionDetailView(generics.RetrieveAPIView):
-    queryset = GoldProductionForm.objects.all() #.filter(state=GoldProductionForm.STATE_APPROVED)
+    queryset = GoldProductionForm.objects.all().select_related('license__company') #.filter(state=GoldProductionForm.STATE_APPROVED)
     serializer_class = GoldProductionMasterSerializer
     permission_classes = [permissions.IsAuthenticated, IsInGroup,]
 
@@ -148,7 +148,7 @@ class GoldShippingListView(generics.ListAPIView):
         })
 
 class GoldShippingDetailView(generics.RetrieveAPIView):
-    queryset = GoldShippingForm.objects.all() #filter(state=GoldShippingForm.STATE_APPROVED)
+    queryset = GoldShippingForm.objects.all().select_related('license__company') #filter(state=GoldShippingForm.STATE_APPROVED)
     serializer_class = GoldShippingMasterSerializer
     permission_classes = [permissions.IsAuthenticated, IsInGroup,]
 

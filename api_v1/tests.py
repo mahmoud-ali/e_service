@@ -1,4 +1,5 @@
 from datetime import date
+from types import SimpleNamespace
 
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
@@ -7,6 +8,11 @@ from django.test import TestCase
 from rest_framework.test import APIRequestFactory, force_authenticate
 
 from . import views
+from .serializers import (
+    GoldProductionMasterSerializer,
+    GoldShippingMasterSerializer,
+    GoldTravelMasterSerializer,
+)
 
 
 class FakeDoesNotExist(Exception):
@@ -225,3 +231,103 @@ class GoldTravelViewsTests(TestCase):
             views.GoldTravelDetailView.queryset = original_queryset
             views.GoldTravelDetailView.serializer_class = original_master_serializer
             views.GoldTravelDetailSerializer = original_detail_serializer
+
+
+class CompanyRegistrationFieldsSerializerTests(TestCase):
+    """Flat company registration fields on the master serializers."""
+
+    def _company(self, **overrides):
+        values = {
+            'name': 'شركة الاختبار',
+            'name_ar': 'شركة الاختبار',
+            'commercial_register_no': 'CR-123',
+            'tax_number': 'TAX-456',
+            'zakat_file_no': 'ZK-789',
+        }
+        values.update(overrides)
+        return SimpleNamespace(**values)
+
+    def _travel(self, company):
+        return SimpleNamespace(
+            id=1,
+            code='RN/1',
+            date=date(2025, 10, 1),
+            destination=1,
+            get_destination_display=lambda: 'SSMO',
+            owner_name_lst=company,
+            owner_address='بورتسودان',
+            repr_name='repr',
+            repr_address='addr',
+            repr_phone='0123',
+            repr_identity_type=1,
+            get_repr_identity_type_display=lambda: 'passport',
+            repr_identity='555',
+            repr_identity_issue_date=date(2020, 1, 30),
+            alloy_list=[],
+        )
+
+    def _production(self, company):
+        return SimpleNamespace(
+            id=1,
+            form_no='P/1',
+            date=date(2025, 10, 1),
+            license=SimpleNamespace(company=company),
+            state=1,
+            get_state_display=lambda: 'draft',
+            alloy_jaf=0,
+            alloy_khabath=0,
+            alloy_remaind=0,
+            alloy_weight_expected=0,
+            goldproductionformalloy_set=[],
+        )
+
+    def _shipping(self, company):
+        return SimpleNamespace(
+            id=1,
+            form_no='S/1',
+            date=date(2025, 10, 1),
+            license=SimpleNamespace(company=company),
+            state=1,
+            get_state_display=lambda: 'draft',
+            goldshippingformalloy_set=[],
+        )
+
+    def test_travel_master_has_registration_fields(self):
+        data = GoldTravelMasterSerializer(self._travel(self._company())).data
+
+        self.assertEqual(data['commercial_register_no'], 'CR-123')
+        self.assertEqual(data['tax_number'], 'TAX-456')
+        self.assertEqual(data['zakat_file_no'], 'ZK-789')
+        self.assertEqual(data['company_name'], 'شركة الاختبار')
+
+    def test_production_master_has_registration_fields(self):
+        data = GoldProductionMasterSerializer(self._production(self._company())).data
+
+        self.assertEqual(data['commercial_register_no'], 'CR-123')
+        self.assertEqual(data['tax_number'], 'TAX-456')
+        self.assertEqual(data['zakat_file_no'], 'ZK-789')
+        self.assertEqual(data['company'], 'شركة الاختبار')
+
+    def test_shipping_master_has_registration_fields(self):
+        data = GoldShippingMasterSerializer(self._shipping(self._company())).data
+
+        self.assertEqual(data['commercial_register_no'], 'CR-123')
+        self.assertEqual(data['tax_number'], 'TAX-456')
+        self.assertEqual(data['zakat_file_no'], 'ZK-789')
+        self.assertEqual(data['company'], 'شركة الاختبار')
+
+    def test_null_registration_fields_serialize_as_null(self):
+        company = self._company(
+            commercial_register_no=None,
+            tax_number=None,
+            zakat_file_no=None,
+        )
+
+        for data in (
+            GoldTravelMasterSerializer(self._travel(company)).data,
+            GoldProductionMasterSerializer(self._production(company)).data,
+            GoldShippingMasterSerializer(self._shipping(company)).data,
+        ):
+            self.assertIsNone(data['commercial_register_no'])
+            self.assertIsNone(data['tax_number'])
+            self.assertIsNone(data['zakat_file_no'])
