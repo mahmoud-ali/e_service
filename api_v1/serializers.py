@@ -154,7 +154,7 @@ class DeductionsMasterSerializer(serializers.ModelSerializer):
     class Meta:
         model = DeductionsView
 
-        fields = ['id', 'tdate', 'companyid', 'company_name', 'produced_gold', 'pure_gold', 'deduction_weight', 'net_weight']
+        fields = ['id', 'tdate', 'companyid', 'company_name', 'produced_gold', 'pure_gold', 'deduction_weight', 'net_weight','baldna_commercial_register','baldna_tax_number','baldna_zakat_file']
 
 ########### Sale(استمارات البيع) ##############
 class BuyerExporterNameField(serializers.RelatedField):

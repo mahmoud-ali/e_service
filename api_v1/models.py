@@ -12,6 +12,9 @@ class DeductionsView(models.Model):
     pure_gold = models.DecimalField(max_digits=18, decimal_places=4)
     deduction_weight = models.DecimalField(max_digits=18, decimal_places=4)
     net_weight = models.DecimalField(max_digits=18, decimal_places=4)
+    baldna_commercial_register = models.CharField(max_length=50)
+    baldna_tax_number = models.CharField(max_length=50)
+    baldna_zakat_file = models.CharField(max_length=50)
 
     class Meta:
         managed = False
