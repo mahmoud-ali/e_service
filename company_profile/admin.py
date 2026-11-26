@@ -393,6 +393,60 @@ class CompanyStateFilter(admin.SimpleListFilter):
         
         return qs
 
+class CommercialRegisterFilter(admin.SimpleListFilter):
+    title = _("السجل التجاري")
+    parameter_name = "has_commercial_register"
+
+    def lookups(self, request, model_admin):
+        return (
+            ('1', _('موجود')),
+            ('0', _('غير موجود')),
+        )
+
+    def queryset(self, request, queryset):
+        val = self.value()
+        if val == '1':
+            return queryset.exclude(models.Q(commercial_register_no__isnull=True) | models.Q(commercial_register_no__exact=''))
+        if val == '0':
+            return queryset.filter(models.Q(commercial_register_no__isnull=True) | models.Q(commercial_register_no__exact=''))
+        return queryset
+
+class TaxNumberFilter(admin.SimpleListFilter):
+    title = _("الرقم الضريبي")
+    parameter_name = "has_tax_number"
+
+    def lookups(self, request, model_admin):
+        return (
+            ('1', _('موجود')),
+            ('0', _('غير موجود')),
+        )
+
+    def queryset(self, request, queryset):
+        val = self.value()
+        if val == '1':
+            return queryset.exclude(models.Q(tax_number__isnull=True) | models.Q(tax_number__exact=''))
+        if val == '0':
+            return queryset.filter(models.Q(tax_number__isnull=True) | models.Q(tax_number__exact=''))
+        return queryset
+
+class ZakatFileFilter(admin.SimpleListFilter):
+    title = _("الملف الزكوي")
+    parameter_name = "has_zakat_file"
+
+    def lookups(self, request, model_admin):
+        return (
+            ('1', _('موجود')),
+            ('0', _('غير موجود')),
+        )
+
+    def queryset(self, request, queryset):
+        val = self.value()
+        if val == '1':
+            return queryset.exclude(models.Q(zakat_file_no__isnull=True) | models.Q(zakat_file_no__exact=''))
+        if val == '0':
+            return queryset.filter(models.Q(zakat_file_no__isnull=True) | models.Q(zakat_file_no__exact=''))
+        return queryset
+
 # class TblCompanyProductionLicenseInline(LoggingAdminMixin,admin.StackedInline):
 #     model = TblCompanyProductionLicense
 #     fieldsets = [
@@ -420,7 +474,7 @@ class TblCompanyProductionAdmin(ExportActionMixin,LoggingAdminMixin,admin.ModelA
      ]
      
     list_display = ["company_type","code","name_ar", "name_en", "status",'license_count','states'] #,'show_summary_link'
-    list_filter = ["company_type","nationality","status",CompanyStateFilter,InactiveCompaniesFilter,"created_at",LicenseCountFilter,('email',admin.EmptyFieldListFilter)]
+    list_filter = ["company_type","nationality","status",CommercialRegisterFilter,TaxNumberFilter,ZakatFileFilter,CompanyStateFilter,InactiveCompaniesFilter,"created_at",LicenseCountFilter,('email',admin.EmptyFieldListFilter)]
     search_fields = ["code","name_ar","name_en","email","commercial_register_no","tax_number","zakat_file_no"]
     exclude = ["created_at","created_by","updated_at","updated_by"]
     view_on_site = False
